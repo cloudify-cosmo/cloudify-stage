@@ -1,12 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-
-import { isEmpty } from 'lodash';
+import { castArray, isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
+export interface ExecutionsWidgetParams {
+    /* eslint-disable camelcase */
+    blueprint_id: any;
+    deployment_id: string | string[] | null | undefined;
+    status_display: any;
+    _include_system_workflows?: boolean;
+    /* eslint-enable camelcase */
+}
+
+export interface ExecutionsWidgetConfiguration {
+    fieldsToShow?: string;
+    showSystemExecutions?: boolean;
+    singleExecutionView?: boolean;
+}
+
 const t = Stage.Utils.getT('widgets.executions');
 
-Stage.defineWidget({
+Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
     id: 'executions',
     name: t('name'),
     description: t('description'),
@@ -63,14 +76,18 @@ Stage.defineWidget({
         const executionActions = new Stage.Common.ExecutionActions(toolbox);
 
         if (singleExecutionView) {
-            const deploymentIdFromParams = params.deployment_id;
+            const deploymentIdFromParams = castArray(params.deployment_id)[0];
 
             if (deploymentIdFromParams) {
                 return new Stage.Common.DeploymentActions(toolbox)
-                    .doGet({
-                        id: deploymentIdFromParams,
-                        _include: 'latest_execution'
-                    })
+                    .doGet(
+                        {
+                            id: deploymentIdFromParams
+                        },
+                        {
+                            _include: 'id,latest_execution'
+                        }
+                    )
                     .then(deployment => executionActions.doGet(deployment.latest_execution));
             }
 
@@ -92,7 +109,7 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
         const { singleExecutionView } = widget.configuration;
 
@@ -110,7 +127,7 @@ Stage.defineWidget({
         }
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
-        const params = this.fetchParams(widget, toolbox);
+        const params = this.fetchParams!(widget, toolbox);
 
         const formattedData = {
             items: _.map(data.items, item => ({
@@ -125,6 +142,7 @@ Stage.defineWidget({
             deploymentId: !!params.deployment_id
         };
 
+        // @ts-ignore ExecutionsTable is not migrated yet
         return <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });
