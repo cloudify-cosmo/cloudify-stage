@@ -1,4 +1,5 @@
 import req from 'request';
+import type { Response } from 'request';
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
 
@@ -17,7 +18,7 @@ export function request(
     return req(requestUrl, options).on('error', onError).on('response', onSuccess);
 }
 
-export function getResponseJson(res: req.Response) {
+export function getResponseJson(res: Response) {
     return new Promise((resolve, reject) => {
         let body = '';
         res.on('data', chunk => {
