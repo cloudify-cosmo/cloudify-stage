@@ -81,7 +81,7 @@ describe('Templates segment', () => {
         );
     });
 
-    it('allows users to create and modify templates', () => {
+    it.only('allows users to create and modify templates', () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
@@ -166,7 +166,7 @@ describe('Templates segment', () => {
         cy.log('Remove template');
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
-        cy.get('.popup button.green').click();
+        cy.get('.popup button.green').click({ force: true });
         cy.get('.main .loading').should('not.exist');
 
         cy.log('Verify template was removed');
