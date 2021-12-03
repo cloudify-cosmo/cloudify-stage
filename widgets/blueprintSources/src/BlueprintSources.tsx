@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 28/02/2017.
- */
 import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 

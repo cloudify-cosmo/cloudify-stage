@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 14/08/2017.
- */
 
 import MyResourcesCheckbox from './MyResourcesCheckbox';
 

@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { waitUntilEmpty } from './resource_commons';
+import { waitUntil, waitUntilEmpty } from './resource_commons';
 
 declare global {
     namespace Cypress {
@@ -37,6 +37,13 @@ const commands = {
             .cfyRequest(activeExecutionsUrl, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
             .then(() => waitUntilEmpty(activeAndKillCancellingExecutionsUrl));
+    },
+
+    waitForExecutionToEnd: (deploymentId: string, workflowId: string) => {
+        const deploymentExecutionsUrl = `executions?_include=id,workflow_id,ended_at&deployment_id=${deploymentId}&workflow_id=${workflowId}`;
+
+        cy.log(`Waiting for workflow ${workflowId} on deployment ${deploymentId} to be ended.`);
+        return waitUntil(deploymentExecutionsUrl, response => _.find(response.body.items, item => item.ended_at));
     }
 };
 

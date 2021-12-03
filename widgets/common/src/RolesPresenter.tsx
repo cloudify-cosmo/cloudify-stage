@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 22/10/2017.
- */
 
 export default function RolesPresenter({ directRole, groupRoles }) {
     let restOfGroupRoles = '';

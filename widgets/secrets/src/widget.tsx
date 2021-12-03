@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 24/03/2017.
- */
 
 import SecretsTable from './SecretsTable';
 

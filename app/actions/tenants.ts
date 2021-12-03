@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by addihorowitz on 19/09/2016.
- */
 
 import log from 'loglevel';
 import * as types from './types';
