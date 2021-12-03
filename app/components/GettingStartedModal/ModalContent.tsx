@@ -63,7 +63,7 @@ const ModalContent = ({
             {stepName === StepName.Environments && (
                 <EnvironmentsStep
                     schema={castedGettingStartedSchema}
-                    selectedEnvironments={environmentsStepData}
+                    selectedEnvironment={environmentsStepData}
                     onChange={onEnvironmentsStepChange}
                 />
             )}

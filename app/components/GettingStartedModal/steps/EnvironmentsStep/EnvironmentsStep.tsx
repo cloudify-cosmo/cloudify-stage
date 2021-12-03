@@ -8,32 +8,31 @@ import type { GettingStartedSchema, GettingStartedEnvironmentsData } from '../..
 
 type Props = {
     schema: GettingStartedSchema;
-    selectedEnvironments?: GettingStartedEnvironmentsData;
-    onChange?: (environments: GettingStartedEnvironmentsData) => void;
+    selectedEnvironment?: GettingStartedEnvironmentsData;
+    onChange?: (environment: GettingStartedEnvironmentsData) => void;
 };
 
-const EnvironmentsStep = ({ schema, selectedEnvironments, onChange }: Props) => {
-    const [
-        localSelectedEnvironments,
-        setLocalSelectedEnvironments,
-        resetLocalSelectedEnvironments
-    ] = useResettableState(selectedEnvironments ?? {});
-    useEffect(() => resetLocalSelectedEnvironments(), [selectedEnvironments]);
+const EnvironmentsStep = ({ schema, selectedEnvironment, onChange }: Props) => {
+    const [localSelectedEnvironment, setLocalSelectedEnvironment, resetLocalSelectedEnvironment] = useResettableState(
+        selectedEnvironment ?? {}
+    );
+    useEffect(() => resetLocalSelectedEnvironment(), [selectedEnvironment]);
 
     return (
         <Form>
             {schema.map(({ name, logo, label }) => {
                 const handleChange = (value: boolean) => {
-                    const newLocalSelectedEnvironments = { ...localSelectedEnvironments, [name]: value };
-                    setLocalSelectedEnvironments(newLocalSelectedEnvironments);
-                    onChange?.(newLocalSelectedEnvironments);
+                    const newLocalSelectedEnvironment = { [name]: value };
+                    setLocalSelectedEnvironment(newLocalSelectedEnvironment);
+                    onChange?.(newLocalSelectedEnvironment);
                 };
+
                 return (
                     <EnvironmentButton
                         key={name}
                         logo={logo}
                         label={label}
-                        value={localSelectedEnvironments[name]}
+                        value={localSelectedEnvironment[name]}
                         onChange={handleChange}
                     />
                 );
