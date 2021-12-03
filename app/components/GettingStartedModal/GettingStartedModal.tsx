@@ -1,7 +1,8 @@
 import React, { memo, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { push } from 'connected-react-router';
 
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
@@ -29,7 +30,7 @@ const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
     const modalOpenState = useModalOpenState();
-
+    const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Welcome);
     const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
@@ -76,6 +77,8 @@ const GettingStartedModal = () => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
+    const navigateToBlueprintsPage = () => dispatch(push('/page/blueprints'));
+
     const checkEnvironmentsStepDataErrors = () => {
         const usedEnvironmentsError = validateEnvironmentsFields(environmentsStepData);
         if (usedEnvironmentsError) {
@@ -120,6 +123,7 @@ const GettingStartedModal = () => {
     const handleModalClose = () => {
         if (stepName !== StepName.Status) openCancelConfirm();
         else closeModal();
+        navigateToBlueprintsPage();
     };
 
     const closeModal = () => {
