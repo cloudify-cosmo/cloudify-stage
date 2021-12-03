@@ -172,7 +172,10 @@ export default class DeploymentActions {
             await pollHelper.wait();
 
             // eslint-disable-next-line no-await-in-loop
-            const { items } = await executionActions.doGetExecutions(deploymentId);
+            const { items } = await executionActions.doGetAll({
+                deployment_id: deploymentId,
+                _include: _.join(['id', 'status', 'ended_at'])
+            });
 
             if (!_.isEmpty(items) && _.isUndefined(_.find(items, { ended_at: null }))) {
                 return;

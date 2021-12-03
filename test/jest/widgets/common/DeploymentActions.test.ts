@@ -2,7 +2,7 @@ import DeploymentActions from 'common/src/DeploymentActions';
 
 describe('(Widgets common) DeploymentActions', () => {
     const wait = jest.fn(() => Promise.resolve());
-    const doGetExecutions = jest.fn();
+    const doGetAll = jest.fn();
 
     beforeEach(() => {
         Stage.Common = {
@@ -10,23 +10,23 @@ describe('(Widgets common) DeploymentActions', () => {
                 this.wait = wait;
             },
             ExecutionActions() {
-                this.doGetExecutions = doGetExecutions;
+                this.doGetAll = doGetAll;
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any;
     });
 
     it('waits for deployment to complete', () => {
-        doGetExecutions.mockResolvedValueOnce({});
-        doGetExecutions.mockResolvedValueOnce({ items: [{}] });
+        doGetAll.mockResolvedValueOnce({});
+        doGetAll.mockResolvedValueOnce({ items: [{}] });
 
         const deploymentId = 'depId';
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return new DeploymentActions(undefined as any).waitUntilCreated(deploymentId).then(() => {
             expect(wait).toHaveReturnedTimes(2);
-            expect(doGetExecutions).toHaveBeenCalledWith(deploymentId);
-            expect(doGetExecutions).toHaveBeenCalledTimes(2);
+            expect(doGetAll).toHaveBeenCalledWith({ _include: 'id,status,ended_at', deployment_id: deploymentId });
+            expect(doGetAll).toHaveBeenCalledTimes(2);
         });
     });
 });
