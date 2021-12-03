@@ -10,7 +10,7 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import useModalOpenState from './useModalOpenState';
-import { validateEnvironmentsFields, validateSecretFields } from './formValidation';
+import { validateSecretFields } from './formValidation';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
@@ -47,6 +47,7 @@ const GettingStartedModal = () => {
         () => castedGettingStartedSchema.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
+
     const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
     const summaryStepSchemas = useMemo(() => {
         return commonStepsSchemas.reduce(
@@ -76,15 +77,6 @@ const GettingStartedModal = () => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
-    const checkEnvironmentsStepDataErrors = () => {
-        const usedEnvironmentsError = validateEnvironmentsFields(environmentsStepData);
-        if (usedEnvironmentsError) {
-            setStepErrors([usedEnvironmentsError]);
-            return false;
-        }
-        resetStepErrors();
-        return true;
-    };
     const checkSecretsStepDataErrors = () => {
         if (!secretsStepSchema) {
             return false;
@@ -170,13 +162,11 @@ const GettingStartedModal = () => {
 
         switch (stepName) {
             case StepName.Environments:
-                if (checkEnvironmentsStepDataErrors()) {
-                    if (secretsStepsSchemas.length > 0) {
-                        goToNextStep();
-                        setSecretsStepIndex(0);
-                    } else {
-                        setStepName(StepName.Summary);
-                    }
+                if (secretsStepsSchemas.length > 0) {
+                    goToNextStep();
+                    setSecretsStepIndex(0);
+                } else {
+                    setStepName(StepName.Summary);
                 }
                 break;
 
@@ -241,6 +231,7 @@ const GettingStartedModal = () => {
                 onBackClick={handleBackClick}
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
+                environmentsStepData={environmentsStepData}
             />
             <Confirm
                 open={cancelConfirmOpen}
