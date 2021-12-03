@@ -266,7 +266,7 @@ describe('Getting started modal', () => {
         });
     });
 
-    it('requires secret to go to the summary step', () => {
+    it('requires all secrets to go to the summary step', () => {
         function verifySecretsRequired(secrets: string[]) {
             secrets.forEach(secret => {
                 goToNextStep();
@@ -306,7 +306,7 @@ describe('Getting started modal', () => {
         });
     });
 
-    it('only enables one environment to be selected at a time', () => {
+    it('should allow only one environment to be selected at a time', () => {
         goToNextStep();
         cy.contains('button', 'AWS').click();
         cy.contains('button.active', 'AWS');
@@ -316,7 +316,7 @@ describe('Getting started modal', () => {
         cy.contains('button.active', 'GCP');
     });
 
-    it('enables to click "next" button when an environment is being selected', () => {
+    it('should allow to click "Next" button when an environment is being selected', () => {
         goToNextStep();
         cy.contains('button', 'Next').should('to.be.disabled');
 
@@ -327,7 +327,7 @@ describe('Getting started modal', () => {
         cy.contains('button', 'Next').should('to.be.disabled');
     });
 
-    it('should keep button and field states when navigating beetwen steps', () => {
+    it('should keep button and field states when navigating between steps', () => {
         cy.get('.modal').within(() => {
             goToNextStep();
             cy.contains('button', 'AWS').click();
