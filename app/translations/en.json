@@ -1123,7 +1123,21 @@
             }
         },
         "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+            "name": "Executions",
+            "description": "This widget shows the deployment executions",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table"
+                },
+                "showSystemExecutions": {
+                    "name": "Show system executions"
+                },
+                "singleExecutionView": {
+                    "name": "Show most recent execution only"
+                }
+            },
+            "noExecutionFound": "There are no executions that could be shown.",
+            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on."
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"

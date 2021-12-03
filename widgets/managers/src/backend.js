@@ -71,7 +71,6 @@ module.exports = r => {
 
     r.register('get_spire_deployments', 'GET', (req, res, next, helper) => {
         const _ = require('lodash');
-        // const logger = helper.Logger('get_spire_deployments');
 
         const { headers } = req;
         const commonManagerRequestOptions = {
@@ -84,7 +83,7 @@ module.exports = r => {
 
         return helper.Manager.doGetFull('/deployments', {
             params: {
-                _include: 'id,workflows,capabilities,description',
+                _include: 'id,workflows,capabilities,description,latest_execution',
                 description:
                     'This blueprint creates several VMs, installs a Manager on each of them, ' +
                     'creates a Spire Management Cluster between all the managers and uploads ' +
@@ -98,10 +97,10 @@ module.exports = r => {
                     helper.Manager.doGet(`/deployments/${deployment.id}/capabilities`, commonManagerRequestOptions)
                 );
 
+                const latestExecutionIds = _.map(data.items, item => item.latest_execution);
                 const executionsPromise = helper.Manager.doGet('/executions', {
                     params: {
-                        _sort: '-ended_at',
-                        deployment_id: _.map(spireDeployments, deployment => deployment.id)
+                        id: latestExecutionIds
                     },
                     ...commonManagerRequestOptions
                 });
