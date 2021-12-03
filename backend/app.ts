@@ -32,6 +32,7 @@ import ServerProxy from './routes/ServerProxy';
 import SourceBrowser from './routes/SourceBrowser';
 import Style from './routes/Style';
 import Templates from './routes/Templates';
+import Terraform from './routes/Terraform';
 import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
@@ -101,27 +102,28 @@ app.use(
 );
 
 // API Routes
-app.use(`${contextPath}/sp`, ServerProxy);
-app.use(`${contextPath}/auth`, Auth);
-app.use(`${contextPath}/ua`, UserApp);
 app.use(`${contextPath}/applications`, Applications);
-app.use(`${contextPath}/source`, SourceBrowser);
+app.use(`${contextPath}/auth`, Auth);
 app.use(`${contextPath}/ba`, BlueprintAdditions);
 app.use(`${contextPath}/bud`, BlueprintUserData);
-app.use(`${contextPath}/style`, Style);
-app.use(`${contextPath}/widgets`, Widgets);
-app.use(`${contextPath}/filters`, Filters);
-app.use(`${contextPath}/templates`, Templates);
 app.use(`${contextPath}/clientConfig`, ClientConfig);
-app.use(`${contextPath}/github`, GitHub);
-app.use(`${contextPath}/external`, External);
-app.use(`${contextPath}/file`, File);
 app.use(`${contextPath}/config`, (req, res) => {
     res.send(getClientConfig(getMode()));
 });
-app.use(`${contextPath}/wb`, WidgetBackend);
-app.use(`${contextPath}/plugins`, Plugins);
+app.use(`${contextPath}/external`, External);
+app.use(`${contextPath}/file`, File);
+app.use(`${contextPath}/filters`, Filters);
+app.use(`${contextPath}/github`, GitHub);
 app.use(`${contextPath}/maps`, Maps);
+app.use(`${contextPath}/plugins`, Plugins);
+app.use(`${contextPath}/source`, SourceBrowser);
+app.use(`${contextPath}/sp`, ServerProxy);
+app.use(`${contextPath}/style`, Style);
+app.use(`${contextPath}/templates`, Templates);
+app.use(`${contextPath}/tf`, Terraform);
+app.use(`${contextPath}/ua`, UserApp);
+app.use(`${contextPath}/wb`, WidgetBackend);
+app.use(`${contextPath}/widgets`, Widgets);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
