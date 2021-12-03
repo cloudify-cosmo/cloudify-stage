@@ -53,6 +53,9 @@ const SummaryStep = ({
         number | undefined
     >(undefined);
 
+    // eslint-disable-next-line
+    console.log(pluginsInstallationTasks);
+
     useEffect(() => {
         resetInstallationErrors();
         resetInstallationStatuses();
