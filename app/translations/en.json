@@ -532,6 +532,12 @@
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
                 },
+                "secretsModal": {
+                    "header": "Add Secrets",
+                    "buttons": {
+                        "save": "save"
+                    }
+                },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {

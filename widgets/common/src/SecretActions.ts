@@ -32,6 +32,11 @@ class SecretActions {
         return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, { body: { visibility } });
     }
 }
+declare global {
+    namespace Stage.Common {
+        export { SecretActions };
+    }
+}
 
 Stage.defineCommon({
     name: 'SecretActions',
