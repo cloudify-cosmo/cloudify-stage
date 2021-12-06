@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -15,10 +15,13 @@ const StyledLabel = styled(Label)`
 
 const UserInitialsIcon: React.FunctionComponent = () => {
     const username = useSelector((state: ReduxState) => state.manager.username);
+    const userInitials = useMemo(() => {
+        return username.substr(0, 2).toUpperCase();
+    }, [username]);
 
     return (
         <StyledLabel style={defaultStyle} circular>
-            {username.substr(0, 2).toUpperCase()}
+            {userInitials}
         </StyledLabel>
     );
 };
