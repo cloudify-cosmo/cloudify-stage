@@ -120,15 +120,16 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
+
     const handleModalClose = () => {
         if (stepName !== StepName.Status) openCancelConfirm();
         else closeModal();
-        navigateToBlueprintsPage();
     };
 
     const closeModal = () => {
         modalOpenState.closeModal(modalDisabledChecked);
-        closeCancelConfirm();
+        navigateToBlueprintsPage();
+        openCancelConfirm();
     };
 
     const handleBackClick = () => {
