@@ -9,6 +9,7 @@ import { mountWithProvider } from '../../utils';
 describe('SideBar', () => {
     it('automatically collapses item groups', () => {
         const username = 'test_user';
+        const version = '6.3';
 
         cy.fixture('pages/pages_with_groups').then(pages => {
             mountWithProvider(
@@ -17,11 +18,13 @@ describe('SideBar', () => {
                 </ThemeContext.Provider>,
                 {
                     pages,
-                    manager: { username, tenants: { items: [] }, version: {}, license: {} },
+                    manager: { username, tenants: { items: [] }, version: { version }, license: {} },
                     config: { mode: Consts.MODE_CUSTOMER }
                 }
             );
         });
+
+        cy.contains(version);
 
         cy.clickPageMenuItem('Group 1');
         cy.contains('Subpage 1').should('be.visible');

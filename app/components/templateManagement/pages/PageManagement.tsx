@@ -10,6 +10,7 @@ import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
 import { SemanticICONS } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
@@ -35,6 +36,13 @@ export interface PageManagementProps {
     pageId: string;
     isEditMode?: boolean;
 }
+
+const StyledPageContainer = styled.div`
+    margin-left: ${expandedSidebarWidth};
+    .widget.maximize {
+        margin-left: ${expandedSidebarWidth};
+    }
+`;
 
 export default function PageManagement({ pageId, isEditMode = false }: PageManagementProps) {
     const dispatch = useDispatch<ThunkDispatch<ReduxState, never, AnyAction>>();
@@ -215,7 +223,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
     return (
         <div className="main">
             <div className="sidebarContainer">
-                <Sidebar visible as={Menu} vertical size="small">
+                <Sidebar visible as={Menu} vertical size="small" style={{ width: expandedSidebarWidth }}>
                     <div className="pages">
                         <Menu.Item link className="pageMenuItem">
                             <IconSelection value={page.icon} onChange={onPageIconChange} enabled={isEditMode} />
@@ -226,7 +234,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                 </Sidebar>
             </div>
 
-            <div className="page" style={{ marginLeft: expandedSidebarWidth }}>
+            <StyledPageContainer className="page">
                 <Segment basic className={`fullHeight ${isWidgetMaximized ? 'maximizeWidget' : ''}`}>
                     <div>
                         <Breadcrumb className="breadcrumbLineHeight">
@@ -299,7 +307,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                         )}
                     </EditModeBubble>
                 </Segment>
-            </div>
+            </StyledPageContainer>
 
             <Alert
                 open={showDrillDownWarn}
