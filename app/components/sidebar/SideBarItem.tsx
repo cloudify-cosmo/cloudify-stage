@@ -12,6 +12,7 @@ export const SideBarItemWrapper = styled.div`
     height: 37px;
     white-space: nowrap;
     overflow: hidden;
+    flex-shrink: 0;
     &:before {
         background-color: ${colors.greyNormal};
         position: absolute;

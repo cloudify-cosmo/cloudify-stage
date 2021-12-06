@@ -2,11 +2,8 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { CSSProperties, PropsWithChildren, ReactNode } from 'react';
 import { ReactGridLayoutProps, Responsive } from 'react-grid-layout';
-import { useSelector } from 'react-redux';
 import { useWidthObserver } from '../../utils/hooks';
 import GridItem from './GridItem';
-import { ReduxState } from '../../reducers';
-import { collapsedSidebarWidth, expandedSidebarWidth } from '../sidebar/SideBar';
 
 const ReactGridLayout = Responsive;
 
@@ -18,7 +15,6 @@ interface GridProps {
 
 export default function Grid({ children, isEditMode, onGridDataChange, style }: PropsWithChildren<GridProps>) {
     const [wrapperRef, getWidth] = useWidthObserver();
-    const isPagePreview = useSelector((state: ReduxState) => state.templateManagement.isActive);
 
     const saveChangedItems: ReactGridLayoutProps['onLayoutChange'] = layout => {
         if (isEditMode) {
@@ -42,9 +38,6 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
             {
                 key: el.props.id,
                 className: [el.props.className, el.props.maximized && 'maximize'].join(' '),
-                style: el.props.maximized && {
-                    marginLeft: isPagePreview ? expandedSidebarWidth : collapsedSidebarWidth
-                },
                 'data-grid': {
                     x: el.props.x || 0,
                     y: el.props.y || 0,
