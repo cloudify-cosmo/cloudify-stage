@@ -722,6 +722,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
+                    "uploadFromTerraformTemplate": "Upload from Terraform template",
                     "generateInComposer": "Generate in the Composer"
                 }
             },

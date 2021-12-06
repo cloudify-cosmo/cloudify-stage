@@ -1,26 +1,9 @@
-import { ComponentProps, FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
+import { map } from 'lodash';
 import type { MarketplaceTab } from './blueprintMarketplace/types';
+import { useBoolean } from '../../../app/utils/hooks';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
-const baseMenuItems: ComponentProps<typeof Stage.Basic.Menu.Item>[] = [
-    { name: 'uploadFromMarketplace', key: 'uploadFromMarketplace', content: t('uploadFromMarketplace') },
-    { name: 'uploadFromPackage', key: 'uploadFromPackage', content: t('uploadFromPackage') }
-];
-const generateInComposerMenuItem = {
-    name: 'generateInComposer',
-    key: 'generateInComposer',
-    content: t('generateInComposer')
-};
-
-const getMenuItems = (includeComposerButton: boolean) => {
-    if (includeComposerButton) {
-        return [...baseMenuItems, generateInComposerMenuItem];
-    }
-
-    return baseMenuItems;
-};
-
-type ActionName = typeof baseMenuItems[number]['name'] | typeof generateInComposerMenuItem['name'];
 
 interface MarketplaceModalConfig {
     tabs?: MarketplaceTab[];
@@ -45,57 +28,47 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
         Basic: { Dropdown }
     } = Stage;
     const { Menu, Item } = Dropdown;
+    // @ts-expect-error UploadBlueprintModal is not converted to TS yet
+    const { UploadBlueprintModal, BlueprintMarketplace } = Stage.Common;
 
-    const [activeAction, setActiveAction] = React.useState<ActionName | ''>('');
-    const handleMenuClick = React.useCallback(
-        (name: ActionName) => {
-            setActiveAction(name);
-        },
-        [setActiveAction]
-    );
-    const hideModal = React.useCallback(() => {
-        setActiveAction('');
-    }, [setActiveAction]);
-    const getModal = React.useCallback(
-        (name: ActionName) => {
-            // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-            const { UploadBlueprintModal, BlueprintMarketplace } = Stage.Common;
+    const [marketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
+    const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
+    const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
-            switch (name) {
-                case 'uploadFromMarketplace':
-                    return (
-                        <BlueprintMarketplace.Modal
-                            open
-                            onHide={hideModal}
-                            tabs={marketplaceConfig.tabs}
-                            displayStyle={marketplaceConfig.displayStyle}
-                            columns={marketplaceConfig.columns}
-                        />
-                    );
-                case 'uploadFromPackage':
-                    return <UploadBlueprintModal open onHide={hideModal} toolbox={toolbox} />;
-                case 'generateInComposer':
-                    Stage.Utils.openComposer();
-                    hideModal();
-                    return null;
-                default:
-                    return null;
-            }
-        },
-        [toolbox, hideModal]
-    );
+    const menuItems = useMemo(() => {
+        const baseMenuItems = {
+            uploadFromMarketplace: showMarketplaceModal,
+            uploadFromPackage: showUploadModal,
+            uploadFromTerraformTemplate: showTerraformModal
+        };
+
+        if (showGenerateInComposerButton) {
+            return { ...baseMenuItems, generateInComposer: Stage.Utils.openComposer };
+        }
+
+        return baseMenuItems;
+    }, [showGenerateInComposerButton]);
 
     return (
         <>
             <Dropdown button text={t('uploadButton')} direction={direction}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
-                    {getMenuItems(showGenerateInComposerButton).map(item => (
-                        <Item text={item.content} key={item.key} onClick={() => handleMenuClick(item.name)} />
+                    {map(menuItems, (clickHandler, key) => (
+                        <Item text={t(key)} key={key} onClick={clickHandler} />
                     ))}
                 </Menu>
             </Dropdown>
-            {getModal(activeAction)}
+            {marketplaceModalVisible && (
+                <BlueprintMarketplace.Modal
+                    open
+                    onHide={hideMarketplaceModal}
+                    tabs={marketplaceConfig.tabs}
+                    displayStyle={marketplaceConfig.displayStyle}
+                    columns={marketplaceConfig.columns}
+                />
+            )}
+            {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
         </>
     );
 };
