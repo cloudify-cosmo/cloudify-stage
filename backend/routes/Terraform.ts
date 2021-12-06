@@ -15,6 +15,27 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
+interface Variable {
+    name: string;
+    source: 'input' | 'secret' | 'static';
+    value: string;
+}
+
+interface Output {
+    name: string;
+    type: 'output' | 'capability';
+    terraformOutput: string;
+}
+
+interface RequestBody {
+    terraformVersion: string;
+    terraformTemplate: string;
+    resourceLocation: string;
+    variables?: Variable[];
+    environmentVariables?: Variable[];
+    outputs?: Output[];
+}
+
 router.post('/blueprint', (req, res) => {
     const {
         terraformVersion = '',
@@ -23,7 +44,7 @@ router.post('/blueprint', (req, res) => {
         variables = [],
         environmentVariables = [],
         outputs = []
-    } = req.body;
+    }: RequestBody = req.body;
 
     logger.debug(
         `Generating Terraform blueprint using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
