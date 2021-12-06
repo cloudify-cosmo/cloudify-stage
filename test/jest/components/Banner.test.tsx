@@ -29,7 +29,7 @@ describe('(Component) Banner', () => {
     };
 
     const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
-        const tagComponent = bannerComponent.find('LicenseTag');
+        const tagComponent = bannerComponent.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
             const labelComponent = bannerComponent.find('Label');

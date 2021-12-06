@@ -14,7 +14,7 @@ describe('Community version', () => {
     });
 
     it('should have Community tag in the banner', () => {
-        cy.get('.large.label').should('have.text', 'Community');
+        cy.get('.sidebar').contains('Community');
     });
 
     it('should have limited set of options in Users menu', () => {
