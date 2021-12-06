@@ -233,61 +233,40 @@ describe('Getting started modal', () => {
         });
     });
 
-    it('should group common plugins and secrets', () => {
-        cy.deletePlugins()
-            .deleteSecrets('aws_')
-            .deleteSecrets('gcp_')
-            .deleteBlueprints('AWS-', true)
-            .deleteBlueprints('GCP-', true);
-
-        const plugins = [...awsPlugins, 'cloudify-terraform-plugin', 'cloudify-gcp-plugin', 'cloudify-ansible-plugin'];
-        const blueprints = [
-            ...awsBlueprints,
-            'AWS-VM-Setup-using-Terraform',
-            'GCP-Basics-VM-Setup',
-            'GCP-Basics-Simple-Service-Setup',
-            'Kubernetes-GCP-GKE'
-        ];
+    it('should group common plugins', () => {
+        cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
         cy.get('.modal').within(() => {
             goToNextStep();
+
             cy.contains('button', 'AWS').click();
-            cy.contains('button', 'GCP').click();
-            cy.contains('button', 'Terraform on AWS').click();
             goToNextStep();
 
             verifyHeader(getExpectedSecretsHeader('AWS'));
             setSecretValues(awsSecrets);
             goToNextStep();
 
-            verifyHeader(getExpectedSecretsHeader('GCP'));
-            setSecretValues(gcpSecrets);
-            goToNextStep();
-
             verifyHeader(StaticHeaders.Summary);
-            plugins.forEach(verifyPluginInstallationSummaryItem);
+            awsPlugins.forEach(verifyPluginInstallationSummaryItem);
             awsSecrets.forEach(verifySecretCreationSummaryItem);
-            gcpSecrets.forEach(verifySecretCreationSummaryItem);
-            blueprints.forEach(verifyBlueprintUploadSummaryItem);
+            awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
 
             interceptSecretsCreation(awsSecrets);
-            interceptSecretsCreation(gcpSecrets);
-            interceptPluginsUpload(plugins);
-            interceptBlueprintsUpload(blueprints);
+            interceptPluginsUpload(awsPlugins);
+            interceptBlueprintsUpload(awsBlueprints);
 
             goToFinishStep();
 
-            cy.wait(toAliasReferences(plugins), waitOptionsForPluginsUpload);
+            cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
             cy.wait(toAliasReferences(awsSecrets));
-            cy.wait(toAliasReferences(gcpSecrets));
-            cy.wait(toAliasReferences(blueprints));
+            cy.wait(toAliasReferences(awsBlueprints));
 
-            verifyInstallationSucceeded(blueprints);
+            verifyInstallationSucceeded(awsBlueprints);
             closeModal();
         });
     });
 
-    it('requires all secrets to go to next step', () => {
+    it('requires all secrets to go to the summary step', () => {
         function verifySecretsRequired(secrets: string[]) {
             secrets.forEach(secret => {
                 goToNextStep();
@@ -299,15 +278,10 @@ describe('Getting started modal', () => {
         cy.get('.modal').within(() => {
             goToNextStep();
             cy.contains('button', 'AWS').click();
-            cy.contains('button', 'GCP').click();
             goToNextStep();
 
             verifyHeader(getExpectedSecretsHeader('AWS'));
             verifySecretsRequired(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(getExpectedSecretsHeader('GCP'));
-            verifySecretsRequired(gcpSecrets);
             goToNextStep();
 
             verifyHeader(StaticHeaders.Summary);
@@ -332,7 +306,28 @@ describe('Getting started modal', () => {
         });
     });
 
-    it('should keep button and field states when navigating beetwen steps', () => {
+    it('should allow only one environment to be selected at a time', () => {
+        goToNextStep();
+        cy.contains('button', 'AWS').click();
+        cy.contains('button.active', 'AWS');
+
+        cy.contains('button', 'GCP').click();
+        cy.contains('button.active', 'AWS').should('not.exist');
+        cy.contains('button.active', 'GCP');
+    });
+
+    it('should allow to click "Next" button when an environment is being selected', () => {
+        goToNextStep();
+        cy.contains('button', 'Next').should('to.be.disabled');
+
+        cy.contains('button', 'AWS').click();
+        cy.contains('button', 'Next').should('not.to.be.disabled');
+
+        cy.contains('button', 'AWS').click();
+        cy.contains('button', 'Next').should('to.be.disabled');
+    });
+
+    it('should keep button and field states when navigating between steps', () => {
         cy.get('.modal').within(() => {
             goToNextStep();
             cy.contains('button', 'AWS').click();
@@ -344,23 +339,23 @@ describe('Getting started modal', () => {
             goToBackStep();
 
             verifyHeader(StaticHeaders.Environments);
-            cy.contains('button', 'GCP').click();
             cy.contains('button.active', 'AWS');
+            cy.contains('button', 'GCP').click();
             cy.contains('button.active', 'GCP');
-            goToNextStep();
-
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             goToNextStep();
 
             verifyHeader(getExpectedSecretsHeader('GCP'));
             setSecretValues(gcpSecrets);
             goToBackStep();
 
+            cy.contains('button', 'AWS').click();
+            goToNextStep();
             verifyHeader(getExpectedSecretsHeader('AWS'));
             awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
-            goToNextStep();
+            goToBackStep();
 
+            cy.contains('button', 'GCP').click();
+            goToNextStep();
             verifyHeader(getExpectedSecretsHeader('GCP'));
             gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
         });

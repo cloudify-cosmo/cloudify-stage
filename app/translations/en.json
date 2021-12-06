@@ -47,7 +47,6 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "validation": {
-            "environmentRequiredError": "At least one environment needs to be selected.",
             "allSecretsRequiredError": "All secret values need to be specified."
         },
         "summary": {
@@ -294,6 +293,13 @@
         "dynamicTable": {
             "addButton": "Add",
             "removeButton": "Remove"
+        }
+    },
+    "sidebar": {
+        "licenseTag":{
+            "expired": "Expired",
+            "trial": "Trial",
+            "community": "Community"
         }
     },
     "templates": {
