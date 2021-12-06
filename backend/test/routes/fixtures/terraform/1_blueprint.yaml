@@ -11,25 +11,30 @@ imports:
 inputs:
   terraform_version:
     type: string
-    default: "<%= terraformVersion %>"
+    default: "1.2.2"
 
   module_source:
     type: string
     required: true
-    default: "<%= terraformTemplate %>"
+    default: "http://host/path/template.zip"
 
   terraform_template_location:
     type: string
-    default: "<%= resourceLocation %>"
+    default: "/ft_folder/template"
 
-<%- include('inputs', { variables: [...variables, ...environmentVariables] }) -%>
+  inputA:
+    type: string
+    default: ""
+  inputC:
+    type: string
+    default: ""
 
 node_templates:
   terraform:
     type: cloudify.nodes.terraform
     properties:
       resource_config:
-        installation_source: https://releases.hashicorp.com/terraform/teraform_<%= terraformVersion %>/teraform_<%= terraformVersion %>_linux_amd64.zip
+        installation_source: https://releases.hashicorp.com/terraform/teraform_1.2.2/teraform_1.2.2_linux_amd64.zip
 
   cloud_resources:
     type: cloudify.nodes.terraform.Module
@@ -38,12 +43,20 @@ node_templates:
         source:
           location: { get_input: module_source }
         source_path: { get_input: terraform_template_location }
-<%- include('variables', { name: 'variables', variables: variables }) -%>
-<%- include('variables', { name: 'environment_variables', variables: environmentVariables }) -%>
+        variables:
+          variableA: { get_secret: secretA }
+          variableB: { get_input: inputA }
+          variableD: "test-value"
+        environment_variables:
+          variableC: { get_input: inputC }
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
 
-<%- include('outputs', { name: 'outputs', outputs: outputs.filter(output => output.type === "output") }) -%>
+outputs:
+  outputA:
+    value: { get_attribute: [ cloud_resources, outputs, outA, value ] }
 
-<%- include('outputs', { name: 'capabilities', outputs: outputs.filter(output => output.type === "capability") }) -%>
+capabilities:
+  outputB:
+    value: { get_attribute: [ cloud_resources, outputs, outB, value ] }
