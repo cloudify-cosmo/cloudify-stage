@@ -362,7 +362,7 @@ describe('Getting started modal', () => {
         });
     });
 
-    it('should redirect to blueprints page upon closing the modal', () => {
+    it('should redirect to the blueprints page upon closing the modal', () => {
         cy.get('.modal').within(() => {
             goToNextStep();
             cy.contains('button', 'Close').click();
