@@ -1,6 +1,6 @@
 import { FunctionComponent, useMemo } from 'react';
 import { map } from 'lodash';
-import type { MarketplaceTab } from './blueprintMarketplace/types';
+import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 import { useBoolean } from '../../../app/utils/hooks';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
@@ -73,16 +73,4 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     );
 };
 
-export default BlueprintUploadActionsMenu;
-
-declare global {
-    namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
-        export { BlueprintUploadActionsMenu };
-    }
-}
-
-Stage.defineCommon({
-    name: 'BlueprintUploadActionsMenu',
-    common: React.memo(BlueprintUploadActionsMenu, _.isEqual)
-});
+export default React.memo(BlueprintUploadActionsMenu, _.isEqual);
