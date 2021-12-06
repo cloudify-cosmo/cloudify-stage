@@ -5,9 +5,7 @@ import express from 'express';
 import fs from 'fs';
 import passport from 'passport';
 import path from 'path';
-import request from 'request';
 import { getLogger } from '../handler/LoggerHandler';
-import { getConfig } from '../config';
 
 const logger = getLogger('Terraform');
 const router = express.Router();
