@@ -136,7 +136,7 @@ function verifyHeader(headerContent: string) {
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
-    beforeEach(() => cy.enableGettingStarted().usePageMock().mockLogin('admin', 'admin', false));
+    beforeEach(() => cy.enableGettingStarted().mockLogin('admin', 'admin', false));
 
     it('should provide option to disable it', () => {
         cy.interceptSp('POST', `/users/admin`).as('disableRequest');
