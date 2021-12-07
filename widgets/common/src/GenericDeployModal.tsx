@@ -43,6 +43,7 @@ class GenericDeployModal extends React.Component {
 
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
+        this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -249,6 +250,13 @@ class GenericDeployModal extends React.Component {
         });
     }
 
+    onErrorsDismiss() {
+        this.setState({
+            isMissingSecrets: false,
+            errors: {}
+        });
+    }
+
     render() {
         const {
             ApproveButton,
@@ -319,7 +327,7 @@ class GenericDeployModal extends React.Component {
                                 <MissingSecretsError
                                     error={errors?.error}
                                     toolbox={toolbox}
-                                    resolveError={() => this.setState({ isMissingSecrets: false, errors: {} })}
+                                    resolveError={this.onErrorsDismiss}
                                 />
                             ) : (
                                 errors
@@ -327,7 +335,7 @@ class GenericDeployModal extends React.Component {
                         }
                         errorMessageHeader={isMissingSecrets ? t('errors.missingSecrets') : undefined}
                         scrollToError
-                        onErrorsDismiss={() => this.setState({ errors: {}, isMissingSecrets: false })}
+                        onErrorsDismiss={this.onErrorsDismiss}
                     >
                         {loading && <LoadingOverlay message={loadingMessage} />}
 
