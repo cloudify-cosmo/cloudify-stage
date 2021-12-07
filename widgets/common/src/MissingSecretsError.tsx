@@ -22,7 +22,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox }) => {
     }
 
     const { Button, List } = Stage.Basic;
-    const secretKeysArr = parseMissingSecrets();
+    const secretKeys = parseMissingSecrets();
     return (
         <>
             <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
@@ -30,13 +30,13 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox }) => {
             </Button>
             <p style={{ display: 'inline' }}>The following required secrets are missing in this tenant:</p>
             <List bulleted>
-                {secretKeysArr.map((secretKey: string) => (
+                {secretKeys.map((secretKey: string) => (
                     <List.Item key={secretKey}>{secretKey}</List.Item>
                 ))}
             </List>
             <SecretsModal
                 toolbox={toolbox}
-                secretKeysArr={parseMissingSecrets()}
+                secretKeys={parseMissingSecrets()}
                 open={secretsModalVisible}
                 onClose={hideSecretsModal}
             />

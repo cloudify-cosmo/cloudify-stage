@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
-    secretKeysArr: Array<string>;
+    secretKeys: Array<string>;
     open: boolean;
     onClose: () => void;
 }
@@ -14,18 +14,15 @@ type secretInputsType = {
 const { i18n } = Stage;
 const t = (key: string) => i18n.t(`widgets.common.deployments.secretsModal.${key}`);
 
-const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeysArr }) => {
-    if (!Array.isArray(secretKeysArr)) {
+const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeys }) => {
+    if (!Array.isArray(secretKeys)) {
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
     const { ApproveButton, CancelButton, Form, UnsafelyTypedFormField, Icon, Input, Modal } = Stage.Basic;
     const { defaultVisibility } = Stage.Common.Consts;
 
-    const initialInputs: secretInputsType = secretKeysArr.reduce(
-        (prev, secretKey) => ({ ...prev, [secretKey]: '' }),
-        {}
-    );
+    const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
@@ -64,7 +61,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {secretKeysArr.map(field => (
+                    {secretKeys.map(field => (
                         <UnsafelyTypedFormField key={field}>
                             <Input type="text" name={field} label={field} onChange={setSecretInputs} />
                         </UnsafelyTypedFormField>
