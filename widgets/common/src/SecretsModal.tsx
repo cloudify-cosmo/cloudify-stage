@@ -62,9 +62,9 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {secretKeys.map(field => (
-                        <UnsafelyTypedFormField key={field}>
-                            <Input type="text" name={field} label={field} onChange={setSecretInputs} />
-                        </UnsafelyTypedFormField>
+                        <Form.Input key={field}>
+                            <Input type="password" required name={field} label={field} onChange={setSecretInputs} />
+                        </Form.Input>
                     ))}
                 </Form>
             </Modal.Content>

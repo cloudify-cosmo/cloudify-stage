@@ -598,6 +598,7 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "missingSecrets": "Missing Secrets Error",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
                         "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
