@@ -130,7 +130,15 @@ class GenericDeployModal extends React.Component {
         });
 
         return stepPromise.catch(errors => {
-            this.setState({ loading: false, errors });
+            const { activeIndex } = this.state;
+            const errorActiveIndex = activeIndex;
+            const keys = Object.keys(errors);
+            if (keys.includes('deploymentId')) {
+                errorActiveIndex = 0;
+            } else if (keys.includes('siteName')) {
+                errorActiveIndex = 1;
+            }
+            this.setState({ loading: false, errors, activeIndex: errorActiveIndex });
         });
     }
 
