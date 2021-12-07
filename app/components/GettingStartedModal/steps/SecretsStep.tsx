@@ -32,7 +32,6 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, markEmptyInp
                             value={secretInputs[name] ?? ''}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
-                            required
                             error={markEmptyInputs && !secretInputs[name]}
                         />
                     </UnsafelyTypedFormField>

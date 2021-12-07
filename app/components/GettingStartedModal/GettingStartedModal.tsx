@@ -171,12 +171,10 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                if (checkSecretsStepDataErrors()) {
-                    if (secretsStepIndex < secretsStepsSchemas.length - 1) {
-                        setSecretsStepIndex(secretsStepIndex + 1);
-                    } else {
-                        goToNextStep();
-                    }
+                if (secretsStepIndex < secretsStepsSchemas.length - 1) {
+                    setSecretsStepIndex(secretsStepIndex + 1);
+                } else {
+                    goToNextStep();
                 }
                 break;
 

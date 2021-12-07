@@ -19,6 +19,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
         return null;
     }
     const getSecretTaskDescription = createTaskDescriptionGetter(
+        t('skipScheduledMessageSufix'),
         t('settingProgressMessageSuffix'),
         t('settingDoneMessageSuffix'),
         t('settingErrorMessageSuffix')
@@ -30,7 +31,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(createdSecret.name, statuses, t('creationScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(createdSecret, statuses, t('creationScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}
@@ -38,7 +39,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(updatedSecret.name, statuses, t('updateScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(updatedSecret, statuses, t('updateScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}

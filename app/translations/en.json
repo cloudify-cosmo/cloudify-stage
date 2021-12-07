@@ -46,9 +46,6 @@
             "secretsLoadingError": "Secrets information loading error.",
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
-        "validation": {
-            "allSecretsRequiredError": "All secret values need to be specified."
-        },
         "summary": {
             "taskListTitle": "Task List",
             "plugin": {
@@ -62,6 +59,7 @@
             "secret": {
                 "creationScheduledMessageSuffix": "secret will be created",
                 "updateScheduledMessageSuffix": "secret will be updated",
+                "skipScheduledMessageSufix": "secret will be skipped",
                 "settingProgressMessageSuffix": "secret setting in progress",
                 "settingDoneMessageSuffix": "secret setting done",
                 "settingErrorMessageSuffix": "secret setting error"
@@ -296,7 +294,7 @@
         }
     },
     "sidebar": {
-        "licenseTag":{
+        "licenseTag": {
             "expired": "Expired",
             "trial": "Trial",
             "community": "Community"
