@@ -1,21 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
-import SecretsModal from './SecretsModal';
+import MissingSecretsError from './MissingSecretsError';
 
 const { i18n } = Stage;
 const t = (key, options) => i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
-const missingSecretsButtonStyle = {
-    marginRight: 10
-};
-
-const clearfixStyle = {
-    content: '',
-    clear: 'both',
-    display: 'table'
-};
-
-const Clearfix = () => <div style={clearfixStyle} />;
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
@@ -25,7 +14,6 @@ class GenericDeployModal extends React.Component {
         deploymentName: '',
         errors: {},
         isMissingSecrets: false,
-        secretsModalVisible: false,
         fileLoading: false,
         loading: false,
         loadingMessage: '',
@@ -55,11 +43,6 @@ class GenericDeployModal extends React.Component {
 
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
-
-        this.missingSecretsError = this.missingSecretsError.bind(this);
-        this.parseMissingSecrets = this.parseMissingSecrets.bind(this);
-        this.showSecretsModal = this.showSecretsModal.bind(this);
-        this.hideSecretsModal = this.hideSecretsModal.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -140,10 +123,7 @@ class GenericDeployModal extends React.Component {
         });
 
         const checkMissingSecretsError = errors => {
-            return (
-                Object.prototype.hasOwnProperty.call(errors, 'error') &&
-                errors.error.includes('dsl_parser.exceptions.UnknownSecretError')
-            );
+            return errors.error?.includes('dsl_parser.exceptions.UnknownSecretError');
         };
 
         return stepPromise.catch(errors => {
@@ -269,55 +249,6 @@ class GenericDeployModal extends React.Component {
         });
     }
 
-    parseMissingSecrets() {
-        const { errors } = this.state;
-        return errors.error
-            .replace('dsl_parser.exceptions.UnknownSecretError: Required secrets: [', '')
-            .replace("] don't exist in this tenant", '')
-            .split(',');
-    }
-
-    missingSecretsError() {
-        const { Button, List } = Stage.Basic;
-        const secretKeysArr = this.parseMissingSecrets();
-        return (
-            <>
-                <p>The following required secrets are missing in this tenant:</p>
-                <List bulleted>
-                    {secretKeysArr.map(secretKey => (
-                        <List.Item key={secretKey}>{secretKey}</List.Item>
-                    ))}
-                </List>
-                <Button floated="right" style={missingSecretsButtonStyle} onClick={this.showSecretsModal}>
-                    Add missing secrets
-                </Button>
-                <Clearfix />
-            </>
-        );
-    }
-
-    showSecretsModal() {
-        this.setState({ secretsModalVisible: true });
-    }
-
-    hideSecretsModal() {
-        this.setState({ secretsModalVisible: false });
-    }
-
-    saveSecretsModal() {
-        const { toolbox } = this.props;
-        const actions = new Stage.Common.SecretActions(toolbox);
-        actions
-            .doCreate(secretKey, secretValue, visibility, isHiddenValue)
-            .then(() => {
-                doClose();
-                toolbox.refresh();
-            })
-            .catch(setMessageAsError)
-            .finally(unsetLoading);
-        this.setState({ secretsModalVisible: false });
-    }
-
     render() {
         const {
             ApproveButton,
@@ -383,7 +314,9 @@ class GenericDeployModal extends React.Component {
 
                 <Modal.Content>
                     <Form
-                        errors={isMissingSecrets ? this.missingSecretsError() : errors}
+                        errors={
+                            isMissingSecrets ? <MissingSecretsError error={errors?.error} toolbox={toolbox} /> : errors
+                        }
                         errorMessageHeader={isMissingSecrets ? 'Missing Secrets Error' : undefined}
                         scrollToError
                         onErrorsDismiss={() => this.setState({ errors: {}, isMissingSecrets: false })}
@@ -517,15 +450,6 @@ class GenericDeployModal extends React.Component {
                             />
                         </Form.Field>
                     </Form>
-
-                    {isMissingSecrets && (
-                        <SecretsModal
-                            toolbox={toolbox}
-                            secretKeysArr={this.parseMissingSecrets()}
-                            open={secretsModalVisible}
-                            onClose={this.hideSecretsModal}
-                        />
-                    )}
 
                     <ExecuteDeploymentModal
                         open={showInstallModal}

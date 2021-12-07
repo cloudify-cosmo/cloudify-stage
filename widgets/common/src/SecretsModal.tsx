@@ -5,7 +5,6 @@ interface SecretsModalProps {
     secretKeysArr: Array<string>;
     open: boolean;
     onClose: () => void;
-    isLoading: boolean;
 }
 
 type secretInputsType = {
