@@ -4,7 +4,7 @@ import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { readJsonSync } from 'fs-extra';
 
-describe('/tf/blueprint endpoint', () => {
+describe('/terraform/blueprint endpoint', () => {
     const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
     const getInputs = (id: number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
     const getBlueprint = (id: number) => readFileSync(getFixturePath(`${id}_blueprint.yaml`), 'utf8');
@@ -18,7 +18,7 @@ describe('/tf/blueprint endpoint', () => {
         const responseBody = getBlueprint(testCase.id);
 
         it(`generates Terraform blueprint - ${testCase.description}`, async () => {
-            const response = await request(app).post('/console/tf/blueprint').send(requestBody);
+            const response = await request(app).post('/console/terraform/blueprint').send(requestBody);
 
             expect(response.status).toBe(200);
             expect(response.headers['content-type']).toBe('text/x-yaml; charset=utf-8');

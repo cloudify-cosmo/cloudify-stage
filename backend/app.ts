@@ -120,7 +120,7 @@ app.use(`${contextPath}/source`, SourceBrowser);
 app.use(`${contextPath}/sp`, ServerProxy);
 app.use(`${contextPath}/style`, Style);
 app.use(`${contextPath}/templates`, Templates);
-app.use(`${contextPath}/tf`, Terraform);
+app.use(`${contextPath}/terraform`, Terraform);
 app.use(`${contextPath}/ua`, UserApp);
 app.use(`${contextPath}/wb`, WidgetBackend);
 app.use(`${contextPath}/widgets`, Widgets);
