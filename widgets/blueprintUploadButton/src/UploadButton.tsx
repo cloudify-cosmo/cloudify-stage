@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 22/05/2018.
- */
 
 export default class UploadButton extends React.Component {
     constructor(props, context) {

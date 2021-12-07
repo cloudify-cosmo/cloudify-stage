@@ -3,11 +3,6 @@ describe('Page groups segment', () => {
         cy.activate();
     });
 
-    function goToTemplateManagement() {
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
-    }
-
     function createPageGroup() {
         cy.stageRequest('/console/templates/page-groups', 'POST', {
             body: {
@@ -48,7 +43,7 @@ describe('Page groups segment', () => {
         });
 
         cy.mockLogin();
-        goToTemplateManagement();
+        cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups')
             .parent()
@@ -103,7 +98,7 @@ describe('Page groups segment', () => {
         cy.removeUserPageGroups();
         createPageGroup();
         cy.mockLogin();
-        goToTemplateManagement();
+        cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups')
             .parent()
@@ -127,7 +122,7 @@ describe('Page groups segment', () => {
         cy.removeUserPageGroups();
         createPageGroup();
         cy.mockLogin();
-        goToTemplateManagement();
+        cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups').parent().contains('tr', 'Test group').find('.remove').click();
         cy.contains('button', 'Ok').click();
@@ -139,7 +134,7 @@ describe('Page groups segment', () => {
         cy.removeUserPageGroups();
         createPageGroup();
         cy.mockLogin();
-        goToTemplateManagement();
+        cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups').parent().contains('tr', 'Test group').find('.edit').click();
         cy.get('.modal').within(() => {
@@ -165,7 +160,7 @@ describe('Page groups segment', () => {
     it('creates new page group', () => {
         cy.removeUserPageGroups();
         cy.mockLogin();
-        goToTemplateManagement();
+        cy.goToTemplateManagement();
 
         cy.contains('Create page group').click();
         cy.get('.modal').within(() => {

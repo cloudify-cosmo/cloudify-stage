@@ -1,4 +1,5 @@
 describe('Nodes list widget', () => {
+    const widgetId = 'nodes';
     const blueprintName = 'nodes_list_test';
     const deployment1Id = `${blueprintName}_dep1_id`;
     const deployment1Name = `${blueprintName}_dep1_name`;
@@ -8,7 +9,7 @@ describe('Nodes list widget', () => {
     before(() =>
         cy
             .activate('valid_trial_license')
-            .usePageMock('nodes', { fieldsToShow: ['Deployment', 'Deployment ID'] })
+            .usePageMock(widgetId, { fieldsToShow: ['Deployment', 'Deployment ID'] })
             .mockLogin()
             .deleteDeployments(blueprintName, true)
             .deleteBlueprints(blueprintName, true)
@@ -29,15 +30,17 @@ describe('Nodes list widget', () => {
 
     it('should display nodes list', () => {
         cy.setBlueprintContext(blueprintName);
-        cy.get('tbody tr').should('have.length', 2);
-        cy.get('table')
-            .getTable()
-            .should(tableData => {
-                expect(tableData[0].Deployment).to.eq(deployment1Name);
-                expect(tableData[0]['Deployment ID']).to.eq(deployment1Id);
-                expect(tableData[1].Deployment).to.eq(deployment2Name);
-                expect(tableData[1]['Deployment ID']).to.eq(deployment2Id);
-            });
+        cy.getWidget(widgetId).within(() => {
+            cy.get('tbody tr').should('have.length', 2);
+            cy.get('table')
+                .getTable()
+                .should(tableData => {
+                    expect(tableData[0].Deployment).to.eq(deployment1Name);
+                    expect(tableData[0]['Deployment ID']).to.eq(deployment1Id);
+                    expect(tableData[1].Deployment).to.eq(deployment2Name);
+                    expect(tableData[1]['Deployment ID']).to.eq(deployment2Id);
+                });
+        });
 
         cy.setDeploymentContext(deployment1Id);
         cy.contains('th', 'Deployment').should('not.exist');

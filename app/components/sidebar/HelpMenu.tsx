@@ -2,24 +2,18 @@ import _ from 'lodash';
 import React, { FunctionComponent } from 'react';
 
 import { useSelector } from 'react-redux';
-import { Icon } from '../basic';
 import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import AboutModal from '../AboutModal';
-import { useBoolean, useToggle } from '../../utils/hooks';
-import SideBarItemIcon from './SideBarItemIcon';
+import { useBoolean } from '../../utils/hooks';
+import { SystemMenuGroupItemProps } from './SystemMenu';
 
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');
 
-interface HelpMenuProps {
-    onAboutModalOpen: () => void;
-}
-
-const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
+const HelpMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onModalOpen, onGroupClick }) => {
     const [aboutModalVisible, showAboutModal, closeAboutModal] = useBoolean();
-    const [expanded, toggleExpand] = useToggle();
 
     const currentVersion = useSelector((state: ReduxState) => state.manager.version.version);
     const version = _.includes(currentVersion, 'dev') ? 'latest' : currentVersion;
@@ -27,36 +21,29 @@ const HelpMenu: FunctionComponent<HelpMenuProps> = ({ onAboutModalOpen }) => {
     const { redirectToPage } = StageUtils.Url;
 
     function handleModalOpen() {
-        onAboutModalOpen();
+        onModalOpen();
         showAboutModal();
     }
 
     return (
         <>
-            <SideBarItem onClick={toggleExpand}>
-                <SideBarItemIcon name="help circle" />
-                {t('help')}
-                <Icon
-                    name="dropdown"
-                    rotated={expanded ? undefined : 'counterclockwise'}
-                    style={{ position: 'absolute', right: 12, margin: 0 }}
-                />
-            </SideBarItem>
+            <SideBarItem icon="help circle" label={t('help')} onClick={onGroupClick} expandable expanded={expanded} />
 
             {expanded && (
                 <>
-                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('documentationLink', { version }))}>
-                        <SideBarItemIcon name="book" />
-                        {tHelp('documentation')}
-                    </SideBarItem>
-                    <SideBarItem subItem onClick={() => redirectToPage(tHelp('contactLink'))}>
-                        <SideBarItemIcon name="comments" />
-                        {tHelp('contact')}
-                    </SideBarItem>
-                    <SideBarItem subItem onClick={handleModalOpen}>
-                        <SideBarItemIcon name="info circle" />
-                        {tHelp('about')}
-                    </SideBarItem>
+                    <SideBarItem
+                        icon="book"
+                        label={tHelp('documentation')}
+                        subItem
+                        onClick={() => redirectToPage(tHelp('documentationLink', { version }))}
+                    />
+                    <SideBarItem
+                        icon="comments"
+                        label={tHelp('contact')}
+                        subItem
+                        onClick={() => redirectToPage(tHelp('contactLink'))}
+                    />
+                    <SideBarItem icon="info circle" label={tHelp('about')} subItem onClick={handleModalOpen} />
                 </>
             )}
 

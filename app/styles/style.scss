@@ -21,18 +21,11 @@ a:hover {
 }
 
 .main {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 55px;
   overflow: auto;
 
   .sidebar {
     &.ui.left.menu{
       z-index: 100;
-      top: 55px;
-      height: calc(100% - 55px) !important;
       transition: all 500ms cubic-bezier(.55, 0, .1, 1);
       &.open{
         left: 0 !important;

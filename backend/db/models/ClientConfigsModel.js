@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 08/03/2017.
- */
-
 module.exports = (sequelize, DataTypes) =>
     sequelize.define(
         'ClientConfigs',

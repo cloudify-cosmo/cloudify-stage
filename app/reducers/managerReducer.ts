@@ -13,12 +13,15 @@ export interface ManagerData {
     };
     clusterStatus: Record<string, any>;
     err: any;
+    isLdapEnabled: boolean;
     isLoggingIn: boolean;
     lastUpdated: any;
     license: Record<string, any>;
+    maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
     tenants: Record<string, any>;
+    username: string;
     version: Record<string, any>;
 }
 
@@ -30,12 +33,15 @@ export const emptyState: ManagerData = {
     },
     clusterStatus: {},
     err: null,
+    isLdapEnabled: false,
     isLoggingIn: false,
     lastUpdated: null,
     license: {},
+    maintenance: '',
     permissions: {},
     roles: [],
     tenants: {},
+    username: '',
     version: {}
 };
 
@@ -66,10 +72,10 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
                 err: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error,
                 lastUpdated: action.receivedAt
             };
-        case types.SET_LDAP:
+        case types.SET_LDAP_ENABLED:
             return {
                 ...state,
-                isLdap: action.isLdap
+                isLdapEnabled: action.isLdapEnabled
             };
         case types.SET_USER_DATA:
             return {

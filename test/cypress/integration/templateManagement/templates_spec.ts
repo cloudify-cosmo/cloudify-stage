@@ -62,8 +62,7 @@ describe('Templates segment', () => {
 
         cy.get('.loader').should('be.not.visible');
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
 
@@ -86,8 +85,7 @@ describe('Templates segment', () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
-        cy.get('.usersMenu').click();
-        cy.get('.usersMenu').contains('Template Management').click();
+        cy.goToTemplateManagement();
 
         cy.get('.createTemplateButton').click();
 
@@ -168,7 +166,7 @@ describe('Templates segment', () => {
         cy.log('Remove template');
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
-        cy.get('.popup button.green').click();
+        cy.get('.popup button.green').click({ force: true });
         cy.get('.main .loading').should('not.exist');
 
         cy.log('Verify template was removed');

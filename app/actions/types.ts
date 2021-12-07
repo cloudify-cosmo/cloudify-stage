@@ -1,7 +1,3 @@
-/**
- * Created by kinneretzin on 30/08/2016.
- */
-
 export const ADD_TAB = 'Add_TAB';
 export const REMOVE_TAB = 'REMOVE_TAB';
 export const UPDATE_TAB = 'UPDATE_TAB';
@@ -60,7 +56,7 @@ export const ERR_LOGIN = 'ERR_LOGIN';
 export const LOGOUT = 'LOGOUT';
 
 export const SET_USER_DATA = 'SET_USER_DATA';
-export const SET_LDAP = 'SET_LDAP';
+export const SET_LDAP_ENABLED = 'SET_LDAP_ENABLED';
 
 export const REQ_TENANTS = 'REQ_TENANTS';
 export const RES_TENANTS = 'RES_TENANTS';

@@ -1,7 +1,3 @@
-/**
- * Created by pposel on 10/04/2017.
- */
-
 const ResourceTypes = require('../types/ResourceTypes');
 
 module.exports = (sequelize, DataTypes) =>

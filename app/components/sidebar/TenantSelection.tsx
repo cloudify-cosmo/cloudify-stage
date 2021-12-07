@@ -8,9 +8,8 @@ import { Dropdown, Input, Loader } from '../basic';
 import { changeTenant, getTenants } from '../../actions/tenants';
 import { useResettableState } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
-import IconSelection from './IconSelection';
-import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
+import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
@@ -44,41 +43,32 @@ const TenantSelection: FunctionComponent = () => {
         .value();
     const selectedTenant = tenants.selected || _.get(tenants, 'items[0].name');
 
-    const tenantMenuTrigger = (
-        <SideBarItem>
-            <IconSelection enabled={false} value="user circle" />
-            {selectedTenant || t('noTenants')}
-        </SideBarItem>
-    );
-
     return (
-        <Dropdown trigger={tenantMenuTrigger} onClose={clearSearch} pointing="left" icon={null} fluid>
-            <Dropdown.Menu style={{ margin: 0 }}>
-                <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
-                <Dropdown.Menu scrolling>
-                    {filteredTenants.map(tenant => (
-                        <Dropdown.Item
-                            key={tenant.name}
-                            text={tenant.name}
-                            selected={tenant.name === selectedTenant}
-                            active={tenant.name === selectedTenant}
-                            onClick={() => onTenantSelected(tenant)}
-                        />
-                    ))}
-                </Dropdown.Menu>
-                <Input
-                    icon="search"
-                    iconPosition="left"
-                    className="search"
-                    value={search}
-                    onClick={(e: Event) => e.stopPropagation()}
-                    onChange={(e, { value }) => {
-                        e.stopPropagation();
-                        setSearch(value);
-                    }}
-                />
+        <SideBarDropdownItem icon="user circle" label={selectedTenant || t('noTenants')} onClose={clearSearch}>
+            <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
+            <Dropdown.Menu scrolling>
+                {filteredTenants.map(tenant => (
+                    <Dropdown.Item
+                        key={tenant.name}
+                        text={tenant.name}
+                        selected={tenant.name === selectedTenant}
+                        active={tenant.name === selectedTenant}
+                        onClick={() => onTenantSelected(tenant)}
+                    />
+                ))}
             </Dropdown.Menu>
-        </Dropdown>
+            <Input
+                icon="search"
+                iconPosition="left"
+                className="search"
+                value={search}
+                onClick={(e: Event) => e.stopPropagation()}
+                onChange={(e, { value }) => {
+                    e.stopPropagation();
+                    setSearch(value);
+                }}
+            />
+        </SideBarDropdownItem>
     );
 };
 

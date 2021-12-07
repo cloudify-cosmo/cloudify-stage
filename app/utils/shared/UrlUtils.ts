@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 06/02/2019.
- */
-
 import _ from 'lodash';
 import Const from '../consts';
 

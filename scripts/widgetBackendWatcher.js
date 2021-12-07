@@ -1,7 +1,3 @@
-/**
- * Created by jakub.niezgoda on 21/02/2019.
- */
-
 const chokidar = require('chokidar');
 const fs = require('fs');
 const path = require('path');

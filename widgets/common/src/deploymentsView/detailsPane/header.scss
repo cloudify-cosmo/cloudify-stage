@@ -4,17 +4,7 @@
     overflow: auto;
     height: 100%;
 
-    .detailsPaneHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        flex-wrap: wrap;
-
-        // NOTE: adds a gap between the tabs headers when the items in the header wrap
-        margin-bottom: 10px;
-    }
-
-    .detailsPaneWidgets {
-        overflow: auto;
+    .centeredButtons {
+        margin-right: 1rem;
     }
 }

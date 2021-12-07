@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 09/05/2018.
- */
 
 export default function DeploymentUpdatedIcon({ className, deployment }) {
     const { Icon, Popup } = Stage.Basic;

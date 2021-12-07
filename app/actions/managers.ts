@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by addihorowitz on 19/09/2016.
- */
 
 import log from 'loglevel';
 import { push } from 'connected-react-router';
@@ -99,10 +96,10 @@ export function getUserData() {
         });
 }
 
-function responseLdap(isLdap) {
+function responseLdap(isLdapEnabled) {
     return {
-        type: types.SET_LDAP,
-        isLdap
+        type: types.SET_LDAP_ENABLED,
+        isLdapEnabled
     };
 }
 
@@ -121,7 +118,7 @@ function doLogout(err) {
     };
 }
 
-export function logout(err, path) {
+export function logout(err?, path?) {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());

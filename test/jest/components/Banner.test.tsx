@@ -1,8 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
-/**
- * Created by jakubniezgoda on 22/03/2019.
- */
 
 import { mount } from 'enzyme';
 
@@ -32,7 +29,7 @@ describe('(Component) Banner', () => {
     };
 
     const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
-        const tagComponent = bannerComponent.find('LicenseTag');
+        const tagComponent = bannerComponent.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
             const labelComponent = bannerComponent.find('Label');

@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 07/03/2019.
- */
 
 import _ from 'lodash';
 import { connect } from 'react-redux';
