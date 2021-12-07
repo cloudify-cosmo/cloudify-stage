@@ -15,10 +15,12 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox }) => {
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
 
     function parseMissingSecrets() {
-        return error
-            .replace('dsl_parser.exceptions.UnknownSecretError: Required secrets: [', '')
-            .replace("] don't exist in this tenant", '')
-            .split(',');
+        // Get comma separated values inside square brackets
+        const matches = /\[(.*?)\]/.exec(error);
+        if (matches && matches.length > 1) {
+            return matches[1].split(', ');
+        }
+        return [];
     }
 
     const { Button, List } = Stage.Basic;

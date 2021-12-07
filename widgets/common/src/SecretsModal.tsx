@@ -19,7 +19,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
-    const { ApproveButton, CancelButton, Form, UnsafelyTypedFormField, Icon, Input, Modal } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, Icon, Input, Modal } = Stage.Basic;
     const { defaultVisibility } = Stage.Common.Consts;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
@@ -32,7 +32,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         const keys = Object.keys(secretInputs);
 
         if (keys.some(key => secretInputs[key].trim() === '')) {
-            setMessageAsError({ message: 'Error: Please type the secret values' });
+            setMessageAsError({ message: t('errors.noSecretValues') });
             return;
         }
 
@@ -41,16 +41,18 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         const isHiddenValue = true;
         const visibility = defaultVisibility;
         const actions = new Stage.Common.SecretActions(toolbox);
-        keys.forEach(secretKey => {
-            actions
-                .doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue)
-                .then(() => {
-                    onClose();
-                    toolbox.refresh();
-                })
-                .catch(setMessageAsError)
-                .finally(unsetLoading);
-        });
+        Promise.all(
+            keys.map(secretKey => {
+                return actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue);
+            })
+        )
+            .catch(setMessageAsError)
+            .finally(() => {
+                unsetLoading();
+
+                onClose();
+                toolbox.refresh();
+            });
     };
     return (
         <Modal open={open} onClose={onClose}>

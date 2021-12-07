@@ -296,7 +296,7 @@
         }
     },
     "sidebar": {
-        "licenseTag":{
+        "licenseTag": {
             "expired": "Expired",
             "trial": "Trial",
             "community": "Community"
@@ -543,6 +543,9 @@
                     "header": "Add Secrets",
                     "buttons": {
                         "save": "save"
+                    },
+                    "errors": {
+                        "noSecretValues": "Please provide the secret values"
                     }
                 },
                 "deployModal": {
