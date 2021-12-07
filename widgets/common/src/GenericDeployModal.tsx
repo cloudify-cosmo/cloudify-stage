@@ -21,6 +21,7 @@ class GenericDeployModal extends React.Component {
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
+        activeIndex: 0,
         yamlFile: null
     };
 
@@ -41,6 +42,7 @@ class GenericDeployModal extends React.Component {
 
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
+        this.onAccordionClick = this.onAccordionClick.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -92,6 +94,13 @@ class GenericDeployModal extends React.Component {
     handleInputChange(proxy, field) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState(fieldNameValue);
+    }
+
+    onAccordionClick(e, { index }) {
+        const { activeIndex } = this.state;
+        const newIndex = activeIndex === index ? -1 : index;
+
+        this.setState({ activeIndex: newIndex });
     }
 
     onCancel() {
@@ -246,6 +255,7 @@ class GenericDeployModal extends React.Component {
     render() {
         const {
             ApproveButton,
+            Accordion,
             CancelButton,
             Form,
             Icon,
@@ -277,6 +287,7 @@ class GenericDeployModal extends React.Component {
             deploymentNameHelp
         } = this.props;
         const {
+            activeIndex,
             blueprint,
             deploymentInputs,
             deploymentId,
@@ -340,100 +351,118 @@ class GenericDeployModal extends React.Component {
                                 />
                             </Form.Field>
                         )}
-                        {showDeploymentIdInput && (
-                            <Form.Field
-                                error={errors.deploymentId}
-                                label={t('inputs.deploymentId.label')}
-                                required
-                                help={t('inputs.deploymentId.help')}
-                            >
-                                <Form.Input
-                                    name="deploymentId"
-                                    value={deploymentId}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Field>
-                        )}
+                        <Accordion fluid styled>
+                            <Accordion.Title active={activeIndex === 0} index={0} onClick={this.onAccordionClick}>
+                                Deployment Inputs
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndex === 0}>
+                                {showDeploymentIdInput && (
+                                    <Form.Field
+                                        error={errors.deploymentId}
+                                        label={t('inputs.deploymentId.label')}
+                                        required
+                                        help={t('inputs.deploymentId.help')}
+                                    >
+                                        <Form.Input
+                                            name="deploymentId"
+                                            value={deploymentId}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                )}
 
-                        {blueprint.id && (
-                            <>
-                                {!_.isEmpty(blueprint.plan.inputs) && (
-                                    <YamlFileButton
-                                        onChange={this.handleYamlFileChange}
-                                        dataType="deployment's inputs"
-                                        fileLoading={fileLoading}
+                                {blueprint.id && (
+                                    <>
+                                        {!_.isEmpty(blueprint.plan.inputs) && (
+                                            <YamlFileButton
+                                                onChange={this.handleYamlFileChange}
+                                                dataType="deployment's inputs"
+                                                fileLoading={fileLoading}
+                                            />
+                                        )}
+                                        {!_.isEmpty(blueprint.plan.data_types) && (
+                                            <DataTypesButton types={blueprint.plan.data_types} />
+                                        )}
+                                        <InputsHeader />
+                                        {_.isEmpty(blueprint.plan.inputs) && (
+                                            <Message content={t('inputs.deploymentInputs.noInputs')} />
+                                        )}
+                                    </>
+                                )}
+
+                                {InputsUtils.getInputFields(
+                                    blueprint.plan.inputs,
+                                    this.handleDeploymentInputChange,
+                                    deploymentInputs,
+                                    errors,
+                                    blueprint.plan.data_types
+                                )}
+                            </Accordion.Content>
+                            <Accordion.Title active={activeIndex === 1} index={1} onClick={this.onAccordionClick}>
+                                Deployment Metadata
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndex === 1}>
+                                {showSitesInput && (
+                                    <Form.Field
+                                        error={errors.siteName}
+                                        label={t('inputs.siteName.label')}
+                                        help={t('inputs.siteName.help')}
+                                    >
+                                        <DynamicDropdown
+                                            value={siteName}
+                                            onChange={value => this.setState({ siteName: value })}
+                                            name="siteName"
+                                            fetchUrl="/sites?_include=name"
+                                            valueProp="name"
+                                            toolbox={toolbox}
+                                        />
+                                    </Form.Field>
+                                )}
+
+                                <Form.Field
+                                    label={i18n.t('widgets.common.labels.input.label')}
+                                    help={i18n.t('widgets.common.labels.input.help')}
+                                >
+                                    <LabelsInput
+                                        toolbox={toolbox}
+                                        hideInitialLabels
+                                        onChange={labels => this.setState({ labels })}
                                     />
+                                </Form.Field>
+                            </Accordion.Content>
+                            <Accordion.Title active={activeIndex === 2} index={2} onClick={this.onAccordionClick}>
+                                Execution Parameters
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndex === 2}>
+                                <Form.Field className="skipPluginsValidationCheckbox">
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t('inputs.skipPluginsValidation.label')}
+                                        name="skipPluginsValidation"
+                                        checked={skipPluginsValidation}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </Accordion.Content>
+                            <Accordion.Title active={activeIndex === 3} index={3} onClick={this.onAccordionClick}>
+                                Advanced
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndex === 3}>
+                                {skipPluginsValidation && (
+                                    <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
-                                {!_.isEmpty(blueprint.plan.data_types) && (
-                                    <DataTypesButton types={blueprint.plan.data_types} />
-                                )}
-                                <InputsHeader />
-                                {_.isEmpty(blueprint.plan.inputs) && (
-                                    <Message content={t('inputs.deploymentInputs.noInputs')} />
-                                )}
-                            </>
-                        )}
 
-                        {InputsUtils.getInputFields(
-                            blueprint.plan.inputs,
-                            this.handleDeploymentInputChange,
-                            deploymentInputs,
-                            errors,
-                            blueprint.plan.data_types
-                        )}
-
-                        <Form.Divider>{t('sections.deploymentMetadata')}</Form.Divider>
-
-                        {showSitesInput && (
-                            <Form.Field
-                                error={errors.siteName}
-                                label={t('inputs.siteName.label')}
-                                help={t('inputs.siteName.help')}
-                            >
-                                <DynamicDropdown
-                                    value={siteName}
-                                    onChange={value => this.setState({ siteName: value })}
-                                    name="siteName"
-                                    fetchUrl="/sites?_include=name"
-                                    valueProp="name"
-                                    toolbox={toolbox}
-                                />
-                            </Form.Field>
-                        )}
-
-                        <Form.Field
-                            label={i18n.t('widgets.common.labels.input.label')}
-                            help={i18n.t('widgets.common.labels.input.help')}
-                        >
-                            <LabelsInput
-                                toolbox={toolbox}
-                                hideInitialLabels
-                                onChange={labels => this.setState({ labels })}
-                            />
-                        </Form.Field>
-
-                        <Form.Divider>{t('sections.executionParameters')}</Form.Divider>
-
-                        <Form.Field className="skipPluginsValidationCheckbox">
-                            <Form.Checkbox
-                                toggle
-                                label={t('inputs.skipPluginsValidation.label')}
-                                name="skipPluginsValidation"
-                                checked={skipPluginsValidation}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                        {skipPluginsValidation && <Message>{t('inputs.skipPluginsValidation.message')}</Message>}
-
-                        <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
-                            <Form.Checkbox
-                                toggle
-                                label={t('inputs.runtimeOnlyEvaluation.label')}
-                                name="runtimeOnlyEvaluation"
-                                checked={runtimeOnlyEvaluation}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+                                <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t('inputs.runtimeOnlyEvaluation.label')}
+                                        name="runtimeOnlyEvaluation"
+                                        checked={runtimeOnlyEvaluation}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </Accordion.Content>
+                        </Accordion>
                     </Form>
 
                     <ExecuteDeploymentModal
