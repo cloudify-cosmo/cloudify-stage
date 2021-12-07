@@ -34,7 +34,7 @@ class SecretActions {
 }
 declare global {
     namespace Stage.Common {
-        export { SecretActions };
+        export default { SecretActions };
     }
 }
 

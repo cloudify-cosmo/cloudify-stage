@@ -17,7 +17,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, resolve
 
     function parseMissingSecrets() {
         // Get comma separated values inside square brackets
-        const matches = /\[(.*?)\]/.exec(error);
+        const matches = error.match(/\[(.*?)\]/);
         if (matches && matches.length > 1) {
             return matches[1].split(', ');
         }

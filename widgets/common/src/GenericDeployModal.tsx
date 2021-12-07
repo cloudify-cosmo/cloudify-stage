@@ -97,6 +97,13 @@ class GenericDeployModal extends React.Component {
         this.setState(fieldNameValue);
     }
 
+    onErrorsDismiss() {
+        this.setState({
+            isMissingSecrets: false,
+            errors: {}
+        });
+    }
+
     onCancel() {
         const { onHide } = this.props;
         onHide();
@@ -247,13 +254,6 @@ class GenericDeployModal extends React.Component {
             } else {
                 resolve();
             }
-        });
-    }
-
-    onErrorsDismiss() {
-        this.setState({
-            isMissingSecrets: false,
-            errors: {}
         });
     }
 
