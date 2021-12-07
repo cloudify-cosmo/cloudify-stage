@@ -317,7 +317,7 @@ class GenericDeployModal extends React.Component {
                         errors={
                             isMissingSecrets ? <MissingSecretsError error={errors?.error} toolbox={toolbox} /> : errors
                         }
-                        errorMessageHeader={isMissingSecrets ? 'Missing Secrets Error' : undefined}
+                        errorMessageHeader={isMissingSecrets ? t('errors.missingSecrets') : undefined}
                         scrollToError
                         onErrorsDismiss={() => this.setState({ errors: {}, isMissingSecrets: false })}
                     >
