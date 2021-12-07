@@ -131,7 +131,7 @@ class GenericDeployModal extends React.Component {
 
         return stepPromise.catch(errors => {
             const { activeIndex } = this.state;
-            const errorActiveIndex = activeIndex;
+            let errorActiveIndex = activeIndex;
             const keys = Object.keys(errors);
             if (keys.includes('deploymentId')) {
                 errorActiveIndex = 0;
