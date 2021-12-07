@@ -25,14 +25,14 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
+    const { errors, setMessageAsError, clearErrors } = useErrors();
     const [secretInputs, setSecretInputs] = useInputs(initialInputs);
 
     const onSave = () => {
         const keys = Object.keys(secretInputs);
 
         if (keys.some(key => _.isEmpty(secretInputs[key]))) {
-            setErrors({});
+            setMessageAsError({ message: 'Error: Please type the secret values' });
             return;
         }
 
