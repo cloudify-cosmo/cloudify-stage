@@ -8,7 +8,7 @@ interface SecretsModalProps {
 }
 
 type secretInputsType = {
-    [key: string]: boolean;
+    [key: string]: string;
 };
 
 const { i18n } = Stage;
@@ -31,7 +31,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     const onSave = () => {
         const keys = Object.keys(secretInputs);
 
-        if (keys.some(key => _.isEmpty(secretInputs[key]))) {
+        if (keys.some(key => secretInputs[key].trim() === '')) {
             setMessageAsError({ message: 'Error: Please type the secret values' });
             return;
         }
