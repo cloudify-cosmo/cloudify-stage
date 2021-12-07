@@ -5,6 +5,7 @@ interface SecretsModalProps {
     secretKeys: Array<string>;
     open: boolean;
     onClose: () => void;
+    resolveError: () => void;
 }
 
 type secretInputsType = {
@@ -14,7 +15,7 @@ type secretInputsType = {
 const { i18n } = Stage;
 const t = (key: string) => i18n.t(`widgets.common.deployments.secretsModal.${key}`);
 
-const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeys }) => {
+const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeys, resolveError }) => {
     if (!Array.isArray(secretKeys)) {
         return null;
     }
@@ -49,9 +50,9 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
             .catch(setMessageAsError)
             .finally(() => {
                 unsetLoading();
-
                 onClose();
                 toolbox.refresh();
+                resolveError();
             });
     };
     return (
