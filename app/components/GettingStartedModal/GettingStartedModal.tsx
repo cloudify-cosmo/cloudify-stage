@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,6 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import useModalOpenState from './useModalOpenState';
-import { validateSecretFields } from './formValidation';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
@@ -32,7 +31,6 @@ const GettingStartedModal = () => {
 
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Welcome);
-    const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [environmentsStepData, setEnvironmentsStepData, resetEnvironmentsStepData] = useResettableState<
         GettingStartedEnvironmentsData
     >({});
@@ -63,7 +61,6 @@ const GettingStartedModal = () => {
 
     useOpenProp(modalOpenState.modalOpen, () => {
         setStepName(StepName.Welcome);
-        resetStepErrors();
         resetEnvironmentsStepData();
         resetSecretsStepIndex();
         resetSecretsStepsData();
@@ -75,24 +72,7 @@ const GettingStartedModal = () => {
     }
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
-    const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
-    const checkSecretsStepDataErrors = () => {
-        if (!secretsStepSchema) {
-            return false;
-        }
-        const localDataError = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
-        if (localDataError) {
-            setStepErrors([localDataError]);
-            return false;
-        }
-        resetStepErrors();
-        return true;
-    };
-
-    const handleStepErrorsDismiss = () => {
-        resetStepErrors();
-    };
     const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
     };
@@ -123,8 +103,6 @@ const GettingStartedModal = () => {
         function goToPreviousStep() {
             setStepName(stepName - 1);
         }
-
-        resetStepErrors();
 
         switch (stepName) {
             case StepName.Environments:
@@ -197,14 +175,12 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
             />
             <ModalContent
-                stepErrors={stepErrors}
                 stepName={stepName}
                 environmentsStepData={environmentsStepData}
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
                 summaryStepSchemas={summaryStepSchemas}
-                onStepErrorsDismiss={handleStepErrorsDismiss}
                 onEnvironmentsStepChange={handleEnvironmentsStepChange}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}

@@ -18,14 +18,12 @@ import type {
 const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 type Props = {
-    stepErrors?: string[];
     stepName: StepName;
     environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
     summaryStepSchemas: GettingStartedSchemaItem[];
-    onStepErrorsDismiss: () => void;
     onEnvironmentsStepChange: (environments: GettingStartedEnvironmentsData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
     onInstallationStarted: () => void;
@@ -34,14 +32,12 @@ type Props = {
 };
 
 const ModalContent = ({
-    stepErrors,
     stepName,
     environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
     summaryStepSchemas,
-    onStepErrorsDismiss,
     onEnvironmentsStepChange,
     onSecretsStepChange,
     onInstallationStarted,
@@ -53,12 +49,6 @@ const ModalContent = ({
     const statusStepActive = stepName === StepName.Status;
     return (
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
-            {!_.isEmpty(stepErrors) && (
-                <>
-                    <ErrorMessage header={null} error={stepErrors} onDismiss={onStepErrorsDismiss} />
-                    <Divider hidden />
-                </>
-            )}
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
                 <EnvironmentsStep
@@ -72,7 +62,6 @@ const ModalContent = ({
                     selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
-                    markEmptyInputs={!_.isEmpty(stepErrors)}
                 />
             )}
             {(stepName === StepName.Summary || statusStepActive) && (
