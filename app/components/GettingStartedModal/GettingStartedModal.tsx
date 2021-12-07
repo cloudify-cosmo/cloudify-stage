@@ -121,7 +121,7 @@ const GettingStartedModal = () => {
     const closeModal = () => {
         modalOpenState.closeModal(modalDisabledChecked);
         navigateToBlueprintsPage();
-        openCancelConfirm();
+        closeCancelConfirm();
     };
 
     const handleBackClick = () => {

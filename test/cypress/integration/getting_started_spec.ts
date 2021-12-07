@@ -6,7 +6,7 @@ const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
-const blueprintsPageUrlSufix = '/page/blueprints';
+const blueprintsPageUrlSuffix = '/page/blueprints';
 
 const gcpSecrets = [
     'gcp_client_x509_cert_url',
@@ -373,6 +373,6 @@ describe('Getting started modal', () => {
             cy.contains('button', 'Yes').click();
         });
 
-        cy.url().should('include', blueprintsPageUrlSufix);
+        cy.url().should('include', blueprintsPageUrlSuffix);
     });
 });
