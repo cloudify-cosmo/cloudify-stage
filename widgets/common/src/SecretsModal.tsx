@@ -55,7 +55,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     return (
         <Modal open={open} onClose={onClose}>
             <Modal.Header>
-                <Icon name="cogs" />
+                <Icon name="key" />
                 {t('header')}
             </Modal.Header>
 
@@ -75,7 +75,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                     onClick={onSave}
                     disabled={isLoading}
                     content={t('buttons.save')}
-                    icon="cogs"
+                    icon="plus"
                     color="green"
                 />
             </Modal.Actions>
