@@ -50,6 +50,10 @@ function verifyPluginNotAvailableSummaryItem(plugin: string) {
     verifySummaryItem(plugin, 'plugin not found in the catalog or on the manager');
 }
 
+function verifySecretSkipSummaryItem(secret: string) {
+    verifySummaryItem(secret, 'secret will be skipped');
+}
+
 function verifySecretCreationSummaryItem(secret: string) {
     verifySummaryItem(secret, 'secret will be created');
 }
@@ -362,6 +366,18 @@ describe('Getting started modal', () => {
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             });
+        });
+
+        it('should allow to not provide every environment secret', () => {
+            const secretToSkip = awsSecrets[0];
+
+            goToNextStep();
+            cy.contains('button', 'AWS').click();
+            cy.contains('button', 'Next').click();
+            setSecretValues(awsSecrets.filter(awsSecret => awsSecret !== secretToSkip));
+
+            cy.contains('button', 'Next').click();
+            verifySecretSkipSummaryItem(secretToSkip);
         });
     });
 
