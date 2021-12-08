@@ -11,6 +11,9 @@ interface props {
     onAdd: () => void;
 }
 
+const { i18n } = Stage;
+const t = (key: string) => i18n.t(`widgets.common.deployments.deployModal.${key}`);
+
 const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
     const { useBoolean } = Stage.Hooks;
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
@@ -31,7 +34,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
             <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
                 Add missing secrets
             </Button>
-            <p style={{ display: 'inline' }}>The following required secrets are missing in this tenant:</p>
+            <p style={{ display: 'inline' }}>{t('errors.missingSecrets')}</p>
             <List bulleted>
                 {secretKeys.map((secretKey: string) => (
                     <List.Item key={secretKey}>{secretKey}</List.Item>

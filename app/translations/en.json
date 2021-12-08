@@ -608,7 +608,8 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
-                        "missingSecrets": "Missing Secrets Error",
+                        "missingSecretsHeading": "Missing Secrets Error",
+                        "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
                         "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
