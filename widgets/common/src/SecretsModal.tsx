@@ -43,9 +43,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         const visibility = defaultVisibility;
         const actions = new Stage.Common.SecretActions(toolbox);
         Promise.all(
-            keys.map(secretKey => {
-                return actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue);
-            })
+            keys.map(secretKey => actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue))
         )
             .catch(setMessageAsError)
             .finally(() => {
