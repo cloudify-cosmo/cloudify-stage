@@ -542,10 +542,10 @@
                 "secretsModal": {
                     "header": "Add Secrets",
                     "buttons": {
-                        "save": "save"
+                        "add": "Add"
                     },
                     "errors": {
-                        "noSecretValues": "Please provide the secret values"
+                        "noSecretValues": "Please provide values for secrets"
                     }
                 },
                 "deployModal": {

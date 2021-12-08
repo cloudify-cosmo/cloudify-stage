@@ -13,7 +13,7 @@ class GenericDeployModal extends React.Component {
         deploymentInputs: [],
         deploymentName: '',
         errors: {},
-        isMissingSecrets: false,
+        areSecretsMissing: false,
         fileLoading: false,
         loading: false,
         loadingMessage: '',
@@ -99,7 +99,7 @@ class GenericDeployModal extends React.Component {
 
     onErrorsDismiss() {
         this.setState({
-            isMissingSecrets: false,
+            areSecretsMissing: false,
             errors: {}
         });
     }
@@ -135,7 +135,7 @@ class GenericDeployModal extends React.Component {
         };
 
         return stepPromise.catch(errors => {
-            this.setState({ loading: false, errors, isMissingSecrets: checkMissingSecretsError(errors) });
+            this.setState({ loading: false, errors, areSecretsMissing: checkMissingSecretsError(errors) });
         });
     }
 
@@ -296,7 +296,7 @@ class GenericDeployModal extends React.Component {
             deploymentId,
             deploymentName,
             errors,
-            isMissingSecrets,
+            areSecretsMissing,
             secretsModalVisible,
             fileLoading,
             loading,
@@ -323,7 +323,7 @@ class GenericDeployModal extends React.Component {
                 <Modal.Content>
                     <Form
                         errors={
-                            isMissingSecrets ? (
+                            areSecretsMissing ? (
                                 <MissingSecretsError
                                     error={errors?.error}
                                     toolbox={toolbox}
@@ -333,7 +333,7 @@ class GenericDeployModal extends React.Component {
                                 errors
                             )
                         }
-                        errorMessageHeader={isMissingSecrets ? t('errors.missingSecrets') : undefined}
+                        errorMessageHeader={areSecretsMissing ? t('errors.missingSecrets') : undefined}
                         scrollToError
                         onErrorsDismiss={this.onErrorsDismiss}
                     >
