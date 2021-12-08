@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, ErrorMessage, Modal } from '../basic';
+import { Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import EnvironmentsStep from './steps/EnvironmentsStep';
 import SecretsStep from './steps/SecretsStep';
