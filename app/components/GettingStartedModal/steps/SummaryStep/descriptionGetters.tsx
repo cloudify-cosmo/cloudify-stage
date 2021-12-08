@@ -1,16 +1,34 @@
 import React from 'react';
-
 import type { ReactNode } from 'react';
 
 import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 import { TaskStatus } from '../../installation/process';
 import { SecretInstallationTask } from '../../installation/tasks';
 
-const createTaskDescriptionGetter = (
-    skipMessage: string,
+export const createTaskDescriptionGetter = (
     processingMessage: string,
     successMessage: string,
     errorMessage: string
+) => {
+    return (taskName: string, taskStatuses?: Record<string, TaskStatus>, defaultDescription?: ReactNode) => {
+        switch (taskStatuses?.[taskName]) {
+            case TaskStatus.InstallationProgress:
+                return <ProcessingDescription message={processingMessage} />;
+            case TaskStatus.InstallationDone:
+                return <SuccessDescription message={successMessage} />;
+            case TaskStatus.InstallationError:
+                return <ErrorDescription message={errorMessage} />;
+            default:
+                return defaultDescription;
+        }
+    };
+};
+
+export const createSecretTaskDescriptionGetter = (
+    processingMessage: string,
+    successMessage: string,
+    errorMessage: string,
+    skipMessage: string
 ) => {
     return (
         task: SecretInstallationTask,
@@ -21,16 +39,11 @@ const createTaskDescriptionGetter = (
             return skipMessage;
         }
 
-        switch (taskStatuses?.[task.name]) {
-            case TaskStatus.InstallationProgress:
-                return <ProcessingDescription message={processingMessage} />;
-            case TaskStatus.InstallationDone:
-                return <SuccessDescription message={successMessage} />;
-            case TaskStatus.InstallationError:
-                return <ErrorDescription message={errorMessage} />;
-            default:
-                return defaultDescription;
-        }
+        return createTaskDescriptionGetter(processingMessage, successMessage, errorMessage)(
+            task.name,
+            taskStatuses,
+            defaultDescription
+        );
     };
 };
 

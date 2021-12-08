@@ -1,7 +1,7 @@
 import React from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
-import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { createSecretTaskDescriptionGetter } from './descriptionGetters';
 import { Divider, Label, List } from '../../../basic';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
@@ -18,11 +18,11 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.createdSecrets) && _.isEmpty(tasks.updatedSecrets))) {
         return null;
     }
-    const getSecretTaskDescription = createTaskDescriptionGetter(
-        t('skipScheduledMessageSufix'),
+    const getSecretTaskDescription = createSecretTaskDescriptionGetter(
         t('settingProgressMessageSuffix'),
         t('settingDoneMessageSuffix'),
-        t('settingErrorMessageSuffix')
+        t('settingErrorMessageSuffix'),
+        t('skipScheduledMessageSufix')
     );
     return (
         <>
