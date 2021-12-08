@@ -273,28 +273,6 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('requires all secrets to go to the summary step', () => {
-            function verifySecretsRequired(secrets: string[]) {
-                secrets.forEach(secret => {
-                    goToNextStep();
-                    cy.contains('.message', 'All secret values need to be specified');
-                    cy.get(`[name=${secret}]`).type(`${secret}_value`);
-                });
-            }
-
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('button', 'AWS').click();
-                goToNextStep();
-
-                verifyHeader(getExpectedSecretsHeader('AWS'));
-                verifySecretsRequired(awsSecrets);
-                goToNextStep();
-
-                verifyHeader(StaticHeaders.Summary);
-            });
-        });
-
         it('should display information about not available plugins', () => {
             mockPluginsCatalog([]);
             cy.deletePlugins();
