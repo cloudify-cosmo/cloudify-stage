@@ -1,4 +1,4 @@
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import SecretsModal from './SecretsModal';
 
 const missingSecretsButtonStyle = {
@@ -18,17 +18,15 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
     const { useBoolean } = Stage.Hooks;
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
 
-    function parseMissingSecrets() {
+    const { Button, List } = Stage.Basic;
+    const secretKeys = useMemo(() => {
         // Get comma separated values inside square brackets
         const matches = error.match(/\[(.*?)\]/);
         if (matches && matches.length > 1) {
             return matches[1].split(', ');
         }
         return [];
-    }
-
-    const { Button, List } = Stage.Basic;
-    const secretKeys = parseMissingSecrets();
+    }, [error]);
     return (
         <>
             <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
@@ -42,7 +40,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
             </List>
             <SecretsModal
                 toolbox={toolbox}
-                secretKeys={parseMissingSecrets()}
+                secretKeys={secretKeys}
                 open={secretsModalVisible}
                 onClose={hideSecretsModal}
                 onAdd={onAdd}
