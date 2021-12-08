@@ -47,6 +47,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         )
             .catch(setMessageAsError)
             .finally(() => {
+                clearErrors();
                 unsetLoading();
                 onClose();
                 toolbox.refresh();
