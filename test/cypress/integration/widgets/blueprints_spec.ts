@@ -128,6 +128,18 @@ describe('Blueprints widget', () => {
         });
     });
 
+    describe('for a blueprint with required secrets', () => {
+        const blueprintName = 'blueprint_with_required_secrets';
+        before(() => cy.uploadBlueprint('blueprints/required_secrets.zip', blueprintName).refreshPage());
+
+        it('should open Missing Error Message when deploying blueprint with missing secrets', () => {
+            getBlueprintRow(blueprintName).find('.rocket').click();
+            cy.get('input[name=deploymentName]').type('blahBlahBlah');
+            cy.contains('.modal button', 'Deploy').click();
+            cy.get('form.error .error .header').should('have.text', 'Missing Secrets Error');
+        });
+    });
+
     describe('should render blueprint items', () => {
         beforeEach(() => {
             cy.interceptSp('POST', '/searches/blueprints', { fixture: 'blueprints/blueprints' });
