@@ -6,6 +6,7 @@ const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
+const blueprintsPageUrlSuffix = '/page/blueprints';
 
 const gcpSecrets = [
     'gcp_client_x509_cert_url',
@@ -135,229 +136,248 @@ function verifyHeader(headerContent: string) {
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
-    beforeEach(() => cy.enableGettingStarted().usePageMock().mockLogin('admin', 'admin', false));
+    // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
+    describe('', () => {
+        beforeEach(() => cy.enableGettingStarted().usePageMock().mockLogin('admin', 'admin', false));
 
-    it('should provide option to disable it', () => {
-        cy.interceptSp('POST', `/users/admin`).as('disableRequest');
+        it('should provide option to disable it', () => {
+            cy.interceptSp('POST', `/users/admin`).as('disableRequest');
 
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('label', "Don't show next time").click();
-            closeModal();
-        });
-
-        cy.contains('button', 'Yes').click();
-
-        cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
-    });
-
-    it('should open when gettingStarted query parameter is present', () => {
-        cy.mockLogin();
-
-        cy.get('.modal').should('not.exist');
-        cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
-
-        cy.get('.modal').should('be.visible');
-        cy.contains('Welcome to Cloudify');
-    });
-
-    it('should install selected environment', () => {
-        cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
-
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            goToNextStep();
-
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            setSecretValues(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(StaticHeaders.Summary);
-            awsPlugins.forEach(verifyPluginInstallationSummaryItem);
-            awsSecrets.forEach(verifySecretCreationSummaryItem);
-            awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
-
-            interceptSecretsCreation(awsSecrets);
-            interceptPluginsUpload(awsPlugins);
-            interceptBlueprintsUpload(awsBlueprints);
-
-            goToFinishStep();
-
-            cy.wait(toAliasReferences(awsSecrets));
-            cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
-            cy.wait(toAliasReferences(awsBlueprints));
-
-            verifyInstallationSucceeded(awsBlueprints);
-            closeModal();
-        });
-    });
-
-    it('should omit uploaded plugins and blueprints updating existing secrets', () => {
-        awsSecrets.forEach(secretKey => cy.createSecret(secretKey, 'dummy'));
-        cy.interceptSp('GET', '/plugins', {
-            body: {
-                metadata: { pagination: { total: awsPlugins.length, size: 1000, offset: 0 }, filtered: null },
-                items: awsPlugins.map(plugin => ({ package_name: plugin }))
-            }
-        });
-        cy.interceptSp('GET', '/blueprints', {
-            body: {
-                metadata: { pagination: { total: awsBlueprints.length, size: 1000, offset: 0 }, filtered: null },
-                items: awsBlueprints.map(id => ({ id }))
-            }
-        });
-
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            goToNextStep();
-
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            setSecretValues(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(StaticHeaders.Summary);
-            awsPlugins.forEach(verifyPluginPresenceSummaryItem);
-            awsSecrets.forEach(verifySecretUpdateSummaryItem);
-            awsBlueprints.forEach(verifyBlueprintPresenceSummaryItem);
-
-            awsSecrets.forEach(secret => cy.interceptSp('PATCH', `/secrets/${secret}`).as(toAlias(secret)));
-
-            goToFinishStep();
-
-            cy.wait(toAliasReferences(awsSecrets));
-
-            verifyInstallationSucceeded(awsBlueprints);
-            closeModal();
-        });
-    });
-
-    it('should group common plugins', () => {
-        cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
-
-        cy.get('.modal').within(() => {
-            goToNextStep();
-
-            cy.contains('button', 'AWS').click();
-            goToNextStep();
-
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            setSecretValues(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(StaticHeaders.Summary);
-            awsPlugins.forEach(verifyPluginInstallationSummaryItem);
-            awsSecrets.forEach(verifySecretCreationSummaryItem);
-            awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
-
-            interceptSecretsCreation(awsSecrets);
-            interceptPluginsUpload(awsPlugins);
-            interceptBlueprintsUpload(awsBlueprints);
-
-            goToFinishStep();
-
-            cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
-            cy.wait(toAliasReferences(awsSecrets));
-            cy.wait(toAliasReferences(awsBlueprints));
-
-            verifyInstallationSucceeded(awsBlueprints);
-            closeModal();
-        });
-    });
-
-    it('requires all secrets to go to the summary step', () => {
-        function verifySecretsRequired(secrets: string[]) {
-            secrets.forEach(secret => {
+            cy.get('.modal').within(() => {
                 goToNextStep();
-                cy.contains('.message', 'All secret values need to be specified');
-                cy.get(`[name=${secret}]`).type(`${secret}_value`);
+                cy.contains('label', "Don't show next time").click();
+                closeModal();
             });
-        }
 
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            goToNextStep();
+            cy.contains('button', 'Yes').click();
 
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            verifySecretsRequired(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(StaticHeaders.Summary);
+            cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
         });
-    });
 
-    it('should display information about not available plugins', () => {
-        mockPluginsCatalog([]);
-        cy.deletePlugins();
+        it('should open when gettingStarted query parameter is present', () => {
+            cy.mockLogin();
 
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            goToNextStep();
+            cy.get('.modal').should('not.exist');
+            cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
 
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            setSecretValues(awsSecrets);
-            goToNextStep();
-
-            verifyHeader(StaticHeaders.Summary);
-            awsPlugins.forEach(verifyPluginNotAvailableSummaryItem);
+            cy.get('.modal').should('be.visible');
+            cy.contains('Welcome to Cloudify');
         });
-    });
 
-    it('should allow only one environment to be selected at a time', () => {
-        goToNextStep();
-        cy.contains('button', 'AWS').click();
-        cy.contains('button.active', 'AWS');
+        it('should install selected environment', () => {
+            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
-        cy.contains('button', 'GCP').click();
-        cy.contains('button.active', 'AWS').should('not.exist');
-        cy.contains('button.active', 'GCP');
-    });
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
 
-    it('should allow to click "Next" button when an environment is being selected', () => {
-        goToNextStep();
-        cy.contains('button', 'Next').should('to.be.disabled');
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+                goToNextStep();
 
-        cy.contains('button', 'AWS').click();
-        cy.contains('button', 'Next').should('not.to.be.disabled');
+                verifyHeader(StaticHeaders.Summary);
+                awsPlugins.forEach(verifyPluginInstallationSummaryItem);
+                awsSecrets.forEach(verifySecretCreationSummaryItem);
+                awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
 
-        cy.contains('button', 'AWS').click();
-        cy.contains('button', 'Next').should('to.be.disabled');
-    });
+                interceptSecretsCreation(awsSecrets);
+                interceptPluginsUpload(awsPlugins);
+                interceptBlueprintsUpload(awsBlueprints);
 
-    it('should keep button and field states when navigating between steps', () => {
-        cy.get('.modal').within(() => {
+                goToFinishStep();
+
+                cy.wait(toAliasReferences(awsSecrets));
+                cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
+                cy.wait(toAliasReferences(awsBlueprints));
+
+                verifyInstallationSucceeded(awsBlueprints);
+                closeModal();
+            });
+        });
+
+        it('should omit uploaded plugins and blueprints updating existing secrets', () => {
+            awsSecrets.forEach(secretKey => cy.createSecret(secretKey, 'dummy'));
+            cy.interceptSp('GET', '/plugins', {
+                body: {
+                    metadata: { pagination: { total: awsPlugins.length, size: 1000, offset: 0 }, filtered: null },
+                    items: awsPlugins.map(plugin => ({ package_name: plugin }))
+                }
+            });
+            cy.interceptSp('GET', '/blueprints', {
+                body: {
+                    metadata: { pagination: { total: awsBlueprints.length, size: 1000, offset: 0 }, filtered: null },
+                    items: awsBlueprints.map(id => ({ id }))
+                }
+            });
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+                goToNextStep();
+
+                verifyHeader(StaticHeaders.Summary);
+                awsPlugins.forEach(verifyPluginPresenceSummaryItem);
+                awsSecrets.forEach(verifySecretUpdateSummaryItem);
+                awsBlueprints.forEach(verifyBlueprintPresenceSummaryItem);
+
+                awsSecrets.forEach(secret => cy.interceptSp('PATCH', `/secrets/${secret}`).as(toAlias(secret)));
+
+                goToFinishStep();
+
+                cy.wait(toAliasReferences(awsSecrets));
+
+                verifyInstallationSucceeded(awsBlueprints);
+                closeModal();
+            });
+        });
+
+        it('should group common plugins', () => {
+            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+                goToNextStep();
+
+                verifyHeader(StaticHeaders.Summary);
+                awsPlugins.forEach(verifyPluginInstallationSummaryItem);
+                awsSecrets.forEach(verifySecretCreationSummaryItem);
+                awsBlueprints.forEach(verifyBlueprintUploadSummaryItem);
+
+                interceptSecretsCreation(awsSecrets);
+                interceptPluginsUpload(awsPlugins);
+                interceptBlueprintsUpload(awsBlueprints);
+
+                goToFinishStep();
+
+                cy.wait(toAliasReferences(awsPlugins), waitOptionsForPluginsUpload);
+                cy.wait(toAliasReferences(awsSecrets));
+                cy.wait(toAliasReferences(awsBlueprints));
+
+                verifyInstallationSucceeded(awsBlueprints);
+                closeModal();
+            });
+        });
+
+        it('requires all secrets to go to the summary step', () => {
+            function verifySecretsRequired(secrets: string[]) {
+                secrets.forEach(secret => {
+                    goToNextStep();
+                    cy.contains('.message', 'All secret values need to be specified');
+                    cy.get(`[name=${secret}]`).type(`${secret}_value`);
+                });
+            }
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                verifySecretsRequired(awsSecrets);
+                goToNextStep();
+
+                verifyHeader(StaticHeaders.Summary);
+            });
+        });
+
+        it('should display information about not available plugins', () => {
+            mockPluginsCatalog([]);
+            cy.deletePlugins();
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+                goToNextStep();
+
+                verifyHeader(StaticHeaders.Summary);
+                awsPlugins.forEach(verifyPluginNotAvailableSummaryItem);
+            });
+        });
+
+        it('should allow only one environment to be selected at a time', () => {
             goToNextStep();
             cy.contains('button', 'AWS').click();
             cy.contains('button.active', 'AWS');
-            goToNextStep();
 
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            setSecretValues(awsSecrets);
-            goToBackStep();
-
-            verifyHeader(StaticHeaders.Environments);
-            cy.contains('button.active', 'AWS');
             cy.contains('button', 'GCP').click();
+            cy.contains('button.active', 'AWS').should('not.exist');
             cy.contains('button.active', 'GCP');
-            goToNextStep();
+        });
 
-            verifyHeader(getExpectedSecretsHeader('GCP'));
-            setSecretValues(gcpSecrets);
-            goToBackStep();
+        it('should allow to click "Next" button when an environment is being selected', () => {
+            goToNextStep();
+            cy.contains('button', 'Next').should('to.be.disabled');
 
             cy.contains('button', 'AWS').click();
-            goToNextStep();
-            verifyHeader(getExpectedSecretsHeader('AWS'));
-            awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
-            goToBackStep();
+            cy.contains('button', 'Next').should('not.to.be.disabled');
 
-            cy.contains('button', 'GCP').click();
-            goToNextStep();
-            verifyHeader(getExpectedSecretsHeader('GCP'));
-            gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
+            cy.contains('button', 'AWS').click();
+            cy.contains('button', 'Next').should('to.be.disabled');
         });
+
+        it('should keep button and field states when navigating between steps', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                cy.contains('button.active', 'AWS');
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+                goToBackStep();
+
+                verifyHeader(StaticHeaders.Environments);
+                cy.contains('button.active', 'AWS');
+                cy.contains('button', 'GCP').click();
+                cy.contains('button.active', 'GCP');
+                goToNextStep();
+
+                verifyHeader(getExpectedSecretsHeader('GCP'));
+                setSecretValues(gcpSecrets);
+                goToBackStep();
+
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
+                goToBackStep();
+
+                cy.contains('button', 'GCP').click();
+                goToNextStep();
+                verifyHeader(getExpectedSecretsHeader('GCP'));
+                gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
+            });
+        });
+    });
+
+    it('should redirect to the blueprints page upon closing the modal', () => {
+        cy.enableGettingStarted().mockLogin('admin', 'admin', false);
+
+        cy.get('.modal').within(() => {
+            goToNextStep();
+            cy.contains('button', 'Close').click();
+        });
+
+        cy.get('.modal').within(() => {
+            cy.contains('div.content', 'Are you sure you want to cancel the setup process?').should('be.visible');
+            cy.contains('button', 'Yes').click();
+        });
+
+        cy.url().should('include', blueprintsPageUrlSuffix);
     });
 });
