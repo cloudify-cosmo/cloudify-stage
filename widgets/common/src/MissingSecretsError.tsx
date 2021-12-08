@@ -8,10 +8,10 @@ const missingSecretsButtonStyle = {
 interface props {
     error: string;
     toolbox: Stage.Types.Toolbox;
-    resolveError: () => void;
+    onAdd: () => void;
 }
 
-const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, resolveError }) => {
+const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
     const { useBoolean } = Stage.Hooks;
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
 
@@ -42,7 +42,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, resolve
                 secretKeys={parseMissingSecrets()}
                 open={secretsModalVisible}
                 onClose={hideSecretsModal}
-                resolveError={resolveError}
+                onAdd={onAdd}
             />
         </>
     );

@@ -327,7 +327,7 @@ class GenericDeployModal extends React.Component {
                                 <MissingSecretsError
                                     error={errors?.error}
                                     toolbox={toolbox}
-                                    resolveError={this.onErrorsDismiss}
+                                    onAdd={this.onErrorsDismiss}
                                 />
                             ) : (
                                 errors
