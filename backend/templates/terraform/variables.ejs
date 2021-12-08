@@ -1,0 +1,7 @@
+<% if (Array.isArray(variables) && variables.length) { _%>
+        <%= name %>:
+<% } _%>
+<% variables.forEach(variable => { _%>
+          <%= variable.name %>: <% if (variable.source === "input" || variable.source === "secret") { _%>{ get_<%=
+              variable.source %>: <%= variable.value %> }<% } else { _%>"<%= variable.value %>"<% } %>
+<% }) _%>
