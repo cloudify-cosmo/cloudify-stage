@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FunctionComponent } from 'react';
 import SecretsModal from './SecretsModal';
 
 const missingSecretsButtonStyle = {
@@ -14,7 +15,7 @@ interface props {
 const { i18n } = Stage;
 const t = (key: string) => i18n.t(`widgets.common.deployments.deployModal.${key}`);
 
-const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
+const MissingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
     const { useBoolean } = Stage.Hooks;
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
 
@@ -30,7 +31,7 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
     return (
         <>
             <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
-                Add missing secrets
+                {t('buttons.addMissingSecrets')}
             </Button>
             <p style={{ display: 'inline' }}>{t('errors.missingSecrets')}</p>
             <List bulleted>
@@ -49,4 +50,4 @@ const missingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
     );
 };
 
-export default missingSecretsError;
+export default MissingSecretsError;

@@ -588,6 +588,7 @@
                         "executionParameters": "Execution parameters"
                     },
                     "buttons": {
+                        "addMissingSecrets": "Add missing secrets",
                         "deploy": "Deploy",
                         "deployAndInstall": "Deploy & Install"
                     },

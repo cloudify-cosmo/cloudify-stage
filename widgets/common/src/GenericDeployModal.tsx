@@ -130,12 +130,12 @@ class GenericDeployModal extends React.Component {
             });
         });
 
-        const checkMissingSecretsError = errors => {
+        const isMissingSecretsError = errors => {
             return errors.error?.includes('dsl_parser.exceptions.UnknownSecretError');
         };
 
         return stepPromise.catch(errors => {
-            this.setState({ loading: false, errors, areSecretsMissing: checkMissingSecretsError(errors) });
+            this.setState({ loading: false, errors, areSecretsMissing: isMissingSecretsError(errors) });
         });
     }
 
@@ -297,7 +297,6 @@ class GenericDeployModal extends React.Component {
             deploymentName,
             errors,
             areSecretsMissing,
-            secretsModalVisible,
             fileLoading,
             loading,
             loadingMessage,

@@ -21,7 +21,6 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
     const { ApproveButton, CancelButton, Form, Icon, Modal, UnsafelyTypedFormField } = Stage.Basic;
-    const { defaultVisibility } = Stage.Common.Consts;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
@@ -40,7 +39,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         setLoading();
 
         const isHiddenValue = true;
-        const visibility = defaultVisibility;
+        const visibility = Stage.Common.Consts.defaultVisibility as Stage.Types.Visibility;
         const actions = new Stage.Common.SecretActions(toolbox);
         Promise.all(
             keys.map(secretKey => actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue))
