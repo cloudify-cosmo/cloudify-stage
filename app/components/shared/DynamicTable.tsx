@@ -1,6 +1,6 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
 
-interface KeyValueEditorProps
+export interface DynamicTableProps
     extends Pick<
         Stage.Types.CustomConfigurationComponentProps<Partial<Record<string, any>>[]>,
         'name' | 'onChange' | 'value'
@@ -9,13 +9,7 @@ interface KeyValueEditorProps
     [key: string]: any;
 }
 
-const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({
-    name,
-    value = [],
-    onChange,
-    columns = [],
-    ...rest
-}) => {
+const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], onChange, columns = [], ...rest }) => {
     const { GenericField, Input, Button, Table } = Stage.Basic;
     const t = Stage.Utils.getT('shared.dynamicTable');
 
