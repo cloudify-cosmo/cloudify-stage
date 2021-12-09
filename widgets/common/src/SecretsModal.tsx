@@ -54,7 +54,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
             });
     };
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal open={open} onClose={onClose} className="secretsModal">
             <Modal.Header>
                 <Icon name="plus" />
                 {t('header')}
