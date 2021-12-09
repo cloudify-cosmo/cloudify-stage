@@ -3,10 +3,10 @@ import { FunctionComponent, ReactElement, useState } from 'react';
 import { useBoolean } from '../../../app/utils/hooks';
 
 interface Properties {
-    description: string;
-    type: string;
-    default: unknown;
-    required: boolean;
+    description?: string;
+    type?: string;
+    default?: unknown;
+    required?: boolean;
 }
 
 const { Header } = Stage.Basic;
