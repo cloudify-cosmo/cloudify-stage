@@ -9,8 +9,8 @@ const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget({
     id: widgetId,
-    name: 'Executions Statuses Graph',
-    description: 'Shows the number of executions per status',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 4,
     initialHeight: 24,
     color: 'blue',
