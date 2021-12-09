@@ -1,8 +1,8 @@
 import React from 'react';
 import TerraformModalAccordion from './TerraformModalAccordion';
+import type { DynamicTableProps } from '../../../app/components/shared/DynamicTable';
 
 const { DynamicTable } = Stage.Shared;
-type DynamicTableProps = React.ComponentProps<typeof DynamicTable>;
 type ValueType = DynamicTableProps['value'];
 
 interface TerraformModalTableAccordionProps {
