@@ -50,6 +50,10 @@ function verifyPluginNotAvailableSummaryItem(plugin: string) {
     verifySummaryItem(plugin, 'plugin not found in the catalog or on the manager');
 }
 
+function verifySecretSkipSummaryItem(secret: string) {
+    verifySummaryItem(secret, 'secret will be skipped');
+}
+
 function verifySecretCreationSummaryItem(secret: string) {
     verifySummaryItem(secret, 'secret will be created');
 }
@@ -269,28 +273,6 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('requires all secrets to go to the summary step', () => {
-            function verifySecretsRequired(secrets: string[]) {
-                secrets.forEach(secret => {
-                    goToNextStep();
-                    cy.contains('.message', 'All secret values need to be specified');
-                    cy.get(`[name=${secret}]`).type(`${secret}_value`);
-                });
-            }
-
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('button', 'AWS').click();
-                goToNextStep();
-
-                verifyHeader(getExpectedSecretsHeader('AWS'));
-                verifySecretsRequired(awsSecrets);
-                goToNextStep();
-
-                verifyHeader(StaticHeaders.Summary);
-            });
-        });
-
         it('should display information about not available plugins', () => {
             mockPluginsCatalog([]);
             cy.deletePlugins();
@@ -362,6 +344,18 @@ describe('Getting started modal', () => {
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             });
+        });
+
+        it('should allow to not provide every environment secret', () => {
+            const secretToSkip = awsSecrets[0];
+
+            goToNextStep();
+            cy.contains('button', 'AWS').click();
+            cy.contains('button', 'Next').click();
+            setSecretValues(awsSecrets.filter(awsSecret => awsSecret !== secretToSkip));
+
+            cy.contains('button', 'Next').click();
+            verifySecretSkipSummaryItem(secretToSkip);
         });
     });
 

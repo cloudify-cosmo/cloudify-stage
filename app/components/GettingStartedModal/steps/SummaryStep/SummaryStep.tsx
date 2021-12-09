@@ -92,7 +92,7 @@ const SummaryStep = ({
             resourcesInstaller.install(
                 pluginsInstallationTasks.tasks.scheduledPlugins,
                 secretsInstallationTasks.tasks.updatedSecrets,
-                secretsInstallationTasks.tasks.createdSecrets,
+                secretsInstallationTasks.tasks.createdSecrets.filter(secret => !!secret.value),
                 blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
             return () => {
