@@ -1,11 +1,15 @@
 import React from 'react';
-
 import type { ReactNode } from 'react';
 
 import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 import { TaskStatus } from '../../installation/process';
+import { SecretInstallationTask } from '../../installation/tasks';
 
-const createTaskDescriptionGetter = (processingMessage: string, successMessage: string, errorMessage: string) => {
+export const createTaskDescriptionGetter = (
+    processingMessage: string,
+    successMessage: string,
+    errorMessage: string
+) => {
     return (taskName: string, taskStatuses?: Record<string, TaskStatus>, defaultDescription?: ReactNode) => {
         switch (taskStatuses?.[taskName]) {
             case TaskStatus.InstallationProgress:
@@ -17,6 +21,29 @@ const createTaskDescriptionGetter = (processingMessage: string, successMessage: 
             default:
                 return defaultDescription;
         }
+    };
+};
+
+export const createSecretTaskDescriptionGetter = (
+    processingMessage: string,
+    successMessage: string,
+    errorMessage: string,
+    skipMessage: string
+) => {
+    return (
+        task: SecretInstallationTask,
+        taskStatuses?: Record<string, TaskStatus>,
+        defaultDescription?: ReactNode
+    ) => {
+        if (!task.value) {
+            return skipMessage;
+        }
+
+        return createTaskDescriptionGetter(processingMessage, successMessage, errorMessage)(
+            task.name,
+            taskStatuses,
+            defaultDescription
+        );
     };
 };
 

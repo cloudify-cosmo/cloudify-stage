@@ -36,8 +36,8 @@ function SecretValue({
                 <Popup.Trigger>
                     <Icon bordered name="dont" color="red" />
                 </Popup.Trigger>
-                User `{currentUsername}` is not permitted to show the secret `{secretKey}
-                {secretKey}` in the tenant `{selectedTenant}` .
+                User `{currentUsername}` is not permitted to show the secret `{secretKey} in the tenant `
+                {selectedTenant}` .
             </Popup>
         );
     }
