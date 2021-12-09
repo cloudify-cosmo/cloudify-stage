@@ -4,9 +4,7 @@ import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
-import BlueprintActions from '../../common/src/BlueprintActions';
-import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
-import { useResettableState } from '../../../app/utils/hooks';
+import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 
@@ -120,7 +118,7 @@ export default function TerraformModal({
     onHide: () => void;
     toolbox: Stage.Types.WidgetlessToolbox;
 }) {
-    const { useInput } = Stage.Hooks;
+    const { useInput, useResettableState } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
 
@@ -133,6 +131,7 @@ export default function TerraformModal({
     const [outputs, setOutputs] = useState<any[]>([]);
 
     function handleSubmit() {
+        const { BlueprintActions } = Stage.Common;
         setProcessPhase('generation');
         new TerraformActions(toolbox)
             .doGenerateBlueprint({
