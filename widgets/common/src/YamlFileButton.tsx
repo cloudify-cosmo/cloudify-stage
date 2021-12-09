@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
 import type { FunctionComponent } from 'react';
+
+export {};
 
 interface Props {
     dataType: string;
