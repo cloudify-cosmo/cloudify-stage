@@ -47,6 +47,27 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
+    it('should open Missing Secrets Error message when deploying blueprint with missing secrets', () => {
+        const blueprintName = 'blueprint_with_required_secrets';
+        cy.uploadBlueprint('blueprints/required_secrets.zip', blueprintName).refreshPage();
+
+        getBlueprintRow(blueprintName).find('.rocket').click();
+        cy.get('input[name=deploymentName]').type('blahBlahBlah');
+        cy.contains('.modal button', 'Deploy').click();
+        cy.get('form.error .error .header').should('have.text', 'Missing Secrets Error');
+        cy.get('form.error .error p').should('have.text', 'The following required secrets are missing in this tenant:');
+        cy.get('form.error .error .item').should('have.text', 'test');
+        cy.contains('form.error button', 'Add Missing Secrets').click();
+        cy.contains('.secretsModal button', 'Add').click();
+        cy.get('.secretsModal .error .header').should('have.text', 'Errors in the form');
+        cy.get('.secretsModal .error li').should('have.text', 'Please provide values for secrets');
+        cy.get('.secretsModal input').type('aaa');
+        cy.contains('.secretsModal button', 'Add').click();
+        cy.get('form.error .error').should('not.exist');
+        cy.contains('.modal button', 'Deploy').click();
+        cy.get('.modal').should('not.exist');
+    });
+
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -125,32 +146,6 @@ describe('Blueprints widget', () => {
             cy.contains(emptyBlueprintName).click();
 
             cy.get('div.blueprintsWidget table.blueprintsTable').should('exist');
-        });
-    });
-
-    describe('for a blueprint with required secrets', () => {
-        const blueprintName = 'blueprint_with_required_secrets';
-        before(() => cy.uploadBlueprint('blueprints/required_secrets.zip', blueprintName).refreshPage());
-
-        it('should open Missing Error Message when deploying blueprint with missing secrets', () => {
-            getBlueprintRow(blueprintName).find('.rocket').click();
-            cy.get('input[name=deploymentName]').type('blahBlahBlah');
-            cy.contains('.modal button', 'Deploy').click();
-            cy.get('form.error .error .header').should('have.text', 'Missing Secrets Error');
-            cy.get('form.error .error p').should(
-                'have.text',
-                'The following required secrets are missing in this tenant:'
-            );
-            cy.get('form.error .error .item').should('have.text', 'test');
-            cy.contains('form.error button', 'Add Missing Secrets').click();
-            cy.contains('.secretsModal button', 'Add').click();
-            cy.get('.secretsModal .error .header').should('have.text', 'Errors in the form');
-            cy.get('.secretsModal .error li').should('have.text', 'Please provide values for secrets');
-            cy.get('.secretsModal input').type('aaa');
-            cy.contains('.secretsModal button', 'Add').click();
-            cy.get('form.error .error').should('not.exist');
-            cy.contains('.modal button', 'Deploy').click();
-            cy.get('.modal').should('not.exist');
         });
     });
 
