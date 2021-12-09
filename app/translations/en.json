@@ -1343,6 +1343,14 @@
             "exceptions": {
                 "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
             }
+        },
+        "executionsStatus": {
+            "noExecutions": "There are no Executions available",
+            "charts": {
+                "tooltip": {
+                    "label": "Number of executions"
+                }
+            }
         }
     }
 }

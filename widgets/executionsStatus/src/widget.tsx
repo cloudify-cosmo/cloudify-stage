@@ -1,8 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
 import { format as d3format } from 'd3-format';
 
+const { Loading } = Stage.Basic;
+const { Graph } = Stage.Shared;
+
+const widgetId = 'executionsStatus';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
 Stage.defineWidget({
-    id: 'executionsStatus',
+    id: widgetId,
     name: 'Executions Statuses Graph',
     description: 'Shows the number of executions per status',
     initialWidth: 4,
@@ -10,7 +16,7 @@ Stage.defineWidget({
     color: 'blue',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionsStatus'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(5)],
     fetchUrl: '[manager]/summary/executions?_target_field=status_display[params]',
@@ -25,14 +31,13 @@ Stage.defineWidget({
     },
 
     render(widget, data) {
-        const { Loading } = Stage.Basic;
-
         if (_.isEmpty(data)) {
             return <Loading />;
         }
+
         if (_.isEmpty(data.items)) {
             const { Message } = Stage.Basic;
-            return <Message content="There are no Executions available." />;
+            return <Message content={t('noExecutions')} />;
         }
 
         const formattedData = _.sortBy(
@@ -42,8 +47,9 @@ Stage.defineWidget({
             })),
             statusSum => statusSum.status
         );
-        const { Graph } = Stage.Shared;
-        const charts = [{ name: 'number_of_executions', label: 'Number of executions', axisLabel: 'status' }];
+
+        const charts = [{ name: 'number_of_executions', label: t('charts.tooltip.label'), axisLabel: 'status' }];
+
         return (
             <Graph
                 type={Graph.BAR_CHART_TYPE}
