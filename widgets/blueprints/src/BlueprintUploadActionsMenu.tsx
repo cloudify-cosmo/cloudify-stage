@@ -1,7 +1,7 @@
 import { FunctionComponent, useMemo } from 'react';
 import { map } from 'lodash';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
-import { useBoolean } from '../../../app/utils/hooks';
+import TerraformModal from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 
@@ -25,11 +25,12 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     showGenerateInComposerButton = false
 }) => {
     const {
-        Basic: { Dropdown }
+        Basic: { Dropdown },
+        // @ts-expect-error UploadBlueprintModal is not converted to TS yet
+        Common: { UploadBlueprintModal, BlueprintMarketplace },
+        Hooks: { useBoolean }
     } = Stage;
     const { Menu, Item } = Dropdown;
-    // @ts-expect-error UploadBlueprintModal is not converted to TS yet
-    const { UploadBlueprintModal, BlueprintMarketplace } = Stage.Common;
 
     const [marketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
@@ -69,6 +70,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                 />
             )}
             {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
+            {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
         </>
     );
 };

@@ -42,7 +42,7 @@ export default class BlueprintActions {
         return Object.values(BlueprintActions.CompletedBlueprintStates).includes(blueprint.state);
     }
 
-    constructor(private toolbox: Stage.Types.Toolbox) {}
+    constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
 
     doEditInComposer(blueprintId: string, mainFileName: string) {
         window.open(

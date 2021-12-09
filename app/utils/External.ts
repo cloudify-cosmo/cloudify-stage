@@ -127,7 +127,7 @@ export default class External {
             });
 
             if (files) {
-                if (files instanceof File) {
+                if (files instanceof Blob) {
                     // Single file
                     if (compressFile) {
                         const reader = new FileReader();
