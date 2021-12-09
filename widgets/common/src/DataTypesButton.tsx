@@ -1,11 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
-import { FunctionComponent, ReactElement, useState } from 'react';
+import { FunctionComponent, ReactElement } from 'react';
 import { useBoolean } from '../../../app/utils/hooks';
 
 interface Properties {
     description?: string;
     type?: string;
-    default?: unknown;
+    default?: any;
     required?: boolean;
 }
 
@@ -14,7 +14,7 @@ const { Header } = Stage.Basic;
 interface DataTypePropertyProps {
     show: boolean;
     name: string;
-    value?: ReactElement;
+    value?: ReactElement | string | null;
 }
 
 const DataTypeProperty: FunctionComponent<DataTypePropertyProps> = ({ show, name, value = null }) =>
@@ -100,10 +100,11 @@ interface DataTypesButtonProps {
         derivedFrom?: string;
         version?: string;
         properties: Properties;
+        description?: string;
     };
 }
 
-const DataTypesButton: FunctionComponent<DataTypePropertyProps> = ({ types, iconButton = false }) => {
+const DataTypesButton: FunctionComponent<DataTypesButtonProps> = ({ types, iconButton = false }) => {
     const { Button, CancelButton, Modal } = Stage.Basic;
     const [open, onOpen, onClose] = useBoolean(false);
     return (
@@ -139,6 +140,12 @@ const DataTypesButton: FunctionComponent<DataTypePropertyProps> = ({ types, icon
 };
 
 export default DataTypesButton;
+
+declare global {
+    namespace Stage.Common {
+        export { DataTypesButton };
+    }
+}
 
 Stage.defineCommon({
     name: 'DataTypesButton',

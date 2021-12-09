@@ -1,7 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
-
-export {};
 
 interface Props {
     dataType: string;
@@ -35,6 +32,14 @@ const YamlFileButton: FunctionComponent<Props> = ({
         />
     );
 };
+
+export default YamlFileButton;
+
+declare global {
+    namespace Stage.Common {
+        export { YamlFileButton };
+    }
+}
 
 Stage.defineCommon({
     name: 'YamlFileButton',
