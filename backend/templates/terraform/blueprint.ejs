@@ -1,0 +1,49 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  This blueprint creates infrastructure on AWS using Terraform.
+
+imports:
+  - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - plugin:cloudify-terraform-plugin
+  - plugin:cloudify-utilities-plugin?version= >=1.22.1
+
+inputs:
+  terraform_version:
+    type: string
+    default: "<%= terraformVersion %>"
+
+  module_source:
+    type: string
+    required: true
+    default: "<%= terraformTemplate %>"
+
+  terraform_template_location:
+    type: string
+    default: "<%= resourceLocation %>"
+
+<%- include('inputs', { variables: [...variables, ...environmentVariables] }) -%>
+
+node_templates:
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/teraform_<%= terraformVersion %>/teraform_<%= terraformVersion %>_linux_amd64.zip
+
+  cloud_resources:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        source:
+          location: { get_input: module_source }
+        source_path: { get_input: terraform_template_location }
+<%- include('variables', { name: 'variables', variables: variables }) -%>
+<%- include('variables', { name: 'environment_variables', variables: environmentVariables }) -%>
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+
+<%- include('outputs', { name: 'outputs', outputs: outputs.filter(output => output.type === "output") }) -%>
+
+<%- include('outputs', { name: 'capabilities', outputs: outputs.filter(output => output.type === "capability") }) -%>

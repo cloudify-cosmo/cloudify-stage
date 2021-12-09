@@ -1,7 +1,8 @@
 import React, { memo, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { push } from 'connected-react-router';
 
 import stageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
@@ -10,7 +11,6 @@ import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
 import gettingStartedSchema from './schema.json';
 import useModalOpenState from './useModalOpenState';
-import { validateSecretFields } from './formValidation';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
@@ -29,10 +29,9 @@ const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
 
 const GettingStartedModal = () => {
     const modalOpenState = useModalOpenState();
-
+    const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Welcome);
-    const [stepErrors, setStepErrors, resetStepErrors] = useResettableState<string[]>([]);
     const [environmentsStepData, setEnvironmentsStepData, resetEnvironmentsStepData] = useResettableState<
         GettingStartedEnvironmentsData
     >({});
@@ -63,7 +62,6 @@ const GettingStartedModal = () => {
 
     useOpenProp(modalOpenState.modalOpen, () => {
         setStepName(StepName.Welcome);
-        resetStepErrors();
         resetEnvironmentsStepData();
         resetSecretsStepIndex();
         resetSecretsStepsData();
@@ -75,24 +73,9 @@ const GettingStartedModal = () => {
     }
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
-    const secretsStepData = secretsStepSchema ? secretsStepsData[secretsStepSchema.name] : undefined;
 
-    const checkSecretsStepDataErrors = () => {
-        if (!secretsStepSchema) {
-            return false;
-        }
-        const localDataError = validateSecretFields(secretsStepSchema.secrets, secretsStepData ?? {});
-        if (localDataError) {
-            setStepErrors([localDataError]);
-            return false;
-        }
-        resetStepErrors();
-        return true;
-    };
+    const navigateToBlueprintsPage = () => dispatch(push('/page/blueprints'));
 
-    const handleStepErrorsDismiss = () => {
-        resetStepErrors();
-    };
     const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
     };
@@ -109,6 +92,7 @@ const GettingStartedModal = () => {
         EventBus.trigger('secrets:refresh');
         setInstallationProcessing(false);
     };
+
     const handleModalClose = () => {
         if (stepName !== StepName.Status) openCancelConfirm();
         else closeModal();
@@ -116,6 +100,7 @@ const GettingStartedModal = () => {
 
     const closeModal = () => {
         modalOpenState.closeModal(modalDisabledChecked);
+        navigateToBlueprintsPage();
         closeCancelConfirm();
     };
 
@@ -123,8 +108,6 @@ const GettingStartedModal = () => {
         function goToPreviousStep() {
             setStepName(stepName - 1);
         }
-
-        resetStepErrors();
 
         switch (stepName) {
             case StepName.Environments:
@@ -171,12 +154,10 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                if (checkSecretsStepDataErrors()) {
-                    if (secretsStepIndex < secretsStepsSchemas.length - 1) {
-                        setSecretsStepIndex(secretsStepIndex + 1);
-                    } else {
-                        goToNextStep();
-                    }
+                if (secretsStepIndex < secretsStepsSchemas.length - 1) {
+                    setSecretsStepIndex(secretsStepIndex + 1);
+                } else {
+                    goToNextStep();
                 }
                 break;
 
@@ -199,14 +180,12 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
             />
             <ModalContent
-                stepErrors={stepErrors}
                 stepName={stepName}
                 environmentsStepData={environmentsStepData}
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
                 summaryStepSchemas={summaryStepSchemas}
-                onStepErrorsDismiss={handleStepErrorsDismiss}
                 onEnvironmentsStepChange={handleEnvironmentsStepChange}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}
