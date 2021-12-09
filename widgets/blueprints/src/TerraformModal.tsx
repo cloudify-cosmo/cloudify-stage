@@ -118,9 +118,10 @@ export default function TerraformModal({
     onHide: () => void;
     toolbox: Stage.Types.WidgetlessToolbox;
 }) {
-    const { useInput, useResettableState } = Stage.Hooks;
+    const { useBoolean, useInput, useResettableState } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
+    const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
 
     const [version, setVersion] = useInput(terraformVersions[0]);
     const [blueprintName, setBlueprintName] = useInput('');
@@ -159,6 +160,7 @@ export default function TerraformModal({
         Accordion,
         ApproveButton,
         CancelButton,
+        Confirm,
         Divider,
         Header,
         LoadingOverlay,
@@ -228,9 +230,16 @@ export default function TerraformModal({
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton onClick={onHide} />
+                <CancelButton onClick={showCancelConfirm} />
                 <ApproveButton content={t('submit')} onClick={handleSubmit} />
             </Modal.Actions>
+
+            <Confirm
+                open={cancelConfirmVisible}
+                content={t('cancelConfirm')}
+                onConfirm={onHide}
+                onCancel={hideCancelConfirm}
+            />
         </Modal>
     );
 }

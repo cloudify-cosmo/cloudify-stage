@@ -832,7 +832,8 @@
                 "progress": {
                     "generation": "1/2: Generating Terraform blueprint...",
                     "upload": "2/2: Uploading Terraform blueprint..."
-                }
+                },
+                "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?"
             }
         },
         "blueprintCatalog": {
