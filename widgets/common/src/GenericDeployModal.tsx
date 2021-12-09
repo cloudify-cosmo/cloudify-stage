@@ -361,7 +361,7 @@ class GenericDeployModal extends React.Component {
                         )}
                         <Accordion fluid styled>
                             <Accordion.Title active={activeSection === 0} index={0} onClick={this.onAccordionClick}>
-                                Deployment Inputs
+                                {t('sections.deploymentInputs')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 0}>
                                 {showDeploymentIdInput && (
@@ -407,7 +407,7 @@ class GenericDeployModal extends React.Component {
                                 )}
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 1} index={1} onClick={this.onAccordionClick}>
-                                Deployment Metadata
+                                {t('sections.deploymentMetadata')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 1}>
                                 {showSitesInput && (
@@ -439,7 +439,7 @@ class GenericDeployModal extends React.Component {
                                 </Form.Field>
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 2} index={2} onClick={this.onAccordionClick}>
-                                Execution Parameters
+                                {t('sections.executionParameters')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 2}>
                                 <Form.Field className="skipPluginsValidationCheckbox">
@@ -453,7 +453,7 @@ class GenericDeployModal extends React.Component {
                                 </Form.Field>
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 3} index={3} onClick={this.onAccordionClick}>
-                                Advanced
+                                {t('sections.advanced')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 3}>
                                 {skipPluginsValidation && (

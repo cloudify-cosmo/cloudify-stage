@@ -573,8 +573,10 @@
                         }
                     },
                     "sections": {
-                        "deploymentMetadata": "Deployment metadata",
-                        "executionParameters": "Execution parameters"
+                        "deploymentInputs": "Deployment Inputs",
+                        "deploymentMetadata": "Deployment Metadata",
+                        "executionParameters": "Execution Parameters",
+                        "advanced": "Advanced"
                     },
                     "buttons": {
                         "deploy": "Deploy",
