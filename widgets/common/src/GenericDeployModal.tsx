@@ -2,7 +2,7 @@
 import Consts from './Consts';
 
 const { i18n } = Stage;
-const t = (key, options) => i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
@@ -359,26 +359,26 @@ class GenericDeployModal extends React.Component {
                                 />
                             </Form.Field>
                         )}
+                        {showDeploymentIdInput && (
+                            <Form.Field
+                                error={errors.deploymentId}
+                                label={t('inputs.deploymentId.label')}
+                                required
+                                help={t('inputs.deploymentId.help')}
+                            >
+                                <Form.Input
+                                    name="deploymentId"
+                                    value={deploymentId}
+                                    onChange={this.handleInputChange}
+                                />
+                            </Form.Field>
+                        )}
                         <Accordion fluid styled>
                             <Accordion.Title active={activeSection === 0} index={0} onClick={this.onAccordionClick}>
+                                <Icon name="dropdown" />
                                 {t('sections.deploymentInputs')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 0}>
-                                {showDeploymentIdInput && (
-                                    <Form.Field
-                                        error={errors.deploymentId}
-                                        label={t('inputs.deploymentId.label')}
-                                        required
-                                        help={t('inputs.deploymentId.help')}
-                                    >
-                                        <Form.Input
-                                            name="deploymentId"
-                                            value={deploymentId}
-                                            onChange={this.handleInputChange}
-                                        />
-                                    </Form.Field>
-                                )}
-
                                 {blueprint.id && (
                                     <>
                                         {!_.isEmpty(blueprint.plan.inputs) && (
@@ -386,12 +386,13 @@ class GenericDeployModal extends React.Component {
                                                 onChange={this.handleYamlFileChange}
                                                 dataType="deployment's inputs"
                                                 fileLoading={fileLoading}
+                                                iconButton
                                             />
                                         )}
                                         {!_.isEmpty(blueprint.plan.data_types) && (
-                                            <DataTypesButton types={blueprint.plan.data_types} />
+                                            <DataTypesButton iconButton types={blueprint.plan.data_types} />
                                         )}
-                                        <InputsHeader />
+                                        <InputsHeader header="" />
                                         {_.isEmpty(blueprint.plan.inputs) && (
                                             <Message content={t('inputs.deploymentInputs.noInputs')} />
                                         )}
@@ -407,6 +408,7 @@ class GenericDeployModal extends React.Component {
                                 )}
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 1} index={1} onClick={this.onAccordionClick}>
+                                <Icon name="dropdown" />
                                 {t('sections.deploymentMetadata')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 1}>
@@ -439,6 +441,7 @@ class GenericDeployModal extends React.Component {
                                 </Form.Field>
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 2} index={2} onClick={this.onAccordionClick}>
+                                <Icon name="dropdown" />
                                 {t('sections.executionParameters')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 2}>
@@ -453,6 +456,7 @@ class GenericDeployModal extends React.Component {
                                 </Form.Field>
                             </Accordion.Content>
                             <Accordion.Title active={activeSection === 3} index={3} onClick={this.onAccordionClick}>
+                                <Icon name="dropdown" />
                                 {t('sections.advanced')}
                             </Accordion.Title>
                             <Accordion.Content active={activeSection === 3}>

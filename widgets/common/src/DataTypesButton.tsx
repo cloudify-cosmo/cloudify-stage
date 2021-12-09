@@ -122,19 +122,23 @@ class DataTypesButton extends React.Component {
     }
 
     render() {
-        const { types } = this.props;
+        const { types, iconButton } = this.props;
         const { open } = this.state;
         const { Button, CancelButton, Modal } = Stage.Basic;
 
         return (
             <div>
-                <Button
-                    icon="code"
-                    content="Show Data Types"
-                    onClick={this.onOpen}
-                    className="rightFloated"
-                    labelPosition="left"
-                />
+                {iconButton ? (
+                    <Button icon="code" onClick={this.onOpen} floated="right" />
+                ) : (
+                    <Button
+                        icon="code"
+                        content="Show Data Types"
+                        onClick={this.onOpen}
+                        floated="right"
+                        labelPosition="left"
+                    />
+                )}
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
@@ -162,7 +166,12 @@ class DataTypesButton extends React.Component {
 }
 export default DataTypesButton;
 
+DataTypesButton.defaultProps = {
+    iconButton: false
+};
+
 DataTypesButton.propTypes = {
+    isIconiconButtonButton: PropTypes.bool,
     types: PropTypes.objectOf(
         PropTypes.shape({
             derived_from: PropTypes.string,
