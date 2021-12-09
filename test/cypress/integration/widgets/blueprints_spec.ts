@@ -423,7 +423,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe.only('should open upload from Terraform template modal and', () => {
+    describe('should open upload from Terraform template modal and', () => {
         before(() => cy.uploadPluginFromCatalog('Terraform'));
 
         beforeEach(() => {
