@@ -21,7 +21,7 @@ class GenericDeployModal extends React.Component {
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
-        activeIndex: 0,
+        activeSection: 0,
         yamlFile: null
     };
 
@@ -97,10 +97,10 @@ class GenericDeployModal extends React.Component {
     }
 
     onAccordionClick(e, { index }) {
-        const { activeIndex } = this.state;
-        const newIndex = activeIndex === index ? -1 : index;
+        const { activeSection } = this.state;
+        const newIndex = activeSection === index ? -1 : index;
 
-        this.setState({ activeIndex: newIndex });
+        this.setState({ activeSection: newIndex });
     }
 
     onCancel() {
@@ -130,15 +130,15 @@ class GenericDeployModal extends React.Component {
         });
 
         return stepPromise.catch(errors => {
-            const { activeIndex } = this.state;
-            let errorActiveIndex = activeIndex;
+            const { activeSection } = this.state;
+            let erroractiveSection = activeSection;
             const keys = Object.keys(errors);
             if (keys.includes('deploymentId')) {
-                errorActiveIndex = 0;
+                erroractiveSection = 0;
             } else if (keys.includes('siteName')) {
-                errorActiveIndex = 1;
+                erroractiveSection = 1;
             }
-            this.setState({ loading: false, errors, activeIndex: errorActiveIndex });
+            this.setState({ loading: false, errors, activeSection: erroractiveSection });
         });
     }
 
@@ -295,7 +295,7 @@ class GenericDeployModal extends React.Component {
             deploymentNameHelp
         } = this.props;
         const {
-            activeIndex,
+            activeSection,
             blueprint,
             deploymentInputs,
             deploymentId,
@@ -360,10 +360,10 @@ class GenericDeployModal extends React.Component {
                             </Form.Field>
                         )}
                         <Accordion fluid styled>
-                            <Accordion.Title active={activeIndex === 0} index={0} onClick={this.onAccordionClick}>
+                            <Accordion.Title active={activeSection === 0} index={0} onClick={this.onAccordionClick}>
                                 Deployment Inputs
                             </Accordion.Title>
-                            <Accordion.Content active={activeIndex === 0}>
+                            <Accordion.Content active={activeSection === 0}>
                                 {showDeploymentIdInput && (
                                     <Form.Field
                                         error={errors.deploymentId}
@@ -406,10 +406,10 @@ class GenericDeployModal extends React.Component {
                                     blueprint.plan.data_types
                                 )}
                             </Accordion.Content>
-                            <Accordion.Title active={activeIndex === 1} index={1} onClick={this.onAccordionClick}>
+                            <Accordion.Title active={activeSection === 1} index={1} onClick={this.onAccordionClick}>
                                 Deployment Metadata
                             </Accordion.Title>
-                            <Accordion.Content active={activeIndex === 1}>
+                            <Accordion.Content active={activeSection === 1}>
                                 {showSitesInput && (
                                     <Form.Field
                                         error={errors.siteName}
@@ -438,10 +438,10 @@ class GenericDeployModal extends React.Component {
                                     />
                                 </Form.Field>
                             </Accordion.Content>
-                            <Accordion.Title active={activeIndex === 2} index={2} onClick={this.onAccordionClick}>
+                            <Accordion.Title active={activeSection === 2} index={2} onClick={this.onAccordionClick}>
                                 Execution Parameters
                             </Accordion.Title>
-                            <Accordion.Content active={activeIndex === 2}>
+                            <Accordion.Content active={activeSection === 2}>
                                 <Form.Field className="skipPluginsValidationCheckbox">
                                     <Form.Checkbox
                                         toggle
@@ -452,10 +452,10 @@ class GenericDeployModal extends React.Component {
                                     />
                                 </Form.Field>
                             </Accordion.Content>
-                            <Accordion.Title active={activeIndex === 3} index={3} onClick={this.onAccordionClick}>
+                            <Accordion.Title active={activeSection === 3} index={3} onClick={this.onAccordionClick}>
                                 Advanced
                             </Accordion.Title>
-                            <Accordion.Content active={activeIndex === 3}>
+                            <Accordion.Content active={activeSection === 3}>
                                 {skipPluginsValidation && (
                                     <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
