@@ -14,19 +14,20 @@ interface props {
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
+function comaSeparatedValuesInBrackets(str: string) {
+    const matches = str.match(/\[(.*?)\]/);
+    if (matches && matches.length > 1) {
+        return matches[1].split(', ');
+    }
+    return [];
+}
+
 const MissingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
     const { useBoolean } = Stage.Hooks;
     const [secretsModalVisible, showSecretsModal, hideSecretsModal] = useBoolean(false);
 
     const { Button, List } = Stage.Basic;
-    const secretKeys = useMemo(() => {
-        // Get comma separated values inside square brackets
-        const matches = error.match(/\[(.*?)\]/);
-        if (matches && matches.length > 1) {
-            return matches[1].split(', ');
-        }
-        return [];
-    }, [error]);
+    const secretKeys = useMemo(() => comaSeparatedValuesInBrackets(error), [error]);
     return (
         <>
             <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
