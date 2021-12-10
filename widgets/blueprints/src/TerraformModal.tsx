@@ -4,44 +4,10 @@ import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
+import terraformVersions from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
-
-const terraformVersions = [
-    '1.0.11',
-    '1.0.10',
-    '1.0.9',
-    '1.0.8',
-    '1.0.7',
-    '1.0.6',
-    '1.0.5',
-    '1.0.4',
-    '1.0.3',
-    '1.0.2',
-    '1.0.1',
-    '1.0.0',
-    '0.14.11',
-    '0.14.10',
-    '0.14.9',
-    '0.14.8',
-    '0.14.7',
-    '0.14.6',
-    '0.14.5',
-    '0.14.4',
-    '0.14.3',
-    '0.14.2',
-    '0.14.1',
-    '0.14.0',
-    '0.13.7',
-    '0.13.6',
-    '0.13.5',
-    '0.13.4',
-    '0.13.3',
-    '0.13.2',
-    '0.13.1',
-    '0.13.0'
-];
 
 const { Dropdown } = Stage.Basic;
 
