@@ -12,6 +12,12 @@ const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 
 const { Dropdown } = Stage.Basic;
 
+const terraformVersionOptions = terraformVersions.map(versionOption => ({
+    text: versionOption,
+    value: versionOption
+}));
+terraformVersionOptions[0].text = `${terraformVersionOptions[0].text} (${t('default')})`;
+
 function getDynamicTableDropdown(options: DropdownProps['options']) {
     return ({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) => {
         return (
@@ -159,10 +165,7 @@ export default function TerraformModal({
                         <Form.Dropdown
                             search
                             selection
-                            options={terraformVersions.map(versionOption => ({
-                                text: versionOption,
-                                value: versionOption
-                            }))}
+                            options={terraformVersionOptions}
                             value={version}
                             onChange={setVersion}
                             clearable={false}
