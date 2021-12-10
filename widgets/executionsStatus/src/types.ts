@@ -17,7 +17,5 @@ export namespace ExecutionsStatusWidget {
         status_display: string;
     }
 
-    export interface Data {
-        items: DataItem[];
-    }
+    export type Data = Stage.Types.PaginatedResponse<DataItem>;
 }
