@@ -1,10 +1,10 @@
-interface Variable {
+export interface Variable {
     name: string;
     source: 'input' | 'secret' | 'static';
     value: string;
 }
 
-interface Output {
+export interface Output {
     name: string;
     type: 'output' | 'capability';
     terraformOutput: string;

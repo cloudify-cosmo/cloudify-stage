@@ -6,6 +6,7 @@ import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
+import type { Variable, Output } from '../../../backend/routes/Terraform.types';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 
@@ -93,9 +94,9 @@ export default function TerraformModal({
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
     const [module, setModule] = useInput('');
-    const [variables, setVariables] = useState<any[]>([]);
-    const [environment, setEnvironment] = useState<any[]>([]);
-    const [outputs, setOutputs] = useState<any[]>([]);
+    const [variables, setVariables] = useState<Variable[]>([]);
+    const [environment, setEnvironment] = useState<Variable[]>([]);
+    const [outputs, setOutputs] = useState<Output[]>([]);
 
     function handleSubmit() {
         const { BlueprintActions } = Stage.Common;

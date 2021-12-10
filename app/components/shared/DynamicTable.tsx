@@ -1,10 +1,7 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
 
 export interface DynamicTableProps
-    extends Pick<
-        Stage.Types.CustomConfigurationComponentProps<Partial<Record<string, any>>[]>,
-        'name' | 'onChange' | 'value'
-    > {
+    extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {
     columns?: Stage.Types.WidgetConfigurationDefinition[];
     [key: string]: any;
 }
