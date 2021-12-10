@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DropdownProps } from 'semantic-ui-react';
+import type { DropdownProps } from 'semantic-ui-react';
 import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
