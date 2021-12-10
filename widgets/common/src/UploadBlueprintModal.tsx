@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 // @ts-nocheck File not migrated fully to TS
 const { BlueprintActions } = Stage.Common;
 const i18nPrefix = 'widgets.common.blueprintUpload';
@@ -15,8 +13,6 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
     } = Stage;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    // NOTE: Here we can see the problem 😁
-    // Errors are being set with the useInputs hook, which is not being responsible for handling errors
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
     const [visibility, setVisibility, clearVisibility] = useResettableState(Stage.Common.Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
@@ -30,11 +26,6 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
     const [uploadState, setUploadState] = useState();
 
     const actions = useRef(new BlueprintActions(toolbox));
-
-    useEffect(() => {
-        // eslint-disable-next-line
-        console.log(inputs);
-    }, [inputs]);
 
     useOpenProp(open, () => {
         unsetLoading();
