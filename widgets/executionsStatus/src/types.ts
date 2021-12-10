@@ -1,11 +1,11 @@
 // eslint-disable-next-line import/prefer-default-export
+/* eslint-disable camelcase */
 
 export namespace ExecutionsStatusWidget {
     export type Configuration = {
         pollingTime: number;
     };
     export interface Params {
-        /* eslint-disable camelcase */
         blueprint_id: Stage.ContextEntries['blueprintId'];
         deployment_id: Stage.ContextEntries['deploymentId'] | undefined;
         id: Stage.ContextEntries['executionId'];
@@ -20,5 +20,4 @@ export namespace ExecutionsStatusWidget {
     export interface Data {
         items: DataItem[];
     }
-    /* eslint-enable camelcase */
 }
