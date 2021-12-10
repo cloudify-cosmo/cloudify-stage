@@ -12,8 +12,7 @@ interface props {
     onAdd: () => void;
 }
 
-const { i18n } = Stage;
-const t = (key: string) => i18n.t(`widgets.common.deployments.deployModal.${key}`);
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
 const MissingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }) => {
     const { useBoolean } = Stage.Hooks;

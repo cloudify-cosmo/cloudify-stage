@@ -12,8 +12,7 @@ type secretInputsType = {
     [key: string]: string;
 };
 
-const { i18n } = Stage;
-const t = (key: string) => i18n.t(`widgets.common.deployments.secretsModal.${key}`);
+const t = Stage.Utils.getT('widgets.common.deployments.secretsModal');
 
 const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, open, secretKeys, onAdd }) => {
     if (!Array.isArray(secretKeys)) {
