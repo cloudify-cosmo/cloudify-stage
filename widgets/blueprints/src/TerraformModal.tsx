@@ -33,6 +33,8 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
     };
 }
 
+const dynamicTableFieldStyle = { height: 38 };
+
 const variablesColumns = [
     {
         id: 'variable',
@@ -48,14 +50,14 @@ const variablesColumns = [
             { text: t('variablesTable.sources.input'), value: 'input' },
             { text: t('variablesTable.sources.static'), value: 'static' }
         ]),
-        style: { height: 38 }
+        style: dynamicTableFieldStyle
     },
     {
         id: 'value',
         label: t('variablesTable.value'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: TerraformVariableValueInput,
-        style: { height: 38 }
+        style: dynamicTableFieldStyle
     }
 ];
 
@@ -74,7 +76,7 @@ const outputsColumns = [
             { text: t('outputsTable.types.output'), value: 'output' },
             { text: t('outputsTable.types.capability'), value: 'capability' }
         ]),
-        style: { height: 38 }
+        style: dynamicTableFieldStyle
     },
     {
         id: 'terraformOutput',
