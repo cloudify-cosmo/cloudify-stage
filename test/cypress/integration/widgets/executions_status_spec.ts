@@ -1,4 +1,4 @@
-describe('ExecutionStatus widget', () => {
+describe('Executions Statuses Graph widget', () => {
     const widgetId = 'executionsStatus';
     const executionQuantity = 12;
 
