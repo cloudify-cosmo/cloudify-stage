@@ -133,6 +133,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                         uploadState={uploadState}
                         onChange={onFormFieldChange}
                         toolbox={toolbox}
+                        clearErrors={clearErrors}
                     />
                 </Modal.Content>
 

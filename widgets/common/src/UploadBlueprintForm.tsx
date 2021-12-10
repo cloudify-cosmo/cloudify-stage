@@ -139,7 +139,8 @@ class UploadBlueprintForm extends React.Component {
             errors,
             loading: loadingProp,
             showErrorsSummary,
-            uploadState
+            uploadState,
+            clearErrors
         } = this.props;
         const { Form } = Stage.Basic;
         const { UploadBlueprintBasicForm } = Stage.Common;
@@ -156,7 +157,7 @@ class UploadBlueprintForm extends React.Component {
                 blueprintUploading={loadingProp}
                 yamlFileHelp={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
                 onInputChange={this.handleInputChange}
-                onErrorsDismiss={this.resetErrors}
+                onErrorsDismiss={clearErrors}
                 firstFormField={
                     <Form.Field
                         label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
@@ -209,7 +210,8 @@ UploadBlueprintForm.propTypes = {
     showErrorsSummary: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    uploadState: PropTypes.string
+    uploadState: PropTypes.string,
+    clearErrors: PropTypes.func
 };
 
 UploadBlueprintForm.defaultProps = {
