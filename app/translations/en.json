@@ -805,7 +805,7 @@
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
                 "template": "Terraform template",
-                "module": "Resource location",
+                "resourceLocation": "Resource location",
                 "mapping": "Variable and output mapping",
                 "variables": "Variables",
                 "environment": "Environment variables",

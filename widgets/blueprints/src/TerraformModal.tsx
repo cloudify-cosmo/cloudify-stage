@@ -99,7 +99,7 @@ export default function TerraformModal({
     const [version, setVersion] = useInput(terraformVersions[0]);
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
-    const [module, setModule] = useInput('');
+    const [resourceLocation, setResourceLocation] = useInput('');
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
@@ -111,7 +111,7 @@ export default function TerraformModal({
             .doGenerateBlueprint({
                 terraformTemplate: templateUrl,
                 terraformVersion: version,
-                resourceLocation: module,
+                resourceLocation,
                 variables,
                 environmentVariables: environment,
                 outputs
@@ -177,8 +177,8 @@ export default function TerraformModal({
                             <UnsafelyTypedFormField label={t(`template`)} required>
                                 <Form.Input value={templateUrl} onChange={setTemplateUrl} />
                             </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField label={t(`module`)} required>
-                                <Form.Input value={module} onChange={setModule} />
+                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required>
+                                <Form.Input value={resourceLocation} onChange={setResourceLocation} />
                             </UnsafelyTypedFormField>
                         </TerraformModalAccordion>
                         <Header size="tiny">{t('mapping')}</Header>
