@@ -120,13 +120,23 @@ export default class BlueprintActions {
 
     doUpload(
         blueprintName: string,
-        blueprintYamlFile: string,
-        blueprintUrl: string,
-        file: any,
-        imageUrl: string,
-        image: any,
-        visibility: string,
-        onStateChanged = _.noop
+        {
+            blueprintYamlFile,
+            blueprintUrl,
+            file,
+            imageUrl,
+            image,
+            visibility = Stage.Common.Consts.defaultVisibility,
+            onStateChanged = _.noop
+        }: {
+            blueprintYamlFile?: string;
+            blueprintUrl?: string;
+            file?: Blob & { name: string };
+            imageUrl?: string;
+            image?: any;
+            visibility?: string;
+            onStateChanged?: (state: string) => void;
+        }
     ) {
         const params: Record<string, any> = { visibility, async_upload: true };
 
@@ -196,7 +206,7 @@ export default class BlueprintActions {
             .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
     }
 
-    doUploadImage(blueprintId: string, imageUrl: string, files: any) {
+    doUploadImage(blueprintId: string, imageUrl: string | undefined, files: any) {
         if (_.isEmpty(imageUrl) && !files) {
             return Promise.resolve();
         }

@@ -122,15 +122,7 @@ export default function TerraformModal({
                 setProcessPhase('upload');
                 const file: any = new Blob([blueprintContent]);
                 file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
-                return new BlueprintActions(toolbox).doUpload(
-                    blueprintName,
-                    '',
-                    '',
-                    file,
-                    '',
-                    null,
-                    Stage.Common.Consts.defaultVisibility
-                );
+                return new BlueprintActions(toolbox).doUpload(blueprintName, { file });
             })
             .then(() => {
                 toolbox.getEventBus().trigger('blueprints:refresh');
