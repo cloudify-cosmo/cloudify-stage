@@ -1,8 +1,9 @@
 import React from 'react';
 import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
+import type { Variable } from '../../../backend/routes/Terraform.types';
 
 interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
-    rowValues?: { source: string };
+    rowValues?: Variable;
 }
 
 export default function TerraformVariableValueInput({
