@@ -37,7 +37,7 @@ const dynamicTableFieldStyle = { height: 38 };
 
 const variablesColumns = [
     {
-        id: 'variable',
+        id: 'name',
         label: t('variablesTable.variable'),
         type: Stage.Basic.GenericField.STRING_TYPE
     },
@@ -63,7 +63,7 @@ const variablesColumns = [
 
 const outputsColumns = [
     {
-        id: 'output',
+        id: 'name',
         label: t('outputsTable.output'),
         default: '',
         type: Stage.Basic.GenericField.STRING_TYPE
