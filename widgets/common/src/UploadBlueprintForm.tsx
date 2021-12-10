@@ -128,7 +128,7 @@ class UploadBlueprintForm extends React.Component {
 
     resetErrors = () => {
         const { onChange } = this.props;
-        onChange({ ...UploadBlueprintForm.NO_ERRORS });
+        onChange(UploadBlueprintForm.NO_ERRORS);
     };
 
     render() {
