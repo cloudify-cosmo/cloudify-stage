@@ -7,7 +7,7 @@ const { Graph } = Stage.Shared;
 const widgetId = 'executionsStatus';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
-Stage.defineWidget<ExecutionsStatusWidget.params, ExecutionsStatusWidget.data, ExecutionsStatusWidget.configuration>({
+Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, ExecutionsStatusWidget.Configuration>({
     id: widgetId,
     name: t('name'),
     description: t('description'),
@@ -35,13 +35,13 @@ Stage.defineWidget<ExecutionsStatusWidget.params, ExecutionsStatusWidget.data, E
             return <Loading />;
         }
 
-        if (_.isEmpty(data.items)) {
+        if (_.isEmpty(data?.items)) {
             const { Message } = Stage.Basic;
             return <Message content={t('noExecutions')} />;
         }
 
         const formattedData = _.sortBy(
-            _.map(data.items, statusSum => ({
+            _.map(data?.items, statusSum => ({
                 status: _.startCase(statusSum.status_display),
                 number_of_executions: statusSum.executions
             })),
