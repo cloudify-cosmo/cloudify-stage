@@ -121,7 +121,7 @@ export default function TerraformModal({
             .then(blueprintContent => {
                 setProcessPhase('upload');
                 const file: any = new Blob([blueprintContent]);
-                file.name = 'blueprint.yaml';
+                file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
                 return new BlueprintActions(toolbox).doUpload(
                     blueprintName,
                     '',

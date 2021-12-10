@@ -82,7 +82,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         repositoryName,
         zipUrl,
         imageUrl,
-        defaultYamlFile = 'blueprint.yaml'
+        defaultYamlFile = Stage.Common.Consts.defaultBlueprintYamlFileName
     ) => {
         const { toolbox, widget } = this.props;
         const { BlueprintActions } = Stage.Common;

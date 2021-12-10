@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
+import Consts from './Consts';
 
 class UploadBlueprintForm extends React.Component {
     static initialState = {
@@ -7,7 +7,7 @@ class UploadBlueprintForm extends React.Component {
         yamlFiles: []
     };
 
-    static DEFAULT_BLUEPRINT_YAML_FILE = 'blueprint.yaml';
+    static DEFAULT_BLUEPRINT_YAML_FILE = Consts.defaultBlueprintYamlFileName;
 
     static NO_ERRORS = { errors: {} };
 
