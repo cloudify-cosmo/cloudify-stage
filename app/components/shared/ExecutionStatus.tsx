@@ -55,7 +55,7 @@ export default function ExecutionStatus({
     }
 
     return showLabel ? (
-        <Popup on={showPopup ? 'hover' : []}>
+        <Popup on="hover" disabled={!showPopup}>
             <Popup.Trigger>
                 <Label attached={labelAttached} onClick={e => e.stopPropagation()}>
                     {renderIcon()}
@@ -68,11 +68,7 @@ export default function ExecutionStatus({
                 <span
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                        __html: i18n.t(
-                            'shared.executionStatus.scheduledFor',
-                            'Scheduled for: <strong>{{datetime}}}</strong>',
-                            { datetime: execution.scheduled_for }
-                        )
+                        __html: i18n.t('shared.executionStatus.scheduledFor', { datetime: execution.scheduled_for })
                     }}
                 />
             ) : null}
