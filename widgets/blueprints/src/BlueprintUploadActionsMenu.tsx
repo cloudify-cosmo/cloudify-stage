@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo } from 'react';
+import { useMemo } from 'react';
+import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 import TerraformModal from './TerraformModal';
