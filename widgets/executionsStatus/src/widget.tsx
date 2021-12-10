@@ -1,5 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
 import { format as d3format } from 'd3-format';
+import type { ExecutionsStatusWidget } from './types';
 
 const { Loading } = Stage.Basic;
 const { Graph } = Stage.Shared;
@@ -7,7 +7,7 @@ const { Graph } = Stage.Shared;
 const widgetId = 'executionsStatus';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
-Stage.defineWidget({
+Stage.defineWidget<ExecutionsStatusWidget.params, ExecutionsStatusWidget.data, ExecutionsStatusWidget.configuration>({
     id: widgetId,
     name: t('name'),
     description: t('description'),
@@ -21,7 +21,7 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(5)],
     fetchUrl: '[manager]/summary/executions?_target_field=status_display[params]',
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
@@ -30,7 +30,7 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data) {
+    render(_widget, data) {
         if (_.isEmpty(data)) {
             return <Loading />;
         }
@@ -52,6 +52,7 @@ Stage.defineWidget({
 
         return (
             <Graph
+                // @ts-expect-error Graph is not converted to TS yet
                 type={Graph.BAR_CHART_TYPE}
                 data={formattedData}
                 charts={charts}

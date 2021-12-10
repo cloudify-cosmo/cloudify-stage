@@ -128,7 +128,9 @@ class UploadBlueprintForm extends React.Component {
 
     resetErrors = () => {
         const { onChange } = this.props;
-        onChange(UploadBlueprintForm.NO_ERRORS);
+        // eslint-disable-next-line
+        console.log('Errors :D');
+        onChange({ ...UploadBlueprintForm.NO_ERRORS });
     };
 
     render() {
