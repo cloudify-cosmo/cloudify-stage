@@ -11,7 +11,7 @@ import { useBoolean, useResettableState } from '../../utils/hooks';
 import SideBarHeader from './SideBarHeader';
 
 export const collapsedSidebarWidth = '4.3rem';
-export const expandedSidebarWidth = '17rem';
+export const expandedSidebarWidth = '18rem';
 
 const ThemedSidebar = styled(Sidebar)`
     border: 0 !important;
@@ -29,6 +29,18 @@ const ThemedSidebar = styled(Sidebar)`
     .item:hover {
         background-color: ${props => props.theme.sidebarHoverActiveColor} !important;
         color: ${props => props.theme.sidebarHoverActiveTextColor} !important;
+    }
+    :after {
+        position: fixed;
+        content: '';
+        width: 0.5em;
+        height: 0.5em !important;
+        -webkit-transform: rotate(45deg);
+        transform: rotate(45deg);
+        background-color: ${props => (props.$expanded ? 'white' : '#050229')} !important;
+        top: 24px;
+        right: -3px;
+        visibility: visible !important;
     }
 `;
 
