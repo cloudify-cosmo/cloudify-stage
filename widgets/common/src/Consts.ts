@@ -2,6 +2,7 @@ import type { MapOptions } from 'leaflet';
 
 const consts = {
     defaultVisibility: 'tenant',
+    defaultBlueprintYamlFileName: 'blueprint.yaml',
     sysAdminRole: 'sys_admin',
     defaultUserRole: 'default',
     adminUsername: 'admin',
