@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 /* eslint-disable camelcase */
 
 export namespace ExecutionsStatusWidget {
