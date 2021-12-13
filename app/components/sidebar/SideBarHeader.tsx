@@ -23,7 +23,7 @@ const SideBarHeader: FunctionComponent = () => {
     const theme = useContext(ThemeContext) || {};
 
     return (
-        <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', flexShrink: 0 }}>
+        <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', flexShrink: 0, borderBottom: '1px white solid' }}>
             <div style={{ fontFamily: productFont, display: 'inline-block', maxWidth: 10 }}>
                 <LicenseLabel
                     style={{

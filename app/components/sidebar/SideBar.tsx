@@ -14,6 +14,7 @@ export const collapsedSidebarWidth = '4.3rem';
 export const expandedSidebarWidth = '17rem';
 
 const ThemedSidebar = styled(Sidebar)`
+    border: 0 !important;
     &&& {
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
