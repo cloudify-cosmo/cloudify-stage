@@ -1,6 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 export {};
 
+const t = Stage.Utils.getT('widgets.common.blueprintUpload.inputs');
+
 class UploadBlueprintForm extends React.Component {
     static initialState = {
         loading: false,
@@ -144,7 +146,6 @@ class UploadBlueprintForm extends React.Component {
         } = this.props;
         const { Form } = Stage.Basic;
         const { UploadBlueprintBasicForm } = Stage.Common;
-        const { i18n } = Stage;
 
         return (
             <UploadBlueprintBasicForm
@@ -155,19 +156,19 @@ class UploadBlueprintForm extends React.Component {
                 uploadState={uploadState}
                 formLoading={loadingState}
                 blueprintUploading={loadingProp}
-                yamlFileHelp={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintYamlFile.label`)}
+                yamlFileHelp={t('blueprintYamlFile.label')}
                 onInputChange={this.handleInputChange}
                 onErrorsDismiss={clearErrors}
                 firstFormField={
                     <Form.Field
-                        label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.label`)}
+                        label={t('blueprintPackage.label')}
                         required
                         error={errors.blueprintUrl}
-                        help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.help`)}
+                        help={t('blueprintPackage.help')}
                     >
                         <Form.UrlOrFile
                             name="blueprint"
-                            placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintPackage.placeholder`)}
+                            placeholder={t('blueprintPackage.placeholder')}
                             onChangeUrl={this.onBlueprintUrlChange}
                             onBlurUrl={this.onBlueprintUrlBlur}
                             onChangeFile={this.onBlueprintFileChange}
@@ -175,14 +176,10 @@ class UploadBlueprintForm extends React.Component {
                     </Form.Field>
                 }
                 lastFormField={
-                    <Form.Field
-                        label="Blueprint icon"
-                        error={errors.imageUrl}
-                        help={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.help`)}
-                    >
+                    <Form.Field label="Blueprint icon" error={errors.imageUrl} help={t('blueprintIcon.help')}>
                         <Form.UrlOrFile
                             name="image"
-                            placeholder={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintIcon.placeholder`)}
+                            placeholder={t('blueprintIcon.placeholder')}
                             onChangeUrl={this.onBlueprintImageUrlChange}
                             onChangeFile={this.onBlueprintImageChange}
                         />
