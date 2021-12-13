@@ -11,9 +11,9 @@ import Consts from '../../utils/consts';
 import { productFont } from '../fonts';
 
 const StyledLink = styled(Link)`
-    color: inherit !important;
+    color: white !important;
     &:hover {
-        color: inherit !important;
+        color: white !important;
         text-decoration: none !important;
     }
 `;
@@ -43,17 +43,20 @@ const SideBarHeader: FunctionComponent = () => {
             </div>
             <StyledLink to={Consts.HOME_PAGE_PATH}>
                 <Logo url={theme.logoUrl || builtInLogo} style={{ position: null, height: 33, margin: '11px 8px' }} />
-                <span
-                    style={{
-                        letterSpacing: '0.2em',
-                        marginRight: '1em',
-                        textTransform: 'uppercase',
-                        fontFamily: productFont
-                    }}
-                >
-                    {i18n.t('productName')}
-                </span>
-                v<ProductVersion version={productVersion} style={{ color: 'inherit', marginLeft: '-0.3em' }} />
+                <div style={{ display: 'inline', fontSize: '1.5em', verticalAlign: 'middle' }}>
+                    <span
+                        style={{
+                            letterSpacing: '0.1em',
+                            marginRight: '0.5em',
+                            textTransform: 'uppercase',
+                            fontFamily: productFont
+                        }}
+                    >
+                        {i18n.t('productName')}
+                    </span>
+                    v
+                    <ProductVersion version={productVersion} style={{ color: 'inherit', marginLeft: '-0.3em' }} />
+                </div>
             </StyledLink>
         </div>
     );

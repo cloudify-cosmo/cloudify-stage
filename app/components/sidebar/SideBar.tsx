@@ -11,7 +11,7 @@ import { useBoolean, useResettableState } from '../../utils/hooks';
 import SideBarHeader from './SideBarHeader';
 
 export const collapsedSidebarWidth = '4.3rem';
-export const expandedSidebarWidth = '15rem';
+export const expandedSidebarWidth = '17rem';
 
 const ThemedSidebar = styled(Sidebar)`
     &&& {
@@ -27,7 +27,7 @@ const ThemedSidebar = styled(Sidebar)`
     .item.active,
     .item:hover {
         background-color: ${props => props.theme.sidebarHoverActiveColor} !important;
-        color: ${props => props.theme.sidebarTextColor} !important;
+        color: ${props => props.theme.sidebarHoverActiveTextColor} !important;
     }
 `;
 
