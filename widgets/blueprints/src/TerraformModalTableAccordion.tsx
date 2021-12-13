@@ -5,11 +5,11 @@ import type { DynamicTableProps } from '../../../app/components/shared/DynamicTa
 const { DynamicTable } = Stage.Shared;
 type DynamicTableValue = DynamicTableProps['value'];
 
-export interface TerraformModalTableAccordionProps<T> {
+export interface TerraformModalTableAccordionProps<T extends any[]> {
     value: T;
     onChange: (value: T) => void;
     title: string;
-    columns: DynamicTableProps['columns'];
+    columns: (Stage.Types.WidgetConfigurationDefinition & { id: keyof T[number] })[];
     toolbox: Stage.Types.WidgetlessToolbox;
 }
 

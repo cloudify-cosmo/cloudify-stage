@@ -35,9 +35,9 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
 
 const dynamicTableFieldStyle = { height: 38 };
 
-type Columns = TerraformModalTableAccordionProps<any>['columns'];
+type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
 
-const variablesColumns: Columns = [
+const variablesColumns: Columns<Variable> = [
     {
         id: 'name',
         label: t('variablesTable.name'),
@@ -63,7 +63,7 @@ const variablesColumns: Columns = [
     }
 ];
 
-const outputsColumns: Columns = [
+const outputsColumns: Columns<Output> = [
     {
         id: 'name',
         label: t('outputsTable.name'),
