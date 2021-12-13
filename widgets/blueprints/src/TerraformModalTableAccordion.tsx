@@ -5,7 +5,7 @@ import type { DynamicTableProps } from '../../../app/components/shared/DynamicTa
 const { DynamicTable } = Stage.Shared;
 type DynamicTableValue = DynamicTableProps['value'];
 
-interface TerraformModalTableAccordionProps<T> {
+export interface TerraformModalTableAccordionProps<T> {
     value: T;
     onChange: (value: T) => void;
     title: string;

@@ -811,7 +811,7 @@
                 "environment": "Environment variables",
                 "outputs": "Outputs",
                 "variablesTable": {
-                    "variable": "Variable",
+                    "name": "Variable",
                     "source": "Source",
                     "value": "Value",
                     "sources": {
@@ -821,7 +821,7 @@
                     }
                 },
                 "outputsTable": {
-                    "output": "Output",
+                    "name": "Output",
                     "type": "Output type",
                     "terraformOutput": "Terraform output",
                     "types": {

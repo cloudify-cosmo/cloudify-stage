@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
 import TerraformModalAccordion from './TerraformModalAccordion';
-import TerraformModalTableAccordion from './TerraformModalTableAccordion';
+import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions from './terraformVersions';
@@ -35,10 +35,12 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
 
 const dynamicTableFieldStyle = { height: 38 };
 
-const variablesColumns = [
+type Columns = TerraformModalTableAccordionProps<any>['columns'];
+
+const variablesColumns: Columns = [
     {
         id: 'name',
-        label: t('variablesTable.variable'),
+        label: t('variablesTable.name'),
         type: Stage.Basic.GenericField.STRING_TYPE
     },
     {
@@ -61,10 +63,10 @@ const variablesColumns = [
     }
 ];
 
-const outputsColumns = [
+const outputsColumns: Columns = [
     {
         id: 'name',
-        label: t('outputsTable.output'),
+        label: t('outputsTable.name'),
         default: '',
         type: Stage.Basic.GenericField.STRING_TYPE
     },
