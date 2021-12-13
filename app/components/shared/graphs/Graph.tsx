@@ -176,7 +176,6 @@ export default class Graph extends Component {
             onClick,
             showLegend,
             syncId,
-            tooltipFormatter,
             type,
             xDataKey,
             yAxisAllowDecimals,
@@ -241,7 +240,7 @@ export default class Graph extends Component {
                     {chartElements}
                     <CartesianGrid strokeDasharray={STROKE_DASHARRAY} />
                     <XAxis dataKey={xDataKey} />
-                    <Tooltip isAnimationActive={false} formatter={tooltipFormatter} cursor={false} />
+                    <Tooltip isAnimationActive={false} cursor={false} />
                     {showLegend && <Legend />}
                 </ChartComponent>
             </ResponsiveContainer>
@@ -287,11 +286,6 @@ Graph.propTypes = {
     syncId: PropTypes.string,
 
     /**
-     * callback function to format the text of the tooltip
-     */
-    tooltipFormatter: PropTypes.func,
-
-    /**
      * stylesheet for X-axis tick
      */
     xAxisTick: PropTypes.shape({}),
@@ -321,7 +315,6 @@ Graph.defaultProps = {
     onClick: _.noop,
     showLegend: true,
     syncId: '',
-    tooltipFormatter: _.noop,
     xAxisTick: { fontSize: '10px' },
     xDataKey: Graph.DEFAULT_X_DATA_KEY,
     yAxisAllowDecimals: true,
