@@ -1,3 +1,4 @@
+import { secondsToMs } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
 describe('Blueprints widget', () => {
@@ -33,10 +34,12 @@ describe('Blueprints widget', () => {
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
+            .deletePlugins()
             .usePageMock('blueprints', blueprintsWidgetConfiguration, {
                 additionalWidgetIdsToLoad: ['blueprintCatalog']
             })
             .mockLogin()
+            .uploadPluginFromCatalog('Utilities')
     );
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
@@ -362,8 +365,6 @@ describe('Blueprints widget', () => {
         });
 
         describe('should upload a blueprint', () => {
-            before(() => cy.deletePlugins().uploadPluginFromCatalog('Utilities'));
-
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
 
@@ -439,6 +440,29 @@ describe('Blueprints widget', () => {
                 cy.contains('.header', 'Blueprint marketplace');
                 cy.get('.tabular > a.item').should('have.length', marketplaceTabs.length);
                 cy.get('.blueprintCatalogWidget').should('be.visible');
+            });
+        });
+    });
+
+    describe('should open upload from Terraform template modal and', () => {
+        before(() => cy.uploadPluginFromCatalog('Terraform'));
+
+        beforeEach(() => {
+            cy.contains('Upload').click();
+            cy.contains('Upload from Terraform template').click();
+        });
+
+        it('create new blueprint on submit', () => {
+            const blueprintName = `${blueprintNamePrefix}_terraform`;
+            cy.get('.modal').within(() => {
+                cy.getField('Blueprint name').find('input').type(blueprintName);
+                cy.contains('button', 'Create').click();
+                cy.contains('Uploading Terraform blueprint').should('be.visible');
+            });
+            cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
+            cy.getWidget('blueprints').within(() => {
+                cy.getSearchInput().type(blueprintName);
+                cy.contains('table', blueprintName).should('be.visible');
             });
         });
     });

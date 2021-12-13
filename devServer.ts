@@ -38,6 +38,7 @@ const options = {
         [`${CONTEXT_PATH}/sp`]: proxyOptions,
         [`${CONTEXT_PATH}/style`]: proxyOptions,
         [`${CONTEXT_PATH}/templates`]: proxyOptions,
+        [`${CONTEXT_PATH}/terraform`]: proxyOptions,
         [`${CONTEXT_PATH}/ua`]: proxyOptions,
         [`${CONTEXT_PATH}/userData`]: proxyOptions,
         [`${CONTEXT_PATH}/wb`]: proxyOptions,
