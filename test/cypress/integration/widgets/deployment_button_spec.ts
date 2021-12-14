@@ -257,10 +257,10 @@ describe('Create Deployment Button widget', () => {
             cy.get('.secretsModal .error li').should('have.text', 'Please provide values for secrets');
 
             cy.get('.secretsModal input').type('aaa');
+            cy.interceptSp('PUT', `/secrets/${secretName}`, { statusCode: 200 }).as('addSecrets');
             cy.contains('.secretsModal button', 'Add').click();
             cy.get('form.error .error').should('not.exist');
-
-            cy.interceptSp('PUT', `/console/sp/secrets/${secretName}`, { statusCode: 200 });
+            cy.wait('@addSecrets');
         });
     });
 
