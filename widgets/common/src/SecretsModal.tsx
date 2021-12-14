@@ -1,5 +1,7 @@
 import type { FunctionComponent } from 'react';
 
+type Visibility = 'private' | 'tenant' | 'global';
+
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
     secretKeys: Array<string>;
@@ -38,7 +40,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         setLoading();
 
         const isHiddenValue = true;
-        const visibility = Stage.Common.Consts.defaultVisibility as Stage.Types.Visibility;
+        const visibility = Stage.Common.Consts.defaultVisibility as Visibility;
         const actions = new Stage.Common.SecretActions(toolbox);
         Promise.all(
             keys.map(secretKey => actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue))

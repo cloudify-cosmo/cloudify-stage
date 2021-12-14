@@ -297,8 +297,6 @@ declare global {
             type ReduxState = import('../reducers').ReduxState;
 
             type ObjectKeys<T extends Record<string, any>> = T[keyof T];
-
-            type Visibility = 'private' | 'tenant' | 'global';
         }
     }
 }
