@@ -1,7 +1,7 @@
 tosca_definitions_version: cloudify_dsl_1_3
 
 description: >
-  This blueprint creates infrastructure on AWS using Terraform.
+  This blueprint was automatically created from a Terraform template.
 
 imports:
   - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
@@ -29,7 +29,7 @@ node_templates:
     type: cloudify.nodes.terraform
     properties:
       resource_config:
-        installation_source: https://releases.hashicorp.com/terraform/teraform_<%= terraformVersion %>/teraform_<%= terraformVersion %>_linux_amd64.zip
+        installation_source: https://releases.hashicorp.com/terraform/<%= terraformVersion %>/terraform_<%= terraformVersion %>_linux_amd64.zip
 
   cloud_resources:
     type: cloudify.nodes.terraform.Module
