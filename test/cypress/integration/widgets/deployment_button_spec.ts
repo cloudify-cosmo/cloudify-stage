@@ -117,14 +117,6 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
-    function clickIfExist(element) {
-        cy.get('body').then(body => {
-            if (body.find(element).length > 0) {
-                cy.get(element).click();
-            }
-        });
-    }
-
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
@@ -155,7 +147,7 @@ describe('Create Deployment Button widget', () => {
 
     describe('handles errors during deploy & install process', () => {
         afterEach(() => {
-            clickIfExist('.actions > .ui:nth-child(1)');
+            cy.get('.actions > .ui:nth-child(1)').click();
         });
 
         it('handles data validation errors', () => {
