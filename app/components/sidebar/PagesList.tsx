@@ -30,7 +30,7 @@ import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
 import IconSelection from './IconSelection';
-import { SideBarItemWrapper } from './SideBarItem';
+import { SideBarItemWrapper, sideBarItemFontSize } from './SideBarItem';
 
 export interface PagesListProps {
     pageId: string;
@@ -62,7 +62,7 @@ const RemoveIcon = styled(Icon)`
 
 const EditIcon = styled(Icon)`
     position: relative;
-    top: -3px;
+    top: -10px;
     margin-left: 1em !important;
     display: none !important;
 
@@ -255,10 +255,10 @@ const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds
                         float: 'none',
                         padding: 0,
                         margin: 0,
-                        fontSize: 'inherit',
+                        fontSize: sideBarItemFontSize,
                         fontWeight: 'inherit',
                         ...(!itemNameInEdit && {
-                            height: 13,
+                            height: 20,
                             maxWidth: 113,
                             overflow: 'hidden',
                             textOverflow: 'ellipsis'
