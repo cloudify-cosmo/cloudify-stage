@@ -52,7 +52,7 @@ describe('Create Deployment Button widget', () => {
             cy.setSearchableDropdownValue('Blueprint', blueprintName);
 
             cy.log('Waiting for blueprint to load and modal to be operational.');
-            cy.contains('Deployment inputs').should('be.visible');
+            cy.contains('Deployment Inputs').should('be.visible');
         });
     };
 
@@ -71,14 +71,17 @@ describe('Create Deployment Button widget', () => {
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
-            cy.contains('h4', 'Deployment inputs')
-                .nextUntil('h4:contains(Deployment metadata)')
-                // check hidden input is not rendered
-                .should('have.length', 1)
-                .should('have.class', 'field')
+            cy.contains('.accordion .title', 'Deployment Inputs')
+                .next('.content')
                 .within(() => {
-                    cy.contains('label', 'Server IP');
-                    cy.get('textarea').type('127.0.0.1');
+                    // check hidden input is not rendered
+                    cy.get('.field')
+                        .should('have.length', 1)
+                        .should('have.class', 'field')
+                        .within(() => {
+                            cy.contains('label', 'Server IP');
+                            cy.get('textarea').type('127.0.0.1');
+                        });
                 });
         });
     };
