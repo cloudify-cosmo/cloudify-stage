@@ -245,12 +245,11 @@ describe('Create Deployment Button widget', () => {
 
             cy.get('input[name=deploymentName]').type('blahBlahBlah');
             cy.contains('.modal button', 'Deploy').click();
-            cy.get('form.error .error .header').should('have.text', 'Missing Secrets Error');
-            cy.get('form.error .error p').should(
-                'have.text',
-                'The following required secrets are missing in this tenant:'
-            );
-            cy.get('form.error .error .item').should('have.text', secretName);
+            cy.get('form.error .error').within(() => {
+                cy.get('.header').should('have.text', 'Missing Secrets Error');
+                cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
+                cy.get('.item').should('have.text', secretName);
+            });
 
             cy.contains('form.error button', 'Add Missing Secrets').click();
             cy.contains('.secretsModal button', 'Add').click();
