@@ -6,6 +6,7 @@ import fs from 'fs';
 import passport from 'passport';
 import path from 'path';
 import { getLogger } from '../handler/LoggerHandler';
+import type { RequestBody } from './Terraform.types';
 
 const logger = getLogger('Terraform');
 const router = express.Router();
@@ -14,27 +15,6 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 
 router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
-
-interface Variable {
-    name: string;
-    source: 'input' | 'secret' | 'static';
-    value: string;
-}
-
-interface Output {
-    name: string;
-    type: 'output' | 'capability';
-    terraformOutput: string;
-}
-
-interface RequestBody {
-    terraformVersion: string;
-    terraformTemplate: string;
-    resourceLocation: string;
-    variables?: Variable[];
-    environmentVariables?: Variable[];
-    outputs?: Output[];
-}
 
 router.post('/blueprint', (req, res) => {
     const {

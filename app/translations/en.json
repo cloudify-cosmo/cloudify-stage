@@ -720,6 +720,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
+                    "uploadFromTerraformTemplate": "Upload from Terraform template",
                     "generateInComposer": "Generate in the Composer"
                 }
             },
@@ -796,6 +797,44 @@
                     "placeholder": "Select fields from the list"
                 },
                 "labelFilterRules": "Label filter rules"
+            },
+            "terraformModal": {
+                "header": "Create blueprint from Terraform",
+                "submit": "Create",
+                "blueprintName": "Blueprint name",
+                "terraformVersion": "Terraform version",
+                "blueprintInformation": "Blueprint main information",
+                "template": "Terraform template",
+                "resourceLocation": "Resource location",
+                "mapping": "Variable and output mapping",
+                "variables": "Variables",
+                "environment": "Environment variables",
+                "outputs": "Outputs",
+                "variablesTable": {
+                    "name": "Variable",
+                    "source": "Source",
+                    "value": "Value",
+                    "sources": {
+                        "secret": "Secret",
+                        "input": "Input",
+                        "static": "Static"
+                    }
+                },
+                "outputsTable": {
+                    "name": "Output",
+                    "type": "Output type",
+                    "terraformOutput": "Terraform output",
+                    "types": {
+                        "output": "Output",
+                        "capability": "Capability"
+                    }
+                },
+                "progress": {
+                    "generation": "1/2: Generating Terraform blueprint...",
+                    "upload": "2/2: Uploading Terraform blueprint..."
+                },
+                "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
+                "default": "Default"
             }
         },
         "blueprintCatalog": {
@@ -1342,6 +1381,16 @@
             },
             "exceptions": {
                 "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+            }
+        },
+        "executionsStatus": {
+            "name": "Executions Statuses Graph",
+            "description": "Shows the number of executions per status",
+            "noExecutions": "There are no Executions available",
+            "charts": {
+                "tooltip": {
+                    "label": "Number of executions"
+                }
             }
         }
     }
