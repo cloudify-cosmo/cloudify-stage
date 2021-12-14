@@ -260,8 +260,7 @@ describe('Create Deployment Button widget', () => {
             cy.contains('.secretsModal button', 'Add').click();
             cy.get('form.error .error').should('not.exist');
 
-            cy.contains('.modal button', 'Deploy').click();
-            cy.get('.modal', { timeout: 6000 }).should('not.exist');
+            cy.interceptSp('PUT', `/console/sp/secrets/${secretName}`, { statusCode: 200 });
         });
     });
 
