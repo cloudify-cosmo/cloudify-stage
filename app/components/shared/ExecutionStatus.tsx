@@ -28,22 +28,48 @@ import ExecutionUtils from '../../utils/shared/ExecutionUtils';
  */
 
 interface Execution {
-    // eslint-disable-next-line camelcase
+    /* eslint-disable camelcase */
     status_display?: string;
     status?: string;
-    // eslint-disable-next-line camelcase
     scheduled_for?: string;
-    // eslint-disable-next-line camelcase
     workflow_id?: string;
+    /* eslint-enable camelcase  */
 }
 
 interface ExecutionStatusProps {
+    /**
+     * Execution resource object
+     */
     execution: Execution;
+
+    /**
+     * If set to true and execution is in one of the waiting states, then popup will be shown on hovering execution status label displaying scheduled_for value
+     */
     allowShowingPopup?: boolean;
+
+    /**
+     * Defines how the label should be attached to a content segment
+     */
     labelAttached?: StrictLabelProps['attached'];
+
+    /**
+     * Defines how the icon should be attached to a content segment
+     */
     iconAttached?: string;
+
+    /**
+     * Icon size
+     */
     iconSize?: StrictIconProps['size'];
+
+    /**
+     * If set to true, then execution status will be added to label
+     */
     showLabel?: boolean;
+
+    /**
+     * If set to true, then workflow ID will be added to label
+     */
     showWorkflowId?: boolean;
 }
 
