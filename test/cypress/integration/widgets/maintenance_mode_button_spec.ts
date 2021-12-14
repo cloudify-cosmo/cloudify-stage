@@ -6,7 +6,7 @@ describe('Maintenance mode button widget', () => {
 
     const getActivateButton = () => cy.contains('Activate Maintenance Mode');
     const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
-    const waitUntilMaintenanceModeIs = (status: 'activated' | 'deactivated') =>
+    const waitForMaintenanceModeStatus = (status: 'activated' | 'deactivated') =>
         waitUntil('maintenance', response => response.body.status === status);
 
     it('should enter maintenance mode on click', () => {
@@ -15,11 +15,11 @@ describe('Maintenance mode button widget', () => {
         getActivateButton().click();
         cy.contains('Yes').click();
         cy.contains('Server is on maintenance mode').should('be.visible');
-        waitUntilMaintenanceModeIs('activated');
+        waitForMaintenanceModeStatus('activated');
 
         getDeactivateButton().click();
         cy.contains('Yes').click();
-        waitUntilMaintenanceModeIs('deactivated');
+        waitForMaintenanceModeStatus('deactivated');
         cy.location('pathname').should('be.equal', '/console/');
     });
 
