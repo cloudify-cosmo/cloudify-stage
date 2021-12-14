@@ -11,10 +11,11 @@ import { useBoolean, useResettableState } from '../../utils/hooks';
 import SideBarHeader from './SideBarHeader';
 
 export const collapsedSidebarWidth = '4.3rem';
-export const expandedSidebarWidth = '15rem';
+export const expandedSidebarWidth = '18rem';
 
 const ThemedSidebar = styled(Sidebar)`
     &&& {
+        border: 0;
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
@@ -27,7 +28,18 @@ const ThemedSidebar = styled(Sidebar)`
     .item.active,
     .item:hover {
         background-color: ${props => props.theme.sidebarHoverActiveColor} !important;
-        color: ${props => props.theme.sidebarTextColor} !important;
+        color: ${props => props.theme.sidebarHoverActiveTextColor} !important;
+    }
+    :after {
+        position: fixed;
+        content: '';
+        width: 0.5em;
+        height: 0.5em !important;
+        transform: rotate(45deg);
+        background-color: ${props => (props.$expanded ? 'white' : props.theme.sidebarColor)} !important;
+        top: 24px;
+        right: -3px;
+        visibility: visible !important;
     }
 `;
 

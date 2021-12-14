@@ -221,6 +221,14 @@ const commands = {
         cy.log(`Clicking '${name}' system menu item`);
         cy.get('.sidebar.menu').contains('a.item', name).click({ force: true });
     },
+    visitPage: (name: string, expectedPageId: string | null = null) => {
+        cy.clickPageMenuItem(name, expectedPageId);
+        return collapseSidebar();
+    },
+    visitSubPage: (groupName: string, pageName: string, expectedPageId: string | null = null) => {
+        cy.clickPageMenuItem(groupName).visitPage(pageName, expectedPageId);
+        return collapseSidebar();
+    },
     visitTestPage: () => {
         cy.clickPageMenuItem(testPageName);
         return collapseSidebar();

@@ -46,8 +46,8 @@ describe('Page', () => {
         cy.get('.deploymentNumWidget');
 
         cy.log('Verify page switching reverts active tab to default');
-        cy.clickPageMenuItem('Another Page');
-        cy.clickPageMenuItem('Admin Dashboard');
+        cy.visitPage('Another Page');
+        cy.visitPage('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
 
