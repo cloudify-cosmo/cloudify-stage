@@ -14,8 +14,8 @@ export const collapsedSidebarWidth = '4.3rem';
 export const expandedSidebarWidth = '18rem';
 
 const ThemedSidebar = styled(Sidebar)`
-    border: 0 !important;
     &&& {
+        border: 0;
         background-color: ${props => props.theme.sidebarColor} !important;
         display: flex;
         overflow-y: visible !important;
@@ -35,9 +35,8 @@ const ThemedSidebar = styled(Sidebar)`
         content: '';
         width: 0.5em;
         height: 0.5em !important;
-        -webkit-transform: rotate(45deg);
         transform: rotate(45deg);
-        background-color: ${props => (props.$expanded ? 'white' : '#050229')} !important;
+        background-color: ${props => (props.$expanded ? 'white' : props.theme.sidebarColor)} !important;
         top: 24px;
         right: -3px;
         visibility: visible !important;

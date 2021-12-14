@@ -11,9 +11,9 @@ import Consts from '../../utils/consts';
 import { productFont } from '../fonts';
 
 const StyledLink = styled(Link)`
-    color: white !important;
+    color: ${props => props.color} !important;
     &:hover {
-        color: white !important;
+        color: ${props => props.color} !important;
         text-decoration: none !important;
     }
 `;
@@ -41,7 +41,7 @@ const SideBarHeader: FunctionComponent = () => {
                     }}
                 />
             </div>
-            <StyledLink to={Consts.HOME_PAGE_PATH}>
+            <StyledLink color={theme.sidebarTextColor} to={Consts.HOME_PAGE_PATH}>
                 <Logo url={theme.logoUrl || builtInLogo} style={{ position: null, height: 33, margin: '11px 8px' }} />
                 <div style={{ display: 'inline', fontSize: '1.5em', verticalAlign: 'middle' }}>
                     <span

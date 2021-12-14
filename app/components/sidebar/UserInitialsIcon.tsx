@@ -7,8 +7,8 @@ import { ReduxState } from '../../reducers';
 import { defaultStyle } from './SideBarItemIcon';
 
 const StyledLabel = styled(Label)`
-    background: #65adff !important;
     &&&&& {
+        background: #65adff;
         margin-top: -5px;
         padding-left: 4px !important;
     }
