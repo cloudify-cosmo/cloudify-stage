@@ -4,6 +4,6 @@
         "types": ["react", "react-dom", "moment", "lodash"],
         "plugins": [{ "name": "typescript-styled-plugin" }]
     },
-    "include": ["**/*", "**/*.json", "../app/typings"],
+    "include": ["**/*", "**/*.json", "../app/typings", "../backend/routes/*.types.ts"],
     "references": [{ "path": "../app" }]
 }
