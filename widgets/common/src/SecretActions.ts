@@ -1,4 +1,4 @@
-type Visibility = 'private' | 'tenant' | 'global';
+export type Visibility = 'private' | 'tenant' | 'global';
 
 export default class SecretActions {
     private toolbox;

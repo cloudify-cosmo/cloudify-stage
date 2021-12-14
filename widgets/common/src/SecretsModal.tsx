@@ -1,6 +1,5 @@
 import type { FunctionComponent } from 'react';
-
-type Visibility = 'private' | 'tenant' | 'global';
+import type { Visibility } from './SecretActions';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
