@@ -2,13 +2,15 @@
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
+    const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
 
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/simple.zip', testBlueprintId);
+            .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
+            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint);
 
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];
         types.forEach(type =>
@@ -115,6 +117,14 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
+    function clickIfExist(element) {
+        cy.get('body').then(body => {
+            if (body.find(element).length > 0) {
+                cy.get(element).click();
+            }
+        });
+    }
+
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
@@ -145,7 +155,7 @@ describe('Create Deployment Button widget', () => {
 
     describe('handles errors during deploy & install process', () => {
         afterEach(() => {
-            cy.get(`.actions > .ui:nth-child(1)`).click();
+            clickIfExist('.actions > .ui:nth-child(1)');
         });
 
         it('handles data validation errors', () => {
@@ -225,6 +235,34 @@ describe('Create Deployment Button widget', () => {
                     'constraint pattern(Ubuntu \\d{2}\\.\\d{2}) operator.'
             );
             cy.get('@string_constraint_pattern').should('have.class', 'error');
+        });
+
+        it('should open Missing Secrets Error message when deploying blueprint with missing secrets', () => {
+            const secretName = 'test';
+
+            selectBlueprintInModal('required_secrets');
+            cy.stageRequest(`/console/sp/secrets/${secretName}`, 'DELETE', { failOnStatusCode: false });
+
+            cy.get('input[name=deploymentName]').type('blahBlahBlah');
+            cy.contains('.modal button', 'Deploy').click();
+            cy.get('form.error .error .header').should('have.text', 'Missing Secrets Error');
+            cy.get('form.error .error p').should(
+                'have.text',
+                'The following required secrets are missing in this tenant:'
+            );
+            cy.get('form.error .error .item').should('have.text', secretName);
+
+            cy.contains('form.error button', 'Add Missing Secrets').click();
+            cy.contains('.secretsModal button', 'Add').click();
+            cy.get('.secretsModal .error .header').should('have.text', 'Errors in the form');
+            cy.get('.secretsModal .error li').should('have.text', 'Please provide values for secrets');
+
+            cy.get('.secretsModal input').type('aaa');
+            cy.contains('.secretsModal button', 'Add').click();
+            cy.get('form.error .error').should('not.exist');
+
+            cy.contains('.modal button', 'Deploy').click();
+            cy.get('.modal', { timeout: 6000 }).should('not.exist');
         });
     });
 
