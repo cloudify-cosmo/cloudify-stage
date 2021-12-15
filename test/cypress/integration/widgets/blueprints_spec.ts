@@ -429,7 +429,7 @@ describe('Blueprints widget', () => {
             cy.contains('Upload from Terraform template').click();
         });
 
-        it.only('validate form data', () => {
+        it('validate form data', () => {
             cy.get('.modal').within(() => {
                 cy.contains('Variables').click().parent().contains('Add').click();
                 cy.contains('Environment variables').click().parent().contains('Add').click();
