@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
+import MissingSecretsError from './MissingSecretsError';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -12,6 +13,7 @@ class GenericDeployModal extends React.Component {
         deploymentInputs: [],
         deploymentName: '',
         errors: {},
+        areSecretsMissing: false,
         fileLoading: false,
         loading: false,
         loadingMessage: '',
@@ -43,6 +45,7 @@ class GenericDeployModal extends React.Component {
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
         this.onAccordionClick = this.onAccordionClick.bind(this);
+        this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -103,6 +106,13 @@ class GenericDeployModal extends React.Component {
         this.setState({ activeSection: newIndex });
     }
 
+    onErrorsDismiss() {
+        this.setState({
+            areSecretsMissing: false,
+            errors: {}
+        });
+    }
+
     onCancel() {
         const { onHide } = this.props;
         onHide();
@@ -129,6 +139,10 @@ class GenericDeployModal extends React.Component {
             });
         });
 
+        const isMissingSecretsError = errors => {
+            return errors.error?.includes('dsl_parser.exceptions.UnknownSecretError');
+        };
+
         return stepPromise.catch(errors => {
             const { activeSection } = this.state;
             let erroractiveSection = activeSection;
@@ -138,7 +152,12 @@ class GenericDeployModal extends React.Component {
             } else if (keys.includes('siteName')) {
                 erroractiveSection = 1;
             }
-            this.setState({ loading: false, errors, activeSection: erroractiveSection });
+            this.setState({
+                loading: false,
+                errors,
+                areSecretsMissing: isMissingSecretsError(errors),
+                activeSection: erroractiveSection
+            });
         });
     }
 
@@ -301,6 +320,7 @@ class GenericDeployModal extends React.Component {
             deploymentId,
             deploymentName,
             errors,
+            areSecretsMissing,
             fileLoading,
             loading,
             loadingMessage,
@@ -324,7 +344,22 @@ class GenericDeployModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
+                    <Form
+                        errors={
+                            areSecretsMissing ? (
+                                <MissingSecretsError
+                                    error={errors?.error}
+                                    toolbox={toolbox}
+                                    onAdd={this.onErrorsDismiss}
+                                />
+                            ) : (
+                                errors
+                            )
+                        }
+                        errorMessageHeader={areSecretsMissing ? t('errors.missingSecretsHeading') : undefined}
+                        scrollToError
+                        onErrorsDismiss={this.onErrorsDismiss}
+                    >
                         {loading && <LoadingOverlay message={loadingMessage} />}
 
                         {this.isBlueprintSelectable() && (
