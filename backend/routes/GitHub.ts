@@ -60,7 +60,7 @@ function getAuthorizationHeader(user: string, tenant?: string) {
     return _.get(authList, `${user}.${tenant}`, '');
 }
 
-function setAuthorizationHeader(req: Request, res: Response, next: NextFunction, forceFetchCredentials: boolean) {
+function setAuthorizationHeader(req: Request, _res: Response, next: NextFunction, forceFetchCredentials: boolean) {
     const user = _.get(req, 'user.username', '');
     const tenant = req.header('tenant');
     const fetchCredentials = forceFetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));

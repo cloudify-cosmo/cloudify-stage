@@ -40,7 +40,7 @@ function checkParams(req: Request, res: Response, next: NextFunction) {
 
 function downloadFile(url: string) {
     return new Promise<any>((resolve, reject) => {
-        defaultedRequest.get(url, (err, res, body) => {
+        defaultedRequest.get(url, (err, _res, body) => {
             if (err) {
                 logger.error(`Failed downloading ${url}. ${err}`);
                 reject(err);
@@ -144,7 +144,6 @@ router.post<any, any, any, any, PostUploadQuery>(
             promises.push(downloadFile(req.query.wagonUrl));
             wagonFilename = _.last(req.query.wagonUrl.split('/')) || '';
         } else {
-            const file = files.wagon_file[0];
             promises.push(Promise.resolve(files.wagon_file[0].buffer));
             wagonFilename = files.wagon_file[0].originalname;
         }

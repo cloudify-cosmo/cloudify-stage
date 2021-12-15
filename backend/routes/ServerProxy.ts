@@ -42,7 +42,7 @@ function errorHandler(url: string, res: Response, err: any) {
     }
 }
 
-function buildManagerUrl(req: Request, res: Response, next: NextFunction) {
+function buildManagerUrl(req: Request, _res: Response, next: NextFunction) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     if (serverUrl) {
         req.su = getApiUrl() + serverUrl;

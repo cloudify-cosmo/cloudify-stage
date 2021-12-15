@@ -13,7 +13,7 @@ interface GetContentQuery extends Record<string, string> {
 function pipeRequest(
     req: Request<any, any, any, GetContentQuery>,
     res: Response,
-    next: NextFunction,
+    _next: NextFunction,
     url: string,
     queryString: any
 ) {
