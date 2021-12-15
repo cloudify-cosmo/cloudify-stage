@@ -3,9 +3,6 @@ import { FunctionComponent } from 'react';
 const { BlueprintActions } = Stage.Common;
 const t = Stage.Utils.getT('widgets.common.blueprintUpload');
 
-// NOTE: prevents leaking variables as global in TypeScript
-export {};
-
 interface UploadBlueprintModalProps {
     toolbox: Stage.Types.Toolbox;
     open: boolean;
@@ -171,9 +168,10 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
     );
 };
 
+export default UploadBlueprintModal;
+
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
         export { UploadBlueprintModal };
     }
 }
