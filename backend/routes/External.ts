@@ -6,7 +6,17 @@ import { getLogger } from '../handler/LoggerHandler';
 const router = express.Router();
 const logger = getLogger('External');
 
-function pipeRequest(req: Request, res: Response, next: NextFunction, url: string, queryString: string) {
+interface GetContentQuery extends Record<string, string> {
+    url: string;
+}
+
+function pipeRequest(
+    req: Request<any, any, any, GetContentQuery>,
+    res: Response,
+    next: NextFunction,
+    url: string,
+    queryString: any
+) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
 
     req.pipe(
@@ -16,11 +26,7 @@ function pipeRequest(req: Request, res: Response, next: NextFunction, url: strin
     ).pipe(res);
 }
 
-interface GetContentQuery {
-    url: string;
-    queryString: string;
-}
-router.get('/content', (req: Request<any, any, any, any, GetContentQuery>, res, next) => {
+router.get<any, any, any, any, GetContentQuery>('/content', (req, res, next) => {
     const { url, ...queryString } = req.query;
     pipeRequest(req, res, next, url, queryString);
 });
