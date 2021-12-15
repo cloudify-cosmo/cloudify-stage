@@ -344,17 +344,17 @@ describe('Blueprints widget', () => {
         });
 
         it('should successfully dismiss error messages', () => {
-            const errorBoxSeletor = '.error.message';
+            const errorBoxSelector = '.error.message';
 
             cy.get('.modal').within(() => {
                 cy.contains('button', 'Upload').click();
 
-                cy.get(errorBoxSeletor).within(() => {
+                cy.get(errorBoxSelector).within(() => {
                     cy.get('.header').should('contain', 'Errors');
                     cy.get('.close.icon').click();
                 });
 
-                cy.get(errorBoxSeletor).should('not.exist');
+                cy.get(errorBoxSelector).should('not.exist');
             });
         });
 
