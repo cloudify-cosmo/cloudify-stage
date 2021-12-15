@@ -343,6 +343,21 @@ describe('Blueprints widget', () => {
             cy.contains('Cancel').click();
         });
 
+        it('should successfully dismiss error messages', () => {
+            const errorBoxSelector = '.error.message';
+
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Upload').click();
+
+                cy.get(errorBoxSelector).within(() => {
+                    cy.get('.header').should('contain', 'Errors');
+                    cy.get('.close.icon').click();
+                });
+
+                cy.get(errorBoxSelector).should('not.exist');
+            });
+        });
+
         describe('should upload a blueprint', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
