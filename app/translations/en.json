@@ -537,6 +537,15 @@
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
                 },
+                "secretsModal": {
+                    "header": "Add Secrets",
+                    "buttons": {
+                        "add": "Add"
+                    },
+                    "errors": {
+                        "noSecretValues": "Please provide values for secrets"
+                    }
+                },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
@@ -577,6 +586,7 @@
                         "executionParameters": "Execution parameters"
                     },
                     "buttons": {
+                        "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
                         "deployAndInstall": "Deploy & Install"
                     },
@@ -597,6 +607,8 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "missingSecretsHeading": "Missing Secrets Error",
+                        "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
                         "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }

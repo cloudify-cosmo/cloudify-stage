@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
+import MissingSecretsError from './MissingSecretsError';
 
 const { i18n } = Stage;
 const t = (key, options) => i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
@@ -12,6 +13,7 @@ class GenericDeployModal extends React.Component {
         deploymentInputs: [],
         deploymentName: '',
         errors: {},
+        areSecretsMissing: false,
         fileLoading: false,
         loading: false,
         loadingMessage: '',
@@ -41,6 +43,7 @@ class GenericDeployModal extends React.Component {
 
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
+        this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
 
     componentDidUpdate(prevProps) {
@@ -94,6 +97,13 @@ class GenericDeployModal extends React.Component {
         this.setState(fieldNameValue);
     }
 
+    onErrorsDismiss() {
+        this.setState({
+            areSecretsMissing: false,
+            errors: {}
+        });
+    }
+
     onCancel() {
         const { onHide } = this.props;
         onHide();
@@ -120,8 +130,12 @@ class GenericDeployModal extends React.Component {
             });
         });
 
+        const isMissingSecretsError = errors => {
+            return errors.error?.includes('dsl_parser.exceptions.UnknownSecretError');
+        };
+
         return stepPromise.catch(errors => {
-            this.setState({ loading: false, errors });
+            this.setState({ loading: false, errors, areSecretsMissing: isMissingSecretsError(errors) });
         });
     }
 
@@ -282,6 +296,7 @@ class GenericDeployModal extends React.Component {
             deploymentId,
             deploymentName,
             errors,
+            areSecretsMissing,
             fileLoading,
             loading,
             loadingMessage,
@@ -305,7 +320,22 @@ class GenericDeployModal extends React.Component {
                 </Modal.Header>
 
                 <Modal.Content>
-                    <Form errors={errors} scrollToError onErrorsDismiss={() => this.setState({ errors: {} })}>
+                    <Form
+                        errors={
+                            areSecretsMissing ? (
+                                <MissingSecretsError
+                                    error={errors?.error}
+                                    toolbox={toolbox}
+                                    onAdd={this.onErrorsDismiss}
+                                />
+                            ) : (
+                                errors
+                            )
+                        }
+                        errorMessageHeader={areSecretsMissing ? t('errors.missingSecretsHeading') : undefined}
+                        scrollToError
+                        onErrorsDismiss={this.onErrorsDismiss}
+                    >
                         {loading && <LoadingOverlay message={loadingMessage} />}
 
                         {this.isBlueprintSelectable() && (
