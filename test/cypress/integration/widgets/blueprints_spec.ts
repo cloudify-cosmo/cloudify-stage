@@ -84,15 +84,16 @@ describe('Blueprints widget', () => {
 
             cy.get('input[name=deploymentName]').type(deploymentName);
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
-            cy.contains('Show Data Types').click();
+            cy.get('i.code').click();
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
 
+            cy.selectAccordionSection('Deployment Metadata');
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
+            cy.get('div[name=labelValue] > input').type('sample_value', { force: true });
             cy.get('.add').click();
             cy.get('a.label').should('be.visible');
 

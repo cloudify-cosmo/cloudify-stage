@@ -392,6 +392,9 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    selectAccordionSection: (sectionContentText: string) =>
+        cy.contains('.accordion .title', sectionContentText).click(),
+
     getField: (fieldName: string) => cy.contains('.field', fieldName),
 
     setSearchableDropdownValue: (fieldName: string, value: string) => {
