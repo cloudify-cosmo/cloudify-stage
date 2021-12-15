@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
+import { find, isEmpty } from 'lodash';
 import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
@@ -9,6 +10,7 @@ import type { CustomConfigurationComponentProps } from '../../../app/utils/Stage
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
+const tError = Stage.Utils.composeT(t, 'errors');
 
 const { Dropdown } = Stage.Basic;
 
@@ -32,6 +34,8 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
         );
     };
 }
+
+const cloudifyResourceRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -95,10 +99,12 @@ export default function TerraformModal({
     onHide: () => void;
     toolbox: Stage.Types.WidgetlessToolbox;
 }) {
-    const { useBoolean, useInput, useResettableState } = Stage.Hooks;
+    const { useBoolean, useErrors, useInput, useResettableState } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
+
+    const { errors, setErrors } = useErrors();
 
     const [version, setVersion] = useInput(terraformVersions[0]);
     const [blueprintName, setBlueprintName] = useInput('');
@@ -109,6 +115,97 @@ export default function TerraformModal({
     const [outputs, setOutputs] = useState<Output[]>([]);
 
     function handleSubmit() {
+        const formErrors: Record<string, string> = {};
+
+        function validateBlueprintName() {
+            if (!blueprintName) {
+                formErrors.blueprint = tError('noBlueprintName');
+            } else if (!blueprintName.match(cloudifyResourceRegexp)) {
+                formErrors.blueprint = tError('invalidBlueprintName');
+            }
+        }
+
+        function validateTemplate() {
+            if (!templateUrl) {
+                formErrors.template = tError('noTerraformTemplate');
+            } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
+                formErrors.template = tError('invalidTerraformTemplate');
+            }
+        }
+
+        function validateResourceLocation() {
+            if (!resourceLocation) {
+                formErrors.resource = tError('noResourceLocation');
+            }
+        }
+
+        function validateVariables(variablesList: Variable[], errorPrefix: string) {
+            const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
+            if (find(variablesList, variable => isEmpty(variable.name))) {
+                formErrors[`${errorPrefix}NameMissing`] = tVariableError('nameMissing');
+            }
+            if (
+                find(variablesList, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
+            ) {
+                formErrors[`${errorPrefix}NameInvalid`] = tVariableError('nameInvalid');
+            }
+            if (find(variablesList, variable => isEmpty(variable.source))) {
+                formErrors[`${errorPrefix}SourceMissing`] = tVariableError('sourceMissing');
+            }
+            if (
+                find(
+                    variablesList,
+                    variable => isEmpty(variable.value) && (variable.source === 'secret' || variable.source === 'input')
+                )
+            ) {
+                formErrors[`${errorPrefix}ValueMissing`] = tVariableError('valueMissing');
+            }
+            if (
+                find(
+                    variablesList,
+                    variable => !isEmpty(variable.value) && !variable.value.match(cloudifyResourceRegexp)
+                )
+            ) {
+                formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
+            }
+        }
+
+        function validateOutputs() {
+            const tOutputError = Stage.Utils.composeT(tError, 'output');
+            if (find(outputs, output => isEmpty(output.name))) {
+                formErrors.outputNameMissing = tOutputError('nameMissing');
+            }
+            if (find(outputs, output => !isEmpty(output.name) && !output.name.match(cloudifyResourceRegexp))) {
+                formErrors.outputNameInvalid = tOutputError('nameInvalid');
+            }
+            if (find(outputs, output => isEmpty(output.type))) {
+                formErrors.outputTypeMissing = tOutputError('typeMissing');
+            }
+            if (find(outputs, output => isEmpty(output.terraformOutput))) {
+                formErrors.outputMissing = tOutputError('outputMissing');
+            }
+            if (
+                find(
+                    outputs,
+                    output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(cloudifyResourceRegexp)
+                )
+            ) {
+                formErrors.outputValueInvalid = tOutputError('outputInvalid');
+            }
+        }
+
+        validateBlueprintName();
+        validateTemplate();
+        validateResourceLocation();
+        validateVariables(variables, 'variable');
+        validateVariables(environment, 'environmentVariable');
+        validateOutputs();
+
+        if (!isEmpty(formErrors)) {
+            setErrors(formErrors);
+            return;
+        }
+
         const { BlueprintActions } = Stage.Common;
         setProcessPhase('generation');
         new TerraformActions(toolbox)
@@ -153,8 +250,8 @@ export default function TerraformModal({
             <Modal.Header>{t('header')}</Modal.Header>
 
             <Modal.Content>
-                <Form>
-                    <UnsafelyTypedFormField label={t(`blueprintName`)} required>
+                <Form errors={errors}>
+                    <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
                         <Form.Input value={blueprintName} onChange={setBlueprintName} />
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={t(`terraformVersion`)} required>
@@ -170,10 +267,10 @@ export default function TerraformModal({
                     <Accordion>
                         <TerraformModalAccordion title={t('blueprintInformation')} initialActive>
                             <Divider style={{ margin: '0 -14px 14px' }} />
-                            <UnsafelyTypedFormField label={t(`template`)} required>
+                            <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
                                 <Form.Input value={templateUrl} onChange={setTemplateUrl} />
                             </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required>
+                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
                                 <Form.Input value={resourceLocation} onChange={setResourceLocation} />
                             </UnsafelyTypedFormField>
                         </TerraformModalAccordion>
