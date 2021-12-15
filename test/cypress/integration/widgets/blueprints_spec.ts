@@ -509,8 +509,10 @@ describe('Blueprints widget', () => {
                 cy.contains('button', 'Cancel').click();
             });
         });
+        }
 
         it('validate form data', () => {
+            openTerraformModal();
             cy.get('.modal').within(() => {
                 cy.contains('Variables').click().parent().contains('Add').click();
                 cy.contains('Environment variables').click().parent().contains('Add').click();
