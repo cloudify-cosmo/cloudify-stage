@@ -1,5 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
 import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import request from 'request';
 import passport from 'passport';
 import _ from 'lodash';
@@ -13,11 +13,19 @@ const logger = getLogger('GitHub');
 const params = getConfig().app.github;
 const authList = {};
 
-function getSecretName(secretName) {
+declare global {
+    namespace Express {
+        interface Response {
+            data: string;
+        }
+    }
+}
+
+function getSecretName(secretName: string) {
     return secretName.replace('secret(', '').replace(')', '');
 }
 
-function pipeRequest(req, res, next, url, isMiddleware) {
+function pipeRequest(req: Request, res: Response, next: NextFunction, url: string, isMiddleware = false) {
     const authorization = req.header('authorization');
 
     logger.debug(
@@ -27,7 +35,7 @@ function pipeRequest(req, res, next, url, isMiddleware) {
         let data = '';
         req.pipe(
             request
-                .get({ url, headers: authorization, qs: req.query, gzip: true, encoding: 'utf8' })
+                .get({ url, headers: { authorization }, qs: req.query, gzip: true, encoding: 'utf8' })
                 .on('data', chunk => {
                     data += chunk;
                 })
@@ -41,32 +49,31 @@ function pipeRequest(req, res, next, url, isMiddleware) {
         );
     } else {
         req.pipe(
-            request.get({ url, headers: authorization, qs: req.query }).on('error', err => {
+            request.get({ url, headers: { authorization }, qs: req.query }).on('error', err => {
                 res.status(500).send({ message: err.message });
             })
         ).pipe(res);
     }
 }
 
-function getAuthorizationHeader(user, tenant) {
+function getAuthorizationHeader(user: string, tenant?: string) {
     return _.get(authList, `${user}.${tenant}`, '');
 }
 
-function setAuthorizationHeader(req, res, next, forceFetchCredentials) {
+function setAuthorizationHeader(req: Request, res: Response, next: NextFunction, forceFetchCredentials: boolean) {
     const user = _.get(req, 'user.username', '');
     const tenant = req.header('tenant');
     const fetchCredentials = forceFetchCredentials || _.isEmpty(getAuthorizationHeader(user, tenant));
 
     if (fetchCredentials) {
+        type SecretsResponse = { value: string };
         const userSecret = getSecretName(params.username);
         const passSecret = getSecretName(params.password);
         Promise.all([
-            jsonRequest('GET', `/secrets/${userSecret}`, req.headers),
-            jsonRequest('GET', `/secrets/${passSecret}`, req.headers)
+            jsonRequest<SecretsResponse>('GET', `/secrets/${userSecret}`, req.headers),
+            jsonRequest<SecretsResponse>('GET', `/secrets/${passSecret}`, req.headers)
         ])
-            .then(data => {
-                const username = data[0];
-                const password = data[1];
+            .then(([username, password]) => {
                 const authorization = `Basic ${Buffer.from(`${username.value}:${password.value}`).toString('base64')}`;
                 req.headers.authorization = authorization;
                 _.set(authList, `${user}.${tenant}`, authorization);
@@ -87,7 +94,7 @@ function setAuthorizationHeader(req, res, next, forceFetchCredentials) {
     }
 }
 
-function addIsAuthToResponseBody(req, res) {
+function addIsAuthToResponseBody(req: Request, res: Response) {
     const json = JSON.parse(res.data);
     json.isAuth = !_.isEmpty(req.header('authorization'));
     res.setHeader('content-type', 'application/json');
