@@ -424,12 +424,13 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload from Terraform template modal and', () => {
-        beforeEach(() => {
+        function openTerraformModal() {
             cy.contains('Upload').click();
             cy.contains('Upload from Terraform template').click();
-        });
+        }
 
         it('validate form data', () => {
+            openTerraformModal();
             cy.get('.modal').within(() => {
                 cy.contains('Variables').click().parent().contains('Add').click();
                 cy.contains('Environment variables').click().parent().contains('Add').click();
@@ -496,6 +497,7 @@ describe('Blueprints widget', () => {
 
         it('create new blueprint on submit', () => {
             cy.uploadPluginFromCatalog('Terraform');
+            openTerraformModal();
 
             const blueprintName = `${blueprintNamePrefix}_terraform`;
             cy.get('.modal').within(() => {
