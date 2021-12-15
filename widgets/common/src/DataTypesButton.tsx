@@ -105,12 +105,12 @@ interface DataTypesButtonProps {
 }
 
 const DataTypesButton: FunctionComponent<DataTypesButtonProps> = ({ types, iconButton = false }) => {
-    const { Button, CancelButton, Modal } = Stage.Basic;
+    const { Button, CancelButton, Modal, Popup } = Stage.Basic;
     const [open, onOpen, onClose] = useBoolean(false);
     return (
         <div>
             {iconButton ? (
-                <Button icon="code" onClick={onOpen} floated="right" />
+                <Popup content="Show Data Types" trigger={<Button icon="code" onClick={onOpen} floated="right" />} />
             ) : (
                 <Button icon="code" content="Show Data Types" onClick={onOpen} floated="right" labelPosition="left" />
             )}
