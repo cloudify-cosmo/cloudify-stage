@@ -1,5 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
-import { waitUntilEmpty } from '../../support/resource_commons';
+import { waitUntil } from '../../support/resource_commons';
 
 describe('Maintenance mode button widget', () => {
     before(() => cy.activate('valid_trial_license'));
@@ -7,14 +6,20 @@ describe('Maintenance mode button widget', () => {
 
     const getActivateButton = () => cy.contains('Activate Maintenance Mode');
     const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
+    const waitForMaintenanceModeStatus = (status: 'activated' | 'deactivated') =>
+        waitUntil('maintenance', response => response.body.status === status);
 
     it('should enter maintenance mode on click', () => {
         cy.killRunningExecutions();
+
         getActivateButton().click();
         cy.contains('Yes').click();
+        cy.contains('Server is on maintenance mode').should('be.visible');
+        waitForMaintenanceModeStatus('activated');
+
         getDeactivateButton().click();
         cy.contains('Yes').click();
-
+        waitForMaintenanceModeStatus('deactivated');
         cy.location('pathname').should('be.equal', '/console/');
     });
 

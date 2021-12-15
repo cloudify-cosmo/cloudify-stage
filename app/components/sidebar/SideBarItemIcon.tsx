@@ -3,7 +3,7 @@ import { IconProps } from 'semantic-ui-react';
 import { Icon } from '../basic';
 
 export const defaultStyle = {
-    marginLeft: 0,
+    marginLeft: 2,
     marginRight: 20,
     float: 'none',
     width: '1.2em'

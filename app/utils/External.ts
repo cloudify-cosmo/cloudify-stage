@@ -69,7 +69,7 @@ export default class External {
             compressFile
         }: {
             params?: Record<string, any>;
-            files?: File | Record<string, any>;
+            files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
             compressFile?: boolean;
@@ -127,7 +127,7 @@ export default class External {
             });
 
             if (files) {
-                if (files instanceof File) {
+                if (files instanceof Blob) {
                     // Single file
                     if (compressFile) {
                         const reader = new FileReader();

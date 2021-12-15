@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
+import Consts from './Consts';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.inputs');
 
@@ -9,7 +9,7 @@ class UploadBlueprintForm extends React.Component {
         yamlFiles: []
     };
 
-    static DEFAULT_BLUEPRINT_YAML_FILE = 'blueprint.yaml';
+    static DEFAULT_BLUEPRINT_YAML_FILE = Consts.defaultBlueprintYamlFileName;
 
     static NO_ERRORS = { errors: {} };
 

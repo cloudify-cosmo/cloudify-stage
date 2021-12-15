@@ -77,16 +77,15 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         setLoading();
 
         actions.current
-            .doUpload(
-                blueprintName,
+            .doUpload(blueprintName, {
                 blueprintYamlFile,
                 blueprintUrl,
-                blueprintFile,
+                file: blueprintFile,
                 imageUrl,
-                imageFile,
+                image: imageFile,
                 visibility,
-                setUploadState
-            )
+                onStateChanged: setUploadState
+            })
             .then(() => {
                 clearErrors();
                 onHide();
