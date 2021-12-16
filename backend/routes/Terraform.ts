@@ -30,23 +30,26 @@ router.post('/blueprint', (req, res) => {
         `Generating Terraform blueprint using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
     );
 
-    // TODO(RD-3659): Validate request payload
-    // TODO(RD-3660): Handle errors
-
-    const result = ejs.render(
-        template,
-        {
-            terraformVersion,
-            terraformTemplate,
-            resourceLocation,
-            variables,
-            environmentVariables,
-            outputs
-        },
-        {
-            views: [templatePath]
-        }
-    );
+    let result;
+    try {
+        result = ejs.render(
+            template,
+            {
+                terraformVersion,
+                terraformTemplate,
+                resourceLocation,
+                variables,
+                environmentVariables,
+                outputs
+            },
+            {
+                views: [templatePath]
+            }
+        );
+    } catch (err) {
+        logger.error(err);
+        res.status(500).send({ message: `Error when generating blueprint: ${err}` });
+    }
 
     res.setHeader('content-type', 'text/x-yaml');
     res.send(result);
