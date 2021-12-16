@@ -85,8 +85,12 @@ function convertHugoShortcodes(widget, content) {
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
+        const relrefToCurrentPageRegex = /\[(.+)\]\({{<\s*relref\s*"(#\S*)"\s*>}}\)/gm;
         const indexRegex = /_index.md/gm;
         const mdRegex = /\.md/gm;
+
+        const onLinkRedirectionToTheCurrentPage =
+            "document.getElementById(this.getAttribute('href')).scrollIntoView();";
 
         let newContent = content;
 
@@ -100,10 +104,17 @@ function convertHugoShortcodes(widget, content) {
             .replace(tipRegex, '<div class="ui message info">$1</div>')
             .replace(warningRegex, '<div class="ui message warning">$1</div>');
 
+        log(widget, 'Converting relref links which are pointing out to the current MD file:');
+        logChange(widget, 'relref shortcodes', newContent.match(relrefToCurrentPageRegex));
+
         log(widget, 'Converting relref links:');
         logChange(widget, 'relref shortcodes', newContent.match(relrefRegex));
 
-        newContent = newContent.replace(relrefRegex, '/$1').replace(indexRegex, 'index.html').replace(mdRegex, '');
+        newContent = newContent
+            .replace(relrefToCurrentPageRegex, `<a href="$2" onclick="${onLinkRedirectionToTheCurrentPage}">$1</a>`)
+            .replace(relrefRegex, '/$1')
+            .replace(indexRegex, 'index.html')
+            .replace(mdRegex, '');
 
         resolve(newContent);
     });
