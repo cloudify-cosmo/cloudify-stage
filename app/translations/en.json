@@ -846,7 +846,35 @@
                     "upload": "2/2: Uploading Terraform blueprint..."
                 },
                 "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
-                "default": "Default"
+                "default": "Default",
+                "errors": {
+                    "noBlueprintName": "Please provide blueprint name",
+                    "noTerraformTemplate": "Please provide Terraform template URL",
+                    "noResourceLocation": "Please provide resource location",
+                    "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                    "invalidTerraformTemplate": "Please provide valid Terraform template URL",
+                    "variable": {
+                        "nameMissing": "Please provide variable name",
+                        "nameInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "sourceMissing": "Please provide variable source",
+                        "valueMissing": "Please provide variable value",
+                        "valueInvalid": "Please provide valid variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                    },
+                    "environmentVariable": {
+                        "nameMissing": "Please provide environment variable name",
+                        "nameInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "sourceMissing": "Please provide environment variable source",
+                        "valueMissing": "Please provide environment variable value",
+                        "valueInvalid": "Please provide valid environment variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                    },
+                    "output": {
+                        "nameMissing": "Please provide output name",
+                        "nameInvalid": "Please provide valid output name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "typeMissing": "Please provide output type",
+                        "outputMissing": "Please provide Terraform output",
+                        "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                    }
+                }
             }
         },
         "blueprintCatalog": {
