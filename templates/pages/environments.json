@@ -16,7 +16,7 @@
         {
           "name": "Environments",
           "width": 12,
-          "height": 28,
+          "height": 100,
           "definition": "deploymentsView",
           "configuration": {
             "filterId": "csys-environment-filter"
