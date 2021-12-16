@@ -3,7 +3,7 @@ describe('Sites Map', () => {
     const sitesMapWidgetPageName = 'Sites map widget page';
 
     const navigateToMapPage = () => {
-        cy.clickPageMenuItem(sitesMapWidgetPageName);
+        cy.visitPage(sitesMapWidgetPageName);
     };
 
     before(() => {

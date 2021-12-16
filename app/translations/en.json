@@ -537,6 +537,15 @@
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
                 },
+                "secretsModal": {
+                    "header": "Add Secrets",
+                    "buttons": {
+                        "add": "Add"
+                    },
+                    "errors": {
+                        "noSecretValues": "Please provide values for secrets"
+                    }
+                },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
@@ -577,6 +586,7 @@
                         "executionParameters": "Execution parameters"
                     },
                     "buttons": {
+                        "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
                         "deployAndInstall": "Deploy & Install"
                     },
@@ -597,6 +607,8 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "missingSecretsHeading": "Missing Secrets Error",
+                        "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
                         "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
@@ -720,6 +732,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
+                    "uploadFromTerraformTemplate": "Upload from Terraform template",
                     "generateInComposer": "Generate in the Composer"
                 }
             },
@@ -796,6 +809,44 @@
                     "placeholder": "Select fields from the list"
                 },
                 "labelFilterRules": "Label filter rules"
+            },
+            "terraformModal": {
+                "header": "Create blueprint from Terraform",
+                "submit": "Create",
+                "blueprintName": "Blueprint name",
+                "terraformVersion": "Terraform version",
+                "blueprintInformation": "Blueprint main information",
+                "template": "Terraform template",
+                "resourceLocation": "Resource location",
+                "mapping": "Variable and output mapping",
+                "variables": "Variables",
+                "environment": "Environment variables",
+                "outputs": "Outputs",
+                "variablesTable": {
+                    "name": "Variable",
+                    "source": "Source",
+                    "value": "Value",
+                    "sources": {
+                        "secret": "Secret",
+                        "input": "Input",
+                        "static": "Static"
+                    }
+                },
+                "outputsTable": {
+                    "name": "Output",
+                    "type": "Output type",
+                    "terraformOutput": "Terraform output",
+                    "types": {
+                        "output": "Output",
+                        "capability": "Capability"
+                    }
+                },
+                "progress": {
+                    "generation": "1/2: Generating Terraform blueprint...",
+                    "upload": "2/2: Uploading Terraform blueprint..."
+                },
+                "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
+                "default": "Default"
             }
         },
         "blueprintCatalog": {
