@@ -14,8 +14,8 @@ The table has 5 columns:
 
 The actions column contains the following action icons:
 
-* **Clone filter** opens the **filter clone** modal allowing to create a modified copy of the selected filter (see [defining filter rules](/#defining-filter-rules) for details on rule definition)
-* **Edit filter** available only to `user` filters, opens the **filter rules edit** modal (see [defining filter rules](/#defining-filter-rules) for details on rule definition)
+* **Clone filter** opens the **filter clone** modal allowing to create a modified copy of the selected filter (see <a href="#defining-filter-rules" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">defining filter rules</a> for details on rule definition)
+* **Edit filter** available only to `user` filters, opens the **filter rules edit** modal (see <a href="#defining-filter-rules" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">defining filter rules</a> for details on rule definition)
 * **Delete filter** available only to non-`system` filters, removes the selected filter (see note below)
 
 Filters used as a default filter in
