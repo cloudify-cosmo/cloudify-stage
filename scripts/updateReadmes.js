@@ -9,14 +9,10 @@ const i18nBundlePath = '../app/translations/en.json';
 const supportedParams = require(i18nBundlePath).widgets.common.readmes.params;
 
 function log(prefix, message) {
-    return;
-    // eslint-disable-next-line
     console.log(`[${prefix}]:`, message);
 }
 
 function logError(prefix, message) {
-    return;
-    // eslint-disable-next-line
     console.error(`[${prefix}]:`, message);
 }
 
