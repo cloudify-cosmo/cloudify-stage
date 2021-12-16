@@ -1,14 +1,29 @@
-// @ts-nocheck File not migrated fully to TS
+import { FunctionComponent } from 'react';
+
 const { BlueprintActions } = Stage.Common;
-const i18nPrefix = 'widgets.common.blueprintUpload';
+const t = Stage.Utils.getT('widgets.common.blueprintUpload');
 
-// NOTE: prevents leaking variables as global in TypeScript
-export {};
+interface UploadBlueprintModalProps {
+    toolbox: Stage.Types.Toolbox;
+    open: boolean;
+    onHide: () => void;
+}
 
-function UploadBlueprintModal({ toolbox, open, onHide }) {
+type ValidationErrors = {
+    [key: string]: string;
+};
+
+type FieldValue = string | null;
+
+type InnerFormError = Record<string, any>;
+
+type FieldValues = {
+    [key: string]: FieldValue | InnerFormError;
+};
+
+const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ toolbox, open, onHide }) => {
     const { useState, useRef } = React;
     const {
-        i18n,
         Hooks: { useBoolean, useInputs, useOpenProp, useErrors, useResettableState }
     } = Stage;
 
@@ -23,7 +38,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         imageUrl: '',
         imageFile: null
     });
-    const [uploadState, setUploadState] = useState();
+    const [uploadState, setUploadState] = useState<string>();
 
     const actions = useRef(new BlueprintActions(toolbox));
 
@@ -46,26 +61,26 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
         const blueprintUrl = blueprintFile ? '' : blueprintUrlState;
         const imageUrl = imageFile ? '' : imageUrlState;
 
-        const validationErrors = {};
+        const validationErrors: ValidationErrors = {};
 
         if (!blueprintFile) {
             if (_.isEmpty(blueprintUrl)) {
-                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintPackage`);
+                validationErrors.blueprintUrl = t('validationErrors.noBlueprintPackage');
             } else if (!Stage.Utils.Url.isUrl(blueprintUrl)) {
-                validationErrors.blueprintUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidBlueprintUrl`);
+                validationErrors.blueprintUrl = t('validationErrors.invalidBlueprintUrl');
             }
         }
 
         if (_.isEmpty(blueprintName)) {
-            validationErrors.blueprintName = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintName`);
+            validationErrors.blueprintName = t('validationErrors.noBlueprintName');
         }
 
         if (_.isEmpty(blueprintYamlFile)) {
-            validationErrors.blueprintYamlFile = i18n.t(`${i18nPrefix}.validationErrors.noBlueprintYamlFile`);
+            validationErrors.blueprintYamlFile = t('validationErrors.noBlueprintYamlFile');
         }
 
         if (!_.isEmpty(imageUrl) && !Stage.Utils.Url.isUrl(imageUrl)) {
-            validationErrors.imageUrl = i18n.t(`${i18nPrefix}.validationErrors.invalidImageUrl`);
+            validationErrors.imageUrl = t('validationErrors.invalidImageUrl');
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -81,7 +96,8 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
             .doUpload(blueprintName, {
                 blueprintYamlFile,
                 blueprintUrl,
-                file: blueprintFile,
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                file: blueprintFile!,
                 imageUrl,
                 image: imageFile,
                 visibility,
@@ -99,19 +115,20 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
             .finally(unsetLoading);
     }
 
-    function onFormFieldChange(values) {
+    function onFormFieldChange(values: FieldValues) {
         setInputs(values);
     }
 
     const { blueprintFile, blueprintYamlFile, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
     const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
+    // @ts-expect-error UploadBlueprintForm is not converted to TS yet
     const { UploadBlueprintForm } = Stage.Common;
 
     return (
         <div>
             <Modal open={open} onClose={onHide} className="uploadBlueprintModal">
                 <Modal.Header>
-                    <Icon name="upload" /> {i18n.t(`${i18nPrefix}.modal.header`)}
+                    <Icon name="upload" /> {t('modal.header')}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
@@ -132,6 +149,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                         uploadState={uploadState}
                         onChange={onFormFieldChange}
                         toolbox={toolbox}
+                        clearErrors={clearErrors}
                     />
                 </Modal.Content>
 
@@ -140,7 +158,7 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
                     <ApproveButton
                         onClick={uploadBlueprint}
                         disabled={isLoading}
-                        content={i18n.t(`${i18nPrefix}.modal.uploadButton`)}
+                        content={t('modal.uploadButton')}
                         icon="upload"
                         color="green"
                     />
@@ -148,13 +166,15 @@ function UploadBlueprintModal({ toolbox, open, onHide }) {
             </Modal>
         </div>
     );
-}
-
-UploadBlueprintModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
+
+export default UploadBlueprintModal;
+
+declare global {
+    namespace Stage.Common {
+        export { UploadBlueprintModal };
+    }
+}
 
 Stage.defineCommon({
     name: 'UploadBlueprintModal',

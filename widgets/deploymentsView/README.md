@@ -5,7 +5,7 @@ Presents information about deployments in a single view. Contains:
 - a table showing the deployments in the system (the left side)
 
     The deployments can be further filtered.
-    See [Filtering deployments](/#filtering-deployments).
+    See <a href="#filtering-deployments" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">Filtering deployments</a>.
 
 - a pane with the deployment details divided into tabs (the right side)
 - a map showing the deployments locations (on the top, opened using the **Map**
@@ -16,15 +16,15 @@ Presents information about deployments in a single view. Contains:
 ## Table
 
 The table shows deployments that match the current filter.
-See [Filtering deployments](/#filtering-deployments)
+See <a href="#filtering-deployments" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">Filtering deployments</a>
 for more details on filtering.
 
 The columns shown in the table can be shown and hidden using the widget's
 configuration.
 
 Clicking a deployment row in the table will select it and affect the contents
-of [the Details pane](/#details-pane) and the selected marker
-in [the map](/#deployments-map).
+of <a href="#details-pane" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the Details pane</a> and the selected marker
+in <a href="#deployments-map" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the map</a>.
 
 At the bottom of the table are controls that allow changing the number of
 deployments shown in a single table page, as well as moving to other pages in
@@ -47,7 +47,7 @@ The columns can show:
    - Red exclamation mark
      ![Requires attention icon](/images/ui/icons/deployments-view-requires-attention-icon.png) - _Requires attention_
 
-    See [the Environments and Services section](/#environments-and-services)
+    See <a href="#environments-and-services" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the Environments and Services section</a>
     for more information on deployment statuses.
 
 2. ID - the deployment ID
@@ -66,7 +66,7 @@ The columns can show:
 7. The counts and statuses of child deployments depending on their type
    (environments or services)
 
-    See [the Environments and Services section](/#environments-and-services)
+    See <a href="#environments-and-services" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the Environments and Services section</a>
     for more information on child deployments.
 
     The counts and statuses in those columns are based on **all** child
@@ -93,7 +93,7 @@ In the header of the right side are:
 
     Those buttons will not be visible when there are no child environments or services.
 
-    See [the Environments and Services section](/#environments-and-services)
+    See <a href="#environments-and-services" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the Environments and Services section</a>
     for more information on child deployments.
 
 - buttons to execute a workflow on that deployment or invoke some other
@@ -222,8 +222,8 @@ the marker. Such a deployment is not clustered, meaning it will appear outside
 of any cluster, even if it is close to other deployments.
 
 Clicking a deployment marker will select it in the table and affect the contents
-of [the Details pane](/#details-pane) and the selected marker
-in [the map](/#deployments-map).
+of <a href="#details-pane" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the Details pane</a> and the selected marker
+in <a href="#deployments-map" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">the map</a>.
 
 Hovering over a deployment marker will show a tooltip with additonal
 information:
@@ -285,7 +285,7 @@ filter.
 - `Name of the saved filter to apply` - the name of a filter to use by default
   when there is no local filter applied.
 
-    See [Filtering deployments](/#filtering-deployments) for more
+    See <a href="#filtering-deployments" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">Filtering deployments</a> for more
     information.
 
 - `Filter by parent deployment` - whether to only show deployments that are
