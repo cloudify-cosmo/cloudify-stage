@@ -13,19 +13,15 @@ const logger = getLogger('GitHub');
 const params = getConfig().app.github;
 const authList = {};
 
-declare global {
-    namespace Express {
-        interface Response {
-            data: string;
-        }
-    }
+interface ResponseWithData extends Response {
+    data?: string;
 }
 
 function getSecretName(secretName: string) {
     return secretName.replace('secret(', '').replace(')', '');
 }
 
-function pipeRequest(req: Request, res: Response, next: NextFunction, url: string, isMiddleware = false) {
+function pipeRequest(req: Request, res: ResponseWithData, next: NextFunction, url: string, isMiddleware = false) {
     const authorization = req.header('authorization');
 
     logger.debug(
@@ -94,8 +90,8 @@ function setAuthorizationHeader(req: Request, _res: Response, next: NextFunction
     }
 }
 
-function addIsAuthToResponseBody(req: Request, res: Response) {
-    const json = JSON.parse(res.data);
+function addIsAuthToResponseBody(req: Request, res: ResponseWithData) {
+    const json = JSON.parse(res.data!);
     json.isAuth = !_.isEmpty(req.header('authorization'));
     res.setHeader('content-type', 'application/json');
     res.send(json);
@@ -104,10 +100,10 @@ function addIsAuthToResponseBody(req: Request, res: Response) {
 router.get(
     '/search/repositories',
     passport.authenticate('token', { session: false }),
-    (req, res, next) => {
+    (req: Request, res: Response, next: NextFunction) => {
         setAuthorizationHeader(req, res, next, true);
     },
-    (req, res, next) => {
+    (req: Request, res: Response, next: NextFunction) => {
         pipeRequest(req, res, next, 'https://api.github.com/search/repositories', true);
     },
     addIsAuthToResponseBody

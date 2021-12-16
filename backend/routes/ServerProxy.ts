@@ -10,12 +10,8 @@ import { getLogger } from '../handler/LoggerHandler';
 const router = express.Router();
 const logger = getLogger('ServerProxy');
 
-declare global {
-    namespace Express {
-        interface Request {
-            su: string;
-        }
-    }
+interface RequestWithServerUrl extends Request {
+    su: string;
 }
 
 function errorHandler(url: string, res: Response, err: any) {
@@ -42,7 +38,7 @@ function errorHandler(url: string, res: Response, err: any) {
     }
 }
 
-function buildManagerUrl(req: Request, _res: Response, next: NextFunction) {
+function buildManagerUrl(req: RequestWithServerUrl, _res: Response, next: NextFunction) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     if (serverUrl) {
         req.su = getApiUrl() + serverUrl;
@@ -53,7 +49,7 @@ function buildManagerUrl(req: Request, _res: Response, next: NextFunction) {
     }
 }
 
-async function proxyRequest(req: Request, res: Response) {
+async function proxyRequest(req: RequestWithServerUrl, res: Response) {
     const options: CoreOptions = {};
 
     // if is a maintenance status fetch then update RBAC cache if empty
