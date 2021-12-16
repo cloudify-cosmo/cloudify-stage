@@ -104,7 +104,7 @@ export default function TerraformModal({
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
 
-    const { errors, setErrors } = useErrors();
+    const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
 
     const [version, setVersion] = useInput(terraformVersions[0]);
     const [blueprintName, setBlueprintName] = useInput('');
@@ -114,7 +114,9 @@ export default function TerraformModal({
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
 
-    function handleSubmit() {
+    async function handleSubmit() {
+        clearErrors();
+
         const formErrors: Record<string, string> = {};
 
         function validateBlueprintName() {
@@ -139,16 +141,30 @@ export default function TerraformModal({
             }
         }
 
-        function validateVariables(variablesList: Variable[], errorPrefix: string) {
-            const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
-            if (find(variablesList, variable => isEmpty(variable.name))) {
-                formErrors[`${errorPrefix}NameMissing`] = tVariableError('nameMissing');
+        function validateNames(namedEntities: { name: string }[], errorPrefix: string) {
+            const tNameError = Stage.Utils.composeT(tError, errorPrefix);
+            let nameError = false;
+            if (find(namedEntities, variable => isEmpty(variable.name))) {
+                formErrors[`${errorPrefix}NameMissing`] = tNameError('nameMissing');
+                nameError = true;
             }
             if (
-                find(variablesList, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
+                find(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
             ) {
-                formErrors[`${errorPrefix}NameInvalid`] = tVariableError('nameInvalid');
+                formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
+                nameError = true;
             }
+
+            if (!nameError && _(namedEntities).keyBy('name').size() !== namedEntities.length) {
+                formErrors[`${errorPrefix}NameDuplicated`] = tNameError('nameDuplicated');
+            }
+        }
+
+        function validateVariables(variablesList: Variable[], errorPrefix: string) {
+            validateNames(variablesList, errorPrefix);
+
+            const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
+
             if (find(variablesList, variable => isEmpty(variable.source))) {
                 formErrors[`${errorPrefix}SourceMissing`] = tVariableError('sourceMissing');
             }
@@ -171,13 +187,10 @@ export default function TerraformModal({
         }
 
         function validateOutputs() {
+            validateNames(outputs, 'output');
+
             const tOutputError = Stage.Utils.composeT(tError, 'output');
-            if (find(outputs, output => isEmpty(output.name))) {
-                formErrors.outputNameMissing = tOutputError('nameMissing');
-            }
-            if (find(outputs, output => !isEmpty(output.name) && !output.name.match(cloudifyResourceRegexp))) {
-                formErrors.outputNameInvalid = tOutputError('nameInvalid');
-            }
+
             if (find(outputs, output => isEmpty(output.type))) {
                 formErrors.outputTypeMissing = tOutputError('typeMissing');
             }
@@ -207,27 +220,39 @@ export default function TerraformModal({
         }
 
         const { BlueprintActions } = Stage.Common;
+
+        const existingBlueprintResponse = await new BlueprintActions(toolbox).doGetBlueprints({
+            id: blueprintName,
+            _include: 'id'
+        });
+        if (existingBlueprintResponse.items.length) {
+            setErrors({ blueprint: tError('blueprintNameInUse') });
+            return;
+        }
+
         setProcessPhase('generation');
-        new TerraformActions(toolbox)
-            .doGenerateBlueprint({
+
+        try {
+            const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 terraformTemplate: templateUrl,
                 terraformVersion: version,
                 resourceLocation,
                 variables,
                 environmentVariables: environment,
                 outputs
-            })
-            .then(blueprintContent => {
-                setProcessPhase('upload');
-                const file: any = new Blob([blueprintContent]);
-                file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
-                return new BlueprintActions(toolbox).doUpload(blueprintName, { file });
-            })
-            .then(() => {
-                toolbox.getEventBus().trigger('blueprints:refresh');
-                onHide();
-            })
-            .catch(stopProcess);
+            });
+
+            setProcessPhase('upload');
+            const file: any = new Blob([blueprintContent]);
+            file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
+            await new BlueprintActions(toolbox).doUpload(blueprintName, { file });
+
+            toolbox.getEventBus().trigger('blueprints:refresh');
+            onHide();
+        } catch (e) {
+            setMessageAsError(e);
+            stopProcess();
+        }
     }
 
     const {

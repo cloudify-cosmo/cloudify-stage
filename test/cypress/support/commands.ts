@@ -433,7 +433,9 @@ const commands = {
 
     mockDisabledGettingStarted: () => mockGettingStarted(false),
 
-    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`)
+    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
+
+    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
 };
 
 addCommands(commands);
