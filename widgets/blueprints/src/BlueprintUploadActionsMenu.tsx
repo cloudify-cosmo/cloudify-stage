@@ -27,7 +27,6 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 }) => {
     const {
         Basic: { Dropdown },
-        // @ts-expect-error UploadBlueprintModal is not converted to TS yet
         Common: { UploadBlueprintModal, BlueprintMarketplace },
         Hooks: { useBoolean }
     } = Stage;

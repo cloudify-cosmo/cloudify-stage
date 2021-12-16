@@ -232,30 +232,38 @@ describe('Create Deployment Button widget', () => {
             cy.get('@string_constraint_pattern').should('have.class', 'error');
         });
 
-        it('should open Missing Secrets Error message when deploying blueprint with missing secrets', () => {
+        it('should handle missing secrets error', () => {
             const secretName = 'test';
+            cy.deleteSecrets(secretName);
 
             selectBlueprintInModal('required_secrets');
-            cy.stageRequest(`/console/sp/secrets/${secretName}`, 'DELETE', { failOnStatusCode: false });
+            cy.get('.modal').within(() => {
+                cy.getField('Deployment name').find('input').type('blahBlahBlah');
+                cy.contains('button', 'Deploy').click();
+                cy.get('.error.message').within(() => {
+                    cy.get('.header').should('have.text', 'Missing Secrets Error');
+                    cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
+                    cy.get('.item').should('have.text', secretName);
+                });
 
-            cy.get('input[name=deploymentName]').type('blahBlahBlah');
-            cy.contains('.modal button', 'Deploy').click();
-            cy.get('form.error .error').within(() => {
-                cy.get('.header').should('have.text', 'Missing Secrets Error');
-                cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
-                cy.get('.item').should('have.text', secretName);
+                cy.contains('button', 'Add Missing Secrets').click();
             });
 
-            cy.contains('form.error button', 'Add Missing Secrets').click();
-            cy.contains('.secretsModal button', 'Add').click();
-            cy.get('.secretsModal .error .header').should('have.text', 'Errors in the form');
-            cy.get('.secretsModal .error li').should('have.text', 'Please provide values for secrets');
+            cy.get('.secretsModal').within(() => {
+                cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets');
 
-            cy.get('.secretsModal input').type('aaa');
-            cy.interceptSp('PUT', `/secrets/${secretName}`, { statusCode: 200 }).as('addSecrets');
-            cy.contains('.secretsModal button', 'Add').click();
-            cy.get('form.error .error').should('not.exist');
-            cy.wait('@addSecrets');
+                cy.contains('button', 'Add').click();
+                cy.get('.error.message').within(() => {
+                    cy.get('.header').should('have.text', 'Errors in the form');
+                    cy.get('li').should('have.text', 'Please provide values for secrets');
+                });
+
+                cy.getField(secretName).find('input').type('aaa');
+                cy.contains('button', 'Add').click();
+                cy.wait('@addSecrets');
+            });
+
+            cy.get('.error.message').should('not.exist');
         });
     });
 
