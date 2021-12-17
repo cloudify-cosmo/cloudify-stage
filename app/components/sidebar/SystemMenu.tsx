@@ -30,7 +30,7 @@ interface SystemMenuProps {
     onModalOpen: () => void;
     expandedGroup?: SystemMenuGroup;
     onGroupClick: (group: SystemMenuGroup) => void;
-    className: string;
+    className?: string;
 }
 
 const SystemMenu: FunctionComponent<SystemMenuProps> = ({ expandedGroup, onModalOpen, onGroupClick, className }) => {
