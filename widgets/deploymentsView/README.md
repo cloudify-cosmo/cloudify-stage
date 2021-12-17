@@ -185,7 +185,7 @@ Deployments visible in the table can be filtered in 3 ways:
     reset when viewing the widget again.
 
 <div class="ui message info">
-<a href="working_with/console/widgets/filter">The Resource Filter widget</a>
+<a href="/working_with/console/widgets/filter">The Resource Filter widget</a>
 does not influence the filtering performed in the Deployments View widget.
 </div>
 
