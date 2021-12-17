@@ -112,7 +112,7 @@ function convertHugoShortcodes(widget, content) {
 
         newContent = newContent
             .replace(styledContentWrappersRegex, match => {
-                return match?.replace(getRelrefMarkdownLinkRegex(), '<a href="$2">$1</a>');
+                return match?.replace(getRelrefMarkdownLinkRegex(), '<a href="/$2">$1</a>');
             })
             .replace(noteRegex, '<div class="ui message info">$1</div>')
             .replace(tipRegex, '<div class="ui message info">$1</div>')

@@ -23,9 +23,11 @@ let widgetDefinitions: WidgetDefinition<any, any, any>[] = [];
 
 function updateReadmeLinks(content: any) {
     const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
-    let newContent = content;
+    const anchorHrefRegex = /<a href="([^#]*?)">/gm;
 
-    newContent = newContent.replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
+    const newContent = content
+        .replace(anchorHrefRegex, `<a href="${i18n.t('widgets.common.readmes.linksBasePath')}$1">`)
+        .replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
 
     return newContent;
 }
