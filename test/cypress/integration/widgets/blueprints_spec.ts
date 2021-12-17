@@ -440,17 +440,86 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload from Terraform template modal and', () => {
-        before(() => cy.uploadPluginFromCatalog('Terraform'));
-
-        beforeEach(() => {
+        function openTerraformModal() {
             cy.contains('Upload').click();
             cy.contains('Upload from Terraform template').click();
+        }
+
+        it('validate form data', () => {
+            openTerraformModal();
+            cy.get('.modal').within(() => {
+                cy.contains('Variables').click().parent().contains('Add').click();
+                cy.contains('Environment variables').click().parent().contains('Add').click();
+                cy.contains('Outputs').click().parent().contains('Add').click();
+                cy.contains('button', 'Create').click();
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide blueprint name').should('be.visible');
+                cy.contains('Please provide Terraform template').should('be.visible');
+                cy.contains('Please provide resource location').should('be.visible');
+                cy.contains('Please provide variable name').should('be.visible');
+                cy.contains('Please provide variable source').should('be.visible');
+                cy.contains('Please provide environment variable name').should('be.visible');
+                cy.contains('Please provide environment variable source').should('be.visible');
+                cy.contains('Please provide output name').should('be.visible');
+                cy.contains('Please provide output type').should('be.visible');
+                cy.contains('Please provide Terraform output').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+
+                cy.getField('Blueprint name').find('input').type('$');
+                cy.getField('Terraform template').find('input').type('$');
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    cy.get('.selection').click();
+                    cy.contains('.item', 'Secret').click();
+                });
+                cy.contains('.segment', 'Environment variables').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    cy.get('.selection').click();
+                    cy.contains('.item', 'Secret').click();
+                });
+                cy.contains('.segment', 'Outputs').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    cy.get('input[name=terraformOutput]').type('$');
+                });
+                cy.contains('button', 'Create').click();
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide valid variable name').should('be.visible');
+                cy.contains('Please provide variable value').should('be.visible');
+                cy.contains('Please provide valid environment variable name').should('be.visible');
+                cy.contains('Please provide environment variable value').should('be.visible');
+                cy.contains('Please provide valid output name').should('be.visible');
+                cy.contains('Please provide valid Terraform output').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.contains('Secret').click();
+                    cy.contains('Static').click();
+                    cy.get('td:eq(2) input').type('$');
+                });
+                cy.contains('.segment', 'Environment variables').within(() => {
+                    cy.contains('Secret').click();
+                    cy.contains('Static').click();
+                    cy.get('td:eq(2) input').type('$');
+                });
+                cy.contains('button', 'Create').click();
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide valid variable value').should('be.visible');
+                cy.contains('Please provide valid environment variable value').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+
+                cy.contains('button', 'Cancel').click();
+            });
         });
 
         it('create new blueprint on submit', () => {
+            cy.uploadPluginFromCatalog('Terraform');
+            openTerraformModal();
+
             const blueprintName = `${blueprintNamePrefix}_terraform`;
             cy.get('.modal').within(() => {
                 cy.getField('Blueprint name').find('input').type(blueprintName);
+                cy.getField('Terraform template').find('input').type('http://terra.io');
+                cy.getField('Resource location').find('input').type('resource');
                 cy.contains('button', 'Create').click();
                 cy.contains('Uploading Terraform blueprint').should('be.visible');
             });
