@@ -226,7 +226,7 @@ export default function TerraformModal({
             _include: 'id'
         });
         if (existingBlueprintResponse.items.length) {
-            setErrors({ blueprint: tError('blueprintNameInUse') });
+            setErrors({ blueprint: tError('blueprintNameInUse', { blueprintName }) });
             return;
         }
 

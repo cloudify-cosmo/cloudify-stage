@@ -853,7 +853,7 @@
                     "noResourceLocation": "Please provide resource location",
                     "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
-                    "blueprintNameInUse": "Blueprint name already exists",
+                    "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
                         "nameMissing": "Please provide variable name",
                         "nameInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",

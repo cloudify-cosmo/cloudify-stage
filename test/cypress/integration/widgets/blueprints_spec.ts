@@ -549,7 +549,7 @@ describe('Blueprints widget', () => {
 
             cy.clickButton('Create');
             cy.contains('Errors in the form').scrollIntoView();
-            cy.contains('Blueprint name already exists').should('be.visible');
+            cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
         it('create new blueprint on submit', () => {
