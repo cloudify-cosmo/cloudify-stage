@@ -24,7 +24,7 @@ export const DeploymentsMapLayoutContainer = styled.div<{ height: number }>`
 `;
 
 export const DeploymentsMasterDetailViewContainer = styled.div`
-    grid-area: 'table-with-details';
+    grid-area: table-with-details;
 `;
 
 export const DeploymentsTableContainer = styled.div`
