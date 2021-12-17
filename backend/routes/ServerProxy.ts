@@ -11,7 +11,7 @@ const router = express.Router();
 const logger = getLogger('ServerProxy');
 
 interface RequestWithServerUrl extends Request {
-    su: string;
+    su?: string;
 }
 
 function errorHandler(url: string, res: Response, err: any) {
@@ -60,8 +60,8 @@ async function proxyRequest(req: RequestWithServerUrl, res: Response) {
     updateOptions(options, req.method);
 
     req.pipe(
-        request(req.su, options).on('error', err => {
-            errorHandler(req.su, res, err);
+        request(req.su!, options).on('error', err => {
+            errorHandler(req.su!, res, err);
         })
     ).pipe(res);
 }
