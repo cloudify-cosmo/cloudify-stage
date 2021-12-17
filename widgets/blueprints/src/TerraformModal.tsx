@@ -275,7 +275,7 @@ export default function TerraformModal({
             <Modal.Header>{t('header')}</Modal.Header>
 
             <Modal.Content>
-                <Form errors={errors}>
+                <Form errors={errors} scrollToError>
                     <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
                         <Form.Input value={blueprintName} onChange={setBlueprintName} />
                     </UnsafelyTypedFormField>
