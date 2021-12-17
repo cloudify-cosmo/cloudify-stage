@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import request from 'supertest';
 import app from 'app';
