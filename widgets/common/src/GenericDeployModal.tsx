@@ -439,7 +439,7 @@ class GenericDeployModal extends React.Component {
                                         {!_.isEmpty(blueprint.plan.data_types) && (
                                             <DataTypesButton iconButton types={blueprint.plan.data_types} />
                                         )}
-                                        <InputsHeader header="" />
+                                        <InputsHeader iconButton header="" />
                                         {_.isEmpty(blueprint.plan.inputs) && (
                                             <Message content={t('inputs.deploymentInputs.noInputs')} />
                                         )}
