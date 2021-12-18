@@ -1,12 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
+import AccordionSection from './AccordionSection';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+
     static DEPLOYMENT_SECTIONS = {
         deploymentInputs: 0,
         deploymentMetadata: 1,
@@ -418,15 +420,12 @@ class GenericDeployModal extends React.Component {
                             </Form.Field>
                         )}
                         <Accordion fluid styled>
-                            <Accordion.Title
-                                active={activeSection === DEPLOYMENT_SECTIONS.deploymentInputs}
+                            <AccordionSection
+                                title={t('sections.deploymentInputs')}
                                 index={DEPLOYMENT_SECTIONS.deploymentInputs}
+                                activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <Icon name="dropdown" />
-                                {t('sections.deploymentInputs')}
-                            </Accordion.Title>
-                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.deploymentInputs}>
                                 {blueprint.id && (
                                     <>
                                         {!_.isEmpty(blueprint.plan.inputs) && (
@@ -454,16 +453,13 @@ class GenericDeployModal extends React.Component {
                                     errors,
                                     blueprint.plan.data_types
                                 )}
-                            </Accordion.Content>
-                            <Accordion.Title
-                                active={activeSection === DEPLOYMENT_SECTIONS.deploymentMetadata}
+                            </AccordionSection>
+                            <AccordionSection
+                                title={t('sections.deploymentMetadata')}
                                 index={DEPLOYMENT_SECTIONS.deploymentMetadata}
+                                activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <Icon name="dropdown" />
-                                {t('sections.deploymentMetadata')}
-                            </Accordion.Title>
-                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.deploymentMetadata}>
                                 {showSitesInput && (
                                     <Form.Field
                                         error={errors.siteName}
@@ -491,16 +487,13 @@ class GenericDeployModal extends React.Component {
                                         onChange={labels => this.setState({ labels })}
                                     />
                                 </Form.Field>
-                            </Accordion.Content>
-                            <Accordion.Title
-                                active={activeSection === DEPLOYMENT_SECTIONS.executionParameters}
+                            </AccordionSection>
+                            <AccordionSection
+                                title={t('sections.executionParameters')}
                                 index={DEPLOYMENT_SECTIONS.executionParameters}
+                                activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <Icon name="dropdown" />
-                                {t('sections.executionParameters')}
-                            </Accordion.Title>
-                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.executionParameters}>
                                 <Form.Field className="skipPluginsValidationCheckbox">
                                     <Form.Checkbox
                                         toggle
@@ -510,16 +503,13 @@ class GenericDeployModal extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
-                            </Accordion.Content>
-                            <Accordion.Title
-                                active={activeSection === DEPLOYMENT_SECTIONS.advanced}
+                            </AccordionSection>
+                            <AccordionSection
+                                title={t('sections.advanced')}
                                 index={DEPLOYMENT_SECTIONS.advanced}
+                                activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <Icon name="dropdown" />
-                                {t('sections.advanced')}
-                            </Accordion.Title>
-                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.advanced}>
                                 {skipPluginsValidation && (
                                     <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
@@ -533,7 +523,7 @@ class GenericDeployModal extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
-                            </Accordion.Content>
+                            </AccordionSection>
                         </Accordion>
                     </Form>
 
