@@ -33,6 +33,8 @@ interface DataTypeProps {
     properties: Properties;
 }
 
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+
 const DataType: FunctionComponent<DataTypeProps> = ({
     name,
     description = null,
@@ -110,9 +112,18 @@ const DataTypesButton: FunctionComponent<DataTypesButtonProps> = ({ types, iconB
     return (
         <div>
             {iconButton ? (
-                <Popup content="Show Data Types" trigger={<Button icon="code" onClick={onOpen} floated="right" />} />
+                <Popup
+                    content={t('buttons.showDataTypes')}
+                    trigger={<Button icon="code" onClick={onOpen} floated="right" />}
+                />
             ) : (
-                <Button icon="code" content="Show Data Types" onClick={onOpen} floated="right" labelPosition="left" />
+                <Button
+                    icon="code"
+                    content={t('buttons.showDataTypes')}
+                    onClick={onOpen}
+                    floated="right"
+                    labelPosition="left"
+                />
             )}
 
             <Modal open={open} onClose={onClose}>
