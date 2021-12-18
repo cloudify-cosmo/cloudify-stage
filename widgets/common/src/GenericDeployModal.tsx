@@ -7,6 +7,12 @@ const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+    static DEPLOYMENT_SECTIONS = {
+        deploymentInputs: 0,
+        deploymentMetadata: 1,
+        executionParameters: 2,
+        advanced: 3
+    };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -144,19 +150,21 @@ class GenericDeployModal extends React.Component {
         };
 
         return stepPromise.catch(errors => {
-            const { activeSection } = this.state;
-            let erroractiveSection = activeSection;
-            const keys = Object.keys(errors);
-            if (keys.includes('deploymentId')) {
-                erroractiveSection = 0;
-            } else if (keys.includes('siteName')) {
-                erroractiveSection = 1;
+            const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
+            const { activeSection, deploymentInputs } = this.state;
+            const errorKeys = Object.keys(errors);
+            const deploymentInputKeys = Object.keys(deploymentInputs);
+            let errorActiveSection = activeSection;
+            if (errorKeys.some(errorKey => deploymentInputKeys.includes(errorKey))) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputs;
+            } else if (errorKeys.includes('siteName')) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentMetadata;
             }
             this.setState({
                 loading: false,
                 errors,
                 areSecretsMissing: isMissingSecretsError(errors),
-                activeSection: erroractiveSection
+                activeSection: errorActiveSection
             });
         });
     }
@@ -331,6 +339,7 @@ class GenericDeployModal extends React.Component {
             visibility
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
+        const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
@@ -409,11 +418,15 @@ class GenericDeployModal extends React.Component {
                             </Form.Field>
                         )}
                         <Accordion fluid styled>
-                            <Accordion.Title active={activeSection === 0} index={0} onClick={this.onAccordionClick}>
+                            <Accordion.Title
+                                active={activeSection === DEPLOYMENT_SECTIONS.deploymentInputs}
+                                index={DEPLOYMENT_SECTIONS.deploymentInputs}
+                                onClick={this.onAccordionClick}
+                            >
                                 <Icon name="dropdown" />
                                 {t('sections.deploymentInputs')}
                             </Accordion.Title>
-                            <Accordion.Content active={activeSection === 0}>
+                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.deploymentInputs}>
                                 {blueprint.id && (
                                     <>
                                         {!_.isEmpty(blueprint.plan.inputs) && (
@@ -442,11 +455,15 @@ class GenericDeployModal extends React.Component {
                                     blueprint.plan.data_types
                                 )}
                             </Accordion.Content>
-                            <Accordion.Title active={activeSection === 1} index={1} onClick={this.onAccordionClick}>
+                            <Accordion.Title
+                                active={activeSection === DEPLOYMENT_SECTIONS.deploymentMetadata}
+                                index={DEPLOYMENT_SECTIONS.deploymentMetadata}
+                                onClick={this.onAccordionClick}
+                            >
                                 <Icon name="dropdown" />
                                 {t('sections.deploymentMetadata')}
                             </Accordion.Title>
-                            <Accordion.Content active={activeSection === 1}>
+                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.deploymentMetadata}>
                                 {showSitesInput && (
                                     <Form.Field
                                         error={errors.siteName}
@@ -475,11 +492,15 @@ class GenericDeployModal extends React.Component {
                                     />
                                 </Form.Field>
                             </Accordion.Content>
-                            <Accordion.Title active={activeSection === 2} index={2} onClick={this.onAccordionClick}>
+                            <Accordion.Title
+                                active={activeSection === DEPLOYMENT_SECTIONS.executionParameters}
+                                index={DEPLOYMENT_SECTIONS.executionParameters}
+                                onClick={this.onAccordionClick}
+                            >
                                 <Icon name="dropdown" />
                                 {t('sections.executionParameters')}
                             </Accordion.Title>
-                            <Accordion.Content active={activeSection === 2}>
+                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.executionParameters}>
                                 <Form.Field className="skipPluginsValidationCheckbox">
                                     <Form.Checkbox
                                         toggle
@@ -490,11 +511,15 @@ class GenericDeployModal extends React.Component {
                                     />
                                 </Form.Field>
                             </Accordion.Content>
-                            <Accordion.Title active={activeSection === 3} index={3} onClick={this.onAccordionClick}>
+                            <Accordion.Title
+                                active={activeSection === DEPLOYMENT_SECTIONS.advanced}
+                                index={DEPLOYMENT_SECTIONS.advanced}
+                                onClick={this.onAccordionClick}
+                            >
                                 <Icon name="dropdown" />
                                 {t('sections.advanced')}
                             </Accordion.Title>
-                            <Accordion.Content active={activeSection === 3}>
+                            <Accordion.Content active={activeSection === DEPLOYMENT_SECTIONS.advanced}>
                                 {skipPluginsValidation && (
                                     <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
