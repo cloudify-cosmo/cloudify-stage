@@ -161,6 +161,8 @@ class GenericDeployModal extends React.Component {
                 errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputs;
             } else if (errorKeys.includes('siteName')) {
                 errorActiveSection = DEPLOYMENT_SECTIONS.deploymentMetadata;
+            } else if (errorKeys.includes('deploymentId')) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.advanced;
             }
             this.setState({
                 loading: false,
@@ -405,20 +407,6 @@ class GenericDeployModal extends React.Component {
                                 />
                             </Form.Field>
                         )}
-                        {showDeploymentIdInput && (
-                            <Form.Field
-                                error={errors.deploymentId}
-                                label={t('inputs.deploymentId.label')}
-                                required
-                                help={t('inputs.deploymentId.help')}
-                            >
-                                <Form.Input
-                                    name="deploymentId"
-                                    value={deploymentId}
-                                    onChange={this.handleInputChange}
-                                />
-                            </Form.Field>
-                        )}
                         <Accordion fluid styled>
                             <AccordionSection
                                 title={t('sections.deploymentInputs')}
@@ -510,6 +498,20 @@ class GenericDeployModal extends React.Component {
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
+                                {showDeploymentIdInput && (
+                                    <Form.Field
+                                        error={errors.deploymentId}
+                                        label={t('inputs.deploymentId.label')}
+                                        required
+                                        help={t('inputs.deploymentId.help')}
+                                    >
+                                        <Form.Input
+                                            name="deploymentId"
+                                            value={deploymentId}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                )}
                                 {skipPluginsValidation && (
                                     <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
