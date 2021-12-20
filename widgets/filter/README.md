@@ -7,7 +7,7 @@ By default, the widget allows filtering by blueprint, deployment and execution, 
 
 <div class="ui message info">
 It is discouraged to place the Resource Filter widget alongside
-[the Deployments View widget](/working_with/console/widgets/deploymentsView)
+<a href="/working_with/console/widgets/deploymentsView">the Deployments View widget</a>
 on the same page.
 The Resource Filter widget does not influence the filtering performed in the Deployments View widget.
 Moreover, the deployment selection in the Resource Filter widget will most likely be overridden

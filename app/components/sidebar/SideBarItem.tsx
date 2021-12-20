@@ -12,7 +12,6 @@ export const SideBarItemWrapper = styled.div`
     position: relative;
     height: 45px;
     white-space: nowrap;
-    overflow: hidden;
     flex-shrink: 0;
     .item:hover {
         text-decoration: none !important; // override semantic ui styles
@@ -46,7 +45,7 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
     };
 
     return (
-        <SideBarItemWrapper>
+        <SideBarItemWrapper className="sidebarItemWrapper">
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Menu.Item style={menuItemStyle} {...rest}>
                 {typeof icon === 'string' ? <SideBarItemIcon name={icon as SemanticICONS} /> : icon}
