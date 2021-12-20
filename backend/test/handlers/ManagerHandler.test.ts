@@ -19,7 +19,7 @@ describe('ManagerHandler', () => {
             .get(`/api/v3.1/${endpoint}`)
             .reply(200, payload);
 
-        return jsonRequest('get', endpoint, undefined, undefined, undefined).then(json => {
+        return jsonRequest('get', endpoint, {}, undefined, undefined).then(json => {
             expect(json).toEqual(payload);
         });
     });
@@ -31,7 +31,7 @@ describe('ManagerHandler', () => {
             .get(`/api/v3.1/${endpoint}`)
             .reply(200, payload);
 
-        return jsonRequest('get', endpoint, undefined, undefined, undefined).catch(error =>
+        return jsonRequest('get', endpoint, {}, undefined, undefined).catch(error =>
             expect(error).toEqual(
                 'response data could not be parsed to JSON: SyntaxError: Unexpected token o in JSON at position 1'
             )

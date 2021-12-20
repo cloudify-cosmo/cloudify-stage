@@ -60,6 +60,8 @@ declare global {
 
             /** Similar to `cy.contains(num)`, but makes sure the number is not a substring of some other number */
             containsNumber: (num: number) => Cypress.Chainable;
+
+            clickButton: (buttonLabel: string) => Cypress.Chainable;
         }
     }
 }
@@ -433,7 +435,9 @@ const commands = {
 
     mockDisabledGettingStarted: () => mockGettingStarted(false),
 
-    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`)
+    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
+
+    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
 };
 
 addCommands(commands);
@@ -442,6 +446,9 @@ addCommands(commands);
 Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: unknown | undefined, num: number) =>
     // eslint-disable-next-line security/detect-non-literal-regexp
     (subject ? cy.wrap(subject) : cy).contains(new RegExp(`\\b${num}\\b`))
+);
+Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unknown | undefined, buttonLabel: string) =>
+    (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
 );
 
 function toIdObj(id: string) {
