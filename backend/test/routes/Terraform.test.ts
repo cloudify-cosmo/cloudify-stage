@@ -3,6 +3,7 @@ import app from 'app';
 import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { readJsonSync } from 'fs-extra';
+import ejs from 'ejs';
 
 describe('/terraform/blueprint endpoint', () => {
     const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
@@ -23,6 +24,18 @@ describe('/terraform/blueprint endpoint', () => {
             expect(response.status).toBe(200);
             expect(response.headers['content-type']).toBe('text/x-yaml; charset=utf-8');
             expect(response.text).toEqual(responseBody);
+        });
+    });
+
+    it('handles ejs errors', async () => {
+        ejs.render = () => {
+            throw Error('err');
+        };
+        const response = await request(app).post('/console/terraform/blueprint').send(getInputs(1));
+
+        expect(response.status).toBe(500);
+        expect(response.body).toStrictEqual({
+            message: 'Error when generating blueprint: Error: err'
         });
     });
 });
