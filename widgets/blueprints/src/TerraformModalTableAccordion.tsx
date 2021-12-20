@@ -1,6 +1,6 @@
 import React from 'react';
-import TerraformModalAccordion from './TerraformModalAccordion';
 import type { DynamicTableProps } from '../../../app/components/shared/DynamicTable';
+import AccordionSection from '../../common/src/AccordionSection';
 
 const { DynamicTable } = Stage.Shared;
 type DynamicTableValue = DynamicTableProps['value'];
@@ -21,7 +21,7 @@ export default function TerraformModalTableAccordion<T extends DynamicTableValue
     toolbox
 }: TerraformModalTableAccordionProps<T>) {
     return (
-        <TerraformModalAccordion title={title}>
+        <AccordionSection title={title}>
             <DynamicTable
                 widgetlessToolbox={toolbox}
                 name=""
@@ -29,6 +29,6 @@ export default function TerraformModalTableAccordion<T extends DynamicTableValue
                 onChange={(_event, field) => onChange(field.value as T)}
                 columns={columns}
             />
-        </TerraformModalAccordion>
+        </AccordionSection>
     );
 }

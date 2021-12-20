@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
 import { find, isEmpty } from 'lodash';
-import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
+import AccordionSectionWithDivider from '../../common/src/AccordionSectionWithDivider';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -260,7 +260,6 @@ export default function TerraformModal({
         ApproveButton,
         CancelButton,
         Confirm,
-        Divider,
         Header,
         LoadingOverlay,
         Modal,
@@ -290,15 +289,14 @@ export default function TerraformModal({
                         />
                     </UnsafelyTypedFormField>
                     <Accordion>
-                        <TerraformModalAccordion title={t('blueprintInformation')} initialActive>
-                            <Divider style={{ margin: '0 -14px 14px' }} />
+                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
                             <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
                                 <Form.Input value={templateUrl} onChange={setTemplateUrl} />
                             </UnsafelyTypedFormField>
                             <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
                                 <Form.Input value={resourceLocation} onChange={setResourceLocation} />
                             </UnsafelyTypedFormField>
-                        </TerraformModalAccordion>
+                        </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
                             title={t('variables')}

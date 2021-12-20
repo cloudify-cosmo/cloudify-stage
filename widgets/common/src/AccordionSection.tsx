@@ -1,25 +1,66 @@
-import type { FunctionComponent } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { AccordionTitleProps } from 'semantic-ui-react';
+
+const accordionTitleStyle = {
+    paddingBottom: 1,
+    paddingTop: 5
+};
+
+const accordionContentStyle = {
+    overflow: 'visible',
+    paddingTop: 14
+};
 
 interface Props {
     title: string;
-    activeSection: number;
-    index: number;
-    onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, props: AccordionTitleProps) => void;
+    initialActive?: boolean;
+    activeSection?: number;
+    index?: number;
+    onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>, props: AccordionTitleProps) => void;
 }
 
-const AccordionSection: FunctionComponent<Props> = ({ title, activeSection, index, onClick, children }) => {
-    const { Accordion, Icon } = Stage.Basic;
+export default function AccordionSection({
+    title,
+    children,
+    initialActive = false,
+    activeSection,
+    index,
+    onClick
+}: PropsWithChildren<Props>) {
+    const { useToggle } = Stage.Hooks;
+
+    const [accordionActive, toggleAccordionActive] = useToggle(initialActive);
+
+    const { Accordion, Icon, Segment } = Stage.Basic;
+
+    if (typeof activeSection !== 'undefined') {
+        return (
+            <Segment>
+                <Accordion.Title
+                    active={activeSection === index}
+                    index={index}
+                    onClick={onClick}
+                    style={accordionTitleStyle}
+                >
+                    <Icon name="dropdown" />
+                    {title}
+                </Accordion.Title>
+                <Accordion.Content style={accordionContentStyle} active={activeSection === index}>
+                    {children}
+                </Accordion.Content>
+            </Segment>
+        );
+    }
 
     return (
-        <>
-            <Accordion.Title active={activeSection === index} index={index} onClick={onClick}>
+        <Segment>
+            <Accordion.Title active={accordionActive} onClick={toggleAccordionActive} style={accordionTitleStyle}>
                 <Icon name="dropdown" />
                 {title}
             </Accordion.Title>
-            <Accordion.Content active={activeSection === index}>{children}</Accordion.Content>
-        </>
+            <Accordion.Content style={accordionContentStyle} active={accordionActive}>
+                {children}
+            </Accordion.Content>
+        </Segment>
     );
-};
-
-export default AccordionSection;
+}

@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
-import AccordionSection from './AccordionSection';
+import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -407,8 +407,8 @@ class GenericDeployModal extends React.Component {
                                 />
                             </Form.Field>
                         )}
-                        <Accordion fluid styled>
-                            <AccordionSection
+                        <Accordion fluid>
+                            <AccordionSectionWithDivider
                                 title={t('sections.deploymentInputs')}
                                 index={DEPLOYMENT_SECTIONS.deploymentInputs}
                                 activeSection={activeSection}
@@ -441,8 +441,8 @@ class GenericDeployModal extends React.Component {
                                     errors,
                                     blueprint.plan.data_types
                                 )}
-                            </AccordionSection>
-                            <AccordionSection
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
                                 title={t('sections.deploymentMetadata')}
                                 index={DEPLOYMENT_SECTIONS.deploymentMetadata}
                                 activeSection={activeSection}
@@ -475,8 +475,8 @@ class GenericDeployModal extends React.Component {
                                         onChange={labels => this.setState({ labels })}
                                     />
                                 </Form.Field>
-                            </AccordionSection>
-                            <AccordionSection
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
                                 title={t('sections.executionParameters')}
                                 index={DEPLOYMENT_SECTIONS.executionParameters}
                                 activeSection={activeSection}
@@ -491,8 +491,8 @@ class GenericDeployModal extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
-                            </AccordionSection>
-                            <AccordionSection
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
                                 title={t('sections.advanced')}
                                 index={DEPLOYMENT_SECTIONS.advanced}
                                 activeSection={activeSection}
@@ -525,7 +525,7 @@ class GenericDeployModal extends React.Component {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
-                            </AccordionSection>
+                            </AccordionSectionWithDivider>
                         </Accordion>
                     </Form>
 
