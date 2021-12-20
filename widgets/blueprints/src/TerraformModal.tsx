@@ -7,7 +7,6 @@ import TerraformActions from './TerraformActions';
 import terraformVersions from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
-import AccordionSectionWithDivider from '../../common/src/AccordionSectionWithDivider';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -254,6 +253,8 @@ export default function TerraformModal({
             stopProcess();
         }
     }
+
+    const { AccordionSectionWithDivider } = Stage.Common;
 
     const {
         Accordion,

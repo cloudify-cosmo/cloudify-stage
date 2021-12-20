@@ -37,3 +37,14 @@ export default function AccordionSectionWithDivider({
         </AccordionSection>
     );
 }
+
+declare global {
+    namespace Stage.Common {
+        export { AccordionSectionWithDivider };
+    }
+}
+
+Stage.defineCommon({
+    name: 'AccordionSectionWithDivider',
+    common: AccordionSectionWithDivider
+});

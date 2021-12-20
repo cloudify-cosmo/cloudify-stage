@@ -64,3 +64,13 @@ export default function AccordionSection({
         </Segment>
     );
 }
+declare global {
+    namespace Stage.Common {
+        export { AccordionSection };
+    }
+}
+
+Stage.defineCommon({
+    name: 'AccordionSection',
+    common: AccordionSection
+});
