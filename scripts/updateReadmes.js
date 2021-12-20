@@ -93,6 +93,7 @@ function convertHugoShortcodes(widget, content) {
         const tipRegex = getStyledMessageRegex('tip');
         const warningRegex = getStyledMessageRegex('warning');
         const styledContentWrappersRegex = getStyledMessageRegex('(?:note|tip|warning)');
+        const tableRegex = /<table>([^]*?)<\/table>/gm;
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
@@ -116,7 +117,8 @@ function convertHugoShortcodes(widget, content) {
             })
             .replace(noteRegex, '<div class="ui message info">$1</div>')
             .replace(tipRegex, '<div class="ui message info">$1</div>')
-            .replace(warningRegex, '<div class="ui message warning">$1</div>');
+            .replace(warningRegex, '<div class="ui message warning">$1</div>')
+            .replace(tableRegex, '<table class="ui celled table">$1</table>');
 
         log(widget, 'Converting relref links which are pointing out to the current MD file:');
         logChange(widget, 'relref shortcodes', newContent.match(relrefToCurrentPageRegex));
