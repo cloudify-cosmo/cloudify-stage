@@ -1,16 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
 import request from 'supertest';
 import app from 'app';
 import mockRequest from 'request';
+import type { Response } from 'request';
+import type { Response as ExpressReponse } from 'express';
 
 jest.mock('handler/ManagerHandler');
 
 jest.mock('request', () => {
     const mock = jest.fn(() => {
-        /**
-         * @type {import('request').Response}
-         */
-        const response = {
+        const response: Partial<Response> = {
             headers: {
                 'content-type': 'image/png',
                 'content-disposition': 'attachment',
@@ -30,21 +28,16 @@ jest.mock('request', () => {
                 connection: 'close'
             }
         };
-        /**
-         * @type {import('request').Request}
-         */
         const proxiedRequest = {
-            on(event, callback) {
+            on(event: string, callback: (...args: any[]) => void) {
                 if (event === 'response') {
                     callback(response);
                 }
 
                 return proxiedRequest;
             },
-            /**
-             * @param {import('express').Response} destination
-             */
-            pipe(destination) {
+
+            pipe(destination: ExpressReponse) {
                 destination.writeHead(200, response.headers);
                 destination.end();
 
@@ -58,6 +51,7 @@ jest.mock('request', () => {
         return proxiedRequest;
     });
 
+    // @ts-ignore TODO(RD-382) It will be removed, so no need to provide typing
     mock.defaults = () => mock;
 
     return mock;
@@ -72,7 +66,7 @@ describe('/maps endpoint', () => {
                 expect(response.headers['strict-transport-security']).toBe(undefined);
 
                 expect(mockRequest).toHaveBeenCalledTimes(1);
-                const proxiedUrl = mockRequest.mock.calls[0][0];
+                const proxiedUrl = (<jest.Mock>(<unknown>mockRequest)).mock.calls[0][0];
                 expect(proxiedUrl).toEqual(expect.stringContaining('stadiamaps.com'));
             });
     });

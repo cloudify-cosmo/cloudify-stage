@@ -1,6 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import request from 'request';
 
@@ -12,7 +12,7 @@ const logger = getLogger('Maps');
 
 const router = express.Router();
 
-function validateEdition(req, res, next) {
+function validateEdition(req: Request, res: Response, next: NextFunction) {
     if (getMode() === MODE_COMMUNITY) {
         logger.error(`Endpoint ${req.baseUrl} not available in community edition.`);
         res.sendStatus(403);
