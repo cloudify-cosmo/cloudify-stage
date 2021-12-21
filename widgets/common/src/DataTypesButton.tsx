@@ -1,47 +1,37 @@
 // @ts-nocheck File not migrated fully to TS
-import { FunctionComponent, ReactElement } from 'react';
-import { useBoolean } from '../../../app/utils/hooks';
 
-interface Properties {
-    description?: string;
-    type?: string;
-    default?: any;
-    required?: boolean;
-}
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+
+const PropertiesPropType = PropTypes.objectOf(
+    PropTypes.shape({
+        description: PropTypes.string,
+        type: PropTypes.string,
+        default: Stage.PropTypes.AnyData,
+        required: PropTypes.bool
+    })
+);
 
 const { Header } = Stage.Basic;
 
-interface DataTypePropertyProps {
-    show: boolean;
-    name: string;
-    value?: ReactElement | string | null;
-}
-
-const DataTypeProperty: FunctionComponent<DataTypePropertyProps> = ({ show, name, value = null }) =>
-    show ? (
+const DataTypeProperty = ({ show, name, value }) =>
+    show && (
         <>
             <Header as="h4">{_.capitalize(name)}</Header>
             {value}
         </>
-    ) : null;
+    );
 
-interface DataTypeProps {
-    name: string;
-    description: string;
-    version?: string;
-    derivedFrom: string;
-    properties: Properties;
-}
+DataTypeProperty.propTypes = {
+    name: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    value: PropTypes.node
+};
 
-const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+DataTypeProperty.defaultProps = {
+    value: null
+};
 
-const DataType: FunctionComponent<DataTypeProps> = ({
-    name,
-    description = null,
-    version = null,
-    derivedFrom = null,
-    properties
-}) => {
+function DataType({ name, description, version, derivedFrom, properties }) {
     const { Segment, Table } = Stage.Basic;
     const { InputsUtils, ParameterValue } = Stage.Common;
 
@@ -94,71 +84,112 @@ const DataType: FunctionComponent<DataTypeProps> = ({
             </Segment>
         </div>
     );
-};
-
-interface DataTypesButtonProps {
-    iconButton: boolean;
-    types: {
-        derivedFrom?: string;
-        version?: string;
-        properties: Properties;
-        description?: string;
-    };
 }
 
-const DataTypesButton: FunctionComponent<DataTypesButtonProps> = ({ types, iconButton = false }) => {
-    const { Button, CancelButton, Modal, Popup } = Stage.Basic;
-    const [open, onOpen, onClose] = useBoolean(false);
-    return (
-        <div>
-            {iconButton ? (
-                <Popup
-                    content={t('buttons.showDataTypes')}
-                    trigger={
-                        <Button icon="code" onClick={onOpen} floated="right" aria-label={t('buttons.showDataTypes')} />
-                    }
-                />
-            ) : (
-                <Button
-                    icon="code"
-                    content={t('buttons.showDataTypes')}
-                    onClick={onOpen}
-                    floated="right"
-                    labelPosition="left"
-                />
-            )}
+DataType.propTypes = {
+    derivedFrom: PropTypes.string,
+    description: PropTypes.string,
+    properties: PropertiesPropType.isRequired,
+    name: PropTypes.string.isRequired,
+    version: PropTypes.string
+};
 
-            <Modal open={open} onClose={onClose}>
-                <Modal.Header>Data Types</Modal.Header>
+DataType.defaultProps = {
+    derivedFrom: null,
+    description: null,
+    version: null
+};
 
-                <Modal.Content>
-                    {_.map(types, (typeObject, typeName) => (
-                        <DataType
-                            key={typeName}
-                            name={typeName}
-                            description={typeObject.description}
-                            derivedFrom={typeObject.derivedFrom}
-                            version={typeObject.version}
-                            properties={typeObject.properties}
-                        />
-                    ))}
-                </Modal.Content>
+class DataTypesButton extends React.Component {
+    constructor(props) {
+        super(props);
 
-                <Modal.Actions>
-                    <CancelButton onClick={onClose} content="Close" />
-                </Modal.Actions>
-            </Modal>
-        </div>
-    );
+        this.state = {
+            open: false
+        };
+
+        this.onOpen = this.onOpen.bind(this);
+        this.onClose = this.onClose.bind(this);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+    }
+
+    onOpen() {
+        this.setState({ open: true });
+    }
+
+    onClose() {
+        this.setState({ open: false });
+    }
+
+    render() {
+        const { types, iconButton } = this.props;
+        const { open } = this.state;
+        const { Button, CancelButton, Modal } = Stage.Basic;
+
+        return (
+            <div>
+                {iconButton ? (
+                    <Popup
+                        content={t('buttons.showDataTypes')}
+                        trigger={
+                            <Button
+                                icon="code"
+                                onClick={this.onOpen}
+                                floated="right"
+                                aria-label={t('buttons.showDataTypes')}
+                            />
+                        }
+                    />
+                ) : (
+                    <Button
+                        icon="code"
+                        content={t('buttons.showDataTypes')}
+                        onClick={this.onOpen}
+                        floated="right"
+                        labelPosition="left"
+                    />
+                )}
+
+                <Modal open={open} onClose={this.onClose}>
+                    <Modal.Header>Data Types</Modal.Header>
+
+                    <Modal.Content>
+                        {_.map(types, (typeObject, typeName) => (
+                            <DataType
+                                key={typeName}
+                                name={typeName}
+                                description={typeObject.description}
+                                derivedFrom={typeObject.derived_from}
+                                version={typeObject.version}
+                                properties={typeObject.properties}
+                            />
+                        ))}
+                    </Modal.Content>
+
+                    <Modal.Actions>
+                        <CancelButton onClick={this.onClose} content="Close" />
+                    </Modal.Actions>
+                </Modal>
+            </div>
+        );
+    }
+}
+
+DataTypesButton.propTypes = {
+    iconButton: PropTypes.bool,
+    types: PropTypes.objectOf(
+        PropTypes.shape({
+            derived_from: PropTypes.string,
+            version: PropTypes.string,
+            properties: PropertiesPropType.isRequired
+        }).isRequired
+    ).isRequired
 };
 
 export default DataTypesButton;
-
-declare global {
-    namespace Stage.Common {
-        export { DataTypesButton };
-    }
-}
 
 Stage.defineCommon({
     name: 'DataTypesButton',
