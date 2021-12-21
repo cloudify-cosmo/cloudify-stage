@@ -589,7 +589,10 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open Composer', () => {
-        before(cy.visitTestPage);
+        before(() => {
+            cy.visitTestPage();
+            cy.reload();
+        });
 
         it('on "Generate in the Composer" menu item click', () => {
             cy.contains('Upload').click();
