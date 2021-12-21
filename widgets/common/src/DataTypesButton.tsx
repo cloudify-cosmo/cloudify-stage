@@ -114,7 +114,9 @@ const DataTypesButton: FunctionComponent<DataTypesButtonProps> = ({ types, iconB
             {iconButton ? (
                 <Popup
                     content={t('buttons.showDataTypes')}
-                    trigger={<Button icon="code" onClick={onOpen} floated="right" />}
+                    trigger={
+                        <Button icon="code" onClick={onOpen} floated="right" aria-label={t('buttons.showDataTypes')} />
+                    }
                 />
             ) : (
                 <Button

@@ -83,8 +83,10 @@ describe('Blueprints widget', () => {
             cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.selectAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
-            cy.get('i.code').click();
+            cy.selectAccordionSection('Deployment Inputs');
+            cy.get('button[aria-label="Show Data Types"]').click();
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
