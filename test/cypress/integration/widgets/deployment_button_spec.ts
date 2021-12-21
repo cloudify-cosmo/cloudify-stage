@@ -71,20 +71,19 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
+            cy.openAccordionSection('Advanced');
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
-            cy.contains('.accordion .title', 'Deployment Inputs')
-                .next('.content')
-                .within(() => {
-                    // check hidden input is not rendered
-                    cy.get('.field')
-                        .should('have.length', 1)
-                        .should('have.class', 'field')
-                        .within(() => {
-                            cy.contains('label', 'Server IP');
-                            cy.get('textarea').type('127.0.0.1');
-                        });
-                });
+            cy.withinAccordionSection('Deployment Inputs', () => {
+                // check hidden input is not rendered
+                cy.get('.field')
+                    .should('have.length', 1)
+                    .should('have.class', 'field')
+                    .within(() => {
+                        cy.contains('label', 'Server IP');
+                        cy.get('textarea').type('127.0.0.1');
+                    });
+            });
         });
     };
 

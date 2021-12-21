@@ -83,16 +83,16 @@ describe('Blueprints widget', () => {
             cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
-            cy.selectAccordionSection('Advanced');
+            cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
-            cy.selectAccordionSection('Deployment Inputs');
+            cy.openAccordionSection('Deployment Inputs');
             cy.get('button[aria-label="Show Data Types"]').click();
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
 
-            cy.selectAccordionSection('Deployment Metadata');
+            cy.openAccordionSection('Deployment Metadata');
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
             cy.get('div[name=labelValue] > input').type('sample_value', { force: true });

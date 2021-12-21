@@ -394,7 +394,11 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    selectAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle).click(),
+    openAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle).click(),
+
+    withinAccordionSection: (sectionTitle: string, callback: () => void) => {
+        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
+    },
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),
 
