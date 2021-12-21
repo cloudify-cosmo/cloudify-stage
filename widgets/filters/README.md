@@ -40,7 +40,7 @@ The component presents a list of rows, each representing a single filter rule. E
 * Rule operator dropdown. The set of available operators to choose from depends on the selected rule type. See **Table 1.** and **Table 2.** below for details.
 * Value input (for attribute rules) or key/value input(s) (for label rules). 
 
-<table>
+<table class="ui celled table">
   <thead>
     <th width="20%">UI</th>
     <th width="15%">API</th>
@@ -83,7 +83,7 @@ The component presents a list of rows, each representing a single filter rule. E
 </table>
 
 
-<table>
+<table class="ui celled table">
   <thead>
     <th width="20%">UI</th>
     <th width="15%">API</th>
