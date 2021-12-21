@@ -33,7 +33,7 @@ export default function AccordionSection({
 
     const { Accordion, Icon, Segment } = Stage.Basic;
 
-    if (typeof activeSection !== 'undefined') {
+    if (activeSection !== undefined) {
         return (
             <Segment>
                 <Accordion.Title
