@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
+import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -303,7 +304,6 @@ class GenericDeployModal extends React.Component {
             VisibilityField
         } = Stage.Basic;
         const {
-            AccordionSectionWithDivider,
             DataTypesButton,
             InputsHeader,
             InputsUtils,
