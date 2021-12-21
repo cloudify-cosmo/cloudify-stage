@@ -563,7 +563,7 @@ describe('Blueprints widget', () => {
                 cy.getField('Terraform template')
                     .find('input')
                     .type(
-                        'https://github.com/cloudify-cosmo/cloudify-stage/raw/RD-3660-e2e-test/test/cypress/fixtures/terraform/local.zip'
+                        'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/local.zip'
                     );
                 cy.getField('Resource location').find('input').type('.');
                 cy.clickButton('Create');
