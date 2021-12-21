@@ -24,10 +24,10 @@ export const inputMaxLength = 256;
 
 function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) {
     return (
-        // eslint-disable-next-line react/jsx-props-no-spreading
         <Input
             name={name}
             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
         >
             <input maxLength={inputMaxLength} />
