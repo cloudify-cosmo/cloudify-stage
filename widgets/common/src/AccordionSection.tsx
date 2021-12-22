@@ -33,44 +33,30 @@ export default function AccordionSection({
 
     const { Accordion, Icon, Segment } = Stage.Basic;
 
+    const active = activeSection !== undefined ? activeSection === index : accordionActive;
+
     const accordionTitleProps =
         activeSection !== undefined
             ? {
-                  active: activeSection === index,
                   index,
-                  onClick,
-                  style: accordionTitleStyle
+                  onClick
               }
             : {
-                  active: accordionActive,
-                  onClick: toggleAccordionActive,
-                  style: accordionTitleStyle
-              };
-
-    const accordionContentProps =
-        activeSection !== undefined
-            ? {
-                  style: accordionContentStyle,
-                  active: activeSection === index
-              }
-            : {
-                  style: accordionContentStyle,
-                  active: accordionActive
+                  onClick: toggleAccordionActive
               };
 
     return (
         <Segment>
             <Accordion.Title
+                style={accordionTitleStyle}
+                active={active}
                 // eslint-disable-next-line react/jsx-props-no-spreading
                 {...accordionTitleProps}
             >
                 <Icon name="dropdown" />
                 {title}
             </Accordion.Title>
-            <Accordion.Content
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...accordionContentProps}
-            >
+            <Accordion.Content style={accordionContentStyle} active={active}>
                 {children}
             </Accordion.Content>
         </Segment>
