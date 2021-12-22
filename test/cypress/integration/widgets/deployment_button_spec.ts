@@ -209,7 +209,7 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
-            cy.getField('Deployment name').type(deploymentName);
+            cy.getField('Deployment name').find('input').type(deploymentName);
             cy.openAccordionSection('Advanced');
             cy.getField('Deployment ID').find('input').clear().type(deploymentName);
             cy.openAccordionSection('Deployment Inputs');
