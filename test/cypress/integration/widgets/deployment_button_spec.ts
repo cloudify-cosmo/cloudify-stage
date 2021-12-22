@@ -267,11 +267,11 @@ describe('Create Deployment Button widget', () => {
 
         it('should open the relevant accordion section on error', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.get('input[name="deploymentName"]').click().type('aaa');
+                cy.getField('Deployment name').type('aaa');
                 cy.openAccordionSection('Advanced');
                 cy.get('input[name="deploymentId"]').clear();
                 cy.openAccordionSection('Deployment Inputs');
-                cy.contains('button', 'Deploy').click();
+                cy.clickButton('Deploy');
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
                 cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
                 cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');
