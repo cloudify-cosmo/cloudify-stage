@@ -1209,6 +1209,7 @@ describe('Deployments View widget', () => {
 
                 cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
 
+                cy.openAccordionSection('Deployment Metadata');
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
                 cy.get('div[name=labelValue] > input').type(labelValue);
