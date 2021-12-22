@@ -1,6 +1,7 @@
 import React from 'react';
 import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable } from '../../../backend/routes/Terraform.types';
+import { inputMaxLength } from './TerraformModal';
 
 interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
     rowValues?: Variable;
@@ -28,6 +29,8 @@ export default function TerraformVariableValueInput({
             valueProp="key"
         />
     ) : (
-        <Input value={value === null ? '' : value} onChange={(event, data) => onChange(event, { name, ...data })} />
+        <Input value={value === null ? '' : value} onChange={(event, data) => onChange(event, { name, ...data })}>
+            <input maxLength={inputMaxLength} />
+        </Input>
     );
 }
