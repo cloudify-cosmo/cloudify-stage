@@ -35,24 +35,11 @@ export default function AccordionSection({
 
     const active = activeSection !== undefined ? activeSection === index : accordionActive;
 
-    const accordionTitleProps =
-        activeSection !== undefined
-            ? {
-                  index,
-                  onClick
-              }
-            : {
-                  onClick: toggleAccordionActive
-              };
+    const handleClick = activeSection !== undefined ? onClick : toggleAccordionActive;
 
     return (
         <Segment>
-            <Accordion.Title
-                style={accordionTitleStyle}
-                active={active}
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...accordionTitleProps}
-            >
+            <Accordion.Title style={accordionTitleStyle} active={active} index={index} onClick={handleClick}>
                 <Icon name="dropdown" />
                 {title}
             </Accordion.Title>
