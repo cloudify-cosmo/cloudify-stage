@@ -33,34 +33,38 @@ export default function AccordionSection({
 
     const { Accordion, Icon, Segment } = Stage.Basic;
 
-    if (activeSection !== undefined) {
-        return (
-            <Segment>
-                <Accordion.Title
-                    active={activeSection === index}
-                    index={index}
-                    onClick={onClick}
-                    style={accordionTitleStyle}
-                >
-                    <Icon name="dropdown" />
-                    {title}
-                </Accordion.Title>
-                <Accordion.Content style={accordionContentStyle} active={activeSection === index}>
-                    {children}
-                </Accordion.Content>
-            </Segment>
-        );
-    }
-
     return (
         <Segment>
-            <Accordion.Title active={accordionActive} onClick={toggleAccordionActive} style={accordionTitleStyle}>
-                <Icon name="dropdown" />
-                {title}
-            </Accordion.Title>
-            <Accordion.Content style={accordionContentStyle} active={accordionActive}>
-                {children}
-            </Accordion.Content>
+            {activeSection !== undefined ? (
+                <>
+                    <Accordion.Title
+                        active={activeSection === index}
+                        index={index}
+                        onClick={onClick}
+                        style={accordionTitleStyle}
+                    >
+                        <Icon name="dropdown" />
+                        {title}
+                    </Accordion.Title>
+                    <Accordion.Content style={accordionContentStyle} active={activeSection === index}>
+                        {children}
+                    </Accordion.Content>
+                </>
+            ) : (
+                <>
+                    <Accordion.Title
+                        active={accordionActive}
+                        onClick={toggleAccordionActive}
+                        style={accordionTitleStyle}
+                    >
+                        <Icon name="dropdown" />
+                        {title}
+                    </Accordion.Title>
+                    <Accordion.Content style={accordionContentStyle} active={accordionActive}>
+                        {children}
+                    </Accordion.Content>
+                </>
+            )}
         </Segment>
     );
 }

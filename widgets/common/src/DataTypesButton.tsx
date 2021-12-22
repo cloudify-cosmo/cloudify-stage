@@ -127,7 +127,7 @@ class DataTypesButton extends React.Component {
     render() {
         const { types, iconButton } = this.props;
         const { open } = this.state;
-        const { Button, CancelButton, Modal } = Stage.Basic;
+        const { Button, CancelButton, Modal, Popup } = Stage.Basic;
 
         return (
             <div>
