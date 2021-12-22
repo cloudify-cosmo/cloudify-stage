@@ -209,8 +209,10 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
-            cy.get('input[name="deploymentName"]').type(deploymentName);
-            cy.get('input[name="deploymentId"]').clear().type(deploymentName);
+            cy.getField('Deployment name').type(deploymentName);
+            cy.openAccordionSection('Advanced');
+            cy.getField('Deployment ID').find('input').clear().type(deploymentName);
+            cy.openAccordionSection('Deployment Inputs');
             cy.get('input[name=string_no_default]').clear().type('Something');
 
             cy.contains('.field', 'string_constraint_pattern')
@@ -267,9 +269,9 @@ describe('Create Deployment Button widget', () => {
 
         it('should open the relevant accordion section on error', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.getField('Deployment name').type('aaa');
+                cy.getField('Deployment name').find('input').type('aaa');
                 cy.openAccordionSection('Advanced');
-                cy.get('input[name="deploymentId"]').clear();
+                cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
                 cy.clickButton('Deploy');
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
