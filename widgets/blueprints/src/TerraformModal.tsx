@@ -12,13 +12,28 @@ import type { Variable, Output } from '../../../backend/routes/Terraform.types';
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const { Dropdown } = Stage.Basic;
+const { Dropdown, Input } = Stage.Basic;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
     text: versionOption,
     value: versionOption
 }));
 terraformVersionOptions[0].text = `${terraformVersionOptions[0].text} (${t('default')})`;
+
+export const inputMaxLength = 256;
+
+function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) {
+    return (
+        <Input
+            name={name}
+            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...rest}
+        >
+            <input maxLength={inputMaxLength} />
+        </Input>
+    );
+}
 
 function getDynamicTableDropdown(options: DropdownProps['options']) {
     return ({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) => {
@@ -45,7 +60,8 @@ const variablesColumns: Columns<Variable> = [
     {
         id: 'name',
         label: t('variablesTable.name'),
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     },
     {
         id: 'source',
@@ -71,8 +87,8 @@ const outputsColumns: Columns<Output> = [
     {
         id: 'name',
         label: t('outputsTable.name'),
-        default: '',
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     },
     {
         id: 'type',
@@ -88,7 +104,8 @@ const outputsColumns: Columns<Output> = [
         id: 'terraformOutput',
         label: t('outputsTable.terraformOutput'),
         default: '',
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     }
 ];
 
@@ -277,7 +294,9 @@ export default function TerraformModal({
             <Modal.Content>
                 <Form errors={errors} scrollToError>
                     <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
-                        <Form.Input value={blueprintName} onChange={setBlueprintName} />
+                        <Form.Input value={blueprintName} onChange={setBlueprintName}>
+                            <input maxLength={inputMaxLength} />
+                        </Form.Input>
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={t(`terraformVersion`)} required>
                         <Form.Dropdown

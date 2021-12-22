@@ -48,7 +48,7 @@ router.post('/blueprint', (req, res) => {
         );
     } catch (err) {
         logger.error(err);
-        res.status(500).send({ message: `Error when generating blueprint: ${err}` });
+        res.status(500).send({ message: `Error when generating blueprint` });
     }
 
     res.setHeader('content-type', 'text/x-yaml');

@@ -552,28 +552,45 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it('create new blueprint on submit', () => {
+        it('create installable blueprint on submit', () => {
             cy.uploadPluginFromCatalog('Terraform');
             openTerraformModal();
 
             const blueprintName = `${blueprintNamePrefix}_terraform`;
+            const deploymentId = blueprintName;
             cy.get('.modal').within(() => {
                 cy.getField('Blueprint name').find('input').type(blueprintName);
-                cy.getField('Terraform template').find('input').type('http://terra.io');
-                cy.getField('Resource location').find('input').type('resource');
+                cy.getField('Terraform template')
+                    .find('input')
+                    .type(
+                        'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/local.zip'
+                    );
+                cy.getField('Resource location').find('input').type('.');
                 cy.clickButton('Create');
                 cy.contains('Uploading Terraform blueprint').should('be.visible');
             });
             cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
             cy.getWidget('blueprints').within(() => {
                 cy.getSearchInput().type(blueprintName);
-                cy.contains('table', blueprintName).should('be.visible');
+                cy.contains('tr', blueprintName).find('.rocket').click();
+            });
+            cy.get('.modal').within(() => {
+                cy.getField('Deployment name').find('input').type(deploymentId);
+                cy.getField('Deployment ID').find('input').clear().type(deploymentId);
+                cy.clickButton('Deploy & Install');
+            });
+            cy.clickButton('Execute');
+
+            cy.waitForExecutionToEnd(deploymentId, 'install');
+            cy.getDeployment(deploymentId).then(response => {
+                expect(response.body.latest_execution_status).to.be.equal('completed');
             });
         });
     });
 
     describe('should open Composer', () => {
         before(() => {
+            cy.visitTestPage();
             cy.reload();
         });
 

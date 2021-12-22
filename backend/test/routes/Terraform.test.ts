@@ -35,7 +35,7 @@ describe('/terraform/blueprint endpoint', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toStrictEqual({
-            message: 'Error when generating blueprint: Error: err'
+            message: 'Error when generating blueprint'
         });
     });
 });
