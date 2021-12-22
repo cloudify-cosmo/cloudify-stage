@@ -394,7 +394,9 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
-    openAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle).click(),
+    getAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle),
+
+    openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
 
     withinAccordionSection: (sectionTitle: string, callback: () => void) => {
         cy.openAccordionSection(sectionTitle).next('.content').within(callback);

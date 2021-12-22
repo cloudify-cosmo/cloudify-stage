@@ -264,6 +264,19 @@ describe('Create Deployment Button widget', () => {
 
             cy.get('.error.message').should('not.exist');
         });
+
+        it('should open the relevant accordion section on error', () => {
+            cy.get('div.deployBlueprintModal').within(() => {
+                cy.get('input[name="deploymentName"]').click().type('aaa');
+                cy.openAccordionSection('Advanced');
+                cy.get('input[name="deploymentId"]').clear();
+                cy.openAccordionSection('Deployment Inputs');
+                cy.contains('button', 'Deploy').click();
+                cy.getAccordionSection('Advanced').should('have.class', 'active');
+                cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
+                cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');
+            });
+        });
     });
 
     describe('handles inputs of type', () => {
