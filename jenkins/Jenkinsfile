@@ -96,8 +96,8 @@ pipeline {
               echo 'Check for cache'
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
-              echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${CFY_NODE_RPM} rpmlint"
+              echo 'Install NodeJS'
+              sh "yum install -y ${CFY_NODE_RPM}"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
