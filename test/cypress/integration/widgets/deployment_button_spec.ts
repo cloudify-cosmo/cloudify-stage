@@ -85,15 +85,24 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
+    const clickDeployButton = () => {
+        cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+        cy.contains('.dropdown span', 'Deploy').click();
+    };
+
+    const clickInstallButton = () => {
+        cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+        cy.contains('.dropdown span', 'Install').click();
+    };
+
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
             if (install) {
-                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-                cy.contains('.dropdown span', 'Install').click();
+                clickInstallButton();
             } else {
-                cy.contains('.button', 'Deploy').click();
+                clickDeployButton();
             }
         });
 
@@ -129,7 +138,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
         cy.get('.actions > .ui:nth-child(2)').within(() => {
-            cy.get('button').should('have.text', 'Deploy');
+            cy.get('button').should('have.text', 'Install');
             cy.get('[data-testid="deploy-dropdown"]').click();
             cy.get('[data-testid="deploy-dropdown"] .item:nth-child(1)').should('have.text', 'Deploy');
             cy.get('[data-testid="deploy-dropdown"] .item:nth-child(2)').should('have.text', 'Install');
@@ -163,8 +172,7 @@ describe('Create Deployment Button widget', () => {
 
         it('handles data validation errors', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-                cy.contains('.dropdown span', 'Install').click();
+                clickInstallButton();
                 cy.get('div.error.message').within(() => {
                     cy.get('li:nth-child(1)').should('have.text', 'Please provide deployment name');
                     cy.get('li:nth-child(2)').should('have.text', 'Please select blueprint from the list');
@@ -183,8 +191,7 @@ describe('Create Deployment Button widget', () => {
                 }
             });
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-                cy.contains('.dropdown span', 'Install').click();
+                clickInstallButton();
             });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
@@ -205,8 +212,7 @@ describe('Create Deployment Button widget', () => {
             }).as('installDeployment');
 
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-                cy.contains('.dropdown span', 'Install').click();
+                clickInstallButton();
             });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.wait('@installDeployment');
@@ -236,7 +242,7 @@ describe('Create Deployment Button widget', () => {
                 });
             cy.get('@string_constraint_pattern').should('not.have.class', 'error');
 
-            cy.get(`.actions > .ui:nth-child(2)`).click();
+            clickDeployButton();
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
@@ -254,7 +260,7 @@ describe('Create Deployment Button widget', () => {
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
                 cy.getField('Deployment name').find('input').type('blahBlahBlah');
-                cy.contains('button', 'Deploy').click();
+                clickDeployButton();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');

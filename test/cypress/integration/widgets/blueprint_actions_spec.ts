@@ -39,7 +39,7 @@ describe('Blueprint Action Buttons widget', () => {
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
         cy.get('.actions > .ui:nth-child(2)').within(() => {
-            cy.get('button').should('have.text', 'Deploy');
+            cy.get('button').should('have.text', 'Install');
             cy.get('[data-testid="deploy-dropdown"]').click();
             cy.get('[data-testid="deploy-dropdown"] .item:nth-child(1)').should('have.text', 'Deploy');
             cy.get('[data-testid="deploy-dropdown"] .item:nth-child(2)').should('have.text', 'Install');

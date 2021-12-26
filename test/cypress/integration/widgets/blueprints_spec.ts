@@ -96,7 +96,8 @@ describe('Blueprints widget', () => {
             cy.get('.add').click();
             cy.get('a.label').should('be.visible');
 
-            cy.contains('.modal .button', 'Deploy').click();
+            cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+            cy.contains('.dropdown span', 'Deploy').click();
             cy.get('.modal').should('not.exist');
 
             cy.wait('@deploy').then(({ request }) => {

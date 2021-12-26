@@ -483,10 +483,10 @@ class GenericDeployModal extends React.Component {
                     {showDeployButton ? (
                         <Button.Group color="green">
                             <ApproveButton
-                                onClick={this.onDeploy}
+                                onClick={this.showInstallModal}
                                 disabled={loading}
-                                content={t('buttons.deploy')}
-                                icon="rocket"
+                                content={t('buttons.install')}
+                                icon="cogs"
                             />
                             <Dropdown
                                 className="button icon down"
