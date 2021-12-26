@@ -60,9 +60,10 @@ describe('User flow', () => {
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         cy.get('[title="Create deployment"]').click();
         cy.get('input[name=deploymentName]').type(resourceName);
-        cy.get('button.green').click();
+        cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+        cy.contains('.dropdown span', 'Install').click();
 
-        cy.get('.modal').find('button.ok').click();
+        cy.clickButton('Execute');
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
         cy.contains('.executionsWidget', 'install completed');
