@@ -96,7 +96,7 @@ describe('Blueprints widget', () => {
             cy.get('.add').click();
             cy.get('a.label').should('be.visible');
 
-            cy.contains('.modal .basic', 'Deploy').click();
+            cy.contains('.modal .button', 'Deploy').click();
             cy.get('.modal').should('not.exist');
 
             cy.wait('@deploy').then(({ request }) => {
@@ -577,7 +577,8 @@ describe('Blueprints widget', () => {
             cy.get('.modal').within(() => {
                 cy.getField('Deployment name').find('input').type(deploymentId);
                 cy.getField('Deployment ID').find('input').clear().type(deploymentId);
-                cy.clickButton('Deploy & Install');
+                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+                cy.contains('.dropdown span', 'Install').click();
             });
             cy.clickButton('Execute');
 

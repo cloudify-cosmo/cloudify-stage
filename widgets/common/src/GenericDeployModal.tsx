@@ -261,6 +261,8 @@ class GenericDeployModal extends React.Component {
         const {
             ApproveButton,
             CancelButton,
+            Button,
+            Dropdown,
             Form,
             Icon,
             LoadingOverlay,
@@ -478,22 +480,47 @@ class GenericDeployModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    {showDeployButton && (
+                    {showDeployButton ? (
+                        <Button.Group color="green">
+                            <ApproveButton
+                                onClick={this.onDeploy}
+                                disabled={loading}
+                                content={t('buttons.deploy')}
+                                icon="rocket"
+                            />
+                            <Dropdown
+                                className="button icon down"
+                                data-testid="deploy-dropdown"
+                                clearable={false}
+                                floating
+                                options={[
+                                    {
+                                        key: 'deploy',
+                                        icon: 'rocket',
+                                        text: t('buttons.deploy'),
+                                        value: 'Deploy',
+                                        onClick: this.onDeploy
+                                    },
+                                    {
+                                        key: 'install',
+                                        icon: 'cogs',
+                                        text: t('buttons.install'),
+                                        value: 'Install',
+                                        onClick: this.showInstallModal
+                                    }
+                                ]}
+                                trigger={<></>}
+                            />
+                        </Button.Group>
+                    ) : (
                         <ApproveButton
-                            onClick={this.onDeploy}
+                            onClick={this.showInstallModal}
                             disabled={loading}
-                            content={t('buttons.deploy')}
-                            icon="rocket"
-                            className="basic"
+                            content={t('buttons.deployAndInstall')}
+                            icon="cogs"
+                            className="green"
                         />
                     )}
-                    <ApproveButton
-                        onClick={this.showInstallModal}
-                        disabled={loading}
-                        content={t('buttons.deployAndInstall')}
-                        icon="cogs"
-                        className="green"
-                    />
                 </Modal.Actions>
             </Modal>
         );

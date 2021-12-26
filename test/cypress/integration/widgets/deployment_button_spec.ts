@@ -88,7 +88,14 @@ describe('Create Deployment Button widget', () => {
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
-        cy.get(`div.deployBlueprintModal .actions > .ui:nth-child(${install ? '3' : '2'})`).click();
+        cy.get('div.deployBlueprintModal').within(() => {
+            if (install) {
+                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+                cy.contains('.dropdown span', 'Install').click();
+            } else {
+                cy.contains('.button', 'Deploy').click();
+            }
+        });
 
         if (install) {
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
@@ -121,8 +128,12 @@ describe('Create Deployment Button widget', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
-        cy.get('.actions > .ui:nth-child(2)').should('have.text', 'Deploy');
-        cy.get('.actions > .ui:nth-child(3)').should('have.text', 'Deploy & Install');
+        cy.get('.actions > .ui:nth-child(2)').within(() => {
+            cy.get('button').should('have.text', 'Deploy');
+            cy.get('[data-testid="deploy-dropdown"]').click();
+            cy.get('[data-testid="deploy-dropdown"] .item:nth-child(1)').should('have.text', 'Deploy');
+            cy.get('[data-testid="deploy-dropdown"] .item:nth-child(2)').should('have.text', 'Install');
+        });
 
         cy.get('.actions > .ui:nth-child(1)').click();
         cy.get('div.deployBlueprintModal').should('not.exist');
@@ -152,7 +163,8 @@ describe('Create Deployment Button widget', () => {
 
         it('handles data validation errors', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.get(`.actions > .ui:nth-child(3)`).click();
+                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+                cy.contains('.dropdown span', 'Install').click();
                 cy.get('div.error.message').within(() => {
                     cy.get('li:nth-child(1)').should('have.text', 'Please provide deployment name');
                     cy.get('li:nth-child(2)').should('have.text', 'Please select blueprint from the list');
@@ -170,7 +182,10 @@ describe('Create Deployment Button widget', () => {
                     message: 'Cannot deploy blueprint'
                 }
             });
-            cy.get(`div.deployBlueprintModal .actions > .ui:nth-child(3)`).click();
+            cy.get('div.deployBlueprintModal').within(() => {
+                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+                cy.contains('.dropdown span', 'Install').click();
+            });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
                 cy.get('li:nth-child(1)').should('have.text', 'Cannot deploy blueprint');
@@ -189,7 +204,10 @@ describe('Create Deployment Button widget', () => {
                 }
             }).as('installDeployment');
 
-            cy.get(`div.deployBlueprintModal .actions > .ui:nth-child(3)`).click();
+            cy.get('div.deployBlueprintModal').within(() => {
+                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
+                cy.contains('.dropdown span', 'Install').click();
+            });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.wait('@installDeployment');
 

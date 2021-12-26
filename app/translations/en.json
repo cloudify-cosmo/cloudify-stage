@@ -588,6 +588,7 @@
                     "buttons": {
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
+                        "install": "Install",
                         "deployAndInstall": "Deploy & Install"
                     },
                     "steps": {
