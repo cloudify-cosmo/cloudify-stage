@@ -547,8 +547,8 @@ describe('Blueprints widget', () => {
             cy.uploadBlueprint('blueprints/empty.zip', existingBlueprintName);
 
             cy.getField('Blueprint name').find('input').type(existingBlueprintName);
-            cy.getField('Terraform template').find('input').type('http://terra.io');
-            cy.getField('Resource location').find('input').type('resource');
+            cy.getField('URL to your Terraform template (zip or git)').find('input').type('http://terra.io');
+            cy.getField('Terraform folder in the archive').find('input').type('resource');
 
             cy.clickButton('Create');
             cy.contains('Errors in the form').scrollIntoView();
@@ -563,12 +563,12 @@ describe('Blueprints widget', () => {
             const deploymentId = blueprintName;
             cy.get('.modal').within(() => {
                 cy.getField('Blueprint name').find('input').type(blueprintName);
-                cy.getField('Terraform template')
+                cy.getField('URL to your Terraform template (zip or git)')
                     .find('input')
                     .type(
                         'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/local.zip'
                     );
-                cy.getField('Resource location').find('input').type('.');
+                cy.getField('Terraform folder in the archive').find('input').type('.');
                 cy.clickButton('Create');
                 cy.contains('Uploading Terraform blueprint').should('be.visible');
             });

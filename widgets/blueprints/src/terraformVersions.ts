@@ -31,6 +31,8 @@ const terraformVersions = [
     '0.13.2',
     '0.13.1',
     '0.13.0'
-];
+] as const;
 
 export default terraformVersions;
+
+export const defaultVersion: typeof terraformVersions[number] = '0.14.11';
