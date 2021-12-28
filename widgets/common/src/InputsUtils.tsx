@@ -1,5 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
 
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
@@ -88,7 +87,7 @@ class InputsUtils {
         }
     }
 
-    static getTemplateForDataType(dataType, stringTemplate) {
+    static getTemplateForDataType(dataType, stringTemplate?) {
         const getStringInitialValue = type => {
             switch (type) {
                 case 'boolean':
@@ -520,6 +519,14 @@ class InputsUtils {
         }
 
         return { [errorFieldKey]: message };
+    }
+}
+
+export default InputsUtils;
+
+declare global {
+    namespace Stage.Common {
+        export { InputsUtils };
     }
 }
 
