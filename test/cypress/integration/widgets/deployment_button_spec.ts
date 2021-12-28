@@ -54,7 +54,7 @@ describe('Create Deployment Button widget', () => {
             cy.setSearchableDropdownValue('Blueprint', blueprintName);
 
             cy.log('Waiting for blueprint to load and modal to be operational.');
-            cy.contains('Deployment inputs').should('be.visible');
+            cy.contains('Deployment Inputs').should('be.visible');
         });
     };
 
@@ -71,17 +71,19 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
+            cy.openAccordionSection('Advanced');
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
-            cy.contains('h4', 'Deployment inputs')
-                .nextUntil('h4:contains(Deployment metadata)')
+            cy.withinAccordionSection('Deployment Inputs', () => {
                 // check hidden input is not rendered
-                .should('have.length', 1)
-                .should('have.class', 'field')
-                .within(() => {
-                    cy.contains('label', 'Server IP');
-                    cy.get('textarea').type('127.0.0.1');
-                });
+                cy.get('.field')
+                    .should('have.length', 1)
+                    .should('have.class', 'field')
+                    .within(() => {
+                        cy.contains('label', 'Server IP');
+                        cy.get('textarea').type('127.0.0.1');
+                    });
+            });
         });
     };
 
@@ -231,8 +233,10 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
-            cy.get('input[name="deploymentName"]').type(deploymentName);
-            cy.get('input[name="deploymentId"]').clear().type(deploymentName);
+            cy.getField('Deployment name').find('input').type(deploymentName);
+            cy.openAccordionSection('Advanced');
+            cy.getField('Deployment ID').find('input').clear().type(deploymentName);
+            cy.openAccordionSection('Deployment Inputs');
             cy.get('input[name=string_no_default]').clear().type('Something');
 
             cy.contains('.field', 'string_constraint_pattern')
@@ -285,6 +289,19 @@ describe('Create Deployment Button widget', () => {
             });
 
             cy.get('.error.message').should('not.exist');
+        });
+
+        it('should open the relevant accordion section on error', () => {
+            cy.get('div.deployBlueprintModal').within(() => {
+                cy.getField('Deployment name').find('input').type('aaa');
+                cy.openAccordionSection('Advanced');
+                cy.getField('Deployment ID').find('input').clear();
+                cy.openAccordionSection('Deployment Inputs');
+                cy.clickButton('Deploy');
+                cy.getAccordionSection('Advanced').should('have.class', 'active');
+                cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
+                cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');
+            });
         });
     });
 

@@ -83,16 +83,19 @@ describe('Blueprints widget', () => {
             cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
-            cy.contains('Show Data Types').click();
+            cy.openAccordionSection('Deployment Inputs');
+            cy.get('button[aria-label="Show Data Types"]').click();
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
 
+            cy.openAccordionSection('Deployment Metadata');
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
+            cy.get('div[name=labelValue] > input').type('sample_value', { force: true });
             cy.get('.add').click();
             cy.get('a.label').should('be.visible');
 
@@ -577,6 +580,7 @@ describe('Blueprints widget', () => {
             });
             cy.get('.modal').within(() => {
                 cy.getField('Deployment name').find('input').type(deploymentId);
+                cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear().type(deploymentId);
                 cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
                 cy.contains('.dropdown span', 'Install').click();

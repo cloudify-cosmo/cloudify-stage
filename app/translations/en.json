@@ -582,10 +582,13 @@
                         }
                     },
                     "sections": {
-                        "deploymentMetadata": "Deployment metadata",
-                        "executionParameters": "Execution parameters"
+                        "deploymentInputs": "Deployment Inputs",
+                        "deploymentMetadata": "Deployment Metadata",
+                        "executionParameters": "Execution Parameters",
+                        "advanced": "Advanced"
                     },
                     "buttons": {
+                        "showDataTypes": "Show Data Types",
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
                         "install": "Install",
