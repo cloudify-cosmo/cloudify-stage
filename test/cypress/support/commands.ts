@@ -394,6 +394,14 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    getAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle),
+
+    openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
+
+    withinAccordionSection: (sectionTitle: string, callback: () => void) => {
+        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
+    },
+
     getField: (fieldName: string) => cy.contains('.field', fieldName),
 
     setSearchableDropdownValue: (fieldName: string, value: string) => {
