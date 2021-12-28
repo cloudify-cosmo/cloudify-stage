@@ -582,8 +582,7 @@ describe('Blueprints widget', () => {
                 cy.getField('Deployment name').find('input').type(deploymentId);
                 cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear().type(deploymentId);
-                cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-                cy.contains('.dropdown span', 'Install').click();
+                cy.clickButton('Install');
             });
             cy.clickButton('Execute');
 

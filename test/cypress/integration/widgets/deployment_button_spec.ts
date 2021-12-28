@@ -92,17 +92,12 @@ describe('Create Deployment Button widget', () => {
         cy.contains('.dropdown span', 'Deploy').click();
     };
 
-    const clickInstallButton = () => {
-        cy.get('.dropdown[data-testid="deploy-dropdown"]').click();
-        cy.contains('.dropdown span', 'Install').click();
-    };
-
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
             if (install) {
-                clickInstallButton();
+                cy.clickButton('Install');
             } else {
                 clickDeployButton();
             }
@@ -174,7 +169,7 @@ describe('Create Deployment Button widget', () => {
 
         it('handles data validation errors', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                clickInstallButton();
+                cy.clickButton('Install');
                 cy.get('div.error.message').within(() => {
                     cy.get('li:nth-child(1)').should('have.text', 'Please provide deployment name');
                     cy.get('li:nth-child(2)').should('have.text', 'Please select blueprint from the list');
@@ -193,7 +188,7 @@ describe('Create Deployment Button widget', () => {
                 }
             });
             cy.get('div.deployBlueprintModal').within(() => {
-                clickInstallButton();
+                cy.clickButton('Install');
             });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
@@ -214,7 +209,7 @@ describe('Create Deployment Button widget', () => {
             }).as('installDeployment');
 
             cy.get('div.deployBlueprintModal').within(() => {
-                clickInstallButton();
+                cy.clickButton('Install');
             });
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.wait('@installDeployment');
