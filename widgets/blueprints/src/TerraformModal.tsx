@@ -5,9 +5,10 @@ import TerraformModalAccordion from './TerraformModalAccordion';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
-import terraformVersions from './terraformVersions';
+import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
+import terraformLogo from '../images/terraform-icon.png';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -15,10 +16,9 @@ const tError = Stage.Utils.composeT(t, 'errors');
 const { Dropdown, Input } = Stage.Basic;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
-    text: versionOption,
+    text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
     value: versionOption
 }));
-terraformVersionOptions[0].text = `${terraformVersionOptions[0].text} (${t('default')})`;
 
 export const inputMaxLength = 256;
 
@@ -123,7 +123,7 @@ export default function TerraformModal({
 
     const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
 
-    const [version, setVersion] = useInput(terraformVersions[0]);
+    const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
     const [resourceLocation, setResourceLocation] = useInput('');
@@ -262,7 +262,8 @@ export default function TerraformModal({
             setProcessPhase('upload');
             const file: any = new Blob([blueprintContent]);
             file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
-            await new BlueprintActions(toolbox).doUpload(blueprintName, { file });
+            const image = await (await fetch(terraformLogo)).blob();
+            await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
 
             toolbox.getEventBus().trigger('blueprints:refresh');
             onHide();
@@ -279,6 +280,7 @@ export default function TerraformModal({
         Confirm,
         Divider,
         Header,
+        Image,
         LoadingOverlay,
         Modal,
         Form,
@@ -289,7 +291,9 @@ export default function TerraformModal({
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
-            <Modal.Header>{t('header')}</Modal.Header>
+            <Modal.Header>
+                <Image src={terraformLogo} size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
+            </Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} scrollToError>
