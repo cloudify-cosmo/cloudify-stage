@@ -99,6 +99,7 @@ describe('Filter', () => {
             });
             const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentName);
             cy.contains('Runtime only evaluation').click();
             cy.contains('.modal button', 'Deploy').click();

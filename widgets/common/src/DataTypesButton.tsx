@@ -1,4 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
+
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,
@@ -122,19 +125,33 @@ class DataTypesButton extends React.Component {
     }
 
     render() {
-        const { types } = this.props;
+        const { types, iconButton } = this.props;
         const { open } = this.state;
-        const { Button, CancelButton, Modal } = Stage.Basic;
+        const { Button, CancelButton, Modal, Popup } = Stage.Basic;
 
         return (
             <div>
-                <Button
-                    icon="code"
-                    content="Show Data Types"
-                    onClick={this.onOpen}
-                    className="rightFloated"
-                    labelPosition="left"
-                />
+                {iconButton ? (
+                    <Popup
+                        content={t('buttons.showDataTypes')}
+                        trigger={
+                            <Button
+                                icon="code"
+                                onClick={this.onOpen}
+                                floated="right"
+                                aria-label={t('buttons.showDataTypes')}
+                            />
+                        }
+                    />
+                ) : (
+                    <Button
+                        icon="code"
+                        content={t('buttons.showDataTypes')}
+                        onClick={this.onOpen}
+                        floated="right"
+                        labelPosition="left"
+                    />
+                )}
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
@@ -160,9 +177,9 @@ class DataTypesButton extends React.Component {
         );
     }
 }
-export default DataTypesButton;
 
 DataTypesButton.propTypes = {
+    iconButton: PropTypes.bool,
     types: PropTypes.objectOf(
         PropTypes.shape({
             derived_from: PropTypes.string,
@@ -171,6 +188,8 @@ DataTypesButton.propTypes = {
         }).isRequired
     ).isRequired
 };
+
+export default DataTypesButton;
 
 Stage.defineCommon({
     name: 'DataTypesButton',
