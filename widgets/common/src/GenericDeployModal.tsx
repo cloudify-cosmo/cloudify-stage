@@ -553,7 +553,6 @@ class GenericDeployModal extends React.Component {
                             />
                             <Dropdown
                                 className="button icon down"
-                                data-testid="deploy-dropdown"
                                 clearable={false}
                                 floating
                                 options={[
