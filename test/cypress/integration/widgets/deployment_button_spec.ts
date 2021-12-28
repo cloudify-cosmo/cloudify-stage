@@ -293,7 +293,8 @@ describe('Create Deployment Button widget', () => {
                 cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
-                cy.clickButton('Deploy');
+                cy.contains('.dropdown', 'Install').click();
+                cy.contains('.dropdown span', 'Deploy').click();
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
                 cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
                 cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');
