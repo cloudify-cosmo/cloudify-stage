@@ -188,9 +188,7 @@ describe('Create Deployment Button widget', () => {
                     message: 'Cannot deploy blueprint'
                 }
             });
-            cy.get('div.deployBlueprintModal').within(() => {
-                cy.clickButton('Install');
-            });
+            cy.get('div.deployBlueprintModal').clickButton('Install');
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
                 cy.get('li:nth-child(1)').should('have.text', 'Cannot deploy blueprint');
@@ -209,9 +207,7 @@ describe('Create Deployment Button widget', () => {
                 }
             }).as('installDeployment');
 
-            cy.get('div.deployBlueprintModal').within(() => {
-                cy.clickButton('Install');
-            });
+            cy.get('div.deployBlueprintModal').clickButton('Install');
             cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.wait('@installDeployment');
 
