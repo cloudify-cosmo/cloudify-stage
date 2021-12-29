@@ -442,8 +442,10 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload from Terraform template modal and', () => {
-        const singleModuleTerraformTemplateUrl =
-            'https://github.com/cloudify-cosmo/cloudify-stage/raw/RD-3208-modules-dropdown/test/cypress/fixtures/terraform/single.zip';
+        const terraformTemplatesBaseUrl =
+            'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
+        const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
+        const multipleModulesTerraformTemplateUrl = `${terraformTemplatesBaseUrl}multiple.zip`;
 
         beforeEach(cy.refreshPage);
 
@@ -596,10 +598,7 @@ describe('Blueprints widget', () => {
 
             it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
             it('multiple modules template', () =>
-                testBlueprintGeneration(
-                    'https://github.com/cloudify-cosmo/cloudify-stage/raw/RD-3208-modules-dropdown/test/cypress/fixtures/terraform/multiple.zip',
-                    'local2'
-                ));
+                testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
         });
     });
 
