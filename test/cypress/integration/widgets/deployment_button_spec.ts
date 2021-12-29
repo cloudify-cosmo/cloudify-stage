@@ -88,8 +88,7 @@ describe('Create Deployment Button widget', () => {
     };
 
     const clickDeployButton = () => {
-        cy.contains('.dropdown', 'Install').click();
-        cy.contains('.dropdown span', 'Deploy').click();
+        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
     };
 
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
@@ -136,10 +135,13 @@ describe('Create Deployment Button widget', () => {
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
         cy.get('.actions > .ui:nth-child(2)').within(() => {
             cy.get('button').should('have.text', 'Install');
-            cy.contains('.dropdown', 'Install').click(); // open dropdown
-            cy.get('.dropdown .item:nth-child(1)').should('have.text', 'Deploy');
-            cy.get('.dropdown .item:nth-child(2)').should('have.text', 'Install');
-            cy.contains('.dropdown', 'Install').click(); // close dropdown
+            cy.contains('.dropdown', 'Install')
+                .click() // open dropdown
+                .within(() => {
+                    cy.get('.item:nth-child(1)').should('have.text', 'Deploy');
+                    cy.get('.item:nth-child(2)').should('have.text', 'Install');
+                })
+                .click(); // close dropdown
         });
 
         cy.get('.actions > .ui:nth-child(1)').click();
@@ -289,8 +291,7 @@ describe('Create Deployment Button widget', () => {
                 cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
-                cy.contains('.dropdown', 'Install').click();
-                cy.contains('.dropdown span', 'Deploy').click();
+                clickDeployButton();
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
                 cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
                 cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');

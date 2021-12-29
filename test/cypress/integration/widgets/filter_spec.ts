@@ -102,8 +102,7 @@ describe('Filter', () => {
             cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentName);
             cy.contains('Runtime only evaluation').click();
-            cy.contains('.dropdown', 'Install').click();
-            cy.contains('.dropdown span', 'Deploy').click();
+            cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
 
             cy.get('.modal').should('not.exist');
             cy.refreshPage();
