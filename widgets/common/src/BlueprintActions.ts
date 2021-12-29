@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 class BlueprintUploadError extends Error {
-    constructor(message: string, public state: string) {
-        super(message);
+    constructor(message: string | null, public state: string) {
+        super(message ?? '');
     }
 }
 
@@ -66,7 +66,7 @@ export default class BlueprintActions {
         });
     }
 
-    doGetFullBlueprintData(blueprintId: string) {
+    doGetFullBlueprintData(blueprintId: string): Promise<Stage.Common.FullBlueprintData> {
         return this.toolbox.getManager().doGet(`/blueprints/${blueprintId}`);
     }
 
