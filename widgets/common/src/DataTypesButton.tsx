@@ -191,6 +191,13 @@ DataTypesButton.propTypes = {
 
 export default DataTypesButton;
 
+declare global {
+    // eslint-disable-next-line import/prefer-default-export
+    namespace Stage.Common {
+        export { DataTypesButton };
+    }
+}
+
 Stage.defineCommon({
     name: 'DataTypesButton',
     common: DataTypesButton

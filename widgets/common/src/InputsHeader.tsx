@@ -90,6 +90,13 @@ InputsHeader.defaultProps = {
     header: 'Deployment inputs'
 };
 
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { InputsHeader };
+    }
+}
+
 Stage.defineCommon({
     name: 'InputsHeader',
     common: InputsHeader
