@@ -853,6 +853,7 @@
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
                     "noTerraformTemplate": "Please provide Terraform template URL",
+                    "terraformTemplateUnauthorized": "The URL requires authentication",
                     "noResourceLocation": "Please provide resource location",
                     "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
