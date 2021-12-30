@@ -6,4 +6,8 @@ export default class TerraformActions {
     doGenerateBlueprint(body: RequestBody) {
         return this.toolbox.getInternal().doPost('/terraform/blueprint', { body });
     }
+
+    doGetTemplateModules(templateZipUrl: string) {
+        return this.toolbox.getInternal().doPost('/terraform/resources', { params: { zipUrl: templateZipUrl } });
+    }
 }

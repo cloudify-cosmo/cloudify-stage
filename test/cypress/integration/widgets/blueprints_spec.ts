@@ -442,11 +442,21 @@ describe('Blueprints widget', () => {
     });
 
     describe('should open upload from Terraform template modal and', () => {
+        const terraformTemplatesBaseUrl =
+            'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
+        const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
+        const multipleModulesTerraformTemplateUrl = `${terraformTemplatesBaseUrl}multiple.zip`;
+
         beforeEach(cy.refreshPage);
 
         function openTerraformModal() {
             cy.contains('Upload').click();
             cy.contains('Upload from Terraform template').click();
+        }
+
+        function setTemplateDetails(templateUrl: string, modulePath: string) {
+            cy.getField('URL to your Terraform template (zip or git)').find('input').type(templateUrl).blur();
+            cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
         }
 
         it('validate individual form fields', () => {
@@ -466,7 +476,6 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
-                cy.contains('Please provide resource location').should('be.visible');
                 cy.contains('Please provide variable name').should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
@@ -474,7 +483,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
+                cy.get('.error.message li').should('have.length', 9);
 
                 cy.contains('.segment', 'Variables').within(() => {
                     selectVariableSource('Secret');
@@ -486,7 +495,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide variable value').should('be.visible');
                 cy.contains('Please provide environment variable value').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
+                cy.get('.error.message li').should('have.length', 9);
 
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
@@ -511,7 +520,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide valid environment variable value').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
+                cy.get('.error.message li').should('have.length', 9);
             });
         });
 
@@ -547,48 +556,49 @@ describe('Blueprints widget', () => {
             cy.uploadBlueprint('blueprints/empty.zip', existingBlueprintName);
 
             cy.getField('Blueprint name').find('input').type(existingBlueprintName);
-            cy.getField('URL to your Terraform template (zip or git)').find('input').type('http://terra.io');
-            cy.getField('Terraform folder in the archive').find('input').type('resource');
+            setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
             cy.contains('Errors in the form').scrollIntoView();
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it('create installable blueprint on submit', () => {
-            cy.uploadPluginFromCatalog('Terraform');
-            openTerraformModal();
+        describe('create installable blueprint on submit from', () => {
+            before(() => cy.uploadPluginFromCatalog('Terraform'));
 
-            const blueprintName = `${blueprintNamePrefix}_terraform`;
-            const deploymentId = blueprintName;
-            cy.get('.modal').within(() => {
-                cy.getField('Blueprint name').find('input').type(blueprintName);
-                cy.getField('URL to your Terraform template (zip or git)')
-                    .find('input')
-                    .type(
-                        'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/local.zip'
-                    );
-                cy.getField('Terraform folder in the archive').find('input').type('.');
-                cy.clickButton('Create');
-                cy.contains('Uploading Terraform blueprint').should('be.visible');
-            });
-            cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
-            cy.getWidget('blueprints').within(() => {
-                cy.getSearchInput().type(blueprintName);
-                cy.contains('tr', blueprintName).find('.rocket').click();
-            });
-            cy.get('.modal').within(() => {
-                cy.getField('Deployment name').find('input').type(deploymentId);
-                cy.openAccordionSection('Advanced');
-                cy.getField('Deployment ID').find('input').clear().type(deploymentId);
-                cy.clickButton('Install');
-            });
-            cy.clickButton('Execute');
+            beforeEach(openTerraformModal);
 
-            cy.waitForExecutionToEnd(deploymentId, 'install');
-            cy.getDeployment(deploymentId).then(response => {
-                expect(response.body.latest_execution_status).to.be.equal('completed');
-            });
+            function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
+                const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
+                const deploymentId = blueprintName;
+                cy.get('.modal').within(() => {
+                    cy.getField('Blueprint name').find('input').type(blueprintName);
+                    setTemplateDetails(terraformTemplateUrl, modulePath);
+                    cy.clickButton('Create');
+                    cy.contains('Uploading Terraform blueprint').should('be.visible');
+                });
+                cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
+                cy.getWidget('blueprints').within(() => {
+                    cy.getSearchInput().type(blueprintName);
+                    cy.contains('tr', blueprintName).find('.rocket').click();
+                });
+                cy.get('.modal').within(() => {
+                    cy.getField('Deployment name').find('input').type(deploymentId);
+                    cy.openAccordionSection('Advanced');
+                    cy.getField('Deployment ID').find('input').clear().type(deploymentId);
+                    cy.clickButton('Install');
+                });
+                cy.clickButton('Execute');
+
+                cy.waitForExecutionToEnd(deploymentId, 'install');
+                cy.getDeployment(deploymentId).then(response => {
+                    expect(response.body.latest_execution_status).to.be.equal('completed');
+                });
+            }
+
+            it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
+            it('multiple modules template', () =>
+                testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
         });
     });
 

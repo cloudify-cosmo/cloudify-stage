@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
-import { find, isEmpty } from 'lodash';
+import _, { find, isEmpty } from 'lodash';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
@@ -8,6 +8,7 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
 import terraformLogo from '../images/terraform-icon.png';
+import { UNAUTHORIZED_ERR } from '../../../app/utils/ErrorCodes';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -119,13 +120,15 @@ export default function TerraformModal({
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
+    const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
+    const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
     const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
 
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
-    const [resourceLocation, setResourceLocation] = useInput('');
+    const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
@@ -152,7 +155,7 @@ export default function TerraformModal({
         }
 
         function validateResourceLocation() {
-            if (!resourceLocation) {
+            if (templateModules.length && !resourceLocation) {
                 formErrors.resource = tError('noResourceLocation');
             }
         }
@@ -248,11 +251,23 @@ export default function TerraformModal({
 
         setProcessPhase('generation');
 
+        function getResourceLocation() {
+            if (
+                _(templateModules)
+                    .map(modulePath => modulePath.split('/')[0])
+                    .uniq()
+                    .size() > 1
+            ) {
+                return resourceLocation;
+            }
+            return resourceLocation.replace(/^[^/]*/, '.');
+        }
+
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 terraformTemplate: templateUrl,
                 terraformVersion: version,
-                resourceLocation,
+                resourceLocation: getResourceLocation(),
                 variables,
                 environmentVariables: environment,
                 outputs
@@ -270,6 +285,30 @@ export default function TerraformModal({
             setMessageAsError(e);
             stopProcess();
         }
+    }
+
+    function handleTemplateUrlBlur() {
+        if (!Stage.Utils.Url.isUrl(templateUrl)) {
+            return;
+        }
+
+        setTemplateModulesLoading();
+        new TerraformActions(toolbox)
+            .doGetTemplateModules(templateUrl)
+            .then(loadedTemplateModules => {
+                setTemplateModules(loadedTemplateModules);
+                setResourceLocation(
+                    find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
+                );
+            })
+            .catch(err => {
+                setErrors({
+                    template: err === UNAUTHORIZED_ERR ? tError('terraformTemplateUnauthorized') : err.message
+                });
+                clearTemplateModules();
+                clearResourceLocation();
+            })
+            .finally(unsetTemplateModulesLoading);
     }
 
     const { AccordionSectionWithDivider } = Stage.Common;
@@ -314,11 +353,26 @@ export default function TerraformModal({
                     </UnsafelyTypedFormField>
                     <Accordion>
                         <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
+                            {templateModulesLoading && <LoadingOverlay />}
                             <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
-                                <Form.Input value={templateUrl} onChange={setTemplateUrl} />
+                                <Form.Input
+                                    value={templateUrl}
+                                    onChange={setTemplateUrl}
+                                    onBlur={handleTemplateUrlBlur}
+                                />
                             </UnsafelyTypedFormField>
                             <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
-                                <Form.Input value={resourceLocation} onChange={setResourceLocation} />
+                                <Form.Dropdown
+                                    selection
+                                    options={templateModules.map(moduleLocation => ({
+                                        text: moduleLocation,
+                                        value: moduleLocation
+                                    }))}
+                                    value={resourceLocation}
+                                    onChange={setResourceLocation}
+                                    clearable={false}
+                                    disabled={isEmpty(templateModules)}
+                                />
                             </UnsafelyTypedFormField>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
