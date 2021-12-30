@@ -1,7 +1,5 @@
 import type { FunctionComponent } from 'react';
 
-type File = (Blob & { name: string }) | Record<string, any>;
-
 interface Props {
     dataType: string;
     fileLoading: boolean;

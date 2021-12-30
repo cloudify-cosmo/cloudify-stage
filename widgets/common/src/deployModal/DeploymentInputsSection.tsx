@@ -1,23 +1,22 @@
 import type { FunctionComponent } from 'react';
+import type { FullBlueprintData } from '../BlueprintActions';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
-type File = (Blob & { name: string }) | Record<string, any>;
-
 interface Props {
-    blueprint: Stage.Common.FullBlueprintData;
-    handleYamlFileChange: (file: File) => void;
+    blueprint: FullBlueprintData;
+    onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    handleDeploymentInputChange: (proxy: React.ChangeEvent, field: unknown) => void;
+    onDeploymentInputChange: (event: React.ChangeEvent, field: unknown) => void;
     deploymentInputs: { [key: string]: string | boolean | number };
     errors: { title: string };
 }
 
 const DeplomentInputsSection: FunctionComponent<Props> = ({
     blueprint,
-    handleYamlFileChange,
+    onYamlFileChange,
     fileLoading,
-    handleDeploymentInputChange,
+    onDeploymentInputChange,
     deploymentInputs,
     errors
 }) => {
@@ -29,7 +28,7 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
                 <>
                     {!_.isEmpty(blueprint.plan.inputs) && (
                         <YamlFileButton
-                            onChange={handleYamlFileChange}
+                            onChange={onYamlFileChange}
                             dataType="deployment's inputs"
                             fileLoading={fileLoading}
                             iconButton
@@ -45,7 +44,7 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
 
             {InputsUtils.getInputFields(
                 blueprint.plan.inputs,
-                handleDeploymentInputChange,
+                onDeploymentInputChange,
                 deploymentInputs,
                 errors,
                 blueprint.plan.data_types

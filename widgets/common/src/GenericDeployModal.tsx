@@ -415,9 +415,9 @@ class GenericDeployModal extends React.Component {
                             >
                                 <DeplomentInputsSection
                                     blueprint={blueprint}
-                                    handleYamlFileChange={this.handleYamlFileChange}
+                                    onYamlFileChange={this.handleYamlFileChange}
                                     fileLoading={fileLoading}
-                                    handleDeploymentInputChange={this.handleDeploymentInputChange}
+                                    onDeploymentInputChange={this.handleDeploymentInputChange}
                                     deploymentInputs={deploymentInputs}
                                     errors={errors}
                                 />
