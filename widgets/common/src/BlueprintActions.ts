@@ -95,6 +95,7 @@ export interface FullBlueprintData {
         private_resource: false;
     };
 }
+/* eslint-enable camelcase */
 
 export interface BlueprintDeployParams {
     blueprintId: string;
