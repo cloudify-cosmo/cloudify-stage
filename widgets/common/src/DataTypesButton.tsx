@@ -100,7 +100,26 @@ DataType.defaultProps = {
     version: null
 };
 
-class DataTypesButton extends React.Component {
+interface DataTypesButtonProps {
+    iconButton?: boolean;
+    types: {
+        // eslint-disable-next-line camelcase
+        derived_from: string;
+        version: string;
+        properties: {
+            description: string;
+            type: string;
+            default: unknown;
+            required: boolean;
+        };
+    };
+}
+
+interface DataTypesButtonState {
+    open: boolean;
+}
+
+class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesButtonState> {
     constructor(props) {
         super(props);
 
@@ -178,18 +197,14 @@ class DataTypesButton extends React.Component {
     }
 }
 
-DataTypesButton.propTypes = {
-    iconButton: PropTypes.bool,
-    types: PropTypes.objectOf(
-        PropTypes.shape({
-            derived_from: PropTypes.string,
-            version: PropTypes.string,
-            properties: PropertiesPropType.isRequired
-        }).isRequired
-    ).isRequired
-};
-
 export default DataTypesButton;
+
+declare global {
+    // eslint-disable-next-line import/prefer-default-export
+    namespace Stage.Common {
+        export { DataTypesButton };
+    }
+}
 
 Stage.defineCommon({
     name: 'DataTypesButton',

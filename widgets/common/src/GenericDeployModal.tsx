@@ -2,6 +2,7 @@
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
+import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -306,10 +307,6 @@ class GenericDeployModal extends React.Component {
             VisibilityField
         } = Stage.Basic;
         const {
-            DataTypesButton,
-            InputsHeader,
-            InputsUtils,
-            YamlFileButton,
             DynamicDropdown,
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
@@ -416,33 +413,14 @@ class GenericDeployModal extends React.Component {
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                {blueprint.id && (
-                                    <>
-                                        {!_.isEmpty(blueprint.plan.inputs) && (
-                                            <YamlFileButton
-                                                onChange={this.handleYamlFileChange}
-                                                dataType="deployment's inputs"
-                                                fileLoading={fileLoading}
-                                                iconButton
-                                            />
-                                        )}
-                                        {!_.isEmpty(blueprint.plan.data_types) && (
-                                            <DataTypesButton iconButton types={blueprint.plan.data_types} />
-                                        )}
-                                        <InputsHeader iconButton header="" />
-                                        {_.isEmpty(blueprint.plan.inputs) && (
-                                            <Message content={t('inputs.deploymentInputs.noInputs')} />
-                                        )}
-                                    </>
-                                )}
-
-                                {InputsUtils.getInputFields(
-                                    blueprint.plan.inputs,
-                                    this.handleDeploymentInputChange,
-                                    deploymentInputs,
-                                    errors,
-                                    blueprint.plan.data_types
-                                )}
+                                <DeplomentInputsSection
+                                    blueprint={blueprint}
+                                    onYamlFileChange={this.handleYamlFileChange}
+                                    fileLoading={fileLoading}
+                                    onDeploymentInputChange={this.handleDeploymentInputChange}
+                                    deploymentInputs={deploymentInputs}
+                                    errors={errors}
+                                />
                             </AccordionSectionWithDivider>
                             <AccordionSectionWithDivider
                                 title={t('sections.deploymentMetadata')}

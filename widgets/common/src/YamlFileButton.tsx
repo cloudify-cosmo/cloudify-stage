@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 interface Props {
     dataType: string;
     fileLoading: boolean;
-    onChange: () => void;
+    onChange: (file: File) => void;
     iconButton?: boolean;
 }
 
