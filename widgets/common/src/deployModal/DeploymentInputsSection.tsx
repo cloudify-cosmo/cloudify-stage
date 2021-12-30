@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');

@@ -29,7 +29,16 @@ interface FullBlueprintData {
         capabilities: { [key: string]: unknown };
         imported_blueprints: unknown[];
         namespaces_mapping: { [key: string]: unknown };
-        data_types: { [key: string]: unknown };
+        data_types: {
+            derived_from: string;
+            version: string;
+            properties: {
+                description: string;
+                type: string;
+                default: unknown;
+                required: boolean;
+            };
+        };
         labels: { [key: string]: unknown };
         blueprint_labels: { [key: string]: unknown };
         deployment_settings: { [key: string]: unknown };

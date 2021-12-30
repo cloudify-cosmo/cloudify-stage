@@ -36,13 +36,20 @@ const PopupContent = () => {
     );
 };
 
-class InputsHeader extends React.Component {
+interface InputsHeaderProps {
+    iconButton?: boolean;
+    compact?: boolean;
+    dividing?: boolean;
+    header?: string;
+}
+
+class InputsHeader extends React.Component<InputsHeaderProps> {
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(this.props, nextProps);
     }
 
     render() {
-        const { compact, dividing, header, iconButton } = this.props;
+        const { compact = false, dividing = true, header = 'Deployment inputs', iconButton = false } = this.props;
         const { Form, Header, Button, Popup, PopupHelp } = Stage.Basic;
 
         if (iconButton) {
@@ -75,20 +82,6 @@ class InputsHeader extends React.Component {
         );
     }
 }
-
-InputsHeader.propTypes = {
-    iconButton: PropTypes.bool,
-    compact: PropTypes.bool,
-    dividing: PropTypes.bool,
-    header: PropTypes.string
-};
-
-InputsHeader.defaultProps = {
-    iconButton: false,
-    compact: false,
-    dividing: true,
-    header: 'Deployment inputs'
-};
 
 declare global {
     namespace Stage.Common {
