@@ -585,7 +585,7 @@ describe('Blueprints widget', () => {
                 method: 'POST',
                 pathname: '/console/terraform/resources',
                 query: { zipUrl: singleModuleTerraformTemplateUrl },
-                headers: { Authentication: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
+                headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
             }).as('resources');
 
             cy.getField('URL authentication').click();

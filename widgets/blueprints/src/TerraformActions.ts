@@ -10,7 +10,7 @@ export default class TerraformActions {
     doGetTemplateModules(templateZipUrl: string, username?: string, password?: string) {
         let headers;
         if (username) {
-            headers = { Authentication: `Basic ${btoa(`${username}:${password}`)}` };
+            headers = { Authorization: `Basic ${btoa(`${username}:${password}`)}` };
         }
         return this.toolbox.getInternal().doPost('/terraform/resources', {
             params: { zipUrl: templateZipUrl },
