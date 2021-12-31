@@ -43,11 +43,16 @@ describe('/terraform/blueprint endpoint', () => {
 
 describe('/terraform/resources endpoint', () => {
     it('provides modules list', async () => {
-        nock(/test/)
+        const authorizationHeaderValue = 'auth';
+
+        nock(/test/, { reqheaders: { authorization: authorizationHeaderValue } })
             .get(`/test.zip`)
             .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template.zip'), null));
 
-        const response = await request(app).post('/console/terraform/resources?zipUrl=http://test/test.zip').send();
+        const response = await request(app)
+            .post('/console/terraform/resources?zipUrl=http://test/test.zip')
+            .set('Authorization', authorizationHeaderValue)
+            .send();
 
         expect(response.status).toBe(200);
         expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
