@@ -582,12 +582,16 @@
                         }
                     },
                     "sections": {
-                        "deploymentMetadata": "Deployment metadata",
-                        "executionParameters": "Execution parameters"
+                        "deploymentInputs": "Deployment Inputs",
+                        "deploymentMetadata": "Deployment Metadata",
+                        "executionParameters": "Execution Parameters",
+                        "advanced": "Advanced"
                     },
                     "buttons": {
+                        "showDataTypes": "Show Data Types",
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
+                        "install": "Install",
                         "deployAndInstall": "Deploy & Install"
                     },
                     "steps": {
@@ -816,9 +820,9 @@
                 "blueprintName": "Blueprint name",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "Terraform template",
-                "resourceLocation": "Resource location",
-                "mapping": "Variable and output mapping",
+                "template": "URL to your Terraform template (zip or git)",
+                "resourceLocation": "Terraform folder in the archive",
+                "mapping": "Terraform variables and outputs mapping",
                 "variables": "Variables",
                 "environment": "Environment variables",
                 "outputs": "Outputs",
@@ -850,6 +854,7 @@
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
                     "noTerraformTemplate": "Please provide Terraform template URL",
+                    "terraformTemplateUnauthorized": "The URL requires authentication",
                     "noResourceLocation": "Please provide resource location",
                     "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",

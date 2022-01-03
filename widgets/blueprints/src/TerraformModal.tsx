@@ -1,24 +1,39 @@
 import React, { useState } from 'react';
 import type { DropdownProps } from 'semantic-ui-react';
-import { find, isEmpty } from 'lodash';
-import TerraformModalAccordion from './TerraformModalAccordion';
+import _, { find, isEmpty } from 'lodash';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
-import terraformVersions from './terraformVersions';
+import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
+import terraformLogo from '../images/terraform-icon.png';
+import { UNAUTHORIZED_ERR } from '../../../app/utils/ErrorCodes';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const { Dropdown } = Stage.Basic;
+const { Dropdown, Input } = Stage.Basic;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
-    text: versionOption,
+    text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
     value: versionOption
 }));
-terraformVersionOptions[0].text = `${terraformVersionOptions[0].text} (${t('default')})`;
+
+export const inputMaxLength = 256;
+
+function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) {
+    return (
+        <Input
+            name={name}
+            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...rest}
+        >
+            <input maxLength={inputMaxLength} />
+        </Input>
+    );
+}
 
 function getDynamicTableDropdown(options: DropdownProps['options']) {
     return ({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) => {
@@ -45,7 +60,8 @@ const variablesColumns: Columns<Variable> = [
     {
         id: 'name',
         label: t('variablesTable.name'),
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     },
     {
         id: 'source',
@@ -71,8 +87,8 @@ const outputsColumns: Columns<Output> = [
     {
         id: 'name',
         label: t('outputsTable.name'),
-        default: '',
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     },
     {
         id: 'type',
@@ -88,7 +104,8 @@ const outputsColumns: Columns<Output> = [
         id: 'terraformOutput',
         label: t('outputsTable.terraformOutput'),
         default: '',
-        type: Stage.Basic.GenericField.STRING_TYPE
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput
     }
 ];
 
@@ -103,13 +120,15 @@ export default function TerraformModal({
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
+    const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
+    const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
     const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
 
-    const [version, setVersion] = useInput(terraformVersions[0]);
+    const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
-    const [resourceLocation, setResourceLocation] = useInput('');
+    const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
@@ -136,7 +155,7 @@ export default function TerraformModal({
         }
 
         function validateResourceLocation() {
-            if (!resourceLocation) {
+            if (templateModules.length && !resourceLocation) {
                 formErrors.resource = tError('noResourceLocation');
             }
         }
@@ -232,11 +251,23 @@ export default function TerraformModal({
 
         setProcessPhase('generation');
 
+        function getResourceLocation() {
+            if (
+                _(templateModules)
+                    .map(modulePath => modulePath.split('/')[0])
+                    .uniq()
+                    .size() > 1
+            ) {
+                return resourceLocation;
+            }
+            return resourceLocation.replace(/^[^/]*/, '.');
+        }
+
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 terraformTemplate: templateUrl,
                 terraformVersion: version,
-                resourceLocation,
+                resourceLocation: getResourceLocation(),
                 variables,
                 environmentVariables: environment,
                 outputs
@@ -245,7 +276,8 @@ export default function TerraformModal({
             setProcessPhase('upload');
             const file: any = new Blob([blueprintContent]);
             file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
-            await new BlueprintActions(toolbox).doUpload(blueprintName, { file });
+            const image = await (await fetch(terraformLogo)).blob();
+            await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
 
             toolbox.getEventBus().trigger('blueprints:refresh');
             onHide();
@@ -255,13 +287,39 @@ export default function TerraformModal({
         }
     }
 
+    function handleTemplateUrlBlur() {
+        if (!Stage.Utils.Url.isUrl(templateUrl)) {
+            return;
+        }
+
+        setTemplateModulesLoading();
+        new TerraformActions(toolbox)
+            .doGetTemplateModules(templateUrl)
+            .then(loadedTemplateModules => {
+                setTemplateModules(loadedTemplateModules);
+                setResourceLocation(
+                    find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
+                );
+            })
+            .catch(err => {
+                setErrors({
+                    template: err === UNAUTHORIZED_ERR ? tError('terraformTemplateUnauthorized') : err.message
+                });
+                clearTemplateModules();
+                clearResourceLocation();
+            })
+            .finally(unsetTemplateModulesLoading);
+    }
+
+    const { AccordionSectionWithDivider } = Stage.Common;
+
     const {
         Accordion,
         ApproveButton,
         CancelButton,
         Confirm,
-        Divider,
         Header,
+        Image,
         LoadingOverlay,
         Modal,
         Form,
@@ -272,12 +330,16 @@ export default function TerraformModal({
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
-            <Modal.Header>{t('header')}</Modal.Header>
+            <Modal.Header>
+                <Image src={terraformLogo} size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
+            </Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} scrollToError>
                     <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
-                        <Form.Input value={blueprintName} onChange={setBlueprintName} />
+                        <Form.Input value={blueprintName} onChange={setBlueprintName}>
+                            <input maxLength={inputMaxLength} />
+                        </Form.Input>
                     </UnsafelyTypedFormField>
                     <UnsafelyTypedFormField label={t(`terraformVersion`)} required>
                         <Form.Dropdown
@@ -290,15 +352,29 @@ export default function TerraformModal({
                         />
                     </UnsafelyTypedFormField>
                     <Accordion>
-                        <TerraformModalAccordion title={t('blueprintInformation')} initialActive>
-                            <Divider style={{ margin: '0 -14px 14px' }} />
+                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
+                            {templateModulesLoading && <LoadingOverlay />}
                             <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
-                                <Form.Input value={templateUrl} onChange={setTemplateUrl} />
+                                <Form.Input
+                                    value={templateUrl}
+                                    onChange={setTemplateUrl}
+                                    onBlur={handleTemplateUrlBlur}
+                                />
                             </UnsafelyTypedFormField>
                             <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
-                                <Form.Input value={resourceLocation} onChange={setResourceLocation} />
+                                <Form.Dropdown
+                                    selection
+                                    options={templateModules.map(moduleLocation => ({
+                                        text: moduleLocation,
+                                        value: moduleLocation
+                                    }))}
+                                    value={resourceLocation}
+                                    onChange={setResourceLocation}
+                                    clearable={false}
+                                    disabled={isEmpty(templateModules)}
+                                />
                             </UnsafelyTypedFormField>
-                        </TerraformModalAccordion>
+                        </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
                             title={t('variables')}

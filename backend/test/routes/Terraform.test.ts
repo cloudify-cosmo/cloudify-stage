@@ -4,6 +4,7 @@ import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { readJsonSync } from 'fs-extra';
 import ejs from 'ejs';
+import nock from 'nock';
 
 describe('/terraform/blueprint endpoint', () => {
     const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
@@ -35,7 +36,20 @@ describe('/terraform/blueprint endpoint', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toStrictEqual({
-            message: 'Error when generating blueprint: Error: err'
+            message: 'Error when generating blueprint'
         });
+    });
+});
+
+describe('/terraform/resources endpoint', () => {
+    it('provides modules list', async () => {
+        nock(/test/)
+            .get(`/test.zip`)
+            .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template.zip'), null));
+
+        const response = await request(app).post('/console/terraform/resources?zipUrl=http://test/test.zip').send();
+
+        expect(response.status).toBe(200);
+        expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
     });
 });

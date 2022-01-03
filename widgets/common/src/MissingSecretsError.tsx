@@ -30,7 +30,7 @@ const MissingSecretsError: FunctionComponent<props> = ({ error, toolbox, onAdd }
     const secretKeys = useMemo(() => parseCommaSeparatedValuesInBrackets(error), [error]);
     return (
         <>
-            <Button floated="right" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
+            <Button floated="right" color="green" style={missingSecretsButtonStyle} onClick={showSecretsModal}>
                 {t('buttons.addMissingSecrets')}
             </Button>
             <p style={{ display: 'inline' }}>{t('errors.missingSecrets')}</p>
