@@ -175,13 +175,19 @@ class InputsUtils {
             example = InputsUtils.getTemplateForDataType(dataType);
         }
 
-        return (
+        const showDefaultValue = !_.isUndefined(defaultValue) || !_.isUndefined(dataType);
+        const showDescription = !_.isEmpty(description);
+        const showType = !_.isEmpty(type);
+        const showConstraints = !_.isEmpty(constraints);
+        const showAnyHelpProperty = showDefaultValue || showDescription || showType || showConstraints;
+
+        return showAnyHelpProperty ? (
             <div>
-                <HelpProperty name="Description" show={!_.isEmpty(description)} value={description} />
-                <HelpProperty name="Type" show={!_.isEmpty(type)} value={type} />
+                <HelpProperty name="Description" show={showDescription} value={description} />
+                <HelpProperty name="Type" show={showType} value={type} />
                 <HelpProperty
                     name="Constraints"
-                    show={!_.isEmpty(constraints)}
+                    show={showConstraints}
                     value={
                         <List bulleted>
                             {_.map(constraints, constraint => {
@@ -197,11 +203,11 @@ class InputsUtils {
                 />
                 <HelpProperty
                     name={!_.isUndefined(defaultValue) ? 'Default Value' : 'Example'}
-                    show={!_.isUndefined(defaultValue) || !_.isUndefined(dataType)}
+                    show={showDefaultValue}
                     value={<ParameterValue value={example} />}
                 />
             </div>
-        );
+        ) : null;
     }
 
     static getFormInputField(input, value, onChange, error, dataType) {
