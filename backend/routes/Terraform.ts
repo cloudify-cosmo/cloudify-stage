@@ -36,7 +36,7 @@ router.post('/resources', (req, res) => {
                     });
                 } else {
                     res.status(400).send({
-                        message: `The URL is not accessible`
+                        message: 'The URL is not accessible'
                     });
                 }
                 return;
