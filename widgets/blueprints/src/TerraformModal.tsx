@@ -298,7 +298,8 @@ export default function TerraformModal({
     }
 
     function handleTemplateUrlBlur() {
-        if (!Stage.Utils.Url.isUrl(templateUrl) || (urlAuthentication && (!username || !password))) {
+        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
+        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
             return;
         }
 
