@@ -1,4 +1,4 @@
-import _, { escapeRegExp, find, trimEnd } from 'lodash';
+import _, { escapeRegExp, trimEnd } from 'lodash';
 import decompress, { File } from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
