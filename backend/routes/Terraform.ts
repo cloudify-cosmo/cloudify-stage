@@ -47,14 +47,11 @@ router.post('/resources', (req, res) => {
                     const modules = _(files)
                         .filter({ type: 'directory' })
                         .map('path')
-                        .filter(
-                            directory =>
-                                !!find(
-                                    files,
-                                    file =>
-                                        file.type === 'file' &&
-                                        file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
-                                )
+                        .filter(directory =>
+                            files.some(
+                                file =>
+                                    file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
+                            )
                         )
                         .map(directory => trimEnd(directory, '/'))
                         .sort()
