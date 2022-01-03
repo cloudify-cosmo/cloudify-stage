@@ -61,7 +61,7 @@ router.post('/resources', (req, res) => {
                     else res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
                 })
                 .catch((decompressErr: any) => {
-                    logger.error(`Error while decompressing zip file: ${decompressErr}`);
+                    logger.error(`Error while decompressing zip file:`, decompressErr);
                     res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
                 });
         }
