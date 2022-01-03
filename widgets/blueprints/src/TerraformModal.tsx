@@ -347,7 +347,7 @@ export default function TerraformModal({
             </Modal.Header>
 
             <Modal.Content>
-                <Form errors={errors} scrollToError>
+                <Form errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
                         <Form.Input value={blueprintName} onChange={setBlueprintName}>
                             <input maxLength={inputMaxLength} />
