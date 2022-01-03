@@ -334,7 +334,8 @@ export default function TerraformModal({
         LoadingOverlay,
         Modal,
         Form,
-        UnsafelyTypedFormField
+        UnsafelyTypedFormField,
+        UnsafelyTypedFormGroup
     } = Stage.Basic;
 
     return (
@@ -385,35 +386,37 @@ export default function TerraformModal({
                                     disabled={isEmpty(templateModules)}
                                 />
                             </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField style={{ display: 'inline-block' }}>
-                                <Form.Checkbox
-                                    toggle
-                                    label={t(`urlAuthentication`)}
-                                    help={undefined}
-                                    checked={urlAuthentication}
-                                    onChange={handleUrlAuthenticationChange}
-                                />
-                            </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField style={{ display: 'inline-block', margin: '0 1em' }} width={5}>
-                                <Form.Input
-                                    disabled={!urlAuthentication}
-                                    value={username}
-                                    onChange={setUsername}
-                                    label={t(`username`)}
-                                    onBlur={handleTemplateUrlBlur}
-                                    required={urlAuthentication}
-                                />
-                            </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField style={{ display: 'inline-block' }} width={5}>
-                                <Form.Input
-                                    disabled={!urlAuthentication}
-                                    value={password}
-                                    onChange={setPassword}
-                                    label={t(`password`)}
-                                    onBlur={handleTemplateUrlBlur}
-                                    required={urlAuthentication}
-                                />
-                            </UnsafelyTypedFormField>
+                            <UnsafelyTypedFormGroup widths="equal">
+                                <UnsafelyTypedFormField>
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t(`urlAuthentication`)}
+                                        help={undefined}
+                                        checked={urlAuthentication}
+                                        onChange={handleUrlAuthenticationChange}
+                                    />
+                                </UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField>
+                                    <Form.Input
+                                        disabled={!urlAuthentication}
+                                        value={username}
+                                        onChange={setUsername}
+                                        label={t(`username`)}
+                                        onBlur={handleTemplateUrlBlur}
+                                        required={urlAuthentication}
+                                    />
+                                </UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField>
+                                    <Form.Input
+                                        disabled={!urlAuthentication}
+                                        value={password}
+                                        onChange={setPassword}
+                                        label={t(`password`)}
+                                        onBlur={handleTemplateUrlBlur}
+                                        required={urlAuthentication}
+                                    />
+                                </UnsafelyTypedFormField>
+                            </UnsafelyTypedFormGroup>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
