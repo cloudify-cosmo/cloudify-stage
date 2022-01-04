@@ -126,7 +126,7 @@ Package tarball archive contains the following resources:
       * ...
     * `templates` - built-in templates - whole [templates](./templates) folder
       * `pages` - built-in pages - whole [templates/pages](./templates/pages) folder
-      * `pages-groups` - built-in page groups - whole [templates/page-groups](./templates/page-groups) folder
+      * `page-groups` - built-in page groups - whole [templates/page-groups](./templates/page-groups) folder
   * `static` - static files
     * `images` - image files
     * `fonts` - font files
