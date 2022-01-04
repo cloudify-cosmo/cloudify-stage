@@ -358,7 +358,7 @@ describe('Getting started modal', () => {
             verifySecretSkipSummaryItem(secretToSkip);
         });
 
-        it.only('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
+        it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
             goToNextStep();
             cy.get('.ui.checkbox.checked').should('not.exist');
 
