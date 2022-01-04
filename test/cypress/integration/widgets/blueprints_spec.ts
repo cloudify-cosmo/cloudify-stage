@@ -563,7 +563,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it.only('handle template URL authentication', () => {
+        it('handle template URL authentication', () => {
             cy.intercept(
                 {
                     method: 'POST',
