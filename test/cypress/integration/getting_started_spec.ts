@@ -360,11 +360,11 @@ describe('Getting started modal', () => {
 
         it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('exist');
+            cy.get('.ui.checkbox.checked').should('not.exist');
 
             cy.disableGettingStarted().visit('/?gettingStarted=true');
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('not.exist');
+            cy.get('.ui.checkbox.checked').should('exist');
         });
     });
 

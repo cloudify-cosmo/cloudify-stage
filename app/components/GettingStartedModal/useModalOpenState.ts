@@ -34,12 +34,13 @@ const useModalOpenState = () => {
         }
     }, [gettingStartedParameter]);
 
-    const closeModal = async (disabled: boolean) => {
+    const closeModal = async (shouldDisableModal: boolean) => {
         try {
-            if (disabled) {
+            const modalVisibilityHasChanged = shouldDisableModal === shouldAutomaticallyShowModal;
+            if (modalVisibilityHasChanged) {
                 // TODO(RD-1874): use common api for backend requests
                 await manager.doPost(`/users/${manager.getCurrentUsername()}`, {
-                    body: { show_getting_started: false }
+                    body: { show_getting_started: !shouldDisableModal }
                 });
                 EventBus.trigger('users:refresh');
             }

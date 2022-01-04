@@ -69,7 +69,7 @@ const GettingStartedModal = () => {
     });
 
     useEffect(() => {
-        setModalDisabledChange(modalOpenState.shouldAutomaticallyShowModal);
+        setModalDisabledChange(!modalOpenState.shouldAutomaticallyShowModal);
     }, [modalOpenState.shouldAutomaticallyShowModal]);
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
