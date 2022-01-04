@@ -175,11 +175,11 @@ class InputsUtils {
             example = InputsUtils.getTemplateForDataType(dataType);
         }
 
-        const showDefaultValue = !_.isUndefined(defaultValue) || !_.isUndefined(dataType);
+        const showExample = !_.isUndefined(defaultValue) || !_.isUndefined(dataType);
         const showDescription = !_.isEmpty(description);
         const showType = !_.isEmpty(type);
         const showConstraints = !_.isEmpty(constraints);
-        const showAnyHelpProperty = showDefaultValue || showDescription || showType || showConstraints;
+        const showAnyHelpProperty = showExample || showDescription || showType || showConstraints;
 
         return showAnyHelpProperty ? (
             <div>
@@ -203,7 +203,7 @@ class InputsUtils {
                 />
                 <HelpProperty
                     name={!_.isUndefined(defaultValue) ? 'Default Value' : 'Example'}
-                    show={showDefaultValue}
+                    show={showExample}
                     value={<ParameterValue value={example} />}
                 />
             </div>
