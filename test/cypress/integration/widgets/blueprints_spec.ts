@@ -563,7 +563,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it('handle template URL authentication', () => {
+        it.only('handle template URL authentication', () => {
             cy.intercept(
                 {
                     method: 'POST',
@@ -588,7 +588,7 @@ describe('Blueprints widget', () => {
                 headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
             }).as('resources');
 
-            cy.getField('URL authentication').click();
+            cy.getField('URL authentication').find('label').click();
             cy.getField('Username').find('input').type('username');
             cy.getField('Password').find('input').type('password').blur();
 
