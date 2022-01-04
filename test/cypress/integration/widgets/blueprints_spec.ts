@@ -563,6 +563,38 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
+        it('handle template URL authentication', () => {
+            cy.intercept(
+                {
+                    method: 'POST',
+                    pathname: '/console/terraform/resources',
+                    query: { zipUrl: singleModuleTerraformTemplateUrl }
+                },
+                { statusCode: 401 }
+            );
+
+            openTerraformModal();
+
+            cy.getField('URL to your Terraform template (zip or git)')
+                .find('input')
+                .type(singleModuleTerraformTemplateUrl)
+                .blur();
+            cy.contains('The URL requires authentication');
+
+            cy.intercept({
+                method: 'POST',
+                pathname: '/console/terraform/resources',
+                query: { zipUrl: singleModuleTerraformTemplateUrl },
+                headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
+            }).as('resources');
+
+            cy.getField('URL authentication').click();
+            cy.getField('Username').find('input').type('username');
+            cy.getField('Password').find('input').type('password').blur();
+
+            cy.wait('@resources');
+        });
+
         describe('create installable blueprint on submit from', () => {
             before(() => cy.uploadPluginFromCatalog('Terraform'));
 
