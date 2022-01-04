@@ -11,8 +11,6 @@ const logger = getLogger('WidgetBackend');
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
-
 router.use('/:service', (req, res, next) => {
     logger.debug(
         `${req.method} request on service '${req.params.service}' called with parameters: ${JSON.stringify(req.query)}`

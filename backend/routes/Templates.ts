@@ -7,7 +7,6 @@ import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (_req, res, next) => {

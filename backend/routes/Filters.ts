@@ -4,8 +4,6 @@ import { getFilterUsage } from '../handler/FilterHandler';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
-
 router.get('/usage/:filterId', (req, res, next) => {
     getFilterUsage(req.params.filterId)
         .then(result => res.send(result))

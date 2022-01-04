@@ -101,29 +101,31 @@ app.use(
     })
 );
 
-// API Routes
-app.use(`${contextPath}/applications`, Applications);
+// API Routes (with authentication)
+app.use(`${contextPath}/applications`, passport.authenticate('cookie', { session: false }), Applications);
+app.use(`${contextPath}/ba`, passport.authenticate('cookie', { session: false }), BlueprintAdditions);
+app.use(`${contextPath}/bud`, passport.authenticate('cookie', { session: false }), BlueprintUserData);
+app.use(`${contextPath}/clientConfig`, passport.authenticate('cookie', { session: false }), ClientConfig);
+app.use(`${contextPath}/external`, passport.authenticate('cookie', { session: false }), External);
+app.use(`${contextPath}/file`, passport.authenticate('cookie', { session: false }), File);
+app.use(`${contextPath}/filters`, passport.authenticate('cookie', { session: false }), Filters);
+app.use(`${contextPath}/github`, passport.authenticate('cookie', { session: false }), GitHub);
+app.use(`${contextPath}/maps`, passport.authenticate('cookie', { session: false }), Maps);
+app.use(`${contextPath}/plugins`, passport.authenticate('cookie', { session: false }), Plugins);
+app.use(`${contextPath}/source`, passport.authenticate('cookie', { session: false }), SourceBrowser);
+app.use(`${contextPath}/templates`, passport.authenticate('cookie', { session: false }), Templates);
+app.use(`${contextPath}/terraform`, passport.authenticate('cookie', { session: false }), Terraform);
+app.use(`${contextPath}/ua`, passport.authenticate('cookie', { session: false }), UserApp);
+app.use(`${contextPath}/wb`, passport.authenticate('cookie', { session: false }), WidgetBackend);
+app.use(`${contextPath}/widgets`, passport.authenticate('cookie', { session: false }), Widgets);
+
+// API Routes (without authentication)
 app.use(`${contextPath}/auth`, Auth);
-app.use(`${contextPath}/ba`, BlueprintAdditions);
-app.use(`${contextPath}/bud`, BlueprintUserData);
-app.use(`${contextPath}/clientConfig`, ClientConfig);
 app.use(`${contextPath}/config`, (req, res) => {
     res.send(getClientConfig(getMode()));
 });
-app.use(`${contextPath}/external`, External);
-app.use(`${contextPath}/file`, File);
-app.use(`${contextPath}/filters`, Filters);
-app.use(`${contextPath}/github`, GitHub);
-app.use(`${contextPath}/maps`, Maps);
-app.use(`${contextPath}/plugins`, Plugins);
-app.use(`${contextPath}/source`, SourceBrowser);
-app.use(`${contextPath}/sp`, ServerProxy);
 app.use(`${contextPath}/style`, Style);
-app.use(`${contextPath}/templates`, Templates);
-app.use(`${contextPath}/terraform`, Terraform);
-app.use(`${contextPath}/ua`, UserApp);
-app.use(`${contextPath}/wb`, WidgetBackend);
-app.use(`${contextPath}/widgets`, Widgets);
+app.use(`${contextPath}/sp`, ServerProxy);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
