@@ -588,7 +588,7 @@ describe('Blueprints widget', () => {
                 headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
             }).as('resources');
 
-            cy.getField('URL authentication').click();
+            cy.getField('URL authentication').find('label').click();
             cy.getField('Username').find('input').type('username');
             cy.getField('Password').find('input').type('password').blur();
 
