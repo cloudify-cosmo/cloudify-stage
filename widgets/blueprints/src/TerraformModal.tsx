@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { DropdownProps } from 'semantic-ui-react';
+import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
@@ -8,7 +8,6 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../backend/routes/Terraform.types';
 import terraformLogo from '../images/terraform-icon.png';
-import { UNAUTHORIZED_ERR } from '../../../app/utils/ErrorCodes';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -129,6 +128,9 @@ export default function TerraformModal({
     const [blueprintName, setBlueprintName] = useInput('');
     const [templateUrl, setTemplateUrl] = useInput('');
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
+    const [urlAuthentication, setUrlAuthentication] = useInput(false);
+    const [username, setUsername, clearUsername] = useInput('');
+    const [password, setPassword, clearPassword] = useInput('');
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
@@ -287,14 +289,23 @@ export default function TerraformModal({
         }
     }
 
+    function handleUrlAuthenticationChange(_event: Event, { checked }: CheckboxProps) {
+        setUrlAuthentication(checked);
+        if (!checked) {
+            clearUsername();
+            clearPassword();
+        }
+    }
+
     function handleTemplateUrlBlur() {
-        if (!Stage.Utils.Url.isUrl(templateUrl)) {
+        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
+        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
             return;
         }
 
         setTemplateModulesLoading();
         new TerraformActions(toolbox)
-            .doGetTemplateModules(templateUrl)
+            .doGetTemplateModules(templateUrl, username, password)
             .then(loadedTemplateModules => {
                 setTemplateModules(loadedTemplateModules);
                 setResourceLocation(
@@ -303,7 +314,7 @@ export default function TerraformModal({
             })
             .catch(err => {
                 setErrors({
-                    template: err === UNAUTHORIZED_ERR ? tError('terraformTemplateUnauthorized') : err.message
+                    template: err.status === 401 ? tError('terraformTemplateUnauthorized') : err.message
                 });
                 clearTemplateModules();
                 clearResourceLocation();
@@ -323,7 +334,8 @@ export default function TerraformModal({
         LoadingOverlay,
         Modal,
         Form,
-        UnsafelyTypedFormField
+        UnsafelyTypedFormField,
+        UnsafelyTypedFormGroup
     } = Stage.Basic;
 
     return (
@@ -335,7 +347,7 @@ export default function TerraformModal({
             </Modal.Header>
 
             <Modal.Content>
-                <Form errors={errors} scrollToError>
+                <Form errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
                         <Form.Input value={blueprintName} onChange={setBlueprintName}>
                             <input maxLength={inputMaxLength} />
@@ -374,6 +386,37 @@ export default function TerraformModal({
                                     disabled={isEmpty(templateModules)}
                                 />
                             </UnsafelyTypedFormField>
+                            <UnsafelyTypedFormGroup widths="equal">
+                                <UnsafelyTypedFormField>
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t(`urlAuthentication`)}
+                                        help={undefined}
+                                        checked={urlAuthentication}
+                                        onChange={handleUrlAuthenticationChange}
+                                    />
+                                </UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField>
+                                    <Form.Input
+                                        disabled={!urlAuthentication}
+                                        value={username}
+                                        onChange={setUsername}
+                                        label={t(`username`)}
+                                        onBlur={handleTemplateUrlBlur}
+                                        required={urlAuthentication}
+                                    />
+                                </UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField>
+                                    <Form.Input
+                                        disabled={!urlAuthentication}
+                                        value={password}
+                                        onChange={setPassword}
+                                        label={t(`password`)}
+                                        onBlur={handleTemplateUrlBlur}
+                                        required={urlAuthentication}
+                                    />
+                                </UnsafelyTypedFormField>
+                            </UnsafelyTypedFormGroup>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
