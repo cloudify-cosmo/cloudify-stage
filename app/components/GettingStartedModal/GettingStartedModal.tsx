@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import i18n from 'i18next';
 import log from 'loglevel';
 import { useSelector, useDispatch } from 'react-redux';
@@ -67,6 +67,10 @@ const GettingStartedModal = () => {
         resetSecretsStepsData();
         resetInstallationProcessing();
     });
+
+    useEffect(() => {
+        setModalDisabledChange(!modalOpenState.shouldAutomaticallyShowModal);
+    }, [modalOpenState.shouldAutomaticallyShowModal]);
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
