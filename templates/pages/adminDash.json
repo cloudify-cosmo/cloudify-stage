@@ -42,6 +42,21 @@
           }
         },
         {
+          "name": "Number of Terraform blueprints",
+          "width": 3,
+          "height": 8,
+          "definition": "deploymentNum",
+          "x": 9,
+          "y": 3,
+          "configuration": {
+            "icon": "",
+            "imageSrc": "/console/static/images/terraform_logo.png",
+            "label": "Terraform",
+            "page": "services",
+            "filterId": "csys-terraform-filter"
+          }
+        },
+        {
           "name": "Setup cloud account",
           "width": 3,
           "height": 3,
@@ -90,18 +105,21 @@
           }
         },
         {
-          "name": "Check out our guide to get started",
+          "name": "Run Terraform Template",
           "width": 3,
-          "height": 11,
-          "definition": "buttonLink",
+          "height": 3,
+          "definition": "serviceButton",
           "x": 9,
           "y": 0,
           "configuration": {
-            "basic": true,
+            "basic": false,
             "color": "blue",
-            "label": "Check out our guide to get started",
-            "url": "https://docs.cloudify.co/staging/dev/trial_getting_started/examples/",
-            "fullHeight": true
+            "icon": "add",
+            "label": "Run Terraform Template",
+            "marketplaceTabs": [{
+              "name": "Terraform",
+              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+            }]
           }
         },
         {
