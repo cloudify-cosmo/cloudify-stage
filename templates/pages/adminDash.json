@@ -6,7 +6,6 @@
       "type": "widgets",
       "content": [
         {
-          "name": "Number of clouds",
           "width": 3,
           "height": 8,
           "definition": "cloudNum",
@@ -14,7 +13,6 @@
           "y": 3
         },
         {
-          "name": "Number of services",
           "width": 3,
           "height": 8,
           "definition": "deploymentNum",
@@ -27,7 +25,6 @@
           }
         },
         {
-          "name": "Number of k8s clusters",
           "width": 3,
           "height": 8,
           "definition": "deploymentNum",
@@ -42,7 +39,20 @@
           }
         },
         {
-          "name": "Setup cloud account",
+          "width": 3,
+          "height": 8,
+          "definition": "deploymentNum",
+          "x": 9,
+          "y": 3,
+          "configuration": {
+            "icon": "",
+            "imageSrc": "/console/static/images/terraform_logo.png",
+            "label": "Terraform templates",
+            "page": "services",
+            "filterId": "csys-terraform-filter"
+          }
+        },
+        {
           "width": 3,
           "height": 3,
           "definition": "buttonLink",
@@ -58,7 +68,6 @@
           }
         },
         {
-          "name": "Create a service button",
           "width": 3,
           "height": 3,
           "definition": "serviceButton",
@@ -72,7 +81,6 @@
           }
         },
         {
-          "name": "Create k8s services button",
           "width": 3,
           "height": 3,
           "definition": "serviceButton",
@@ -90,22 +98,23 @@
           }
         },
         {
-          "name": "Check out our guide to get started",
           "width": 3,
-          "height": 11,
-          "definition": "buttonLink",
+          "height": 3,
+          "definition": "serviceButton",
           "x": 9,
           "y": 0,
           "configuration": {
-            "basic": true,
+            "basic": false,
             "color": "blue",
-            "label": "Check out our guide to get started",
-            "url": "https://docs.cloudify.co/staging/dev/trial_getting_started/examples/",
-            "fullHeight": true
+            "icon": "add",
+            "label": "Run Terraform template",
+            "marketplaceTabs": [{
+              "name": "Terraform",
+              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+            }]
           }
         },
         {
-          "name": "Filter",
           "definition": "filter",
           "x": 0,
           "y": 10,
