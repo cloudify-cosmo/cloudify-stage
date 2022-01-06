@@ -3,6 +3,7 @@ import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
+import DeployModalActions from './deployModal/DeployModalActions';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -51,8 +52,8 @@ class GenericDeployModal extends React.Component {
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
 
-        this.hideInstallModal = this.hideInstallModal.bind(this);
-        this.showInstallModal = this.showInstallModal.bind(this);
+        this.closeInstallModal = this.closeInstallModal.bind(this);
+        this.openInstallModal = this.openInstallModal.bind(this);
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
@@ -220,7 +221,7 @@ class GenericDeployModal extends React.Component {
         this.setState({ loadingMessage: message });
     }
 
-    showInstallModal() {
+    openInstallModal() {
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
             .then(() => this.setState({ loading: false, showInstallModal: true }))
@@ -229,7 +230,7 @@ class GenericDeployModal extends React.Component {
             });
     }
 
-    hideInstallModal() {
+    closeInstallModal() {
         this.setState({ showInstallModal: false });
     }
 
@@ -513,55 +514,19 @@ class GenericDeployModal extends React.Component {
                         open={showInstallModal}
                         workflow={workflow}
                         onExecute={this.onDeployAndInstall}
-                        onHide={this.hideInstallModal}
+                        onHide={this.closeInstallModal}
                         toolbox={toolbox}
                         hideOptions={!showInstallOptions}
                     />
                 </Modal.Content>
 
-                <Modal.Actions>
-                    <CancelButton onClick={this.onCancel} disabled={loading} />
-                    {showDeployButton ? (
-                        <Button.Group color="green">
-                            <ApproveButton
-                                onClick={this.showInstallModal}
-                                disabled={loading}
-                                content={t('buttons.install')}
-                                icon="cogs"
-                            />
-                            <Dropdown
-                                className="button icon down"
-                                clearable={false}
-                                floating
-                                options={[
-                                    {
-                                        key: 'deploy',
-                                        icon: 'rocket',
-                                        text: t('buttons.deploy'),
-                                        value: 'Deploy',
-                                        onClick: this.onDeploy
-                                    },
-                                    {
-                                        key: 'install',
-                                        icon: 'cogs',
-                                        text: t('buttons.install'),
-                                        value: 'Install',
-                                        onClick: this.showInstallModal
-                                    }
-                                ]}
-                                trigger={<></>}
-                            />
-                        </Button.Group>
-                    ) : (
-                        <ApproveButton
-                            onClick={this.showInstallModal}
-                            disabled={loading}
-                            content={t('buttons.deployAndInstall')}
-                            icon="cogs"
-                            className="green"
-                        />
-                    )}
-                </Modal.Actions>
+                <DeployModalActions
+                    loading={loading}
+                    showDeployButton={showDeployButton}
+                    onCancel={this.onCancel}
+                    showInstallModal={this.openInstallModal}
+                    onDeploy={this.onDeploy}
+                />
             </Modal>
         );
     }
