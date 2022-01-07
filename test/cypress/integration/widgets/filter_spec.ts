@@ -103,6 +103,7 @@ describe('Filter', () => {
             cy.get('input[name=deploymentId]').clear().type(deploymentName);
             cy.contains('Runtime only evaluation').click();
             cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
+            cy.get('.actions').clickButton('Deploy');
 
             cy.get('.modal').should('not.exist');
             cy.refreshPage();
