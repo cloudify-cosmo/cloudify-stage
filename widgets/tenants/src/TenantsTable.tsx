@@ -103,7 +103,6 @@ export default class TenantsTable extends React.Component {
             .then((/* tenant */) => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('tenants:refresh');
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
             })
             .catch(err => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: err.message });

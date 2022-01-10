@@ -31,7 +31,6 @@ export default function CreateModal({ toolbox }) {
                 doClose();
                 clearErrors();
                 toolbox.refresh();
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
             })
             .catch(setMessageAsError)
             .finally(unsetLoading);
