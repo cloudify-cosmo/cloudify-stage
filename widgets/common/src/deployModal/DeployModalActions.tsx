@@ -11,8 +11,8 @@ interface ApproveButtonsProps {
 
 const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButton, onInstall, loading, onDeploy }) => {
     enum Buttons {
-        install = 0,
-        deploy = 1
+        install,
+        deploy
     }
     const [selectedButton, setSelectedButton] = useState(Buttons.install);
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
