@@ -40,7 +40,6 @@ export default function AuthRoutes({ isSamlEnabled }) {
         }
 
         dispatch(getManagerData())
-            .then(() => dispatch(getTenants()))
             .then(setManagerDataFetched)
             .catch(error => {
                 log.error(i18n.t('managerDataError'), error);
