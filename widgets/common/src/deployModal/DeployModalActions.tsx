@@ -10,8 +10,11 @@ interface ApproveButtonsProps {
 }
 
 const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButton, onInstall, loading, onDeploy }) => {
-    const BUTTONS = { install: 0, deploy: 1 };
-    const [selectedButton, setSelectedButton] = useState(BUTTONS.install);
+    enum Buttons {
+        install = 0,
+        deploy = 1
+    }
+    const [selectedButton, setSelectedButton] = useState(Buttons.install);
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
     if (!showDeployButton) {
         <ApproveButton
@@ -24,7 +27,7 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButt
     }
     return (
         <Button.Group color="green">
-            {selectedButton === BUTTONS.install ? (
+            {selectedButton === Buttons.install ? (
                 <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.install')} icon="cogs" />
             ) : (
                 <ApproveButton onClick={onDeploy} disabled={loading} content={t('buttons.deploy')} icon="rocket" />
@@ -40,14 +43,14 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButt
                         icon: 'rocket',
                         text: t('buttons.deploy'),
                         value: 'Deploy',
-                        onClick: () => setSelectedButton(BUTTONS.deploy)
+                        onClick: () => setSelectedButton(Buttons.deploy)
                     },
                     {
                         key: 'install',
                         icon: 'cogs',
                         text: t('buttons.install'),
                         value: 'Install',
-                        onClick: () => setSelectedButton(BUTTONS.install)
+                        onClick: () => setSelectedButton(Buttons.install)
                     }
                 ]}
                 trigger={<></>}
