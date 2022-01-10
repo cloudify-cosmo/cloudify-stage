@@ -5,22 +5,17 @@ const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 interface ApproveButtonsProps {
     loading: boolean;
     showDeployButton: boolean;
-    showInstallModal: () => void;
+    onInstall: () => void;
     onDeploy: () => void;
 }
 
-const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
-    showDeployButton,
-    showInstallModal,
-    loading,
-    onDeploy
-}) => {
+const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButton, onInstall, loading, onDeploy }) => {
     const BUTTONS = { install: 0, deploy: 1 };
     const [selectedButton, setSelectedButton] = useState(BUTTONS.install);
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
     if (!showDeployButton) {
         <ApproveButton
-            onClick={showInstallModal}
+            onClick={onInstall}
             disabled={loading}
             content={t('buttons.deployAndInstall')}
             icon="cogs"
@@ -30,12 +25,7 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
     return (
         <Button.Group color="green">
             {selectedButton === BUTTONS.install ? (
-                <ApproveButton
-                    onClick={showInstallModal}
-                    disabled={loading}
-                    content={t('buttons.install')}
-                    icon="cogs"
-                />
+                <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.install')} icon="cogs" />
             ) : (
                 <ApproveButton onClick={onDeploy} disabled={loading} content={t('buttons.deploy')} icon="rocket" />
             )}
@@ -70,7 +60,7 @@ interface DeployModalActionsProps {
     loading: boolean;
     showDeployButton: boolean;
     onCancel: () => void;
-    showInstallModal: () => void;
+    onInstall: () => void;
     onDeploy: () => void;
 }
 
@@ -78,14 +68,14 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
     loading,
     showDeployButton,
     onCancel,
-    showInstallModal,
+    onInstall,
     onDeploy
 }) => {
     const { Modal, CancelButton } = Stage.Basic;
     return (
         <Modal.Actions>
             <CancelButton onClick={onCancel} disabled={loading} />
-            <ApproveButtons {...{ showDeployButton, showInstallModal, loading, onDeploy }} />
+            <ApproveButtons {...{ showDeployButton, onInstall, loading, onDeploy }} />
         </Modal.Actions>
     );
 };

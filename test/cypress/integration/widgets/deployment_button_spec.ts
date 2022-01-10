@@ -89,6 +89,7 @@ describe('Create Deployment Button widget', () => {
 
     const selectDeployButton = () => {
         cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
+        cy.get('.actions').clickButton('Deploy');
     };
 
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
@@ -99,7 +100,6 @@ describe('Create Deployment Button widget', () => {
                 cy.clickButton('Install');
             } else {
                 selectDeployButton();
-                cy.clickButton('Deploy');
             }
         });
 
@@ -242,7 +242,6 @@ describe('Create Deployment Button widget', () => {
             cy.get('@string_constraint_pattern').should('not.have.class', 'error');
 
             selectDeployButton();
-            cy.get('.actions').clickButton('Deploy');
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
@@ -261,7 +260,6 @@ describe('Create Deployment Button widget', () => {
             cy.get('.modal').within(() => {
                 cy.getField('Deployment name').find('input').type('blahBlahBlah');
                 selectDeployButton();
-                cy.clickButton('Deploy');
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
@@ -295,7 +293,6 @@ describe('Create Deployment Button widget', () => {
                 cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
                 selectDeployButton();
-                cy.clickButton('Deploy');
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
                 cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
                 cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');

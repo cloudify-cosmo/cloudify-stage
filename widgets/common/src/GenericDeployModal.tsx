@@ -524,7 +524,7 @@ class GenericDeployModal extends React.Component {
                     loading={loading}
                     showDeployButton={showDeployButton}
                     onCancel={this.onCancel}
-                    showInstallModal={this.openInstallModal}
+                    onInstall={this.openInstallModal}
                     onDeploy={this.onDeploy}
                 />
             </Modal>
