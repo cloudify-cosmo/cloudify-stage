@@ -1,10 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
 
-export default function CreateModal({ toolbox }) {
-    const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
 
+const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
+
+export default function CreateModal({ toolbox }: CreateModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [tenantName, setTenantName, clearTenantName] = useInput('');
@@ -36,7 +39,6 @@ export default function CreateModal({ toolbox }) {
             .finally(unsetLoading);
     }
 
-    const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
     const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
 
     return (
@@ -47,6 +49,7 @@ export default function CreateModal({ toolbox }) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
+                    {/* @ts-ignore Form.Field is not migrated yet */}
                     <Form.Field error={errors.tenantName}>
                         <Form.Input
                             name="tenantName"
@@ -71,7 +74,3 @@ export default function CreateModal({ toolbox }) {
         </Modal>
     );
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
