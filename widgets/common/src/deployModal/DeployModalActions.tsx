@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
@@ -14,8 +14,10 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButt
         install,
         deploy
     }
-    const [selectedButton, setSelectedButton] = useState(Buttons.install);
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
+    const { useInput } = Stage.Hooks;
+    const [selectedButton, setSelectedButton] = useInput(Buttons.install);
+
     if (!showDeployButton) {
         <ApproveButton
             onClick={onInstall}
@@ -37,20 +39,19 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButt
                 className="button icon down"
                 clearable={false}
                 floating
+                onChange={setSelectedButton}
                 options={[
                     {
                         key: 'deploy',
                         icon: 'rocket',
                         text: t('buttons.deploy'),
-                        value: 'Deploy',
-                        onClick: () => setSelectedButton(Buttons.deploy)
+                        value: Buttons.deploy
                     },
                     {
                         key: 'install',
                         icon: 'cogs',
                         text: t('buttons.install'),
-                        value: 'Install',
-                        onClick: () => setSelectedButton(Buttons.install)
+                        value: Buttons.install
                     }
                 ]}
                 trigger={<></>}
