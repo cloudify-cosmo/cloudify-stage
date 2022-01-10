@@ -75,7 +75,12 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
     return (
         <Modal.Actions>
             <CancelButton onClick={onCancel} disabled={loading} />
-            <ApproveButtons {...{ showDeployButton, onInstall, loading, onDeploy }} />
+            <ApproveButtons
+                showDeployButton={showDeployButton}
+                onInstall={onInstall}
+                loading={loading}
+                onDeploy={onDeploy}
+            />
         </Modal.Actions>
     );
 };
