@@ -36,7 +36,8 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButt
             )}
 
             <Dropdown
-                className="button icon down"
+                className="icon"
+                button
                 clearable={false}
                 floating
                 onChange={setSelectedButton}
