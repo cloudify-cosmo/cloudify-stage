@@ -7,6 +7,8 @@ interface CreateModalProps {
 const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
 
+const t = Stage.Utils.getT(`widgets.tenants.createModal`);
+
 export default function CreateModal({ toolbox }: CreateModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
@@ -20,7 +22,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     function createTenant() {
         if (_.isEmpty(tenantName)) {
-            setErrors({ tenantName: 'Please provide tenant name' });
+            setErrors({ tenantName: t('form.errors.emptyTenantName') });
             return;
         }
 
@@ -39,12 +41,12 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .finally(unsetLoading);
     }
 
-    const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
+    const addButton = <Button content={t('form.buttons.addTenant')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add user" /> Add tenant
+                <Icon name="add user" /> {t('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -53,7 +55,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                     <Form.Field error={errors.tenantName}>
                         <Form.Input
                             name="tenantName"
-                            placeholder="Tenant name"
+                            placeholder={t('form.fields.tenantName')}
                             value={tenantName}
                             onChange={setTenantName}
                         />
@@ -66,7 +68,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                 <ApproveButton
                     onClick={createTenant}
                     disabled={isLoading}
-                    content="Add"
+                    content={t('form.buttons.addTenant')}
                     icon="add user"
                     color="green"
                 />
