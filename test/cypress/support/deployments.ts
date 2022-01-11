@@ -32,10 +32,6 @@ export type Label = SystemLabel & {
 
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
-    selectAndClickDeploy: () => {
-        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
-        cy.get('.actions').clickButton('Deploy');
-    },
     deployBlueprint: (
         blueprintId: string,
         deploymentId: string,
@@ -74,6 +70,10 @@ const commands = {
             cy.get('.input.loading').should('not.exist');
             cy.get('.widgetLoader').should('be.not.visible');
         }),
+    selectAndClickDeploy: () => {
+        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
+        cy.get('.actions').clickButton('Deploy');
+    },
     revertToDefaultValue: () => {
         const revertToDefaultAriaLabel = '[aria-label="Revert value to default"]';
         return cy.get(revertToDefaultAriaLabel).click().should('not.exist');
