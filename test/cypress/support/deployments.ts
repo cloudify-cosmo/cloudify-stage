@@ -32,6 +32,10 @@ export type Label = SystemLabel & {
 
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
+    selectAndClickDeploy: () => {
+        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
+        cy.get('.actions').clickButton('Deploy');
+    },
     deployBlueprint: (
         blueprintId: string,
         deploymentId: string,

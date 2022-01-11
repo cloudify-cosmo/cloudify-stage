@@ -87,11 +87,6 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const selectAndClickDeploy = () => {
-        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
-        cy.get('.actions').clickButton('Deploy');
-    };
-
     const deployBlueprint = (deploymentId, deploymentName, install = false) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
 
@@ -99,7 +94,7 @@ describe('Create Deployment Button widget', () => {
             if (install) {
                 cy.clickButton('Install');
             } else {
-                selectAndClickDeploy();
+                cy.selectAndClickDeploy();
             }
         });
 
@@ -241,7 +236,7 @@ describe('Create Deployment Button widget', () => {
                 });
             cy.get('@string_constraint_pattern').should('not.have.class', 'error');
 
-            selectAndClickDeploy();
+            cy.selectAndClickDeploy();
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
@@ -259,7 +254,7 @@ describe('Create Deployment Button widget', () => {
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
                 cy.getField('Deployment name').find('input').type('blahBlahBlah');
-                selectAndClickDeploy();
+                cy.selectAndClickDeploy();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
@@ -292,7 +287,7 @@ describe('Create Deployment Button widget', () => {
                 cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
-                selectAndClickDeploy();
+                cy.selectAndClickDeploy();
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
                 cy.getAccordionSection('Advanced').next('.content').should('have.class', 'active');
                 cy.getAccordionSection('Deployment Inputs').should('not.have.class', 'active');
