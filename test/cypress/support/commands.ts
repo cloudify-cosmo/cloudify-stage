@@ -14,6 +14,7 @@ import 'cypress-get-table';
 import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import Consts from 'app/utils/consts';
 
 import './asserts';
 import './blueprints';
@@ -35,7 +36,7 @@ let token = '';
 
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
-    tenant: 'default_tenant'
+    tenant: Consts.DEFAULT_TENANT
 });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
@@ -105,7 +106,9 @@ const commands = {
                 token = adminToken;
             })
             .then(() =>
-                cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+                cy.stageRequest(`/console/ua/clear-pages?tenant=${Consts.DEFAULT_TENANT}`, 'GET', {
+                    failOnStatusCode: false
+                })
             ),
     cfyRequest: (
         url: string,
@@ -352,7 +355,7 @@ const commands = {
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        return cy.contains('.text', 'default_tenant').click({ force: true });
+        return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),

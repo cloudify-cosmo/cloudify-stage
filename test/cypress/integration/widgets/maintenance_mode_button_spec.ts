@@ -1,3 +1,4 @@
+import Consts from 'app/utils/consts';
 import { waitUntil } from '../../support/resource_commons';
 
 describe('Maintenance mode button widget', () => {
@@ -55,7 +56,7 @@ describe('Maintenance mode button widget', () => {
                         blueprint_id: null,
                         deployment_id: null,
                         status_display: 'completed',
-                        tenant_name: 'default_tenant',
+                        tenant_name: Consts.DEFAULT_TENANT,
                         created_by: 'admin',
                         resource_availability: 'tenant',
                         private_resource: false

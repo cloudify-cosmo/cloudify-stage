@@ -1,9 +1,9 @@
 import _ from 'lodash';
+import Consts from 'app/utils/consts';
 
 describe('User Menu', () => {
     const nonAdminUsername = 'user-menu-test';
     const nonAdminPassword = 'user-menu-test';
-    const defaultTenantName = 'default_tenant';
     const newTenantName = 'Darth_Vader';
 
     const verifyOptionIsVisible = (expectedName: string, expectedClasses: string) => {
@@ -22,7 +22,7 @@ describe('User Menu', () => {
         cy.activate()
             .deleteAllUsersAndTenants()
             .addUser(nonAdminUsername, nonAdminPassword, false)
-            .addUserToTenant(nonAdminUsername, defaultTenantName, 'viewer');
+            .addUserToTenant(nonAdminUsername, Consts.DEFAULT_TENANT, 'viewer');
     });
 
     beforeEach(cy.usePageMock);
@@ -56,7 +56,7 @@ describe('User Menu', () => {
 
         cy.log('Adding new tenant');
         cy.addTenant(newTenantName);
-        cy.contains(defaultTenantName).click();
+        cy.contains(Consts.DEFAULT_TENANT).click();
 
         cy.contains('Tenant selection')
             .parent()
