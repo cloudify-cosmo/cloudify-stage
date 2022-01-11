@@ -1,4 +1,4 @@
-import { getCurrentAppVersion } from '../support/app_commons';
+import Consts from 'app/utils/consts';
 
 describe('Page', () => {
     before(() => {
@@ -18,7 +18,7 @@ describe('Page', () => {
                             }
                         ]
                     },
-                    appDataVersion: getCurrentAppVersion()
+                    appDataVersion: Consts.APP_VERSION
                 }
             })
         );

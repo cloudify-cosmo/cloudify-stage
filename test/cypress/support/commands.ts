@@ -30,7 +30,6 @@ import './secrets';
 import './snapshots';
 import './filters';
 import './getting_started';
-import { getCurrentAppVersion } from './app_commons';
 
 let token = '';
 
@@ -263,7 +262,7 @@ const commands = {
         );
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
-            appDataVersion: getCurrentAppVersion(),
+            appDataVersion: Consts.APP_VERSION,
             appData: {
                 pages: [
                     {
