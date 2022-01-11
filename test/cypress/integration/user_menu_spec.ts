@@ -4,6 +4,7 @@ describe('User Menu', () => {
     const nonAdminUsername = 'user-menu-test';
     const nonAdminPassword = 'user-menu-test';
     const defaultTenantName = 'default_tenant';
+    const newTenantName = 'Darth_Vader';
 
     const verifyOptionIsVisible = (expectedName: string, expectedClasses: string) => {
         cy.contains('.item', expectedName).within(() => {
@@ -51,7 +52,6 @@ describe('User Menu', () => {
     });
 
     it('should fetch tenants on every tenants menu item click', () => {
-        const newTenantName = 'Darth_Vader';
         cy.login();
 
         cy.log('Adding new tenant');
@@ -63,5 +63,9 @@ describe('User Menu', () => {
 
         cy.log('New tenant is visible in the dropdown');
         cy.contains(newTenantName);
+    });
+
+    after(() => {
+        cy.deleteTenant(newTenantName);
     });
 });
