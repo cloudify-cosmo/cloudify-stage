@@ -68,8 +68,4 @@ describe('User Menu', () => {
                 cy.contains(newTenantName);
             });
     });
-
-    after(() => {
-        cy.deleteTenant(newTenantName);
-    });
 });
