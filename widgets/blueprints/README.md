@@ -62,7 +62,7 @@ The default visibility is "Tenant", and according to the logged-in user's permis
    The names of the default input values appear in the inputs fields. You can leave these defaults or override them with new values.
    Input's description (on hovering help icon ![Help icon]( /images/ui/icons/help-icon.png )) might help you understand how to fill-in the proper value.
    An alternative for providing the inputs is to specify a .yaml file containing the relevant values.
-4. Click **Deploy** to deploy the blueprint or **Deploy & Install** to deploy and execute `install` workflow on it.
+4. Select **Deploy** in the drop-down to deploy the blueprint or click **Install** to deploy and execute `install` workflow on it.
 
 ![Create a deployment]( /images/ui/widgets/blueprints_deployment_creation.png )
 
