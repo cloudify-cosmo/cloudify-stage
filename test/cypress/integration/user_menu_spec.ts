@@ -58,11 +58,15 @@ describe('User Menu', () => {
         cy.addTenant(newTenantName);
         cy.contains(defaultTenantName).click();
 
-        cy.log('Showing spinner while fetching data');
-        cy.contains('Loading');
+        cy.contains('Tenant selection')
+            .parent()
+            .within(() => {
+                cy.log('Showing spinner while fetching data');
+                cy.contains('Loading');
 
-        cy.log('New tenant is visible in the dropdown');
-        cy.contains(newTenantName);
+                cy.log('New tenant is visible in the dropdown');
+                cy.contains(newTenantName);
+            });
     });
 
     after(() => {
