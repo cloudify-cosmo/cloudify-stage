@@ -2,7 +2,6 @@ import _ from 'lodash';
 import React, { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InputOnChangeData } from 'semantic-ui-react';
-import styled from 'styled-components';
 
 import { Dropdown, Input, Loading } from '../basic';
 import { changeTenant, getTenants } from '../../actions/tenants';
@@ -12,10 +11,6 @@ import StageUtils from '../../utils/stageUtils';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
-
-const StyledLoaderWrapper = styled.div`
-    height: 80px;
-`;
 
 const TenantSelection: FunctionComponent = () => {
     const [search, setSearch, clearSearch] = useResettableState('');
@@ -55,9 +50,7 @@ const TenantSelection: FunctionComponent = () => {
             <Dropdown.Header>{t('tenantsHeader')}</Dropdown.Header>
             <Dropdown.Menu scrolling>
                 {isLoadingTenants ? (
-                    <StyledLoaderWrapper>
-                        <Loading />
-                    </StyledLoaderWrapper>
+                    <Loading style={{ height: 80 }} />
                 ) : (
                     <>
                         {filteredTenants.map(tenant => (
