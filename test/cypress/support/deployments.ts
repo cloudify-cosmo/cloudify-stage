@@ -71,7 +71,7 @@ const commands = {
             cy.get('.widgetLoader').should('be.not.visible');
         }),
     selectAndClickDeploy: () => {
-        cy.contains('.dropdown', 'Install').click().contains('Deploy').click();
+        cy.get('[aria-label="Deploy or Install"]').click().contains('Deploy').click();
         cy.get('.actions').clickButton('Deploy');
     },
     revertToDefaultValue: () => {
