@@ -1,3 +1,5 @@
+import Consts from 'app/utils/consts';
+
 describe('Template management', () => {
     const nonAdminUser = {
         username: 'default',
@@ -9,7 +11,7 @@ describe('Template management', () => {
 
         cy.log('Create non-admin user');
         cy.addUser(nonAdminUser.username, nonAdminUser.password, false);
-        cy.addUserToTenant(nonAdminUser.username, 'default_tenant', 'user');
+        cy.addUserToTenant(nonAdminUser.username, Consts.DEFAULT_TENANT, 'user');
     });
 
     it('is not available for non-admin users', () => {

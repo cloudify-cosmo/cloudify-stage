@@ -1,4 +1,5 @@
 import { map } from 'lodash';
+import Consts from 'app/utils/consts';
 
 describe('Templates segment', () => {
     const testTenants = ['T1', 'T2', 'T3'];
@@ -8,7 +9,7 @@ describe('Templates segment', () => {
         password,
         isAdmin: false,
         tenants: [
-            { name: 'default_tenant', role: 'user' },
+            { name: Consts.DEFAULT_TENANT, role: 'user' },
             { name: 'T1', role: 'manager' }
         ],
         pages: ['catalog', 'blueprints']

@@ -582,12 +582,16 @@
                         }
                     },
                     "sections": {
-                        "deploymentMetadata": "Deployment metadata",
-                        "executionParameters": "Execution parameters"
+                        "deploymentInputs": "Deployment Inputs",
+                        "deploymentMetadata": "Deployment Metadata",
+                        "executionParameters": "Execution Parameters",
+                        "advanced": "Advanced"
                     },
                     "buttons": {
+                        "showDataTypes": "Show Data Types",
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
+                        "install": "Install",
                         "deployAndInstall": "Deploy & Install"
                     },
                     "steps": {
@@ -816,9 +820,12 @@
                 "blueprintName": "Blueprint name",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "Terraform template",
-                "resourceLocation": "Resource location",
-                "mapping": "Variable and output mapping",
+                "template": "URL to your Terraform template (zip or git)",
+                "resourceLocation": "Terraform folder in the archive",
+                "urlAuthentication": "URL authentication",
+                "username": "Username",
+                "password": "Password",
+                "mapping": "Terraform variables and outputs mapping",
                 "variables": "Variables",
                 "environment": "Environment variables",
                 "outputs": "Outputs",
@@ -850,6 +857,9 @@
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
                     "noTerraformTemplate": "Please provide Terraform template URL",
+                    "terraformTemplateUnauthorized": "The URL requires authentication",
+                    "noUsername": "Please provide username",
+                    "noPassword": "Please provide password",
                     "noResourceLocation": "Please provide resource location",
                     "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
@@ -1434,6 +1444,38 @@
             "charts": {
                 "tooltip": {
                     "label": "Number of executions"
+                }
+            }
+        },
+        "tenants": {
+            "name": "Tenants management",
+            "description": "This widget shows a list of available tenants, and allow managing them",
+            "createModal": {
+                "header": "Add tenant",
+                "form": {
+                    "errors": {
+                        "emptyTenantName": "Please provide tenant name"
+                    },
+                    "buttons": {
+                        "addTenant": "Add"
+                    },
+                    "fields": {
+                        "tenantName": "Tenant name"
+                    }
+                }
+            },
+            "tenantsTable": {
+                "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
+                "columns": {
+                    "name": "Name",
+                    "groups": "# Groups",
+                    "users": "# Users"
+                },
+                "errors": {
+                    "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+                },
+                "deleteModal": {
+                    "content": "Are you sure you want to delete tenant {{tenantName}}?"
                 }
             }
         }

@@ -1,10 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
 
-export default function CreateModal({ toolbox }) {
-    const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
 
+const { Modal, Button, Icon, Form, ApproveButton, CancelButton, UnsafelyTypedFormField } = Stage.Basic;
+const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
+
+const t = Stage.Utils.getT(`widgets.tenants.createModal`);
+
+export default function CreateModal({ toolbox }: CreateModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [tenantName, setTenantName, clearTenantName] = useInput('');
@@ -17,7 +22,7 @@ export default function CreateModal({ toolbox }) {
 
     function createTenant() {
         if (_.isEmpty(tenantName)) {
-            setErrors({ tenantName: 'Please provide tenant name' });
+            setErrors({ tenantName: t('form.errors.emptyTenantName') });
             return;
         }
 
@@ -31,31 +36,29 @@ export default function CreateModal({ toolbox }) {
                 doClose();
                 clearErrors();
                 toolbox.refresh();
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
             })
             .catch(setMessageAsError)
             .finally(unsetLoading);
     }
 
-    const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-    const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
+    const addButton = <Button content={t('form.buttons.addTenant')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add user" /> Add tenant
+                <Icon name="add user" /> {t('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.tenantName}>
+                    <UnsafelyTypedFormField error={errors.tenantName}>
                         <Form.Input
                             name="tenantName"
-                            placeholder="Tenant name"
+                            placeholder={t('form.fields.tenantName')}
                             value={tenantName}
                             onChange={setTenantName}
                         />
-                    </Form.Field>
+                    </UnsafelyTypedFormField>
                 </Form>
             </Modal.Content>
 
@@ -64,7 +67,7 @@ export default function CreateModal({ toolbox }) {
                 <ApproveButton
                     onClick={createTenant}
                     disabled={isLoading}
-                    content="Add"
+                    content={t('form.buttons.addTenant')}
                     icon="add user"
                     color="green"
                 />
@@ -72,7 +75,3 @@ export default function CreateModal({ toolbox }) {
         </Modal>
     );
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

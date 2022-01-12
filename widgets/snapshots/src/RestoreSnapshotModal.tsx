@@ -27,7 +27,6 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
                 clearErrors();
                 toolbox.refresh();
                 toolbox.getEventBus().trigger('snapshots:refresh');
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
                 onHide();
             })
             .catch(setMessageAsError)

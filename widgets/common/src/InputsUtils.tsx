@@ -1,5 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
 
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
@@ -88,7 +87,7 @@ class InputsUtils {
         }
     }
 
-    static getTemplateForDataType(dataType, stringTemplate) {
+    static getTemplateForDataType(dataType, stringTemplate?) {
         const getStringInitialValue = type => {
             switch (type) {
                 case 'boolean':
@@ -176,13 +175,19 @@ class InputsUtils {
             example = InputsUtils.getTemplateForDataType(dataType);
         }
 
-        return (
+        const showExample = !_.isUndefined(defaultValue) || !_.isUndefined(dataType);
+        const showDescription = !_.isEmpty(description);
+        const showType = !_.isEmpty(type);
+        const showConstraints = !_.isEmpty(constraints);
+        const showAnyHelpProperty = showExample || showDescription || showType || showConstraints;
+
+        return showAnyHelpProperty ? (
             <div>
-                <HelpProperty name="Description" show={!_.isEmpty(description)} value={description} />
-                <HelpProperty name="Type" show={!_.isEmpty(type)} value={type} />
+                <HelpProperty name="Description" show={showDescription} value={description} />
+                <HelpProperty name="Type" show={showType} value={type} />
                 <HelpProperty
                     name="Constraints"
-                    show={!_.isEmpty(constraints)}
+                    show={showConstraints}
                     value={
                         <List bulleted>
                             {_.map(constraints, constraint => {
@@ -198,11 +203,11 @@ class InputsUtils {
                 />
                 <HelpProperty
                     name={!_.isUndefined(defaultValue) ? 'Default Value' : 'Example'}
-                    show={!_.isUndefined(defaultValue) || !_.isUndefined(dataType)}
+                    show={showExample}
                     value={<ParameterValue value={example} />}
                 />
             </div>
-        );
+        ) : null;
     }
 
     static getFormInputField(input, value, onChange, error, dataType) {
@@ -520,6 +525,14 @@ class InputsUtils {
         }
 
         return { [errorFieldKey]: message };
+    }
+}
+
+export default InputsUtils;
+
+declare global {
+    namespace Stage.Common {
+        export { InputsUtils };
     }
 }
 
