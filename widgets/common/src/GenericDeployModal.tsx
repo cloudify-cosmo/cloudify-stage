@@ -37,16 +37,6 @@ function renderActionField(name, checked, onChange) {
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
 
-function setWorkflowParams(workflowResource) {
-    const { InputsUtils } = Stage.Common;
-    // setBaseWorkflowParams(workflowResource.parameters);
-    // setUserWorkflowParams(
-    //     _.mapValues(workflowResource.parameters, parameterData =>
-    //         InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
-    //     )
-    // );
-}
-
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
@@ -104,6 +94,7 @@ class GenericDeployModal extends React.Component {
         this.openInstallModal = this.openInstallModal.bind(this);
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
+        this.setWorkflowParams = this.setWorkflowParams.bind(this);
     }
 
     componentDidMount() {
@@ -111,39 +102,41 @@ class GenericDeployModal extends React.Component {
         const { toolbox } = this.props;
         const { workflow, deploymentId } = this.state;
 
-        // clearErrors();
-        // unsetLoading();
-        // clearDryRun();
-        // unsetFileLoading();
-        // clearForce();
-        // clearQueue();
-        // clearSchedule();
-        // clearScheduleTime();
-        // resetUserWorkflowParams();
-        // resetBaseWorkflowParams();
+        this.setState({
+            errors: {},
+            loading: false,
+            dryRun: false,
+            fileLoading: false,
+            force: false,
+            queue: false,
+            scheduledTime: '',
+            baseWorkflowParams: {},
+            userWorkflowParams: {}
+        });
 
         const actions = new DeploymentActions(toolbox);
+        const workflowName = getWorkflowName(workflow);
         if (isWorkflowName(workflow)) {
             this.setState({ loading: true });
             actions
                 .doGetWorkflows(deploymentId)
                 .then(({ workflows }) => {
-                    // const selectedWorkflow = _.find(workflows, { name: workflowName });
-                    // if (selectedWorkflow) {
-                    //     setWorkflowParams(selectedWorkflow);
-                    // } else {
-                    //     setErrors(
-                    //         t('errors.workflowError', {
-                    //             deploymentId,
-                    //             workflowName
-                    //         })
-                    //     );
-                    // }
+                    const selectedWorkflow = _.find(workflows, { name: workflowName });
+                    if (selectedWorkflow) {
+                        this.setWorkflowParams(selectedWorkflow);
+                    } else {
+                        this.setState({
+                            errors: tExecute('errors.workflowError', {
+                                deploymentId,
+                                workflowName
+                            })
+                        });
+                    }
                 })
-                // .catch(setMessageAsError)
+                .catch((err: { message: string }) => setErrors({ errors: err.message }))
                 .finally(() => this.setState({ loading: false }));
         } else {
-            setWorkflowParams(workflow);
+            this.setWorkflowParams(workflow);
         }
     }
 
@@ -283,6 +276,16 @@ class GenericDeployModal extends React.Component {
             installWorkflowParameters,
             installWorkflowOptions
         );
+    }
+
+    setWorkflowParams(workflowResource) {
+        const { InputsUtils } = Stage.Common;
+        this.setState({
+            baseWorkflowParams: workflowResource.parameters,
+            userWorkflowParams: _.mapValues(workflowResource.parameters, parameterData =>
+                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+            )
+        });
     }
 
     getDeploymentParams() {
