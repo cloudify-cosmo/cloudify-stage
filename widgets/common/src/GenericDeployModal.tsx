@@ -199,7 +199,9 @@ class GenericDeployModal extends React.Component {
     }
 
     handleExecuteInputChange(event, field) {
-        // setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
+        this.setState(prevState => ({
+            userWorkflowParams: { ...prevState.userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) }
+        }));
     }
 
     onAccordionClick(e, { index }) {
