@@ -14,6 +14,7 @@ import 'cypress-get-table';
 import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import Consts from 'app/utils/consts';
 
 import './asserts';
 import './blueprints';
@@ -29,13 +30,12 @@ import './secrets';
 import './snapshots';
 import './filters';
 import './getting_started';
-import { getCurrentAppVersion } from './app_commons';
 
 let token = '';
 
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
-    tenant: 'default_tenant'
+    tenant: Consts.DEFAULT_TENANT
 });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
@@ -105,7 +105,9 @@ const commands = {
                 token = adminToken;
             })
             .then(() =>
-                cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+                cy.stageRequest(`/console/ua/clear-pages?tenant=${Consts.DEFAULT_TENANT}`, 'GET', {
+                    failOnStatusCode: false
+                })
             ),
     cfyRequest: (
         url: string,
@@ -260,7 +262,7 @@ const commands = {
         );
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
-            appDataVersion: getCurrentAppVersion(),
+            appDataVersion: Consts.APP_VERSION,
             appData: {
                 pages: [
                     {
@@ -352,7 +354,7 @@ const commands = {
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        return cy.contains('.text', 'default_tenant').click({ force: true });
+        return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),
@@ -392,6 +394,14 @@ const commands = {
         return cy
             .exec(`./node_modules/.bin/babel --config-file ${babelConfigPath} ${scriptPath}`)
             .then(commandResult => commandResult.stdout);
+    },
+
+    getAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle),
+
+    openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
+
+    withinAccordionSection: (sectionTitle: string, callback: () => void) => {
+        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
     },
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),

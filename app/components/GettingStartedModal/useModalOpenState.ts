@@ -18,10 +18,12 @@ const useModalOpenState = () => {
     const manager = useManager();
     const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
+    const [shouldAutomaticallyShowModal, setShouldAutomaticallyShowModal] = useState(false);
     const [gettingStartedParameter, , deleteGettingStartedParameter] = useSearchParam(gettingStartedParameterName);
 
     useEffect(() => {
         if (response?.show_getting_started) {
+            setShouldAutomaticallyShowModal(true);
             setModalOpen(true);
         }
     }, [response]);
@@ -32,12 +34,13 @@ const useModalOpenState = () => {
         }
     }, [gettingStartedParameter]);
 
-    const closeModal = async (disabled: boolean) => {
+    const closeModal = async (shouldDisableModal: boolean) => {
         try {
-            if (disabled) {
+            const modalVisibilityHasChanged = shouldDisableModal === shouldAutomaticallyShowModal;
+            if (modalVisibilityHasChanged) {
                 // TODO(RD-1874): use common api for backend requests
                 await manager.doPost(`/users/${manager.getCurrentUsername()}`, {
-                    body: { show_getting_started: false }
+                    body: { show_getting_started: !shouldDisableModal }
                 });
                 EventBus.trigger('users:refresh');
             }
@@ -47,7 +50,7 @@ const useModalOpenState = () => {
             log.error(error);
         }
     };
-    return { modalOpen, closeModal };
+    return { modalOpen, closeModal, shouldAutomaticallyShowModal };
 };
 
 export default useModalOpenState;

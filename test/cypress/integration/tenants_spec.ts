@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import Consts from 'app/utils/consts';
 
 describe('Tenants menu', () => {
     const user = {
@@ -8,7 +9,7 @@ describe('Tenants menu', () => {
         isAdmin: false,
         tenants: [
             {
-                name: 'default_tenant',
+                name: Consts.DEFAULT_TENANT,
                 role: 'user',
                 pages: [
                     { id: 'adminDash', name: 'Dashboard' },
@@ -60,7 +61,7 @@ describe('Tenants menu', () => {
         cy.mockLogin(user.username, user.password);
 
         function verifyTemplate(tenant) {
-            cy.contains('.dropdown', 'default_tenant').click();
+            cy.contains('.dropdown', Consts.DEFAULT_TENANT).click();
             cy.get('.menu').contains(tenant.name).click().waitUntilLoaded();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));
         }

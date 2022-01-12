@@ -1,12 +1,21 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
+import AccordionSectionWithDivider from './AccordionSectionWithDivider';
+import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 
 const { i18n } = Stage;
-const t = (key, options) => i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+
+    static DEPLOYMENT_SECTIONS = {
+        deploymentInputs: 0,
+        deploymentMetadata: 1,
+        executionParameters: 2,
+        advanced: 3
+    };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -23,6 +32,7 @@ class GenericDeployModal extends React.Component {
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
+        activeSection: 0,
         yamlFile: null
     };
 
@@ -43,6 +53,7 @@ class GenericDeployModal extends React.Component {
 
         this.hideInstallModal = this.hideInstallModal.bind(this);
         this.showInstallModal = this.showInstallModal.bind(this);
+        this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
 
@@ -97,6 +108,13 @@ class GenericDeployModal extends React.Component {
         this.setState(fieldNameValue);
     }
 
+    onAccordionClick(e, { index }) {
+        const { activeSection } = this.state;
+        const newIndex = activeSection === index ? -1 : index;
+
+        this.setState({ activeSection: newIndex });
+    }
+
     onErrorsDismiss() {
         this.setState({
             areSecretsMissing: false,
@@ -135,7 +153,24 @@ class GenericDeployModal extends React.Component {
         };
 
         return stepPromise.catch(errors => {
-            this.setState({ loading: false, errors, areSecretsMissing: isMissingSecretsError(errors) });
+            const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
+            const { activeSection, deploymentInputs } = this.state;
+            const errorKeys = Object.keys(errors);
+            const deploymentInputKeys = Object.keys(deploymentInputs);
+            let errorActiveSection = activeSection;
+            if (errorKeys.some(errorKey => deploymentInputKeys.includes(errorKey))) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputs;
+            } else if (errorKeys.includes('siteName')) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentMetadata;
+            } else if (errorKeys.includes('deploymentId')) {
+                errorActiveSection = DEPLOYMENT_SECTIONS.advanced;
+            }
+            this.setState({
+                loading: false,
+                errors,
+                areSecretsMissing: isMissingSecretsError(errors),
+                activeSection: errorActiveSection
+            });
         });
     }
 
@@ -260,7 +295,10 @@ class GenericDeployModal extends React.Component {
     render() {
         const {
             ApproveButton,
+            Accordion,
             CancelButton,
+            Button,
+            Dropdown,
             Form,
             Icon,
             LoadingOverlay,
@@ -269,10 +307,6 @@ class GenericDeployModal extends React.Component {
             VisibilityField
         } = Stage.Basic;
         const {
-            DataTypesButton,
-            InputsHeader,
-            InputsUtils,
-            YamlFileButton,
             DynamicDropdown,
             ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
@@ -291,6 +325,7 @@ class GenericDeployModal extends React.Component {
             deploymentNameHelp
         } = this.props;
         const {
+            activeSection,
             blueprint,
             deploymentInputs,
             deploymentId,
@@ -307,6 +342,7 @@ class GenericDeployModal extends React.Component {
             visibility
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
+        const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
@@ -370,100 +406,107 @@ class GenericDeployModal extends React.Component {
                                 />
                             </Form.Field>
                         )}
-                        {showDeploymentIdInput && (
-                            <Form.Field
-                                error={errors.deploymentId}
-                                label={t('inputs.deploymentId.label')}
-                                required
-                                help={t('inputs.deploymentId.help')}
+                        <Accordion fluid>
+                            <AccordionSectionWithDivider
+                                title={t('sections.deploymentInputs')}
+                                index={DEPLOYMENT_SECTIONS.deploymentInputs}
+                                activeSection={activeSection}
+                                onClick={this.onAccordionClick}
                             >
-                                <Form.Input
-                                    name="deploymentId"
-                                    value={deploymentId}
-                                    onChange={this.handleInputChange}
+                                <DeplomentInputsSection
+                                    blueprint={blueprint}
+                                    onYamlFileChange={this.handleYamlFileChange}
+                                    fileLoading={fileLoading}
+                                    onDeploymentInputChange={this.handleDeploymentInputChange}
+                                    deploymentInputs={deploymentInputs}
+                                    errors={errors}
                                 />
-                            </Form.Field>
-                        )}
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
+                                title={t('sections.deploymentMetadata')}
+                                index={DEPLOYMENT_SECTIONS.deploymentMetadata}
+                                activeSection={activeSection}
+                                onClick={this.onAccordionClick}
+                            >
+                                {showSitesInput && (
+                                    <Form.Field
+                                        error={errors.siteName}
+                                        label={t('inputs.siteName.label')}
+                                        help={t('inputs.siteName.help')}
+                                    >
+                                        <DynamicDropdown
+                                            value={siteName}
+                                            onChange={value => this.setState({ siteName: value })}
+                                            name="siteName"
+                                            fetchUrl="/sites?_include=name"
+                                            valueProp="name"
+                                            toolbox={toolbox}
+                                        />
+                                    </Form.Field>
+                                )}
 
-                        {blueprint.id && (
-                            <>
-                                {!_.isEmpty(blueprint.plan.inputs) && (
-                                    <YamlFileButton
-                                        onChange={this.handleYamlFileChange}
-                                        dataType="deployment's inputs"
-                                        fileLoading={fileLoading}
+                                <Form.Field
+                                    label={i18n.t('widgets.common.labels.input.label')}
+                                    help={i18n.t('widgets.common.labels.input.help')}
+                                >
+                                    <LabelsInput
+                                        toolbox={toolbox}
+                                        hideInitialLabels
+                                        onChange={labels => this.setState({ labels })}
                                     />
-                                )}
-                                {!_.isEmpty(blueprint.plan.data_types) && (
-                                    <DataTypesButton types={blueprint.plan.data_types} />
-                                )}
-                                <InputsHeader />
-                                {_.isEmpty(blueprint.plan.inputs) && (
-                                    <Message content={t('inputs.deploymentInputs.noInputs')} />
-                                )}
-                            </>
-                        )}
-
-                        {InputsUtils.getInputFields(
-                            blueprint.plan.inputs,
-                            this.handleDeploymentInputChange,
-                            deploymentInputs,
-                            errors,
-                            blueprint.plan.data_types
-                        )}
-
-                        <Form.Divider>{t('sections.deploymentMetadata')}</Form.Divider>
-
-                        {showSitesInput && (
-                            <Form.Field
-                                error={errors.siteName}
-                                label={t('inputs.siteName.label')}
-                                help={t('inputs.siteName.help')}
+                                </Form.Field>
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
+                                title={t('sections.executionParameters')}
+                                index={DEPLOYMENT_SECTIONS.executionParameters}
+                                activeSection={activeSection}
+                                onClick={this.onAccordionClick}
                             >
-                                <DynamicDropdown
-                                    value={siteName}
-                                    onChange={value => this.setState({ siteName: value })}
-                                    name="siteName"
-                                    fetchUrl="/sites?_include=name"
-                                    valueProp="name"
-                                    toolbox={toolbox}
-                                />
-                            </Form.Field>
-                        )}
+                                <Form.Field className="skipPluginsValidationCheckbox">
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t('inputs.skipPluginsValidation.label')}
+                                        name="skipPluginsValidation"
+                                        checked={skipPluginsValidation}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </AccordionSectionWithDivider>
+                            <AccordionSectionWithDivider
+                                title={t('sections.advanced')}
+                                index={DEPLOYMENT_SECTIONS.advanced}
+                                activeSection={activeSection}
+                                onClick={this.onAccordionClick}
+                            >
+                                {showDeploymentIdInput && (
+                                    <Form.Field
+                                        error={errors.deploymentId}
+                                        label={t('inputs.deploymentId.label')}
+                                        required
+                                        help={t('inputs.deploymentId.help')}
+                                    >
+                                        <Form.Input
+                                            name="deploymentId"
+                                            value={deploymentId}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                )}
+                                {skipPluginsValidation && (
+                                    <Message>{t('inputs.skipPluginsValidation.message')}</Message>
+                                )}
 
-                        <Form.Field
-                            label={i18n.t('widgets.common.labels.input.label')}
-                            help={i18n.t('widgets.common.labels.input.help')}
-                        >
-                            <LabelsInput
-                                toolbox={toolbox}
-                                hideInitialLabels
-                                onChange={labels => this.setState({ labels })}
-                            />
-                        </Form.Field>
-
-                        <Form.Divider>{t('sections.executionParameters')}</Form.Divider>
-
-                        <Form.Field className="skipPluginsValidationCheckbox">
-                            <Form.Checkbox
-                                toggle
-                                label={t('inputs.skipPluginsValidation.label')}
-                                name="skipPluginsValidation"
-                                checked={skipPluginsValidation}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
-                        {skipPluginsValidation && <Message>{t('inputs.skipPluginsValidation.message')}</Message>}
-
-                        <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
-                            <Form.Checkbox
-                                toggle
-                                label={t('inputs.runtimeOnlyEvaluation.label')}
-                                name="runtimeOnlyEvaluation"
-                                checked={runtimeOnlyEvaluation}
-                                onChange={this.handleInputChange}
-                            />
-                        </Form.Field>
+                                <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t('inputs.runtimeOnlyEvaluation.label')}
+                                        name="runtimeOnlyEvaluation"
+                                        checked={runtimeOnlyEvaluation}
+                                        onChange={this.handleInputChange}
+                                    />
+                                </Form.Field>
+                            </AccordionSectionWithDivider>
+                        </Accordion>
                     </Form>
 
                     <ExecuteDeploymentModal
@@ -478,22 +521,46 @@ class GenericDeployModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    {showDeployButton && (
+                    {showDeployButton ? (
+                        <Button.Group color="green">
+                            <ApproveButton
+                                onClick={this.showInstallModal}
+                                disabled={loading}
+                                content={t('buttons.install')}
+                                icon="cogs"
+                            />
+                            <Dropdown
+                                className="button icon down"
+                                clearable={false}
+                                floating
+                                options={[
+                                    {
+                                        key: 'deploy',
+                                        icon: 'rocket',
+                                        text: t('buttons.deploy'),
+                                        value: 'Deploy',
+                                        onClick: this.onDeploy
+                                    },
+                                    {
+                                        key: 'install',
+                                        icon: 'cogs',
+                                        text: t('buttons.install'),
+                                        value: 'Install',
+                                        onClick: this.showInstallModal
+                                    }
+                                ]}
+                                trigger={<></>}
+                            />
+                        </Button.Group>
+                    ) : (
                         <ApproveButton
-                            onClick={this.onDeploy}
+                            onClick={this.showInstallModal}
                             disabled={loading}
-                            content={t('buttons.deploy')}
-                            icon="rocket"
-                            className="basic"
+                            content={t('buttons.deployAndInstall')}
+                            icon="cogs"
+                            className="green"
                         />
                     )}
-                    <ApproveButton
-                        onClick={this.showInstallModal}
-                        disabled={loading}
-                        content={t('buttons.deployAndInstall')}
-                        icon="cogs"
-                        className="green"
-                    />
                 </Modal.Actions>
             </Modal>
         );

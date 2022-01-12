@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import Consts from 'app/utils/consts';
+
 describe('Sites Management', () => {
     const widgetId = 'sites';
     const siteWithLocation = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
@@ -99,7 +101,7 @@ describe('Sites Management', () => {
         }
 
         cy.getWidget(widgetId).within(() => {
-            cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', 'default_tenant');
+            cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', Consts.DEFAULT_TENANT);
             cy.get(`${siteRow} > td:nth-child(6)`).should('have.text', '0');
         });
     };
