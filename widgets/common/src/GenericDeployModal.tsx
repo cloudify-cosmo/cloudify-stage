@@ -665,7 +665,7 @@ class GenericDeployModal extends React.Component {
 
                                         <Form.Field error={!!errors.scheduledTime}>
                                             {renderActionCheckbox('schedule', schedule, (event, field) => {
-                                                // setSchedule(field.checked)
+                                                this.setState({ schedule: field.checked });
                                             })}
                                             {schedule && (
                                                 <>
