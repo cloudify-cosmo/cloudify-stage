@@ -1446,6 +1446,38 @@
                     "label": "Number of executions"
                 }
             }
+        },
+        "tenants": {
+            "name": "Tenants management",
+            "description": "This widget shows a list of available tenants, and allow managing them",
+            "createModal": {
+                "header": "Add tenant",
+                "form": {
+                    "errors": {
+                        "emptyTenantName": "Please provide tenant name"
+                    },
+                    "buttons": {
+                        "addTenant": "Add"
+                    },
+                    "fields": {
+                        "tenantName": "Tenant name"
+                    }
+                }
+            },
+            "tenantsTable": {
+                "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
+                "columns": {
+                    "name": "Name",
+                    "groups": "# Groups",
+                    "users": "# Users"
+                },
+                "errors": {
+                    "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+                },
+                "deleteModal": {
+                    "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                }
+            }
         }
     }
 }

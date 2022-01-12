@@ -1,3 +1,5 @@
+import Consts from 'app/utils/consts';
+
 describe('Change Password modal', () => {
     before(cy.activate);
 
@@ -8,7 +10,7 @@ describe('Change Password modal', () => {
         before(() => {
             cy.deleteAllUsersAndTenants()
                 .addUser(username, password, true)
-                .addUserToTenant(username, 'default_tenant', 'manager')
+                .addUserToTenant(username, Consts.DEFAULT_TENANT, 'manager')
                 .usePageMock()
                 .mockLogin(username, password);
             cy.contains(username).click({ force: true });

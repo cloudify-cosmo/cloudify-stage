@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import Consts from 'app/utils/consts';
+
 describe('User management widget', () => {
     const username = 'user_management_test_user';
     const group = 'user_management_test_group';
@@ -81,7 +83,7 @@ describe('User management widget', () => {
         cy.contains("Edit user's tenants").click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();
-            cy.contains('.item', 'default_tenant').click();
+            cy.contains('.item', Consts.DEFAULT_TENANT).click();
             cy.contains('Save').click({ force: true });
         });
         cy.contains('tr', username).contains('.label.blue', '1');
