@@ -250,9 +250,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                         />
                     )}
                     {!hasError &&
-                        (widget.definition &&
-                        !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) &&
-                        !_.get(this.props, 'manager.tenants.isFetching') ? (
+                        (widget.definition && !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) ? (
                             <WidgetDynamicContent
                                 widget={widget}
                                 context={context}

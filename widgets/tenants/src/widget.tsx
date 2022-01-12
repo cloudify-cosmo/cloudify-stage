@@ -2,17 +2,20 @@
 
 import TenantsTable from './TenantsTable';
 
+const widgetId = 'tenants';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
 Stage.defineWidget({
-    id: 'tenants',
-    name: 'Tenants management',
-    description: 'This widget shows a list of available tenants, and allow managing them',
+    id: widgetId,
+    name: t('name'),
+    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     color: 'green',
     fetchUrl: '[manager]/tenants?_get_data=true[params]',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('tenants'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [

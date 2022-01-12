@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import Consts from 'app/utils/consts';
+
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
     const ldapGroupColumnName = 'LDAP group';
@@ -43,7 +45,7 @@ describe('User group management widget', () => {
         cy.contains("Edit group's tenants").click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();
-            cy.contains('.item', 'default_tenant').click();
+            cy.contains('.item', Consts.DEFAULT_TENANT).click();
             cy.contains('Save').click({ force: true });
         });
         cy.contains('tr', groupName).contains('.label.blue', '1');

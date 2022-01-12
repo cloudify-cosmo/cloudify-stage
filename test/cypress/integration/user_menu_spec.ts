@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import Consts from 'app/utils/consts';
 
 describe('User Menu', () => {
     const nonAdminUsername = 'user-menu-test';
     const nonAdminPassword = 'user-menu-test';
+    const newTenantName = 'Darth_Vader';
 
     const verifyOptionIsVisible = (expectedName: string, expectedClasses: string) => {
         cy.contains('.item', expectedName).within(() => {
@@ -20,7 +22,7 @@ describe('User Menu', () => {
         cy.activate()
             .deleteAllUsersAndTenants()
             .addUser(nonAdminUsername, nonAdminPassword, false)
-            .addUserToTenant(nonAdminUsername, 'default_tenant', 'viewer');
+            .addUserToTenant(nonAdminUsername, Consts.DEFAULT_TENANT, 'viewer');
     });
 
     beforeEach(cy.usePageMock);
@@ -47,5 +49,23 @@ describe('User Menu', () => {
         verifyOptionIsNotVisible('License Management');
         verifyOptionIsVisible('Change Password', 'lock');
         verifyOptionIsVisible('Logout', 'log out');
+    });
+
+    it('should fetch tenants on every tenants menu item click', () => {
+        cy.login();
+
+        cy.log('Adding new tenant');
+        cy.addTenant(newTenantName);
+        cy.contains(Consts.DEFAULT_TENANT).click();
+
+        cy.contains('Tenant selection')
+            .parent()
+            .within(() => {
+                cy.log('Showing spinner while fetching data');
+                cy.contains('Loading');
+
+                cy.log('New tenant is visible in the dropdown');
+                cy.contains(newTenantName);
+            });
     });
 });
