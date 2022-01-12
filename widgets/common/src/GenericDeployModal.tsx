@@ -653,12 +653,14 @@ class GenericDeployModal extends React.Component {
                                             this.setState({ dryRun: field.checked })
                                         )}
                                         {renderActionField('queue', queue, (event, field) => {
-                                            // setQueue(field.checked);
-                                            // clearForce();
-                                            // clearDryRun();
-                                            // clearSchedule();
-                                            // clearScheduleTime();
-                                            // clearErrors();
+                                            this.setState({
+                                                force: false,
+                                                dryRun: false,
+                                                schedule: false,
+                                                scheduledTime: '',
+                                                errors: {},
+                                                queue: field.checked
+                                            });
                                         })}
 
                                         <Form.Field error={!!errors.scheduledTime}>
