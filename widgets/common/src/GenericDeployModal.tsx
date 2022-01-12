@@ -646,7 +646,9 @@ class GenericDeployModal extends React.Component {
                                             <Header size="tiny">{tExecute('actionsHeader')}</Header>
                                         </Form.Divider>
 
-                                        {renderActionField('force', force, (event, field) => setForce(field.checked))}
+                                        {renderActionField('force', force, (event, field) =>
+                                            this.setState({ force: field.checked })
+                                        )}
                                         {renderActionField('dryRun', dryRun, (event, field) =>
                                             this.setState({ dryRun: field.checked })
                                         )}
