@@ -95,6 +95,7 @@ class GenericDeployModal extends React.Component {
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
         this.setWorkflowParams = this.setWorkflowParams.bind(this);
+        this.submitExecute = this.submitExecute.bind(this);
     }
 
     componentDidMount() {
@@ -319,6 +320,96 @@ class GenericDeployModal extends React.Component {
         this.setState({ loadingMessage: message });
     }
 
+    submitExecute() {
+        const { toolbox } = this.props;
+        const {
+            workflow,
+            baseWorkflowParams,
+            userWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            deploymentId
+        } = this.state;
+        const { InputsUtils, DeploymentActions } = Stage.Common;
+        const validationErrors = {};
+        const deployments = [];
+        const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+
+        const name = getWorkflowName(workflow);
+        if (!name) {
+            this.setState({ errors: tExecute('errors.missingWorkflow') });
+            return false;
+        }
+
+        const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
+        InputsUtils.addErrors(inputsWithoutValue, validationErrors);
+
+        if (schedule) {
+            const scheduledTimeMoment = moment(scheduledTime);
+            if (
+                !scheduledTimeMoment.isValid() ||
+                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
+                scheduledTimeMoment.isBefore(moment())
+            ) {
+                validationErrors.scheduledTime = tExecute('errors.scheduleTimeError');
+            }
+        }
+
+        if (!_.isEmpty(validationErrors)) {
+            this.setState({ errors: validationErrors });
+            return false;
+        }
+
+        const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
+
+        if (_.isFunction(this.onDeployAndInstall) && this.onDeployAndInstall !== _.noop) {
+            this.onDeployAndInstall(workflowParameters, {
+                force,
+                dryRun,
+                queue,
+                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+            });
+            return true;
+        }
+
+        if (_.isEmpty(deploymentsList)) {
+            this.setState({ errors: tExecute('errors.missingDeployment') });
+            return false;
+        }
+
+        this.setState({ loading: true });
+        const actions = new DeploymentActions(toolbox);
+
+        const executePromises = _.map(deploymentsList, id => {
+            return actions
+                .doExecute(id, name, workflowParameters, {
+                    force,
+                    dryRun,
+                    queue,
+                    scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                })
+                .then(() => {
+                    this.setState({
+                        loading: false,
+                        errors: {}
+                    });
+                    toolbox.getEventBus().trigger('executions:refresh');
+                    // NOTE: pass id to keep the current deployment selected
+                    toolbox.getEventBus().trigger('deployments:refresh', id);
+                });
+        });
+
+        return Promise.all(executePromises).catch(err => {
+            this.setState({
+                loading: false,
+                errors: { errors: err.message }
+            });
+        });
+    }
+
     openInstallModal() {
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
@@ -413,7 +504,6 @@ class GenericDeployModal extends React.Component {
             InputsUtils,
             YamlFileButton,
             DynamicDropdown,
-            ExecuteDeploymentModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
         const {
@@ -691,22 +781,13 @@ class GenericDeployModal extends React.Component {
                             </AccordionSectionWithDivider>
                         </Accordion>
                     </Form>
-
-                    <ExecuteDeploymentModal
-                        open={showInstallModal}
-                        workflow={workflow}
-                        onExecute={this.onDeployAndInstall}
-                        onHide={this.closeInstallModal}
-                        toolbox={toolbox}
-                        hideOptions={!showInstallOptions}
-                    />
                 </Modal.Content>
 
                 <DeployModalActions
                     loading={loading}
                     showDeployButton={showDeployButton}
                     onCancel={this.onCancel}
-                    onInstall={this.openInstallModal}
+                    onInstall={this.submitExecute}
                     onDeploy={this.onDeploy}
                 />
             </Modal>
