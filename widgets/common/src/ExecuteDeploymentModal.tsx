@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import InstallSection from './deployModal/InstallSection';
+
 function isWorkflowName(workflow) {
     return typeof workflow === 'string';
 }
@@ -220,8 +222,7 @@ export default function ExecuteDeploymentModal({
         setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
-    const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
-    const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
+    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
     let headerKey = 'header.';
     if (!_.isEmpty(deploymentsList)) {
@@ -234,6 +235,35 @@ export default function ExecuteDeploymentModal({
         }
     } else {
         headerKey += 'noDeployment';
+    }
+
+    function createChangeEvent(fieldName: string) {
+        return (event, field) => {
+            switch (fieldName) {
+                case 'force':
+                    setForce(field.checked);
+                    break;
+                case 'dryRun':
+                    setDryRun(field.checked);
+                    break;
+                case 'queue':
+                    clearForce();
+                    clearDryRun();
+                    clearSchedule();
+                    clearScheduleTime();
+                    clearErrors();
+                    setQueue(field.checked);
+                    break;
+                case 'schedule':
+                    setSchedule(field.checked);
+                    break;
+                case 'scheduledTime':
+                    setScheduledTime(field.value);
+                    break;
+                default:
+                    break;
+            }
+        };
     }
 
     return (
@@ -251,57 +281,21 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    {!_.isEmpty(baseWorkflowParams) && (
-                        <YamlFileButton
-                            onChange={handleYamlFileChange}
-                            dataType="execution parameters"
-                            fileLoading={isFileLoading}
-                        />
-                    )}
-
-                    <InputsHeader header={t('paramsHeader')} compact />
-
-                    {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
-
-                    {InputsUtils.getInputFields(baseWorkflowParams, handleInputChange, userWorkflowParams, errors)}
-
-                    {!hideOptions && (
-                        <>
-                            <Form.Divider>
-                                <Header size="tiny">{t('actionsHeader')}</Header>
-                            </Form.Divider>
-
-                            {renderActionField('force', force, (event, field) => setForce(field.checked))}
-                            {renderActionField('dryRun', dryRun, (event, field) => setDryRun(field.checked))}
-                            {renderActionField('queue', queue, (event, field) => {
-                                setQueue(field.checked);
-                                clearForce();
-                                clearDryRun();
-                                clearSchedule();
-                                clearScheduleTime();
-                                clearErrors();
-                            })}
-
-                            <Form.Field error={!!errors.scheduledTime}>
-                                {renderActionCheckbox('schedule', schedule, (event, field) =>
-                                    setSchedule(field.checked)
-                                )}
-                                {schedule && (
-                                    <>
-                                        <Divider hidden />
-                                        <DateInput
-                                            name="scheduledTime"
-                                            value={scheduledTime}
-                                            defaultValue=""
-                                            minDate={moment()}
-                                            maxDate={moment().add(1, 'Y')}
-                                            onChange={(event, field) => setScheduledTime(field.value)}
-                                        />
-                                    </>
-                                )}
-                            </Form.Field>
-                        </>
-                    )}
+                    <InstallSection
+                        baseWorkflowParams={baseWorkflowParams}
+                        userWorkflowParams={userWorkflowParams}
+                        handleYamlFileChange={handleYamlFileChange}
+                        handleExecuteInputChange={handleInputChange}
+                        fileLoading={isFileLoading}
+                        errors={errors}
+                        showInstallOptions={!hideOptions}
+                        force={force}
+                        dryRun={dryRun}
+                        queue={queue}
+                        schedule={schedule}
+                        scheduledTime={scheduledTime}
+                        createChangeEvent={createChangeEvent}
+                    />
                 </Form>
             </Modal.Content>
 

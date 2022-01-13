@@ -27,7 +27,7 @@ interface Props {
     errors: any; // TODO: change type
     handleYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    handleExecuteInputChange: () => void;
+    handleExecuteInputChange: (event: any, field: any) => void; // TODO: change type `any`
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
