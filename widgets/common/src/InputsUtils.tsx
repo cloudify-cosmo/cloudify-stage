@@ -381,7 +381,7 @@ class InputsUtils {
         return inputsState[input.name];
     }
 
-    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
+    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes?) {
         return _(inputs)
             .map((input, name) => ({ name, ...input }))
             .reject('hidden')

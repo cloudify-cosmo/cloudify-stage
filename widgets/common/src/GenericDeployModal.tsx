@@ -4,6 +4,7 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
+import InstallSection from './deployModal/InstallSection';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -17,25 +18,6 @@ function getWorkflowName(workflow) {
 }
 
 const tExecute = Stage.Utils.getT('widgets.common.deployments.executeModal');
-
-function renderActionCheckbox(name, checked, onChange) {
-    const { Checkbox } = Stage.Basic.Form;
-    return (
-        <Checkbox
-            name={name}
-            toggle
-            label={tExecute(`actions.${name}.label`)}
-            help={tExecute(`actions.${name}.help`)}
-            checked={checked}
-            onChange={onChange}
-        />
-    );
-}
-
-function renderActionField(name, checked, onChange) {
-    const { Field } = Stage.Basic.Form;
-    return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
-}
 
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
@@ -93,6 +75,7 @@ class GenericDeployModal extends React.Component {
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
         this.setWorkflowParams = this.setWorkflowParams.bind(this);
         this.submitExecute = this.submitExecute.bind(this);
+        this.createChangeEvent = this.createChangeEvent.bind(this);
     }
 
     componentDidMount() {
@@ -416,6 +399,37 @@ class GenericDeployModal extends React.Component {
             });
     }
 
+    createChangeEvent(fieldName: string) {
+        return (event, field) => {
+            switch (fieldName) {
+                case 'force':
+                    this.setState({ force: field.checked });
+                    break;
+                case 'dryRun':
+                    this.setState({ dryRun: field.checked });
+                    break;
+                case 'queue':
+                    this.setState({
+                        force: false,
+                        dryRun: false,
+                        schedule: false,
+                        scheduledTime: '',
+                        errors: {},
+                        queue: field.checked
+                    });
+                    break;
+                case 'schedule':
+                    this.setState({ schedule: field.checked });
+                    break;
+                case 'scheduledTime':
+                    this.setState({ scheduledTime: field.value });
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
+
     isBlueprintSelectable() {
         const { blueprintId } = this.props;
         return _.isEmpty(blueprintId);
@@ -706,70 +720,21 @@ class GenericDeployModal extends React.Component {
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                {!_.isEmpty(baseWorkflowParams) && (
-                                    <YamlFileButton
-                                        onChange={this.handleYamlFileChange}
-                                        dataType="execution parameters"
-                                        fileLoading={fileLoading}
-                                    />
-                                )}
-
-                                <InputsHeader header={tExecute('paramsHeader')} compact />
-
-                                {_.isEmpty(baseWorkflowParams) && <Message content={tExecute('noParams')} />}
-
-                                {InputsUtils.getInputFields(
-                                    baseWorkflowParams,
-                                    this.handleExecuteInputChange,
-                                    userWorkflowParams,
-                                    errors
-                                )}
-
-                                {showInstallOptions && (
-                                    <>
-                                        <Form.Divider>
-                                            <Header size="tiny">{tExecute('actionsHeader')}</Header>
-                                        </Form.Divider>
-
-                                        {renderActionField('force', force, (event, field) =>
-                                            this.setState({ force: field.checked })
-                                        )}
-                                        {renderActionField('dryRun', dryRun, (event, field) =>
-                                            this.setState({ dryRun: field.checked })
-                                        )}
-                                        {renderActionField('queue', queue, (event, field) => {
-                                            this.setState({
-                                                force: false,
-                                                dryRun: false,
-                                                schedule: false,
-                                                scheduledTime: '',
-                                                errors: {},
-                                                queue: field.checked
-                                            });
-                                        })}
-
-                                        <Form.Field error={!!errors.scheduledTime}>
-                                            {renderActionCheckbox('schedule', schedule, (event, field) => {
-                                                this.setState({ schedule: field.checked });
-                                            })}
-                                            {schedule && (
-                                                <>
-                                                    <Divider hidden />
-                                                    <DateInput
-                                                        name="scheduledTime"
-                                                        value={scheduledTime}
-                                                        defaultValue=""
-                                                        minDate={moment()}
-                                                        maxDate={moment().add(1, 'Y')}
-                                                        onChange={(event, field) =>
-                                                            this.setState({ scheduledTime: field.value })
-                                                        }
-                                                    />
-                                                </>
-                                            )}
-                                        </Form.Field>
-                                    </>
-                                )}
+                                <InstallSection
+                                    baseWorkflowParams={baseWorkflowParams}
+                                    userWorkflowParams={userWorkflowParams}
+                                    handleYamlFileChange={this.handleYamlFileChange}
+                                    handleExecuteInputChange={this.handleExecuteInputChange}
+                                    fileLoading={fileLoading}
+                                    errors={errors}
+                                    showInstallOptions={showInstallOptions}
+                                    force={force}
+                                    dryRun={dryRun}
+                                    queue={queue}
+                                    schedule={schedule}
+                                    scheduledTime={scheduledTime}
+                                    createChangeEvent={this.createChangeEvent}
+                                />
                             </AccordionSectionWithDivider>
                         </Accordion>
                     </Form>
