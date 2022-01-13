@@ -58,7 +58,6 @@ class GenericDeployModal extends React.Component {
         loading: false,
         loadingMessage: '',
         runtimeOnlyEvaluation: false,
-        showInstallModal: false,
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
@@ -90,8 +89,6 @@ class GenericDeployModal extends React.Component {
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
 
-        this.closeInstallModal = this.closeInstallModal.bind(this);
-        this.openInstallModal = this.openInstallModal.bind(this);
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
         this.setWorkflowParams = this.setWorkflowParams.bind(this);
@@ -321,106 +318,102 @@ class GenericDeployModal extends React.Component {
     }
 
     submitExecute() {
-        const { toolbox } = this.props;
-        const {
-            workflow,
-            baseWorkflowParams,
-            userWorkflowParams,
-            schedule,
-            scheduledTime,
-            force,
-            dryRun,
-            queue,
-            deploymentId
-        } = this.state;
-        const { InputsUtils, DeploymentActions } = Stage.Common;
-        const validationErrors = {};
-        const deployments = [];
-        const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+        this.setState({ loading: true, errors: {} });
+        return this.validateInputs()
+            .then(() => {
+                this.setState({ loading: false });
 
-        const name = getWorkflowName(workflow);
-        if (!name) {
-            this.setState({ errors: tExecute('errors.missingWorkflow') });
-            return false;
-        }
-
-        const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
-        InputsUtils.addErrors(inputsWithoutValue, validationErrors);
-
-        if (schedule) {
-            const scheduledTimeMoment = moment(scheduledTime);
-            if (
-                !scheduledTimeMoment.isValid() ||
-                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
-                scheduledTimeMoment.isBefore(moment())
-            ) {
-                validationErrors.scheduledTime = tExecute('errors.scheduleTimeError');
-            }
-        }
-
-        if (!_.isEmpty(validationErrors)) {
-            this.setState({ errors: validationErrors });
-            return false;
-        }
-
-        const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
-
-        if (_.isFunction(this.onDeployAndInstall) && this.onDeployAndInstall !== _.noop) {
-            this.onDeployAndInstall(workflowParameters, {
-                force,
-                dryRun,
-                queue,
-                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-            });
-            return true;
-        }
-
-        if (_.isEmpty(deploymentsList)) {
-            this.setState({ errors: tExecute('errors.missingDeployment') });
-            return false;
-        }
-
-        this.setState({ loading: true });
-        const actions = new DeploymentActions(toolbox);
-
-        const executePromises = _.map(deploymentsList, id => {
-            return actions
-                .doExecute(id, name, workflowParameters, {
+                const { toolbox } = this.props;
+                const {
+                    workflow,
+                    baseWorkflowParams,
+                    userWorkflowParams,
+                    schedule,
+                    scheduledTime,
                     force,
                     dryRun,
                     queue,
-                    scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-                })
-                .then(() => {
+                    deploymentId
+                } = this.state;
+                const { InputsUtils, DeploymentActions } = Stage.Common;
+                const validationErrors = {};
+                const deployments = [];
+                const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+
+                const name = getWorkflowName(workflow);
+                if (!name) {
+                    this.setState({ errors: tExecute('errors.missingWorkflow') });
+                    return false;
+                }
+
+                const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
+                InputsUtils.addErrors(inputsWithoutValue, validationErrors);
+
+                if (schedule) {
+                    const scheduledTimeMoment = moment(scheduledTime);
+                    if (
+                        !scheduledTimeMoment.isValid() ||
+                        !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
+                        scheduledTimeMoment.isBefore(moment())
+                    ) {
+                        validationErrors.scheduledTime = tExecute('errors.scheduleTimeError');
+                    }
+                }
+
+                if (!_.isEmpty(validationErrors)) {
+                    this.setState({ errors: validationErrors });
+                    return false;
+                }
+
+                const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
+
+                if (_.isFunction(this.onDeployAndInstall) && this.onDeployAndInstall !== _.noop) {
+                    this.onDeployAndInstall(workflowParameters, {
+                        force,
+                        dryRun,
+                        queue,
+                        scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                    });
+                    return true;
+                }
+
+                if (_.isEmpty(deploymentsList)) {
+                    this.setState({ errors: tExecute('errors.missingDeployment') });
+                    return false;
+                }
+
+                this.setState({ loading: true });
+                const actions = new DeploymentActions(toolbox);
+
+                const executePromises = _.map(deploymentsList, id => {
+                    return actions
+                        .doExecute(id, name, workflowParameters, {
+                            force,
+                            dryRun,
+                            queue,
+                            scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                        })
+                        .then(() => {
+                            this.setState({
+                                loading: false,
+                                errors: {}
+                            });
+                            toolbox.getEventBus().trigger('executions:refresh');
+                            // NOTE: pass id to keep the current deployment selected
+                            toolbox.getEventBus().trigger('deployments:refresh', id);
+                        });
+                });
+
+                return Promise.all(executePromises).catch(err => {
                     this.setState({
                         loading: false,
-                        errors: {}
+                        errors: { errors: err.message }
                     });
-                    toolbox.getEventBus().trigger('executions:refresh');
-                    // NOTE: pass id to keep the current deployment selected
-                    toolbox.getEventBus().trigger('deployments:refresh', id);
                 });
-        });
-
-        return Promise.all(executePromises).catch(err => {
-            this.setState({
-                loading: false,
-                errors: { errors: err.message }
-            });
-        });
-    }
-
-    openInstallModal() {
-        this.setState({ loading: true, errors: {} });
-        return this.validateInputs()
-            .then(() => this.setState({ loading: false, showInstallModal: true }))
+            })
             .catch(errors => {
                 this.setState({ loading: false, errors });
             });
-    }
-
-    closeInstallModal() {
-        this.setState({ showInstallModal: false });
     }
 
     isBlueprintSelectable() {
@@ -531,7 +524,6 @@ class GenericDeployModal extends React.Component {
             loading,
             loadingMessage,
             runtimeOnlyEvaluation,
-            showInstallModal,
             skipPluginsValidation,
             siteName,
             visibility,
