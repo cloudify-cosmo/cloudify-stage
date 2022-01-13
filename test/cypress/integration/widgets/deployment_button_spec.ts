@@ -98,10 +98,6 @@ describe('Create Deployment Button widget', () => {
             }
         });
 
-        if (install) {
-            cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
-        }
-
         waitForDeployBlueprintModal(install);
     };
 
