@@ -30,13 +30,28 @@ function mockSamlConfig() {
 
 describe('/auth endpoint', () => {
     describe('/login handles', () => {
-        it('valid token', () => {
+        it('valid token via https', () => {
+            (<jest.Mock>getToken).mockResolvedValue({ value: 'xyz', role: 'default' });
+            return request(app)
+                .post('/console/auth/login')
+                .set('X-Scheme', 'http,https')
+                .expect(200)
+                .then(response => {
+                    expect(response.body).toStrictEqual({ role: 'default' });
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; Secure; SameSite=Strict']);
+                });
+        });
+
+        it('valid token via http', () => {
             (<jest.Mock>getToken).mockResolvedValue({ value: 'xyz', role: 'default' });
             return request(app)
                 .post('/console/auth/login')
                 .expect(200)
                 .then(response => {
                     expect(response.body).toStrictEqual({ role: 'default' });
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; SameSite=Strict']);
                 });
         });
 
