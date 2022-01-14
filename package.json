@@ -140,7 +140,7 @@
   },
   "// optionalDependencies": "NOTE: Development dependencies NOT required to build the package",
   "optionalDependencies": {
-    "@cypress/code-coverage": "^3.9.10",
+    "@cypress/code-coverage": "^3.9.12",
     "@cypress/react": "^5.10.0",
     "@cypress/webpack-dev-server": "^1.6.0",
     "@size-limit/preset-app": "^4.5.5",
