@@ -366,26 +366,6 @@ export default function TerraformModal({
                     <Accordion>
                         <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
-                            <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
-                                <Form.Input
-                                    value={templateUrl}
-                                    onChange={setTemplateUrl}
-                                    onBlur={handleTemplateUrlBlur}
-                                />
-                            </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
-                                <Form.Dropdown
-                                    selection
-                                    options={templateModules.map(moduleLocation => ({
-                                        text: moduleLocation,
-                                        value: moduleLocation
-                                    }))}
-                                    value={resourceLocation}
-                                    onChange={setResourceLocation}
-                                    clearable={false}
-                                    disabled={isEmpty(templateModules)}
-                                />
-                            </UnsafelyTypedFormField>
                             <UnsafelyTypedFormGroup widths="equal">
                                 <UnsafelyTypedFormField>
                                     <Form.Checkbox
@@ -417,6 +397,26 @@ export default function TerraformModal({
                                     />
                                 </UnsafelyTypedFormField>
                             </UnsafelyTypedFormGroup>
+                            <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
+                                <Form.Input
+                                    value={templateUrl}
+                                    onChange={setTemplateUrl}
+                                    onBlur={handleTemplateUrlBlur}
+                                />
+                            </UnsafelyTypedFormField>
+                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
+                                <Form.Dropdown
+                                    selection
+                                    options={templateModules.map(moduleLocation => ({
+                                        text: moduleLocation,
+                                        value: moduleLocation
+                                    }))}
+                                    value={resourceLocation}
+                                    onChange={setResourceLocation}
+                                    clearable={false}
+                                    disabled={isEmpty(templateModules)}
+                                />
+                            </UnsafelyTypedFormField>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
