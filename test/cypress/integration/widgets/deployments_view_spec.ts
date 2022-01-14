@@ -1216,7 +1216,7 @@ describe('Deployments View widget', () => {
                 cy.get('[aria-label=Add]').click();
                 cy.get('a.label').should('be.visible');
 
-                cy.contains('Deploy & Install').click();
+                cy.contains('Install').click();
             });
 
             cy.contains('.modal button', 'Execute').click();
