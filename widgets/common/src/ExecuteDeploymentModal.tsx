@@ -11,25 +11,6 @@ function getWorkflowName(workflow) {
 
 const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
 
-function renderActionCheckbox(name, checked, onChange) {
-    const { Checkbox } = Stage.Basic.Form;
-    return (
-        <Checkbox
-            name={name}
-            toggle
-            label={t(`actions.${name}.label`)}
-            help={t(`actions.${name}.help`)}
-            checked={checked}
-            onChange={onChange}
-        />
-    );
-}
-
-function renderActionField(name, checked, onChange) {
-    const { Field } = Stage.Basic.Form;
-    return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
-}
-
 export default function ExecuteDeploymentModal({
     deploymentId,
     deploymentName,
