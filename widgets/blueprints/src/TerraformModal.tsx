@@ -157,7 +157,7 @@ export default function TerraformModal({
         }
 
         function validateResourceLocation() {
-            if (templateModules.length && !resourceLocation) {
+            if (!resourceLocation) {
                 formErrors.resource = tError('noResourceLocation');
             }
         }
