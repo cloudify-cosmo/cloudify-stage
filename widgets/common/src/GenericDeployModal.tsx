@@ -19,16 +19,15 @@ function getWorkflowName(workflow) {
 
 const tExecute = Stage.Utils.getT('widgets.common.deployments.executeModal');
 
+enum DEPLOYMENT_SECTIONS {
+    deploymentInputs,
+    deploymentMetadata,
+    executionParameters,
+    advanced,
+    install
+}
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
-
-    static DEPLOYMENT_SECTIONS = {
-        deploymentInputs: 0,
-        deploymentMetadata: 1,
-        executionParameters: 2,
-        advanced: 3,
-        install: 4
-    };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -223,7 +222,6 @@ class GenericDeployModal extends React.Component {
         };
 
         return stepPromise.catch(errors => {
-            const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
             const { activeSection, deploymentInputs } = this.state;
             const errorKeys = Object.keys(errors);
             const deploymentInputKeys = Object.keys(deploymentInputs);
@@ -550,7 +548,6 @@ class GenericDeployModal extends React.Component {
             scheduledTime
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
-        const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
