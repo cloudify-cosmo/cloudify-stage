@@ -18,6 +18,17 @@ describe('User Menu', () => {
         cy.contains(optionName).should('not.exist');
     };
 
+    const delayTenantsRefresh = (delayTime: number) => {
+        cy.intercept(
+            { pathname: 'console/sp/tenants', query: { _include: 'name', _get_all_results: 'true' } },
+            request => {
+                request.on('response', response => {
+                    response.setDelay(delayTime);
+                });
+            }
+        );
+    };
+
     before(() => {
         cy.activate()
             .deleteAllUsersAndTenants()
@@ -56,6 +67,7 @@ describe('User Menu', () => {
 
         cy.log('Adding new tenant');
         cy.addTenant(newTenantName);
+        delayTenantsRefresh(250);
         cy.contains(Consts.DEFAULT_TENANT).click();
 
         cy.contains('Tenant selection')
