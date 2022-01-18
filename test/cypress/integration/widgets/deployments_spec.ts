@@ -1,4 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
+import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
@@ -176,7 +176,7 @@ describe('Deployments widget', () => {
 
         cy.wait('@updateDeployment');
         cy.get('.updateDetailsModal').should('not.exist');
-        verifyExecutionHasEnded('update');
+        verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
         cy.contains('div.row', deploymentId)
             .get('div.column:nth-child(3) h5:nth-child(2)')
             .should('contain.text', 'Updated');
