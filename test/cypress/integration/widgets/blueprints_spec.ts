@@ -441,7 +441,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from Terraform template modal and', () => {
+    describe('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
@@ -451,11 +451,14 @@ describe('Blueprints widget', () => {
 
         function openTerraformModal() {
             cy.contains('Upload').click();
-            cy.contains('Upload from Terraform template').click();
+            cy.contains('Upload from Terraform module').click();
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.getField('URL to your Terraform template (zip or git)').find('input').type(templateUrl).blur();
+            cy.getField('URL to a zip archive that contains the Terraform module')
+                .find('input')
+                .type(templateUrl)
+                .blur();
             cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
         }
 
@@ -576,7 +579,7 @@ describe('Blueprints widget', () => {
 
             openTerraformModal();
 
-            cy.getField('URL to your Terraform template (zip or git)')
+            cy.getField('URL to a zip archive that contains the Terraform module')
                 .find('input')
                 .type(singleModuleTerraformTemplateUrl)
                 .blur();
