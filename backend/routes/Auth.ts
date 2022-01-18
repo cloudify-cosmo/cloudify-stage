@@ -16,7 +16,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 function getCookieOptions(req: Request) {
-    const httpsUsed = req.header('X-Scheme')?.includes('https') || req.header('X-Force-Secure') === 'true';
+    const httpsUsed = req.header('X-Scheme') === 'https' || req.header('X-Force-Secure') === 'true';
     return { sameSite: 'strict', secure: httpsUsed } as CookieOptions;
 }
 
