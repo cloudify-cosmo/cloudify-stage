@@ -6,22 +6,8 @@ description: >
 imports:
   - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
   - plugin:cloudify-terraform-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
-  terraform_version:
-    type: string
-    default: "<%= terraformVersion %>"
-
-  module_source:
-    type: string
-    required: true
-    default: "<%= terraformTemplate %>"
-
-  terraform_template_location:
-    type: string
-    default: "<%= resourceLocation %>"
-
 <%- include('inputs', { variables: [...variables, ...environmentVariables] }) -%>
 
 node_templates:
@@ -36,8 +22,10 @@ node_templates:
     properties:
       resource_config:
         source:
-          location: { get_input: module_source }
-        source_path: { get_input: terraform_template_location }
+          location: "<%= terraformTemplate %>"<% if (urlAuthentication) { %>
+          username: { get_secret: "<%= blueprintName %>.username" }
+          password: { get_secret: "<%= blueprintName %>.password" }<% } %>
+        source_path: "<%= resourceLocation %>"
 <%- include('variables', { name: 'variables', variables: variables }) -%>
 <%- include('variables', { name: 'environment_variables', variables: environmentVariables }) -%>
     relationships:
