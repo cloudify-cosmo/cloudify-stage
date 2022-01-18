@@ -1,9 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import _ from 'lodash';
+import type { CookieOptions, Request } from 'express';
 
 import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, ROLE_COOKIE_NAME, TOKEN_COOKIE_NAME, USERNAME_COOKIE_NAME } from '../consts';
@@ -16,13 +15,13 @@ const logger = getLogger('Auth');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-function getCookieOptions(req) {
+function getCookieOptions(req: Request) {
     const httpsUsed = req.header('X-Scheme')?.includes('https') || req.header('X-Force-Secure') === 'true';
-    return { sameSite: 'strict', secure: httpsUsed };
+    return { sameSite: 'strict', secure: httpsUsed } as CookieOptions;
 }
 
 router.post('/login', (req, res) =>
-    AuthHandler.getToken(req.headers.authorization)
+    AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
             const cookieOptions = getCookieOptions(req);
             res.cookie(TOKEN_COOKIE_NAME, token.value, cookieOptions);
@@ -49,7 +48,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
             .then(token => {
                 const cookieOptions = getCookieOptions(req);
                 res.cookie(TOKEN_COOKIE_NAME, token.value, cookieOptions);
-                res.cookie(USERNAME_COOKIE_NAME, req.user.username, cookieOptions);
+                res.cookie(USERNAME_COOKIE_NAME, req.user!.username, cookieOptions);
                 res.cookie(ROLE_COOKIE_NAME, token.role, cookieOptions);
                 res.redirect(CONTEXT_PATH);
             })
@@ -61,7 +60,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
 });
 
 router.get('/manager', (req, res) => {
-    const token = req.headers['authentication-token'];
+    const token = req.headers['authentication-token'] as string;
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
     if (isSamlEnabled) {
         res.clearCookie(USERNAME_COOKIE_NAME);
@@ -90,20 +89,20 @@ router.get('/manager', (req, res) => {
 
 router.get('/user', passport.authenticate('token', { session: false }), (req, res) => {
     res.send({
-        username: req.user.username,
-        role: req.user.role,
-        groupSystemRoles: req.user.group_system_roles,
-        tenantsRoles: req.user.tenants
+        username: req.user!.username,
+        role: req.user!.role,
+        groupSystemRoles: req.user!.group_system_roles,
+        tenantsRoles: req.user!.tenants
     });
 });
 
-router.post('/logout', passport.authenticate('token', { session: false }), (req, res) => {
+router.post('/logout', passport.authenticate('token', { session: false }), (_req, res) => {
     res.clearCookie(TOKEN_COOKIE_NAME);
     res.end();
 });
 
 router.get('/RBAC', passport.authenticate('token', { session: false }), (req, res) => {
-    AuthHandler.getRBAC(req.headers['authentication-token'])
+    AuthHandler.getRBAC(req.headers['authentication-token'] as string)
         .then(res.send)
         .catch(err => {
             logger.error(err);

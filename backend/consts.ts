@@ -18,7 +18,7 @@ export const USERNAME_COOKIE_NAME = 'USERNAME';
 export const EDITION = {
     PREMIUM: 'premium',
     COMMUNITY: 'community'
-};
+} as const;
 
 export const SERVER_HOST = 'localhost';
 export const SERVER_PORT = 8088;
