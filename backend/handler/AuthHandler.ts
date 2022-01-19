@@ -79,7 +79,7 @@ export function getTokenViaSamlResponse(samlResponse: string) {
     );
 }
 
-export function getAndCacheConfig(token: string | undefined) {
+export function getAndCacheConfig(token?: string) {
     return jsonRequest<ConfigResponse>('GET', '/config', {
         'Authentication-Token': token
     }).then(config => {
