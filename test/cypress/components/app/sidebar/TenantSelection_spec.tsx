@@ -1,13 +1,27 @@
 import React from 'react';
+import type { RouteMatcher } from 'cypress/types/net-stubbing';
 
 import '../../initAppContext';
 import TenantSelection from 'app/components/sidebar/TenantSelection';
 import { mountWithProvider } from '../../utils';
 
+const tenantListRouteMatcher: RouteMatcher = {
+    pathname: '/console/sp/tenants',
+    query: { _include: 'name', _get_all_results: 'true' }
+};
+
+const fetchTenants = (tenants: any[]) => {
+    cy.intercept(tenantListRouteMatcher, {
+        items: tenants
+    });
+};
+
 describe('TenantSelection', () => {
     it('renders loader when fetching tenants', () => {
-        mountWithProvider(<TenantSelection />);
+        mountWithProvider(<TenantSelection />, { manager: { tenants: { items: [] } } });
+        fetchTenants([]);
 
+        cy.contains('No Tenants').click();
         cy.get('div.loader').should('be.visible');
     });
 
@@ -58,8 +72,10 @@ describe('TenantSelection', () => {
 
     it('changes active tenant on dropdown item click', () => {
         const { store } = mountWithProvider(<TenantSelection />, {
-            manager: { tenants: { selected: 'abc', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
+            manager: { tenants: { selected: 'abc', items: [] } }
         });
+
+        fetchTenants([{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]);
 
         cy.contains('abc').click();
         cy.contains('aaa').click();
