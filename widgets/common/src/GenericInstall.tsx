@@ -121,4 +121,4 @@ const GenericInstall: FunctionComponent<Props> = ({
     );
 };
 
-export default GenericInstall;
+export default React.memo(GenericInstall);
