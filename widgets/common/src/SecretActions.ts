@@ -3,7 +3,7 @@ export type Visibility = 'private' | 'tenant' | 'global';
 export default class SecretActions {
     private toolbox;
 
-    constructor(toolbox: Stage.Types.Toolbox) {
+    constructor(toolbox: Stage.Types.WidgetlessToolbox) {
         this.toolbox = toolbox;
     }
 
