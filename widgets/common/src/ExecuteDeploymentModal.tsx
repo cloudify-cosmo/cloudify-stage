@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
-import GenericInstall from './deployModal/GenericInstall';
+import GenericInstall from './GenericInstall';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
