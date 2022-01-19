@@ -2,7 +2,14 @@ import type { FunctionComponent } from 'react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
 
-function renderActionCheckbox(name: string, checked: boolean, onChange: (event: any, field: any) => void) {
+type Field = {
+    name: string;
+    value: unknown;
+    type: string;
+    checked?: string;
+};
+
+function renderActionCheckbox(name: string, checked: boolean, onChange: (event: Event, field: Field) => void) {
     const { Checkbox } = Stage.Basic.Form;
     return (
         <Checkbox
@@ -20,13 +27,6 @@ function renderActionField(name: string, checked: boolean, onChange: (event: Eve
     const { Field } = Stage.Basic.Form;
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
-
-type Field = {
-    name: string;
-    value: unknown;
-    type: string;
-    checked?: string;
-};
 
 interface Props {
     baseWorkflowParams: { [key: string]: any }; // TODO: change type
