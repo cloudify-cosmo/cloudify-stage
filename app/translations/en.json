@@ -880,7 +880,7 @@
                         "sourceMissing": "Please provide environment variable source",
                         "valueMissing": "Please provide environment variable value",
                         "valueInvalid": "Please provide valid environment variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
-                        "staticValueInvalid": "Please provide valid environment variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\".  If special characters or complex structures are needed please provide this value inside a secret"
+                        "staticValueInvalid": "Please provide valid environment variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\". If special characters or complex structures are needed please provide this value inside a secret"
                     },
                     "output": {
                         "nameMissing": "Please provide output name",
