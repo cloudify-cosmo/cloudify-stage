@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
-import InstallSection from './deployModal/InstallSection';
+import GenericInstall from './deployModal/GenericInstall';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -198,7 +198,7 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <InstallSection
+                    <GenericInstall
                         baseWorkflowParams={baseWorkflowParams}
                         userWorkflowParams={userWorkflowParams}
                         handleYamlFileChange={handleYamlFileChange}
