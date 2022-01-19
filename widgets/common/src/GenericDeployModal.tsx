@@ -309,9 +309,9 @@ class GenericDeployModal extends React.Component {
                     queue,
                     deploymentId,
                     setErrors: errors => this.setState({ errors }),
-                    clearLoading: () => this.setState({ loading: false }),
+                    unsetLoading: () => this.setState({ loading: false }),
                     clearErrors: () => this.setState({ errors: {} }),
-                    onDeployAndInstall: this.onDeployAndInstall
+                    onExecute: this.onDeployAndInstall
                 })
             )
             .catch(errors => {

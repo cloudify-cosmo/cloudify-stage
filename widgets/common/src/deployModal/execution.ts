@@ -31,9 +31,10 @@ export const createInstallFunction = ({
     queue,
     deploymentId,
     setErrors,
-    clearLoading,
+    unsetLoading,
     clearErrors,
-    onDeployAndInstall
+    onExecute,
+    onHide = () => {}
 }: {
     setLoading: () => void;
     toolbox: any;
@@ -47,9 +48,10 @@ export const createInstallFunction = ({
     queue: boolean;
     deploymentId: string;
     setErrors: (errors: Errors) => void;
-    clearLoading: () => void;
+    unsetLoading: () => void;
     clearErrors: () => void;
-    onDeployAndInstall: () => void;
+    onExecute: () => void;
+    onHide: () => void;
 }) => () => {
     setLoading();
 
@@ -88,13 +90,14 @@ export const createInstallFunction = ({
 
     const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
 
-    if (_.isFunction(onDeployAndInstall) && onDeployAndInstall !== _.noop) {
-        onDeployAndInstall(workflowParameters, {
+    if (_.isFunction(onExecute) && onExecute !== _.noop) {
+        onExecute(workflowParameters, {
             force,
             dryRun,
             queue,
             scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
         });
+        onHide();
         return true;
     }
 
@@ -115,8 +118,9 @@ export const createInstallFunction = ({
                 scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
             })
             .then(() => {
-                clearLoading();
+                unsetLoading();
                 clearErrors();
+                onHide();
                 toolbox.getEventBus().trigger('executions:refresh');
                 // NOTE: pass id to keep the current deployment selected
                 toolbox.getEventBus().trigger('deployments:refresh', id);
@@ -124,7 +128,7 @@ export const createInstallFunction = ({
     });
 
     return Promise.all(executePromises).catch(err => {
-        clearLoading();
+        unsetLoading();
         setErrors(err.message);
     });
 };
