@@ -59,7 +59,7 @@ interface Props {
     createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
-const InstallSection: FunctionComponent<Props> = ({
+const GenericInstall: FunctionComponent<Props> = ({
     baseWorkflowParams,
     userWorkflowParams,
     handleYamlFileChange,
@@ -121,4 +121,4 @@ const InstallSection: FunctionComponent<Props> = ({
     );
 };
 
-export default InstallSection;
+export default GenericInstall;
