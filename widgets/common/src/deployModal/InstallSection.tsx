@@ -21,20 +21,27 @@ function renderActionField(name: string, checked: boolean, onChange: (event: any
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
 
+type Field = {
+    name: string;
+    value: unknown;
+    type: string;
+    checked?: string;
+};
+
 interface Props {
-    baseWorkflowParams: any; // TODO: change type
-    userWorkflowParams: any; // TODO: change type
+    baseWorkflowParams: { [key: string]: any }; // TODO: change type
+    userWorkflowParams: { [key: string]: any }; // TODO: change type
     errors: any; // TODO: change type
     handleYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    handleExecuteInputChange: (event: any, field: any) => void; // TODO: change type `any`
+    handleExecuteInputChange: (event: Event, field: Field) => void;
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    createChangeEvent: (fieldName: string) => (event: any, field: any) => void;
+    createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
 const InstallSection: FunctionComponent<Props> = ({
