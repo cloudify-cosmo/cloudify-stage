@@ -476,6 +476,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
+                cy.contains('Please provide resource location').should('be.visible');
                 cy.contains('Please provide variable name').should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
@@ -483,7 +484,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.contains('.segment', 'Variables').within(() => {
                     selectVariableSource('Secret');
@@ -495,7 +496,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide variable value').should('be.visible');
                 cy.contains('Please provide environment variable value').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
@@ -520,7 +521,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide valid environment variable value').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
             });
         });
 
