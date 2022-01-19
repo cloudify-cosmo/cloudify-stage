@@ -6,22 +6,8 @@ description: >
 imports:
   - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
   - plugin:cloudify-terraform-plugin
-  - plugin:cloudify-utilities-plugin?version= >=1.22.1
 
 inputs:
-  terraform_version:
-    type: string
-    default: "1.2.2"
-
-  module_source:
-    type: string
-    required: true
-    default: "http://host/path/template.zip"
-
-  terraform_template_location:
-    type: string
-    default: "/ft_folder/template"
-
   inputA:
     type: string
     default: ""
@@ -41,8 +27,10 @@ node_templates:
     properties:
       resource_config:
         source:
-          location: { get_input: module_source }
-        source_path: { get_input: terraform_template_location }
+          location: "http://host/path/template.zip"
+          username: { get_secret: "bpName.username" }
+          password: { get_secret: "bpName.password" }
+        source_path: "/ft_folder/template"
         variables:
           variableA: { get_secret: secretA }
           variableB: { get_input: inputA }
