@@ -736,7 +736,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
-                    "uploadFromTerraformTemplate": "Upload from Terraform template",
+                    "uploadFromTerraformTemplate": "Upload from Terraform module",
                     "generateInComposer": "Generate in the Composer"
                 }
             },
@@ -820,7 +820,7 @@
                 "blueprintName": "Blueprint name",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "URL to your Terraform template (zip or git)",
+                "template": "URL to a zip archive that contains the Terraform module",
                 "resourceLocation": "Terraform folder in the archive",
                 "urlAuthentication": "URL authentication",
                 "username": "Username",
