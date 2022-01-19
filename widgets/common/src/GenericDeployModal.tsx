@@ -5,18 +5,10 @@ import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
 import InstallSection from './deployModal/InstallSection';
+import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
-
-function isWorkflowName(workflow) {
-    return typeof workflow === 'string';
-}
-
-function getWorkflowName(workflow) {
-    return isWorkflowName(workflow) ? workflow : workflow.name;
-}
-
 const tExecute = Stage.Utils.getT('widgets.common.deployments.execute');
 
 enum DEPLOYMENT_SECTIONS {
@@ -289,13 +281,24 @@ class GenericDeployModal extends React.Component {
     }
 
     submitExecute() {
+        const { toolbox } = this.props;
+        const {
+            workflow,
+            baseWorkflowParams,
+            userWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            deploymentId
+        } = this.state;
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
-            .then(() => {
-                this.setState({ loading: false });
-
-                const { toolbox } = this.props;
-                const {
+            .then(
+                createInstallFunction({
+                    setLoading: () => this.setState({ loading: false }),
+                    toolbox,
                     workflow,
                     baseWorkflowParams,
                     userWorkflowParams,
@@ -304,84 +307,13 @@ class GenericDeployModal extends React.Component {
                     force,
                     dryRun,
                     queue,
-                    deploymentId
-                } = this.state;
-                const { InputsUtils, DeploymentActions } = Stage.Common;
-                const validationErrors = {};
-                const deployments = [];
-                const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
-
-                const name = getWorkflowName(workflow);
-                if (!name) {
-                    this.setState({ errors: tExecute('errors.missingWorkflow') });
-                    return false;
-                }
-
-                const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
-                InputsUtils.addErrors(inputsWithoutValue, validationErrors);
-
-                if (schedule) {
-                    const scheduledTimeMoment = moment(scheduledTime);
-                    if (
-                        !scheduledTimeMoment.isValid() ||
-                        !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
-                        scheduledTimeMoment.isBefore(moment())
-                    ) {
-                        validationErrors.scheduledTime = tExecute('errors.scheduleTimeError');
-                    }
-                }
-
-                if (!_.isEmpty(validationErrors)) {
-                    this.setState({ errors: validationErrors });
-                    return false;
-                }
-
-                const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
-
-                if (_.isFunction(this.onDeployAndInstall) && this.onDeployAndInstall !== _.noop) {
-                    this.onDeployAndInstall(workflowParameters, {
-                        force,
-                        dryRun,
-                        queue,
-                        scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-                    });
-                    return true;
-                }
-
-                if (_.isEmpty(deploymentsList)) {
-                    this.setState({ errors: tExecute('errors.missingDeployment') });
-                    return false;
-                }
-
-                this.setState({ loading: true });
-                const actions = new DeploymentActions(toolbox);
-
-                const executePromises = _.map(deploymentsList, id => {
-                    return actions
-                        .doExecute(id, name, workflowParameters, {
-                            force,
-                            dryRun,
-                            queue,
-                            scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-                        })
-                        .then(() => {
-                            this.setState({
-                                loading: false,
-                                errors: {}
-                            });
-                            toolbox.getEventBus().trigger('executions:refresh');
-                            // NOTE: pass id to keep the current deployment selected
-                            toolbox.getEventBus().trigger('deployments:refresh', id);
-                        });
-                });
-
-                return Promise.all(executePromises).catch(err => {
-                    this.setState({
-                        loading: false,
-                        errors: { errors: err.message }
-                    });
-                });
-            })
+                    deploymentId,
+                    setErrors: errors => this.setState({ errors }),
+                    clearLoading: () => this.setState({ loading: false }),
+                    clearErrors: () => this.setState({ errors: {} }),
+                    onDeployAndInstall: this.onDeployAndInstall
+                })
+            )
             .catch(errors => {
                 this.setState({ loading: false, errors });
             });
