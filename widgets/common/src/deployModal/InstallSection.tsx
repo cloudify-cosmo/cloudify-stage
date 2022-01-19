@@ -16,7 +16,7 @@ function renderActionCheckbox(name: string, checked: boolean, onChange: (event: 
     );
 }
 
-function renderActionField(name: string, checked: boolean, onChange: (event: any, field: any) => void) {
+function renderActionField(name: string, checked: boolean, onChange: (event: Event, field: Field) => void) {
     const { Field } = Stage.Basic.Form;
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
