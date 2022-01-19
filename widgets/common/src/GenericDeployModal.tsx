@@ -391,26 +391,38 @@ class GenericDeployModal extends React.Component {
         return (event, field) => {
             switch (fieldName) {
                 case 'force':
-                    this.setState({ force: field.checked });
+                    this.setState({
+                        errors: {},
+                        queue: false,
+                        force: field.checked
+                    });
                     break;
                 case 'dryRun':
-                    this.setState({ dryRun: field.checked });
+                    this.setState({
+                        errors: {},
+                        queue: false,
+                        dryRun: field.checked
+                    });
                     break;
                 case 'queue':
                     this.setState({
+                        errors: {},
                         force: false,
                         dryRun: false,
                         schedule: false,
                         scheduledTime: '',
-                        errors: {},
                         queue: field.checked
                     });
                     break;
                 case 'schedule':
-                    this.setState({ schedule: field.checked });
+                    this.setState({
+                        errors: {},
+                        queue: false,
+                        schedule: field.checked
+                    });
                     break;
                 case 'scheduledTime':
-                    this.setState({ scheduledTime: field.value });
+                    this.setState({ errors: {}, queue: false, scheduledTime: field.value });
                     break;
                 default:
                     break;
