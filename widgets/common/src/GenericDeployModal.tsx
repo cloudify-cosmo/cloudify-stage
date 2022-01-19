@@ -81,27 +81,17 @@ class GenericDeployModal extends React.Component {
         const { DeploymentActions } = Stage.Common;
         const { toolbox } = this.props;
         const { workflow, deploymentId } = this.state;
-
-        this.setState({
-            errors: {},
-            loading: false,
-            dryRun: false,
-            fileLoading: false,
-            force: false,
-            queue: false,
-            scheduledTime: '',
-            baseWorkflowParams: {},
-            userWorkflowParams: {}
-        });
-
         const actions = new DeploymentActions(toolbox);
         const workflowName = getWorkflowName(workflow);
+
         if (isWorkflowName(workflow)) {
             this.setState({ loading: true });
             actions
                 .doGetWorkflows(deploymentId)
-                .then(({ workflows }) => {
-                    const selectedWorkflow = _.find(workflows, { name: workflowName });
+                .then(({ workflows }: { workflows: unknown[] }) => {
+                    const selectedWorkflow: { name: string; [key: string]: undefined | unknown } = _.find(workflows, {
+                        name: workflowName
+                    });
                     if (selectedWorkflow) {
                         this.setWorkflowParams(selectedWorkflow);
                     } else {
