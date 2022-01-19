@@ -23,7 +23,7 @@ function renderActionCheckbox(name: string, checked: boolean, onChange: (event: 
     );
 }
 
-function renderActionField(name: string, checked: boolean, onChange: (event: Event, field: Field) => void) {
+function renderCheckboxField(name: string, checked: boolean, onChange: (event: Event, field: Field) => void) {
     const { Field } = Stage.Basic.Form;
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
@@ -80,9 +80,9 @@ const InstallSection: FunctionComponent<Props> = ({
                         <Header size="tiny">{t('actionsHeader')}</Header>
                     </Form.Divider>
 
-                    {renderActionField('force', force, createChangeEvent('force'))}
-                    {renderActionField('dryRun', dryRun, createChangeEvent('dryRun'))}
-                    {renderActionField('queue', queue, createChangeEvent('queue'))}
+                    {renderCheckboxField('force', force, createChangeEvent('force'))}
+                    {renderCheckboxField('dryRun', dryRun, createChangeEvent('dryRun'))}
+                    {renderCheckboxField('queue', queue, createChangeEvent('queue'))}
 
                     <UnsafelyTypedFormField error={!!errors.scheduledTime}>
                         {renderActionCheckbox('schedule', schedule, createChangeEvent('schedule'))}
