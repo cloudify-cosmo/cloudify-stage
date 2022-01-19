@@ -9,6 +9,16 @@ type Field = {
     checked?: string;
 };
 
+type WorkflowParams = {
+    [key: string]: {
+        type?: string;
+        default?: string;
+        constraints?: {
+            pattern: string;
+        }[];
+    };
+};
+
 function renderActionCheckbox(name: string, checked: boolean, onChange: (event: Event, field: Field) => void) {
     const { Checkbox } = Stage.Basic.Form;
     return (
@@ -29,9 +39,14 @@ function renderCheckboxField(name: string, checked: boolean, onChange: (event: E
 }
 
 interface Props {
-    baseWorkflowParams: { [key: string]: any }; // TODO: change type
-    userWorkflowParams: { [key: string]: any }; // TODO: change type
-    errors: any; // TODO: change type
+    baseWorkflowParams: WorkflowParams;
+    userWorkflowParams: WorkflowParams;
+    errors: {
+        errors?: string;
+        scheduledTime?: string;
+        yamlFile?: string;
+        [inputName: string]: undefined | string;
+    };
     handleYamlFileChange: (file: File) => void;
     fileLoading: boolean;
     handleExecuteInputChange: (event: Event, field: Field) => void;
