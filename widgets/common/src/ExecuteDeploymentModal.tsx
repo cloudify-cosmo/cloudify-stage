@@ -9,7 +9,7 @@ function getWorkflowName(workflow) {
     return isWorkflowName(workflow) ? workflow : workflow.name;
 }
 
-const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
+const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 export default function ExecuteDeploymentModal({
     deploymentId,

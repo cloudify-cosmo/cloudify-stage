@@ -17,7 +17,7 @@ function getWorkflowName(workflow) {
     return isWorkflowName(workflow) ? workflow : workflow.name;
 }
 
-const tExecute = Stage.Utils.getT('widgets.common.deployments.executeModal');
+const tExecute = Stage.Utils.getT('widgets.common.deployments.execute');
 
 enum DEPLOYMENT_SECTIONS {
     deploymentInputs,

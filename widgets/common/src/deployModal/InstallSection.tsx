@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 
-const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
+const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 type Field = {
     name: string;
