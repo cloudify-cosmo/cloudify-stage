@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import _ from 'lodash';
 import type { CookieOptions, Request } from 'express';
 
