@@ -1219,8 +1219,6 @@ describe('Deployments View widget', () => {
                 cy.contains('Install').click();
             });
 
-            cy.contains('.modal button', 'Execute').click();
-
             cy.wait('@searchDeployments');
             cy.wait('@createDeploymentGroup').then(({ request }) => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
