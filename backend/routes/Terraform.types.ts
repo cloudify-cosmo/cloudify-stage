@@ -11,8 +11,10 @@ export interface Output {
 }
 
 export interface RequestBody {
+    blueprintName: string;
     terraformVersion: string;
     terraformTemplate: string;
+    urlAuthentication: boolean;
     resourceLocation: string;
     variables?: Variable[];
     environmentVariables?: Variable[];

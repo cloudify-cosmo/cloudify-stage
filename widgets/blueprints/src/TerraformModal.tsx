@@ -157,8 +157,19 @@ export default function TerraformModal({
         }
 
         function validateResourceLocation() {
-            if (templateModules.length && !resourceLocation) {
+            if (!resourceLocation) {
                 formErrors.resource = tError('noResourceLocation');
+            }
+        }
+
+        function validateUrlAuthentication() {
+            if (urlAuthentication) {
+                if (!username) {
+                    formErrors.username = tError('noUsername');
+                }
+                if (!password) {
+                    formErrors.password = tError('noPassword');
+                }
             }
         }
 
@@ -230,6 +241,7 @@ export default function TerraformModal({
 
         validateBlueprintName();
         validateTemplate();
+        validateUrlAuthentication();
         validateResourceLocation();
         validateVariables(variables, 'variable');
         validateVariables(environment, 'environmentVariable');
@@ -267,7 +279,9 @@ export default function TerraformModal({
 
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
+                blueprintName,
                 terraformTemplate: templateUrl,
+                urlAuthentication,
                 terraformVersion: version,
                 resourceLocation: getResourceLocation(),
                 variables,
@@ -276,6 +290,14 @@ export default function TerraformModal({
             });
 
             setProcessPhase('upload');
+
+            if (urlAuthentication) {
+                const secretActions = new Stage.Common.SecretActions(toolbox);
+                const { defaultVisibility } = Stage.Common.Consts;
+                await secretActions.doCreate(`${blueprintName}.username`, username, defaultVisibility, false);
+                await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
+            }
+
             const file: any = new Blob([blueprintContent]);
             file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
             const image = await (await fetch(terraformLogo)).blob();
@@ -396,7 +418,7 @@ export default function TerraformModal({
                                         onChange={handleUrlAuthenticationChange}
                                     />
                                 </UnsafelyTypedFormField>
-                                <UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField error={errors.username}>
                                     <Form.Input
                                         disabled={!urlAuthentication}
                                         value={username}
@@ -406,7 +428,7 @@ export default function TerraformModal({
                                         required={urlAuthentication}
                                     />
                                 </UnsafelyTypedFormField>
-                                <UnsafelyTypedFormField>
+                                <UnsafelyTypedFormField error={errors.password}>
                                     <Form.Input
                                         disabled={!urlAuthentication}
                                         value={password}

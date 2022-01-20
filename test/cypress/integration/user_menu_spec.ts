@@ -20,7 +20,7 @@ describe('User Menu', () => {
 
     const delayTenantsRefresh = (delayTime: number) => {
         cy.intercept(
-            { pathname: 'console/sp/tenants', query: { _include: 'name', _get_all_results: 'true' } },
+            { pathname: '/console/sp/tenants', query: { _include: 'name', _get_all_results: 'true' } },
             request => {
                 request.on('response', response => {
                     response.setDelay(delayTime);

@@ -54,7 +54,7 @@ async function proxyRequest(req: RequestWithServerUrl, res: Response) {
 
     // if is a maintenance status fetch then update RBAC cache if empty
     if (req.su === `${getApiUrl()}/maintenance` && req.method === 'GET' && !isRbacInCache()) {
-        await getAndCacheConfig(req.headers['authentication-token']);
+        await getAndCacheConfig(req.headers['authentication-token'] as string);
     }
 
     updateOptions(options, req.method);
