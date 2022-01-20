@@ -20,6 +20,7 @@ enum DEPLOYMENT_SECTIONS {
 }
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+    static initialInstallWorkflow = { ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install, name: 'install' };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -34,7 +35,7 @@ class GenericDeployModal extends React.Component {
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
-        workflow: {},
+        workflow: GenericDeployModal.initialInstallWorkflow,
         activeSection: 0,
         yamlFile: null,
         baseWorkflowParams: {},
@@ -378,7 +379,13 @@ class GenericDeployModal extends React.Component {
                 .doGetFullBlueprintData(id)
                 .then(blueprint => {
                     const deploymentInputs = InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
-                    this.setState({ deploymentInputs, blueprint, errors: {}, loading: false });
+                    this.setState({
+                        deploymentInputs,
+                        blueprint,
+                        // workflow: blueprint.plan.workflows, // TODO: check if adding this line is the correct way to add workflows from blueprint
+                        errors: {},
+                        loading: false
+                    });
                 })
                 .catch(err => {
                     this.setState({

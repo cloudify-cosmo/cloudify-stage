@@ -2,6 +2,11 @@ export type Workflow =
     | string
     | {
           name: string;
+          id?: string;
+          plan?: {
+              inputs?: { [key: string]: string };
+              workflows?: { install?: { [key: string]: string } };
+          };
       };
 
 export type Errors =
