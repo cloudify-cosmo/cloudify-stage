@@ -20,6 +20,7 @@ enum DEPLOYMENT_SECTIONS {
 }
 class GenericDeployModal extends React.Component {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+
     static initialInstallWorkflow = { ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install, name: 'install' };
 
     static initialState = {
