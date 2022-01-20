@@ -35,6 +35,7 @@ let token = '';
 
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
+    cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
     tenant: Consts.DEFAULT_TENANT
 });
 
