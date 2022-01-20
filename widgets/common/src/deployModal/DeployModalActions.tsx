@@ -7,16 +7,24 @@ interface ApproveButtonsProps {
     showDeployButton: boolean;
     onInstall: () => void;
     onDeploy: () => void;
+    selectedButton: Buttons;
+    setSelectedButton: () => void;
 }
 
-const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({ showDeployButton, onInstall, loading, onDeploy }) => {
-    enum Buttons {
-        install,
-        deploy
-    }
+export enum Buttons {
+    install,
+    deploy
+}
+
+const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
+    showDeployButton,
+    onInstall,
+    loading,
+    onDeploy,
+    selectedButton,
+    setSelectedButton
+}) => {
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
-    const { useInput } = Stage.Hooks;
-    const [selectedButton, setSelectedButton] = useInput(Buttons.install);
 
     if (!showDeployButton) {
         <ApproveButton
@@ -68,6 +76,8 @@ interface DeployModalActionsProps {
     onCancel: () => void;
     onInstall: () => void;
     onDeploy: () => void;
+    selectedButton: Buttons;
+    setSelectedButton: () => void;
 }
 
 const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
@@ -75,7 +85,9 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
     showDeployButton,
     onCancel,
     onInstall,
-    onDeploy
+    onDeploy,
+    selectedButton,
+    setSelectedButton
 }) => {
     const { Modal, CancelButton } = Stage.Basic;
     return (
@@ -86,6 +98,8 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
                 onInstall={onInstall}
                 loading={loading}
                 onDeploy={onDeploy}
+                selectedButton={selectedButton}
+                setSelectedButton={setSelectedButton}
             />
         </Modal.Actions>
     );

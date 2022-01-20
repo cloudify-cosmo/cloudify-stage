@@ -3,7 +3,7 @@ import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
-import DeployModalActions from './deployModal/DeployModalActions';
+import DeployModalActions, { Buttons } from './deployModal/DeployModalActions';
 import InstallSection from './GenericInstall';
 import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
 
@@ -45,7 +45,8 @@ class GenericDeployModal extends React.Component {
         dryRun: false,
         queue: false,
         schedule: false,
-        scheduledTime: ''
+        scheduledTime: '',
+        selectedButton: Buttons.install
     };
 
     constructor(props) {
@@ -487,7 +488,8 @@ class GenericDeployModal extends React.Component {
             dryRun,
             queue,
             schedule,
-            scheduledTime
+            scheduledTime,
+            selectedButton
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
 
@@ -653,28 +655,30 @@ class GenericDeployModal extends React.Component {
                                     />
                                 </Form.Field>
                             </AccordionSectionWithDivider>
-                            <AccordionSectionWithDivider
-                                title={t('sections.install')}
-                                index={DEPLOYMENT_SECTIONS.install}
-                                activeSection={activeSection}
-                                onClick={this.onAccordionClick}
-                            >
-                                <InstallSection
-                                    baseWorkflowParams={baseWorkflowParams}
-                                    userWorkflowParams={userWorkflowParams}
-                                    handleYamlFileChange={this.handleYamlFileChange}
-                                    handleExecuteInputChange={this.handleExecuteInputChange}
-                                    fileLoading={fileLoading}
-                                    errors={errors}
-                                    showInstallOptions={showInstallOptions}
-                                    force={force}
-                                    dryRun={dryRun}
-                                    queue={queue}
-                                    schedule={schedule}
-                                    scheduledTime={scheduledTime}
-                                    createChangeEvent={this.createChangeEvent}
-                                />
-                            </AccordionSectionWithDivider>
+                            {selectedButton === Buttons.install && (
+                                <AccordionSectionWithDivider
+                                    title={t('sections.install')}
+                                    index={DEPLOYMENT_SECTIONS.install}
+                                    activeSection={activeSection}
+                                    onClick={this.onAccordionClick}
+                                >
+                                    <InstallSection
+                                        baseWorkflowParams={baseWorkflowParams}
+                                        userWorkflowParams={userWorkflowParams}
+                                        handleYamlFileChange={this.handleYamlFileChange}
+                                        handleExecuteInputChange={this.handleExecuteInputChange}
+                                        fileLoading={fileLoading}
+                                        errors={errors}
+                                        showInstallOptions={showInstallOptions}
+                                        force={force}
+                                        dryRun={dryRun}
+                                        queue={queue}
+                                        schedule={schedule}
+                                        scheduledTime={scheduledTime}
+                                        createChangeEvent={this.createChangeEvent}
+                                    />
+                                </AccordionSectionWithDivider>
+                            )}
                         </Accordion>
                     </Form>
                 </Modal.Content>
@@ -685,6 +689,10 @@ class GenericDeployModal extends React.Component {
                     onCancel={this.onCancel}
                     onInstall={this.submitExecute}
                     onDeploy={this.onDeploy}
+                    selectedButton={selectedButton}
+                    setSelectedButton={(value, field) =>
+                        this.setState({ selectedButton: field ? field.value ?? field.checked : value })
+                    }
                 />
             </Modal>
         );
