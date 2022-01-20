@@ -1,5 +1,4 @@
 import express from 'express';
-import passport from 'passport';
 import { callService } from '../handler/BackendHandler';
 import { getLogger } from '../handler/LoggerHandler';
 
