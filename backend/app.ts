@@ -16,6 +16,7 @@ import { getResourcePath } from './utils';
 import getCookieStrategy from './auth/CookieStrategy';
 import getTokenStrategy from './auth/TokenStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
+import { authenticateWithCookie, authenticateWithToken } from './auth/AuthMiddlewares';
 import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
@@ -79,10 +80,6 @@ passport.use(getCookieStrategy());
 app.use(cookieParser());
 app.use(passport.initialize());
 
-function authenticateWithCookie(req, res, next) {
-    return passport.authenticate('cookie', { session: false })(req, res, next);
-}
-
 // Static Routes
 app.use(
     `${contextPath}/appData`,
@@ -106,22 +103,22 @@ app.use(
 );
 
 // API Routes (with authentication)
-app.use(`${contextPath}/applications`, authenticateWithCookie, Applications);
-app.use(`${contextPath}/ba`, authenticateWithCookie, BlueprintAdditions);
-app.use(`${contextPath}/bud`, authenticateWithCookie, BlueprintUserData);
-app.use(`${contextPath}/clientConfig`, authenticateWithCookie, ClientConfig);
-app.use(`${contextPath}/external`, authenticateWithCookie, External);
-app.use(`${contextPath}/file`, authenticateWithCookie, File);
-app.use(`${contextPath}/filters`, authenticateWithCookie, Filters);
-app.use(`${contextPath}/github`, authenticateWithCookie, GitHub);
-app.use(`${contextPath}/maps`, authenticateWithCookie, Maps);
-app.use(`${contextPath}/plugins`, authenticateWithCookie, Plugins);
-app.use(`${contextPath}/source`, authenticateWithCookie, SourceBrowser);
-app.use(`${contextPath}/templates`, authenticateWithCookie, Templates);
-app.use(`${contextPath}/terraform`, authenticateWithCookie, Terraform);
-app.use(`${contextPath}/ua`, authenticateWithCookie, UserApp);
-app.use(`${contextPath}/wb`, authenticateWithCookie, WidgetBackend);
-app.use(`${contextPath}/widgets`, authenticateWithCookie, Widgets);
+app.use(`${contextPath}/applications`, authenticateWithToken, Applications);
+app.use(`${contextPath}/ba`, authenticateWithToken, BlueprintAdditions);
+app.use(`${contextPath}/bud`, authenticateWithToken, BlueprintUserData);
+app.use(`${contextPath}/clientConfig`, authenticateWithToken, ClientConfig);
+app.use(`${contextPath}/external`, authenticateWithToken, External);
+app.use(`${contextPath}/file`, authenticateWithToken, File);
+app.use(`${contextPath}/filters`, authenticateWithToken, Filters);
+app.use(`${contextPath}/github`, authenticateWithToken, GitHub);
+app.use(`${contextPath}/maps`, authenticateWithToken, Maps);
+app.use(`${contextPath}/plugins`, authenticateWithToken, Plugins);
+app.use(`${contextPath}/source`, authenticateWithToken, SourceBrowser);
+app.use(`${contextPath}/templates`, authenticateWithToken, Templates);
+app.use(`${contextPath}/terraform`, authenticateWithToken, Terraform);
+app.use(`${contextPath}/ua`, authenticateWithToken, UserApp);
+app.use(`${contextPath}/wb`, authenticateWithToken, WidgetBackend);
+app.use(`${contextPath}/widgets`, authenticateWithToken, Widgets);
 
 // API Routes (without authentication)
 app.use(`${contextPath}/auth`, Auth);
