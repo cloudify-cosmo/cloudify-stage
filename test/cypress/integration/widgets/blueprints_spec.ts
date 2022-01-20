@@ -624,7 +624,6 @@ describe('Blueprints widget', () => {
                     cy.getField('Deployment ID').find('input').clear().type(deploymentId);
                     cy.clickButton('Install');
                 });
-                cy.clickButton('Execute');
 
                 cy.waitForExecutionToEnd(deploymentId, 'install');
                 cy.getDeployment(deploymentId).then(response => {
