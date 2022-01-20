@@ -50,11 +50,6 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
-    function selectTerraformVariableSource(source: string) {
-        cy.get('td:eq(1) .selection').click();
-        cy.contains('.item', source).click();
-    }
-
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -467,10 +462,13 @@ describe('Blueprints widget', () => {
             cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
         }
 
+        function selectVariableSource(source: string) {
+            cy.get('td:eq(1) .selection').click();
+            cy.contains('.item', source).click();
+        }
+
         it('validate individual form fields', () => {
             openTerraformModal();
-            const invalidStaticValues = ['123$', '~123_', 'abc+123', '    abc'];
-            const validStaticValue = '321.test-test_test';
 
             cy.get('.modal').within(() => {
                 cy.log('Check mandatory fields validations');
@@ -492,10 +490,10 @@ describe('Blueprints widget', () => {
                 cy.get('.error.message li').should('have.length', 10);
 
                 cy.contains('.segment', 'Variables').within(() => {
-                    selectTerraformVariableSource('Secret');
+                    selectVariableSource('Secret');
                 });
                 cy.contains('.segment', 'Environment variables').within(() => {
-                    selectTerraformVariableSource('Secret');
+                    selectVariableSource('Secret');
                 });
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
@@ -506,12 +504,12 @@ describe('Blueprints widget', () => {
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
                     cy.get('input[name=name]').type('$');
-                    selectTerraformVariableSource('Static');
+                    selectVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
                 cy.contains('.segment', 'Environment variables').within(() => {
                     cy.get('input[name=name]').type('$');
-                    selectTerraformVariableSource('Static');
+                    selectVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
                 cy.contains('.segment', 'Outputs').within(() => {
@@ -549,7 +547,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Variables').click().parent().clickButton('Add');
                 cy.contains('.segment', 'Variables').within(() => {
                     cy.get('input[name=name]').type(validVariableName);
-                    selectTerraformVariableSource('Static');
+                    selectVariableSource('Static');
                 });
 
                 invalidVariableValues.forEach(invalidVariableValue => {
