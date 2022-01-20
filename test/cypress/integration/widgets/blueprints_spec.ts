@@ -626,7 +626,7 @@ describe('Blueprints widget', () => {
                 });
                 cy.clickButton('Execute');
 
-                cy.waitForExecutionToEnd(deploymentId, 'install');
+                cy.waitForExecutionToEnd('install', { deploymentId });
                 cy.getDeployment(deploymentId).then(response => {
                     expect(response.body.latest_execution_status).to.be.equal('completed');
                 });
