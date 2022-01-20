@@ -2,7 +2,7 @@ import md5 from 'blueimp-md5';
 import _ from 'lodash';
 import log from 'loglevel';
 import { saveAs } from 'file-saver';
-import marked from 'marked';
+import { marked } from 'marked';
 import { v4 } from 'uuid';
 import i18n, { TFunction } from 'i18next';
 import { GenericField } from '../components/basic';
