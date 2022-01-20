@@ -441,7 +441,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from Terraform template modal and', () => {
+    describe('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
@@ -451,11 +451,14 @@ describe('Blueprints widget', () => {
 
         function openTerraformModal() {
             cy.contains('Upload').click();
-            cy.contains('Upload from Terraform template').click();
+            cy.contains('Upload from Terraform module').click();
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.getField('URL to your Terraform template (zip or git)').find('input').type(templateUrl).blur();
+            cy.getField('URL to a zip archive that contains the Terraform module')
+                .find('input')
+                .type(templateUrl)
+                .blur();
             cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
         }
 
@@ -476,6 +479,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
+                cy.contains('Please provide resource location').should('be.visible');
                 cy.contains('Please provide variable name').should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
@@ -483,7 +487,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.contains('.segment', 'Variables').within(() => {
                     selectVariableSource('Secret');
@@ -495,7 +499,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide variable value').should('be.visible');
                 cy.contains('Please provide environment variable value').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
@@ -520,7 +524,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide valid environment variable value').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
             });
         });
 
@@ -575,7 +579,7 @@ describe('Blueprints widget', () => {
 
             openTerraformModal();
 
-            cy.getField('URL to your Terraform template (zip or git)')
+            cy.getField('URL to a zip archive that contains the Terraform module')
                 .find('input')
                 .type(singleModuleTerraformTemplateUrl)
                 .blur();

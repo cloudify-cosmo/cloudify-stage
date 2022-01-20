@@ -70,9 +70,11 @@ router.post('/resources', (req, res) => {
 
 router.post('/blueprint', (req, res) => {
     const {
+        blueprintName,
         terraformVersion = '',
         terraformTemplate = '',
         resourceLocation = '',
+        urlAuthentication,
         variables = [],
         environmentVariables = [],
         outputs = []
@@ -87,8 +89,10 @@ router.post('/blueprint', (req, res) => {
         result = ejs.render(
             template,
             {
+                blueprintName,
                 terraformVersion,
                 terraformTemplate,
+                urlAuthentication,
                 resourceLocation,
                 variables,
                 environmentVariables,
