@@ -79,10 +79,14 @@ passport.use(getCookieStrategy());
 app.use(cookieParser());
 app.use(passport.initialize());
 
+function authenticateWithCookie(req, res, next) {
+    return passport.authenticate('cookie', { session: false })(req, res, next);
+}
+
 // Static Routes
 app.use(
     `${contextPath}/appData`,
-    passport.authenticate('cookie', { session: false }),
+    authenticateWithCookie,
     expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { indexFromEmptyFile: false })
 );
 
@@ -95,29 +99,29 @@ app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) => {
 
 app.use(
     `${contextPath}/userData`,
-    passport.authenticate('cookie', { session: false }),
+    authenticateWithCookie,
     expressStaticGzip(getResourcePath('', true), {
         indexFromEmptyFile: false
     })
 );
 
 // API Routes (with authentication)
-app.use(`${contextPath}/applications`, passport.authenticate('cookie', { session: false }), Applications);
-app.use(`${contextPath}/ba`, passport.authenticate('cookie', { session: false }), BlueprintAdditions);
-app.use(`${contextPath}/bud`, passport.authenticate('cookie', { session: false }), BlueprintUserData);
-app.use(`${contextPath}/clientConfig`, passport.authenticate('cookie', { session: false }), ClientConfig);
-app.use(`${contextPath}/external`, passport.authenticate('cookie', { session: false }), External);
-app.use(`${contextPath}/file`, passport.authenticate('cookie', { session: false }), File);
-app.use(`${contextPath}/filters`, passport.authenticate('cookie', { session: false }), Filters);
-app.use(`${contextPath}/github`, passport.authenticate('cookie', { session: false }), GitHub);
-app.use(`${contextPath}/maps`, passport.authenticate('cookie', { session: false }), Maps);
-app.use(`${contextPath}/plugins`, passport.authenticate('cookie', { session: false }), Plugins);
-app.use(`${contextPath}/source`, passport.authenticate('cookie', { session: false }), SourceBrowser);
-app.use(`${contextPath}/templates`, passport.authenticate('cookie', { session: false }), Templates);
-app.use(`${contextPath}/terraform`, passport.authenticate('cookie', { session: false }), Terraform);
-app.use(`${contextPath}/ua`, passport.authenticate('cookie', { session: false }), UserApp);
-app.use(`${contextPath}/wb`, passport.authenticate('cookie', { session: false }), WidgetBackend);
-app.use(`${contextPath}/widgets`, passport.authenticate('cookie', { session: false }), Widgets);
+app.use(`${contextPath}/applications`, authenticateWithCookie, Applications);
+app.use(`${contextPath}/ba`, authenticateWithCookie, BlueprintAdditions);
+app.use(`${contextPath}/bud`, authenticateWithCookie, BlueprintUserData);
+app.use(`${contextPath}/clientConfig`, authenticateWithCookie, ClientConfig);
+app.use(`${contextPath}/external`, authenticateWithCookie, External);
+app.use(`${contextPath}/file`, authenticateWithCookie, File);
+app.use(`${contextPath}/filters`, authenticateWithCookie, Filters);
+app.use(`${contextPath}/github`, authenticateWithCookie, GitHub);
+app.use(`${contextPath}/maps`, authenticateWithCookie, Maps);
+app.use(`${contextPath}/plugins`, authenticateWithCookie, Plugins);
+app.use(`${contextPath}/source`, authenticateWithCookie, SourceBrowser);
+app.use(`${contextPath}/templates`, authenticateWithCookie, Templates);
+app.use(`${contextPath}/terraform`, authenticateWithCookie, Terraform);
+app.use(`${contextPath}/ua`, authenticateWithCookie, UserApp);
+app.use(`${contextPath}/wb`, authenticateWithCookie, WidgetBackend);
+app.use(`${contextPath}/widgets`, authenticateWithCookie, Widgets);
 
 // API Routes (without authentication)
 app.use(`${contextPath}/auth`, Auth);
