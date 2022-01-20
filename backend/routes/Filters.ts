@@ -1,5 +1,4 @@
 import express from 'express';
-import passport from 'passport';
 import { getFilterUsage } from '../handler/FilterHandler';
 
 const router = express.Router();

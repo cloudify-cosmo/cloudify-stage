@@ -1,7 +1,6 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import request from 'request';
-import passport from 'passport';
 import _ from 'lodash';
 import { getConfig } from '../config';
 import { jsonRequest } from '../handler/ManagerHandler';

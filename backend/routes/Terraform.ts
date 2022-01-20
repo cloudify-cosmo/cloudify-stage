@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
 import fs from 'fs';
-import passport from 'passport';
 import path from 'path';
 import request from 'request';
 import { STATUS_CODES } from 'http';
