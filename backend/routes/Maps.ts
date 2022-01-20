@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
 import request from 'request';
 
 import { getConfig } from '../config';
@@ -9,7 +8,6 @@ import { getLogger } from '../handler/LoggerHandler';
 import { getMode, MODE_COMMUNITY } from '../serverSettings';
 
 const logger = getLogger('Maps');
-
 const router = express.Router();
 
 function validateEdition(req: Request, res: Response, next: NextFunction) {
@@ -20,7 +18,6 @@ function validateEdition(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
-router.use(passport.authenticate('cookie', { session: false }));
 router.use(validateEdition);
 
 router.get('/:z/:x/:y/:r?', (req, res) => {
