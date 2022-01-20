@@ -50,6 +50,11 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
+    function selectTerraformVariableSource(source: string) {
+        cy.get('td:eq(1) .selection').click();
+        cy.contains('.item', source).click();
+    }
+
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -464,11 +469,8 @@ describe('Blueprints widget', () => {
 
         it('validate individual form fields', () => {
             openTerraformModal();
-
-            function selectVariableSource(source: string) {
-                cy.get('td:eq(1) .selection').click();
-                cy.contains('.item', source).click();
-            }
+            const invalidStaticValues = ['123$', '~123_', 'abc+123', '    abc'];
+            const validStaticValue = '321.test-test_test';
 
             cy.get('.modal').within(() => {
                 cy.log('Check mandatory fields validations');
@@ -490,10 +492,10 @@ describe('Blueprints widget', () => {
                 cy.get('.error.message li').should('have.length', 10);
 
                 cy.contains('.segment', 'Variables').within(() => {
-                    selectVariableSource('Secret');
+                    selectTerraformVariableSource('Secret');
                 });
                 cy.contains('.segment', 'Environment variables').within(() => {
-                    selectVariableSource('Secret');
+                    selectTerraformVariableSource('Secret');
                 });
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
@@ -504,12 +506,12 @@ describe('Blueprints widget', () => {
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
                     cy.get('input[name=name]').type('$');
-                    selectVariableSource('Static');
+                    selectTerraformVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
                 cy.contains('.segment', 'Environment variables').within(() => {
                     cy.get('input[name=name]').type('$');
-                    selectVariableSource('Static');
+                    selectTerraformVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
                 cy.contains('.segment', 'Outputs').within(() => {
@@ -525,6 +527,40 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
                 cy.get('.error.message li').should('have.length', 10);
+            });
+        });
+
+        it('validate static variable values', () => {
+            const invalidVariableValues = ['123$', '~123_', 'abc+123', '    abc'];
+            const validVariableValue = '321.test-test_test';
+            const validVariableName = 'abc';
+            const validationMessage =
+                'Please provide valid variable value - allowed only letters, digits and the characters "-", "." and "_". If special characters or complex structures are needed please provide this value inside a secret';
+
+            const setVariableValue = (value: string) => {
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('td:eq(2) input').clear().type(value);
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.contains('Variables').click().parent().clickButton('Add');
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectTerraformVariableSource('Static');
+                });
+
+                invalidVariableValues.forEach(invalidVariableValue => {
+                    setVariableValue(invalidVariableValue);
+                    cy.clickButton('Create');
+                    cy.contains(validationMessage).should('exist');
+                });
+
+                setVariableValue(validVariableValue);
+                cy.clickButton('Create');
+                cy.contains(validationMessage).should('not.exist');
             });
         });
 
