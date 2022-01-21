@@ -7,17 +7,13 @@ describe('Number of Plugins widget', () => {
         cy.getWidget(widgetId).find('.statistic').click();
     }
 
-    function verifyUrl(expectedPageId: string) {
-        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
-    }
-
     before(() => cy.activate('valid_trial_license').mockLogin().addPage(page).addWidget(widgetId));
 
     it('opens the default page on click', () => {
         const defaultPage = 'plugins';
 
         clickOnWidget();
-        verifyUrl(defaultPage);
+        cy.verifyLocationByPageId(defaultPage);
     });
 
     describe('', () => {
@@ -38,7 +34,7 @@ describe('Number of Plugins widget', () => {
             cy.setSearchableDropdownConfigurationField(widgetId, 'Page to open on click', pageId);
             clickOnWidget();
 
-            verifyUrl(pageId);
+            cy.verifyLocationByPageId(pageId);
         });
     });
 });

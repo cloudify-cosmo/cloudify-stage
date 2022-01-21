@@ -213,11 +213,12 @@ const commands = {
         });
         return cy.visit('/console');
     },
+    // Note: The following function shouldn't be responsible for location verification
     clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
         cy.log(`Clicking '${name}' page menu item`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
         if (expectedPageId) {
-            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+            cy.verifyLocationByPageId(expectedPageId);
         }
         return cy.waitUntilPageLoaded();
     },
@@ -446,7 +447,8 @@ const commands = {
     mockDisabledGettingStarted: () => mockGettingStarted(false),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
-
+    verifyLocationByPageId: (expectedPageId: string) =>
+        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`),
     clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
 };
 
