@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import log from 'loglevel';
-import marked from 'marked';
 import i18n from 'i18next';
 import React, { Component, createRef, ErrorInfo, ReactElement } from 'react';
 import { connect, ConnectedProps, MapStateToProps } from 'react-redux';
@@ -98,7 +97,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
         let readmeContent = '';
 
         if (typeof readme === 'string') {
-            readmeContent = marked(readme);
+            readmeContent = stageUtils.parseMarkdown(readme);
         }
         this.setState({ readmeContent, showReadmeModal: true });
     };
