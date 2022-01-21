@@ -4,14 +4,19 @@ import '../../initAppContext';
 import TenantSelection from 'app/components/sidebar/TenantSelection';
 import { mountWithProvider } from '../../utils';
 
-const mockTenantsResponse = (tenants: any[]) => {
+const mockTenantsResponse = (tenants: any[], withDelay = false) => {
+    const defaultDelay = 250;
+
     cy.intercept(
         {
             pathname: '/console/sp/tenants',
             query: { _include: 'name', _get_all_results: 'true' }
         },
         {
-            items: tenants
+            body: {
+                items: tenants
+            },
+            delay: withDelay ? defaultDelay : 0
         }
     );
 };
@@ -19,7 +24,7 @@ const mockTenantsResponse = (tenants: any[]) => {
 describe('TenantSelection', () => {
     it('renders loader when fetching tenants', () => {
         mountWithProvider(<TenantSelection />, { manager: { tenants: { items: [] } } });
-        mockTenantsResponse([]);
+        mockTenantsResponse([], true);
 
         cy.contains('No Tenants').click();
         cy.get('div.loader').should('be.visible');
