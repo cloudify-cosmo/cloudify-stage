@@ -11,7 +11,7 @@ describe('Number of Blueprints widget', () => {
         });
     }
 
-    it('Opens the default page on click', () => {
+    it('opens the default page on click', () => {
         cy.activate().login().addWidget(widgetId);
         clickOnWidget();
         cy.verifyLocationByPageId('blueprints');
