@@ -50,6 +50,7 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
 }
 
 const cloudifyResourceRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+const staticValueRegexp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -211,7 +212,21 @@ export default function TerraformModal({
             if (
                 find(
                     variablesList,
-                    variable => !isEmpty(variable.value) && !variable.value.match(cloudifyResourceRegexp)
+                    variable =>
+                        !isEmpty(variable.value) &&
+                        variable.source === 'static' &&
+                        !variable.value.match(staticValueRegexp)
+                )
+            ) {
+                formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('staticValueInvalid');
+            }
+            if (
+                find(
+                    variablesList,
+                    variable =>
+                        !isEmpty(variable.value) &&
+                        variable.source !== 'static' &&
+                        !variable.value.match(cloudifyResourceRegexp)
                 )
             ) {
                 formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
