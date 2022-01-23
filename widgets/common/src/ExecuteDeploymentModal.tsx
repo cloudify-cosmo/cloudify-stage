@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
+import { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
 import ExecuteWorkflow from './ExecuteWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -90,7 +90,7 @@ export default function ExecuteDeploymentModal({
 
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
-    const submitExecute = createInstallFunction({
+    const submitExecute = createExecuteWorkflowFunction({
         setLoading,
         toolbox,
         workflow,

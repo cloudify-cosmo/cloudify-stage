@@ -5,7 +5,7 @@ import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions, { Buttons } from './deployModal/DeployModalActions';
 import InstallSection from './ExecuteWorkflow';
-import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
+import { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -299,7 +299,7 @@ class GenericDeployModal extends React.Component {
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
             .then(
-                createInstallFunction({
+                createExecuteWorkflowFunction({
                     setLoading: () => this.setState({ loading: false }),
                     toolbox,
                     workflow,

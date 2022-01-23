@@ -23,7 +23,7 @@ export function getWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
-export const createInstallFunction = ({
+export const createExecuteWorkflowFunction = ({
     setLoading,
     toolbox,
     workflow,
