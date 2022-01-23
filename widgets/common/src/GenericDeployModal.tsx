@@ -491,7 +491,6 @@ class GenericDeployModal extends React.Component {
             scheduledTime,
             selectedButton
         } = this.state;
-        const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
 
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
