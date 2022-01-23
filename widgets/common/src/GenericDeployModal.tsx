@@ -4,7 +4,7 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions, { Buttons } from './deployModal/DeployModalActions';
-import InstallSection from './GenericInstall';
+import InstallSection from './ExecuteWorkflow';
 import { createInstallFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
 
 const { i18n } = Stage;

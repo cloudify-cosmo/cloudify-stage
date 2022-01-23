@@ -59,7 +59,7 @@ interface Props {
     createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
-const GenericInstall: FunctionComponent<Props> = ({
+const ExecuteWorkflow: FunctionComponent<Props> = ({
     baseWorkflowParams,
     userWorkflowParams,
     handleYamlFileChange,
@@ -121,4 +121,4 @@ const GenericInstall: FunctionComponent<Props> = ({
     );
 };
 
-export default React.memo(GenericInstall);
+export default React.memo(ExecuteWorkflow);
