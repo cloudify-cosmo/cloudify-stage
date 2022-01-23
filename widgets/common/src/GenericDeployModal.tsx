@@ -489,7 +489,8 @@ class GenericDeployModal extends React.Component {
             queue,
             schedule,
             scheduledTime,
-            selectedButton
+            selectedButton,
+            workflow
         } = this.state;
 
         return (
