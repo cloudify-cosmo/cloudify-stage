@@ -27,6 +27,12 @@ export function getWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
+const isValidScheduledTime = (time: string) => {
+    const scheduledTime = moment(time);
+    const hasProperFormat = _.isEqual(scheduledTime.format('YYYY-MM-DD HH:mm'), time);
+    return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
+};
+
 export const executeWorkflowFunction = ({
     setLoading,
     toolbox,
@@ -51,7 +57,7 @@ export const executeWorkflowFunction = ({
     baseWorkflowParams: any;
     userWorkflowParams: any;
     schedule: any;
-    scheduledTime: any;
+    scheduledTime: string;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
@@ -79,15 +85,8 @@ export const executeWorkflowFunction = ({
     const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
     InputsUtils.addErrors(inputsWithoutValue, validationErrors);
 
-    if (schedule) {
-        const scheduledTimeMoment = moment(scheduledTime);
-        if (
-            !scheduledTimeMoment.isValid() ||
-            !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
-            scheduledTimeMoment.isBefore(moment())
-        ) {
-            validationErrors.scheduledTime = t('errors.scheduleTimeError');
-        }
+    if (schedule && !isValidScheduledTime(scheduledTime)) {
+        validationErrors.scheduledTime = t('errors.scheduleTimeError');
     }
 
     if (!_.isEmpty(validationErrors)) {
