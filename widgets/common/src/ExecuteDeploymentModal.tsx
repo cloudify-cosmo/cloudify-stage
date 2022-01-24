@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import ExecuteWorkflowInputs, {
-    createExecuteWorkflowFunction,
+    executeWorkflowFunction,
     isWorkflowName,
     getWorkflowName
 } from './ExecuteWorkflowInputs';
@@ -93,28 +93,26 @@ export default function ExecuteDeploymentModal({
 
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
-    const submitExecute = createExecuteWorkflowFunction({
-        setLoading,
-        toolbox,
-        workflow,
-        baseWorkflowParams,
-        userWorkflowParams,
-        schedule,
-        scheduledTime,
-        force,
-        dryRun,
-        queue,
-        deploymentId,
-        setErrors,
-        unsetLoading,
-        clearErrors,
-        onExecute,
-        onHide
-    });
-
     function onApprove() {
         clearErrors();
-        submitExecute();
+        executeWorkflowFunction({
+            setLoading,
+            toolbox,
+            workflow,
+            baseWorkflowParams,
+            userWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            deploymentId,
+            setErrors,
+            unsetLoading,
+            clearErrors,
+            onExecute,
+            onHide
+        });
     }
 
     function handleYamlFileChange(file) {

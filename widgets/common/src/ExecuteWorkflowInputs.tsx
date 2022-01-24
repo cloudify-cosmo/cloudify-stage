@@ -27,7 +27,7 @@ export function getWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
-export const createExecuteWorkflowFunction = ({
+export const executeWorkflowFunction = ({
     setLoading,
     toolbox,
     workflow,
@@ -61,7 +61,7 @@ export const createExecuteWorkflowFunction = ({
     clearErrors: () => void;
     onExecute: () => void;
     onHide: () => void;
-}) => () => {
+}) => {
     setLoading();
 
     const { InputsUtils, DeploymentActions } = Stage.Common;
