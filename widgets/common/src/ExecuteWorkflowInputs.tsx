@@ -186,7 +186,7 @@ interface ExecuteWorkflowInputsProps {
     };
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    handleExecuteInputChange: (event: Event, field: Field) => void;
+    onWorkflowInputChange: (event: Event, field: Field) => void;
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
@@ -201,7 +201,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     userWorkflowParams,
     onYamlFileChange,
     fileLoading,
-    handleExecuteInputChange,
+    onWorkflowInputChange,
     errors,
     showInstallOptions,
     force,
@@ -221,7 +221,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
             <InputsHeader header={t('paramsHeader')} compact />
             {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
 
-            {InputsUtils.getInputFields(baseWorkflowParams, handleExecuteInputChange, userWorkflowParams, errors)}
+            {InputsUtils.getInputFields(baseWorkflowParams, onWorkflowInputChange, userWorkflowParams, errors)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

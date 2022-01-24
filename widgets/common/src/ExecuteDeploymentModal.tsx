@@ -203,7 +203,7 @@ export default function ExecuteDeploymentModal({
                         baseWorkflowParams={baseWorkflowParams}
                         userWorkflowParams={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
-                        handleExecuteInputChange={handleInputChange}
+                        onWorkflowInputChange={handleInputChange}
                         fileLoading={isFileLoading}
                         errors={errors}
                         showInstallOptions={!hideOptions}
