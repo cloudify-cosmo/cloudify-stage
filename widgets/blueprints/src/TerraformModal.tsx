@@ -289,7 +289,7 @@ export default function TerraformModal({
             ) {
                 return resourceLocation;
             }
-            return resourceLocation.replace(/^[^/]*\//, '');
+            return resourceLocation.replace(/^[^/]*[/]?/, '');
         }
 
         try {
