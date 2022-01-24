@@ -134,7 +134,7 @@ const SummaryStep = ({
                 blueprintsInstallationTasks.tasks) && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
-                    <List ordered relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
+                    <List relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
                         <PluginsInstallationTasks
                             tasks={pluginsInstallationTasks.tasks}
                             statuses={installationStatuses.plugin}

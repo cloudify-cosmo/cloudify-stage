@@ -441,7 +441,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from Terraform template modal and', () => {
+    describe('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
@@ -451,21 +451,24 @@ describe('Blueprints widget', () => {
 
         function openTerraformModal() {
             cy.contains('Upload').click();
-            cy.contains('Upload from Terraform template').click();
+            cy.contains('Upload from Terraform module').click();
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.getField('URL to your Terraform template (zip or git)').find('input').type(templateUrl).blur();
+            cy.getField('URL to a zip archive that contains the Terraform module')
+                .find('input')
+                .type(templateUrl)
+                .blur();
             cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
+        }
+
+        function selectVariableSource(source: string) {
+            cy.get('td:eq(1) .selection').click();
+            cy.contains('.item', source).click();
         }
 
         it('validate individual form fields', () => {
             openTerraformModal();
-
-            function selectVariableSource(source: string) {
-                cy.get('td:eq(1) .selection').click();
-                cy.contains('.item', source).click();
-            }
 
             cy.get('.modal').within(() => {
                 cy.log('Check mandatory fields validations');
@@ -476,6 +479,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
+                cy.contains('Please provide resource location').should('be.visible');
                 cy.contains('Please provide variable name').should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
@@ -483,7 +487,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.contains('.segment', 'Variables').within(() => {
                     selectVariableSource('Secret');
@@ -495,7 +499,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide variable value').should('be.visible');
                 cy.contains('Please provide environment variable value').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
                 cy.contains('.segment', 'Variables').within(() => {
@@ -520,7 +524,41 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide valid environment variable value').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 9);
+                cy.get('.error.message li').should('have.length', 10);
+            });
+        });
+
+        it('validate static variable values', () => {
+            const invalidVariableValues = ['123$', '~123_', 'abc+123', '    abc'];
+            const validVariableValue = '321.test-test_test';
+            const validVariableName = 'abc';
+            const validationMessage =
+                'Please provide valid variable value - allowed only letters, digits and the characters "-", "." and "_". If special characters or complex structures are needed please provide this value inside a secret';
+
+            const setVariableValue = (value: string) => {
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('td:eq(2) input').clear().type(value);
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.contains('Variables').click().parent().clickButton('Add');
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectVariableSource('Static');
+                });
+
+                invalidVariableValues.forEach(invalidVariableValue => {
+                    setVariableValue(invalidVariableValue);
+                    cy.clickButton('Create');
+                    cy.contains(validationMessage).should('exist');
+                });
+
+                setVariableValue(validVariableValue);
+                cy.clickButton('Create');
+                cy.contains(validationMessage).should('not.exist');
             });
         });
 
@@ -575,7 +613,7 @@ describe('Blueprints widget', () => {
 
             openTerraformModal();
 
-            cy.getField('URL to your Terraform template (zip or git)')
+            cy.getField('URL to a zip archive that contains the Terraform module')
                 .find('input')
                 .type(singleModuleTerraformTemplateUrl)
                 .blur();

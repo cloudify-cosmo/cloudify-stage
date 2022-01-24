@@ -23,7 +23,7 @@ const consts = {
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     }
-};
+} as const;
 
 declare global {
     namespace Stage.Common {

@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { EDITION } from '../consts';
 import { jsonRequest } from './ManagerHandler';
@@ -8,44 +7,80 @@ import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('AuthHandler');
 
-let authorizationCache = {};
+let authorizationCache = {} as ConfigResponse['authorization'];
 
-export function getToken(basicAuth) {
-    return jsonRequest('GET', '/tokens', {
+export interface TokenResponse {
+    username: string;
+    value: string;
+    role: string;
+}
+
+export interface ConfigResponse {
+    metadata: any;
+    items: any[];
+    authorization: {
+        roles: {
+            id: number;
+            name: string;
+            type: string;
+            description: string;
+        }[];
+        permissions: Record<string, string[]>[];
+    };
+}
+
+export interface VersionResponse {
+    edition: typeof EDITION.PREMIUM | typeof EDITION.COMMUNITY;
+    version: string;
+    build: any;
+    date: any;
+    commit: any;
+    distribution: string;
+    // eslint-disable-next-line camelcase
+    distro_release: string;
+}
+
+export function getToken(basicAuth: string) {
+    return jsonRequest<TokenResponse>('GET', '/tokens', {
         Authorization: basicAuth
     });
 }
 
-export function getTenants(token) {
+export function getTenants(token: string) {
     return jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', {
         'Authentication-Token': token
     });
 }
 
-export function getUser(token) {
+export function getUser(token: string) {
     return jsonRequest('GET', '/user?_get_data=true', {
         'Authentication-Token': token
     });
 }
 
-export function isProductLicensed(version) {
+export function isProductLicensed(version: VersionResponse) {
     return !_.isEqual(version.edition, EDITION.COMMUNITY);
 }
 
-export function getLicense(token) {
+export function getLicense(token: string) {
     return jsonRequest('GET', '/license', {
         'Authentication-Token': token
     });
 }
 
-export function getTokenViaSamlResponse(samlResponse) {
-    return jsonRequest('POST', '/tokens', null, {
-        'saml-response': samlResponse
-    });
+export function getTokenViaSamlResponse(samlResponse: string) {
+    return jsonRequest<TokenResponse>(
+        'POST',
+        '/tokens',
+        {},
+        {
+            'saml-response': samlResponse
+        }
+    );
 }
 
-export function getAndCacheConfig(token) {
-    return jsonRequest('GET', '/config', {
+export function getAndCacheConfig(token?: string) {
+    return jsonRequest<ConfigResponse>('GET', '/config', {
         'Authentication-Token': token
     }).then(config => {
         authorizationCache = config.authorization;
@@ -58,7 +93,7 @@ export function isRbacInCache() {
     return !_.isEmpty(authorizationCache);
 }
 
-export async function getRBAC(token): Promise<{ roles: any }> {
+export async function getRBAC(token: string): Promise<{ roles: any }> {
     if (!isRbacInCache()) {
         logger.debug('No RBAC data in cache.');
         await getAndCacheConfig(token);
@@ -68,8 +103,8 @@ export async function getRBAC(token): Promise<{ roles: any }> {
     return authorizationCache;
 }
 
-export function getManagerVersion(token) {
-    return jsonRequest('GET', '/version', { 'Authentication-Token': token }).then(version => {
+export function getManagerVersion(token: string) {
+    return jsonRequest<VersionResponse>('GET', '/version', { 'Authentication-Token': token }).then(version => {
         // set community mode from manager API only if mode is not set from the command line
         if (getMode() === MODE_MAIN && version.edition === MODE_COMMUNITY) {
             setMode(MODE_COMMUNITY);
@@ -79,7 +114,7 @@ export function getManagerVersion(token) {
     });
 }
 
-export function isAuthorized(user, authorizedRoles) {
+export function isAuthorized(user: Express.User, authorizedRoles: string[]) {
     const systemRole = user.role;
     const groupSystemRoles = _.keys(user.group_system_roles);
 

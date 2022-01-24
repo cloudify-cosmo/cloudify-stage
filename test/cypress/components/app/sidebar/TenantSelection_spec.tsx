@@ -4,10 +4,29 @@ import '../../initAppContext';
 import TenantSelection from 'app/components/sidebar/TenantSelection';
 import { mountWithProvider } from '../../utils';
 
+const mockTenantsResponse = (tenants: any[], withDelay = false) => {
+    const defaultDelay = 250;
+
+    cy.intercept(
+        {
+            pathname: '/console/sp/tenants',
+            query: { _include: 'name', _get_all_results: 'true' }
+        },
+        {
+            body: {
+                items: tenants
+            },
+            delay: withDelay ? defaultDelay : 0
+        }
+    );
+};
+
 describe('TenantSelection', () => {
     it('renders loader when fetching tenants', () => {
-        mountWithProvider(<TenantSelection />);
+        mountWithProvider(<TenantSelection />, { manager: { tenants: { items: [] } } });
+        mockTenantsResponse([], true);
 
+        cy.contains('No Tenants').click();
         cy.get('div.loader').should('be.visible');
     });
 
@@ -58,8 +77,10 @@ describe('TenantSelection', () => {
 
     it('changes active tenant on dropdown item click', () => {
         const { store } = mountWithProvider(<TenantSelection />, {
-            manager: { tenants: { selected: 'abc', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
+            manager: { tenants: { selected: 'abc', items: [] } }
         });
+
+        mockTenantsResponse([{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]);
 
         cy.contains('abc').click();
         cy.contains('aaa').click();

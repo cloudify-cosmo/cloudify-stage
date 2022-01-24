@@ -1,4 +1,6 @@
 {
+  "blueprintName": "bpName",
+  "urlAuthentication": true,
   "terraformVersion": "1.2.2",
   "terraformTemplate": "http://host/path/template.zip",
   "resourceLocation": "/ft_folder/template",
