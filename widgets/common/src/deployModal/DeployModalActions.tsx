@@ -50,6 +50,7 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
                 floating
                 aria-label="Deploy or Install"
                 onChange={setSelectedButton}
+                value={selectedButton}
                 options={[
                     {
                         key: 'deploy',
