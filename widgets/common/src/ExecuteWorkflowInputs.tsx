@@ -189,7 +189,11 @@ interface ExecuteWorkflowInputsProps {
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    createOnChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
+    onForceChange: (event: Event, field: Field) => void;
+    onDryRynChange: (event: Event, field: Field) => void;
+    onQueueChange: (event: Event, field: Field) => void;
+    onScheduleChange: (event: Event, field: Field) => void;
+    onScheduledTimeChange: (event: Event, field: Field) => void;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
@@ -205,7 +209,11 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     queue,
     schedule,
     scheduledTime,
-    createOnChangeEvent
+    onForceChange,
+    onDryRynChange,
+    onQueueChange,
+    onScheduleChange,
+    onScheduledTimeChange
 }) => {
     const { Message, Form, UnsafelyTypedFormField, Header, Divider, DateInput } = Stage.Basic;
     const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
@@ -224,12 +232,12 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                         <Header size="tiny">{t('actionsHeader')}</Header>
                     </Form.Divider>
 
-                    {renderCheckboxField('force', force, createOnChangeEvent('force'))}
-                    {renderCheckboxField('dryRun', dryRun, createOnChangeEvent('dryRun'))}
-                    {renderCheckboxField('queue', queue, createOnChangeEvent('queue'))}
+                    {renderCheckboxField('force', force, onForceChange)}
+                    {renderCheckboxField('dryRun', dryRun, onDryRynChange)}
+                    {renderCheckboxField('queue', queue, onQueueChange)}
 
                     <UnsafelyTypedFormField error={!!errors.scheduledTime}>
-                        {renderActionCheckbox('schedule', schedule, createOnChangeEvent('schedule'))}
+                        {renderActionCheckbox('schedule', schedule, onScheduleChange)}
                         {schedule && (
                             <>
                                 <Divider hidden />
@@ -239,7 +247,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                                     defaultValue=""
                                     minDate={moment()}
                                     maxDate={moment().add(1, 'year')}
-                                    onChange={createOnChangeEvent('scheduledTime')}
+                                    onChange={onScheduledTimeChange}
                                 />
                             </>
                         )}

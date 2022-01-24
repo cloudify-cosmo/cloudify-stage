@@ -155,34 +155,34 @@ export default function ExecuteDeploymentModal({
         headerKey += 'noDeployment';
     }
 
-    function createOnChangeEvent(fieldName: string) {
-        return (event, field) => {
-            switch (fieldName) {
-                case 'force':
-                    setForce(field.checked);
-                    break;
-                case 'dryRun':
-                    setDryRun(field.checked);
-                    break;
-                case 'queue':
-                    clearForce();
-                    clearDryRun();
-                    clearSchedule();
-                    clearScheduleTime();
-                    clearErrors();
-                    setQueue(field.checked);
-                    break;
-                case 'schedule':
-                    setSchedule(field.checked);
-                    break;
-                case 'scheduledTime':
-                    setScheduledTime(field.value);
-                    break;
-                default:
-                    break;
-            }
-        };
-    }
+    const onForceChange = (event: Event, field: Field) => {
+        clearErrors();
+        clearQueue();
+        setForce(field.checked);
+    };
+    const onDryRynChange = (event: Event, field: Field) => {
+        clearErrors();
+        clearQueue();
+        setDryRun(field.checked);
+    };
+    const onQueueChange = (event: Event, field: Field) => {
+        clearForce();
+        clearDryRun();
+        clearSchedule();
+        clearScheduleTime();
+        clearErrors();
+        setQueue(field.checked);
+    };
+    const onScheduleChange = (event: Event, field: Field) => {
+        clearErrors();
+        clearQueue();
+        setSchedule(field.checked);
+    };
+    const onScheduledTimeChange = (event: Event, field: Field) => {
+        clearErrors();
+        clearQueue();
+        setScheduledTime(field.value);
+    };
 
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
@@ -212,7 +212,11 @@ export default function ExecuteDeploymentModal({
                         queue={queue}
                         schedule={schedule}
                         scheduledTime={scheduledTime}
-                        createOnChangeEvent={createOnChangeEvent}
+                        onForceChange={onForceChange}
+                        onDryRynChange={onDryRynChange}
+                        onQueueChange={onQueueChange}
+                        onScheduleChange={onScheduleChange}
+                        onScheduledTimeChange={onScheduledTimeChange}
                     />
                 </Form>
             </Modal.Content>
