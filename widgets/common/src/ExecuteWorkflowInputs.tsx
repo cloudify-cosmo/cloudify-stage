@@ -184,7 +184,7 @@ interface ExecuteWorkflowInputsProps {
         yamlFile?: string;
         [inputName: string]: undefined | string;
     };
-    handleYamlFileChange: (file: File) => void;
+    onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
     handleExecuteInputChange: (event: Event, field: Field) => void;
     showInstallOptions: boolean;
@@ -199,7 +199,7 @@ interface ExecuteWorkflowInputsProps {
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     baseWorkflowParams,
     userWorkflowParams,
-    handleYamlFileChange,
+    onYamlFileChange,
     fileLoading,
     handleExecuteInputChange,
     errors,
@@ -216,11 +216,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     return (
         <>
             {!_.isEmpty(baseWorkflowParams) && (
-                <YamlFileButton
-                    onChange={handleYamlFileChange}
-                    dataType="execution parameters"
-                    fileLoading={fileLoading}
-                />
+                <YamlFileButton onChange={onYamlFileChange} dataType="execution parameters" fileLoading={fileLoading} />
             )}
             <InputsHeader header={t('paramsHeader')} compact />
             {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
