@@ -176,7 +176,7 @@ function renderCheckboxField(name: string, checked: boolean, onChange: (event: E
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
 
-interface ExecuteWorkflowProps {
+interface ExecuteWorkflowInputsProps {
     baseWorkflowParams: WorkflowParams;
     userWorkflowParams: WorkflowParams;
     errors: {
@@ -197,7 +197,7 @@ interface ExecuteWorkflowProps {
     createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
-const ExecuteWorkflow: FunctionComponent<ExecuteWorkflowProps> = ({
+const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     baseWorkflowParams,
     userWorkflowParams,
     handleYamlFileChange,
@@ -259,4 +259,4 @@ const ExecuteWorkflow: FunctionComponent<ExecuteWorkflowProps> = ({
     );
 };
 
-export default React.memo(ExecuteWorkflow);
+export default React.memo(ExecuteWorkflowInputs);

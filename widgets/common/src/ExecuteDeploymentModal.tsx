@@ -1,5 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
-import ExecuteWorkflow, { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './ExecuteWorkflow';
+import ExecuteWorkflowInputs, {
+    createExecuteWorkflowFunction,
+    isWorkflowName,
+    getWorkflowName
+} from './ExecuteWorkflowInputs';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -197,7 +201,7 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <ExecuteWorkflow
+                    <ExecuteWorkflowInputs
                         baseWorkflowParams={baseWorkflowParams}
                         userWorkflowParams={userWorkflowParams}
                         handleYamlFileChange={handleYamlFileChange}
