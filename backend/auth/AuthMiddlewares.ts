@@ -13,5 +13,5 @@ export function authenticateWithToken(req: Request, res: Response, next: NextFun
 }
 
 export function authenticateWithSaml(req: Request, res: Response, next: NextFunction) {
-    return authenticateWith('token')(req, res, next);
+    return authenticateWith('saml')(req, res, next);
 }
