@@ -38,7 +38,7 @@ function renderCheckboxField(name: string, checked: boolean, onChange: (event: E
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
 
-interface Props {
+interface ExecuteWorkflowProps {
     baseWorkflowParams: WorkflowParams;
     userWorkflowParams: WorkflowParams;
     errors: {
@@ -59,7 +59,7 @@ interface Props {
     createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
-const ExecuteWorkflow: FunctionComponent<Props> = ({
+const ExecuteWorkflow: FunctionComponent<ExecuteWorkflowProps> = ({
     baseWorkflowParams,
     userWorkflowParams,
     handleYamlFileChange,
