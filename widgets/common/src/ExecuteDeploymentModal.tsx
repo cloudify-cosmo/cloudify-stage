@@ -1,32 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-function isWorkflowName(workflow) {
-    return typeof workflow === 'string';
-}
+import ExecuteWorkflow, { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './ExecuteWorkflow';
 
-function getWorkflowName(workflow) {
-    return isWorkflowName(workflow) ? workflow : workflow.name;
-}
-
-const t = Stage.Utils.getT('widgets.common.deployments.executeModal');
-
-function renderActionCheckbox(name, checked, onChange) {
-    const { Checkbox } = Stage.Basic.Form;
-    return (
-        <Checkbox
-            name={name}
-            toggle
-            label={t(`actions.${name}.label`)}
-            help={t(`actions.${name}.help`)}
-            checked={checked}
-            onChange={onChange}
-        />
-    );
-}
-
-function renderActionField(name, checked, onChange) {
-    const { Field } = Stage.Basic.Form;
-    return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
-}
+const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 export default function ExecuteDeploymentModal({
     deploymentId,
@@ -114,81 +89,24 @@ export default function ExecuteDeploymentModal({
 
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
-    function submitExecute() {
-        const { InputsUtils, DeploymentActions } = Stage.Common;
-        const validationErrors = {};
-
-        const name = getWorkflowName(workflow);
-        if (!name) {
-            setErrors(t('errors.missingWorkflow'));
-            return false;
-        }
-
-        const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
-        InputsUtils.addErrors(inputsWithoutValue, validationErrors);
-
-        if (schedule) {
-            const scheduledTimeMoment = moment(scheduledTime);
-            if (
-                !scheduledTimeMoment.isValid() ||
-                !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
-                scheduledTimeMoment.isBefore(moment())
-            ) {
-                validationErrors.scheduledTime = t('errors.scheduleTimeError');
-            }
-        }
-
-        if (!_.isEmpty(validationErrors)) {
-            setErrors(validationErrors);
-            return false;
-        }
-
-        const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
-
-        if (_.isFunction(onExecute) && onExecute !== _.noop) {
-            onExecute(workflowParameters, {
-                force,
-                dryRun,
-                queue,
-                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-            });
-            onHide();
-            return true;
-        }
-
-        if (_.isEmpty(deploymentsList)) {
-            setErrors(t('errors.missingDeployment'));
-            return false;
-        }
-
-        setLoading();
-        const actions = new DeploymentActions(toolbox);
-
-        const executePromises = _.map(deploymentsList, id => {
-            return actions
-                .doExecute(id, name, workflowParameters, {
-                    force,
-                    dryRun,
-                    queue,
-                    scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
-                })
-                .then(() => {
-                    // State updates should be done before calling `onHide` to avoid React errors:
-                    // "Warning: Can't perform a React state update on an unmounted component"
-                    unsetLoading();
-                    clearErrors();
-                    onHide();
-                    toolbox.getEventBus().trigger('executions:refresh');
-                    // NOTE: pass id to keep the current deployment selected
-                    toolbox.getEventBus().trigger('deployments:refresh', id);
-                });
-        });
-
-        return Promise.all(executePromises).catch(err => {
-            unsetLoading();
-            setMessageAsError(err);
-        });
-    }
+    const submitExecute = createExecuteWorkflowFunction({
+        setLoading,
+        toolbox,
+        workflow,
+        baseWorkflowParams,
+        userWorkflowParams,
+        schedule,
+        scheduledTime,
+        force,
+        dryRun,
+        queue,
+        deploymentId,
+        setErrors,
+        unsetLoading,
+        clearErrors,
+        onExecute,
+        onHide
+    });
 
     function onApprove() {
         clearErrors();
@@ -220,8 +138,7 @@ export default function ExecuteDeploymentModal({
         setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
-    const { ApproveButton, CancelButton, DateInput, Divider, Form, Header, Icon, Modal, Message } = Stage.Basic;
-    const { InputsHeader, InputsUtils, YamlFileButton } = Stage.Common;
+    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
     let headerKey = 'header.';
     if (!_.isEmpty(deploymentsList)) {
@@ -234,6 +151,35 @@ export default function ExecuteDeploymentModal({
         }
     } else {
         headerKey += 'noDeployment';
+    }
+
+    function createChangeEvent(fieldName: string) {
+        return (event, field) => {
+            switch (fieldName) {
+                case 'force':
+                    setForce(field.checked);
+                    break;
+                case 'dryRun':
+                    setDryRun(field.checked);
+                    break;
+                case 'queue':
+                    clearForce();
+                    clearDryRun();
+                    clearSchedule();
+                    clearScheduleTime();
+                    clearErrors();
+                    setQueue(field.checked);
+                    break;
+                case 'schedule':
+                    setSchedule(field.checked);
+                    break;
+                case 'scheduledTime':
+                    setScheduledTime(field.value);
+                    break;
+                default:
+                    break;
+            }
+        };
     }
 
     return (
@@ -251,57 +197,21 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    {!_.isEmpty(baseWorkflowParams) && (
-                        <YamlFileButton
-                            onChange={handleYamlFileChange}
-                            dataType="execution parameters"
-                            fileLoading={isFileLoading}
-                        />
-                    )}
-
-                    <InputsHeader header={t('paramsHeader')} compact />
-
-                    {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
-
-                    {InputsUtils.getInputFields(baseWorkflowParams, handleInputChange, userWorkflowParams, errors)}
-
-                    {!hideOptions && (
-                        <>
-                            <Form.Divider>
-                                <Header size="tiny">{t('actionsHeader')}</Header>
-                            </Form.Divider>
-
-                            {renderActionField('force', force, (event, field) => setForce(field.checked))}
-                            {renderActionField('dryRun', dryRun, (event, field) => setDryRun(field.checked))}
-                            {renderActionField('queue', queue, (event, field) => {
-                                setQueue(field.checked);
-                                clearForce();
-                                clearDryRun();
-                                clearSchedule();
-                                clearScheduleTime();
-                                clearErrors();
-                            })}
-
-                            <Form.Field error={!!errors.scheduledTime}>
-                                {renderActionCheckbox('schedule', schedule, (event, field) =>
-                                    setSchedule(field.checked)
-                                )}
-                                {schedule && (
-                                    <>
-                                        <Divider hidden />
-                                        <DateInput
-                                            name="scheduledTime"
-                                            value={scheduledTime}
-                                            defaultValue=""
-                                            minDate={moment()}
-                                            maxDate={moment().add(1, 'Y')}
-                                            onChange={(event, field) => setScheduledTime(field.value)}
-                                        />
-                                    </>
-                                )}
-                            </Form.Field>
-                        </>
-                    )}
+                    <ExecuteWorkflow
+                        baseWorkflowParams={baseWorkflowParams}
+                        userWorkflowParams={userWorkflowParams}
+                        handleYamlFileChange={handleYamlFileChange}
+                        handleExecuteInputChange={handleInputChange}
+                        fileLoading={isFileLoading}
+                        errors={errors}
+                        showInstallOptions={!hideOptions}
+                        force={force}
+                        dryRun={dryRun}
+                        queue={queue}
+                        schedule={schedule}
+                        scheduledTime={scheduledTime}
+                        createChangeEvent={createChangeEvent}
+                    />
                 </Form>
             </Modal.Content>
 
