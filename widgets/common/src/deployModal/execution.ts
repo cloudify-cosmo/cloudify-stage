@@ -1,19 +1,19 @@
+type MapStrings = {
+    [key: string]: string;
+};
+
 export type Workflow =
     | string
     | {
           name: string;
           id?: string;
           plan?: {
-              inputs?: { [key: string]: string };
-              workflows?: { install?: { [key: string]: string } };
+              inputs?: MapStrings;
+              workflows?: { install?: MapStrings };
           };
       };
 
-export type Errors =
-    | string
-    | {
-          [key: string]: string;
-      };
+export type Errors = string | MapStrings;
 
 export function isWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string';
@@ -61,7 +61,7 @@ export const createExecuteWorkflowFunction = ({
     setLoading();
 
     const { InputsUtils, DeploymentActions } = Stage.Common;
-    const validationErrors: { [key: string]: string } = {};
+    const validationErrors: MapStrings = {};
     const deployments: any[] = [];
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
