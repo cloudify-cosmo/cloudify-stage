@@ -157,7 +157,7 @@ export default function ExecuteDeploymentModal({
         headerKey += 'noDeployment';
     }
 
-    function createChangeEvent(fieldName: string) {
+    function createOnChangeEvent(fieldName: string) {
         return (event, field) => {
             switch (fieldName) {
                 case 'force':
@@ -214,7 +214,7 @@ export default function ExecuteDeploymentModal({
                         queue={queue}
                         schedule={schedule}
                         scheduledTime={scheduledTime}
-                        createChangeEvent={createChangeEvent}
+                        createOnChangeEvent={createOnChangeEvent}
                     />
                 </Form>
             </Modal.Content>

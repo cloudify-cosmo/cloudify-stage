@@ -194,7 +194,7 @@ interface ExecuteWorkflowInputsProps {
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    createChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
+    createOnChangeEvent: (fieldName: string) => (event: Event, field: Field) => void;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
@@ -210,7 +210,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     queue,
     schedule,
     scheduledTime,
-    createChangeEvent
+    createOnChangeEvent
 }) => {
     const { Message, Form, UnsafelyTypedFormField, Header, Divider, DateInput } = Stage.Basic;
     const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
@@ -233,12 +233,12 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                         <Header size="tiny">{t('actionsHeader')}</Header>
                     </Form.Divider>
 
-                    {renderCheckboxField('force', force, createChangeEvent('force'))}
-                    {renderCheckboxField('dryRun', dryRun, createChangeEvent('dryRun'))}
-                    {renderCheckboxField('queue', queue, createChangeEvent('queue'))}
+                    {renderCheckboxField('force', force, createOnChangeEvent('force'))}
+                    {renderCheckboxField('dryRun', dryRun, createOnChangeEvent('dryRun'))}
+                    {renderCheckboxField('queue', queue, createOnChangeEvent('queue'))}
 
                     <UnsafelyTypedFormField error={!!errors.scheduledTime}>
-                        {renderActionCheckbox('schedule', schedule, createChangeEvent('schedule'))}
+                        {renderActionCheckbox('schedule', schedule, createOnChangeEvent('schedule'))}
                         {schedule && (
                             <>
                                 <Divider hidden />
@@ -248,7 +248,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                                     defaultValue=""
                                     minDate={moment()}
                                     maxDate={moment().add(1, 'year')}
-                                    onChange={createChangeEvent('scheduledTime')}
+                                    onChange={createOnChangeEvent('scheduledTime')}
                                 />
                             </>
                         )}
