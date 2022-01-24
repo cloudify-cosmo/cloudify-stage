@@ -2,22 +2,18 @@ import type { FunctionComponent } from 'react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-type MapStrings = {
-    [key: string]: string;
-};
-
 export type Workflow =
     | string
     | {
           name: string;
           id?: string;
           plan?: {
-              inputs?: MapStrings;
-              workflows?: { install?: MapStrings };
+              inputs?: Record<string, string>;
+              workflows?: { install?: Record<string, string> };
           };
       };
 
-export type Errors = string | MapStrings;
+export type Errors = string | Record<string, string>;
 
 export function isWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string';
@@ -71,7 +67,7 @@ export const executeWorkflowFunction = ({
     setLoading();
 
     const { InputsUtils, DeploymentActions } = Stage.Common;
-    const validationErrors: MapStrings = {};
+    const validationErrors: Record<string, string> = {};
     const deployments: any[] = [];
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
