@@ -7,7 +7,6 @@ import { db } from '../db/Connection';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (req, res, next) => {
