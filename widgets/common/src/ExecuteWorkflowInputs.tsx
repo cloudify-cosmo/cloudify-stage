@@ -151,9 +151,9 @@ type WorkflowParams = {
     };
 };
 
-type EventFunction = (event: Event, field: Field) => void;
+type OnChange = (event: Event, field: Field) => void;
 
-function renderActionCheckbox(name: string, checked: boolean, onChange: EventFunction) {
+function renderActionCheckbox(name: string, checked: boolean, onChange: OnChange) {
     const { Checkbox } = Stage.Basic.Form;
     return (
         <Checkbox
@@ -167,7 +167,7 @@ function renderActionCheckbox(name: string, checked: boolean, onChange: EventFun
     );
 }
 
-function renderCheckboxField(name: string, checked: boolean, onChange: EventFunction) {
+function renderCheckboxField(name: string, checked: boolean, onChange: OnChange) {
     const { Field } = Stage.Basic.Form;
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
@@ -183,18 +183,18 @@ interface ExecuteWorkflowInputsProps {
     };
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onWorkflowInputChange: EventFunction;
+    onWorkflowInputChange: OnChange;
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    onForceChange: EventFunction;
-    onDryRynChange: EventFunction;
-    onQueueChange: EventFunction;
-    onScheduleChange: EventFunction;
-    onScheduledTimeChange: EventFunction;
+    onForceChange: OnChange;
+    onDryRynChange: OnChange;
+    onQueueChange: OnChange;
+    onScheduleChange: OnChange;
+    onScheduledTimeChange: OnChange;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
