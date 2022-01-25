@@ -30,6 +30,7 @@ const isValidScheduledTime = (time: string) => {
 };
 
 export const executeWorkflow = ({
+    deployments,
     setLoading,
     toolbox,
     workflow,
@@ -47,6 +48,7 @@ export const executeWorkflow = ({
     onExecute,
     onHide = () => {}
 }: {
+    deployments: any[];
     setLoading: () => void;
     toolbox: any;
     workflow: Workflow;
@@ -68,7 +70,6 @@ export const executeWorkflow = ({
 
     const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Record<string, string> = {};
-    const deployments: any[] = [];
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
     const name = getWorkflowName(workflow);

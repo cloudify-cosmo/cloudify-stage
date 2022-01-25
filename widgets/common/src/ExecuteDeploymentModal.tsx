@@ -197,6 +197,7 @@ export default function ExecuteDeploymentModal({
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <ExecuteWorkflowInputs
+                        deployments={deployments}
                         baseWorkflowParams={baseWorkflowParams}
                         userWorkflowParams={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
