@@ -1,7 +1,6 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import request from 'request';
-import passport from 'passport';
 import _ from 'lodash';
 import { getConfig } from '../config';
 import { jsonRequest } from '../handler/ManagerHandler';
@@ -9,7 +8,6 @@ import { getLogger } from '../handler/LoggerHandler';
 
 const router = express.Router();
 const logger = getLogger('GitHub');
-
 const params = getConfig().app.github;
 const authList = {};
 
@@ -99,7 +97,6 @@ function addIsAuthToResponseBody(req: Request, res: ResponseWithData) {
 
 router.get(
     '/search/repositories',
-    passport.authenticate('token', { session: false }),
     (req: Request, res: Response, next: NextFunction) => {
         setAuthorizationHeader(req, res, next, true);
     },
@@ -111,7 +108,6 @@ router.get(
 
 router.get(
     '/repos/:user/:repo/git/trees/master',
-    passport.authenticate('token', { session: false }),
     (req, res, next) => {
         setAuthorizationHeader(req, res, next, false);
     },
