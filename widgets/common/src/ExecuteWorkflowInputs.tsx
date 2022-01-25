@@ -93,12 +93,15 @@ export const executeWorkflow = ({
 
     const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
 
+    const scheduleTime = (schedule: any, scheduledTime: string) =>
+        schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
+
     if (_.isFunction(onExecute) && onExecute !== _.noop) {
         onExecute(workflowParameters, {
             force,
             dryRun,
             queue,
-            scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+            scheduledTime: scheduleTime(schedule, scheduledTime)
         });
         onHide();
         return true;
@@ -117,7 +120,7 @@ export const executeWorkflow = ({
                 force,
                 dryRun,
                 queue,
-                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                scheduledTime: scheduleTime(schedule, scheduledTime)
             })
             .then(() => {
                 unsetLoading();
