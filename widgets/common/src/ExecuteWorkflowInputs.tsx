@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import type { BaseWorkflowInputs } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -8,17 +9,6 @@ type Field = {
     type: string;
     checked?: string;
 };
-
-type BaseWorkflowInputs = Record<
-    string,
-    {
-        type?: string;
-        default?: string;
-        constraints?: {
-            pattern: string;
-        }[];
-    }
->;
 
 type OnChange = (event: Event, field: Field) => void;
 

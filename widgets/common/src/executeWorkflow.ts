@@ -1,5 +1,16 @@
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
+export type BaseWorkflowInputs = Record<
+    string,
+    {
+        type?: string;
+        default?: string;
+        constraints?: {
+            pattern: string;
+        }[];
+    }
+>;
+
 export type Workflow =
     | string
     | {
@@ -51,9 +62,9 @@ export const executeWorkflow = ({
 }: {
     deployments: any[];
     setLoading: () => void;
-    toolbox: any;
+    toolbox: Stage.Types.Toolbox;
     workflow: Workflow;
-    baseWorkflowParams: any;
+    baseWorkflowParams: BaseWorkflowInputs;
     userWorkflowParams: any;
     schedule: any;
     scheduledTime: string;
