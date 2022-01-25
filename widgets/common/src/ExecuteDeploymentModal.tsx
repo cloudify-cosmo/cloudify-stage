@@ -155,14 +155,17 @@ export default function ExecuteDeploymentModal({
         headerKey += 'noDeployment';
     }
 
-    const onForceChange = (event: Event, field: Field) => {
+    const clearErrorsAndQueue = () => {
         clearErrors();
         clearQueue();
+    };
+
+    const onForceChange = (event: Event, field: Field) => {
+        clearErrorsAndQueue();
         setForce(field.checked);
     };
     const onDryRynChange = (event: Event, field: Field) => {
-        clearErrors();
-        clearQueue();
+        clearErrorsAndQueue();
         setDryRun(field.checked);
     };
     const onQueueChange = (event: Event, field: Field) => {
@@ -174,13 +177,11 @@ export default function ExecuteDeploymentModal({
         setQueue(field.checked);
     };
     const onScheduleChange = (event: Event, field: Field) => {
-        clearErrors();
-        clearQueue();
+        clearErrorsAndQueue();
         setSchedule(field.checked);
     };
     const onScheduledTimeChange = (event: Event, field: Field) => {
-        clearErrors();
-        clearQueue();
+        clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
 
