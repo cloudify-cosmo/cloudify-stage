@@ -29,6 +29,9 @@ const isValidScheduledTime = (time: string) => {
     return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
 };
 
+const scheduleTime = (schedule: any, scheduledTime: string) =>
+    schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
+
 export const executeWorkflow = ({
     deployments,
     setLoading,
@@ -92,9 +95,6 @@ export const executeWorkflow = ({
     }
 
     const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
-
-    const scheduleTime = (schedule: any, scheduledTime: string) =>
-        schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
 
     if (_.isFunction(onExecute) && onExecute !== _.noop) {
         onExecute(workflowParameters, {
