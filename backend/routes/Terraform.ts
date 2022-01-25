@@ -71,9 +71,9 @@ router.post('/resources', (req, res) => {
 router.post('/blueprint', (req, res) => {
     const {
         blueprintName,
-        terraformVersion = '',
-        terraformTemplate = '',
-        resourceLocation = '',
+        terraformVersion,
+        terraformTemplate,
+        resourceLocation,
         urlAuthentication,
         variables = [],
         environmentVariables = [],

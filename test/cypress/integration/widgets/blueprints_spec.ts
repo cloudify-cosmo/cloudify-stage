@@ -601,7 +601,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it('handle template URL authentication', () => {
+        it('handle template URL 401', () => {
             cy.intercept(
                 {
                     method: 'POST',
@@ -613,24 +613,52 @@ describe('Blueprints widget', () => {
 
             openTerraformModal();
 
-            cy.getField('URL to a zip archive that contains the Terraform module')
-                .find('input')
-                .type(singleModuleTerraformTemplateUrl)
-                .blur();
-            cy.contains('The URL requires authentication');
+            cy.get('.modal').within(() => {
+                cy.getField('URL to a zip archive that contains the Terraform module')
+                    .find('input')
+                    .type(singleModuleTerraformTemplateUrl)
+                    .blur();
+                cy.contains('The URL requires authentication');
+            });
+        });
 
-            cy.intercept({
-                method: 'POST',
-                pathname: '/console/terraform/resources',
-                query: { zipUrl: singleModuleTerraformTemplateUrl },
-                headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
-            }).as('resources');
+        it.only('handle template URL authentication', () => {
+            const blueprintName = `${blueprintNamePrefix}_terraform_url_auth`;
 
-            cy.getField('URL authentication').find('label').click();
-            cy.getField('Username').find('input').type('username');
-            cy.getField('Password').find('input').type('password').blur();
+            cy.deleteSecrets(blueprintName);
 
-            cy.wait('@resources');
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.intercept({
+                    method: 'POST',
+                    pathname: '/console/terraform/resources',
+                    query: { zipUrl: singleModuleTerraformTemplateUrl },
+                    headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
+                }).as('resources');
+
+                cy.getField('Blueprint name').find('input').type(blueprintName);
+
+                cy.getField('URL authentication').find('label').click();
+                cy.getField('Username').find('input').type('username');
+                cy.getField('Password').find('input').type('password');
+
+                cy.getField('URL to a zip archive that contains the Terraform module')
+                    .find('input')
+                    .type(singleModuleTerraformTemplateUrl)
+                    .blur();
+
+                cy.wait('@resources');
+
+                cy.setSingleDropdownValue('Terraform folder in the archive', 'local');
+                cy.clickButton('Create');
+                cy.contains('Uploading Terraform blueprint', { timeout: secondsToMs(30) }).should('be.visible');
+            });
+            cy.get('.modal', { timeout: secondsToMs(60) }).should('not.exist');
+
+            cy.getSecrets(blueprintName).then(response => {
+                expect(response.body.items).to.have.length(2);
+            });
         });
 
         describe('create installable blueprint on submit from', () => {
