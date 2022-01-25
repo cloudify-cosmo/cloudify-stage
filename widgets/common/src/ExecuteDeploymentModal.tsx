@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
-import ExecuteWorkflowInputs, { executeWorkflow, isWorkflowName, getWorkflowName } from './ExecuteWorkflowInputs';
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
