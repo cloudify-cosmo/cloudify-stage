@@ -27,7 +27,7 @@ const isValidScheduledTime = (time: string) => {
     return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
 };
 
-const scheduleTime = (schedule: any, scheduledTime: string) =>
+const normalizeScheduledTime = (schedule: any, scheduledTime: string) =>
     schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
 
 export const executeWorkflow = ({
@@ -99,7 +99,7 @@ export const executeWorkflow = ({
             force,
             dryRun,
             queue,
-            scheduledTime: scheduleTime(schedule, scheduledTime)
+            scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
         });
         onHide();
         return true;
@@ -118,7 +118,7 @@ export const executeWorkflow = ({
                 force,
                 dryRun,
                 queue,
-                scheduledTime: scheduleTime(schedule, scheduledTime)
+                scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
             })
             .then(() => {
                 unsetLoading();
