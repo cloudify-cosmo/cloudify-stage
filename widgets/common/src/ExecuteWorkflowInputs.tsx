@@ -44,12 +44,7 @@ function renderCheckboxField(name: string, checked: boolean, onChange: OnChange)
 interface ExecuteWorkflowInputsProps {
     baseWorkflowInputs: BaseWorkflowInputs;
     userWorkflowParams: any;
-    errors: {
-        errors?: string;
-        scheduledTime?: string;
-        yamlFile?: string;
-        [inputName: string]: undefined | string;
-    };
+    errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
     onWorkflowInputChange: OnChange;
