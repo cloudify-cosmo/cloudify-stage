@@ -1,10 +1,10 @@
-import { authenticate } from 'passport';
+import passport from 'passport';
 import type { Request, Response, NextFunction } from 'express';
 
 type AuthenticateMiddleware = (req: Request, res: Response, next: NextFunction) => ReturnType<typeof authenticateWith>;
 
 function authenticateWith(strategy: 'cookie' | 'token' | 'saml') {
-    return authenticate(strategy, { session: false });
+    return passport.authenticate(strategy, { session: false });
 }
 export const authenticateWithCookie: AuthenticateMiddleware = (req, res, next) => {
     return authenticateWith('cookie')(req, res, next);
