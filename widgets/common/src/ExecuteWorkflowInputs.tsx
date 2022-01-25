@@ -145,15 +145,16 @@ type Field = {
     checked?: string;
 };
 
-type WorkflowParams = {
-    [key: string]: {
+type WorkflowParams = Record<
+    string,
+    {
         type?: string;
         default?: string;
         constraints?: {
             pattern: string;
         }[];
-    };
-};
+    }
+>;
 
 type OnChange = (event: Event, field: Field) => void;
 
