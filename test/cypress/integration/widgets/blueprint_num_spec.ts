@@ -5,20 +5,16 @@ describe('Number of Blueprints widget', () => {
         cy.get('.blueprintNumWidget .statistic').click();
     }
 
-    function verifyUrl(expectedPageId: string) {
-        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
-    }
-
     function setWidgetConfiguration(pageToOpenOnClick: string) {
         cy.editWidgetConfiguration(widgetId, () => {
             cy.setSingleDropdownValue('Page to open on click', pageToOpenOnClick);
         });
     }
 
-    it('Opens the default page on click', () => {
+    it('opens the default page on click', () => {
         cy.activate().login().addWidget(widgetId);
         clickOnWidget();
-        verifyUrl('blueprints');
+        cy.verifyLocationByPageId('blueprints');
     });
 
     describe('', () => {
@@ -42,7 +38,7 @@ describe('Number of Blueprints widget', () => {
         it('opens chosen page after configuration change on click', () => {
             setWidgetConfiguration(pageName);
             clickOnWidget();
-            verifyUrl(pageId);
+            cy.verifyLocationByPageId(pageId);
         });
     });
 });
