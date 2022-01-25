@@ -43,7 +43,7 @@ function renderCheckboxField(name: string, checked: boolean, onChange: OnChange)
 
 interface ExecuteWorkflowInputsProps {
     baseWorkflowInputs: BaseWorkflowInputs;
-    userWorkflowParams: any;
+    userWorkflowInputsState: any;
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
@@ -63,7 +63,7 @@ interface ExecuteWorkflowInputsProps {
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     baseWorkflowInputs,
-    userWorkflowParams,
+    userWorkflowInputsState,
     onYamlFileChange,
     fileLoading,
     onWorkflowInputChange,
@@ -90,7 +90,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
             <InputsHeader header={t('paramsHeader')} compact />
             {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} />}
 
-            {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowParams, errors)}
+            {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

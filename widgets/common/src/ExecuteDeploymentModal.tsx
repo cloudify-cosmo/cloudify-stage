@@ -200,7 +200,7 @@ export default function ExecuteDeploymentModal({
                     <ExecuteWorkflowInputs
                         deployments={deployments}
                         baseWorkflowInputs={baseWorkflowParams}
-                        userWorkflowParams={userWorkflowParams}
+                        userWorkflowInputsState={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
                         onWorkflowInputChange={handleInputChange}
                         fileLoading={isFileLoading}
