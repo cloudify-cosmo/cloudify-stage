@@ -40,7 +40,7 @@ const isValidScheduledTime = (time: string) => {
     return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
 };
 
-const normalizeScheduledTime = (schedule: any, scheduledTime: string) =>
+const normalizeScheduledTime = (schedule: boolean, scheduledTime: string) =>
     schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
 
 export const executeWorkflow = ({
@@ -68,7 +68,7 @@ export const executeWorkflow = ({
     workflow: Workflow;
     baseWorkflowParams: BaseWorkflowInputs;
     userWorkflowParams: UserWorkflowInputsState;
-    schedule: any;
+    schedule: boolean;
     scheduledTime: string;
     force: boolean;
     dryRun: boolean;
