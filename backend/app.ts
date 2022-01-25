@@ -6,6 +6,7 @@ import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import type { Router } from 'express';
 
 import { getConfig, getClientConfig } from './config';
 import { CONTEXT_PATH } from './consts';
@@ -101,24 +102,28 @@ app.use(
         indexFromEmptyFile: false
     })
 );
-
 // API Routes (with authentication)
-app.use(`${contextPath}/applications`, authenticateWithToken, Applications);
-app.use(`${contextPath}/ba`, authenticateWithToken, BlueprintAdditions);
-app.use(`${contextPath}/bud`, authenticateWithToken, BlueprintUserData);
-app.use(`${contextPath}/clientConfig`, authenticateWithToken, ClientConfig);
-app.use(`${contextPath}/external`, authenticateWithToken, External);
-app.use(`${contextPath}/file`, authenticateWithToken, File);
-app.use(`${contextPath}/filters`, authenticateWithToken, Filters);
-app.use(`${contextPath}/github`, authenticateWithToken, GitHub);
-app.use(`${contextPath}/maps`, authenticateWithToken, Maps);
-app.use(`${contextPath}/plugins`, authenticateWithToken, Plugins);
-app.use(`${contextPath}/source`, authenticateWithToken, SourceBrowser);
-app.use(`${contextPath}/templates`, authenticateWithToken, Templates);
-app.use(`${contextPath}/terraform`, authenticateWithToken, Terraform);
-app.use(`${contextPath}/ua`, authenticateWithToken, UserApp);
-app.use(`${contextPath}/wb`, authenticateWithToken, WidgetBackend);
-app.use(`${contextPath}/widgets`, authenticateWithToken, Widgets);
+const authenticatedApiRoutes: Record<string, Router> = {
+    applications: Applications,
+    ba: BlueprintAdditions,
+    bud: BlueprintUserData,
+    clientConfig: ClientConfig,
+    external: External,
+    file: File,
+    filters: Filters,
+    github: GitHub,
+    maps: Maps,
+    plugins: Plugins,
+    source: SourceBrowser,
+    templates: Templates,
+    terraform: Terraform,
+    ua: UserApp,
+    wb: WidgetBackend,
+    widgets: Widgets
+};
+Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
+    app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
+);
 
 // API Routes (without authentication)
 app.use(`${contextPath}/auth`, Auth);
