@@ -9,7 +9,7 @@ type Field = {
     checked?: string;
 };
 
-type WorkflowParams = Record<
+type BaseWorkflowInputs = Record<
     string,
     {
         type?: string;
@@ -42,8 +42,8 @@ function renderCheckboxField(name: string, checked: boolean, onChange: OnChange)
 }
 
 interface ExecuteWorkflowInputsProps {
-    baseWorkflowParams: WorkflowParams;
-    userWorkflowParams: WorkflowParams;
+    baseWorkflowInputs: BaseWorkflowInputs;
+    userWorkflowParams: any;
     errors: {
         errors?: string;
         scheduledTime?: string;
@@ -67,7 +67,7 @@ interface ExecuteWorkflowInputsProps {
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
-    baseWorkflowParams,
+    baseWorkflowInputs,
     userWorkflowParams,
     onYamlFileChange,
     fileLoading,
@@ -89,13 +89,13 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
     return (
         <>
-            {!_.isEmpty(baseWorkflowParams) && (
+            {!_.isEmpty(baseWorkflowInputs) && (
                 <YamlFileButton onChange={onYamlFileChange} dataType="execution parameters" fileLoading={fileLoading} />
             )}
             <InputsHeader header={t('paramsHeader')} compact />
-            {_.isEmpty(baseWorkflowParams) && <Message content={t('noParams')} />}
+            {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} />}
 
-            {InputsUtils.getInputFields(baseWorkflowParams, onWorkflowInputChange, userWorkflowParams, errors)}
+            {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowParams, errors)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

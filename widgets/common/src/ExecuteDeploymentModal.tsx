@@ -199,7 +199,7 @@ export default function ExecuteDeploymentModal({
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <ExecuteWorkflowInputs
                         deployments={deployments}
-                        baseWorkflowParams={baseWorkflowParams}
+                        baseWorkflowInputs={baseWorkflowParams}
                         userWorkflowParams={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
                         onWorkflowInputChange={handleInputChange}
