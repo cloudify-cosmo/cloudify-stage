@@ -108,7 +108,6 @@ export const executeWorkflowFunction = ({
         return false;
     }
 
-    setLoading();
     const actions = new DeploymentActions(toolbox);
 
     const executePromises = _.map(deploymentsList, id => {
