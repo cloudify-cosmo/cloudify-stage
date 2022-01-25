@@ -1,9 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import ExecuteWorkflowInputs, {
-    executeWorkflowFunction,
-    isWorkflowName,
-    getWorkflowName
-} from './ExecuteWorkflowInputs';
+import ExecuteWorkflowInputs, { executeWorkflow, isWorkflowName, getWorkflowName } from './ExecuteWorkflowInputs';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -95,7 +91,7 @@ export default function ExecuteDeploymentModal({
 
     function onApprove() {
         clearErrors();
-        executeWorkflowFunction({
+        executeWorkflow({
             setLoading,
             toolbox,
             workflow,

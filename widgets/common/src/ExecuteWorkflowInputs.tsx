@@ -29,7 +29,7 @@ const isValidScheduledTime = (time: string) => {
     return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
 };
 
-export const executeWorkflowFunction = ({
+export const executeWorkflow = ({
     setLoading,
     toolbox,
     workflow,
