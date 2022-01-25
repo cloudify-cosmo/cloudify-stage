@@ -1,13 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
 import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (_req, res, next) => {
