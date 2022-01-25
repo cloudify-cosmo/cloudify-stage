@@ -11,6 +11,8 @@ export type BaseWorkflowInputs = Record<
     }
 >;
 
+export type UserWorkflowInputsState = Record<string, string | number | boolean | null | undefined>;
+
 export type Workflow =
     | string
     | {
@@ -65,7 +67,7 @@ export const executeWorkflow = ({
     toolbox: Stage.Types.Toolbox;
     workflow: Workflow;
     baseWorkflowParams: BaseWorkflowInputs;
-    userWorkflowParams: any;
+    userWorkflowParams: UserWorkflowInputsState;
     schedule: any;
     scheduledTime: string;
     force: boolean;

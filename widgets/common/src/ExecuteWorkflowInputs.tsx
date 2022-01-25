@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import type { BaseWorkflowInputs } from './executeWorkflow';
+import type { BaseWorkflowInputs, UserWorkflowInputsState } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -33,7 +33,7 @@ function renderCheckboxField(name: string, checked: boolean, onChange: OnChange)
 
 interface ExecuteWorkflowInputsProps {
     baseWorkflowInputs: BaseWorkflowInputs;
-    userWorkflowInputsState: any;
+    userWorkflowInputsState: UserWorkflowInputsState;
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
