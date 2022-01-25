@@ -622,7 +622,7 @@ describe('Blueprints widget', () => {
             });
         });
 
-        it.only('handle template URL authentication', () => {
+        it('handle template URL authentication', () => {
             const blueprintName = `${blueprintNamePrefix}_terraform_url_auth`;
 
             cy.deleteSecrets(blueprintName);
