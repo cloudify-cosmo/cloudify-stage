@@ -1,4 +1,4 @@
-import { secondsToMs } from 'test/cypress/support/resource_commons';
+import { secondsToMs, waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
 describe('Blueprints widget', () => {
@@ -455,10 +455,7 @@ describe('Blueprints widget', () => {
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.getField('URL to a zip archive that contains the Terraform module')
-                .find('input')
-                .type(templateUrl)
-                .blur();
+            cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', templateUrl).blur();
             cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
         }
 
@@ -593,7 +590,7 @@ describe('Blueprints widget', () => {
             const existingBlueprintName = `${blueprintNamePrefix}_existing`;
             cy.uploadBlueprint('blueprints/empty.zip', existingBlueprintName);
 
-            cy.getField('Blueprint name').find('input').type(existingBlueprintName);
+            cy.typeToFieldInput('Blueprint name', existingBlueprintName);
             setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
@@ -614,16 +611,18 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                cy.getField('URL to a zip archive that contains the Terraform module')
-                    .find('input')
-                    .type(singleModuleTerraformTemplateUrl)
-                    .blur();
+                cy.typeToFieldInput(
+                    'URL to a zip archive that contains the Terraform module',
+                    singleModuleTerraformTemplateUrl
+                ).blur();
                 cy.contains('The URL requires authentication');
             });
         });
 
         it('handle template URL authentication', () => {
             const blueprintName = `${blueprintNamePrefix}_terraform_url_auth`;
+            const username = 'username';
+            const password = 'password';
 
             cy.deleteSecrets(blueprintName);
 
@@ -637,27 +636,32 @@ describe('Blueprints widget', () => {
                     headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
                 }).as('resources');
 
-                cy.getField('Blueprint name').find('input').type(blueprintName);
+                cy.typeToFieldInput('Blueprint name', blueprintName);
 
                 cy.getField('URL authentication').find('label').click();
-                cy.getField('Username').find('input').type('username');
-                cy.getField('Password').find('input').type('password');
+                cy.typeToFieldInput('Username', username);
+                cy.typeToFieldInput('Password', password);
 
-                cy.getField('URL to a zip archive that contains the Terraform module')
-                    .find('input')
-                    .type(singleModuleTerraformTemplateUrl)
-                    .blur();
+                cy.typeToFieldInput(
+                    'URL to a zip archive that contains the Terraform module',
+                    singleModuleTerraformTemplateUrl
+                ).blur();
 
                 cy.wait('@resources');
 
                 cy.setSingleDropdownValue('Terraform folder in the archive', 'local');
                 cy.clickButton('Create');
-                cy.contains('Uploading Terraform blueprint', { timeout: secondsToMs(30) }).should('be.visible');
+                cy.contains('Generating Terraform blueprint').should('be.visible');
+                cy.contains('Uploading Terraform blueprint').should('be.visible');
             });
-            cy.get('.modal', { timeout: secondsToMs(60) }).should('not.exist');
+            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.get('.modal').should('not.exist');
 
-            cy.getSecrets(blueprintName).then(response => {
-                expect(response.body.items).to.have.length(2);
+            cy.getSecret(`${blueprintName}.username`).then(response => {
+                expect(response.body.value).to.equal(username);
+            });
+            cy.getSecret(`${blueprintName}.password`).then(response => {
+                expect(response.body.value).to.equal(password);
             });
         });
 
@@ -670,7 +674,7 @@ describe('Blueprints widget', () => {
                 const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
                 const deploymentId = blueprintName;
                 cy.get('.modal').within(() => {
-                    cy.getField('Blueprint name').find('input').type(blueprintName);
+                    cy.typeToFieldInput('Blueprint name', blueprintName);
                     setTemplateDetails(terraformTemplateUrl, modulePath);
                     cy.clickButton('Create');
                     cy.contains('Uploading Terraform blueprint').should('be.visible');
@@ -681,9 +685,9 @@ describe('Blueprints widget', () => {
                     cy.contains('tr', blueprintName).find('.rocket').click();
                 });
                 cy.get('.modal').within(() => {
-                    cy.getField('Deployment name').find('input').type(deploymentId);
+                    cy.typeToFieldInput('Deployment name', deploymentId);
                     cy.openAccordionSection('Advanced');
-                    cy.getField('Deployment ID').find('input').clear().type(deploymentId);
+                    cy.typeToFieldInput('Deployment ID', deploymentId);
                     cy.clickButton('Install');
                 });
                 cy.clickButton('Execute');

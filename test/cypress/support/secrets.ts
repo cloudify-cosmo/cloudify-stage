@@ -11,7 +11,7 @@ declare global {
 const commands = {
     deleteSecrets: (search: string) =>
         cy
-            .getSecrets(search)
+            .cfyRequest(`/secrets?_search=${search}`, 'GET')
             .then(response =>
                 response.body.items.forEach(({ key }: { key: string }) => cy.cfyRequest(`/secrets/${key}`, 'DELETE'))
             ),
@@ -19,7 +19,7 @@ const commands = {
     createSecret: (key: string, value: string) =>
         cy.cfyRequest(`/secrets/${key}`, 'PUT', null, { value }, { failOnStatusCode: false }),
 
-    getSecrets: (search: string) => cy.cfyRequest(`/secrets?_search=${search}`, 'GET')
+    getSecret: (key: string) => cy.cfyRequest(`/secrets/${key}`, 'GET')
 };
 
 addCommands(commands);
