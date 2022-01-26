@@ -36,7 +36,7 @@ interface ExecuteWorkflowInputsProps {
     schedule: boolean;
     scheduledTime: string;
     onForceChange: OnChange;
-    onDryRynChange: OnChange;
+    onDryRunChange: OnChange;
     onQueueChange: OnChange;
     onScheduleChange: OnChange;
     onScheduledTimeChange: OnChange;
@@ -56,7 +56,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     schedule,
     scheduledTime,
     onForceChange,
-    onDryRynChange,
+    onDryRunChange,
     onQueueChange,
     onScheduleChange,
     onScheduledTimeChange
@@ -79,7 +79,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     </Form.Divider>
 
                     {renderCheckboxField('force', force, onForceChange)}
-                    {renderCheckboxField('dryRun', dryRun, onDryRynChange)}
+                    {renderCheckboxField('dryRun', dryRun, onDryRunChange)}
                     {renderCheckboxField('queue', queue, onQueueChange)}
 
                     <UnsafelyTypedFormField error={!!errors.scheduledTime}>

@@ -162,7 +162,7 @@ export default function ExecuteDeploymentModal({
         clearErrorsAndQueue();
         setForce(field.checked);
     };
-    const onDryRynChange: OnChange = (event, field) => {
+    const onDryRunChange: OnChange = (event, field) => {
         clearErrorsAndQueue();
         setDryRun(field.checked);
     };
@@ -213,7 +213,7 @@ export default function ExecuteDeploymentModal({
                         schedule={schedule}
                         scheduledTime={scheduledTime}
                         onForceChange={onForceChange}
-                        onDryRynChange={onDryRynChange}
+                        onDryRunChange={onDryRunChange}
                         onQueueChange={onQueueChange}
                         onScheduleChange={onScheduleChange}
                         onScheduledTimeChange={onScheduledTimeChange}
