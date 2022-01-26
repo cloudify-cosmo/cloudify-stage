@@ -2,7 +2,7 @@ import { escapeRegExp, find } from 'lodash';
 import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
-const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json';
+const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
