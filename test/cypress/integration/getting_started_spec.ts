@@ -143,7 +143,7 @@ describe('Getting started modal', () => {
     // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
     describe('', () => {
         before(() => cy.enableGettingStarted().usePageMock().mockLogin('admin', 'admin', false));
-        beforeEach(() => cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`)));
+        beforeEach(() => cy.visit(`/console?gettingStarted=true`));
 
         it('should provide option to disable it', () => {
             cy.interceptSp('POST', `/users/admin`).as('disableRequest');
