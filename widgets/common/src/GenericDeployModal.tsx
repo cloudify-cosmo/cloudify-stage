@@ -4,8 +4,8 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions, { Buttons } from './deployModal/DeployModalActions';
-import InstallSection from './ExecuteWorkflow';
-import { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -68,8 +68,12 @@ class GenericDeployModal extends React.Component {
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
         this.setWorkflowParams = this.setWorkflowParams.bind(this);
-        this.submitExecute = this.submitExecute.bind(this);
-        this.createChangeEvent = this.createChangeEvent.bind(this);
+
+        this.onForceChange = this.onForceChange.bind(this);
+        this.onDryRunChange = this.onDryRunChange.bind(this);
+        this.onQueueChange = this.onQueueChange.bind(this);
+        this.onScheduleChange = this.onScheduleChange.bind(this);
+        this.onScheduledTimeChange = this.onScheduledTimeChange.bind(this);
     }
 
     componentDidMount() {
@@ -242,14 +246,43 @@ class GenericDeployModal extends React.Component {
         );
     }
 
-    setWorkflowParams(workflowResource) {
-        const { InputsUtils } = Stage.Common;
+    onForceChange(event, field) {
         this.setState({
-            baseWorkflowParams: workflowResource.parameters,
-            userWorkflowParams: _.mapValues(workflowResource.parameters, parameterData =>
-                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
-            )
+            errors: {},
+            queue: false,
+            force: field.checked
         });
+    }
+
+    onDryRunChange(event, field) {
+        this.setState({
+            errors: {},
+            queue: false,
+            dryRun: field.checked
+        });
+    }
+
+    onQueueChange(event, field) {
+        this.setState({
+            errors: {},
+            force: false,
+            dryRun: false,
+            schedule: false,
+            scheduledTime: '',
+            queue: field.checked
+        });
+    }
+
+    onScheduleChange(event, field) {
+        this.setState({
+            errors: {},
+            queue: false,
+            schedule: field.checked
+        });
+    }
+
+    onScheduledTimeChange(event, field) {
+        this.setState({ errors: {}, queue: false, scheduledTime: field.value });
     }
 
     getDeploymentParams() {
@@ -279,6 +312,16 @@ class GenericDeployModal extends React.Component {
         };
     }
 
+    setWorkflowParams(workflowResource) {
+        const { InputsUtils } = Stage.Common;
+        this.setState({
+            baseWorkflowParams: workflowResource.parameters,
+            userWorkflowParams: _.mapValues(workflowResource.parameters, parameterData =>
+                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+            )
+        });
+    }
+
     setLoadingMessage(message) {
         this.setState({ loadingMessage: message });
     }
@@ -298,8 +341,8 @@ class GenericDeployModal extends React.Component {
         } = this.state;
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
-            .then(
-                createExecuteWorkflowFunction({
+            .then(() =>
+                executeWorkflow({
                     setLoading: () => this.setState({ loading: false }),
                     toolbox,
                     workflow,
@@ -320,49 +363,6 @@ class GenericDeployModal extends React.Component {
             .catch(errors => {
                 this.setState({ loading: false, errors });
             });
-    }
-
-    createChangeEvent(fieldName: string) {
-        return (event, field) => {
-            switch (fieldName) {
-                case 'force':
-                    this.setState({
-                        errors: {},
-                        queue: false,
-                        force: field.checked
-                    });
-                    break;
-                case 'dryRun':
-                    this.setState({
-                        errors: {},
-                        queue: false,
-                        dryRun: field.checked
-                    });
-                    break;
-                case 'queue':
-                    this.setState({
-                        errors: {},
-                        force: false,
-                        dryRun: false,
-                        schedule: false,
-                        scheduledTime: '',
-                        queue: field.checked
-                    });
-                    break;
-                case 'schedule':
-                    this.setState({
-                        errors: {},
-                        queue: false,
-                        schedule: field.checked
-                    });
-                    break;
-                case 'scheduledTime':
-                    this.setState({ errors: {}, queue: false, scheduledTime: field.value });
-                    break;
-                default:
-                    break;
-            }
-        };
     }
 
     isBlueprintSelectable() {
@@ -662,11 +662,11 @@ class GenericDeployModal extends React.Component {
                                     activeSection={activeSection}
                                     onClick={this.onAccordionClick}
                                 >
-                                    <InstallSection
-                                        baseWorkflowParams={baseWorkflowParams}
-                                        userWorkflowParams={userWorkflowParams}
+                                    <ExecuteWorkflowInputs
+                                        baseWorkflowInputs={baseWorkflowParams}
+                                        userWorkflowInputsState={userWorkflowParams}
                                         handleYamlFileChange={this.handleYamlFileChange}
-                                        handleExecuteInputChange={this.handleExecuteInputChange}
+                                        onWorkflowInputChange={this.handleExecuteInputChange}
                                         fileLoading={fileLoading}
                                         errors={errors}
                                         showInstallOptions={showInstallOptions}
@@ -675,7 +675,11 @@ class GenericDeployModal extends React.Component {
                                         queue={queue}
                                         schedule={schedule}
                                         scheduledTime={scheduledTime}
-                                        createChangeEvent={this.createChangeEvent}
+                                        onForceChange={this.onForceChange}
+                                        onDryRunChange={this.onDryRunChange}
+                                        onQueueChange={this.onQueueChange}
+                                        onScheduleChange={this.onScheduleChange}
+                                        onScheduledTimeChange={this.onScheduledTimeChange}
                                     />
                                 </AccordionSectionWithDivider>
                             )}

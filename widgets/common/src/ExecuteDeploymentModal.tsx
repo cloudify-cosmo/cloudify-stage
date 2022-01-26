@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-import { createExecuteWorkflowFunction, isWorkflowName, getWorkflowName } from './deployModal/execution';
-import ExecuteWorkflow from './ExecuteWorkflow';
+import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import type { OnChange } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -90,28 +91,26 @@ export default function ExecuteDeploymentModal({
 
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
-    const submitExecute = createExecuteWorkflowFunction({
-        setLoading,
-        toolbox,
-        workflow,
-        baseWorkflowParams,
-        userWorkflowParams,
-        schedule,
-        scheduledTime,
-        force,
-        dryRun,
-        queue,
-        deploymentId,
-        setErrors,
-        unsetLoading,
-        clearErrors,
-        onExecute,
-        onHide
-    });
-
     function onApprove() {
         clearErrors();
-        submitExecute();
+        executeWorkflow({
+            deploymentsList,
+            setLoading,
+            toolbox,
+            workflow,
+            baseWorkflowParams,
+            userWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            setErrors,
+            unsetLoading,
+            clearErrors,
+            onExecute,
+            onHide
+        });
     }
 
     function handleYamlFileChange(file) {
@@ -154,34 +153,35 @@ export default function ExecuteDeploymentModal({
         headerKey += 'noDeployment';
     }
 
-    function createChangeEvent(fieldName: string) {
-        return (event, field) => {
-            switch (fieldName) {
-                case 'force':
-                    setForce(field.checked);
-                    break;
-                case 'dryRun':
-                    setDryRun(field.checked);
-                    break;
-                case 'queue':
-                    clearForce();
-                    clearDryRun();
-                    clearSchedule();
-                    clearScheduleTime();
-                    clearErrors();
-                    setQueue(field.checked);
-                    break;
-                case 'schedule':
-                    setSchedule(field.checked);
-                    break;
-                case 'scheduledTime':
-                    setScheduledTime(field.value);
-                    break;
-                default:
-                    break;
-            }
-        };
-    }
+    const clearErrorsAndQueue = () => {
+        clearErrors();
+        clearQueue();
+    };
+
+    const onForceChange: OnChange = (event, field) => {
+        clearErrorsAndQueue();
+        setForce(field.checked);
+    };
+    const onDryRunChange: OnChange = (event, field) => {
+        clearErrorsAndQueue();
+        setDryRun(field.checked);
+    };
+    const onQueueChange: OnChange = (event, field) => {
+        clearForce();
+        clearDryRun();
+        clearSchedule();
+        clearScheduleTime();
+        clearErrors();
+        setQueue(field.checked);
+    };
+    const onScheduleChange: OnChange = (event, field) => {
+        clearErrorsAndQueue();
+        setSchedule(field.checked);
+    };
+    const onScheduledTimeChange: OnChange = (event, field) => {
+        clearErrorsAndQueue();
+        setScheduledTime(field.value);
+    };
 
     return (
         <Modal open={open} onClose={onHide} className="executeWorkflowModal">
@@ -198,11 +198,12 @@ export default function ExecuteDeploymentModal({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <ExecuteWorkflow
-                        baseWorkflowParams={baseWorkflowParams}
-                        userWorkflowParams={userWorkflowParams}
-                        handleYamlFileChange={handleYamlFileChange}
-                        handleExecuteInputChange={handleInputChange}
+                    <ExecuteWorkflowInputs
+                        deployments={deployments}
+                        baseWorkflowInputs={baseWorkflowParams}
+                        userWorkflowInputsState={userWorkflowParams}
+                        onYamlFileChange={handleYamlFileChange}
+                        onWorkflowInputChange={handleInputChange}
                         fileLoading={isFileLoading}
                         errors={errors}
                         showInstallOptions={!hideOptions}
@@ -211,7 +212,11 @@ export default function ExecuteDeploymentModal({
                         queue={queue}
                         schedule={schedule}
                         scheduledTime={scheduledTime}
-                        createChangeEvent={createChangeEvent}
+                        onForceChange={onForceChange}
+                        onDryRunChange={onDryRunChange}
+                        onQueueChange={onQueueChange}
+                        onScheduleChange={onScheduleChange}
+                        onScheduledTimeChange={onScheduledTimeChange}
                     />
                 </Form>
             </Modal.Content>

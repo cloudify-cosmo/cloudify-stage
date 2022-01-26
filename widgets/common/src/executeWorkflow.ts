@@ -1,6 +1,28 @@
-type MapStrings = {
-    [key: string]: string;
+import type { ComponentProps } from 'react';
+
+const t = Stage.Utils.getT('widgets.common.deployments.execute');
+
+export type Field = {
+    name: string;
+    value: unknown;
+    type: string;
+    checked?: string;
 };
+
+export type OnChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
+
+export type BaseWorkflowInputs = Record<
+    string,
+    {
+        type?: string;
+        default?: string;
+        constraints?: {
+            pattern: string;
+        }[];
+    }
+>;
+
+export type UserWorkflowInputsState = Record<string, string | number | boolean | null | undefined>;
 
 export type Workflow =
     | string
@@ -8,12 +30,12 @@ export type Workflow =
           name: string;
           id?: string;
           plan?: {
-              inputs?: MapStrings;
-              workflows?: { install?: MapStrings };
+              inputs?: Record<string, string>;
+              workflows?: { install?: Record<string, string> };
           };
       };
 
-export type Errors = string | MapStrings;
+export type Errors = string | Record<string, string>;
 
 export function isWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string';
@@ -23,7 +45,17 @@ export function getWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
-export const createExecuteWorkflowFunction = ({
+const isValidScheduledTime = (scheduledTime: string) => {
+    const scheduledTimeMoment = moment(scheduledTime);
+    const hasProperFormat = _.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime);
+    return scheduledTimeMoment.isValid() && hasProperFormat && !scheduledTimeMoment.isBefore(moment());
+};
+
+const normalizeScheduledTime = (schedule: boolean, scheduledTime: string) =>
+    schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
+
+export const executeWorkflow = ({
+    deploymentsList,
     setLoading,
     toolbox,
     workflow,
@@ -34,41 +66,41 @@ export const createExecuteWorkflowFunction = ({
     force,
     dryRun,
     queue,
-    deploymentId,
     setErrors,
     unsetLoading,
     clearErrors,
     onExecute,
     onHide = () => {}
 }: {
+    deploymentsList: any[];
     setLoading: () => void;
-    toolbox: any;
+    toolbox: Stage.Types.Toolbox;
     workflow: Workflow;
-    baseWorkflowParams: any;
-    userWorkflowParams: any;
-    schedule: any;
-    scheduledTime: any;
+    baseWorkflowParams: BaseWorkflowInputs;
+    userWorkflowParams: UserWorkflowInputsState;
+    schedule: boolean;
+    scheduledTime: string;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
-    deploymentId: string;
     setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;
-    onExecute: () => void;
+    onExecute: (
+        installWorkflowParameters: Record<string, string>,
+        installWorkflowOptions: {
+            force: boolean;
+            dryRun: boolean;
+            queue: boolean;
+            scheduledTime: string;
+        }
+    ) => void;
     onHide: () => void;
-}) => () => {
-    setLoading();
-
+}) => {
     const { InputsUtils, DeploymentActions } = Stage.Common;
-    const validationErrors: MapStrings = {};
-    const deployments: any[] = [];
-    const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+    const validationErrors: Record<string, string> = {};
 
     const name = getWorkflowName(workflow);
-
-    const t = Stage.Utils.getT('widgets.common.deployments.execute');
-
     if (!name) {
         setErrors(t('errors.missingWorkflow'));
         return false;
@@ -77,15 +109,8 @@ export const createExecuteWorkflowFunction = ({
     const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
     InputsUtils.addErrors(inputsWithoutValue, validationErrors);
 
-    if (schedule) {
-        const scheduledTimeMoment = moment(scheduledTime);
-        if (
-            !scheduledTimeMoment.isValid() ||
-            !_.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime) ||
-            scheduledTimeMoment.isBefore(moment())
-        ) {
-            validationErrors.scheduledTime = t('errors.scheduleTimeError');
-        }
+    if (schedule && !isValidScheduledTime(scheduledTime)) {
+        validationErrors.scheduledTime = t('errors.scheduleTimeError');
     }
 
     if (!_.isEmpty(validationErrors)) {
@@ -100,7 +125,7 @@ export const createExecuteWorkflowFunction = ({
             force,
             dryRun,
             queue,
-            scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+            scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
         });
         onHide();
         return true;
@@ -114,13 +139,13 @@ export const createExecuteWorkflowFunction = ({
     setLoading();
     const actions = new DeploymentActions(toolbox);
 
-    const executePromises = _.map(deploymentsList, id => {
+    const executePromises = _.map(deploymentsList, (id: string) => {
         return actions
             .doExecute(id, name, workflowParameters, {
                 force,
                 dryRun,
                 queue,
-                scheduledTime: schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined
+                scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
             })
             .then(() => {
                 unsetLoading();
