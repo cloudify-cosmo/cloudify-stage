@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Modal } from '../basic';
-import gettingStartedSchema from './schema.json';
 import EnvironmentsStep from './steps/EnvironmentsStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
@@ -15,8 +14,6 @@ import type {
     GettingStartedEnvironmentsData
 } from './model';
 
-const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
-
 type Props = {
     stepName: StepName;
     environmentsStepData?: GettingStartedEnvironmentsData;
@@ -24,6 +21,7 @@ type Props = {
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
     summaryStepSchemas: GettingStartedSchemaItem[];
+    schema: GettingStartedSchema;
     onEnvironmentsStepChange: (environments: GettingStartedEnvironmentsData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
     onInstallationStarted: () => void;
@@ -38,6 +36,7 @@ const ModalContent = ({
     secretsStepsData,
     secretsStepIndex,
     summaryStepSchemas,
+    schema,
     onEnvironmentsStepChange,
     onSecretsStepChange,
     onInstallationStarted,
@@ -52,7 +51,7 @@ const ModalContent = ({
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
                 <EnvironmentsStep
-                    schema={castedGettingStartedSchema}
+                    schema={schema}
                     selectedEnvironment={environmentsStepData}
                     onChange={onEnvironmentsStepChange}
                 />
