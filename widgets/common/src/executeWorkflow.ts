@@ -1,5 +1,14 @@
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
+export type Field = {
+    name: string;
+    value: unknown;
+    type: string;
+    checked?: string;
+};
+
+export type OnChange = (event: Event, field: Field) => void;
+
 export type BaseWorkflowInputs = Record<
     string,
     {
@@ -77,7 +86,15 @@ export const executeWorkflow = ({
     setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;
-    onExecute: () => void;
+    onExecute: (
+        installWorkflowParameters: Record<string, string>,
+        installWorkflowOptions: {
+            force: boolean;
+            dryRun: boolean;
+            queue: boolean;
+            scheduledTime: string;
+        }
+    ) => void;
     onHide: () => void;
 }) => {
     setLoading();
@@ -125,7 +142,7 @@ export const executeWorkflow = ({
 
     const actions = new DeploymentActions(toolbox);
 
-    const executePromises = _.map(deploymentsList, id => {
+    const executePromises = _.map(deploymentsList, (id: string) => {
         return actions
             .doExecute(id, name, workflowParameters, {
                 force,

@@ -1,16 +1,7 @@
 import type { FunctionComponent } from 'react';
-import type { BaseWorkflowInputs, UserWorkflowInputsState } from './executeWorkflow';
+import type { BaseWorkflowInputs, UserWorkflowInputsState, OnChange } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
-
-type Field = {
-    name: string;
-    value: unknown;
-    type: string;
-    checked?: string;
-};
-
-type OnChange = (event: Event, field: Field) => void;
 
 function renderActionCheckbox(name: string, checked: boolean, onChange: OnChange) {
     const { Checkbox } = Stage.Basic.Form;
