@@ -285,7 +285,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('div.deployBlueprintModal').within(() => {
                 cy.typeToFieldInput('Deployment name', 'aaa');
                 cy.openAccordionSection('Advanced');
-                cy.typeToFieldInput('Deployment ID', '');
+                cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
                 cy.selectAndClickDeploy();
                 cy.getAccordionSection('Advanced').should('have.class', 'active');
