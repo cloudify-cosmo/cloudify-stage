@@ -659,7 +659,7 @@ describe('Blueprints widget', () => {
                     cy.clickButton('Install');
                 });
 
-                cy.waitForExecutionToEnd(deploymentId, 'install');
+                cy.waitForExecutionToEnd('install', { deploymentId }, { numberOfRetriesLeft: 120 });
                 cy.getDeployment(deploymentId).then(response => {
                     expect(response.body.latest_execution_status).to.be.equal('completed');
                 });
