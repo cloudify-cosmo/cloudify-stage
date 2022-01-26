@@ -5,7 +5,7 @@ describe('Blueprints catalog widget', () => {
         cy
             .activate()
             .usePageMock('blueprintCatalog', {
-                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json',
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json',
                 displayStyle: 'catalog',
                 fieldsToShow: ['Name', 'Description', 'Created', 'Updated']
             })
