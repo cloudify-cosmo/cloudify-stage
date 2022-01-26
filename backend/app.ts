@@ -102,13 +102,11 @@ app.use(
         indexFromEmptyFile: false
     })
 );
-// API Routes (with authentication)
+// API Routes with authentication
 const authenticatedApiRoutes: Record<string, Router> = {
     applications: Applications,
-    ba: BlueprintAdditions,
     bud: BlueprintUserData,
     clientConfig: ClientConfig,
-    external: External,
     file: File,
     filters: Filters,
     github: GitHub,
@@ -125,11 +123,15 @@ Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
 );
 
-// API Routes (without authentication)
+// API Routes with authentication only for some endpoints (see routers for details)
 app.use(`${contextPath}/auth`, Auth);
+app.use(`${contextPath}/ba`, BlueprintAdditions);
+
+// API Routes without authentication
 app.use(`${contextPath}/config`, (req, res) => {
     res.send(getClientConfig(getMode()));
 });
+app.use(`${contextPath}/external`, External);
 app.use(`${contextPath}/style`, Style);
 app.use(`${contextPath}/sp`, ServerProxy);
 
