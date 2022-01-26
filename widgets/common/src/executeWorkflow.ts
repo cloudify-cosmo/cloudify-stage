@@ -43,17 +43,17 @@ export function getWorkflowName(workflow: Workflow) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
-const isValidScheduledTime = (time: string) => {
-    const scheduledTime = moment(time);
-    const hasProperFormat = _.isEqual(scheduledTime.format('YYYY-MM-DD HH:mm'), time);
-    return scheduledTime.isValid() || hasProperFormat || scheduledTime.isBefore(moment());
+const isValidScheduledTime = (scheduledTime: string) => {
+    const scheduledTimeMoment = moment(scheduledTime);
+    const hasProperFormat = _.isEqual(scheduledTimeMoment.format('YYYY-MM-DD HH:mm'), scheduledTime);
+    return scheduledTimeMoment.isValid() && hasProperFormat && !scheduledTimeMoment.isBefore(moment());
 };
 
 const normalizeScheduledTime = (schedule: boolean, scheduledTime: string) =>
     schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
 
 export const executeWorkflow = ({
-    deployments,
+    deploymentsList,
     setLoading,
     toolbox,
     workflow,
@@ -64,14 +64,13 @@ export const executeWorkflow = ({
     force,
     dryRun,
     queue,
-    deploymentId,
     setErrors,
     unsetLoading,
     clearErrors,
     onExecute,
     onHide = () => {}
 }: {
-    deployments: any[];
+    deploymentsList: any[];
     setLoading: () => void;
     toolbox: Stage.Types.Toolbox;
     workflow: Workflow;
@@ -82,7 +81,6 @@ export const executeWorkflow = ({
     force: boolean;
     dryRun: boolean;
     queue: boolean;
-    deploymentId: string;
     setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;
@@ -97,14 +95,10 @@ export const executeWorkflow = ({
     ) => void;
     onHide: () => void;
 }) => {
-    setLoading();
-
     const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Record<string, string> = {};
-    const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
 
     const name = getWorkflowName(workflow);
-
     if (!name) {
         setErrors(t('errors.missingWorkflow'));
         return false;
@@ -140,6 +134,7 @@ export const executeWorkflow = ({
         return false;
     }
 
+    setLoading();
     const actions = new DeploymentActions(toolbox);
 
     const executePromises = _.map(deploymentsList, (id: string) => {

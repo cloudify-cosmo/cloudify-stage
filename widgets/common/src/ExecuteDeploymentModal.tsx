@@ -94,6 +94,7 @@ export default function ExecuteDeploymentModal({
     function onApprove() {
         clearErrors();
         executeWorkflow({
+            deploymentsList,
             setLoading,
             toolbox,
             workflow,
@@ -104,7 +105,6 @@ export default function ExecuteDeploymentModal({
             force,
             dryRun,
             queue,
-            deploymentId,
             setErrors,
             unsetLoading,
             clearErrors,
