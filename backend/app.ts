@@ -123,17 +123,19 @@ Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
 );
 
+// TODO(RD-3827): All API routes should be authenticated
 // API Routes with authentication only for some endpoints (see routers for details)
 app.use(`${contextPath}/auth`, Auth);
 app.use(`${contextPath}/ba`, BlueprintAdditions);
 
 // API Routes without authentication
-app.use(`${contextPath}/config`, (req, res) => {
+const Config = (req, res) => {
     res.send(getClientConfig(getMode()));
-});
-app.use(`${contextPath}/external`, External);
-app.use(`${contextPath}/style`, Style);
-app.use(`${contextPath}/sp`, ServerProxy);
+};
+app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
+app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
+app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
+app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
