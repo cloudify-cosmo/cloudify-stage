@@ -1,3 +1,5 @@
+import type { ComponentProps } from 'react';
+
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 export type Field = {
@@ -7,7 +9,7 @@ export type Field = {
     checked?: string;
 };
 
-export type OnChange = (event: Event, field: Field) => void;
+export type OnChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 
 export type BaseWorkflowInputs = Record<
     string,
