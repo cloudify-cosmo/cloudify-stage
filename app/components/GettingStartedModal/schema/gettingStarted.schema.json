@@ -1,0 +1,120 @@
+[
+  {
+    "name": "terraform",
+    "logo": "https://cloudify.co/wp-content/uploads/2020/07/terraform-icon.png",
+    "label": "Terraform",
+    "secrets": [],
+    "plugins": [
+      {
+        "name": "cloudify-terraform-plugin"
+      },
+      {
+        "name": "cloudify-utilities-plugin"
+      }
+    ],
+    "blueprints": [
+      {
+        "id": "terraform_azure_vm",
+        "name": "Terraform-Azure-VM",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_azure_vm.zip",
+        "yamlFile": "blueprint.yaml"
+      },
+      {
+        "id": "terraform_gcp_vm",
+        "name": "Terraform-Google-Cloud-VM",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_gcp_vm.zip",
+        "yamlFile": "blueprint.yaml"
+      },
+      {
+        "id": "terraform_openstack_vm",
+        "name": "Terraform-OpenStack-VM",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_openstack_vm.zip",
+        "yamlFile": "blueprint.yaml"
+      },
+      {
+        "id": "terraform_aws_vm",
+        "name": "Terraform-AWS-VM",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_aws_vm.zip",
+        "yamlFile": "blueprint.yaml"
+      }
+    ]
+  },
+  {
+    "name": "kubernetes",
+    "logo": "https://cloudify.co/wp-content/uploads/2020/07/kube-icon.png",
+    "label": "Kubernetes",
+    "secrets": [],
+    "plugins": [
+      {
+        "name": "cloudify-kubernetes-plugin"
+      },
+      {
+        "name": "cloudify-aws-plugin"
+      },
+      {
+        "name": "cloudify-azure-plugin"
+      },
+      {
+        "name": "cloudify-gcp-plugin"
+      },
+      {
+        "name": "cloudify-utilities-plugin"
+      }
+    ],
+    "blueprints": [
+      {
+        "id": "Kubernetes-AWS-EKS",
+        "name": "Kubernetes-AWS-EKS",
+        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip",
+        "yamlFile": "blueprint.yaml"
+      },
+      {
+        "id": "Kubernetes-Azure-AKS",
+        "name": "Kubernetes-Azure-AKS",
+        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-azure-aks.zip",
+        "yamlFile": "blueprint.yaml"
+      },
+      {
+        "id": "Kubernetes-GCP-GKE",
+        "name": "Kubernetes-GCP-GKE",
+        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-gcp-gke.zip",
+        "yamlFile": "blueprint.yaml"
+      }
+    ]
+  },
+  {
+    "name": "multi_cloud",
+    "logo": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/images/multi_cloud.png",
+    "label": "Multi Cloud",
+    "secrets": [],
+    "plugins": [
+      {
+        "name": "cloudify-aws-plugin"
+      },
+      {
+        "name": "cloudify-azure-plugin"
+      },
+      {
+        "name": "cloudify-gcp-plugin"
+      },
+      {
+        "name": "cloudify-utilities-plugin"
+      },
+      {
+        "name": "cloudify-fabric-plugin"
+      }
+    ],
+    "blueprints": [
+      {
+        "id": "Multi-Cloud-NodeJS-Application-Server",
+        "name": "Multi-Cloud-NodeJS-Application-Server-Setup",
+        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/getting-started.zip",
+        "yamlFile": "mc-nodejs.yaml"
+      }
+    ]
+  }
+]
+
+
+
+
