@@ -2,7 +2,7 @@
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
-        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json"
     },
     "cluster": {
         "manager": "Manager",

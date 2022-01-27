@@ -323,7 +323,7 @@ const commands = {
                                         definition: 'pluginsCatalog',
                                         configuration: {
                                             jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+                                                'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json'
                                         },
                                         drillDownPages: {},
                                         height: 20,
@@ -406,6 +406,8 @@ const commands = {
     },
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),
+
+    typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
 
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
