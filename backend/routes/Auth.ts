@@ -20,6 +20,7 @@ function getCookieOptions(req: Request) {
     return { sameSite: 'strict', secure: httpsUsed } as CookieOptions;
 }
 
+// This path is used during logging in, so it should not require authentication
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
@@ -59,6 +60,7 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
     }
 });
 
+// TODO(RD-3827): Check (Okta and normal login) if it is possible to add authentication to this path
 router.get('/manager', (req, res) => {
     const token = req.headers['authentication-token'] as string;
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);

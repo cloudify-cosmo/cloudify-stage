@@ -2,7 +2,7 @@
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
-        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json"
     },
     "cluster": {
         "manager": "Manager",
@@ -681,7 +681,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.2/examples.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.3/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -776,27 +776,27 @@
                         "defaultValues": [
                             {
                                 "name": "AWS",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json"
                             },
                             {
                                 "name": "Azure",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json"
                             },
                             {
                                 "name": "GCP",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/gcp_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json"
                             },
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
                             },
                             {
                                 "name": "Helm",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json"
                             },
                             {
                                 "name": "Other",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/other_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json"
                             }
                         ]
                     }

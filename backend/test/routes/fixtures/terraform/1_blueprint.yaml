@@ -4,7 +4,7 @@ description: >
   This blueprint was automatically created from a Terraform template.
 
 imports:
-  - http://cloudify.co/spec/cloudify/6.2.0/types.yaml
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
   - plugin:cloudify-terraform-plugin
 
 inputs:
