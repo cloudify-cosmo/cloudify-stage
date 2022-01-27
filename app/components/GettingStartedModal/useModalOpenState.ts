@@ -4,22 +4,19 @@ import log from 'loglevel';
 import { useFetch } from './common/fetchHooks';
 import { useManager } from './common/managerHooks';
 import EventBus from '../../utils/EventBus';
-import useSearchParam from '../../utils/hooks/useSearchParam';
+import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 
 type UserResponse = {
     // eslint-disable-next-line camelcase
     show_getting_started: boolean;
 };
 
-const gettingStartedParameterName = 'gettingStarted';
-const gettingStartedParameterValue = 'true';
-
 const useModalOpenState = () => {
     const manager = useManager();
     const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
     const [shouldAutomaticallyShowModal, setShouldAutomaticallyShowModal] = useState(false);
-    const [gettingStartedParameter, , deleteGettingStartedParameter] = useSearchParam(gettingStartedParameterName);
+    const [cloudSetupUrlParam, deleteCloudSetupUrlParam] = useCloudSetupUrlParam();
 
     useEffect(() => {
         if (response?.show_getting_started) {
@@ -29,10 +26,10 @@ const useModalOpenState = () => {
     }, [response]);
 
     useEffect(() => {
-        if (gettingStartedParameter === gettingStartedParameterValue) {
+        if (cloudSetupUrlParam) {
             setModalOpen(true);
         }
-    }, [gettingStartedParameter]);
+    }, [cloudSetupUrlParam]);
 
     const closeModal = async (shouldDisableModal: boolean) => {
         try {
@@ -45,7 +42,7 @@ const useModalOpenState = () => {
                 EventBus.trigger('users:refresh');
             }
             setModalOpen(false);
-            deleteGettingStartedParameter();
+            deleteCloudSetupUrlParam();
         } catch (error) {
             log.error(error);
         }
