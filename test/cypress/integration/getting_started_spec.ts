@@ -143,7 +143,7 @@ describe('Getting started modal', () => {
     // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
     describe('', () => {
         before(() => cy.usePageMock().mockLogin('admin', 'admin', false));
-        beforeEach(() => cy.visit(`/console?gettingStarted=true`));
+        beforeEach(() => cy.visit(`/console?cloudSetup=true`));
 
         it('should provide option to disable it', () => {
             cy.interceptSp('POST', `/users/admin`).as('disableRequest');
@@ -350,7 +350,7 @@ describe('Getting started modal', () => {
         });
 
         it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
-            cy.disableGettingStarted().visit('/console/?gettingStarted=true');
+            cy.disableGettingStarted().visit('/console/?cloudSetup=true');
             goToNextStep();
             cy.get('.ui.checkbox.checked').should('exist');
 

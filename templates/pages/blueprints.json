@@ -16,7 +16,7 @@
                         "color": "blue",
                         "icon": "wizard",
                         "label": "Setup cloud account",
-                        "url": "?gettingStarted=true",
+                        "url": "?cloudSetup=true",
                         "fullHeight": false
                     }
                 },

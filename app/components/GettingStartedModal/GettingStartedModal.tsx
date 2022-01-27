@@ -25,7 +25,7 @@ import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';
 
 import type { ReduxState } from '../../reducers';
-import useGettingStartedUrlParam from './useGettingStartedUrlParam';
+import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -45,7 +45,7 @@ const GettingStartedModal = () => {
     const [modalDisabledChecked, setModalDisabledChange] = useInput(false);
     const [cancelConfirmOpen, openCancelConfirm, closeCancelConfirm] = useBoolean();
     const [schema, setSchema] = useState(gettingStartedSchema);
-    const [gettingStartedUrlParam] = useGettingStartedUrlParam();
+    const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
     const commonStepsSchemas = useMemo(() => schema.filter(item => environmentsStepData[item.name]), [
         environmentsStepData
@@ -77,8 +77,8 @@ const GettingStartedModal = () => {
     }, [modalOpenState.shouldAutomaticallyShowModal]);
 
     useEffect(() => {
-        setSchema(gettingStartedUrlParam ? cloudSetupSchema : gettingStartedSchema);
-    }, [gettingStartedUrlParam]);
+        setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
+    }, [cloudSetupUrlParam]);
 
     if (!stageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
