@@ -84,7 +84,7 @@
   },
   {
     "name": "multi_cloud",
-    "logo": "https://www.zadara.com/wp-content/uploads/cloudlogos3.png",
+    "logo": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/images/multi_cloud.png",
     "label": "Multi Cloud",
     "secrets": [],
     "plugins": [
