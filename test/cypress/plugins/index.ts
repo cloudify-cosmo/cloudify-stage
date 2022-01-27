@@ -21,7 +21,7 @@ const setupPluginsAndConfig: Cypress.PluginConfig = (on, config) => {
 
     // Delete the recorded video for specs that had no retry attempts
     // https://github.com/cypress-io/cypress/issues/16377
-    on('after:spec', async (spec, results) => {
+    on('after:spec', async (_spec, results) => {
         if (results && results.video) {
             // Do we have failures for any retry attempts?
             const failures = results.tests?.some(test => test.attempts.some(attempt => attempt?.state === 'failed'));
