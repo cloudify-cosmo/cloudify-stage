@@ -217,9 +217,9 @@ describe('Create Deployment Button widget', () => {
             const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
 
-            cy.getField('Deployment name').find('input').type(deploymentName);
+            cy.typeToFieldInput('Deployment name', deploymentName);
             cy.openAccordionSection('Advanced');
-            cy.getField('Deployment ID').find('input').clear().type(deploymentName);
+            cy.typeToFieldInput('Deployment ID', deploymentName);
             cy.openAccordionSection('Deployment Inputs');
             cy.get('input[name=string_no_default]').clear().type('Something');
 
@@ -247,7 +247,7 @@ describe('Create Deployment Button widget', () => {
 
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
-                cy.getField('Deployment name').find('input').type('blahBlahBlah');
+                cy.typeToFieldInput('Deployment name', 'blahBlahBlah');
                 cy.selectAndClickDeploy();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
@@ -267,7 +267,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
 
-                cy.getField(secretName).find('input').type('aaa');
+                cy.typeToFieldInput(secretName, 'aaa');
                 cy.contains('button', 'Add').click();
                 cy.wait('@addSecrets');
             });
@@ -277,7 +277,7 @@ describe('Create Deployment Button widget', () => {
 
         it('should open the relevant accordion section on error', () => {
             cy.get('div.deployBlueprintModal').within(() => {
-                cy.getField('Deployment name').find('input').type('aaa');
+                cy.typeToFieldInput('Deployment name', 'aaa');
                 cy.openAccordionSection('Advanced');
                 cy.getField('Deployment ID').find('input').clear();
                 cy.openAccordionSection('Deployment Inputs');
