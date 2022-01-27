@@ -145,20 +145,6 @@ describe('Getting started modal', () => {
         before(() => cy.usePageMock().mockLogin('admin', 'admin', false));
         beforeEach(() => cy.visit(`/console?cloudSetup=true`));
 
-        it('should provide option to disable it', () => {
-            cy.interceptSp('POST', `/users/admin`).as('disableRequest');
-
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('label', "Don't show next time").click();
-                closeModal();
-            });
-
-            cy.contains('button', 'Yes').click();
-
-            cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
-        });
-
         it('should install selected environment', () => {
             cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
 
@@ -358,11 +344,24 @@ describe('Getting started modal', () => {
             // cloudSetup parameter missing
             cy.enableGettingStarted().visit('/console');
             goToNextStep();
-            cy.get('.ui.checkbox:not(.checked)').should('exist');
+            cy.log('Verify modal content');
             cy.get('.modal .content button').should('have.length', 3);
             cy.contains('.modal .content button', 'Terraform').should('be.visible');
             cy.contains('.modal .content button', 'Kubernetes').should('be.visible');
             cy.contains('.modal .content button', 'Multi Cloud').should('be.visible');
+
+            cy.log('Verify "don\'t show next time" checkbox presence and behavior');
+
+            cy.get('.ui.checkbox:not(.checked)').should('exist');
+
+            cy.interceptSp('POST', `/users/admin`).as('disableRequest');
+
+            cy.contains('label', "Don't show next time").click();
+            closeModal();
+
+            cy.contains('button', 'Yes').click();
+
+            cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
         });
     });
 
