@@ -323,7 +323,7 @@ const commands = {
                                         definition: 'pluginsCatalog',
                                         configuration: {
                                             jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
+                                                'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json'
                                         },
                                         drillDownPages: {},
                                         height: 20,
