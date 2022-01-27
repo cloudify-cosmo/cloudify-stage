@@ -205,7 +205,7 @@ const GettingStartedModal = () => {
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
                 onInstallationCanceled={handleInstallationFinishedOrCanceled}
             />
-            {stepName !== StepName.Welcome && (
+            {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                     <Form.Field>
                         <Form.Checkbox

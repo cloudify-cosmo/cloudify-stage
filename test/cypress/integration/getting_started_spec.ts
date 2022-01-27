@@ -350,13 +350,12 @@ describe('Getting started modal', () => {
         });
 
         it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
-            cy.disableGettingStarted().visit('/console/?cloudSetup=true');
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('exist');
+            cy.get('.ui.checkbox').should('not.exist');
 
             cy.enableGettingStarted().visit('/console');
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('not.exist');
+            cy.get('.ui.checkbox:not(.checked)').should('exist');
         });
     });
 
