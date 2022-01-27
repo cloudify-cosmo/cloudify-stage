@@ -349,13 +349,20 @@ describe('Getting started modal', () => {
             verifySecretSkipSummaryItem(secretToSkip);
         });
 
-        it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
+        it('should show different content depending on cloudSetup parameter presence', () => {
+            // cloudSetup parameter present (see beforeEach)
             goToNextStep();
             cy.get('.ui.checkbox').should('not.exist');
+            // NOTE: actual content is verified by test cases that go through steps
 
+            // cloudSetup parameter missing
             cy.enableGettingStarted().visit('/console');
             goToNextStep();
             cy.get('.ui.checkbox:not(.checked)').should('exist');
+            cy.get('.modal .content button').should('have.length', 3);
+            cy.contains('.modal .content button', 'Terraform').should('be.visible');
+            cy.contains('.modal .content button', 'Kubernetes').should('be.visible');
+            cy.contains('.modal .content button', 'Multi Cloud').should('be.visible');
         });
     });
 
