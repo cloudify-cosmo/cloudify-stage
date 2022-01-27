@@ -164,7 +164,7 @@ describe('Page groups segment', () => {
 
         cy.contains('Create page group').click();
         cy.get('.modal').within(() => {
-            cy.getField('Group name').find('input').type('New group');
+            cy.typeToFieldInput('Group name', 'New group');
             cy.get('.dropdown input').type('rocket{enter}');
             cy.contains('adminDash').find('.add').click();
             cy.contains('button', 'Create').click();

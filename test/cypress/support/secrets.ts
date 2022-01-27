@@ -17,7 +17,9 @@ const commands = {
             ),
 
     createSecret: (key: string, value: string) =>
-        cy.cfyRequest(`/secrets/${key}`, 'PUT', null, { value }, { failOnStatusCode: false })
+        cy.cfyRequest(`/secrets/${key}`, 'PUT', null, { value }, { failOnStatusCode: false }),
+
+    getSecret: (key: string) => cy.cfyRequest(`/secrets/${key}`, 'GET')
 };
 
 addCommands(commands);
