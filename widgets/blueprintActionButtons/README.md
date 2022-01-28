@@ -8,4 +8,4 @@ See [notes](/working_with/console/widgets/index.html) for more information on re
 
 ## Settings
 
-None
+* `Show the "Edit a copy in Composer" button` - Defines whether "Edit a copy in Composer" button should be displayed. Default: Off

@@ -35,5 +35,5 @@ You can change the provider in [User Configuration](/working_with/console/custom
 
 ## Settings
 
-* `Refresh time interval` - Time interval in which widget’s data will be refreshed, in seconds. Default: 10 seconds.
-* `Show all the site labels` - If set, then all sites will be displayed with site details popup opened.
+* `Refresh time interval` - Time interval in which widget’s data will be refreshed, in seconds. Default: 10 seconds
+* `Show all the site labels` - If set, then all sites will be displayed with site details popup opened. Default: Off
