@@ -407,6 +407,8 @@ const commands = {
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),
 
+    typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
+
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
             return cy
