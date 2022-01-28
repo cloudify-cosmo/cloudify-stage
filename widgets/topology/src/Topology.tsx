@@ -305,8 +305,13 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                     .uniq()
                     .forEach((dependency: string) => {
                         const [dependencyName] = dependency.split('.').slice(-1);
-                        const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
                         const side2 = _.find(terraformDeploymentNodes, { name: dependencyName });
+
+                        if (!side2) {
+                            return;
+                        }
+
+                        const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
                         const connector = {
                             name: '',
                             id: `terraformDependency:${resource.name}.${dependencyName}`,
