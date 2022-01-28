@@ -77,7 +77,7 @@ export default class ExecutionUtils {
         ...ExecutionUtils.WAITING_EXECUTION_STATUSES
     ]);
 
-    static UPDATE_WORKFLOW_ID = 'csys_new_deployment_update';
+    static UPDATE_WORKFLOW_ID = 'update';
 
     /* Helper methods */
     static isCancelledExecution(execution) {
