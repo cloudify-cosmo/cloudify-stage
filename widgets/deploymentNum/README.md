@@ -1,8 +1,9 @@
 # Number of deployments
 Displays the total number of deployments in the tenant, according to the user’s permissions and the blueprints’ visibility levels.
 
-The widget is clickable, and upon clicking will redirect by default to the
-“Services” page. You can set the widget’s configuration to lead to a different
+The widget is clickable, and upon clicking will redirect by default to
+[the Services page](/working_with/console/pages/services-page). 
+You can set the widget’s configuration to lead to a different
 page. If the page contains Deployments View widget, then deployments will be
 filtered according to the filter selected in widget's configuration.
 
