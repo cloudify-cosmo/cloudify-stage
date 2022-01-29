@@ -666,8 +666,6 @@ describe('Blueprints widget', () => {
         });
 
         describe('create installable blueprint on submit from', () => {
-            before(() => cy.uploadPluginFromCatalog('Terraform'));
-
             beforeEach(openTerraformModal);
 
             function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
