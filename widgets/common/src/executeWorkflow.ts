@@ -29,11 +29,10 @@ export type Workflow =
     | string
     | {
           name: string;
-          id?: string;
-          plan?: {
-              inputs?: Record<string, string>;
-              workflows?: { install?: Record<string, string> };
-          };
+          plugin: string;
+          operation?: string;
+          is_cascading?: boolean;
+          parameters?: Record<string, string>;
       };
 
 export type Errors = string | Record<string, string>;

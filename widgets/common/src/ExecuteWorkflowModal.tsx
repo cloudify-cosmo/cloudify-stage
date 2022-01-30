@@ -2,11 +2,9 @@
 import type { FunctionComponent } from 'react';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
-import type { OnCheckboxChange } from './executeWorkflow';
+import type { OnCheckboxChange, Workflow } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
-
-type Workflow = { name: string; parameters: Record<string, string> } | string;
 
 interface ExecuteWorkflowModalProps {
     deploymentId?: string;
