@@ -8,7 +8,7 @@ const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 type Workflow = { name: string; parameters: Record<string, string> } | string;
 
-interface ExecuteDeploymentModalProps {
+interface ExecuteWorkflowModalProps {
     deploymentId?: string;
     deploymentName: string;
     deployments?: string[];
@@ -20,7 +20,7 @@ interface ExecuteDeploymentModalProps {
     open: boolean;
 }
 
-const ExecuteDeploymentModal: FunctionComponent<ExecuteDeploymentModalProps> = ({
+const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     deploymentId = '',
     deploymentName,
     deployments = [],
@@ -251,13 +251,13 @@ const ExecuteDeploymentModal: FunctionComponent<ExecuteDeploymentModalProps> = (
 
 declare global {
     namespace Stage.Common {
-        export { ExecuteDeploymentModal };
+        export { ExecuteWorkflowModal };
     }
 }
 
 Stage.defineCommon({
-    name: 'ExecuteDeploymentModal',
-    common: ExecuteDeploymentModal
+    name: 'ExecuteWorkflowModal',
+    common: ExecuteWorkflowModal
 });
 
-export default ExecuteDeploymentModal;
+export default ExecuteWorkflowModal;
