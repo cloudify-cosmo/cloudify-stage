@@ -9,7 +9,8 @@ export type Field = {
     checked?: string;
 };
 
-export type OnChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
+export type OnDropDownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
+export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 
 export type BaseWorkflowInputs = Record<
     string,

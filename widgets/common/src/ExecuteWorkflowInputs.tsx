@@ -1,9 +1,14 @@
 import type { FunctionComponent } from 'react';
-import type { BaseWorkflowInputs, UserWorkflowInputsState, OnChange } from './executeWorkflow';
+import type {
+    BaseWorkflowInputs,
+    UserWorkflowInputsState,
+    OnCheckboxChange,
+    OnDropDownChange
+} from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-function renderActionCheckbox(name: string, checked: boolean, onChange: OnChange) {
+function renderActionCheckbox(name: string, checked: boolean, onChange: OnCheckboxChange) {
     const { Checkbox } = Stage.Basic.Form;
     return (
         <Checkbox
@@ -17,7 +22,7 @@ function renderActionCheckbox(name: string, checked: boolean, onChange: OnChange
     );
 }
 
-function renderCheckboxField(name: string, checked: boolean, onChange: OnChange) {
+function renderCheckboxField(name: string, checked: boolean, onChange: OnCheckboxChange) {
     const { Field } = Stage.Basic.Form;
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
@@ -28,18 +33,18 @@ interface ExecuteWorkflowInputsProps {
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onWorkflowInputChange: OnChange;
+    onWorkflowInputChange: OnDropDownChange;
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    onForceChange: OnChange;
-    onDryRunChange: OnChange;
-    onQueueChange: OnChange;
-    onScheduleChange: OnChange;
-    onScheduledTimeChange: OnChange;
+    onForceChange: OnCheckboxChange;
+    onDryRunChange: OnCheckboxChange;
+    onQueueChange: OnCheckboxChange;
+    onScheduleChange: OnCheckboxChange;
+    onScheduledTimeChange: OnCheckboxChange;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({

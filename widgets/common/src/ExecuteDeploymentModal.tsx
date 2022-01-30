@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
-import type { OnChange } from './executeWorkflow';
+import type { OnCheckboxChange } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -158,15 +158,15 @@ export default function ExecuteDeploymentModal({
         clearQueue();
     };
 
-    const onForceChange: OnChange = (event, field) => {
+    const onForceChange: OnCheckboxChange = (event, field) => {
         clearErrorsAndQueue();
         setForce(field.checked);
     };
-    const onDryRunChange: OnChange = (event, field) => {
+    const onDryRunChange: OnCheckboxChange = (event, field) => {
         clearErrorsAndQueue();
         setDryRun(field.checked);
     };
-    const onQueueChange: OnChange = (event, field) => {
+    const onQueueChange: OnCheckboxChange = (event, field) => {
         clearForce();
         clearDryRun();
         clearSchedule();
@@ -174,11 +174,11 @@ export default function ExecuteDeploymentModal({
         clearErrors();
         setQueue(field.checked);
     };
-    const onScheduleChange: OnChange = (event, field) => {
+    const onScheduleChange: OnCheckboxChange = (event, field) => {
         clearErrorsAndQueue();
         setSchedule(field.checked);
     };
-    const onScheduledTimeChange: OnChange = (event, field) => {
+    const onScheduledTimeChange: OnCheckboxChange = (event, field) => {
         clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
