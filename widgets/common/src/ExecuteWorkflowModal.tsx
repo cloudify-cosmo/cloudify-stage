@@ -1,21 +1,36 @@
 // @ts-nocheck File not migrated fully to TS
+import type { FunctionComponent } from 'react';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
 import type { OnCheckboxChange } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-export default function ExecuteDeploymentModal({
-    deploymentId,
+type Workflow = { name: string; parameters: Record<string, string> } | string;
+
+interface ExecuteDeploymentModalProps {
+    deploymentId?: string;
+    deploymentName: string;
+    deployments?: string[];
+    hideOptions?: boolean;
+    onExecute?: () => void;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+    workflow: Workflow;
+    open: boolean;
+}
+
+const ExecuteDeploymentModal: FunctionComponent<ExecuteDeploymentModalProps> = ({
+    deploymentId = '',
     deploymentName,
-    deployments,
-    hideOptions,
-    onExecute,
+    deployments = [],
+    hideOptions = false,
+    onExecute = _.noop,
     onHide,
     toolbox,
     workflow,
     open
-}) {
+}) => {
     const {
         Hooks: { useErrors, useBoolean, useOpenProp, useInput, useResettableState }
     } = Stage;
@@ -34,7 +49,7 @@ export default function ExecuteDeploymentModal({
 
     const workflowName = getWorkflowName(workflow);
 
-    function setWorkflowParams(workflowResource) {
+    function setWorkflowParams(workflowResource: Workflow) {
         const { InputsUtils } = Stage.Common;
         setBaseWorkflowParams(workflowResource.parameters);
         setUserWorkflowParams(
@@ -64,7 +79,7 @@ export default function ExecuteDeploymentModal({
             actions
                 .doGetWorkflows(deploymentId)
                 .then(({ workflows }) => {
-                    const selectedWorkflow = _.find(workflows, { name: workflowName });
+                    const selectedWorkflow: Workflow = _.find(workflows, { name: workflowName });
 
                     if (selectedWorkflow) {
                         setWorkflowParams(selectedWorkflow);
@@ -113,7 +128,7 @@ export default function ExecuteDeploymentModal({
         });
     }
 
-    function handleYamlFileChange(file) {
+    function handleYamlFileChange(file: File) {
         if (!file) {
             return;
         }
@@ -199,7 +214,6 @@ export default function ExecuteDeploymentModal({
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <ExecuteWorkflowInputs
-                        deployments={deployments}
                         baseWorkflowInputs={baseWorkflowParams}
                         userWorkflowInputsState={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
@@ -233,41 +247,17 @@ export default function ExecuteDeploymentModal({
             </Modal.Actions>
         </Modal>
     );
+};
+
+declare global {
+    namespace Stage.Common {
+        export { ExecuteDeploymentModal };
+    }
 }
-
-ExecuteDeploymentModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    open: PropTypes.bool.isRequired,
-    deploymentId: (props, propName, componentName) => {
-        const { [propName]: deploymentId, workflow } = props;
-
-        if (_.isString(workflow) && !(_.isString(deploymentId) && deploymentId)) {
-            return new Error(
-                `Invalid prop \`deploymentId\` supplied to \`${componentName}\`. ` +
-                    `When \`workflow\` prop is specified as a string, \`deploymentId\` must be provided. ` +
-                    `Validation failed.`
-            );
-        }
-        return null;
-    },
-    deploymentName: PropTypes.string,
-    deployments: PropTypes.arrayOf(PropTypes.string),
-    workflow: PropTypes.oneOfType([
-        PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
-        PropTypes.string
-    ]).isRequired,
-    onExecute: PropTypes.func,
-    onHide: PropTypes.func.isRequired,
-    hideOptions: PropTypes.bool
-};
-ExecuteDeploymentModal.defaultProps = {
-    deploymentId: '',
-    deployments: [],
-    hideOptions: false,
-    onExecute: _.noop
-};
 
 Stage.defineCommon({
     name: 'ExecuteDeploymentModal',
     common: ExecuteDeploymentModal
 });
+
+export default ExecuteDeploymentModal;
