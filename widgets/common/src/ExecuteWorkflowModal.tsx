@@ -14,7 +14,7 @@ interface ExecuteWorkflowModalProps {
     onExecute?: () => void;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
-    workflow: Workflow;
+    workflow: Workflow | null;
     open: boolean;
 }
 

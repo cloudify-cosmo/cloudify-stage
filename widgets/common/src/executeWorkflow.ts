@@ -23,7 +23,10 @@ export type BaseWorkflowInputs = Record<
     }
 >;
 
-export type UserWorkflowInputsState = Record<string, string | number | boolean | null | undefined>;
+export type UserWorkflowInputsState = Record<
+    string,
+    string | number | boolean | string[] | Record<string, string> | null | undefined
+>;
 
 export type Workflow =
     | string
@@ -31,6 +34,7 @@ export type Workflow =
           name: string;
           plugin: string;
           operation?: string;
+          // eslint-disable-next-line camelcase
           is_cascading?: boolean;
           parameters?: Record<string, string>;
       };
