@@ -25,7 +25,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     const {
         Basic: { Button },
         // @ts-expect-error Some commons are not migrated to TS yet
-        Common: { DeploymentActionsMenu, DeploymentActionsModals, ExecuteDeploymentModal, WorkflowsMenu },
+        Common: { DeploymentActionsMenu, DeploymentActionsModals, ExecuteWorkflowModal, WorkflowsMenu },
         Hooks: { useResettableState }
     } = Stage;
 
@@ -72,7 +72,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
             />
 
             {isDeploymentFetched(fetchedDeploymentState) && deploymentId && workflow && (
-                <ExecuteDeploymentModal
+                <ExecuteWorkflowModal
                     open
                     deploymentId={deploymentId}
                     deploymentName={fetchedDeploymentState.data.display_name}

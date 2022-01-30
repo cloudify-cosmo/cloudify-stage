@@ -309,7 +309,7 @@ class GenericDeployModal extends React.Component {
         } = Stage.Basic;
         const {
             DynamicDropdown,
-            ExecuteDeploymentModal,
+            ExecuteWorkflowModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
         const {
@@ -510,7 +510,7 @@ class GenericDeployModal extends React.Component {
                         </Accordion>
                     </Form>
 
-                    <ExecuteDeploymentModal
+                    <ExecuteWorkflowModal
                         open={showInstallModal}
                         workflow={workflow}
                         onExecute={this.onDeployAndInstall}

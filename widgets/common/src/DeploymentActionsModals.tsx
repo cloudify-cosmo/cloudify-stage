@@ -22,7 +22,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     const {
         Common: {
             // @ts-expect-error Not migrated to TS yet
-            ExecuteDeploymentModal,
+            ExecuteWorkflowModal,
             // @ts-expect-error Not migrated to TS yet
             UpdateDeploymentModal,
             RemoveDeploymentModal,
@@ -40,7 +40,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
             return <ManageLabelsModal {...commonProps} />;
         case actions.install:
         case actions.uninstall:
-            return <ExecuteDeploymentModal {...commonProps} workflow={activeAction} />;
+            return <ExecuteWorkflowModal {...commonProps} workflow={activeAction} />;
         case actions.update:
             return <UpdateDeploymentModal {...commonProps} />;
         case actions.delete:
