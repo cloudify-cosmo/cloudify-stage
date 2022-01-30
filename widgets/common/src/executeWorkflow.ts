@@ -25,7 +25,15 @@ export type BaseWorkflowInputs = Record<
 
 export type UserWorkflowInputsState = Record<
     string,
-    string | number | boolean | string[] | Record<string, string> | null | undefined
+    | string
+    | number
+    | boolean
+    | string[]
+    | number[]
+    | boolean[]
+    | Record<string, string | number | boolean>
+    | null
+    | undefined
 >;
 
 export type Workflow =
