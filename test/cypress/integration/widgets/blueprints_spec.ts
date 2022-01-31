@@ -39,7 +39,6 @@ describe('Blueprints widget', () => {
                 additionalWidgetIdsToLoad: ['blueprintCatalog']
             })
             .mockLogin()
-            .uploadPluginFromCatalog('Utilities')
     );
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
