@@ -12,7 +12,6 @@ const FilterCloneModal: FunctionComponent<FilterCloneModalProps> = ({ initialFil
             i18nHeaderKey="widgets.filters.modal.header.clone"
             showFilterIdInput
             initialFilterIdSuffix="_clone"
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
         />
     );

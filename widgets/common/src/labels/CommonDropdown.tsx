@@ -25,7 +25,6 @@ interface CommonDropdownProps
 }
 
 const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({ allowAdditions = false, ...rest }) =>
-    // eslint-disable-next-line react/jsx-props-no-spreading
     allowAdditions ? <CommonDropdownWithAdditions {...rest} /> : <CommonDropdownWithoutAdditions {...rest} />;
 export default CommonDropdown;
 

@@ -18,7 +18,6 @@ const SideBarItemIcon = ({ name, style, ...rest }: IconProps) => (
             ...defaultStyle,
             ...style
         }}
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
     />
 );

@@ -37,14 +37,7 @@ const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, id, 
                 {name}
                 <span className="right floated actionIcons">
                     <Icon link name="minus" onClick={onRemove} title={t('removePage')} />
-                    <Icon
-                        // eslint-disable-next-line react/jsx-props-no-spreading
-                        {...listeners}
-                        link
-                        name="move"
-                        className="handle"
-                        title={t('reorderPage')}
-                    />
+                    <Icon {...listeners} link name="move" className="handle" title={t('reorderPage')} />
                 </span>
             </List.Item>
         </Ref>
