@@ -30,7 +30,7 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({
     rule,
     toolbox
 }) => {
-    const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
+    const { Form } = Stage.Basic;
     const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
 
@@ -55,16 +55,16 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({
     }
 
     return (
-        <FormGroup widths="equal">
+        <Form.Group widths="equal">
             {hideType === false && (
-                <FormField width={4}>
+                <Form.Field width={4}>
                     <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
-                </FormField>
+                </Form.Field>
             )}
-            <FormField width={4}>
+            <Form.Field width={4}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
-            </FormField>
-            <FormField width={7} error={error}>
+            </Form.Field>
+            <Form.Field width={7} error={error}>
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
@@ -72,9 +72,9 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({
                     rule={rule}
                     toolbox={toolbox}
                 />
-            </FormField>
-            <FormField width={1}>{removable && <RuleRemoveButton onClick={onRemove} />}</FormField>
-        </FormGroup>
+            </Form.Field>
+            <Form.Field width={1}>{removable && <RuleRemoveButton onClick={onRemove} />}</Form.Field>
+        </Form.Group>
     );
 };
 export default RuleRow;

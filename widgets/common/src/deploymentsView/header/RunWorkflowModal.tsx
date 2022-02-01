@@ -32,17 +32,7 @@ const getWorkflowsOptions = (workflows: Workflow[]) => {
 };
 
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRules, onHide, toolbox }) => {
-    const {
-        ApproveButton,
-        CancelButton,
-        Dropdown,
-        Icon,
-        LoadingOverlay,
-        Message,
-        Modal,
-        Form,
-        UnsafelyTypedFormField
-    } = Stage.Basic;
+    const { ApproveButton, CancelButton, Dropdown, Icon, LoadingOverlay, Message, Modal, Form } = Stage.Basic;
     // @ts-expect-error DynamicDropdown is not converted to TS yet
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors, useResettableState } = Stage.Hooks;
@@ -106,10 +96,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {loadingMessage && <LoadingOverlay message={loadingMessage} />}
-                    <UnsafelyTypedFormField
-                        label={modalT('inputs.workflowId.label')}
-                        help={modalT('inputs.workflowId.help')}
-                    >
+                    <Form.Field label={modalT('inputs.workflowId.label')} help={modalT('inputs.workflowId.help')}>
                         <Dropdown
                             search
                             selection
@@ -117,7 +104,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
                             onChange={(_event, { value }) => setWorkflowId(value as string)}
                             value={workflowId}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                     <Message>{modalT('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>

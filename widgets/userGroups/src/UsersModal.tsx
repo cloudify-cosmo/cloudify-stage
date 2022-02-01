@@ -3,7 +3,6 @@
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
-const { UnsafelyTypedFormField } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.user');
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
@@ -84,7 +83,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={t('fields.users')}>
+                    <Form.Field label={t('fields.users')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -93,7 +92,7 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                             value={editedUsers}
                             onChange={handleInputChange}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 
