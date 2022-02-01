@@ -3,7 +3,8 @@ import type {
     BaseWorkflowInputs,
     UserWorkflowInputsState,
     OnCheckboxChange,
-    OnDropDownChange
+    OnDropDownChange,
+    OnChange
 } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -44,7 +45,7 @@ interface ExecuteWorkflowInputsProps {
     onDryRunChange: OnCheckboxChange;
     onQueueChange: OnCheckboxChange;
     onScheduleChange: OnCheckboxChange;
-    onScheduledTimeChange: OnCheckboxChange;
+    onScheduledTimeChange: OnChange;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({

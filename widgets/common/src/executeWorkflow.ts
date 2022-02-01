@@ -9,6 +9,7 @@ export type Field = {
     checked?: string;
 };
 
+export type OnChange = (event: Event, field: Field) => void;
 export type OnDropDownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 

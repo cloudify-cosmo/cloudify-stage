@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
+import { executeWorkflow, isWorkflowName, getWorkflowName, OnChange } from './executeWorkflow';
 import type { OnCheckboxChange, Workflow } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -191,7 +191,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         clearErrorsAndQueue();
         setSchedule(field.checked);
     };
-    const onScheduledTimeChange: OnCheckboxChange = (event, field) => {
+    const onScheduledTimeChange: OnChange = (event, field) => {
         clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
