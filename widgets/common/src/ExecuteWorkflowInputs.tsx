@@ -1,7 +1,7 @@
 import type { ComponentProps, FunctionComponent } from 'react';
 
 export type OnChange = (event: Event, field: typeof Stage.Basic.UnsafelyTypedFormField) => void;
-export type OnDropDownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
+export type OnDropdownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 
 export type BaseWorkflowInputs = Record<
@@ -55,7 +55,7 @@ interface ExecuteWorkflowInputsProps {
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onWorkflowInputChange: OnDropDownChange;
+    onWorkflowInputChange: OnDropdownChange;
     showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
