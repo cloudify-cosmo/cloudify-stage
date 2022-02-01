@@ -1,6 +1,6 @@
 import React from 'react';
-import type { FunctionComponent, ReactNode } from 'react';
-import styled from 'styled-components';
+import type { FunctionComponent, ReactNode, CSSProperties } from 'react';
+import styled, { css } from 'styled-components';
 import type { MenuItemProps, SemanticICONS } from 'semantic-ui-react';
 import { Icon, Menu } from '../basic';
 import { expandedSidebarWidth } from './SideBar';
@@ -16,6 +16,18 @@ export const SideBarItemWrapper = styled.div`
     .item:hover {
         text-decoration: none !important; // override semantic ui styles
     }
+`;
+
+type SideBarAnimatedItemWrapperProps = Pick<SideBarItemProps, 'subItem'>;
+
+export const SideBarAnimatedItemWrapper = styled.div<SideBarAnimatedItemWrapperProps>`
+    transition: transform 500ms ease;
+
+    ${({ subItem }) =>
+        subItem &&
+        css`
+            transform: translateX(10px);
+        `}
 `;
 
 export interface SideBarItemProps extends MenuItemProps {
@@ -36,28 +48,30 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
     children,
     ...rest
 }) => {
-    const menuItemStyle = {
+    const menuItemStyle: CSSProperties = {
         height: '100%',
         width: expandedSidebarWidth,
         paddingTop: 13,
-        paddingLeft: subItem && 25,
+        paddingLeft: subItem && 15,
         ...style
     };
 
     return (
-        <SideBarItemWrapper className="sidebarItemWrapper">
+        <SideBarItemWrapper>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Menu.Item style={menuItemStyle} {...rest}>
-                {typeof icon === 'string' ? <SideBarItemIcon name={icon as SemanticICONS} /> : icon}
-                {label && <span style={{ verticalAlign: 'top', fontSize: sideBarItemFontSize }}>{label}</span>}
-                {children}
-                {expandable && (
-                    <Icon
-                        name="dropdown"
-                        rotated={expanded ? undefined : 'counterclockwise'}
-                        style={{ position: 'absolute', right: 12, margin: 0 }}
-                    />
-                )}
+                <SideBarAnimatedItemWrapper subItem={subItem}>
+                    {typeof icon === 'string' ? <SideBarItemIcon name={icon as SemanticICONS} /> : icon}
+                    {label && <span style={{ verticalAlign: 'top', fontSize: sideBarItemFontSize }}>{label}</span>}
+                    {children}
+                    {expandable && (
+                        <Icon
+                            name="dropdown"
+                            rotated={expanded ? undefined : 'counterclockwise'}
+                            style={{ position: 'absolute', right: 12, margin: 0 }}
+                        />
+                    )}
+                </SideBarAnimatedItemWrapper>
             </Menu.Item>
         </SideBarItemWrapper>
     );
