@@ -307,34 +307,6 @@ const commands = {
                                   }
                               ]
                             : []
-                    },
-                    // used by tests that require plugins
-                    {
-                        name: 'Plugins Catalog',
-                        id: 'plugin_catalog',
-                        type: 'page',
-                        layout: [
-                            {
-                                type: 'widgets',
-                                content: [
-                                    {
-                                        id: 'pluginsCatalog',
-                                        name: 'Plugins Catalog',
-                                        definition: 'pluginsCatalog',
-                                        configuration: {
-                                            jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json'
-                                        },
-                                        drillDownPages: {},
-                                        height: 20,
-                                        width: widgetsWidth,
-                                        x: 0,
-                                        y: 0,
-                                        maximized: false
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 ]
             }
