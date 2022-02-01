@@ -17,19 +17,6 @@ const commands = {
             failOnStatusCode: false,
             timeout: uploadPluginTimeout
         }),
-    uploadPluginFromCatalog: (pluginName: string) => {
-        // eslint-disable-next-line security/detect-non-literal-regexp
-        cy.intercept('POST', new RegExp(`console/plugins/upload.*title=${pluginName}`)).as('pluginUpload');
-
-        cy.log(`Upload ${pluginName} plugin`);
-        cy.visitPage('Plugins Catalog');
-        cy.get('.pluginsCatalogWidget').within(() => {
-            cy.contains('tr', pluginName).find('button').click();
-        });
-        cy.wait('@pluginUpload', { responseTimeout: uploadPluginTimeout });
-        cy.get('.pluginsCatalogWidget .message').should('have.text', `${pluginName} successfully uploaded`);
-        return cy.visitTestPage();
-    },
     deletePlugins: () =>
         cy
             .cfyRequest('/plugins')
