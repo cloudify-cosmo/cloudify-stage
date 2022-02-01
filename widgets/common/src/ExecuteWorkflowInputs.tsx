@@ -4,7 +4,7 @@ export type OnChange = (event: Event, field: typeof Stage.Basic.UnsafelyTypedFor
 export type OnDropdownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 
-export type BaseWorkflowInputs = Record<
+type BaseWorkflowInputs = Record<
     string,
     {
         type?: string;
@@ -15,7 +15,7 @@ export type BaseWorkflowInputs = Record<
     }
 >;
 
-export type UserWorkflowInputsState = Record<
+type UserWorkflowInputsState = Record<
     string,
     | string
     | number
@@ -49,19 +49,22 @@ function renderCheckboxField(name: string, checked: boolean, onChange: OnCheckbo
     return <Field>{renderActionCheckbox(name, checked, onChange)}</Field>;
 }
 
-interface ExecuteWorkflowInputsProps {
+export interface CommonExecuteWorflowProps {
     baseWorkflowInputs: BaseWorkflowInputs;
     userWorkflowInputsState: UserWorkflowInputsState;
-    errors: Record<string, string>;
-    onYamlFileChange: (file: File) => void;
-    fileLoading: boolean;
-    onWorkflowInputChange: OnDropdownChange;
-    showInstallOptions: boolean;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
+}
+
+interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
+    errors: Record<string, string>;
+    onYamlFileChange: (file: File) => void;
+    fileLoading: boolean;
+    onWorkflowInputChange: OnDropdownChange;
+    showInstallOptions: boolean;
     onForceChange: OnCheckboxChange;
     onDryRunChange: OnCheckboxChange;
     onQueueChange: OnCheckboxChange;

@@ -1,4 +1,4 @@
-import type { BaseWorkflowInputs, UserWorkflowInputsState } from './ExecuteWorkflowInputs';
+import type { CommonExecuteWorflowProps } from './ExecuteWorkflowInputs';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -32,35 +32,11 @@ const isValidScheduledTime = (scheduledTime: string) => {
 const normalizeScheduledTime = (schedule: boolean, scheduledTime: string) =>
     schedule ? moment(scheduledTime).format('YYYYMMDDHHmmZ') : undefined;
 
-export const executeWorkflow = ({
-    deploymentsList,
-    setLoading,
-    toolbox,
-    workflow,
-    baseWorkflowParams,
-    userWorkflowParams,
-    schedule,
-    scheduledTime,
-    force,
-    dryRun,
-    queue,
-    setErrors,
-    unsetLoading,
-    clearErrors,
-    onExecute,
-    onHide = () => {}
-}: {
+interface ExecuteWorkflowParams extends CommonExecuteWorflowProps {
     deploymentsList: any[];
     setLoading: () => void;
     toolbox: Stage.Types.Toolbox;
     workflow: Workflow;
-    baseWorkflowParams: BaseWorkflowInputs;
-    userWorkflowParams: UserWorkflowInputsState;
-    schedule: boolean;
-    scheduledTime: string;
-    force: boolean;
-    dryRun: boolean;
-    queue: boolean;
     setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;
@@ -74,7 +50,26 @@ export const executeWorkflow = ({
         }
     ) => void;
     onHide: () => void;
-}) => {
+}
+
+export const executeWorkflow = ({
+    deploymentsList,
+    setLoading,
+    toolbox,
+    workflow,
+    baseWorkflowInputs,
+    userWorkflowInputsState,
+    schedule,
+    scheduledTime,
+    force,
+    dryRun,
+    queue,
+    setErrors,
+    unsetLoading,
+    clearErrors,
+    onExecute,
+    onHide = () => {}
+}: ExecuteWorkflowParams) => {
     const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Record<string, string> = {};
 
@@ -84,7 +79,7 @@ export const executeWorkflow = ({
         return false;
     }
 
-    const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowParams, userWorkflowParams);
+    const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
     InputsUtils.addErrors(inputsWithoutValue, validationErrors);
 
     if (schedule && !isValidScheduledTime(scheduledTime)) {
@@ -96,7 +91,7 @@ export const executeWorkflow = ({
         return false;
     }
 
-    const workflowParameters = InputsUtils.getInputsMap(baseWorkflowParams, userWorkflowParams);
+    const workflowParameters = InputsUtils.getInputsMap(baseWorkflowInputs, userWorkflowInputsState);
 
     if (_.isFunction(onExecute) && onExecute !== _.noop) {
         onExecute(workflowParameters, {
