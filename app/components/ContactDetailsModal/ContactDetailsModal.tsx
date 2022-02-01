@@ -1,6 +1,7 @@
 import React from 'react';
 import { useErrors, useInputs } from '../../utils/hooks';
 import { Form, Modal, UnsafelyTypedFormField, ApproveButton } from '../basic';
+import ContactDetailsForm from './ContactDetailsForm';
 import useModalOpenState from './useModalOpenState';
 
 enum FormFieldType {
@@ -136,30 +137,7 @@ const ContactDetailsModal = () => {
         <Modal open={isModalOpen}>
             <Modal.Header>Welcome to Cloudify</Modal.Header>
             <Modal.Content>
-                <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {formFields.map(formField => (
-                        <UnsafelyTypedFormField key={formField.name}>
-                            {formField.type === FormFieldType.Text ? (
-                                <Form.Input
-                                    type="text"
-                                    name={formField.name}
-                                    label={formField.label}
-                                    value={formInputs[formField.name]}
-                                    onChange={setFormInputs}
-                                    required={formField.isRequired}
-                                />
-                            ) : (
-                                <Form.Checkbox
-                                    name={formField.name}
-                                    label={formField.label}
-                                    help=""
-                                    checked={formInputs[formField.name]}
-                                    onChange={setFormInputs}
-                                />
-                            )}
-                        </UnsafelyTypedFormField>
-                    ))}
-                </Form>
+                <ContactDetailsForm />
             </Modal.Content>
             <Modal.Actions>
                 <ApproveButton color="green" onClick={handleSubmit}>
