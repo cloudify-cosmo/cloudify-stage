@@ -1,34 +1,6 @@
-import type { ComponentProps } from 'react';
+import type { BaseWorkflowInputs, UserWorkflowInputsState } from './ExecuteWorkflowInputs';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
-
-export type OnChange = (event: Event, field: typeof Stage.Basic.UnsafelyTypedFormField) => void;
-export type OnDropDownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
-export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
-
-export type BaseWorkflowInputs = Record<
-    string,
-    {
-        type?: string;
-        default?: string;
-        constraints?: {
-            pattern: string;
-        }[];
-    }
->;
-
-export type UserWorkflowInputsState = Record<
-    string,
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-    | Record<string, string | number | boolean>
-    | null
-    | undefined
->;
 
 export type Workflow =
     | string
