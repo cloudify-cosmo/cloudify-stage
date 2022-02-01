@@ -71,7 +71,7 @@ export const executeWorkflow = ({
     onHide = () => {}
 }: ExecuteWorkflowParams) => {
     const { InputsUtils, DeploymentActions } = Stage.Common;
-    const validationErrors: Record<string, string> = {};
+    const validationErrors: Errors = {};
 
     const name = getWorkflowName(workflow);
     if (!name) {
