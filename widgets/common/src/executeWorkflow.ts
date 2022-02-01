@@ -2,14 +2,7 @@ import type { ComponentProps } from 'react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-export type Field = {
-    name: string;
-    value: unknown;
-    type: string;
-    checked?: string;
-};
-
-export type OnChange = (event: Event, field: Field) => void;
+export type OnChange = (event: Event, field: typeof Stage.Basic.UnsafelyTypedFormField) => void;
 export type OnDropDownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 
