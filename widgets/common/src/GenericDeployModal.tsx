@@ -8,7 +8,113 @@ import DeployModalActions from './deployModal/DeployModalActions';
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
-class GenericDeployModal extends React.Component {
+type Errors = {
+    deploymentName?: string;
+    deploymentId?: string;
+    blueprintName?: string;
+};
+
+type StepsProp = {
+    message: string;
+    executeStep: () => void;
+};
+
+const defaultProps = {
+    blueprintId: '',
+    onHide: _.noop,
+    showDeploymentNameInput: false,
+    showDeploymentIdInput: false,
+    showDeployButton: false,
+    showInstallOptions: false,
+    showSitesInput: false,
+    deploySteps: null,
+    deployValidationMessage: null,
+    deployAndInstallValidationMessage: null,
+    deploymentNameLabel: t('inputs.deploymentName.label'),
+    deploymentNameHelp: t('inputs.deploymentName.help')
+};
+
+type GenericDeployModalProps = {
+    /**
+     * specifies whether the deploy modal is displayed
+     */
+    open: boolean;
+
+    /**
+     * Toolbox object
+     */
+    toolbox: Stage.Types.Toolbox;
+
+    /**
+     * blueprintId, if set then Blueprint selection dropdown is not displayed
+     */
+    blueprintId?: string;
+
+    /**
+     * function to be called when the modal is closed
+     */
+    onHide?: () => void;
+
+    i18nHeaderKey: string;
+
+    /**
+     * Whether to show deployment name input
+     */
+    showDeploymentNameInput?: boolean;
+
+    /**
+     * Whether to show deployment ID input
+     */
+    showDeploymentIdInput?: boolean;
+
+    /**
+     * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
+     */
+    showDeployButton?: boolean;
+
+    /**
+     * Whether to show install workflow options (force, dry run, queue, schedule)
+     */
+    showInstallOptions?: boolean;
+
+    /**
+     * Whether to show site selection input
+     */
+    showSitesInput?: boolean;
+
+    /**
+     * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
+     */
+    deploySteps?: StepsProp;
+
+    /**
+     * Message to be displayed during inputs validation, before steps defined by `deploySteps` are executed, needs to be
+     * specified only when `showDeployButton` is enabled
+     */
+    deployValidationMessage?: string;
+
+    /**
+     * Steps to be executed on 'Deploy & Install' button press
+     */
+    deployAndInstallSteps: StepsProp;
+
+    /**
+     * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
+     */
+    deployAndInstallValidationMessage?: string;
+
+    /**
+     * Deployment Name input label
+     */
+    deploymentNameLabel?: string;
+
+    /**
+     * Deployment Name input help description
+     */
+    deploymentNameHelp?: string;
+} & typeof defaultProps;
+
+class GenericDeployModal extends React.Component<GenericDeployModalProps> {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
     static DEPLOYMENT_SECTIONS = {
@@ -58,7 +164,7 @@ class GenericDeployModal extends React.Component {
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: GenericDeployModalProps) {
         const { blueprintId, open } = this.props;
         if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
@@ -74,7 +180,7 @@ class GenericDeployModal extends React.Component {
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
     }
 
-    handleYamlFileChange(file) {
+    handleYamlFileChange(file: File) {
         if (!file) {
             return;
         }
@@ -109,7 +215,7 @@ class GenericDeployModal extends React.Component {
         this.setState(fieldNameValue);
     }
 
-    onAccordionClick(e, { index }) {
+    onAccordionClick(e, { index }: { index: number }) {
         const { activeSection } = this.state;
         const newIndex = activeSection === index ? -1 : index;
 
@@ -269,7 +375,7 @@ class GenericDeployModal extends React.Component {
             const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
-            const errors = {};
+            const errors: Errors = {};
 
             if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
                 errors.deploymentName = t('errors.noDeploymentName');
@@ -295,12 +401,9 @@ class GenericDeployModal extends React.Component {
 
     render() {
         const {
-            ApproveButton,
             Accordion,
-            CancelButton,
-            Button,
-            Dropdown,
             Form,
+            UnsafelyTypedFormField,
             Icon,
             LoadingOverlay,
             Message,
@@ -376,7 +479,7 @@ class GenericDeployModal extends React.Component {
                         {loading && <LoadingOverlay message={loadingMessage} />}
 
                         {this.isBlueprintSelectable() && (
-                            <Form.Field
+                            <UnsafelyTypedFormField
                                 error={errors.blueprintName}
                                 label={t('inputs.blueprintName.label')}
                                 required
@@ -390,11 +493,11 @@ class GenericDeployModal extends React.Component {
                                     toolbox={toolbox}
                                     prefetch
                                 />
-                            </Form.Field>
+                            </UnsafelyTypedFormField>
                         )}
 
                         {showDeploymentNameInput && (
-                            <Form.Field
+                            <UnsafelyTypedFormField
                                 error={errors.deploymentName}
                                 label={deploymentNameLabel}
                                 required
@@ -405,7 +508,7 @@ class GenericDeployModal extends React.Component {
                                     value={deploymentName}
                                     onChange={this.handleInputChange}
                                 />
-                            </Form.Field>
+                            </UnsafelyTypedFormField>
                         )}
                         <Accordion fluid>
                             <AccordionSectionWithDivider
@@ -430,7 +533,7 @@ class GenericDeployModal extends React.Component {
                                 onClick={this.onAccordionClick}
                             >
                                 {showSitesInput && (
-                                    <Form.Field
+                                    <UnsafelyTypedFormField
                                         error={errors.siteName}
                                         label={t('inputs.siteName.label')}
                                         help={t('inputs.siteName.help')}
@@ -443,10 +546,10 @@ class GenericDeployModal extends React.Component {
                                             valueProp="name"
                                             toolbox={toolbox}
                                         />
-                                    </Form.Field>
+                                    </UnsafelyTypedFormField>
                                 )}
 
-                                <Form.Field
+                                <UnsafelyTypedFormField
                                     label={i18n.t('widgets.common.labels.input.label')}
                                     help={i18n.t('widgets.common.labels.input.help')}
                                 >
@@ -455,7 +558,7 @@ class GenericDeployModal extends React.Component {
                                         hideInitialLabels
                                         onChange={labels => this.setState({ labels })}
                                     />
-                                </Form.Field>
+                                </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>
                             <AccordionSectionWithDivider
                                 title={t('sections.executionParameters')}
@@ -463,15 +566,16 @@ class GenericDeployModal extends React.Component {
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <Form.Field className="skipPluginsValidationCheckbox">
+                                <UnsafelyTypedFormField className="skipPluginsValidationCheckbox">
                                     <Form.Checkbox
                                         toggle
                                         label={t('inputs.skipPluginsValidation.label')}
                                         name="skipPluginsValidation"
                                         checked={skipPluginsValidation}
                                         onChange={this.handleInputChange}
+                                        help=""
                                     />
-                                </Form.Field>
+                                </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>
                             <AccordionSectionWithDivider
                                 title={t('sections.advanced')}
@@ -480,7 +584,7 @@ class GenericDeployModal extends React.Component {
                                 onClick={this.onAccordionClick}
                             >
                                 {showDeploymentIdInput && (
-                                    <Form.Field
+                                    <UnsafelyTypedFormField
                                         error={errors.deploymentId}
                                         label={t('inputs.deploymentId.label')}
                                         required
@@ -491,21 +595,22 @@ class GenericDeployModal extends React.Component {
                                             value={deploymentId}
                                             onChange={this.handleInputChange}
                                         />
-                                    </Form.Field>
+                                    </UnsafelyTypedFormField>
                                 )}
                                 {skipPluginsValidation && (
                                     <Message>{t('inputs.skipPluginsValidation.message')}</Message>
                                 )}
 
-                                <Form.Field help={t('inputs.runtimeOnlyEvaluation.help')}>
+                                <UnsafelyTypedFormField help={t('inputs.runtimeOnlyEvaluation.help')}>
                                     <Form.Checkbox
                                         toggle
                                         label={t('inputs.runtimeOnlyEvaluation.label')}
                                         name="runtimeOnlyEvaluation"
                                         checked={runtimeOnlyEvaluation}
                                         onChange={this.handleInputChange}
+                                        help=""
                                     />
-                                </Form.Field>
+                                </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>
                         </Accordion>
                     </Form>
@@ -531,115 +636,5 @@ class GenericDeployModal extends React.Component {
         );
     }
 }
-
-const StepsPropType = PropTypes.arrayOf(
-    PropTypes.shape({
-        /**
-         * Message to be displayed during step execution
-         */
-        message: PropTypes.string,
-
-        /**
-         * Function receiving previous step outcome and deployment parameters. In case of deploy & install flow install
-         * workflow parameters and install workflow options are also passed to the function
-         */
-        executeStep: PropTypes.func
-    })
-);
-
-GenericDeployModal.propTypes = {
-    /**
-     * specifies whether the deploy modal is displayed
-     */
-    open: PropTypes.bool.isRequired,
-
-    /**
-     * Toolbox object
-     */
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-
-    /**
-     * blueprintId, if set then Blueprint selection dropdown is not displayed
-     */
-    blueprintId: PropTypes.string,
-
-    /**
-     * function to be called when the modal is closed
-     */
-    onHide: PropTypes.func,
-
-    i18nHeaderKey: PropTypes.string.isRequired,
-
-    /**
-     * Whether to show deployment name input
-     */
-    showDeploymentNameInput: PropTypes.bool,
-
-    /**
-     * Whether to show deployment ID input
-     */
-    showDeploymentIdInput: PropTypes.bool,
-
-    /**
-     * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
-     */
-    showDeployButton: PropTypes.bool,
-
-    /**
-     * Whether to show install workflow options (force, dry run, queue, schedule)
-     */
-    showInstallOptions: PropTypes.bool,
-
-    /**
-     * Whether to show site selection input
-     */
-    showSitesInput: PropTypes.bool,
-
-    /**
-     * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
-     */
-    deploySteps: StepsPropType,
-
-    /**
-     * Message to be displayed during inputs validation, before steps defined by `deploySteps` are executed, needs to be
-     * specified only when `showDeployButton` is enabled
-     */
-    deployValidationMessage: PropTypes.string,
-
-    /**
-     * Steps to be executed on 'Deploy & Install' button press
-     */
-    deployAndInstallSteps: StepsPropType.isRequired,
-
-    /**
-     * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
-     */
-    deployAndInstallValidationMessage: PropTypes.string,
-
-    /**
-     * Deployment Name input label
-     */
-    deploymentNameLabel: PropTypes.string,
-
-    /**
-     * Deployment Name input help description
-     */
-    deploymentNameHelp: PropTypes.string
-};
-
-GenericDeployModal.defaultProps = {
-    blueprintId: '',
-    onHide: _.noop,
-    showDeploymentNameInput: false,
-    showDeploymentIdInput: false,
-    showDeployButton: false,
-    showInstallOptions: false,
-    showSitesInput: false,
-    deploySteps: null,
-    deployValidationMessage: null,
-    deployAndInstallValidationMessage: null,
-    deploymentNameLabel: t('inputs.deploymentName.label'),
-    deploymentNameHelp: t('inputs.deploymentName.help')
-};
 
 export default GenericDeployModal;
