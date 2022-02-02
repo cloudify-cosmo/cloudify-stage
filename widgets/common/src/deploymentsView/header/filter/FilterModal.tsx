@@ -133,7 +133,6 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
         setFilterSaving();
         new FilterActions(toolbox)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             .doUpdate(filterId.value!, filterRules.value)
             .then(() => filterDirty.set(false))
             .catch(setMessageAsError)

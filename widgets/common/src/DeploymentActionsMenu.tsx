@@ -46,7 +46,6 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
         : {};
 
     const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         onActionClick(name!);
     };
 

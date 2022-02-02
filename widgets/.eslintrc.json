@@ -9,6 +9,7 @@
         "no-void": "off",
         "prefer-promise-reject-errors": "off",
         "react/jsx-props-no-spreading": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-namespace": "off"
     },
     "globals": {

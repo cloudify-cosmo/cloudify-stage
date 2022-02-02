@@ -5,6 +5,7 @@
         "no-void": "off",
         "react/jsx-props-no-spreading": "off",
         "prefer-promise-reject-errors": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
 
         "@typescript-eslint/no-namespace": [
             "error",

@@ -8,7 +8,8 @@
         "no-console": "error",
         "no-void": "off",
         "react/jsx-props-no-spreading": "off",
-        "prefer-promise-reject-errors": "off"
+        "prefer-promise-reject-errors": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
     },
     "env": {
         "jquery": true
