@@ -4,6 +4,7 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
+import { Workflow } from './types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -138,9 +139,8 @@ type GenericDeployModalState = {
     siteName: string;
     skipPluginsValidation: boolean;
     visibility: any;
-    workflow: any;
+    workflow: Workflow;
     activeSection: DEPLOYMENT_SECTIONS;
-    yamlFile: any;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -161,8 +161,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
-        activeSection: DEPLOYMENT_SECTIONS.deploymentInputs,
-        yamlFile: null
+        activeSection: DEPLOYMENT_SECTIONS.deploymentInputs
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -196,7 +195,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         }
     }
 
-    handleDeploymentInputChange(proxy, field) {
+    handleDeploymentInputChange(event: React.ChangeEvent, field: unknown) {
         const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
