@@ -7,6 +7,7 @@
     "rules": {
         "no-console": "error",
         "prefer-promise-reject-errors": "off",
+        "react/jsx-props-no-spreading": "off",
         "@typescript-eslint/no-namespace": "off"
     },
     "globals": {

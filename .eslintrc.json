@@ -2,6 +2,7 @@
     "extends": ["./node_modules/cloudify-ui-common/configs/eslint-common.json", "./.eslintrc.temp-overrides.json"],
     "rules": {
         "no-console": "error",
+        "react/jsx-props-no-spreading": "off",
         "prefer-promise-reject-errors": "off",
 
         "@typescript-eslint/no-namespace": [
