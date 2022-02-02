@@ -4,6 +4,10 @@ import { Modal, Form, UnsafelyTypedFormField, ApproveButton } from '../../basic'
 import type { FormField } from './form-fields';
 import { FormFieldType, formFields, requiredFormFields } from './form-fields';
 import CheckboxLabel from './CheckboxLabel';
+import StageUtils from '../../../utils/stageUtils';
+import { removeHtmlTagsFromString } from './utils';
+
+const t = StageUtils.getT('contactDetailsModal.form');
 
 type FormFieldValue = string | boolean;
 
@@ -40,11 +44,13 @@ const ContactDetailsForm = () => {
         const validationErrors: Record<string, unknown> = {};
 
         requiredFormFields.forEach(formField => {
+            const formFieldLabel = removeHtmlTagsFromString(t(formField.label));
+
             if (formField.isRequired && isFieldEmpty(formField)) {
-                validationErrors[formField.name] = `${formField.label} - field is required.`;
+                validationErrors[formField.name] = `${formFieldLabel} - ${t('validation.isFieldRequired')}`;
             } else if (!isFieldValid(formField)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                validationErrors[formField.name] = `${formField.label} - ${formField.validation!.errorMessage}`;
+                validationErrors[formField.name] = `${formFieldLabel} - ${t(formField.validation!.errorMessage)}`;
             }
         });
 
@@ -67,7 +73,7 @@ const ContactDetailsForm = () => {
                                 <Form.Input
                                     type="text"
                                     name={formField.name}
-                                    label={formField.label}
+                                    label={t(formField.label)}
                                     value={formInputs[formField.name]}
                                     onChange={setFormInputs}
                                     required={formField.isRequired}
@@ -87,7 +93,7 @@ const ContactDetailsForm = () => {
             </Modal.Content>
             <Modal.Actions>
                 <ApproveButton color="green" onClick={handleSubmit}>
-                    Submit
+                    {t('buttons.submit')}
                 </ApproveButton>
             </Modal.Actions>
         </>

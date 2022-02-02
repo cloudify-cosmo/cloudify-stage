@@ -18,58 +18,68 @@ export interface FormField {
     validation?: FormFieldValidation;
 }
 
+const getFormFieldTranslationPath = (fieldName: string) => {
+    return `fields.${fieldName}`;
+};
+
+export const getFormFieldValidationMessagePath = (fieldName: string) => {
+    return `${getFormFieldTranslationPath(fieldName)}.validationMessage`;
+};
+
+export const getFormFieldLabelPath = (fieldName: string) => {
+    return `${getFormFieldTranslationPath(fieldName)}.label`;
+};
+
 export const formFields: FormField[] = [
     {
         name: 'firstName',
-        label: 'First name',
+        label: getFormFieldLabelPath('firstName'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Please provide a valid first name, which should be between 2 to 20 characters long',
+            errorMessage: getFormFieldValidationMessagePath('firstName'),
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
         },
         isRequired: true
     },
     {
         name: 'lastName',
-        label: 'Last name',
+        label: getFormFieldLabelPath('lastName'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Please provide a valid last name, which should be between 2 and 20 characters long',
+            errorMessage: getFormFieldValidationMessagePath('lastName'),
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
         },
         isRequired: true
     },
     {
         name: 'email',
-        label: 'Email address',
+        label: getFormFieldLabelPath('email'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Please provide a valid email address',
+            errorMessage: getFormFieldValidationMessagePath('email'),
             regexp: ValidationRegexpPatterns.isEmail
         },
         isRequired: true
     },
     {
         name: 'phone',
-        label: 'Phone number',
+        label: getFormFieldLabelPath('phone'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Please provide a valid phone number, which should be between 4 and 20 digits long',
+            errorMessage: getFormFieldValidationMessagePath('phone'),
             regexp: ValidationRegexpPatterns.isBetweenDigitCharactersRange(4, 20)
         },
         isRequired: true
     },
     {
         name: 'isEULA',
-        label:
-            'By registering for the Cloudify Hosted Service you agree to the <a href="https://cloudify.co/license" target="_blank">Hosted Trial End User License Agreement</a>',
+        label: getFormFieldLabelPath('isEULA'),
         type: FormFieldType.Checkbox,
         isRequired: true
     },
     {
         name: 'isSendServicesDetails',
-        label:
-            'Cloudify uses the information provided to send you your service details. For more information see our <a href="https://cloudify.co/privacy-policy/" target="_blank">Privacy Policy</a>',
+        label: getFormFieldLabelPath('isSendServicesDetails'),
         type: FormFieldType.Checkbox
     }
 ];
