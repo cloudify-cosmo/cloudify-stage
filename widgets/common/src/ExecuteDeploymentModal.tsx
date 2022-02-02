@@ -351,6 +351,13 @@ ExecuteDeploymentModal.defaultProps = {
     onExecute: _.noop
 };
 
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { ExecuteDeploymentModal };
+    }
+}
+
 Stage.defineCommon({
     name: 'ExecuteDeploymentModal',
     common: ExecuteDeploymentModal
