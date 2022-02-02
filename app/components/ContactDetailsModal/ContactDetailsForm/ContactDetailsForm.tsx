@@ -3,6 +3,7 @@ import { useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, UnsafelyTypedFormField, ApproveButton } from '../../basic';
 import type { FormField } from './form-fields';
 import { FormFieldType, formFields, requiredFormFields } from './form-fields';
+import CheckboxLabel from './CheckboxLabel';
 
 type FormFieldValue = string | boolean;
 
@@ -61,7 +62,7 @@ const ContactDetailsForm = () => {
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {formFields.map(formField => (
-                        <UnsafelyTypedFormField key={formField.name}>
+                        <UnsafelyTypedFormField key={formField.name} required={formField.isRequired}>
                             {formField.type === FormFieldType.Text ? (
                                 <Form.Input
                                     type="text"
@@ -74,7 +75,7 @@ const ContactDetailsForm = () => {
                             ) : (
                                 <Form.Checkbox
                                     name={formField.name}
-                                    label={formField.label}
+                                    label={<CheckboxLabel label={formField.label} />}
                                     help=""
                                     checked={formInputs[formField.name]}
                                     onChange={setFormInputs}
