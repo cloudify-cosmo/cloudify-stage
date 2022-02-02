@@ -8,11 +8,14 @@ import DeployModalActions from './deployModal/DeployModalActions';
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
-type Errors = {
-    deploymentName?: string;
-    deploymentId?: string;
-    blueprintName?: string;
-};
+type Errors =
+    | {
+          deploymentName?: string;
+          deploymentId?: string;
+          blueprintName?: string;
+          error?: string;
+      }
+    | Record<string, string>;
 
 type StepsProp = {
     message: string;
@@ -114,15 +117,34 @@ type GenericDeployModalProps = {
     deploymentNameHelp?: string;
 } & typeof defaultProps;
 
-class GenericDeployModal extends React.Component<GenericDeployModalProps> {
-    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+enum DEPLOYMENT_SECTIONS {
+    deploymentInputs,
+    deploymentMetadata,
+    executionParameters,
+    advanced
+}
 
-    static DEPLOYMENT_SECTIONS = {
-        deploymentInputs: 0,
-        deploymentMetadata: 1,
-        executionParameters: 2,
-        advanced: 3
-    };
+type GenericDeployModalState = {
+    blueprint: any;
+    deploymentInputs: any[];
+    deploymentName: string;
+    errors: Errors;
+    areSecretsMissing: boolean;
+    fileLoading: boolean;
+    loading: boolean;
+    loadingMessage: string;
+    runtimeOnlyEvaluation: boolean;
+    showInstallModal: boolean;
+    siteName: string;
+    skipPluginsValidation: boolean;
+    visibility: any;
+    workflow: any;
+    activeSection: DEPLOYMENT_SECTIONS;
+    yamlFile: any;
+};
+
+class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
+    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -139,11 +161,11 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps> {
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
-        activeSection: 0,
+        activeSection: DEPLOYMENT_SECTIONS.deploymentInputs,
         yamlFile: null
     };
 
-    constructor(props) {
+    constructor(props: GenericDeployModalProps) {
         super(props);
 
         this.state = GenericDeployModal.initialState;
@@ -215,7 +237,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps> {
         this.setState(fieldNameValue);
     }
 
-    onAccordionClick(e, { index }: { index: number }) {
+    onAccordionClick(e, { index }) {
         const { activeSection } = this.state;
         const newIndex = activeSection === index ? -1 : index;
 
@@ -260,7 +282,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps> {
         };
 
         return stepPromise.catch(errors => {
-            const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
             const { activeSection, deploymentInputs } = this.state;
             const errorKeys = Object.keys(errors);
             const deploymentInputKeys = Object.keys(deploymentInputs);
@@ -323,7 +344,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps> {
         };
     }
 
-    setLoadingMessage(message) {
+    setLoadingMessage(message: string) {
         this.setState({ loadingMessage: message });
     }
 
@@ -446,7 +467,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps> {
             visibility
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
-        const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
             <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
