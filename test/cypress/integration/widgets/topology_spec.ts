@@ -32,7 +32,6 @@ describe('Topology', () => {
         before(() => {
             cy.mockLogin()
                 .deletePlugins()
-                .uploadPluginFromCatalog('Terraform')
                 .deleteDeployments(resourcePrefix, true)
                 .deleteBlueprints(resourcePrefix, true)
                 .uploadBlueprint(blueprintFile, blueprintId)
