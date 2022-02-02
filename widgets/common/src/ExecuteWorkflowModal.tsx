@@ -1,7 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import type { Workflow, OnChange, OnCheckboxChange } from './ExecuteWorkflowInputs';
+import type { Workflow } from './types';
+import type { OnChange, OnCheckboxChange } from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');

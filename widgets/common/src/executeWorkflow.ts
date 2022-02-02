@@ -1,25 +1,15 @@
 import type { CommonExecuteWorflowProps } from './ExecuteWorkflowInputs';
+import type { Workflow } from './types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-export type Workflow =
-    | string
-    | {
-          name: string;
-          plugin: string;
-          operation?: string;
-          // eslint-disable-next-line camelcase
-          is_cascading?: boolean;
-          parameters?: Record<string, string>;
-      };
-
 export type Errors = string | Record<string, string>;
 
-export function isWorkflowName(workflow: Workflow) {
+export function isWorkflowName(workflow: Workflow | string) {
     return typeof workflow === 'string';
 }
 
-export function getWorkflowName(workflow: Workflow) {
+export function getWorkflowName(workflow: Workflow | string) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }
 
