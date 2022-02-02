@@ -26,6 +26,12 @@
     },
     "overrides": [
         {
+            "files": ["*.ts"],
+            "rules": {
+                "import/prefer-default-export": "off"
+            }
+        },
+        {
             "files": ["./*/src/backend.js"],
             "extends": ["../node_modules/cloudify-ui-common/configs/eslint-common-node.json"],
             "rules": {

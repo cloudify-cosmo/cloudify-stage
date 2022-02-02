@@ -19,7 +19,8 @@
             "files": ["*.ts"],
             "rules": {
                 // NOTE: results in false-positives in regular classes for `context` properties
-                "react/static-property-placement": "off"
+                "react/static-property-placement": "off",
+                "import/prefer-default-export": "off"
             }
         }
     ]
