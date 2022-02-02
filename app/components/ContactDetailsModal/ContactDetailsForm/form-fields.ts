@@ -22,54 +22,54 @@ export const formFields: FormField[] = [
     {
         name: 'firstName',
         label: 'First name',
-        isRequired: true,
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Should be between 2 and 20 characters',
+            errorMessage: 'Please provide a valid first name, which should be between 2 to 20 characters long',
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
-        }
+        },
+        isRequired: true
     },
     {
         name: 'lastName',
         label: 'Last name',
-        isRequired: true,
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Should be between 2 and 20 characters',
+            errorMessage: 'Please provide a valid last name, which should be between 2 and 20 characters long',
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
-        }
+        },
+        isRequired: true
     },
     {
         name: 'email',
         label: 'Email address',
-        isRequired: true,
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Should be a valid email address',
+            errorMessage: 'Please provide a valid email address',
             regexp: ValidationRegexpPatterns.isEmail
-        }
+        },
+        isRequired: true
     },
     {
         name: 'phone',
         label: 'Phone number',
-        isRequired: true,
         type: FormFieldType.Text,
         validation: {
-            errorMessage: 'Should be between 4 and 20 digits',
+            errorMessage: 'Please provide a valid phone number, which should be between 4 and 20 digits long',
             regexp: ValidationRegexpPatterns.isBetweenDigitCharactersRange(4, 20)
-        }
+        },
+        isRequired: true
     },
     {
         name: 'isEULA',
         label:
-            'By registering for the Cloudify Hosted Service you agree to the Hosted Trial End User License Agreement.',
-        isRequired: true,
-        type: FormFieldType.Checkbox
+            'By registering for the Cloudify Hosted Service you agree to the <a href="https://cloudify.co/license" target="_blank">Hosted Trial End User License Agreement</a>',
+        type: FormFieldType.Checkbox,
+        isRequired: true
     },
     {
         name: 'isSendServicesDetails',
         label:
-            'Cloudify uses the information provided to send you your service details. For more information see our Privacy Policy.',
+            'Cloudify uses the information provided to send you your service details. For more information see our <a href="https://cloudify.co/privacy-policy/" target="_blank">Privacy Policy</a>',
         type: FormFieldType.Checkbox
     }
 ];
