@@ -30,6 +30,14 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     workflow,
     open
 }) => {
+    if (_.isString(workflow) && !(_.isString(deploymentId) && deploymentId)) {
+        throw Error(
+            `Invalid prop \`deploymentId\` supplied to \`ExecuteWorkflowModal\`. ` +
+                `When \`workflow\` prop is specified as a string, \`deploymentId\` must be provided. ` +
+                `Validation failed.`
+        );
+    }
+
     const {
         Hooks: { useErrors, useBoolean, useOpenProp, useInput, useResettableState }
     } = Stage;
