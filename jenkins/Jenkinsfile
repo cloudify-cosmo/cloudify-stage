@@ -133,12 +133,22 @@ pipeline {
     }
     stage('Run second tests group') {
       parallel {
-        stage('Test frontend'){
+        stage('Test frontend unit'){
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run frontend tests'
                 sh 'npm run test:frontend:unit'
+              }
+            }
+          }
+        }
+        stage('Test frontend components'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run frontend tests'
+                sh 'npm run test:frontend:components'
               }
             }
           }

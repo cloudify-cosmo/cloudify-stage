@@ -13,7 +13,7 @@ spec:
         cpu: 0.3
         memory: 256Mi
   - name: node
-    image: circleci/node:14.18.1-browsers
+    image: cypress/browsers:node12.18.3-chrome89-ff86
     resources:
       requests:
         cpu: 2.5
