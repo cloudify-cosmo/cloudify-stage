@@ -56,7 +56,7 @@
                 "isFieldRequired": "Field is required"
             },
             "buttons": {
-                "submit": "Submit"
+                "submit": "Continue"
             }
         }
     },
