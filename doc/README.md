@@ -6,8 +6,7 @@ Documentation of widget basic components (exposed using `Stage.Basic` global) is
 
 Version of `cloudify-ui-components` package used in [package.json](../package.json) 
 must match the version of `ui_components_link` parameter set in 
-[widgets-components.md from docs.getcloudify.org repository]
-(https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master/content/developer/writing_widgets/widgets-components.md).
+[widgets-components.md from docs.getcloudify.org repository](https://raw.githubusercontent.com/cloudify-cosmo/docs.getcloudify.org/master/content/developer/writing_widgets/widgets-components.md).
 
 It means that whenever `cloudify-ui-components` package version needs to be updated in `cloudify-stage`, 
 then `ui_components_link` parameter in `widgets-components.md` should be updated first.
