@@ -4,7 +4,7 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
-import { Workflow } from './types';
+import type { Workflow } from './types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
