@@ -153,7 +153,7 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
-                sh 'rm -rf /var/lib/apt/lists/* && apt update && apt install postgresql-client'
+                sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
