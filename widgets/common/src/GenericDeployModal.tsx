@@ -1,26 +1,29 @@
 // @ts-nocheck File not migrated fully to TS
+import type { AccordionTitleProps } from 'semantic-ui-react';
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
-import type { Workflow } from './types';
+import type { Workflow, DropdownValue } from './types';
+import type { BlueprintDeployParams } from './BlueprintActions';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
-type Errors =
-    | {
-          deploymentName?: string;
-          deploymentId?: string;
-          blueprintName?: string;
-          error?: string;
-      }
-    | Record<string, string>;
+type Errors = Record<string, string>;
+
+type InstallWorkflowParameters = Record<string, string>;
+type InstallWorkflowOptions = { force: boolean; dryRun: boolean; queue: boolean; scheduledTime: string };
 
 type StepsProp = {
     message: string;
-    executeStep: () => void;
+    executeStep: (
+        previousStepOutcome: any,
+        deploymentParameters: BlueprintDeployParams,
+        installWorkflowParameters?: InstallWorkflowParameters,
+        installWorkflowOptions?: InstallWorkflowOptions
+    ) => void;
 };
 
 const defaultProps = {
@@ -89,7 +92,7 @@ type GenericDeployModalProps = {
     /**
      * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
      */
-    deploySteps?: StepsProp;
+    deploySteps?: StepsProp | null;
 
     /**
      * Message to be displayed during inputs validation, before steps defined by `deploySteps` are executed, needs to be
@@ -127,7 +130,7 @@ enum DEPLOYMENT_SECTIONS {
 
 type GenericDeployModalState = {
     blueprint: any;
-    deploymentInputs: any[];
+    deploymentInputs: Record<string, string | number | boolean>;
     deploymentName: string;
     errors: Errors;
     areSecretsMissing: boolean;
@@ -136,11 +139,12 @@ type GenericDeployModalState = {
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
     showInstallModal: boolean;
-    siteName: string;
+    siteName: DropdownValue;
     skipPluginsValidation: boolean;
     visibility: any;
     workflow: Workflow;
     activeSection: DEPLOYMENT_SECTIONS;
+    deploymentId: string;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -215,7 +219,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         actions
             .doGetYamlFileContent(file)
-            .then(yamlInputs => {
+            .then((yamlInputs: any) => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
                     blueprint.plan.inputs,
                     deploymentInputsState,
@@ -223,9 +227,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 );
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });
             })
-            .catch(err => {
+            .catch((err: string | { message: string }) => {
                 const errorMessage = t('errors.loadingYamlFileFailed', {
-                    reason: _.isString(err) ? err : err.message
+                    reason: typeof err === 'string' ? err : err.message
                 });
                 this.setState({ errors: { yamlFile: errorMessage }, fileLoading: false });
             });
@@ -236,7 +240,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.setState(fieldNameValue);
     }
 
-    onAccordionClick(e, { index }) {
+    onAccordionClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
         const { activeSection } = this.state;
         const newIndex = activeSection === index ? -1 : index;
 
@@ -256,7 +260,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return true;
     }
 
-    onSubmit(validationMessage, steps, installWorkflowParameters, installWorkflowOptions) {
+    onSubmit(
+        validationMessage: string,
+        steps: StepsProp[],
+        installWorkflowParameters?: InstallWorkflowParameters,
+        installWorkflowOptions?: InstallWorkflowOptions
+    ) {
         this.setState({ loading: true, errors: {} });
         this.setLoadingMessage(validationMessage);
 
@@ -276,7 +285,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             });
         });
 
-        const isMissingSecretsError = errors => {
+        const isMissingSecretsError = (errors: Errors) => {
             return errors.error?.includes('dsl_parser.exceptions.UnknownSecretError');
         };
 
@@ -306,7 +315,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return this.onSubmit(deployValidationMessage, deploySteps);
     }
 
-    onDeployAndInstall(installWorkflowParameters, installWorkflowOptions) {
+    onDeployAndInstall(
+        installWorkflowParameters: InstallWorkflowParameters,
+        installWorkflowOptions: InstallWorkflowOptions
+    ) {
         const { deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
         return this.onSubmit(
             deployAndInstallValidationMessage,
@@ -365,7 +377,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return _.isEmpty(blueprintId);
     }
 
-    selectBlueprint(id) {
+    selectBlueprint(id: DropdownValue) {
         if (!_.isEmpty(id)) {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
             const { toolbox } = this.props;
