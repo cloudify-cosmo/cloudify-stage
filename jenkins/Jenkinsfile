@@ -59,7 +59,7 @@ pipeline {
               dir("${STAGE_DIR}/conf") {
                 withVault([configuration: configuration, vaultSecrets: secrets]) {
                   sh """
-                    jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
+                    jq '.maps.accessToken = "$MAPS_ACCESS_TOKEN"' app.json > app.json.tmp && mv app.json.tmp app.json
                   """
                 }
                 dir("${STAGE_DIR}") {
@@ -137,7 +137,7 @@ pipeline {
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
-                echo 'Run frontend tests'
+                echo 'Run frontend unit tests'
                 sh 'npm run test:frontend:unit'
               }
             }
@@ -147,7 +147,7 @@ pipeline {
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
-                echo 'Run frontend tests'
+                echo 'Run frontend component tests'
                 sh 'npm run test:frontend:components'
               }
             }
