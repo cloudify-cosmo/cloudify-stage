@@ -69,6 +69,10 @@ pipeline {
               echo 'prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
               dir("${WORKSPACE}/test"){
+                echo "Install required packages"
+                sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client && apt-get -y install jq'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
+
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
               }
@@ -153,8 +157,6 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
-                sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
             }
