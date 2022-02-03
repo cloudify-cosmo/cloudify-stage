@@ -4,7 +4,7 @@ import pathlib from 'path';
 import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';
 import ts from 'typescript';
-import tsConfig from '@tsconfig/node12/tsconfig.json';
+import tsConfig from '@tsconfig/node14/tsconfig.json';
 
 import { getConfig } from '../config';
 import { ALLOWED_METHODS_OBJECT, ALLOWED_METHODS_ARRAY, WIDGET_ID_HEADER } from '../consts';

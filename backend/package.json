@@ -29,7 +29,7 @@
     "delay": 2000
   },
   "dependencies": {
-    "@tsconfig/node12": "^1.0.9",
+    "@tsconfig/node14": "^1.0.1",
     "archiver": "^2.1.1",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",
