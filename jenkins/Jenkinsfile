@@ -59,7 +59,7 @@ pipeline {
               dir("${STAGE_DIR}/conf") {
                 withVault([configuration: configuration, vaultSecrets: secrets]) {
                   sh """
-                    jq '.maps.accessToken = "$MAPS_ACCESS_TOKEN"' app.json > app.json.tmp && mv app.json.tmp app.json
+                    echo jq '.maps.accessToken = "$MAPS_ACCESS_TOKEN"' app.json > app.json.tmp && mv app.json.tmp app.json
                   """
                 }
                 dir("${STAGE_DIR}") {
