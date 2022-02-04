@@ -170,7 +170,7 @@ describe('Edit mode', () => {
                 cy.wait('@deleteWidget').its('response.statusCode').should('equal', 200);
             }
 
-            cy.get('.modal .message ul').should('have.text', expectedError);
+            cy.contains('.modal .message ul', expectedError).should('be.visible');
         }
 
         it('validate widget installation', () => {
