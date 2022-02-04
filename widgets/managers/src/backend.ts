@@ -1,4 +1,5 @@
-module.exports = r => {
+// @ts-nocheck File not migrated fully to TS
+export default r => {
     r.register('get_cluster_status', 'GET', (req, res, next, helper) => {
         const _ = require('lodash');
         const logger = helper.Logger('get_cluster_status');
