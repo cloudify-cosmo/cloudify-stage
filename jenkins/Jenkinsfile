@@ -76,7 +76,6 @@ pipeline {
               echo 'Prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
               dir("${WORKSPACE}/test"){
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
               }
@@ -161,6 +160,7 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
+                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
             }
