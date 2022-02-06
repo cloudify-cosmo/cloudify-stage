@@ -7,6 +7,7 @@ import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
 import type { Workflow, DropdownValue } from './types';
 import type { BlueprintDeployParams } from './BlueprintActions';
+import type { Label } from './labels/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -20,7 +21,7 @@ type StepsProp = {
     message: string;
     executeStep: (
         previousStepOutcome: any,
-        deploymentParameters: BlueprintDeployParams,
+        deploymentParameters: BlueprintDeployParams & { deploymentId: string },
         installWorkflowParameters?: InstallWorkflowParameters,
         installWorkflowOptions?: InstallWorkflowOptions
     ) => void;
@@ -122,19 +123,23 @@ type GenericDeployModalProps = {
 } & typeof defaultProps;
 
 enum DEPLOYMENT_SECTIONS {
-    deploymentInputs,
+    noSectionSelected,
+    deploymentInputsSection,
     deploymentMetadata,
     executionParameters,
     advanced
 }
 
 type GenericDeployModalState = {
+    activeSection: DEPLOYMENT_SECTIONS;
+    areSecretsMissing: boolean;
     blueprint: any;
+    deploymentId?: string;
     deploymentInputs: Record<string, string | number | boolean>;
     deploymentName: string;
     errors: Errors;
-    areSecretsMissing: boolean;
     fileLoading: boolean;
+    labels?: Label[];
     loading: boolean;
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
@@ -143,8 +148,6 @@ type GenericDeployModalState = {
     skipPluginsValidation: boolean;
     visibility: any;
     workflow: Workflow;
-    activeSection: DEPLOYMENT_SECTIONS;
-    deploymentId: string;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -165,7 +168,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
-        activeSection: DEPLOYMENT_SECTIONS.deploymentInputs
+        activeSection: DEPLOYMENT_SECTIONS.deploymentInputsSection
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -242,7 +245,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     onAccordionClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
         const { activeSection } = this.state;
-        const newIndex = activeSection === index ? -1 : index;
+        const newIndex = activeSection === index ? DEPLOYMENT_SECTIONS.noSectionSelected : index;
 
         this.setState({ activeSection: newIndex });
     }
@@ -295,7 +298,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             const deploymentInputKeys = Object.keys(deploymentInputs);
             let errorActiveSection = activeSection;
             if (errorKeys.some(errorKey => deploymentInputKeys.includes(errorKey))) {
-                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputs;
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputsSection;
             } else if (errorKeys.includes('siteName')) {
                 errorActiveSection = DEPLOYMENT_SECTIONS.deploymentMetadata;
             } else if (errorKeys.includes('deploymentId')) {
@@ -403,7 +406,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     validateInputs() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
@@ -480,7 +483,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
 
         return (
-            <Modal open={open} onClose={() => onHide()} className="deployBlueprintModal">
+            <Modal open={open} onClose={onHide} className="deployBlueprintModal">
                 <Modal.Header>
                     <Icon name="rocket" /> {i18n.t(i18nHeaderKey, { blueprintId: blueprint.id })}
                     <VisibilityField
@@ -544,7 +547,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         <Accordion fluid>
                             <AccordionSectionWithDivider
                                 title={t('sections.deploymentInputs')}
-                                index={DEPLOYMENT_SECTIONS.deploymentInputs}
+                                index={DEPLOYMENT_SECTIONS.deploymentInputsSection}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
@@ -587,7 +590,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     <LabelsInput
                                         toolbox={toolbox}
                                         hideInitialLabels
-                                        onChange={labels => this.setState({ labels })}
+                                        onChange={(labels: Label[]) => this.setState({ labels })}
                                     />
                                 </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>

@@ -9,7 +9,7 @@ interface Props {
     fileLoading: boolean;
     onDeploymentInputChange: (event: React.ChangeEvent, field: unknown) => void;
     deploymentInputs: { [key: string]: string | boolean | number };
-    errors: { title: string };
+    errors: Record<string, string>;
 }
 
 const DeplomentInputsSection: FunctionComponent<Props> = ({
