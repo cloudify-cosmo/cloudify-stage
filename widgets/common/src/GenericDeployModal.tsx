@@ -27,21 +27,6 @@ type StepsProp = {
     ) => void;
 };
 
-const defaultProps = {
-    blueprintId: '',
-    onHide: _.noop,
-    showDeploymentNameInput: false,
-    showDeploymentIdInput: false,
-    showDeployButton: false,
-    showInstallOptions: false,
-    showSitesInput: false,
-    deploySteps: null,
-    deployValidationMessage: null,
-    deployAndInstallValidationMessage: null,
-    deploymentNameLabel: t('inputs.deploymentName.label'),
-    deploymentNameHelp: t('inputs.deploymentName.help')
-};
-
 type GenericDeployModalProps = {
     /**
      * specifies whether the deploy modal is displayed
@@ -120,18 +105,10 @@ type GenericDeployModalProps = {
      * Deployment Name input help description
      */
     deploymentNameHelp?: string;
-} & typeof defaultProps;
-
-enum DEPLOYMENT_SECTIONS {
-    noSectionSelected,
-    deploymentInputsSection,
-    deploymentMetadata,
-    executionParameters,
-    advanced
-}
+};
 
 type GenericDeployModalState = {
-    activeSection: DEPLOYMENT_SECTIONS;
+    activeSection: any;
     areSecretsMissing: boolean;
     blueprint: any;
     deploymentId?: string;
@@ -153,6 +130,13 @@ type GenericDeployModalState = {
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
+    static DEPLOYMENT_SECTIONS = {
+        deploymentInputs: 0,
+        deploymentMetadata: 1,
+        executionParameters: 2,
+        advanced: 3
+    };
+
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
         deploymentInputs: [],
@@ -168,7 +152,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
         workflow: {},
-        activeSection: DEPLOYMENT_SECTIONS.deploymentInputsSection
+        activeSection: 0
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -202,7 +186,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         }
     }
 
-    handleDeploymentInputChange(event: React.ChangeEvent, field: unknown) {
+    handleDeploymentInputChange(proxy, field) {
         const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
@@ -222,7 +206,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         actions
             .doGetYamlFileContent(file)
-            .then((yamlInputs: any) => {
+            .then(yamlInputs => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
                     blueprint.plan.inputs,
                     deploymentInputsState,
@@ -245,7 +229,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     onAccordionClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
         const { activeSection } = this.state;
-        const newIndex = activeSection === index ? DEPLOYMENT_SECTIONS.noSectionSelected : index;
+        const newIndex = activeSection === index ? -1 : index;
 
         this.setState({ activeSection: newIndex });
     }
@@ -293,12 +277,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         };
 
         return stepPromise.catch(errors => {
+            const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
             const { activeSection, deploymentInputs } = this.state;
             const errorKeys = Object.keys(errors);
             const deploymentInputKeys = Object.keys(deploymentInputs);
             let errorActiveSection = activeSection;
             if (errorKeys.some(errorKey => deploymentInputKeys.includes(errorKey))) {
-                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputsSection;
+                errorActiveSection = DEPLOYMENT_SECTIONS.deploymentInputs;
             } else if (errorKeys.includes('siteName')) {
                 errorActiveSection = DEPLOYMENT_SECTIONS.deploymentMetadata;
             } else if (errorKeys.includes('deploymentId')) {
@@ -481,6 +466,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             visibility
         } = this.state;
         const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
+        const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
@@ -547,7 +533,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         <Accordion fluid>
                             <AccordionSectionWithDivider
                                 title={t('sections.deploymentInputs')}
-                                index={DEPLOYMENT_SECTIONS.deploymentInputsSection}
+                                index={DEPLOYMENT_SECTIONS.deploymentInputs}
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
@@ -670,5 +656,20 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         );
     }
 }
+
+GenericDeployModal.defaultProps = {
+    blueprintId: '',
+    onHide: _.noop,
+    showDeploymentNameInput: false,
+    showDeploymentIdInput: false,
+    showDeployButton: false,
+    showInstallOptions: false,
+    showSitesInput: false,
+    deploySteps: null,
+    deployValidationMessage: null,
+    deployAndInstallValidationMessage: null,
+    deploymentNameLabel: t('inputs.deploymentName.label'),
+    deploymentNameHelp: t('inputs.deploymentName.help')
+};
 
 export default GenericDeployModal;
