@@ -1,16 +1,24 @@
-// @ts-nocheck File not migrated fully to TS
 import type { AccordionTitleProps } from 'semantic-ui-react';
+import type { ChangeEvent } from 'react';
 import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
-import type { Workflow, DropdownValue } from './Types';
+import type { Workflow, DropdownValue, Field } from './Types';
 import type { BlueprintDeployParams } from './BlueprintActions';
 import type { Label } from './labels/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+
+type Blueprint = {
+    description?: string;
+    imports?: string[];
+    inputs?: Record<string, any>;
+    node_templates?: Record<string, any>;
+    tosca_definitions_version?: string;
+};
 
 type Errors = Record<string, string>;
 
@@ -41,12 +49,12 @@ type GenericDeployModalProps = {
     /**
      * blueprintId, if set then Blueprint selection dropdown is not displayed
      */
-    blueprintId?: string;
+    blueprintId: string;
 
     /**
      * function to be called when the modal is closed
      */
-    onHide?: () => void;
+    onHide: () => void;
 
     i18nHeaderKey: string;
 
@@ -63,7 +71,7 @@ type GenericDeployModalProps = {
     /**
      * Whether to show 'Deploy' button, if not set only 'Deploy & Install' button is shown
      */
-    showDeployButton?: boolean;
+    showDeployButton: boolean;
 
     /**
      * Whether to show install workflow options (force, dry run, queue, schedule)
@@ -78,23 +86,23 @@ type GenericDeployModalProps = {
     /**
      * Steps to be executed on 'Deploy' button press, needs to be specified only when `showDeployButton` is enabled
      */
-    deploySteps?: StepsProp | null;
+    deploySteps: StepsProp[];
 
     /**
      * Message to be displayed during inputs validation, before steps defined by `deploySteps` are executed, needs to be
      * specified only when `showDeployButton` is enabled
      */
-    deployValidationMessage?: string;
+    deployValidationMessage: string;
 
     /**
      * Steps to be executed on 'Deploy & Install' button press
      */
-    deployAndInstallSteps: StepsProp;
+    deployAndInstallSteps: StepsProp[];
 
     /**
      * Message to be displayed during inputs validation, before steps defined by `deployAndInstallSteps` are executed
      */
-    deployAndInstallValidationMessage?: string;
+    deployAndInstallValidationMessage: string;
 
     /**
      * Deployment Name input label
@@ -107,27 +115,43 @@ type GenericDeployModalProps = {
     deploymentNameHelp?: string;
 };
 
+const defaultProps: Partial<GenericDeployModalProps> = {
+    blueprintId: '',
+    onHide: _.noop,
+    showDeploymentNameInput: false,
+    showDeploymentIdInput: false,
+    showDeployButton: false,
+    showInstallOptions: false,
+    showSitesInput: false,
+    deploySteps: [],
+    deployValidationMessage: '',
+    deployAndInstallValidationMessage: '',
+    deploymentNameLabel: t('inputs.deploymentName.label'),
+    deploymentNameHelp: t('inputs.deploymentName.help')
+};
+
 type GenericDeployModalState = {
     activeSection: any;
     areSecretsMissing: boolean;
     blueprint: any;
-    deploymentId?: string;
-    deploymentInputs: Record<string, string | number | boolean>;
+    deploymentId: string;
+    deploymentInputs: Record<string, unknown>;
     deploymentName: string;
     errors: Errors;
     fileLoading: boolean;
-    labels?: Label[];
+    labels: Label[];
     loading: boolean;
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
     showInstallModal: boolean;
-    siteName: DropdownValue;
+    siteName: string;
     skipPluginsValidation: boolean;
     visibility: any;
     workflow: Workflow;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
+    static defaultProps = defaultProps;
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
     static DEPLOYMENT_SECTIONS = {
@@ -139,7 +163,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
-        deploymentInputs: [],
+        deploymentInputs: {},
         deploymentName: '',
         errors: {},
         areSecretsMissing: false,
@@ -151,8 +175,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
-        workflow: {},
-        activeSection: 0
+        workflow: { name: '', parameters: {}, plugin: '' },
+        activeSection: 0,
+        deploymentId: '',
+        labels: []
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -163,7 +189,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.selectBlueprint = this.selectBlueprint.bind(this);
 
         this.handleDeploymentInputChange = this.handleDeploymentInputChange.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
         this.handleYamlFileChange = this.handleYamlFileChange.bind(this);
 
         this.onCancel = this.onCancel.bind(this);
@@ -186,7 +211,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         }
     }
 
-    handleDeploymentInputChange(proxy, field) {
+    handleDeploymentInputChange(_: ChangeEvent<Element>, field: Field) {
         const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
@@ -206,7 +231,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         actions
             .doGetYamlFileContent(file)
-            .then(yamlInputs => {
+            .then((yamlInputs: Blueprint) => {
                 const deploymentInputs = InputsUtils.getUpdatedInputs(
                     blueprint.plan.inputs,
                     deploymentInputsState,
@@ -222,12 +247,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             });
     }
 
-    handleInputChange(proxy, field) {
-        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
-        this.setState(fieldNameValue);
-    }
-
-    onAccordionClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
+    onAccordionClick(_: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
         const { activeSection } = this.state;
         const newIndex = activeSection === index ? -1 : index;
 
@@ -366,7 +386,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     selectBlueprint(id: DropdownValue) {
-        if (!_.isEmpty(id)) {
+        if (!_.isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
             const { toolbox } = this.props;
             const { BlueprintActions, InputsUtils } = Stage.Common;
@@ -526,7 +546,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 <Form.Input
                                     name="deploymentName"
                                     value={deploymentName}
-                                    onChange={this.handleInputChange}
+                                    onChange={(_: ChangeEvent<HTMLInputElement>, { value }: { value: string }) =>
+                                        this.setState({ deploymentName: value })
+                                    }
                                 />
                             </UnsafelyTypedFormField>
                         )}
@@ -560,7 +582,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     >
                                         <DynamicDropdown
                                             value={siteName}
-                                            onChange={value => this.setState({ siteName: value })}
+                                            onChange={value =>
+                                                typeof value === 'string' && this.setState({ siteName: value })
+                                            }
                                             name="siteName"
                                             fetchUrl="/sites?_include=name"
                                             valueProp="name"
@@ -592,7 +616,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         label={t('inputs.skipPluginsValidation.label')}
                                         name="skipPluginsValidation"
                                         checked={skipPluginsValidation}
-                                        onChange={this.handleInputChange}
+                                        onChange={(_: undefined, { checked }: { checked: boolean }) =>
+                                            this.setState({ skipPluginsValidation: checked })
+                                        }
                                         help=""
                                     />
                                 </UnsafelyTypedFormField>
@@ -613,7 +639,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         <Form.Input
                                             name="deploymentId"
                                             value={deploymentId}
-                                            onChange={this.handleInputChange}
+                                            onChange={(
+                                                _: ChangeEvent<HTMLInputElement>,
+                                                { value }: { value: string }
+                                            ) => this.setState({ deploymentId: value })}
                                         />
                                     </UnsafelyTypedFormField>
                                 )}
@@ -627,7 +656,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         label={t('inputs.runtimeOnlyEvaluation.label')}
                                         name="runtimeOnlyEvaluation"
                                         checked={runtimeOnlyEvaluation}
-                                        onChange={this.handleInputChange}
+                                        onChange={(_: undefined, { checked }: { checked: boolean }) =>
+                                            this.setState({ runtimeOnlyEvaluation: checked })
+                                        }
                                         help=""
                                     />
                                 </UnsafelyTypedFormField>
@@ -656,20 +687,5 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         );
     }
 }
-
-GenericDeployModal.defaultProps = {
-    blueprintId: '',
-    onHide: _.noop,
-    showDeploymentNameInput: false,
-    showDeploymentIdInput: false,
-    showDeployButton: false,
-    showInstallOptions: false,
-    showSitesInput: false,
-    deploySteps: null,
-    deployValidationMessage: null,
-    deployAndInstallValidationMessage: null,
-    deploymentNameLabel: t('inputs.deploymentName.label'),
-    deploymentNameHelp: t('inputs.deploymentName.help')
-};
 
 export default GenericDeployModal;

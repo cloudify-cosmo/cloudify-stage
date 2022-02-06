@@ -12,26 +12,4 @@ export type Workflow = {
     plugin: string;
 };
 
-export type BaseWorkflowInputs = Record<
-    string,
-    {
-        type?: string;
-        default?: string;
-        constraints?: {
-            pattern: string;
-        }[];
-    }
->;
-
-export type UserWorkflowInputsState = Record<
-    string,
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-    | Record<string, string | number | boolean>
-    | null
-    | undefined
->;
+export type Field = { name: string; value: unknown; type: string; checked?: string | undefined };

@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import type { FullBlueprintData } from '../BlueprintActions';
+import type { Field } from '../Types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
@@ -7,8 +8,8 @@ interface Props {
     blueprint: FullBlueprintData;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onDeploymentInputChange: (event: React.ChangeEvent, field: unknown) => void;
-    deploymentInputs: { [key: string]: string | boolean | number };
+    onDeploymentInputChange: (event: React.ChangeEvent, field: Field) => void;
+    deploymentInputs: { [key: string]: unknown };
     errors: Record<string, string>;
 }
 
