@@ -13,5 +13,5 @@ node_modules
 test/cypress/screenshots
 test/cypress/videos
 test/cypress/results
-widgets/*/backend.js
+widgets/*/backend.ts
 stage.tar.gz
