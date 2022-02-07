@@ -15,7 +15,7 @@ const proxyOptions = {
     secure: false
 };
 
-const options = {
+const options: WebpackDevServer.Configuration = {
     hot: true,
     publicPath: CONTEXT_PATH,
     host: SERVER_HOST,
