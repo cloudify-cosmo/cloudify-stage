@@ -16,9 +16,10 @@ const proxyOptions = {
 };
 
 const options = {
+    hot: true,
     publicPath: CONTEXT_PATH,
     host: SERVER_HOST,
-    inline: false,
+    inline: true,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`
     },
