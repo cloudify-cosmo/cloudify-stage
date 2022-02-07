@@ -209,10 +209,7 @@ module.exports = (env, argv) => {
                     isDevelopment &&
                         new ForkTsCheckerWebpackPlugin({
                             eslint: {
-                                files: './{app,widgets}/**/*.{ts,tsx,js,tsx}',
-                                options: {
-                                    ignorePattern: 'widgets/**/backend.js'
-                                }
+                                files: './{app,widgets}/**/*.{ts,tsx,js,tsx}'
                             },
                             typescript: {
                                 configFile: './tsconfig.ui.json',
@@ -251,8 +248,8 @@ module.exports = (env, argv) => {
                     new CopyWebpackPlugin({
                         patterns: [
                             {
-                                from: 'widgets/**/src/backend.js',
-                                to: '[path]../backend.js'
+                                from: 'widgets/**/src/backend.ts',
+                                to: '[path]../backend.ts'
                             }
                         ]
                     }),

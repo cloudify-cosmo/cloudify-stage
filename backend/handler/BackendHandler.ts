@@ -3,6 +3,8 @@ import fs from 'fs-extra';
 import pathlib from 'path';
 import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';
+import ts from 'typescript';
+import tsConfig from '@tsconfig/node14/tsconfig.json';
 
 import { getConfig } from '../config';
 import { ALLOWED_METHODS_OBJECT, ALLOWED_METHODS_ARRAY, WIDGET_ID_HEADER } from '../consts';
@@ -108,19 +110,21 @@ export function importWidgetBackend(widgetId, isCustom = true) {
             const vm = new NodeVM({
                 sandbox: {
                     _,
-                    backendFile,
                     widgetId,
                     BackendRegistrator
                 },
                 require: {
                     context: 'sandbox',
                     external: getConfig().app.widgets.allowedModules
-                }
+                },
+                compiler: source => ts.transpile(source, tsConfig.compilerOptions),
+                sourceExtensions: ['ts']
             });
 
-            const script = `module.exports = new Promise((resolve, reject) => {
+            const script = `
+                    import backend from '${backendFile}';
+                    module.exports = new Promise((resolve, reject) => {
                          try {
-                             let backend = require(backendFile);
                              if (_.isFunction(backend)) {
                                  backend(BackendRegistrator(widgetId, resolve, reject));
                              } else {
