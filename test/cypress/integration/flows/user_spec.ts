@@ -65,6 +65,7 @@ describe('User flow', () => {
         cy.clickButton('Execute');
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
+        cy.waitForExecutionToEnd('install', { deploymentDisplayName: resourceName });
         cy.contains('.executionsWidget', 'install completed');
         cy.contains('.eventsTable', "'install' workflow execution succeeded");
 

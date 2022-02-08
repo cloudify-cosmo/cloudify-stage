@@ -9,7 +9,6 @@ import { getConfig } from '../config';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 /**

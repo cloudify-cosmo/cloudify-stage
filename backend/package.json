@@ -1,6 +1,6 @@
 {
   "name": "stage-backend",
-  "version": "6.3.0-.dev1",
+  "version": "6.4.0-.dev1",
   "description": "Cloudify Console Backend",
   "repository": "https://github.com/cloudify-cosmo/cloudify-stage/backend",
   "license": "Apache-2.0",
@@ -29,6 +29,7 @@
     "delay": 2000
   },
   "dependencies": {
+    "@tsconfig/node14": "^1.0.1",
     "archiver": "^2.1.1",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",

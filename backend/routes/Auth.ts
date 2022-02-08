@@ -1,9 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import _ from 'lodash';
 import type { CookieOptions, Request } from 'express';
 
+import { authenticateWithSaml, authenticateWithToken } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, ROLE_COOKIE_NAME, TOKEN_COOKIE_NAME, USERNAME_COOKIE_NAME } from '../consts';
 import { getConfig } from '../config';
@@ -20,6 +20,7 @@ function getCookieOptions(req: Request) {
     return { sameSite: 'strict', secure: httpsUsed } as CookieOptions;
 }
 
+// This path is used during logging in, so it should not require authentication
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
@@ -39,7 +40,7 @@ router.post('/login', (req, res) =>
         })
 );
 
-router.post('/saml/callback', passport.authenticate('saml', { session: false }), (req, res) => {
+router.post('/saml/callback', authenticateWithSaml, (req, res) => {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
@@ -59,6 +60,7 @@ router.post('/saml/callback', passport.authenticate('saml', { session: false }),
     }
 });
 
+// TODO(RD-3827): Check (Okta and normal login) if it is possible to add authentication to this path
 router.get('/manager', (req, res) => {
     const token = req.headers['authentication-token'] as string;
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
@@ -87,7 +89,7 @@ router.get('/manager', (req, res) => {
         });
 });
 
-router.get('/user', passport.authenticate('token', { session: false }), (req, res) => {
+router.get('/user', authenticateWithToken, (req, res) => {
     res.send({
         username: req.user!.username,
         role: req.user!.role,
@@ -96,12 +98,12 @@ router.get('/user', passport.authenticate('token', { session: false }), (req, re
     });
 });
 
-router.post('/logout', passport.authenticate('token', { session: false }), (_req, res) => {
+router.post('/logout', authenticateWithToken, (_req, res) => {
     res.clearCookie(TOKEN_COOKIE_NAME);
     res.end();
 });
 
-router.get('/RBAC', passport.authenticate('token', { session: false }), (req, res) => {
+router.get('/RBAC', authenticateWithToken, (req, res) => {
     AuthHandler.getRBAC(req.headers['authentication-token'] as string)
         .then(res.send)
         .catch(err => {

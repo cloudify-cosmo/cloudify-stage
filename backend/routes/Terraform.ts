@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
 import fs from 'fs';
-import passport from 'passport';
 import path from 'path';
 import request from 'request';
 import { STATUS_CODES } from 'http';
@@ -16,7 +15,6 @@ const router = express.Router();
 const templatePath = path.resolve(__dirname, '../templates/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.post('/resources', (req, res) => {
@@ -71,9 +69,9 @@ router.post('/resources', (req, res) => {
 router.post('/blueprint', (req, res) => {
     const {
         blueprintName,
-        terraformVersion = '',
-        terraformTemplate = '',
-        resourceLocation = '',
+        terraformVersion,
+        terraformTemplate,
+        resourceLocation,
         urlAuthentication,
         variables = [],
         environmentVariables = [],

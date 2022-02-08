@@ -2,7 +2,7 @@ import { escapeRegExp, find } from 'lodash';
 import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
-const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json';
+const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
@@ -142,31 +142,8 @@ describe('Getting started modal', () => {
 
     // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
     describe('', () => {
-        beforeEach(() => cy.enableGettingStarted().usePageMock().mockLogin('admin', 'admin', false));
-
-        it('should provide option to disable it', () => {
-            cy.interceptSp('POST', `/users/admin`).as('disableRequest');
-
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('label', "Don't show next time").click();
-                closeModal();
-            });
-
-            cy.contains('button', 'Yes').click();
-
-            cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
-        });
-
-        it('should open when gettingStarted query parameter is present', () => {
-            cy.mockLogin();
-
-            cy.get('.modal').should('not.exist');
-            cy.location('pathname').then(pathname => cy.visit(`${pathname}?gettingStarted=true`));
-
-            cy.get('.modal').should('be.visible');
-            cy.contains('Welcome to Cloudify');
-        });
+        before(() => cy.usePageMock().mockLogin('admin', 'admin', false));
+        beforeEach(() => cy.visit(`/console?cloudSetup=true`));
 
         it('should install selected environment', () => {
             cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
@@ -358,13 +335,33 @@ describe('Getting started modal', () => {
             verifySecretSkipSummaryItem(secretToSkip);
         });
 
-        it('should reflect show_getting_started value by the "Don\'t show next time" checkbox', () => {
+        it('should show different content depending on cloudSetup parameter presence', () => {
+            // cloudSetup parameter present (see beforeEach)
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('not.exist');
+            cy.get('.ui.checkbox').should('not.exist');
+            // NOTE: actual content is verified by test cases that go through steps
 
-            cy.disableGettingStarted().visit('/console/?gettingStarted=true');
+            // cloudSetup parameter missing
+            cy.enableGettingStarted().visit('/console');
             goToNextStep();
-            cy.get('.ui.checkbox.checked').should('exist');
+            cy.log('Verify modal content');
+            cy.get('.modal .content button').should('have.length', 3);
+            cy.contains('.modal .content button', 'Terraform').should('be.visible');
+            cy.contains('.modal .content button', 'Kubernetes').should('be.visible');
+            cy.contains('.modal .content button', 'Multi Cloud').should('be.visible');
+
+            cy.log('Verify "don\'t show next time" checkbox presence and behavior');
+
+            cy.get('.ui.checkbox:not(.checked)').should('exist');
+
+            cy.interceptSp('POST', `/users/admin`).as('disableRequest');
+
+            cy.contains('label', "Don't show next time").click();
+            closeModal();
+
+            cy.contains('button', 'Yes').click();
+
+            cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
         });
     });
 

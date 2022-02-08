@@ -4,11 +4,12 @@ function appendQueryParam(url: string, param: string, value: string) {
     return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
 }
 
-type WaitUntilOptions = {
+export type WaitUntilOptions = {
     search?: string;
     numberOfRetriesLeft?: number;
     waitingInterval?: number;
 };
+
 export function waitUntil(
     resource: string,
     predicate: (response: Cypress.Response<any>) => boolean,

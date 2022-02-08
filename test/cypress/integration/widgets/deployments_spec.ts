@@ -20,7 +20,7 @@ describe('Deployments widget', () => {
     const executeDeploymentWorkflow = (id: string, workflow: string) => {
         selectDeploymentActionFromMenu(id, '.workflowsMenu', workflow);
     };
-    const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(deploymentId, workflow);
+    const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
 
     before(() => {
         cy.activate('valid_trial_license')

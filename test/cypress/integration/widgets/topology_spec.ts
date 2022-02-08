@@ -17,9 +17,8 @@ describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
     const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
 
-    const waitForDeploymentToBeInstalled = (deploymentId: string) => {
-        cy.waitForExecutionToEnd(deploymentId, 'install');
-    };
+    const waitForDeploymentToBeInstalled = (deploymentId: string) =>
+        cy.waitForExecutionToEnd('install', { deploymentId });
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: pollingTimeSeconds });
@@ -33,7 +32,6 @@ describe('Topology', () => {
         before(() => {
             cy.mockLogin()
                 .deletePlugins()
-                .uploadPluginFromCatalog('Terraform')
                 .deleteDeployments(resourcePrefix, true)
                 .deleteBlueprints(resourcePrefix, true)
                 .uploadBlueprint(blueprintFile, blueprintId)

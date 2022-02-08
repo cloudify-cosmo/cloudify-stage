@@ -21,7 +21,7 @@ function uploadPlugins(pluginNames: string[]) {
 
 describe('Plugins Catalog widget', () => {
     const widgetConfiguration: PluginsCatalogWidgetConfiguration = {
-        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
+        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json',
         sortByName: true
     };
 

@@ -64,7 +64,7 @@ describe('Number of Deployments widget', () => {
         }
 
         function verifyUrl(expectedPageId: string, expectedSearch: string) {
-            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+            cy.verifyLocationByPageId(expectedPageId);
             cy.location('search').should('be.equal', expectedSearch);
         }
 

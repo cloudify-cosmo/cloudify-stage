@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useContext, useState } from 'react';
 
-import styled, { ThemeContext } from 'styled-components';
+import styled, { css, ThemeContext } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { without } from 'lodash';
 import PagesList from './PagesList';
@@ -9,6 +9,7 @@ import { ReduxState } from '../../reducers';
 import SystemMenu, { SystemMenuGroup } from './SystemMenu';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import SideBarHeader from './SideBarHeader';
+import { SideBarAnimatedItemWrapper } from './SideBarItem';
 
 export const collapsedSidebarWidth = '4.3rem';
 export const expandedSidebarWidth = '18rem';
@@ -23,7 +24,13 @@ const ThemedSidebar = styled(Sidebar)`
     }
     .item {
         color: ${props => props.theme.sidebarTextColor} !important;
-        padding-left: ${props => !props.$expanded && '15px !important'};
+    }
+    ${SideBarAnimatedItemWrapper} {
+        ${props =>
+            !props.$expanded &&
+            css`
+                transform: translateX(0px);
+            `}
     }
     .item.active,
     .item:hover {

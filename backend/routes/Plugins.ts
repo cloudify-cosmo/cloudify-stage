@@ -1,6 +1,5 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import passport from 'passport';
 import multer from 'multer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
@@ -12,12 +11,9 @@ import { getResponseJson } from '../handler/RequestHandler';
 import { getLogger } from '../handler/LoggerHandler';
 
 const defaultedRequest = request.defaults({ encoding: null });
-
 const router = express.Router();
-
 const upload = multer();
 const logger = getLogger('Plugins');
-
 const getFiles = (req: Request) => req.files as { [fieldname: string]: Express.Multer.File[] };
 
 function checkParams(req: Request, res: Response, next: NextFunction) {
@@ -132,7 +128,6 @@ interface PostUploadQuery {
 }
 router.post<any, any, any, any, PostUploadQuery>(
     '/upload',
-    passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
     (req, res) => {

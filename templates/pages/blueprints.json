@@ -16,7 +16,7 @@
                         "color": "blue",
                         "icon": "wizard",
                         "label": "Setup cloud account",
-                        "url": "?gettingStarted=true",
+                        "url": "?cloudSetup=true",
                         "fullHeight": false
                     }
                 },
@@ -47,7 +47,7 @@
                         "marketplaceTabs": [
                             {
                                 "name": "Clusters",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/k8s-examples.json"
                             }
                         ]
                     }
@@ -66,7 +66,7 @@
                         "marketplaceTabs": [
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
                             }
                         ]
                     }

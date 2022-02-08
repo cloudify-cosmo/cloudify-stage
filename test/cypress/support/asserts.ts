@@ -20,7 +20,9 @@ const commands = {
                 pageName
             });
         });
-    }
+    },
+    verifyLocationByPageId: (expectedPageId: string) =>
+        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`)
 };
 
 addCommands(commands);

@@ -35,6 +35,7 @@ let token = '';
 
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
+    cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
     tenant: Consts.DEFAULT_TENANT
 });
 
@@ -217,7 +218,7 @@ const commands = {
         cy.log(`Clicking '${name}' page menu item`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
         if (expectedPageId) {
-            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+            cy.verifyLocationByPageId(expectedPageId);
         }
         return cy.waitUntilPageLoaded();
     },
@@ -306,34 +307,6 @@ const commands = {
                                   }
                               ]
                             : []
-                    },
-                    // used by tests that require plugins
-                    {
-                        name: 'Plugins Catalog',
-                        id: 'plugin_catalog',
-                        type: 'page',
-                        layout: [
-                            {
-                                type: 'widgets',
-                                content: [
-                                    {
-                                        id: 'pluginsCatalog',
-                                        name: 'Plugins Catalog',
-                                        definition: 'pluginsCatalog',
-                                        configuration: {
-                                            jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
-                                        },
-                                        drillDownPages: {},
-                                        height: 20,
-                                        width: widgetsWidth,
-                                        x: 0,
-                                        y: 0,
-                                        maximized: false
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 ]
             }
@@ -406,6 +379,8 @@ const commands = {
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),
 
+    typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
+
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
             return cy
@@ -446,7 +421,6 @@ const commands = {
     mockDisabledGettingStarted: () => mockGettingStarted(false),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
-
     clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
 };
 
