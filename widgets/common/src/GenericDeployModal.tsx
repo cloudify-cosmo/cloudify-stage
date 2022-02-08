@@ -153,6 +153,7 @@ type GenericDeployModalState = {
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
+    // eslint-disable-next-line react/static-property-placement
     static defaultProps = defaultProps;
 
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
