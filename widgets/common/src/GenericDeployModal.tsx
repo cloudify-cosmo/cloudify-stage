@@ -154,6 +154,7 @@ type GenericDeployModalState = {
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
     static defaultProps = defaultProps;
+
     static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
 
     static DEPLOYMENT_SECTIONS = {
