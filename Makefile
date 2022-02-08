@@ -7,10 +7,10 @@ install:
 	docker-compose stop
 
 # Run it with command:
-# make -j2 up
-up: docker backend-up frontend-up
+# $ make -j2 up
+up: docker-up backend-up frontend-up
 
-docker:
+docker-up:
 	docker-compose up -d
 
 backend-up:
