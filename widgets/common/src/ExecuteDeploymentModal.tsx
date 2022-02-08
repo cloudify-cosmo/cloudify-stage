@@ -339,7 +339,7 @@ ExecuteDeploymentModal.propTypes = {
     workflow: PropTypes.oneOfType([
         PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
         PropTypes.string,
-        null
+        PropTypes.oneOf([null])
     ]).isRequired,
     onExecute: PropTypes.func,
     onHide: PropTypes.func.isRequired,
