@@ -7,5 +7,6 @@ templates/**
 tours/**
 userData/**
 tsc-dist/**
+widgets/*/*
 
 # To be removed, when code is fixed in these folders
