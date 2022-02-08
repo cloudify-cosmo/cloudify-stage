@@ -558,6 +558,32 @@ describe('Blueprints widget', () => {
             });
         });
 
+        it.only('enable to enter non-existing secret value', () => {
+            const validVariableName = 'abc';
+            const notExistingSecretKey = `${blueprintNamePrefix}_terraform_secret`;
+
+            const setNotExistingSecretValue = () => {
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('td:eq(2) input').type(notExistingSecretKey);
+                    cy.get('[role="combobox"] .item').contains(`Add ${notExistingSecretKey}`).click();
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.contains('Variables').click().parent().clickButton('Add');
+
+                cy.contains('.segment', 'Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectVariableSource('Secret');
+                });
+
+                setNotExistingSecretValue();
+                cy.contains(notExistingSecretKey);
+            });
+        });
+
         it('validate variables and outputs uniqueness', () => {
             openTerraformModal();
 
