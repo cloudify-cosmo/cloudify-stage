@@ -574,7 +574,7 @@ describe('Blueprints widget', () => {
             const setNotExistingSecretValue = () => {
                 getSegment('Variables').within(() => {
                     cy.get('td:eq(2) input').type(notExistingSecretKey);
-                    cy.get('[role="combobox"] .item').contains(`Add ${notExistingSecretKey}`).click();
+                    cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecretKey}`).click();
                 });
             };
 
