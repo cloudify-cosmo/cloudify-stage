@@ -16,7 +16,9 @@ type Blueprint = {
     description?: string;
     imports?: string[];
     inputs?: Record<string, any>;
+    // eslint-disable-next-line camelcase
     node_templates?: Record<string, any>;
+    // eslint-disable-next-line camelcase
     tosca_definitions_version?: string;
 };
 
