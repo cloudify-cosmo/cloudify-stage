@@ -27,6 +27,7 @@ export default function TerraformVariableValueInput({
             clearable={false}
             toolbox={widgetlessToolbox}
             valueProp="key"
+            allowAdditions
         />
     ) : (
         <Input value={value === null ? '' : value} onChange={(event, data) => onChange(event, { name, ...data })}>
