@@ -20,7 +20,6 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
 }) => {
     const {
         Common: {
-            // @ts-expect-error Not migrated to TS yet
             ExecuteDeploymentModal,
             // @ts-expect-error Not migrated to TS yet
             UpdateDeploymentModal,

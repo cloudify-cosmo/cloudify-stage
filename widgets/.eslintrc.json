@@ -32,8 +32,8 @@
             }
         },
         {
-            "files": ["./*/src/backend.js"],
-            "extends": ["../node_modules/cloudify-ui-common/configs/eslint-common-node.json"],
+            "files": ["./*/src/backend.ts"],
+            "extends": ["../backend/.eslintrc.json"],
             "rules": {
                 "global-require": "off",
                 "import/no-unresolved": "off",
@@ -42,7 +42,8 @@
                     {
                         "allowModules": ["lodash", "body", "elkjs"]
                     }
-                ]
+                ],
+                "@typescript-eslint/no-var-requires": "off"
             }
         },
         // NOTE: Turning off react/destructuring-assignment rule for some files as it

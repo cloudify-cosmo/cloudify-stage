@@ -4,5 +4,5 @@
         "types": ["jest"],
         "baseUrl": ".."
     },
-    "include": ["../**/*", "../../conf/*.json"]
+    "include": ["../**/*", "../../conf/*.json", "../../widgets/*/src/backend.ts"]
 }

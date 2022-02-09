@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 
 interface BlueprintActionButtonsProps {
-    blueprintId?: string;
+    blueprintId: string;
     toolbox: Stage.Types.Toolbox;
     showEditCopyInComposerButton: boolean;
 }

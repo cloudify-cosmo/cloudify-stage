@@ -56,11 +56,13 @@ pipeline {
         stage('Prepare & Run first test group'){
           steps {
             container('node'){
+              echo "Install required packages"
+              sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client && apt-get -y install jq'
               dir("${STAGE_DIR}/conf") {
                 withVault([configuration: configuration, vaultSecrets: secrets]) {
-                  sh """
-                    jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
-                  """
+                  sh '''
+                    jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
+                  '''
                 }
                 dir("${STAGE_DIR}") {
                   restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
@@ -71,7 +73,7 @@ pipeline {
                   sh 'npm run build'
                 }
               }
-              echo 'prepare test folder'
+              echo 'Prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
@@ -133,12 +135,22 @@ pipeline {
     }
     stage('Run second tests group') {
       parallel {
-        stage('Test frontend'){
+        stage('Test frontend unit'){
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
-                echo 'Run frontend tests'
+                echo 'Run frontend unit tests'
                 sh 'npm run test:frontend:unit'
+              }
+            }
+          }
+        }
+        stage('Test frontend components'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run frontend component tests'
+                sh 'npm run test:frontend:components'
               }
             }
           }
@@ -148,7 +160,6 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
-                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
               }
