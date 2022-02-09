@@ -463,7 +463,7 @@ describe('Blueprints widget', () => {
             cy.contains('.item', source).click();
         }
 
-        function initializeFirstSegmentRow(segmentName: string) {
+        function addFirstSegmentRow(segmentName: string) {
             cy.contains(segmentName).click().parent().clickButton('Add');
         }
 
@@ -476,9 +476,9 @@ describe('Blueprints widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.log('Check mandatory fields validations');
-                initializeFirstSegmentRow('Variables');
-                initializeFirstSegmentRow('Environment variables');
-                initializeFirstSegmentRow('Outputs');
+                addFirstSegmentRow('Variables');
+                addFirstSegmentRow('Environment variables');
+                addFirstSegmentRow('Outputs');
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
@@ -548,7 +548,7 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                initializeFirstSegmentRow('Variables');
+                addFirstSegmentRow('Variables');
 
                 getSegment('Variables').within(() => {
                     cy.get('input[name=name]').type(validVariableName);
@@ -567,29 +567,29 @@ describe('Blueprints widget', () => {
             });
         });
 
-        it('enable to enter non-existing secret key', () => {
+        it('enable to enter non-existing secret', () => {
             const validVariableName = 'abc';
-            const notExistingSecretKey = `${blueprintNamePrefix}_terraform_secret`;
+            const notExistingSecret = `${blueprintNamePrefix}_terraform_secret`;
 
-            const setNotExistingSecretValue = () => {
+            const setNotExistingSecret = () => {
                 getSegment('Variables').within(() => {
-                    cy.get('td:eq(2) input').type(notExistingSecretKey);
-                    cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecretKey}`).click();
+                    cy.get('td:eq(2) input').type(notExistingSecret);
+                    cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecret}`).click();
                 });
             };
 
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                initializeFirstSegmentRow('Variables');
+                addFirstSegmentRow('Variables');
 
                 getSegment('Variables').within(() => {
                     cy.get('input[name=name]').type(validVariableName);
                     selectVariableSource('Secret');
                 });
 
-                setNotExistingSecretValue();
-                cy.contains(notExistingSecretKey);
+                setNotExistingSecret();
+                cy.contains(notExistingSecret);
             });
         });
 
