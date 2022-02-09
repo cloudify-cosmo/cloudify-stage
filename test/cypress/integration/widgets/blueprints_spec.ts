@@ -467,14 +467,22 @@ describe('Blueprints widget', () => {
             cy.contains('.item', source).click();
         }
 
+        function addFirstSegmentRow(segmentName: string) {
+            cy.contains(segmentName).click().parent().clickButton('Add');
+        }
+
+        function getSegment(segmentName: string) {
+            return cy.contains('.segment', segmentName);
+        }
+
         it('validate individual form fields', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
                 cy.log('Check mandatory fields validations');
-                cy.contains('Variables').click().parent().clickButton('Add');
-                cy.contains('Environment variables').click().parent().clickButton('Add');
-                cy.contains('Outputs').click().parent().clickButton('Add');
+                addFirstSegmentRow('Variables');
+                addFirstSegmentRow('Environment variables');
+                addFirstSegmentRow('Outputs');
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
@@ -489,10 +497,10 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide Terraform output').should('be.visible');
                 cy.get('.error.message li').should('have.length', 10);
 
-                cy.contains('.segment', 'Variables').within(() => {
+                getSegment('Variables').within(() => {
                     selectVariableSource('Secret');
                 });
-                cy.contains('.segment', 'Environment variables').within(() => {
+                getSegment('Environment variables').within(() => {
                     selectVariableSource('Secret');
                 });
                 cy.clickButton('Create');
@@ -502,17 +510,17 @@ describe('Blueprints widget', () => {
                 cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
-                cy.contains('.segment', 'Variables').within(() => {
+                getSegment('Variables').within(() => {
                     cy.get('input[name=name]').type('$');
                     selectVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
-                cy.contains('.segment', 'Environment variables').within(() => {
+                getSegment('Environment variables').within(() => {
                     cy.get('input[name=name]').type('$');
                     selectVariableSource('Static');
                     cy.get('td:eq(2) input').type('$');
                 });
-                cy.contains('.segment', 'Outputs').within(() => {
+                getSegment('Outputs').within(() => {
                     cy.get('input[name=name]').type('$');
                     cy.get('input[name=terraformOutput]').type('$');
                 });
@@ -536,7 +544,7 @@ describe('Blueprints widget', () => {
                 'Please provide valid variable value - allowed only letters, digits and the characters "-", "." and "_". If special characters or complex structures are needed please provide this value inside a secret';
 
             const setVariableValue = (value: string) => {
-                cy.contains('.segment', 'Variables').within(() => {
+                getSegment('Variables').within(() => {
                     cy.get('td:eq(2) input').clear().type(value);
                 });
             };
@@ -544,8 +552,9 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                cy.contains('Variables').click().parent().clickButton('Add');
-                cy.contains('.segment', 'Variables').within(() => {
+                addFirstSegmentRow('Variables');
+
+                getSegment('Variables').within(() => {
                     cy.get('input[name=name]').type(validVariableName);
                     selectVariableSource('Static');
                 });
@@ -559,6 +568,32 @@ describe('Blueprints widget', () => {
                 setVariableValue(validVariableValue);
                 cy.clickButton('Create');
                 cy.contains(validationMessage).should('not.exist');
+            });
+        });
+
+        it('enable to enter non-existing secret', () => {
+            const validVariableName = 'abc';
+            const notExistingSecret = `${blueprintNamePrefix}_terraform_secret`;
+
+            const setNotExistingSecret = () => {
+                getSegment('Variables').within(() => {
+                    cy.get('td:eq(2) input').type(notExistingSecret);
+                    cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecret}`).click();
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                addFirstSegmentRow('Variables');
+
+                getSegment('Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectVariableSource('Secret');
+                });
+
+                setNotExistingSecret();
+                cy.contains(notExistingSecret);
             });
         });
 

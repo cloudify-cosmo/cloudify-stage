@@ -837,7 +837,8 @@
                         "secret": "Secret",
                         "input": "Input",
                         "static": "Static"
-                    }
+                    },
+                    "newSecretPrefix": "[new]"
                 },
                 "outputsTable": {
                     "name": "Output",
