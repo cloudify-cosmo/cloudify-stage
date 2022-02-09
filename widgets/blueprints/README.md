@@ -70,7 +70,7 @@ The default visibility is "Tenant", and according to the logged-in user's permis
       - `Value / Secret key / Input name` - value of the variable (related to the selected `Source`).<br />
          Selecting `Static` as a `Source` enables to type a value. <br />
          Selecting `Input` as a `Source` enables to type a value. <br />
-         Selecting `Secret` enables to select a value from one of the stored secrets.
+         Selecting `Secret` enables to choose one of the stored secrets as the variable value source or to manually enter secret key, which may not be defined in the secret store yet.
 8. (Optional) To add `Outputs`:   
    1. Click the `Outputs` section.
    2. Click the **Add** button.
