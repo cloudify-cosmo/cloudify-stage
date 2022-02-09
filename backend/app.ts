@@ -39,6 +39,7 @@ import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
 import Filters from './routes/Filters';
+import ContactDetails from './routes/ContactDetails';
 
 const logger = LoggerHandler.getLogger('App');
 const contextPath = CONTEXT_PATH;
@@ -117,7 +118,8 @@ const authenticatedApiRoutes: Record<string, Router> = {
     terraform: Terraform,
     ua: UserApp,
     wb: WidgetBackend,
-    widgets: Widgets
+    widgets: Widgets,
+    contactDetails: ContactDetails
 };
 Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
