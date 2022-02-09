@@ -567,7 +567,7 @@ describe('Blueprints widget', () => {
             });
         });
 
-        it('enable to enter non-existing secret value', () => {
+        it('enable to enter non-existing secret key', () => {
             const validVariableName = 'abc';
             const notExistingSecretKey = `${blueprintNamePrefix}_terraform_secret`;
 
