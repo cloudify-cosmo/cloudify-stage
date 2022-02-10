@@ -8,6 +8,29 @@ import { getResourcePath } from '../utils';
 
 const logger = getLogger('ContactDetails');
 const router = express.Router();
+const contactDetailsFilePath = getResourcePath('submittedContactDetails.json', true);
+
+const hubspotRequest = (_data: any, createError?: boolean): Promise<string> =>
+    new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (createError) {
+                reject('error');
+            } else {
+                resolve('custom-costumer-id');
+            }
+        }, 500);
+    });
+
+const managerRequest = (_data: any, createError?: boolean): Promise<void> =>
+    new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (createError) {
+                reject('error');
+            } else {
+                resolve();
+            }
+        }, 500);
+    });
 
 /* eslint-disable camelcase */
 
@@ -36,10 +59,9 @@ interface StoredContactDetails {
     data: ContactDetailsDto | HubspotResponseDto;
 }
 
-const getContactDetailsFile = (): JSON | null => {
-    const filePath = getResourcePath('submittedContactDetails.json', true);
+const getContactDetailsFile = (): StoredContactDetails | null => {
     try {
-        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const fileContent = fs.readFileSync(contactDetailsFilePath, 'utf8');
         const jsonContent = JSON.parse(fileContent);
         return jsonContent;
     } catch {
@@ -49,7 +71,15 @@ const getContactDetailsFile = (): JSON | null => {
 
 const getContactDetailsStatus = (): ContactDetailsStatus => {
     const contactDetails = getContactDetailsFile();
-    return ContactDetailsStatus.NOT_RECEIVED;
+    return contactDetails?.status || ContactDetailsStatus.NOT_RECEIVED;
+};
+
+const saveContactDetailsData = (contactDetails: StoredContactDetails) => {
+    try {
+        fs.writeFileSync(contactDetailsFilePath, JSON.stringify(contactDetails), 'utf8');
+    } catch (error) {
+        logger.error(error);
+    }
 };
 
 router.use(bodyParser.json());
@@ -63,6 +93,10 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', validateFormData, (req, res) => {
+    saveContactDetailsData({
+        status: ContactDetailsStatus.RECEIVED,
+        data: { clientId: '4' }
+    });
     res.send(req.body);
 });
 
