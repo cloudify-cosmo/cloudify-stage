@@ -3,6 +3,8 @@ import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
 import type { Variable } from '../../../backend/routes/Terraform.types';
 import { inputMaxLength } from './TerraformModal';
 
+const t = Stage.Utils.getT('widgets.blueprints.terraformModal.variablesTable');
+
 interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
     rowValues?: Variable;
 }
@@ -27,6 +29,8 @@ export default function TerraformVariableValueInput({
             clearable={false}
             toolbox={widgetlessToolbox}
             valueProp="key"
+            allowAdditions
+            additionLabel={`${t('newSecretPrefix')} `}
         />
     ) : (
         <Input value={value === null ? '' : value} onChange={(event, data) => onChange(event, { name, ...data })}>
