@@ -28,14 +28,6 @@ export type BaseWorkflowInputs = Record<
 
 export type UserWorkflowInputsState = Record<
     string,
-    | string
-    | number
-    | boolean
-    | string[]
-    | number[]
-    | boolean[]
-    | Record<string, string | number | boolean>
-    | null
-    | undefined
+    undefined | boolean | number | string | (boolean | number | string)[]
 >;
 export type Field = { name: string; value: unknown; type: string; checked?: string | undefined };
