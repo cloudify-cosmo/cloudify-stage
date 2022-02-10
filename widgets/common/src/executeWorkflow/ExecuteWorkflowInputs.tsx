@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import type {
-    OnChange,
+    OnDateInputChange,
     OnDropdownChange,
     OnCheckboxChange,
     BaseWorkflowInputs,
@@ -48,7 +48,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     onDryRunChange: OnCheckboxChange;
     onQueueChange: OnCheckboxChange;
     onScheduleChange: OnCheckboxChange;
-    onScheduledTimeChange: OnChange;
+    onScheduledTimeChange: OnDateInputChange;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({

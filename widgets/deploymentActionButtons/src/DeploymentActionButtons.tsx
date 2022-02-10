@@ -30,7 +30,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     } = Stage;
 
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
-    const [workflow, setWorkflow, resetWorkflow] = useResettableState(null);
+    const [workflow, setWorkflow, resetWorkflow] = useResettableState('');
 
     useEffect(() => {
         if (fetchedDeploymentState.status === 'error') {

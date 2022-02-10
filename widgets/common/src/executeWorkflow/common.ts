@@ -22,7 +22,7 @@ interface ExecuteWorkflowParams extends CommonExecuteWorflowProps {
     deploymentsList: any[];
     setLoading: () => void;
     toolbox: Stage.Types.Toolbox;
-    workflow: Workflow;
+    workflow: string | Workflow;
     setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;

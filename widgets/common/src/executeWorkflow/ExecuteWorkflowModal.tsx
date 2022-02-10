@@ -1,6 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
-import type { Workflow, WorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
+import type {
+    Workflow,
+    WorkflowOptions,
+    WorkflowParameters,
+    OnDateInputChange,
+    OnCheckboxChange,
+    OnDropdownChange
+} from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { executeWorkflow, getWorkflowName } from './common';
 
@@ -119,14 +125,20 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             setLoading,
             toolbox,
             workflow,
-            baseWorkflowParams,
-            userWorkflowParams,
+            baseWorkflowInputs: baseWorkflowParams,
+            userWorkflowInputsState: userWorkflowParams,
             schedule,
             scheduledTime,
             force,
             dryRun,
             queue,
-            setErrors,
+            setErrors: errors => {
+                if (typeof errors === 'string') {
+                    setErrors({ errors });
+                } else {
+                    setErrors(errors);
+                }
+            },
             unsetLoading,
             clearErrors,
             onExecute,
@@ -145,19 +157,24 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
 
         actions
             .doGetYamlFileContent(file)
-            .then(yamlInputs => {
+            .then((yamlInputs: any) => {
                 clearErrors();
                 setUserWorkflowParams(InputsUtils.getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
-            .catch(err =>
+            .catch((err: string | { message: string }) =>
                 setErrors({ yamlFile: t('errors.yamlFileError', { message: _.isString(err) ? err : err.message }) })
             )
             .finally(unsetFileLoading);
     }
 
-    function handleInputChange(_event, field) {
-        setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
+    const onWorkflowInputChange: OnDropdownChange = (_event, field) => {
+        setUserWorkflowParams({
+            ...userWorkflowParams,
+            ...Stage.Basic.Form.fieldNameValue(
+                field as { name: string; value: unknown; type: string; checked?: string | undefined }
+            )
+        });
+    };
 
     const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
@@ -199,7 +216,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         clearErrorsAndQueue();
         setSchedule(field.checked);
     };
-    const onScheduledTimeChange: OnChange = (_event, field) => {
+    const onScheduledTimeChange: OnDateInputChange = (_event, field) => {
         clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
@@ -223,7 +240,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                         baseWorkflowInputs={baseWorkflowParams}
                         userWorkflowInputsState={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
-                        onWorkflowInputChange={handleInputChange}
+                        onWorkflowInputChange={onWorkflowInputChange}
                         fileLoading={isFileLoading}
                         errors={errors}
                         showInstallOptions={!hideOptions}
