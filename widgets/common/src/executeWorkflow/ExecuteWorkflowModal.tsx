@@ -1,3 +1,4 @@
+// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import type { Workflow, WorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
