@@ -12,7 +12,7 @@ interface ContactDetailsResponse {
 }
 
 const useModalOpenState = () => {
-    const [isModalOpen, setModalOpen, setModalClose] = useBoolean(false);
+    const [isModalOpen, openModal, closeModal] = useBoolean(false);
     const userIsUsingCommunity = useSelector(
         (state: ReduxState) => state.manager.version.edition === consts.EDITION.COMMUNITY
     );
@@ -23,13 +23,13 @@ const useModalOpenState = () => {
         if (userIsUsingCommunity) {
             internal.doGet('contactDetails/').then((response: ContactDetailsResponse) => {
                 if (!response.details_received) {
-                    setModalOpen();
+                    openModal();
                 }
             });
         }
     }, []);
 
-    return { isModalOpen, setModalClose };
+    return { isModalOpen, closeModal };
 };
 
 export default useModalOpenState;

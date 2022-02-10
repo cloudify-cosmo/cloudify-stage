@@ -7,12 +7,12 @@ import useModalOpenState from './useModalOpenState';
 const t = StageUtils.getT('contactDetailsModal');
 
 const ContactDetailsModal = () => {
-    const { isModalOpen } = useModalOpenState();
+    const { isModalOpen, closeModal } = useModalOpenState();
 
     return (
         <Modal open={isModalOpen}>
             <Modal.Header>{t('header')}</Modal.Header>
-            <ContactDetailsForm />
+            <ContactDetailsForm closeModal={closeModal} />
         </Modal>
     );
 };

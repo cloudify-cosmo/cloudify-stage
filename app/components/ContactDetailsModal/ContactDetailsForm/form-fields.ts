@@ -32,7 +32,7 @@ export const getFormFieldLabelPath = (fieldName: string) => {
 
 export const formFields: FormField[] = [
     {
-        name: 'firstName',
+        name: 'first_name',
         label: getFormFieldLabelPath('firstName'),
         type: FormFieldType.Text,
         validation: {
@@ -42,7 +42,7 @@ export const formFields: FormField[] = [
         isRequired: true
     },
     {
-        name: 'lastName',
+        name: 'last_name',
         label: getFormFieldLabelPath('lastName'),
         type: FormFieldType.Text,
         validation: {
@@ -72,13 +72,13 @@ export const formFields: FormField[] = [
         isRequired: true
     },
     {
-        name: 'isEULA',
+        name: 'is_eula',
         label: getFormFieldLabelPath('isEULA'),
         type: FormFieldType.Checkbox,
         isRequired: true
     },
     {
-        name: 'isSendServicesDetails',
+        name: 'is_send_services_details',
         label: getFormFieldLabelPath('isSendServicesDetails'),
         type: FormFieldType.Checkbox
     }

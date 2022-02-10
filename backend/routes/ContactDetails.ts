@@ -63,7 +63,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', validateFormData, (req, res) => {
-    res.send(getContactDetailsFile());
+    res.send(req.body);
 });
 
 export default router;

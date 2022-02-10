@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, UnsafelyTypedFormField, ApproveButton } from '../../basic';
 import type { FormField } from './form-fields';
@@ -6,6 +6,8 @@ import { FormFieldType, formFields, requiredFormFields } from './form-fields';
 import CheckboxLabel from './CheckboxLabel';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
+import { useManager } from '../../GettingStartedModal/common/managerHooks';
+import Internal from '../../../utils/Internal';
 
 const t = StageUtils.getT('contactDetailsModal.form');
 
@@ -15,9 +17,15 @@ interface FormInputs {
     [inputName: string]: FormFieldValue;
 }
 
-const ContactDetailsForm = () => {
+interface ContactDetailsFormProps {
+    closeModal: () => void;
+}
+
+const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeModal }) => {
     const [formInputs, setFormInputs] = useInputs<FormInputs>({});
     const { errors, setErrors, clearErrors } = useErrors();
+    const manager = useManager();
+    const internal = new Internal(manager);
 
     const isFieldEmpty = (formField: FormField) => {
         const fieldValue = formInputs[formField.name];
@@ -40,7 +48,7 @@ const ContactDetailsForm = () => {
         return true;
     };
 
-    const validateFields = () => {
+    const validateFields = (): boolean => {
         const validationErrors: Record<string, unknown> = {};
 
         requiredFormFields.forEach(formField => {
@@ -55,12 +63,20 @@ const ContactDetailsForm = () => {
         });
 
         setErrors(validationErrors);
+
+        return _.isEmpty(validationErrors);
     };
 
     const handleSubmit = () => {
-        validateFields();
-        // eslint-disable-next-line
-        console.log(formInputs);
+        const fieldsAreValid = validateFields();
+
+        if (fieldsAreValid) {
+            internal
+                .doPost('contactDetails/', {
+                    body: formInputs
+                })
+                .then(() => closeModal());
+        }
     };
 
     return (
