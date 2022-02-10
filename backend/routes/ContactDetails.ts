@@ -58,7 +58,7 @@ router.use(bodyParser.json());
 router.get('/', (req, res) => {
     const contactDetailsStatus = getContactDetailsStatus();
     res.send({
-        details_received: contactDetailsStatus === ContactDetailsStatus.NOT_RECEIVED
+        details_received: contactDetailsStatus !== ContactDetailsStatus.NOT_RECEIVED
     });
 });
 
