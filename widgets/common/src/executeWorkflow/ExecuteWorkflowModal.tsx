@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
-import type { Workflow, InstallWorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
+import type { Workflow, WorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './common';
 
@@ -11,7 +11,7 @@ interface ExecuteWorkflowModalProps {
     deploymentName?: string;
     deployments?: string[];
     hideOptions?: boolean;
-    onExecute?: (workflowParameters: WorkflowParameters, workflowOptions: InstallWorkflowOptions) => void;
+    onExecute?: (workflowParameters: WorkflowParameters, workflowOptions: WorkflowOptions) => void;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
     workflow: Workflow | string | null;
@@ -155,7 +155,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             .finally(unsetFileLoading);
     }
 
-    function handleInputChange(event, field) {
+    function handleInputChange(_event, field) {
         setUserWorkflowParams({ ...userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) });
     }
 
@@ -179,15 +179,15 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         clearQueue();
     };
 
-    const onForceChange: OnCheckboxChange = (event, field) => {
+    const onForceChange: OnCheckboxChange = (_event, field) => {
         clearErrorsAndQueue();
         setForce(field.checked);
     };
-    const onDryRunChange: OnCheckboxChange = (event, field) => {
+    const onDryRunChange: OnCheckboxChange = (_event, field) => {
         clearErrorsAndQueue();
         setDryRun(field.checked);
     };
-    const onQueueChange: OnCheckboxChange = (event, field) => {
+    const onQueueChange: OnCheckboxChange = (_event, field) => {
         clearForce();
         clearDryRun();
         clearSchedule();
@@ -195,11 +195,11 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         clearErrors();
         setQueue(field.checked);
     };
-    const onScheduleChange: OnCheckboxChange = (event, field) => {
+    const onScheduleChange: OnCheckboxChange = (_event, field) => {
         clearErrorsAndQueue();
         setSchedule(field.checked);
     };
-    const onScheduledTimeChange: OnChange = (event, field) => {
+    const onScheduledTimeChange: OnChange = (_event, field) => {
         clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
