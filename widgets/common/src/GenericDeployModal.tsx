@@ -5,7 +5,13 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
-import type { Workflow, DropdownValue, Field, InstallWorkflowParameters, InstallWorkflowOptions } from './types';
+import type {
+    Workflow,
+    DropdownValue,
+    Field,
+    InstallWorkflowParameters,
+    InstallWorkflowOptions
+} from './executeWorkflow';
 import type { BlueprintDeployParams } from './BlueprintActions';
 import type { Label } from './labels/types';
 

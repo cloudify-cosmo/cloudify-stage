@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import type { Workflow, InstallWorkflowOptions, InstallWorkflowParameters } from './types';
 import type { OnChange, OnCheckboxChange } from './ExecuteWorkflowInputs';
-import { executeWorkflow, isWorkflowName, getWorkflowName } from './executeWorkflow';
+import { executeWorkflow, isWorkflowName, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
