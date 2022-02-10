@@ -5,10 +5,6 @@ const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
 export type Errors = string | Record<string, string>;
 
-export function isWorkflowName(workflow: Workflow | string) {
-    return typeof workflow === 'string';
-}
-
 export function getWorkflowName(workflow: Workflow | string) {
     return typeof workflow === 'string' ? workflow : workflow.name;
 }

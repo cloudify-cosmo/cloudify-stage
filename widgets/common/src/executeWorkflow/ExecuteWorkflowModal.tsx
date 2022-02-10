@@ -2,7 +2,7 @@
 import type { FunctionComponent } from 'react';
 import type { Workflow, WorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import { executeWorkflow, isWorkflowName, getWorkflowName } from './common';
+import { executeWorkflow, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -14,7 +14,7 @@ interface ExecuteWorkflowModalProps {
     onExecute?: (workflowParameters: WorkflowParameters, workflowOptions: WorkflowOptions) => void;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
-    workflow: Workflow | string | null;
+    workflow: Workflow | string;
     open: boolean;
 }
 
@@ -80,12 +80,12 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         resetBaseWorkflowParams();
 
         const actions = new DeploymentActions(toolbox);
-        if (isWorkflowName(workflow)) {
+        if (typeof workflow === 'string') {
             setLoading();
             actions
                 .doGetWorkflows(deploymentId)
                 .then(({ workflows }) => {
-                    const selectedWorkflow: Workflow = _.find(workflows, { name: workflowName });
+                    const selectedWorkflow = _.find(workflows, { name: workflowName });
 
                     if (selectedWorkflow) {
                         setWorkflowParams(selectedWorkflow);
