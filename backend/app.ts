@@ -118,8 +118,7 @@ const authenticatedApiRoutes: Record<string, Router> = {
     terraform: Terraform,
     ua: UserApp,
     wb: WidgetBackend,
-    widgets: Widgets,
-    contactDetails: ContactDetails
+    widgets: Widgets
 };
 Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
@@ -138,6 +137,7 @@ app.use(`${contextPath}/config`, Config); // used to get white-labelling configu
 app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
+app.use(`${contextPath}/contactDetails`, ContactDetails);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {

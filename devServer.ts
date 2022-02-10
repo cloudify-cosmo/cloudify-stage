@@ -42,7 +42,8 @@ const options = {
         [`${CONTEXT_PATH}/ua`]: proxyOptions,
         [`${CONTEXT_PATH}/userData`]: proxyOptions,
         [`${CONTEXT_PATH}/wb`]: proxyOptions,
-        [`${CONTEXT_PATH}/widgets`]: proxyOptions
+        [`${CONTEXT_PATH}/widgets`]: proxyOptions,
+        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']

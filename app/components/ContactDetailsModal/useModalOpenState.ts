@@ -1,26 +1,33 @@
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useBoolean } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
 import consts from '../../utils/consts';
-import { useInternalFetch } from '../GettingStartedModal/common/fetchHooks';
+import Internal from '../../utils/Internal';
+import { useManager } from '../GettingStartedModal/common/managerHooks';
 
 interface ContactDetailsResponse {
     // eslint-disable-next-line camelcase
-    details_submitted: boolean;
+    details_received: boolean;
 }
 
 const useModalOpenState = () => {
-    const { response } = useInternalFetch<ContactDetailsResponse>('contactDetails');
-    // eslint-disable-next-line
-    console.log(response);
-    const isUserUsingCommunity = useSelector(
-        (state: ReduxState) => state.manager.version.edition === consts.EDITION.PREMIUM
+    const [isModalOpen, setModalOpen, setModalClose] = useBoolean(false);
+    const userIsUsingCommunity = useSelector(
+        (state: ReduxState) => state.manager.version.edition === consts.EDITION.COMMUNITY
     );
+    const manager = useManager();
+    const internal = new Internal(manager);
 
-    const detailsWereSubmitted = false;
-    const shouldBeInitiallyOpen = isUserUsingCommunity && !detailsWereSubmitted;
-
-    const [isModalOpen, _setModalOpen, setModalClose] = useBoolean(shouldBeInitiallyOpen);
+    useEffect(() => {
+        if (userIsUsingCommunity) {
+            internal.doGet('contactDetails/').then((response: ContactDetailsResponse) => {
+                if (!response.details_received) {
+                    setModalOpen();
+                }
+            });
+        }
+    }, []);
 
     return { isModalOpen, setModalClose };
 };
