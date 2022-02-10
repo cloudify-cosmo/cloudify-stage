@@ -31,8 +31,8 @@ interface ExecuteWorkflowParams extends CommonExecuteWorflowProps {
     unsetLoading: () => void;
     clearErrors: () => void;
     onExecute: (
-        installWorkflowParameters: Record<string, string>,
-        installWorkflowOptions: {
+        workflowParameters: Record<string, string>,
+        workflowOptions: {
             force: boolean;
             dryRun: boolean;
             queue: boolean;

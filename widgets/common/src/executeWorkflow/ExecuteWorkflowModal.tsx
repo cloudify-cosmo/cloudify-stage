@@ -1,8 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
+import type { Workflow, InstallWorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import type { Workflow, InstallWorkflowOptions, InstallWorkflowParameters } from './types';
-import type { OnChange, OnCheckboxChange } from './ExecuteWorkflowInputs';
 import { executeWorkflow, isWorkflowName, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -12,10 +11,7 @@ interface ExecuteWorkflowModalProps {
     deploymentName?: string;
     deployments?: string[];
     hideOptions?: boolean;
-    onExecute?: (
-        installWorkflowParameters: InstallWorkflowParameters,
-        installWorkflowOptions: InstallWorkflowOptions
-    ) => void;
+    onExecute?: (workflowParameters: WorkflowParameters, workflowOptions: InstallWorkflowOptions) => void;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
     workflow: Workflow | string | null;

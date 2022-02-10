@@ -12,8 +12,8 @@ export type Workflow = {
     plugin: string;
 };
 
-export type InstallWorkflowParameters = Record<string, string>;
-export type InstallWorkflowOptions = { force: boolean; dryRun: boolean; queue: boolean; scheduledTime: string };
+export type WorkflowParameters = Record<string, string>;
+export type WorkflowOptions = { force: boolean; dryRun: boolean; queue: boolean; scheduledTime: string };
 
 export type BaseWorkflowInputs = Record<
     string,

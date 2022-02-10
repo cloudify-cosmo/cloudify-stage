@@ -1,3 +1,3 @@
-import type { Workflow, DropdownValue, Field, InstallWorkflowParameters, InstallWorkflowOptions } from './types';
+import type { Workflow, DropdownValue, Field, WorkflowParameters, WorkflowOptions } from './types';
 
-export type { Workflow, DropdownValue, Field, InstallWorkflowParameters, InstallWorkflowOptions };
+export type { Workflow, DropdownValue, Field, WorkflowParameters, WorkflowOptions };
