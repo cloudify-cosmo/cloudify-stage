@@ -8,7 +8,7 @@ import type {
     OnDropdownChange
 } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import { executeWorkflow, getWorkflowName } from './common';
+import { Errors, executeWorkflow, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -132,11 +132,11 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             force,
             dryRun,
             queue,
-            setErrors: errors => {
-                if (typeof errors === 'string') {
-                    setErrors({ errors });
+            setErrors: (err: Errors) => {
+                if (typeof err === 'string') {
+                    setErrors({ errors: err });
                 } else {
-                    setErrors(errors);
+                    setErrors(err);
                 }
             },
             unsetLoading,
