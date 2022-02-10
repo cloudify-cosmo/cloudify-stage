@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import type { Workflow, WorkflowOptions, WorkflowParameters, OnChange, OnCheckboxChange } from './types';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
@@ -254,16 +253,5 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         </Modal>
     );
 };
-
-declare global {
-    namespace Stage.Common {
-        export { ExecuteWorkflowModal };
-    }
-}
-
-Stage.defineCommon({
-    name: 'ExecuteWorkflowModal',
-    common: ExecuteWorkflowModal
-});
 
 export default ExecuteWorkflowModal;
