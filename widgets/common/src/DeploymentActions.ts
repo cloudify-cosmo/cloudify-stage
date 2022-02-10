@@ -1,3 +1,5 @@
+import type { Workflow } from './executeWorkflow';
+
 export interface WorkflowOptions {
     force: boolean;
     dryRun: boolean;
@@ -158,7 +160,7 @@ export default class DeploymentActions {
     }
 
     // eslint-disable-next-line camelcase
-    doGetWorkflows(deploymentId: string): Promise<{ id: string; display_name: string; workflows: unknown[] }> {
+    doGetWorkflows(deploymentId: string): Promise<{ id: string; display_name: string; workflows: Workflow[] }> {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
     }
 
