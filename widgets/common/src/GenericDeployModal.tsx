@@ -180,6 +180,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         advanced: 3,
         install: 4
     };
+
     static initialInstallWorkflow = { ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install, name: 'install' };
 
     static initialState = {
