@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { DropdownProps } from 'semantic-ui-react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
@@ -11,8 +12,8 @@ interface ApproveButtonsProps {
     showDeployButton: boolean;
     onInstall: () => void;
     onDeploy: () => void;
-    selectedButton: Buttons;
-    setSelectedButton: () => void;
+    selectedApproveButton: Buttons;
+    onApproveButtonChange: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void;
 }
 
 const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
@@ -20,8 +21,8 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
     onInstall,
     loading,
     onDeploy,
-    selectedButton,
-    setSelectedButton
+    selectedApproveButton,
+    onApproveButtonChange
 }) => {
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
 
@@ -36,7 +37,7 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
     }
     return (
         <Button.Group color="green">
-            {selectedButton === Buttons.install ? (
+            {selectedApproveButton === Buttons.install ? (
                 <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.install')} icon="cogs" />
             ) : (
                 <ApproveButton onClick={onDeploy} disabled={loading} content={t('buttons.deploy')} icon="rocket" />
@@ -48,8 +49,8 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
                 clearable={false}
                 floating
                 aria-label="Deploy or Install"
-                onChange={setSelectedButton}
-                value={selectedButton}
+                onChange={onApproveButtonChange}
+                value={selectedApproveButton}
                 options={[
                     {
                         key: 'deploy',
@@ -76,8 +77,8 @@ interface DeployModalActionsProps {
     onCancel: () => void;
     onInstall: () => void;
     onDeploy: () => void;
-    selectedButton: Buttons;
-    setSelectedButton: (value: any, field: any) => void;
+    selectedApproveButton: Buttons;
+    onApproveButtonChange: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) => void;
 }
 
 const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
@@ -86,8 +87,8 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
     onCancel,
     onInstall,
     onDeploy,
-    selectedButton,
-    setSelectedButton
+    selectedApproveButton,
+    onApproveButtonChange
 }) => {
     const { Modal, CancelButton } = Stage.Basic;
     return (
@@ -98,8 +99,8 @@ const DeployModalActions: FunctionComponent<DeployModalActionsProps> = ({
                 onInstall={onInstall}
                 loading={loading}
                 onDeploy={onDeploy}
-                selectedButton={selectedButton}
-                setSelectedButton={setSelectedButton}
+                selectedApproveButton={selectedApproveButton}
+                onApproveButtonChange={onApproveButtonChange}
             />
         </Modal.Actions>
     );

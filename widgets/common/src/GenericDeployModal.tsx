@@ -164,7 +164,7 @@ type GenericDeployModalState = {
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    selectedButton: Buttons;
+    selectedApproveButton: Buttons;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -208,7 +208,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         queue: false,
         schedule: false,
         scheduledTime: '',
-        selectedButton: Buttons.install
+        selectedApproveButton: Buttons.install
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -503,25 +503,34 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             queue,
             deploymentId
         } = this.state;
+        const deploymentsList: string[] = _.compact([deploymentId]);
+        // const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
             .then(() =>
                 executeWorkflow({
+                    deploymentsList,
                     setLoading: () => this.setState({ loading: false }),
                     toolbox,
                     workflow,
-                    baseWorkflowParams,
-                    userWorkflowParams,
+                    baseWorkflowInputs: baseWorkflowParams,
+                    userWorkflowInputsState: userWorkflowParams,
                     schedule,
                     scheduledTime,
                     force,
                     dryRun,
                     queue,
-                    deploymentId,
-                    setErrors: errors => this.setState({ errors }),
+                    setErrors: err => {
+                        if (typeof err === 'string') {
+                            this.setState({ errors: { message: err } });
+                        } else {
+                            this.setState({ errors: err });
+                        }
+                    },
                     unsetLoading: () => this.setState({ loading: false }),
                     clearErrors: () => this.setState({ errors: {} }),
-                    onExecute: this.onDeployAndInstall
+                    onExecute: this.onDeployAndInstall,
+                    onHide: () => {}
                 })
             )
             .catch(errors => {
@@ -644,7 +653,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             queue,
             schedule,
             scheduledTime,
-            selectedButton
+            selectedApproveButton
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
@@ -823,7 +832,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     />
                                 </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>
-                            {selectedButton === Buttons.install && (
+                            {selectedApproveButton === Buttons.install && (
                                 <AccordionSectionWithDivider
                                     title={t('sections.install')}
                                     index={DEPLOYMENT_SECTIONS.install}
@@ -861,9 +870,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     onCancel={this.onCancel}
                     onInstall={this.submitExecute}
                     onDeploy={this.onDeploy}
-                    selectedButton={selectedButton}
-                    setSelectedButton={(value, field) =>
-                        this.setState({ selectedButton: field ? field.value ?? field.checked : value })
+                    selectedApproveButton={selectedApproveButton}
+                    onApproveButtonChange={(value, field) =>
+                        this.setState({ selectedApproveButton: field ? field.value ?? field.checked : value })
                     }
                 />
             </Modal>

@@ -55,14 +55,14 @@ export const executeWorkflow = ({
     clearErrors,
     onExecute,
     onHide = () => {}
-}: ExecuteWorkflowParams) => {
+}: ExecuteWorkflowParams): void | Promise<void | boolean[]> => {
     const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Errors = {};
 
     const name = getWorkflowName(workflow);
     if (!name) {
         setErrors(t('errors.missingWorkflow'));
-        return false;
+        return;
     }
 
     const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
@@ -74,7 +74,7 @@ export const executeWorkflow = ({
 
     if (!_.isEmpty(validationErrors)) {
         setErrors(validationErrors);
-        return false;
+        return;
     }
 
     const workflowParameters = InputsUtils.getInputsMap(baseWorkflowInputs, userWorkflowInputsState);
@@ -87,12 +87,12 @@ export const executeWorkflow = ({
             scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
         });
         onHide();
-        return true;
+        return;
     }
 
     if (_.isEmpty(deploymentsList)) {
         setErrors(t('errors.missingDeployment'));
-        return false;
+        return;
     }
 
     setLoading();
