@@ -16,7 +16,7 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
             >
                 <Form.TextArea
                     name="license"
-                    autoheight
+                    autoheight="true"
                     error={!!error}
                     placeholder={i18n.t(
                         'licenseManagement.licensePlaceholder',
