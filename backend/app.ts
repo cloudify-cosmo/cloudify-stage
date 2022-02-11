@@ -137,6 +137,7 @@ app.use(`${contextPath}/config`, Config); // used to get white-labelling configu
 app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
+// NOTE: Just for developer purposes, after finishing working on the functionality, move it to authenticatedApiRoutes array
 app.use(`${contextPath}/contactDetails`, ContactDetails);
 
 // Redirect URLs with old context path (/stage)
