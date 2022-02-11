@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { getAdminAuthorizationHeader } from 'test/cypress/support/commands';
+import { getAdminAuthorizationHeader } from './commands';
 
 function appendQueryParam(url: string, param: string, value: string) {
     return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;

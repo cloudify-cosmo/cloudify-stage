@@ -32,11 +32,13 @@ import './users';
 import './widgets';
 
 let token = '';
+
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
     cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
     tenant: Consts.DEFAULT_TENANT
 });
+
 export const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
