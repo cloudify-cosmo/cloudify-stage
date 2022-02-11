@@ -1,4 +1,6 @@
 <!--- Provide JIRA issue ID and a general summary of your changes in the Title above -->
+<!--- e.g. "RD-1234 Improve styling in SuperComponent" -->
+<!--- Note that the title is used as a commit message after merging the PR -->
 
 ## Description
 <!--- Describe your changes to help reviewers understand the details. -->
@@ -10,9 +12,9 @@
 
 ## Checklist
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
-- [ ] My code follows the UI Code Style.
+- [ ] My code follows the [UI Code Style](https://cloudifysource.atlassian.net/l/c/x8fq902p).
 - [ ] I verified that all tests and checks have passed.
-- [ ] I verified if that change requires a documentation update.
+- [ ] I verified if that change requires any update in the [documentation](https://cloudifysource.atlassian.net/l/c/4XKtPocy).
 - [ ] I added proper labels to this PR.
 
 ## Tests
@@ -25,5 +27,6 @@
 
 ## Documentation
 <!--- If applicable, describe how you documented or plan to document your changes. -->
+<!--- Check UI documentation guidelines - https://cloudifysource.atlassian.net/l/c/EYWJ0XfB - for details. -->
 <!--- Provide links to JIRA issues, other PRs or related documentation pages. -->
 <!--- If not applicable, just write “N/A” in this section. -->
