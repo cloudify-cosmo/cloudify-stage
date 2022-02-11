@@ -3,6 +3,7 @@ import { debounce, isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
+import type { DropdownValue } from './types';
 
 let instanceCount = 0;
 
@@ -57,7 +58,6 @@ function fetchReducer(state: typeof defaultFetchState, action: FetchReducerActio
 /** May also contain an `implicit` property, but it's hard to model in TypeScript */
 type Option = { [valueProp: string]: string };
 
-type DropdownValue = string | string[] | null;
 interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     allowAdditions?: boolean;
     innerRef?: React.Ref<HTMLElement>;

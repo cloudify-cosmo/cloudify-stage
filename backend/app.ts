@@ -110,7 +110,6 @@ const authenticatedApiRoutes: Record<string, Router> = {
     file: File,
     filters: Filters,
     github: GitHub,
-    maps: Maps,
     plugins: Plugins,
     source: SourceBrowser,
     templates: Templates,
@@ -136,6 +135,7 @@ app.use(`${contextPath}/config`, Config); // used to get white-labelling configu
 app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
+app.use(`${contextPath}/maps`, Maps);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {

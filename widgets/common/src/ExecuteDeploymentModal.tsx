@@ -338,7 +338,8 @@ ExecuteDeploymentModal.propTypes = {
     deployments: PropTypes.arrayOf(PropTypes.string),
     workflow: PropTypes.oneOfType([
         PropTypes.shape({ name: PropTypes.string, parameters: PropTypes.shape({}) }),
-        PropTypes.string
+        PropTypes.string,
+        null
     ]).isRequired,
     onExecute: PropTypes.func,
     onHide: PropTypes.func.isRequired,
@@ -350,6 +351,13 @@ ExecuteDeploymentModal.defaultProps = {
     hideOptions: false,
     onExecute: _.noop
 };
+
+declare global {
+    namespace Stage.Common {
+        // eslint-disable-next-line import/prefer-default-export
+        export { ExecuteDeploymentModal };
+    }
+}
 
 Stage.defineCommon({
     name: 'ExecuteDeploymentModal',
