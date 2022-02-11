@@ -4,7 +4,7 @@ import Consts from './Consts';
 import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
-import DeployModalActions, { Buttons } from './deployModal/DeployModalActions';
+import DeployModalActions, { Buttons as ApproveButtons } from './deployModal/DeployModalActions';
 import type {
     Workflow,
     DropdownValue,
@@ -164,7 +164,7 @@ type GenericDeployModalState = {
     queue: boolean;
     schedule: boolean;
     scheduledTime: string;
-    selectedApproveButton: Buttons;
+    selectedApproveButton: ApproveButtons;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -181,7 +181,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         install: 4
     };
 
-    static initialInstallWorkflow = { ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install, name: 'install' };
+    static initialInstallWorkflow: Workflow = {
+        ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install,
+        name: 'install',
+        parameters: {},
+        plugin: ''
+    };
 
     static initialState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
@@ -208,7 +213,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         queue: false,
         schedule: false,
         scheduledTime: '',
-        selectedApproveButton: Buttons.install
+        selectedApproveButton: ApproveButtons.install
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -251,7 +256,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 .then(({ workflows }: { workflows: unknown[] }) => {
                     const selectedWorkflow = _.find(workflows, {
                         name: workflowName
-                    }) as { name: string; [key: string]: undefined | unknown };
+                    }) as { parameters: BaseWorkflowInputs };
                     if (selectedWorkflow) {
                         this.setWorkflowParams(selectedWorkflow);
                     } else {
@@ -832,7 +837,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     />
                                 </UnsafelyTypedFormField>
                             </AccordionSectionWithDivider>
-                            {selectedApproveButton === Buttons.install && (
+                            {selectedApproveButton === ApproveButtons.install && (
                                 <AccordionSectionWithDivider
                                     title={t('sections.install')}
                                     index={DEPLOYMENT_SECTIONS.install}
