@@ -13,7 +13,6 @@ export default class SplashLoadingScreen {
 
     private static fadeOut() {
         try {
-            // TODO: remove this try catches RD-2841.
             SplashLoadingScreen.assertSplashExists(splashDiv);
 
             splashDiv.style.setProperty('opacity', '0');
