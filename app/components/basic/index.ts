@@ -5,8 +5,6 @@
  * whenever you change list of exported components in this file.
  */
 
-import { FunctionComponent } from 'react';
-
 import {
     Accordion,
     Breadcrumb,
