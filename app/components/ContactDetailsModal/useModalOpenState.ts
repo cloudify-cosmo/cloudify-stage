@@ -12,6 +12,7 @@ interface ContactDetailsResponse {
 }
 
 const useModalOpenState = () => {
+    // Modal is open ONLY if currently the user is using the Community version of the Manager and he have not submitted contact details yet
     const [isModalOpen, openModal, closeModal] = useBoolean(false);
     const userIsUsingCommunity = useSelector(
         (state: ReduxState) => state.manager.version.edition === consts.EDITION.COMMUNITY
