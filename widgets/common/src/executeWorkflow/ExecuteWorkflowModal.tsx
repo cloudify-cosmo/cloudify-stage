@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import type {
+    Errors,
     Workflow,
     WorkflowOptions,
     WorkflowParameters,
@@ -7,8 +8,10 @@ import type {
     OnCheckboxChange,
     OnDropdownChange
 } from './types';
+
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import { Errors, executeWorkflow, getWorkflowName } from './common';
+
+import { executeWorkflow, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 

@@ -1,7 +1,5 @@
 import { ComponentProps } from 'react';
 
-export type DropdownValue = string | string[] | null;
-
 export type OnDateInputChange = (event: Event, field: { name?: string; value?: string }) => void; // DateInput has props any, so it is impossible to use ComponentProps<typeof Stage.Basic.DateInput>['onChange'];
 export type OnDropdownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
@@ -30,4 +28,5 @@ export type UserWorkflowInputsState = Record<
     string,
     undefined | boolean | number | string | (boolean | number | string)[]
 >;
-export type Field = { name: string; value: unknown; type: string; checked?: string | undefined };
+
+export type Errors = string | Record<string, string>;

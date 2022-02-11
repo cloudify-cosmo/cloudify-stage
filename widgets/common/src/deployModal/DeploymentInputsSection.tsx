@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import type { FullBlueprintData } from '../BlueprintActions';
-import type { Field } from '../executeWorkflow/types';
+import type { Field } from '../types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 

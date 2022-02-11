@@ -3,23 +3,13 @@ import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
 import { getWorkflowName, executeWorkflow } from './common';
 import type {
     Workflow,
-    DropdownValue,
-    Field,
     WorkflowParameters,
     WorkflowOptions,
     BaseWorkflowInputs,
     UserWorkflowInputsState
 } from './types';
 
-export type {
-    Workflow,
-    DropdownValue,
-    Field,
-    WorkflowParameters,
-    WorkflowOptions,
-    BaseWorkflowInputs,
-    UserWorkflowInputsState
-};
+export type { Workflow, WorkflowParameters, WorkflowOptions, BaseWorkflowInputs, UserWorkflowInputsState };
 
 export { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow };
 

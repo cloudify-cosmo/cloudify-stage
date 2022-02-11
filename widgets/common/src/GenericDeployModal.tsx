@@ -5,15 +5,9 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions, { Buttons as ApproveButtons } from './deployModal/DeployModalActions';
-import type {
-    Workflow,
-    DropdownValue,
-    Field,
-    WorkflowParameters,
-    WorkflowOptions,
-    BaseWorkflowInputs,
-    UserWorkflowInputsState
-} from './executeWorkflow';
+import type { BaseWorkflowInputs, UserWorkflowInputsState } from './executeWorkflow';
+import type { Workflow, WorkflowParameters, WorkflowOptions } from './executeWorkflow';
+import type { DropdownValue, Field } from './types';
 import type { BlueprintDeployParams } from './BlueprintActions';
 import type { Label } from './labels/types';
 import { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow } from './executeWorkflow';
