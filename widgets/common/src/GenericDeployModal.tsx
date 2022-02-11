@@ -444,15 +444,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     render() {
-        const {
-            Accordion,
-            Form,
-            Icon,
-            LoadingOverlay,
-            Message,
-            Modal,
-            VisibilityField
-        } = Stage.Basic;
+        const { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } = Stage.Basic;
         const {
             DynamicDropdown,
             ExecuteDeploymentModal,
