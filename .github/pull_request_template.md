@@ -27,6 +27,6 @@
 
 ## Documentation
 <!--- If applicable, describe how you documented or plan to document your changes. -->
-<!--- Check [UI documentation guidelines](https://cloudifysource.atlassian.net/l/c/EYWJ0XfB) for details. -->
+<!--- Check UI documentation guidelines - https://cloudifysource.atlassian.net/l/c/EYWJ0XfB - for details. -->
 <!--- Provide links to JIRA issues, other PRs or related documentation pages. -->
 <!--- If not applicable, just write “N/A” in this section. -->
