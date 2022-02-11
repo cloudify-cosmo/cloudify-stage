@@ -14,7 +14,7 @@ then `ui_components_link` parameter in `widgets-components.md` should be updated
 ## Widgets
 Widgets documentation bases on 
 [Default Widgets Reference](https://docs.cloudify.co/staging/dev/working_with/console/default-widgets-ref/) 
-and is stored in `README.md` files in widgets' folders.
+and is stored in `README.md` files in widgets' root folders (e.g. [widgets/blueprints/README.md](../widgets/blueprints/README.md)).
 
 To update widgets' documentation - instead of modifying `README.md` files directly - you have to:
 1. Update it in [docs.getcloudify.org repository](https://github.com/cloudify-cosmo/docs.getcloudify.org/tree/master/content/working_with/console/widgets) 
