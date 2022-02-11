@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { useErrors, useInputs } from '../../../utils/hooks';
+import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, UnsafelyTypedFormField, ApproveButton } from '../../basic';
 import type { FormField } from './form-fields';
 import { FormFieldType, formFields, requiredFormFields } from './form-fields';
@@ -24,6 +24,7 @@ interface ContactDetailsFormProps {
 const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeModal }) => {
     const [formInputs, setFormInputs] = useInputs<FormInputs>({});
     const { errors, setErrors, clearErrors } = useErrors();
+    const [isSubmitting, setIsSubmitting] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
 
@@ -71,6 +72,7 @@ const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeM
         const fieldsAreValid = validateFields();
 
         if (fieldsAreValid) {
+            setIsSubmitting();
             internal
                 .doPost('contactDetails/', {
                     body: formInputs
@@ -108,7 +110,7 @@ const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeM
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                <ApproveButton color="green" onClick={handleSubmit}>
+                <ApproveButton color="green" onClick={handleSubmit} loading={isSubmitting} disabled={isSubmitting}>
                     {t('buttons.submit')}
                 </ApproveButton>
             </Modal.Actions>
