@@ -3,7 +3,7 @@ import { debounce, isFunction } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
-import type { DropdownValue } from './executeWorkflow';
+import type { DropdownValue } from './types';
 
 let instanceCount = 0;
 
