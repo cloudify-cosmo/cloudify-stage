@@ -83,7 +83,7 @@ const commands = {
     waitUntilLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
-            .get('#loader', { timeout: 20000 })
+            .get('#loader', { timeout: 21000 })
             .should('be.not.visible')
             .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
