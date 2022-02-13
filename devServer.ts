@@ -15,11 +15,14 @@ const proxyOptions = {
     secure: false
 };
 
+const hotReloadingEnabled = process.env.HOT_RELOADING === 'true';
+console.log(process.env.HOT_RELOADING, typeof process.env.HOT_RELOADING);
+
 const options: WebpackDevServer.Configuration = {
-    hot: true,
+    hot: hotReloadingEnabled,
     publicPath: CONTEXT_PATH,
     host: SERVER_HOST,
-    inline: true,
+    inline: hotReloadingEnabled,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`
     },
