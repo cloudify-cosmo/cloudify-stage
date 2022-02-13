@@ -4,6 +4,7 @@ import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionStartedModal from './ExecutionStartedModal';
+import type { Workflow } from '../../executeWorkflow';
 
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];
@@ -11,11 +12,6 @@ interface RunWorkflowModalProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-type Workflow = {
-    name: string;
-    parameters: Record<string, { description?: string; default?: any; type?: any }>;
-    plugin: string;
-};
 type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
 
 const modalT = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);

@@ -36,10 +36,12 @@ describe('Sites Map', () => {
     describe('is displayed when sites are available and', () => {
         before(() => {
             cy.createSite(testSite);
+            cy.intercept('/console/maps/3/3/3').as('mapTileRequest');
             navigateToMapPage();
         });
 
         it('shows markers for each site', () => {
+            cy.wait('@mapTileRequest').then(({ response }) => expect(response?.statusCode).to.equal(200));
             cy.get('div.sites-map div.leaflet-layer > div.leaflet-tile-container').should('have.descendants', 'img');
 
             cy.log('Verify first site is present on the map');

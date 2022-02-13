@@ -490,7 +490,7 @@
                 "workflowsMenu": {
                     "tooltip": "Execute workflow"
                 },
-                "executeModal": {
+                "execute": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
                         "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
@@ -837,7 +837,8 @@
                         "secret": "Secret",
                         "input": "Input",
                         "static": "Static"
-                    }
+                    },
+                    "newSecretPrefix": "[new]"
                 },
                 "outputsTable": {
                     "name": "Output",
