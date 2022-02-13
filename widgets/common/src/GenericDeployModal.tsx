@@ -224,6 +224,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onCancel = this.onCancel.bind(this);
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
+        this.submitExecute = this.submitExecute.bind(this);
 
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
@@ -534,6 +535,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             )
             .catch(errors => {
                 this.setState({ loading: false, errors });
+            })
+            .finally(() => {
+                this.setState({ loading: false });
             });
     }
 
