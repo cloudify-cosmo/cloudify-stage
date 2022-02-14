@@ -2,7 +2,6 @@ import React, { memo, useEffect, useMemo } from 'react';
 
 import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
-import { UnsafelyTypedFormField } from '../unsafelyTypedForm';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 
@@ -39,7 +38,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                     onChange(secretInputs);
                 };
                 return (
-                    <UnsafelyTypedFormField key={name}>
+                    <Form.Field key={name}>
                         <Form.Input
                             type={type}
                             name={name}
@@ -48,7 +47,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 );
             })}
         </Form>
