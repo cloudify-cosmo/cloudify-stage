@@ -1,8 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 import type { ComponentProps, FunctionComponent } from 'react';
 import GenericDeployModal from './GenericDeployModal';
-import BlueprintActions, { BlueprintDeployParams } from './BlueprintActions';
-import DeploymentActions, { WorkflowOptions } from './DeploymentActions';
+import BlueprintActions, { BlueprintDeployParams } from '../BlueprintActions';
+import DeploymentActions, { WorkflowOptions } from '../DeploymentActions';
 
 const t = (key: string, options?: Record<string, any>) =>
     Stage.i18n.t(`widgets.common.deployments.deployModal.${key}`, options);

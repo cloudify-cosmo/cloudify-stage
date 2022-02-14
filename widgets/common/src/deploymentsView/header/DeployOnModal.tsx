@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
-import GenericDeployModal from '../../GenericDeployModal';
+import GenericDeployModal from '../../deployModal/GenericDeployModal';
 import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';

@@ -1,21 +1,21 @@
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
 import type { ChangeEvent } from 'react';
-import Consts from './Consts';
-import MissingSecretsError from './MissingSecretsError';
-import AccordionSectionWithDivider from './AccordionSectionWithDivider';
-import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
-import DeployModalActions, { Buttons as ApproveButtons } from './deployModal/DeployModalActions';
-import { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow } from './executeWorkflow';
+import Consts from '../Consts';
+import MissingSecretsError from '../MissingSecretsError';
+import AccordionSectionWithDivider from '../AccordionSectionWithDivider';
+import DeplomentInputsSection from './DeploymentInputsSection';
+import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
+import { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow } from '../executeWorkflow';
 import type {
     BaseWorkflowInputs,
     UserWorkflowInputsState,
     Workflow,
     WorkflowParameters,
     WorkflowOptions
-} from './executeWorkflow';
-import type { DropdownValue, Field } from './types';
-import type { BlueprintDeployParams } from './BlueprintActions';
-import type { Label } from './labels/types';
+} from '../executeWorkflow';
+import type { DropdownValue, Field } from '../types';
+import type { BlueprintDeployParams } from '../BlueprintActions';
+import type { Label } from '../labels/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
