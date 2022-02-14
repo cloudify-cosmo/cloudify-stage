@@ -873,7 +873,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     loading={loading}
                     showDeployButton={showDeployButton}
                     onCancel={this.onCancel}
-                    onInstall={this.onInstall}
+                    onInstall={this.onDeployAndInstall}
                     onDeploy={this.onDeploy}
                     selectedApproveButton={selectedApproveButton}
                     onApproveButtonChange={(value, field) =>
