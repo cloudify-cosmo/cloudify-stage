@@ -263,7 +263,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     });
                 }
             })
-            .catch((err: { message: string }) => this.setState({ errors: err }))
             .finally(() => this.setState({ loading: false }));
     }
 
@@ -413,6 +412,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const deploymentsList: string[] = _.compact([deploymentId]);
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
+            .catch(errors => {
+                this.setState({ errors });
+            })
             .then(() =>
                 executeWorkflow({
                     deploymentsList,
@@ -449,9 +451,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     onHide: () => {}
                 })
             )
-            .catch(errors => {
-                this.setState({ errors });
-            })
             .finally(() => {
                 this.setState({ loading: false });
             });
