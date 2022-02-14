@@ -4,7 +4,7 @@ import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionStartedModal from './ExecutionStartedModal';
-import type { Workflow } from '../../types';
+import type { Workflow } from '../../executeWorkflow';
 
 interface RunWorkflowModalProps {
     filterRules: FilterRule[];

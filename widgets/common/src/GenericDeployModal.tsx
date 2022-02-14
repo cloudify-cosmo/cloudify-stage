@@ -5,7 +5,8 @@ import MissingSecretsError from './MissingSecretsError';
 import AccordionSectionWithDivider from './AccordionSectionWithDivider';
 import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
 import DeployModalActions from './deployModal/DeployModalActions';
-import type { Workflow, DropdownValue, Field } from './types';
+import type { Workflow, WorkflowParameters, WorkflowOptions } from './executeWorkflow';
+import type { DropdownValue, Field } from './types';
 import type { BlueprintDeployParams } from './BlueprintActions';
 import type { Label } from './labels/types';
 
@@ -24,16 +25,13 @@ type Blueprint = {
 
 type Errors = Record<string, string>;
 
-type InstallWorkflowParameters = Record<string, string>;
-type InstallWorkflowOptions = { force: boolean; dryRun: boolean; queue: boolean; scheduledTime: string };
-
 type StepsProp = {
     message: string;
     executeStep: (
         previousStepOutcome: any,
         deploymentParameters: BlueprintDeployParams & { deploymentId: string },
-        installWorkflowParameters?: InstallWorkflowParameters,
-        installWorkflowOptions?: InstallWorkflowOptions
+        installWorkflowParameters?: WorkflowParameters,
+        installWorkflowOptions?: WorkflowOptions
     ) => void;
 };
 
@@ -274,8 +272,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     onSubmit(
         validationMessage: string,
         steps: StepsProp[],
-        installWorkflowParameters?: InstallWorkflowParameters,
-        installWorkflowOptions?: InstallWorkflowOptions
+        installWorkflowParameters?: WorkflowParameters,
+        installWorkflowOptions?: WorkflowOptions
     ) {
         this.setState({ loading: true, errors: {} });
         this.setLoadingMessage(validationMessage);
@@ -327,10 +325,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return this.onSubmit(deployValidationMessage, deploySteps);
     }
 
-    onDeployAndInstall(
-        installWorkflowParameters: InstallWorkflowParameters,
-        installWorkflowOptions: InstallWorkflowOptions
-    ) {
+    onDeployAndInstall(installWorkflowParameters: WorkflowParameters, installWorkflowOptions: WorkflowOptions) {
         const { deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
         return this.onSubmit(
             deployAndInstallValidationMessage,
@@ -447,7 +442,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } = Stage.Basic;
         const {
             DynamicDropdown,
-            ExecuteDeploymentModal,
+            ExecuteWorkflowModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
         const {
@@ -661,7 +656,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         </Accordion>
                     </Form>
 
-                    <ExecuteDeploymentModal
+                    <ExecuteWorkflowModal
                         open={showInstallModal}
                         workflow={workflow}
                         onExecute={this.onDeployAndInstall}

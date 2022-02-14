@@ -1,5 +1,3 @@
-import log from 'loglevel';
-
 const splashDiv = document.querySelector<HTMLElement>('div.splashPage');
 const activeClass = 'active';
 const fadeOutSpeed = 300;
@@ -12,44 +10,31 @@ export default class SplashLoadingScreen {
     }
 
     private static fadeOut() {
-        try {
-            // TODO: remove this try catches RD-2841.
-            SplashLoadingScreen.assertSplashExists(splashDiv);
+        SplashLoadingScreen.assertSplashExists(splashDiv);
 
-            splashDiv.style.setProperty('opacity', '0');
-            setTimeout(() => {
-                splashDiv.style.removeProperty('opacity');
-                splashDiv.style.setProperty('display', 'none');
-            }, fadeOutSpeed);
-        } catch (e) {
-            log.error(e);
-        }
+        splashDiv.style.setProperty('opacity', '0');
+        setTimeout(() => {
+            splashDiv.style.removeProperty('opacity');
+            splashDiv.style.setProperty('display', 'none');
+        }, fadeOutSpeed);
     }
 
     static turnOn() {
-        try {
-            SplashLoadingScreen.assertSplashExists(splashDiv);
+        SplashLoadingScreen.assertSplashExists(splashDiv);
 
-            if (!splashDiv.classList.contains(activeClass)) {
-                splashDiv.style.removeProperty('display');
+        if (!splashDiv.classList.contains(activeClass)) {
+            splashDiv.style.removeProperty('display');
 
-                splashDiv.classList.add(activeClass);
-            }
-        } catch (e) {
-            log.error(e);
+            splashDiv.classList.add(activeClass);
         }
     }
 
     static turnOff() {
-        try {
-            SplashLoadingScreen.assertSplashExists(splashDiv);
+        SplashLoadingScreen.assertSplashExists(splashDiv);
 
-            if (splashDiv.classList.contains(activeClass)) {
-                SplashLoadingScreen.fadeOut();
-                splashDiv.classList.remove(activeClass);
-            }
-        } catch (e) {
-            log.error(e);
+        if (splashDiv.classList.contains(activeClass)) {
+            SplashLoadingScreen.fadeOut();
+            splashDiv.classList.remove(activeClass);
         }
     }
 }
