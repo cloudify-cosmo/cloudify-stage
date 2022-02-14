@@ -555,7 +555,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     this.setState({
                         deploymentInputs,
                         blueprint,
-                        workflow: blueprint.plan.workflows as Workflow,
+                        workflow: {
+                            ...(blueprint.plan.workflows.install as Record<string, unknown>),
+                            name: 'install'
+                        } as Workflow,
                         errors: {},
                         loading: false
                     });
