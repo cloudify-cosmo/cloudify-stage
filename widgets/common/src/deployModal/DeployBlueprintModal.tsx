@@ -1,8 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 import type { ComponentProps, FunctionComponent } from 'react';
 import GenericDeployModal from './GenericDeployModal';
 import BlueprintActions, { BlueprintDeployParams } from '../BlueprintActions';
 import DeploymentActions, { WorkflowOptions } from '../DeploymentActions';
+import { WorkflowParameters } from '../executeWorkflow';
 
 const t = (key: string, options?: Record<string, any>) =>
     Stage.i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
@@ -14,7 +14,6 @@ type DeployBlueprintModalProps = Pick<
 
 const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
-        // @ts-expect-error Properties do not exist on type 'typeof Common'
         const { InputsUtils } = Stage.Common;
 
         const blueprintActions = new BlueprintActions(toolbox);
@@ -36,8 +35,8 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
     function installDeployment(
         deploymentId: string,
         { deploymentName }: BlueprintDeployParams,
-        installWorkflowParameters: Record<string, any>,
-        installWorkflowOptions: WorkflowOptions
+        installWorkflowParameters?: WorkflowParameters,
+        installWorkflowOptions?: WorkflowOptions
     ) {
         const deploymentActions = new DeploymentActions(toolbox);
 

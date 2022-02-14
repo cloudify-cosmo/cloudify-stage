@@ -33,14 +33,16 @@ type Blueprint = {
 
 type Errors = Record<string, string>;
 
+type ExecuteStep = (
+    deploymentIdOrPreviousStepOutcome: string | any,
+    deploymentParameters: BlueprintDeployParams,
+    installWorkflowParameters?: WorkflowParameters,
+    installWorkflowOptions?: WorkflowOptions
+) => void;
+
 type StepsProp = {
-    message: string;
-    executeStep: (
-        previousStepOutcome: any,
-        deploymentParameters: BlueprintDeployParams & { deploymentId: string },
-        installWorkflowParameters?: WorkflowParameters,
-        installWorkflowOptions?: WorkflowOptions
-    ) => void;
+    message?: string;
+    executeStep: ExecuteStep;
 };
 
 type GenericDeployModalProps = {
@@ -355,9 +357,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         steps.forEach(step => {
             stepPromise = stepPromise.then(previousStepOutcome => {
-                this.setLoadingMessage(step.message);
+                this.setLoadingMessage(step.message || '');
                 return step.executeStep(
-                    previousStepOutcome,
+                    previousStepOutcome as any,
                     deploymentParameters,
                     installWorkflowParameters,
                     installWorkflowOptions
