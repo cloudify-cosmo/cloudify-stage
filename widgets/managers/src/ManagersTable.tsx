@@ -65,7 +65,7 @@ function ManagersTable({ data, toolbox, widget }) {
         setBulkOperation(bulk);
     }
 
-    function onExecuteDeploymentModalHide() {
+    function onExecuteWorkflowModalHide() {
         setDeployment({ id: '' });
         setWorkflow({ name: '', parameters: {} });
         hideExecuteWorkflowModal();
@@ -90,7 +90,7 @@ function ManagersTable({ data, toolbox, widget }) {
     const workflows = !_.isEmpty(selectedManagers) ? _.get(data, 'items[0].workflows', []) : [];
 
     const { Checkbox, DataTable, ErrorMessage } = Stage.Basic;
-    const { ExecuteDeploymentModal, LastExecutionStatusIcon } = Stage.Common;
+    const { ExecuteWorkflowModal, LastExecutionStatusIcon } = Stage.Common;
 
     return (
         <div>
@@ -203,13 +203,13 @@ function ManagersTable({ data, toolbox, widget }) {
             </DataTable>
 
             {deployment.id && (
-                <ExecuteDeploymentModal
+                <ExecuteWorkflowModal
                     toolbox={toolbox}
                     open={isExecuteWorkflowModalShown}
                     deploymentId={deployment.id}
                     deployments={bulkOperation ? selectedManagers : []}
                     workflow={workflow}
-                    onHide={onExecuteDeploymentModalHide}
+                    onHide={onExecuteWorkflowModalHide}
                 />
             )}
         </div>

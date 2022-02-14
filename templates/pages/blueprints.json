@@ -124,7 +124,10 @@
                     "width": 12,
                     "height": 24,
                     "x": 0,
-                    "y": 11
+                    "y": 11,
+                    "configuration": {
+                        "displayStyle": "catalog"
+                    }
                 }
             ]
         }
