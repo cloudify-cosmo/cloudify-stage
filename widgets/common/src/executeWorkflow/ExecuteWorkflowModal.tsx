@@ -135,17 +135,17 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             force,
             dryRun,
             queue,
-            setErrors: (err: Errors) => {
-                if (typeof err === 'string') {
-                    setErrors({ errors: err });
-                } else {
-                    setErrors(err);
-                }
-            },
             unsetLoading,
             clearErrors,
             onExecute,
             onHide
+        }).catch((err: Errors) => {
+            if (typeof err === 'string') {
+                setErrors({ errors: err });
+            } else {
+                setErrors(err);
+            }
+            unsetLoading();
         });
     }
 

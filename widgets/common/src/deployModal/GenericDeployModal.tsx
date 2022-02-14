@@ -414,9 +414,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const deploymentsList: string[] = _.compact([deploymentId]);
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
-            .catch(errors => {
-                this.setState({ errors });
-            })
             .then(() =>
                 executeWorkflow({
                     deploymentsList,
@@ -431,13 +428,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     force,
                     dryRun,
                     queue,
-                    setErrors: err => {
-                        if (typeof err === 'string') {
-                            this.setState({ errors: { message: err } });
-                        } else {
-                            this.setState({ errors: err });
-                        }
-                    },
                     clearErrors: () => this.setState({ errors: {} }),
                     onExecute: (
                         installWorkflowParameters: WorkflowParameters,
@@ -453,6 +443,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     onHide: () => {}
                 })
             )
+            .catch(err => {
+                if (typeof err === 'string') {
+                    this.setState({ errors: { message: err } });
+                } else {
+                    this.setState({ errors: err });
+                }
+            })
             .finally(() => {
                 this.setState({ loading: false });
             });
