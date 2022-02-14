@@ -70,7 +70,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduleChange,
     onScheduledTimeChange
 }) => {
-    const { Message, Form, UnsafelyTypedFormField, Header, Divider, DateInput } = Stage.Basic;
+    const { Message, Form, Header, Divider, DateInput } = Stage.Basic;
     const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
     return (
         <>
@@ -91,7 +91,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     {renderCheckboxField('dryRun', dryRun, onDryRunChange)}
                     {renderCheckboxField('queue', queue, onQueueChange)}
 
-                    <UnsafelyTypedFormField error={!!errors.scheduledTime}>
+                    <Form.Field error={!!errors.scheduledTime}>
                         {renderActionCheckbox('schedule', schedule, onScheduleChange)}
                         {schedule && (
                             <>
@@ -106,7 +106,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                                 />
                             </>
                         )}
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </>
             )}
         </>

@@ -2,7 +2,6 @@
 
 import Actions from './actions';
 
-const { UnsafelyTypedFormField } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
 export default function CreateModal({ toolbox, isLdapEnabled }) {
@@ -54,14 +53,14 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField error={errors.groupName} label={t('fields.groupName')}>
+                    <Form.Field error={errors.groupName} label={t('fields.groupName')}>
                         <Form.Input name="groupName" value={groupName} onChange={setInput} />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
 
                     {isLdapEnabled && (
-                        <UnsafelyTypedFormField error={errors.ldapGroup} label={t('fields.ldapGroup')}>
+                        <Form.Field error={errors.ldapGroup} label={t('fields.ldapGroup')}>
                             <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
-                        </UnsafelyTypedFormField>
+                        </Form.Field>
                     )}
 
                     <Form.Field error={errors.isAdmin}>
