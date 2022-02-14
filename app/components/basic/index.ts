@@ -105,6 +105,11 @@ const ErrorMessageWithCorrectReturnType = (ErrorMessage as unknown) as Component
     InferProps<typeof ErrorMessage['propTypes']>
 >;
 
+// DEPRECIATED
+// NOTE: It can be safely removed with the major version change
+const UnsafelyTypedFormField = Form.Field;
+const UnsafelyTypedFormGroup = Form.Group;
+
 export {
     Accordion,
     Alert,
@@ -166,6 +171,8 @@ export {
     Step,
     Tab,
     Table,
+    UnsafelyTypedFormField,
+    UnsafelyTypedFormGroup,
     VisibilityIcon,
     VisibilityField
 };
