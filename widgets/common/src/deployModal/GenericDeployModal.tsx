@@ -840,7 +840,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         onWorkflowInputChange={this.handleExecuteInputChange}
                                         fileLoading={fileLoading}
                                         errors={errors}
-                                        showInstallOptions={showInstallOptions}
+                                        showInstallOptions={showInstallOptions || false}
                                         force={force}
                                         dryRun={dryRun}
                                         queue={queue}

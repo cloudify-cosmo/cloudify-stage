@@ -43,7 +43,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
     onWorkflowInputChange: OnDropdownChange;
-    showInstallOptions?: boolean;
+    showInstallOptions: boolean;
     onForceChange: OnCheckboxChange;
     onDryRunChange: OnCheckboxChange;
     onQueueChange: OnCheckboxChange;
