@@ -6,9 +6,9 @@
     ],
     "rules": {
         "no-console": "error",
+        "prefer-promise-reject-errors": "off",
         "no-void": "off",
         "react/jsx-props-no-spreading": "off",
-        "prefer-promise-reject-errors": "off",
         "@typescript-eslint/no-non-null-assertion": "off"
     },
     "env": {
@@ -19,8 +19,8 @@
             "files": ["*.ts"],
             "rules": {
                 // NOTE: results in false-positives in regular classes for `context` properties
-                "react/static-property-placement": "off",
-                "import/prefer-default-export": "off"
+                "import/prefer-default-export": "off",
+                "react/static-property-placement": "off"
             }
         }
     ]
