@@ -4,7 +4,7 @@ import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
 const { RolesPicker, RolesUtil } = Stage.Common;
-const { UnsafelyTypedFormField, Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.tenants');
 
 export default function TenantsModal({ group, open, tenants, toolbox, onHide }) {
@@ -83,7 +83,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={t('fields.tenants')}>
+                    <Form.Field label={t('fields.tenants')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -92,7 +92,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
                             value={Object.keys(editedTenants)}
                             onChange={handleInputChange}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                     <RolesPicker
                         onUpdate={onRoleChange}
                         resources={editedTenants}

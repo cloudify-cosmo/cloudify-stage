@@ -5,8 +5,6 @@
  * whenever you change list of exported components in this file.
  */
 
-import { FunctionComponent } from 'react';
-
 import {
     Accordion,
     Breadcrumb,
@@ -107,9 +105,10 @@ const ErrorMessageWithCorrectReturnType = (ErrorMessage as unknown) as Component
     InferProps<typeof ErrorMessage['propTypes']>
 >;
 
-// TODO(RD-1837): Once `Form` component has proper TS definitions, these wrappers should be removed
-const UnsafelyTypedFormField = (Form.Field as unknown) as FunctionComponent<{ [x: string]: any }>;
-const UnsafelyTypedFormGroup = (Form.Group as unknown) as FunctionComponent<{ [x: string]: any }>;
+// DEPRECIATED
+// NOTE: It can be safely removed with the major version change
+const UnsafelyTypedFormField = Form.Field;
+const UnsafelyTypedFormGroup = Form.Group;
 
 export {
     Accordion,

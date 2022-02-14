@@ -12,7 +12,7 @@ export interface FilterModalProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const { Form, UnsafelyTypedFormField } = Stage.Basic;
+const { Form } = Stage.Basic;
 
 const FilterModal: FunctionComponent<FilterModalProps> = ({
     i18nHeaderKey,
@@ -67,11 +67,11 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {showFilterIdInput && (
-                        <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.id')}>
+                        <Form.Field label={i18n.t('widgets.filters.modal.id')}>
                             <Form.Input value={filterId} required onChange={setFilterId} error={errors.filterId} />
-                        </UnsafelyTypedFormField>
+                        </Form.Field>
                     )}
-                    <UnsafelyTypedFormField label={i18n.t('widgets.filters.modal.rules')}>
+                    <Form.Field label={i18n.t('widgets.filters.modal.rules')}>
                         <RulesForm
                             resourceType="deployments"
                             initialFilters={initialFilterRules}
@@ -83,7 +83,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             markErrors={markRulesFormErrors}
                             minLength={1}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 
