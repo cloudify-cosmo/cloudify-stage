@@ -227,7 +227,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onCancel = this.onCancel.bind(this);
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
-        this.onInstall = this.onInstall.bind(this);
 
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
@@ -403,14 +402,65 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return this.onSubmit(deployValidationMessage, deploySteps);
     }
 
-    onDeployAndInstall(installWorkflowParameters: WorkflowParameters, installWorkflowOptions: WorkflowOptions) {
-        const { deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
-        return this.onSubmit(
-            deployAndInstallValidationMessage,
-            deployAndInstallSteps,
-            installWorkflowParameters,
-            installWorkflowOptions
-        );
+    onDeployAndInstall() {
+        const { toolbox, deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
+        const {
+            workflow,
+            baseWorkflowParams,
+            userWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            deploymentId
+        } = this.state;
+        const deploymentsList: string[] = _.compact([deploymentId]);
+        // const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+        this.setState({ loading: true, errors: {} });
+        return this.validateInputs()
+            .then(() =>
+                executeWorkflow({
+                    deploymentsList,
+                    setLoading: () => this.setState({ loading: false }),
+                    toolbox,
+                    workflow,
+                    baseWorkflowInputs: baseWorkflowParams,
+                    userWorkflowInputsState: userWorkflowParams,
+                    schedule,
+                    scheduledTime,
+                    force,
+                    dryRun,
+                    queue,
+                    setErrors: err => {
+                        if (typeof err === 'string') {
+                            this.setState({ errors: { message: err } });
+                        } else {
+                            this.setState({ errors: err });
+                        }
+                    },
+                    unsetLoading: () => this.setState({ loading: false }),
+                    clearErrors: () => this.setState({ errors: {} }),
+                    onExecute: (
+                        installWorkflowParameters: WorkflowParameters,
+                        installWorkflowOptions: WorkflowOptions
+                    ) => {
+                        return this.onSubmit(
+                            deployAndInstallValidationMessage,
+                            deployAndInstallSteps,
+                            installWorkflowParameters,
+                            installWorkflowOptions
+                        );
+                    },
+                    onHide: () => {}
+                })
+            )
+            .catch(errors => {
+                this.setState({ errors });
+            })
+            .finally(() => {
+                this.setState({ loading: false });
+            });
     }
 
     onForceChange(_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
@@ -491,57 +541,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     setLoadingMessage(message: string) {
         this.setState({ loadingMessage: message });
-    }
-
-    onInstall() {
-        const { toolbox } = this.props;
-        const {
-            workflow,
-            baseWorkflowParams,
-            userWorkflowParams,
-            schedule,
-            scheduledTime,
-            force,
-            dryRun,
-            queue,
-            deploymentId
-        } = this.state;
-        const deploymentsList: string[] = _.compact([deploymentId]);
-        // const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
-        this.setState({ loading: true, errors: {} });
-        return this.validateInputs()
-            .then(() =>
-                executeWorkflow({
-                    deploymentsList,
-                    setLoading: () => this.setState({ loading: false }),
-                    toolbox,
-                    workflow,
-                    baseWorkflowInputs: baseWorkflowParams,
-                    userWorkflowInputsState: userWorkflowParams,
-                    schedule,
-                    scheduledTime,
-                    force,
-                    dryRun,
-                    queue,
-                    setErrors: err => {
-                        if (typeof err === 'string') {
-                            this.setState({ errors: { message: err } });
-                        } else {
-                            this.setState({ errors: err });
-                        }
-                    },
-                    unsetLoading: () => this.setState({ loading: false }),
-                    clearErrors: () => this.setState({ errors: {} }),
-                    onExecute: this.onDeployAndInstall,
-                    onHide: () => {}
-                })
-            )
-            .catch(errors => {
-                this.setState({ errors });
-            })
-            .finally(() => {
-                this.setState({ loading: false });
-            });
     }
 
     isBlueprintSelectable() {
