@@ -5,8 +5,8 @@ import type {
     WorkflowOptions,
     WorkflowParameters,
     OnDateInputChange,
-    OnCheckboxChange,
-    OnDropdownChange
+    OnDropdownChange,
+    OnCheckboxChange
 } from './types';
 
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
