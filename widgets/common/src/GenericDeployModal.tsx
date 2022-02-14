@@ -151,7 +151,6 @@ type GenericDeployModalState = {
     loading: boolean;
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
-    showInstallModal: boolean;
     siteName: string;
     skipPluginsValidation: boolean;
     visibility: any;
@@ -197,7 +196,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         loading: false,
         loadingMessage: '',
         runtimeOnlyEvaluation: false,
-        showInstallModal: false,
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
@@ -229,7 +227,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onCancel = this.onCancel.bind(this);
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
-        this.submitExecute = this.submitExecute.bind(this);
+        this.onInstall = this.onInstall.bind(this);
 
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
@@ -495,7 +493,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.setState({ loadingMessage: message });
     }
 
-    submitExecute() {
+    onInstall() {
         const { toolbox } = this.props;
         const {
             workflow,
@@ -539,7 +537,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 })
             )
             .catch(errors => {
-                this.setState({ loading: false, errors });
+                this.setState({ errors });
             })
             .finally(() => {
                 this.setState({ loading: false });
@@ -876,7 +874,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     loading={loading}
                     showDeployButton={showDeployButton}
                     onCancel={this.onCancel}
-                    onInstall={this.submitExecute}
+                    onInstall={this.onInstall}
                     onDeploy={this.onDeploy}
                     selectedApproveButton={selectedApproveButton}
                     onApproveButtonChange={(value, field) =>
