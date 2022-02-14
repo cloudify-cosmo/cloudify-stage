@@ -5,11 +5,10 @@
         "../.eslintrc.temp-overrides.json"
     ],
     "rules": {
-        "no-console": "error",
-        "prefer-promise-reject-errors": "off",
         "no-void": "off",
-        "react/jsx-props-no-spreading": "off",
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "no-console": "error",
+        "prefer-promise-reject-errors": "off"
     },
     "env": {
         "jquery": true
