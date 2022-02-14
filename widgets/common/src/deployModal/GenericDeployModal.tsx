@@ -245,31 +245,26 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const { workflow, deploymentId } = this.state;
         const actions = new DeploymentActions(toolbox);
         const workflowName = getWorkflowName(workflow);
-
-        if (typeof workflow === 'string') {
-            this.setState({ loading: true });
-            actions
-                .doGetWorkflows(deploymentId)
-                .then(({ workflows }: { workflows: unknown[] }) => {
-                    const selectedWorkflow = _.find(workflows, {
-                        name: workflowName
-                    }) as { parameters: BaseWorkflowInputs };
-                    if (selectedWorkflow) {
-                        this.setWorkflowParams(selectedWorkflow);
-                    } else {
-                        this.setState({
-                            errors: tExecute('errors.workflowError', {
-                                deploymentId,
-                                workflowName
-                            })
-                        });
-                    }
-                })
-                .catch((err: { message: string }) => this.setState({ errors: err }))
-                .finally(() => this.setState({ loading: false }));
-        } else {
-            this.setWorkflowParams(workflow);
-        }
+        this.setState({ loading: true });
+        actions
+            .doGetWorkflows(deploymentId)
+            .then(({ workflows }: { workflows: unknown[] }) => {
+                const selectedWorkflow = _.find(workflows, {
+                    name: workflowName
+                }) as { parameters: BaseWorkflowInputs };
+                if (selectedWorkflow) {
+                    this.setWorkflowParams(selectedWorkflow);
+                } else {
+                    this.setState({
+                        errors: tExecute('errors.workflowError', {
+                            deploymentId,
+                            workflowName
+                        })
+                    });
+                }
+            })
+            .catch((err: { message: string }) => this.setState({ errors: err }))
+            .finally(() => this.setState({ loading: false }));
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
@@ -416,7 +411,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentId
         } = this.state;
         const deploymentsList: string[] = _.compact([deploymentId]);
-        // const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
         this.setState({ loading: true, errors: {} });
         return this.validateInputs()
             .then(() =>
@@ -562,7 +556,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     this.setState({
                         deploymentInputs,
                         blueprint,
-                        // workflow: blueprint.plan.workflows, // TODO: check if adding this line is the correct way to add workflows from blueprint
+                        workflow: blueprint.plan.workflows as Workflow,
                         errors: {},
                         loading: false
                     });
