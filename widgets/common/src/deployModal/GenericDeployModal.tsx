@@ -422,7 +422,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             .then(() =>
                 executeWorkflow({
                     deploymentsList,
-                    setLoading: () => this.setState({ loading: false }),
+                    setLoading: () => this.setState({ loading: true }),
+                    unsetLoading: () => this.setState({ loading: false }),
                     toolbox,
                     workflow,
                     baseWorkflowInputs: baseWorkflowParams,
@@ -439,7 +440,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             this.setState({ errors: err });
                         }
                     },
-                    unsetLoading: () => this.setState({ loading: false }),
                     clearErrors: () => this.setState({ errors: {} }),
                     onExecute: (
                         installWorkflowParameters: WorkflowParameters,
