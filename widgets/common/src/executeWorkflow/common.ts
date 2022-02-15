@@ -86,8 +86,7 @@ export const executeWorkflow = ({
     }
 
     if (_.isEmpty(deploymentsList)) {
-        const error = t('errors.missingDeployment');
-        return Promise.reject(error);
+        return Promise.reject(t('errors.missingDeployment'));
     }
 
     setLoading();
