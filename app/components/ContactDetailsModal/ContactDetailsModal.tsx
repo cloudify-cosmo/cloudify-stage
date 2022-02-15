@@ -1,7 +1,7 @@
 import React from 'react';
 import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
-import ContactDetailsForm from './ContactDetailsForm';
+import ContactDetailsModalContent from './ContactDetailsModalContent';
 import useModalOpenState from './useModalOpenState';
 
 const t = StageUtils.getT('contactDetailsModal');
@@ -12,7 +12,7 @@ const ContactDetailsModal = () => {
     return (
         <Modal open={isModalOpen}>
             <Modal.Header>{t('header')}</Modal.Header>
-            <ContactDetailsForm closeModal={closeModal} />
+            <ContactDetailsModalContent closeModal={closeModal} />
         </Modal>
     );
 };

@@ -17,11 +17,11 @@ interface FormInputs {
     [inputName: string]: FormFieldValue;
 }
 
-interface ContactDetailsFormProps {
+interface ContactDetailsModalContentProps {
     closeModal: () => void;
 }
 
-const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeModal }) => {
+const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentProps> = ({ closeModal }) => {
     const [formInputs, setFormInputs] = useInputs<FormInputs>({});
     const { errors, setErrors, clearErrors } = useErrors();
     const [loading, setLoading] = useBoolean();
@@ -118,4 +118,4 @@ const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeM
     );
 };
 
-export default ContactDetailsForm;
+export default ContactDetailsModalContent;
