@@ -27,6 +27,7 @@ const options = {
         [`${CONTEXT_PATH}/ba`]: proxyOptions,
         [`${CONTEXT_PATH}/bud`]: proxyOptions,
         [`${CONTEXT_PATH}/clientConfig`]: proxyOptions,
+        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions,
         [`${CONTEXT_PATH}/config`]: proxyOptions,
         [`${CONTEXT_PATH}/external`]: proxyOptions,
         [`${CONTEXT_PATH}/file`]: proxyOptions,
@@ -42,8 +43,7 @@ const options = {
         [`${CONTEXT_PATH}/ua`]: proxyOptions,
         [`${CONTEXT_PATH}/userData`]: proxyOptions,
         [`${CONTEXT_PATH}/wb`]: proxyOptions,
-        [`${CONTEXT_PATH}/widgets`]: proxyOptions,
-        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions
+        [`${CONTEXT_PATH}/widgets`]: proxyOptions
     },
     watchOptions: {
         ignored: ['**/userData/**']

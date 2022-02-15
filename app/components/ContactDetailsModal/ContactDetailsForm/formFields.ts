@@ -1,4 +1,4 @@
-import ValidationRegexpPatterns from './validation-regexp-patterns';
+import * as ValidationRegexpPatterns from './validationRegexpPatterns';
 
 export enum FormFieldType {
     Text,
@@ -57,7 +57,7 @@ export const formFields: FormField[] = [
         type: FormFieldType.Text,
         validation: {
             errorMessage: getFormFieldValidationMessagePath('email'),
-            regexp: ValidationRegexpPatterns.isEmail
+            regexp: ValidationRegexpPatterns.emailRegexp
         },
         isRequired: true
     },

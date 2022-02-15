@@ -25,6 +25,7 @@ import Applications from './routes/Applications';
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
 import ClientConfig from './routes/ClientConfig';
+import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -39,7 +40,6 @@ import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
 import Filters from './routes/Filters';
-import ContactDetails from './routes/ContactDetails';
 
 const logger = LoggerHandler.getLogger('App');
 const contextPath = CONTEXT_PATH;

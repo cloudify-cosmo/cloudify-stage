@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, UnsafelyTypedFormField, ApproveButton } from '../../basic';
-import type { FormField } from './form-fields';
-import { FormFieldType, formFields, requiredFormFields } from './form-fields';
+import type { FormField } from './formFields';
+import { FormFieldType, formFields, requiredFormFields } from './formFields';
 import CheckboxLabel from './CheckboxLabel';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
