@@ -1,5 +1,4 @@
 import Consts from 'app/utils/consts';
-import { getAdminAuthorizationHeader } from '../../support/commands';
 import { waitUntil } from '../../support/resource_commons';
 
 describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
@@ -11,7 +10,7 @@ describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
 
     const deactivateMaintenanceMode = () =>
         cy
-            .cfyRequest('/maintenance/deactivate', 'POST', getAdminAuthorizationHeader())
+            .cfyRequest('/maintenance/deactivate', 'POST', null, null, { useAdminAuthorization: true })
             .then(() => waitForMaintenanceModeStatus('deactivated'));
     const waitForMaintenanceModeStatus = (status: 'activated' | 'deactivated') =>
         waitUntil('maintenance', response => response.body.status === status, { useAdminAuthorization: true });
