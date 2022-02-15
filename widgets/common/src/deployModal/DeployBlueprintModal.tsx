@@ -1,8 +1,10 @@
 import type { ComponentProps, FunctionComponent } from 'react';
+import type { BlueprintDeployParams } from '../BlueprintActions';
+import type { WorkflowOptions } from '../DeploymentActions';
+import type { WorkflowParameters } from '../executeWorkflow';
 import GenericDeployModal from './GenericDeployModal';
-import BlueprintActions, { BlueprintDeployParams } from '../BlueprintActions';
-import DeploymentActions, { WorkflowOptions } from '../DeploymentActions';
-import { WorkflowParameters } from '../executeWorkflow';
+import BlueprintActions from '../BlueprintActions';
+import DeploymentActions from '../DeploymentActions';
 
 const t = (key: string, options?: Record<string, any>) =>
     Stage.i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
