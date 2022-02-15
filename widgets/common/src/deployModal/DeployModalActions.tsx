@@ -47,6 +47,7 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
                 className="icon"
                 button
                 clearable={false}
+                disabled={loading}
                 floating
                 aria-label="Deploy or Install"
                 onChange={onApproveButtonChange}
