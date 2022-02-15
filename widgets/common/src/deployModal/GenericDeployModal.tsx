@@ -155,9 +155,9 @@ type GenericDeployModalState = {
     siteName: string;
     skipPluginsValidation: boolean;
     visibility: any;
-    workflow: Workflow;
-    baseWorkflowParams: BaseWorkflowInputs;
-    userWorkflowParams: UserWorkflowInputsState;
+    installWorkflow: Workflow;
+    baseInstallWorkflowParams: BaseWorkflowInputs;
+    userInstallWorkflowParams: UserWorkflowInputsState;
     force: boolean;
     dryRun: boolean;
     queue: boolean;
@@ -200,12 +200,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
-        workflow: GenericDeployModal.initialInstallWorkflow,
+        installWorkflow: GenericDeployModal.initialInstallWorkflow,
         activeSection: 0,
         deploymentId: '',
         labels: [],
-        baseWorkflowParams: {},
-        userWorkflowParams: {},
+        baseInstallWorkflowParams: {},
+        userInstallWorkflowParams: {},
         force: false,
         dryRun: false,
         queue: false,
@@ -240,11 +240,11 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     componentDidMount() {
-        const { workflow } = this.state;
+        const { installWorkflow } = this.state;
         const { InputsUtils } = Stage.Common;
         this.setState({
-            baseWorkflowParams: workflow.parameters,
-            userWorkflowParams: _.mapValues(workflow.parameters, parameterData =>
+            baseInstallWorkflowParams: installWorkflow.parameters,
+            userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
                 InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
             )
         });
@@ -299,7 +299,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement>, field: any) {
         this.setState((prevState: any) => {
             return {
-                userWorkflowParams: { ...prevState.userWorkflowParams, ...Stage.Basic.Form.fieldNameValue(field) }
+                userInstallWorkflowParams: {
+                    ...prevState.userInstallWorkflowParams,
+                    ...Stage.Basic.Form.fieldNameValue(field)
+                }
             };
         });
     }
@@ -383,9 +386,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     onDeployAndInstall() {
         const { toolbox, deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
         const {
-            workflow,
-            baseWorkflowParams,
-            userWorkflowParams,
+            installWorkflow,
+            baseInstallWorkflowParams,
+            userInstallWorkflowParams,
             schedule,
             scheduledTime,
             force,
@@ -402,9 +405,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     setLoading: () => this.setState({ loading: true }),
                     unsetLoading: () => this.setState({ loading: false }),
                     toolbox,
-                    workflow,
-                    baseWorkflowInputs: baseWorkflowParams,
-                    userWorkflowInputsState: userWorkflowParams,
+                    workflow: installWorkflow,
+                    baseWorkflowInputs: baseInstallWorkflowParams,
+                    userWorkflowInputsState: userInstallWorkflowParams,
                     schedule,
                     scheduledTime,
                     force,
@@ -523,7 +526,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                     this.setState({
                         deploymentInputs,
                         blueprint,
-                        workflow: {
+                        installWorkflow: {
                             ...(blueprint.plan.workflows.install as Record<string, unknown>),
                             name: 'install'
                         } as Workflow,
@@ -606,8 +609,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             skipPluginsValidation,
             siteName,
             visibility,
-            baseWorkflowParams,
-            userWorkflowParams,
+            baseInstallWorkflowParams,
+            userInstallWorkflowParams,
             force,
             dryRun,
             queue,
@@ -800,8 +803,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     onClick={this.onAccordionClick}
                                 >
                                     <ExecuteWorkflowInputs
-                                        baseWorkflowInputs={baseWorkflowParams}
-                                        userWorkflowInputsState={userWorkflowParams}
+                                        baseWorkflowInputs={baseInstallWorkflowParams}
+                                        userWorkflowInputsState={userInstallWorkflowParams}
                                         onYamlFileChange={this.handleYamlFileChange}
                                         onWorkflowInputChange={this.handleExecuteInputChange}
                                         fileLoading={fileLoading}
