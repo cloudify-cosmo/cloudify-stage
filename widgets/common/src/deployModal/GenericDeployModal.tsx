@@ -232,7 +232,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
-        this.setWorkflowParams = this.setWorkflowParams.bind(this);
 
         this.onForceChange = this.onForceChange.bind(this);
         this.onDryRunChange = this.onDryRunChange.bind(this);
@@ -242,30 +241,14 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     componentDidMount() {
-        const { DeploymentActions } = Stage.Common;
-        const { toolbox } = this.props;
-        const { workflow, deploymentId } = this.state;
-        const actions = new DeploymentActions(toolbox);
-        const workflowName = getWorkflowName(workflow);
-        this.setState({ loading: true });
-        actions
-            .doGetWorkflows(deploymentId)
-            .then(({ workflows }: { workflows: unknown[] }) => {
-                const selectedWorkflow = _.find(workflows, {
-                    name: workflowName
-                }) as { parameters: BaseWorkflowInputs };
-                if (selectedWorkflow) {
-                    this.setWorkflowParams(selectedWorkflow);
-                } else {
-                    this.setState({
-                        errors: tExecute('errors.workflowError', {
-                            deploymentId,
-                            workflowName
-                        })
-                    });
-                }
-            })
-            .finally(() => this.setState({ loading: false }));
+        const { workflow } = this.state;
+        const { InputsUtils } = Stage.Common;
+        this.setState({
+            baseWorkflowParams: workflow.parameters,
+            userWorkflowParams: _.mapValues(workflow.parameters, parameterData =>
+                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+            )
+        });
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
@@ -519,16 +502,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             siteName,
             runtimeOnlyEvaluation
         };
-    }
-
-    setWorkflowParams(workflowResource: { parameters: BaseWorkflowInputs }) {
-        const { InputsUtils } = Stage.Common;
-        this.setState({
-            baseWorkflowParams: workflowResource.parameters,
-            userWorkflowParams: _.mapValues(workflowResource.parameters, parameterData =>
-                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
-            )
-        });
     }
 
     setLoadingMessage(message: string) {
