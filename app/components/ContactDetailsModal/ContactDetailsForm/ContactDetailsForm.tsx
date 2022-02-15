@@ -24,7 +24,7 @@ interface ContactDetailsFormProps {
 const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeModal }) => {
     const [formInputs, setFormInputs] = useInputs<FormInputs>({});
     const { errors, setErrors, clearErrors } = useErrors();
-    const [isSubmitting, setIsSubmitting] = useBoolean();
+    const [loading, setLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
 
@@ -72,7 +72,7 @@ const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeM
         const fieldsAreValid = validateFields();
 
         if (fieldsAreValid) {
-            setIsSubmitting();
+            setLoading();
             internal
                 .doPost('contactDetails/', {
                     body: formInputs
@@ -110,7 +110,7 @@ const ContactDetailsForm: FunctionComponent<ContactDetailsFormProps> = ({ closeM
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                <ApproveButton color="green" onClick={handleSubmit} loading={isSubmitting} disabled={isSubmitting}>
+                <ApproveButton color="green" onClick={handleSubmit} loading={loading} disabled={loading}>
                     {t('buttons.submit')}
                 </ApproveButton>
             </Modal.Actions>
