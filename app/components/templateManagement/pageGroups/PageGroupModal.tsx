@@ -3,17 +3,7 @@ import React from 'react';
 import { ModalProps, SemanticICONS } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
-import {
-    ApproveButton,
-    CancelButton,
-    Divider,
-    Form,
-    Icon,
-    LoadingOverlay,
-    Modal,
-    Segment,
-    UnsafelyTypedFormField
-} from '../../basic';
+import { ApproveButton, CancelButton, Divider, Form, Icon, LoadingOverlay, Modal, Segment } from '../../basic';
 import { ReduxState } from '../../../reducers';
 import StageUtils from '../../../utils/stageUtils';
 import SelectionList from '../common/SelectionList';
@@ -100,7 +90,7 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
 
             <Modal.Content>
                 <Form errors={errors}>
-                    <UnsafelyTypedFormField error={errors.groupName} label={t('groupName')}>
+                    <Form.Field error={errors.groupName} label={t('groupName')}>
                         <Form.Input
                             value={groupName}
                             onChange={(...args) => {
@@ -108,10 +98,10 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
                                 setGroupName(...args);
                             }}
                         />
-                    </UnsafelyTypedFormField>
-                    <UnsafelyTypedFormField label={t('icon')}>
+                    </Form.Field>
+                    <Form.Field label={t('icon')}>
                         <SemanticIconDropdown value={icon} onChange={setIcon} />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                     <Segment.Group horizontal>
                         <Segment style={{ width: '50%' }}>
                             <Icon name="file outline" /> {t('availablePages')}
