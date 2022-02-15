@@ -20,7 +20,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
-    const { ApproveButton, CancelButton, Form, Icon, Modal, UnsafelyTypedFormField } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
@@ -63,9 +63,9 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {secretKeys.map(field => (
-                        <UnsafelyTypedFormField key={field} required label={field}>
+                        <Form.Field key={field} required label={field}>
                             <Form.Input type="password" name={field} onChange={setSecretInputs} />
-                        </UnsafelyTypedFormField>
+                        </Form.Field>
                     ))}
                 </Form>
             </Modal.Content>

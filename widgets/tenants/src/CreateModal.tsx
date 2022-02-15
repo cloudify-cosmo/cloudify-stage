@@ -4,7 +4,7 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-const { Modal, Button, Icon, Form, ApproveButton, CancelButton, UnsafelyTypedFormField } = Stage.Basic;
+const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
 
 const t = Stage.Utils.getT(`widgets.tenants.createModal`);
@@ -51,14 +51,14 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField error={errors.tenantName}>
+                    <Form.Field error={errors.tenantName}>
                         <Form.Input
                             name="tenantName"
                             placeholder={t('form.fields.tenantName')}
                             value={tenantName}
                             onChange={setTenantName}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 
