@@ -427,13 +427,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             )
             .catch(err => {
                 if (typeof err === 'string') {
-                    this.setState({ errors: { message: err } });
+                    this.setState({ errors: { message: err }, loading: false });
                 } else {
-                    this.setState({ errors: err });
+                    this.setState({ errors: err, loading: false });
                 }
-            })
-            .finally(() => {
-                this.setState({ loading: false });
             });
     }
 
