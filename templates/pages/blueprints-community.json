@@ -7,9 +7,12 @@
         "name": "Blueprints",
         "definition": "blueprints",
         "width": 12,
-        "height": 24,
+        "height": 29,
         "x": 0,
-        "y": 0
+        "y": 0,
+        "configuration": {
+          "displayStyle": "catalog"
+        }
       }
     ]
   }]

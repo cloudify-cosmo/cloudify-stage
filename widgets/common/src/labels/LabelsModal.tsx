@@ -25,7 +25,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Icon, Modal, Form, UnsafelyTypedFormField } = Stage.Basic;
+    const { ApproveButton, CancelButton, Icon, Modal, Form } = Stage.Basic;
     const { DeploymentActions } = Stage.Common;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
     const actions = new DeploymentActions(toolbox);
@@ -90,7 +90,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField
+                    <Form.Field
                         label={i18n.t('widgets.common.labels.input.label')}
                         help={i18n.t('widgets.common.labels.input.help')}
                     >
@@ -102,7 +102,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
                                 toolbox={toolbox}
                             />
                         </ResourceTypeContext.Provider>
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 

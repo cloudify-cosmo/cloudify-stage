@@ -19,17 +19,17 @@ import Consts from 'app/utils/consts';
 import './asserts';
 import './blueprints';
 import './deployments';
-import './executions';
-import './users';
-import './sites';
-import './templates';
-import './plugins';
 import './editMode';
-import './widgets';
-import './secrets';
-import './snapshots';
+import './executions';
 import './filters';
 import './getting_started';
+import './plugins';
+import './secrets';
+import './sites';
+import './snapshots';
+import './templates';
+import './users';
+import './widgets';
 
 let token = '';
 
@@ -38,6 +38,8 @@ const getCommonHeaders = () => ({
     cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
     tenant: Consts.DEFAULT_TENANT
 });
+
+export const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.interceptSp('GET', `/users/*`, {
@@ -92,7 +94,7 @@ const commands = {
                 method: 'PUT',
                 url: '/console/sp/license',
                 headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
+                    ...getAdminAuthorizationHeader(),
                     'Content-Type': 'text/plain'
                 },
                 body: yaml
@@ -307,34 +309,6 @@ const commands = {
                                   }
                               ]
                             : []
-                    },
-                    // used by tests that require plugins
-                    {
-                        name: 'Plugins Catalog',
-                        id: 'plugin_catalog',
-                        type: 'page',
-                        layout: [
-                            {
-                                type: 'widgets',
-                                content: [
-                                    {
-                                        id: 'pluginsCatalog',
-                                        name: 'Plugins Catalog',
-                                        definition: 'pluginsCatalog',
-                                        configuration: {
-                                            jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json'
-                                        },
-                                        drillDownPages: {},
-                                        height: 20,
-                                        width: widgetsWidth,
-                                        x: 0,
-                                        y: 0,
-                                        maximized: false
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 ]
             }

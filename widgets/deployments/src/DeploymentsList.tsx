@@ -94,7 +94,7 @@ export default class DeploymentsList extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage } = Stage.Basic;
-        const { DeploymentActionsModals, ExecuteDeploymentModal } = Stage.Common;
+        const { DeploymentActionsModals, ExecuteWorkflowModal } = Stage.Common;
 
         const { displayStyle, showExecutionStatusLabel } = widget.configuration;
         const showTableComponent = displayStyle === 'table';
@@ -119,7 +119,7 @@ export default class DeploymentsList extends React.Component {
                     toolbox={toolbox}
                 />
                 {deployment && workflowName && (
-                    <ExecuteDeploymentModal
+                    <ExecuteWorkflowModal
                         deploymentId={deployment.id}
                         deploymentName={deployment.display_name}
                         onHide={this.hideExecuteModal}
