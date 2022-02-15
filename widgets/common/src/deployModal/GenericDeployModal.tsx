@@ -5,7 +5,7 @@ import MissingSecretsError from '../MissingSecretsError';
 import AccordionSectionWithDivider from '../AccordionSectionWithDivider';
 import DeplomentInputsSection from './DeploymentInputsSection';
 import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
-import { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow } from '../executeWorkflow';
+import { ExecuteWorkflowInputs, executeWorkflow } from '../executeWorkflow';
 import type {
     BaseWorkflowInputs,
     UserWorkflowInputsState,
@@ -19,7 +19,6 @@ import type { Label } from '../labels/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
-const tExecute = Stage.Utils.getT('widgets.common.deployments.execute');
 
 type Blueprint = {
     description?: string;
