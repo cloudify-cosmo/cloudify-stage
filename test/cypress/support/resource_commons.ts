@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { getAdminAuthorizationHeader } from './commands';
 
 function appendQueryParam(url: string, param: string, value: string) {
     return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
@@ -30,7 +29,7 @@ export function waitUntil(
     if (search) {
         url = appendQueryParam(url, `_search`, search);
     }
-    cy.cfyRequest(url, 'GET', useAdminAuthorization ? getAdminAuthorizationHeader() : null).then(response => {
+    cy.cfyRequest(url, 'GET', null, null, { useAdminAuthorization }).then(response => {
         if (predicate(response)) {
             return;
         }

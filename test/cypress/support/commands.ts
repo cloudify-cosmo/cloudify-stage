@@ -40,7 +40,7 @@ const getCommonHeaders = () => ({
     tenant: Consts.DEFAULT_TENANT
 });
 
-export const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
+const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.interceptSp('GET', `/users/*`, {
@@ -118,7 +118,9 @@ const commands = {
         method = 'GET',
         headers: any = null,
         body: any = null,
-        options: Partial<Cypress.RequestOptions> = {}
+        options: Partial<Cypress.RequestOptions> & { useAdminAuthorization?: boolean } = {
+            useAdminAuthorization: false
+        }
     ) =>
         cy.request({
             method,
@@ -126,6 +128,7 @@ const commands = {
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
+                ...(options.useAdminAuthorization ? getAdminAuthorizationHeader() : {}),
                 ...headers
             },
             body,
