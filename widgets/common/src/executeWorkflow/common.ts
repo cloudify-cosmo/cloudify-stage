@@ -57,8 +57,7 @@ export const executeWorkflow = ({
 
     const name = getWorkflowName(workflow);
     if (!name) {
-        const error = t('errors.missingWorkflow');
-        return Promise.reject(error);
+        return Promise.reject(t('errors.missingWorkflow'));
     }
 
     const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
