@@ -6,14 +6,6 @@
                 "devDependencies": true
             }
         ],
-        "no-console": "off",
-        // TODO(RD-1382): remove the file after the rules below cause no violations
-        "@typescript-eslint/ban-ts-comment": [
-            "error",
-            {
-                "ts-ignore": "allow-with-description",
-                "ts-nocheck": "allow-with-description"
-            }
-        ]
+        "no-console": "off"
     }
 }
