@@ -109,6 +109,19 @@ const outputsColumns: Columns<Output> = [
     }
 ];
 
+export function getResourceLocation(templateModules: string[], resourceLocation: string) {
+    if (
+        _(templateModules)
+            .map(modulePath => modulePath.split('/')[0])
+            .uniq()
+            .size() > 1
+    ) {
+        return resourceLocation;
+    }
+    // Remove first dir from the path ('dir1/dir2' -> 'dir2')
+    return resourceLocation.replace(/^[^/]*[/]?/, '');
+}
+
 export default function TerraformModal({
     onHide,
     toolbox
@@ -280,25 +293,13 @@ export default function TerraformModal({
 
         setProcessPhase('generation');
 
-        function getResourceLocation() {
-            if (
-                _(templateModules)
-                    .map(modulePath => modulePath.split('/')[0])
-                    .uniq()
-                    .size() > 1
-            ) {
-                return resourceLocation;
-            }
-            return resourceLocation.replace(/^[^/]*[/]?/, '');
-        }
-
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 blueprintName,
                 terraformTemplate: templateUrl,
                 urlAuthentication,
                 terraformVersion: version,
-                resourceLocation: getResourceLocation(),
+                resourceLocation: getResourceLocation(templateModules, resourceLocation),
                 variables,
                 environmentVariables: environment,
                 outputs

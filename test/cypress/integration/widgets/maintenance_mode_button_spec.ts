@@ -1,14 +1,19 @@
 import Consts from 'app/utils/consts';
 import { waitUntil } from '../../support/resource_commons';
 
-describe('Maintenance mode button widget', () => {
+describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
     before(() => cy.activate('valid_trial_license'));
-    beforeEach(() => cy.usePageMock('maintenanceModeButton', { pollingTime: 2 }).mockLogin());
+    beforeEach(() => deactivateMaintenanceMode().usePageMock('maintenanceModeButton', { pollingTime: 2 }).mockLogin());
 
     const getActivateButton = () => cy.contains('Activate Maintenance Mode');
     const getDeactivateButton = () => cy.contains('Deactivate Maintenance Mode');
+
+    const deactivateMaintenanceMode = () =>
+        cy
+            .cfyRequest('/maintenance/deactivate', 'POST', null, null, { useAdminAuthorization: true })
+            .then(() => waitForMaintenanceModeStatus('deactivated'));
     const waitForMaintenanceModeStatus = (status: 'activated' | 'deactivated') =>
-        waitUntil('maintenance', response => response.body.status === status);
+        waitUntil('maintenance', response => response.body.status === status, { useAdminAuthorization: true });
 
     it('should enter maintenance mode on click', () => {
         cy.killRunningExecutions();
