@@ -5,8 +5,6 @@
         "../.eslintrc.temp-overrides.json"
     ],
     "rules": {
-        "no-void": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
         "no-console": "error",
         "prefer-promise-reject-errors": "off"
     },
@@ -18,7 +16,6 @@
             "files": ["*.ts"],
             "rules": {
                 // NOTE: results in false-positives in regular classes for `context` properties
-                "import/prefer-default-export": "off",
                 "react/static-property-placement": "off"
             }
         }

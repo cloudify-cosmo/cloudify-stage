@@ -1,5 +1,8 @@
 {
-    "extends": ["../../node_modules/cloudify-ui-common/configs/eslint-common-cypress.json"],
+    "extends": [
+        "../../node_modules/cloudify-ui-common/configs/eslint-common-cypress.json",
+        "../../.eslintrc.temp-overrides.json"
+    ],
     "settings": {
         "import/resolver": {"node": {"moduleDirectory": ["../../node_modules", "../.."]}}
     }

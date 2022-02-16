@@ -6,10 +6,7 @@
     ],
     "rules": {
         "no-console": "error",
-        "no-void": "off",
         "prefer-promise-reject-errors": "off",
-        "react/jsx-props-no-spreading": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-namespace": "off"
     },
     "globals": {
@@ -25,12 +22,6 @@
         "Stage": true
     },
     "overrides": [
-        {
-            "files": ["*.ts"],
-            "rules": {
-                "import/prefer-default-export": "off"
-            }
-        },
         {
             "files": ["./*/src/backend.ts"],
             "extends": ["../backend/.eslintrc.json"],
