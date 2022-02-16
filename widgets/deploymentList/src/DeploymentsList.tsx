@@ -65,7 +65,7 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
         const { ErrorMessage } = Stage.Basic;
 
         return (
-            <div>
+            <>
                 <ErrorMessage error={error} onDismiss={this.onDismiss} autoHide />
                 <DeploymentsTable
                     widget={widget}
@@ -73,7 +73,7 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
                     fetchData={this.fetchData}
                     noDataMessage={NO_DATA_MESSAGE}
                 />
-            </div>
+            </>
         );
     }
 }
