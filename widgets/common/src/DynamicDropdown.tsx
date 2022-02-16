@@ -305,7 +305,6 @@ export default function DynamicDropdown({
                     }
                     return preparedOptions;
                 })()}
-                /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
         </Ref>

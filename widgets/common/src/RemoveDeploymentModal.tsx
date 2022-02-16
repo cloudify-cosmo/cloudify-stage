@@ -90,7 +90,6 @@ RemoveDeploymentModal.propTypes = {
 
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
         export { RemoveDeploymentModal };
     }
 }

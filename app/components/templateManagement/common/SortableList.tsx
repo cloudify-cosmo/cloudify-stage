@@ -32,7 +32,6 @@ const SortablePageItem: FunctionComponent<SortablePageItemProps> = ({ item, id, 
 
     return (
         <Ref innerRef={setNodeRef}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <List.Item style={style} {...attributes}>
                 {name}
                 <span className="right floated actionIcons">

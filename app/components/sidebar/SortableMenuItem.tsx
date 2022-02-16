@@ -15,7 +15,6 @@ export default function SortableMenuItem({ id, style, className, ...rest }: Side
 
     return (
         <div ref={setNodeRef} {...attributes} {...listeners}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <SideBarItem {...rest} className={`item ${className}`} style={Object.assign(builtInStyle, style)} />
         </div>
     );

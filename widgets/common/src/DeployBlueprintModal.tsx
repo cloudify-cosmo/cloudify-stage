@@ -98,7 +98,6 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
 
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
         export { DeployBlueprintModal };
     }
 }

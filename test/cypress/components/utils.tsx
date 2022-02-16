@@ -9,7 +9,6 @@ import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from 'app/reducers';
 import { Router } from 'react-router';
 
-// eslint-disable-next-line import/prefer-default-export
 export function mountWithProvider(component: ReactNode, initialState?: Record<string, any>) {
     const history = createBrowserHistory();
     const store = createStore(
