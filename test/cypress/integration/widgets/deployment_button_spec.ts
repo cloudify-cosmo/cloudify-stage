@@ -11,7 +11,8 @@ describe('Create Deployment Button widget', () => {
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
-            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint);
+            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];
         types.forEach(type =>
@@ -68,12 +69,16 @@ describe('Create Deployment Button widget', () => {
         cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
+    const fillFields = (deploymentId, deploymentName, blueprintId) => {
+        cy.setSearchableDropdownValue('Blueprint', blueprintId);
+        cy.get('input[name="deploymentName"]').click().type(deploymentName);
+        cy.openAccordionSection('Advanced');
+        cy.get('input[name="deploymentId"]').clear().type(deploymentId);
+    };
+
     const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
         cy.get('div.deployBlueprintModal').within(() => {
-            cy.setSearchableDropdownValue('Blueprint', blueprintId);
-            cy.get('input[name="deploymentName"]').click().type(deploymentName);
-            cy.openAccordionSection('Advanced');
-            cy.get('input[name="deploymentId"]').clear().type(deploymentId);
+            fillFields(deploymentId, deploymentName, blueprintId);
 
             cy.withinAccordionSection('Deployment Inputs', () => {
                 // check hidden input is not rendered
@@ -161,7 +166,18 @@ describe('Create Deployment Button widget', () => {
     it('blueprint with custom install workflow', () => {
         const deploymentName = `${resourcePrefix}customeInstallWorkflow`;
         const deploymentId = `${deploymentName}Id`;
-        fillDeployBlueprintModal(deploymentId, deploymentName, customInstallWorkflowBlueprint);
+
+        cy.get('div.deployBlueprintModal').within(() => {
+            fillFields(deploymentId, deploymentName, customInstallWorkflowBlueprint);
+            cy.withinAccordionSection('Install', () => {
+                cy.getField('xxx').within(() => {
+                    cy.get('textarea').should('have.text', 'blabla');
+                });
+                cy.getField('yyy').within(() => {
+                    cy.get('textarea').should('have.text', 'blabla');
+                });
+            });
+        });
     });
 
     describe('handles errors during deploy & install process', () => {
