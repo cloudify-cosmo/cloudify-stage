@@ -59,6 +59,10 @@ router.get('/', async (req, res) => {
         contactDetailsReceived
     });
 
+    // Further functionality should be transparent for the user
+    // Because of that, the functionality below is implemented after sending a response to the user
+    if (!contactDetailsReceived) return;
+
     const { customer_id: customerId } = (await jsonRequest('get', '/license', {
         'Authentication-Token': token
     })) as HubspotResponse;
@@ -66,11 +70,7 @@ router.get('/', async (req, res) => {
     // If customerId is assigned then hubspot submission is complete
     if (customerId) return;
 
-    // Further functionality should be transparent for the user
-    // Because of that, the functionality below is implemented after sending a response to the user
-    if (contactDetailsReceived) {
-        submitContactDetails(getStoredContactDetails(), token);
-    }
+    submitContactDetails(getStoredContactDetails(), token);
 });
 
 router.post(
@@ -84,7 +84,7 @@ router.post(
         // Further submission of the data should be transparent for the user
         // Because of that, the functionality below is implemented after sending a response to the user
         saveContactDetailsData(contactDetails);
-        submitContactDetails(getStoredContactDetails(), token);
+        submitContactDetails(contactDetails, token);
     }
 );
 
