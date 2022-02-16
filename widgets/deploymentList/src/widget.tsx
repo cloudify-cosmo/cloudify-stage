@@ -40,7 +40,7 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
     ],
     isReact: true,
     hasReadme: true,
-    hasStyle: true,
+    hasStyle: false,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchData(_widget, toolbox, params): Promise<DeploymentsTableDataType> {
