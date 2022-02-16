@@ -3,6 +3,7 @@ describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
+    const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -155,6 +156,12 @@ describe('Create Deployment Button widget', () => {
         verifyBlueprintDeployed(testBlueprintId, deploymentId);
         verifyRedirectionToDeploymentPage(deploymentId, deploymentName);
         verifyDeploymentInstallStarted(deploymentId);
+    });
+
+    it('blueprint with custom install workflow', () => {
+        const deploymentName = `${resourcePrefix}customeInstallWorkflow`;
+        const deploymentId = `${deploymentName}Id`;
+        fillDeployBlueprintModal(deploymentId, deploymentName, customInstallWorkflowBlueprint);
     });
 
     describe('handles errors during deploy & install process', () => {

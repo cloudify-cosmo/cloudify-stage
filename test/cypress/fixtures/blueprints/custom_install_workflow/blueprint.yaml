@@ -1,0 +1,16 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+plugins:
+    default_workflows:
+        executor: central_deployment_agent
+        install: false
+
+workflows:
+    install:
+        mapping: default_workflows.cloudify.plugins.workflows.install
+        is_cascading: false
+        parameters:
+            xxx:
+                default: blabla
+            yyy:
+                default: blabla

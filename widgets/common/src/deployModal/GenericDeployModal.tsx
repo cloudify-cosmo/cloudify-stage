@@ -523,13 +523,18 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 .doGetFullBlueprintData(id)
                 .then(blueprint => {
                     const deploymentInputs = InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
+                    const installWorkflow = {
+                        ...(blueprint.plan.workflows.install as Record<string, unknown>),
+                        name: 'install'
+                    } as Workflow;
                     this.setState({
                         deploymentInputs,
                         blueprint,
-                        installWorkflow: {
-                            ...(blueprint.plan.workflows.install as Record<string, unknown>),
-                            name: 'install'
-                        } as Workflow,
+                        installWorkflow,
+                        baseInstallWorkflowParams: installWorkflow.parameters,
+                        userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
+                            InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+                        ),
                         errors: {},
                         loading: false
                     });
