@@ -5,7 +5,7 @@ import type DeploymentsTableDataType from './types/DeploymentsTableDataType';
 interface DeploymentListProps {
     widget: Stage.Types.Widget<DeploymentListWidget.Configuration>;
     toolbox: Stage.Types.Toolbox;
-    data: DeploymentsTableDataType
+    data: DeploymentsTableDataType;
 }
 
 interface DeploymentListState {
@@ -17,7 +17,7 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
         super(props);
 
         this.state = {
-            error: null,
+            error: null
         };
     }
 
@@ -40,6 +40,10 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
         toolbox.getEventBus().off('deployments:refresh', this.refreshData);
     }
 
+    onDismiss() {
+        this.setState({ error: null });
+    }
+
     setError = (errorMessage: string) => {
         this.setState({ error: errorMessage });
     };
@@ -52,10 +56,6 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
     refreshData() {
         const { toolbox } = this.props;
         toolbox.refresh();
-    }
-
-    onDismiss() {
-        this.setState({ error: null });
     }
 
     render() {
@@ -77,4 +77,3 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
         );
     }
 }
-

@@ -8,12 +8,16 @@ type DeploymentLabelType = {
     value: string;
 };
 
-type DeploymentDataItem = {
-    id: string,
-    display_name: string,
-    blueprint_id: string,
-    labels: DeploymentLabelType[]
-} | Record<string, any>;
+type DeploymentDataItem =
+    | {
+          id: string;
+          // eslint-disable-next-line camelcase
+          display_name: string;
+          // eslint-disable-next-line camelcase
+          blueprint_id: string;
+          labels: DeploymentLabelType[];
+      }
+    | Record<string, any>;
 
 type DeploymentDataType = {
     items: DeploymentDataItem[];
@@ -39,27 +43,26 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
     hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
-    fetchData(_widget, toolbox, params) : Promise<DeploymentsTableDataType> {
+    fetchData(_widget, toolbox, params): Promise<DeploymentsTableDataType> {
         const deploymentDataPromise = new Stage.Common.DeploymentActions(toolbox).doGetDeployments({
-            _include:
-                'id,display_name,blueprint_id,labels',
+            _include: 'id,display_name,blueprint_id,labels',
             ...params
         });
 
-        return deploymentDataPromise
-            .then(function mapDataFetchedToTable(data: DeploymentDataType): DeploymentsTableDataType {
-                return {
-                    items: data.items.map(({id, display_name, blueprint_id, labels}) => ({
-                        id,
-                        display_name,
-                        blueprint_id,
-                        label: labels.find(
-                            (label: DeploymentLabelType) => label.key === 'system'
-                        )?.value
-                    })),
-                    total: _.get(data, 'metadata.pagination.total', 0)
-                }
-            });
+        return deploymentDataPromise.then(function mapDataFetchedToTable(
+            data: DeploymentDataType
+        ): DeploymentsTableDataType {
+            return {
+                // eslint-disable-next camelcase
+                items: data.items.map(({ id, display_name: displayName, blueprint_id: blueprintId, labels }) => ({
+                    id,
+                    displayName,
+                    blueprintId,
+                    label: labels.find((label: DeploymentLabelType) => label.key === 'system')?.value
+                })),
+                total: _.get(data, 'metadata.pagination.total', 0)
+            };
+        });
     },
 
     render(widget, data, _error, toolbox) {

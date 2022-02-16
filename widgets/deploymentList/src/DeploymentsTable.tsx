@@ -10,34 +10,23 @@ interface DeploymentsTableProps {
     noDataMessage: string;
 }
 
-const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
-    data,
-    fetchData,
-    noDataMessage,
-    widget
-}) => {
+const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({ data, fetchData, noDataMessage, widget }) => {
     const { DataTable } = Stage.Basic;
     const tableName = 'deploymentsTable';
-    
+
     const tableRowList = data.items.map(item => (
-        <DataTable.Row
-            id={`${tableName}_${item.id}`}
-            key={item.id}
-        >
+        <DataTable.Row id={`${tableName}_${item.id}`} key={item.id}>
             {/* ID */}
             <DataTable.Data>{item.id}</DataTable.Data>
 
             {/* Deployment Name */}
-            <DataTable.Data>{item.display_name}</DataTable.Data>
+            <DataTable.Data>{item.displayName}</DataTable.Data>
 
             {/* Blueprint Name */}
-            <DataTable.Data>{item.blueprint_id}</DataTable.Data>
+            <DataTable.Data>{item.blueprintId}</DataTable.Data>
 
             {/* Status */}
-            <DataTable.Data>
-                {item.label}
-            </DataTable.Data>
-
+            <DataTable.Data>{item.label}</DataTable.Data>
         </DataTable.Row>
     ));
 
@@ -59,6 +48,6 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
             {tableRowList}
         </DataTable>
     );
-}
+};
 
 export default DeploymentsTable;

@@ -3,5 +3,5 @@ export declare namespace DeploymentListWidget {
         pageSize: number;
         sortColumn: string;
         sortAscending: boolean;
-    }
-};
+    };
+}

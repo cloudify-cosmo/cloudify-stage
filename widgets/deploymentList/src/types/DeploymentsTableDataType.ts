@@ -1,7 +1,7 @@
 type DeploymentsTableItemType = {
     id: string;
-    display_name: string;
-    blueprint_id: string;
+    displayName: string;
+    blueprintId: string;
     label: string;
 };
 
