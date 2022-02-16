@@ -108,6 +108,7 @@ const authenticatedApiRoutes: Record<string, Router> = {
     applications: Applications,
     bud: BlueprintUserData,
     clientConfig: ClientConfig,
+    contactDetails: ContactDetails,
     file: File,
     filters: Filters,
     github: GitHub,
@@ -137,8 +138,6 @@ app.use(`${contextPath}/external`, External); // used to get images for blueprin
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
 app.use(`${contextPath}/maps`, Maps);
-// NOTE: Just for developer purposes, after finishing working on the functionality, move it to authenticatedApiRoutes array
-app.use(`${contextPath}/contactDetails`, ContactDetails);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {

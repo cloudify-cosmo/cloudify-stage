@@ -7,8 +7,7 @@ import Internal from '../../utils/Internal';
 import { useManager } from '../GettingStartedModal/common/managerHooks';
 
 interface ContactDetailsResponse {
-    // eslint-disable-next-line camelcase
-    details_received: boolean;
+    contactDetailsReceived: boolean;
 }
 
 const useModalOpenState = () => {
@@ -23,7 +22,7 @@ const useModalOpenState = () => {
     useEffect(() => {
         if (userIsUsingCommunity) {
             internal.doGet('contactDetails/').then((response: ContactDetailsResponse) => {
-                if (!response.details_received) {
+                if (!response.contactDetailsReceived) {
                     openModal();
                 }
             });
