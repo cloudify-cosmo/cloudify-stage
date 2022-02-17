@@ -39,11 +39,15 @@ const saveContactDetailsData = (contactDetails: ContactDetails) => {
 
 const submitContactDetails = async (contactDetails: ContactDetails, token: string) => {
     try {
-        const hubspotResponse = (await jsonRequest('post', '/contacts', {
-            body: contactDetails,
-            'Authentication-Token': token
-        })) as HubspotResponse;
-        jsonRequest('post', '/license', { body: hubspotResponse, 'Authentication-Token': token });
+        const hubspotResponse = (await jsonRequest(
+            'post',
+            '/contacts',
+            {
+                'Authentication-Token': token
+            },
+            contactDetails
+        )) as HubspotResponse;
+        await jsonRequest('post', '/license', { 'Authentication-Token': token }, hubspotResponse);
     } catch (error) {
         logger.error(error);
     }
@@ -63,14 +67,15 @@ router.get('/', async (req, res) => {
     // Because of that, the functionality below is implemented after sending a response to the user
     if (!contactDetailsReceived) return;
 
-    const { customer_id: customerId } = (await jsonRequest('get', '/license', {
-        'Authentication-Token': token
-    })) as HubspotResponse;
-
-    // If customerId is assigned then hubspot submission is complete
-    if (customerId) return;
-
-    submitContactDetails(getStoredContactDetails(), token);
+    try {
+        await jsonRequest('get', '/license-check', {
+            'Authentication-Token': token
+        });
+    } catch (error) {
+        // Customer ID not found
+        logger.debug(error);
+        submitContactDetails(getStoredContactDetails(), token);
+    }
 });
 
 router.post(

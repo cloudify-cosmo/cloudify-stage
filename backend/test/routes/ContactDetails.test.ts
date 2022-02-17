@@ -25,7 +25,7 @@ describe('/contactDetails endpoint', () => {
     it('allows to get positive submission status when hubspot request was not done', () => {
         (<jest.Mock>fs.existsSync).mockReturnValueOnce(true);
         (<jest.Mock>fs.readFileSync).mockReturnValueOnce('{}');
-        (<jest.Mock>jsonRequest).mockResolvedValue({});
+        (<jest.Mock>jsonRequest).mockRejectedValueOnce({});
         return request(app)
             .get('/console/contactDetails')
             .then(response => {
