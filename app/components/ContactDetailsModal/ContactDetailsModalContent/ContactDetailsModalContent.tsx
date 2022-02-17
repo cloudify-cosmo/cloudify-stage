@@ -6,7 +6,7 @@ import { FormFieldType, formFields, requiredFormFields } from './formFields';
 import CheckboxLabel from './CheckboxLabel';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
-import { useManager } from '../../GettingStartedModal/common/managerHooks';
+import useManager from '../../../utils/hooks/useManager';
 import Internal from '../../../utils/Internal';
 
 const t = StageUtils.getT('contactDetailsModal.form');

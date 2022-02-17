@@ -4,7 +4,7 @@ import { useBoolean } from '../../utils/hooks';
 import { ReduxState } from '../../reducers';
 import consts from '../../utils/consts';
 import Internal from '../../utils/Internal';
-import { useManager } from '../GettingStartedModal/common/managerHooks';
+import useManager from '../../utils/hooks/useManager';
 
 interface ContactDetailsResponse {
     contactDetailsReceived: boolean;
