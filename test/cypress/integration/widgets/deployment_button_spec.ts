@@ -127,8 +127,8 @@ describe('Create Deployment Button widget', () => {
     const verifyDeploymentInstallStarted = deploymentId => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
-            expect(response.body.items[0].parameters['xxx']).to.be.equal('hello');
-            expect(response.body.items[0].parameters['yyy']).to.be.equal('world');
+            expect(response.body.items[0].parameters.xxx).to.be.equal('hello');
+            expect(response.body.items[0].parameters.yyy).to.be.equal('world');
             expect(response.body.items[0].is_dry_run).to.be.true;
         });
     };
