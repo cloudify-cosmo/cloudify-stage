@@ -1,14 +1,16 @@
 import type { FunctionComponent } from 'react';
 import type {
+    Errors,
     Workflow,
     WorkflowOptions,
     WorkflowParameters,
     OnDateInputChange,
-    OnCheckboxChange,
     OnDropdownChange,
-    Errors
+    OnCheckboxChange
 } from './types';
+
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+
 import { executeWorkflow, getWorkflowName } from './common';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -133,17 +135,17 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             force,
             dryRun,
             queue,
-            setErrors: (err: Errors) => {
-                if (typeof err === 'string') {
-                    setErrors({ errors: err });
-                } else {
-                    setErrors(err);
-                }
-            },
             unsetLoading,
             clearErrors,
             onExecute,
             onHide
+        }).catch((err: Errors) => {
+            if (typeof err === 'string') {
+                setErrors({ errors: err });
+            } else {
+                setErrors(err);
+            }
+            unsetLoading();
         });
     }
 

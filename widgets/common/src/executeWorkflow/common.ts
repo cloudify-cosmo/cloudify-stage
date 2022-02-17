@@ -21,7 +21,6 @@ interface ExecuteWorkflowParams extends CommonExecuteWorflowProps {
     setLoading: () => void;
     toolbox: Stage.Types.Toolbox;
     workflow: string | Workflow;
-    setErrors: (errors: Errors) => void;
     unsetLoading: () => void;
     clearErrors: () => void;
     onExecute: (
@@ -48,19 +47,17 @@ export const executeWorkflow = ({
     force,
     dryRun,
     queue,
-    setErrors,
     unsetLoading,
     clearErrors,
     onExecute,
     onHide = () => {}
-}: ExecuteWorkflowParams) => {
+}: ExecuteWorkflowParams): Promise<void | boolean[] | Errors> => {
     const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Errors = {};
 
     const name = getWorkflowName(workflow);
     if (!name) {
-        setErrors(t('errors.missingWorkflow'));
-        return false;
+        return Promise.reject(t('errors.missingWorkflow'));
     }
 
     const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
@@ -71,8 +68,7 @@ export const executeWorkflow = ({
     }
 
     if (!_.isEmpty(validationErrors)) {
-        setErrors(validationErrors);
-        return false;
+        return Promise.reject(validationErrors);
     }
 
     const workflowParameters = InputsUtils.getInputsMap(baseWorkflowInputs, userWorkflowInputsState);
@@ -85,12 +81,11 @@ export const executeWorkflow = ({
             scheduledTime: normalizeScheduledTime(schedule, scheduledTime)
         });
         onHide();
-        return true;
+        return Promise.resolve();
     }
 
     if (_.isEmpty(deploymentsList)) {
-        setErrors(t('errors.missingDeployment'));
-        return false;
+        return Promise.reject(t('errors.missingDeployment'));
     }
 
     setLoading();
@@ -114,8 +109,5 @@ export const executeWorkflow = ({
             });
     });
 
-    return Promise.all(executePromises).catch(err => {
-        unsetLoading();
-        setErrors(err.message);
-    });
+    return Promise.all(executePromises);
 };
