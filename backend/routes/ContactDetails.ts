@@ -25,7 +25,7 @@ interface HubspotResponse {
 }
 /* eslint-enable camelcase */
 
-// Reading the data from the stored file (which definition is described with the usage of StoredContactDetails)
+// Reading the data from the stored file
 const getStoredContactDetails = (): ContactDetails => {
     // Synchronised methods were used, as they are more common in the backend that async methods
     const fileContent = fs.readFileSync(contactDetailsFilePath, 'utf8');
