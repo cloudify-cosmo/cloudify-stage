@@ -25,6 +25,41 @@
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
     },
+    "contactDetailsModal": {
+        "header": "Welcome to Cloudify",
+        "form": {
+            "fields": {
+                "firstName": {
+                    "label": "First name",
+                    "validationMessage": "Please provide a valid first name, which should be between 2 to 20 characters long"
+                },
+                "lastName": {
+                    "label": "Last name",
+                    "validationMessage": "Please provide a valid last name, which should be between 2 and 20 characters long"
+                },
+                "email": {
+                    "label": "Email address",
+                    "validationMessage": "Please provide a valid email address"
+                },
+                "phone": {
+                    "label": "Phone number",
+                    "validationMessage": "Please provide a valid phone number, which should consists only of 4 - 20 digits"
+                },
+                "isEULA": {
+                    "label": "By registering for the Cloudify Hosted Service you agree to the <a href=\"https://cloudify.co/license\" target=\"_blank\" onclick=\"event.stopPropagation();\">Hosted Trial End User License Agreement</a>"
+                },
+                "isSendServicesDetails": {
+                    "label": "Cloudify uses the information provided to send you your service details. For more information see our <a href=\"https://cloudify.co/privacy-policy/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>"
+                }
+            },
+            "validation": {
+                "isFieldRequired": "Field is required"
+            },
+            "buttons": {
+                "submit": "Continue"
+            }
+        }
+    },
     "gettingStartedModal": {
         "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
