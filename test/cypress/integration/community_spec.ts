@@ -43,10 +43,10 @@ describe('Community version', () => {
         cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: false });
         cy.refreshTemplate();
 
-        cy.typeToFieldInput('First name', 'Ja');
-        cy.typeToFieldInput('Last name', 'Ma');
-        cy.typeToFieldInput('Email address', 'a@o.pl');
-        cy.typeToFieldInput('Phone number', '1234');
+        cy.getField('First name').find('input').clear().type('Ja');
+        cy.getField('Last name').find('input').clear().type('Ma');
+        cy.getField('Email address').find('input').clear().type('a@o.pl');
+        cy.getField('Phone number').find('input').clear().type('1234');
         cy.contains('Cloudify Hosted Service').click();
 
         cy.intercept('POST', '/console/contactDetails').as('contactDetailsSubmit');
