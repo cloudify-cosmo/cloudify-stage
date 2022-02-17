@@ -69,32 +69,41 @@ describe('Create Deployment Button widget', () => {
         cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
-    const fillFields = (deploymentId, deploymentName, blueprintId) => {
-        cy.setSearchableDropdownValue('Blueprint', blueprintId);
-        cy.get('input[name="deploymentName"]').click().type(deploymentName);
-        cy.openAccordionSection('Advanced');
-        cy.get('input[name="deploymentId"]').clear().type(deploymentId);
-    };
-
     const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
         cy.get('div.deployBlueprintModal').within(() => {
-            fillFields(deploymentId, deploymentName, blueprintId);
+            cy.setSearchableDropdownValue('Blueprint', blueprintId);
+            cy.get('input[name="deploymentName"]').click().type(deploymentName);
+            cy.openAccordionSection('Advanced');
+            cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
-            cy.withinAccordionSection('Deployment Inputs', () => {
-                // check hidden input is not rendered
-                cy.get('.field')
-                    .should('have.length', 1)
-                    .should('have.class', 'field')
-                    .within(() => {
-                        cy.contains('label', 'Server IP');
-                        cy.get('textarea').type('127.0.0.1');
+            if (blueprintId === customInstallWorkflowBlueprint) {
+                cy.withinAccordionSection('Install', () => {
+                    cy.getField('xxx').within(() => {
+                        cy.get('textarea').should('have.text', 'blabla');
                     });
-            });
+                    cy.getField('yyy').within(() => {
+                        cy.get('textarea').should('have.text', 'blabla');
+                    });
+                });
+            }
+
+            if (blueprintId === testBlueprintId) {
+                cy.withinAccordionSection('Deployment Inputs', () => {
+                    // check hidden input is not rendered
+                    cy.get('.field')
+                        .should('have.length', 1)
+                        .should('have.class', 'field')
+                        .within(() => {
+                            cy.contains('label', 'Server IP');
+                            cy.get('textarea').type('127.0.0.1');
+                        });
+                });
+            }
         });
     };
 
-    const deployBlueprint = (deploymentId, deploymentName, install = false) => {
-        fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
+    const deployBlueprint = (deploymentId, deploymentName, install = false, blueprintId = testBlueprintId) => {
+        fillDeployBlueprintModal(deploymentId, deploymentName, blueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
             if (install) {
@@ -117,6 +126,7 @@ describe('Create Deployment Button widget', () => {
     const verifyDeploymentInstallStarted = deploymentId => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
+
         });
     };
 
@@ -157,27 +167,10 @@ describe('Create Deployment Button widget', () => {
     it('allows to deploy and install a blueprint', () => {
         const deploymentName = `${resourcePrefix}deployAndInstall`;
         const deploymentId = `${deploymentName}Id`;
-        deployBlueprint(deploymentId, deploymentName, true);
-        verifyBlueprintDeployed(testBlueprintId, deploymentId);
+        deployBlueprint(deploymentId, deploymentName, true, customInstallWorkflowBlueprint);
+        verifyBlueprintDeployed(customInstallWorkflowBlueprint, deploymentId);
         verifyRedirectionToDeploymentPage(deploymentId, deploymentName);
         verifyDeploymentInstallStarted(deploymentId);
-    });
-
-    it('blueprint with custom install workflow', () => {
-        const deploymentName = `${resourcePrefix}customeInstallWorkflow`;
-        const deploymentId = `${deploymentName}Id`;
-
-        cy.get('div.deployBlueprintModal').within(() => {
-            fillFields(deploymentId, deploymentName, customInstallWorkflowBlueprint);
-            cy.withinAccordionSection('Install', () => {
-                cy.getField('xxx').within(() => {
-                    cy.get('textarea').should('have.text', 'blabla');
-                });
-                cy.getField('yyy').within(() => {
-                    cy.get('textarea').should('have.text', 'blabla');
-                });
-            });
-        });
     });
 
     describe('handles errors during deploy & install process', () => {
