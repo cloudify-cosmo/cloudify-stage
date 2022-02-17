@@ -58,7 +58,7 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
                     id,
                     displayName,
                     blueprintId,
-                    label: labels.find((label: DeploymentLabelType) => label.key === 'system')?.value
+                    label: labels.find((label: DeploymentLabelType) => label.key === 'status')?.value
                 })),
                 total: _.get(data, 'metadata.pagination.total', 0)
             };
