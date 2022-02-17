@@ -25,6 +25,7 @@ import Applications from './routes/Applications';
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
 import ClientConfig from './routes/ClientConfig';
+import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -107,6 +108,7 @@ const authenticatedApiRoutes: Record<string, Router> = {
     applications: Applications,
     bud: BlueprintUserData,
     clientConfig: ClientConfig,
+    contactDetails: ContactDetails,
     file: File,
     filters: Filters,
     github: GitHub,
