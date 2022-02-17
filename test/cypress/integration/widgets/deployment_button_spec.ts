@@ -4,6 +4,8 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
+    const customInstallWorkflowParam1 = 'hello';
+    const customInstallWorkflowParam2 = 'world';
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -79,10 +81,10 @@ describe('Create Deployment Button widget', () => {
             if (blueprintId === customInstallWorkflowBlueprint) {
                 cy.withinAccordionSection('Install', () => {
                     cy.getField('xxx').within(() => {
-                        cy.get('textarea').should('have.text', 'blabla').clear().type('hello');
+                        cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam1);
                     });
                     cy.getField('yyy').within(() => {
-                        cy.get('textarea').should('have.text', 'blabla').clear().type('world');
+                        cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam2);
                     });
                     cy.getField('Dry run').within(() => cy.get('input[type="checkbox"]').click({ force: true }));
                 });
@@ -127,8 +129,8 @@ describe('Create Deployment Button widget', () => {
     const verifyDeploymentInstallStarted = deploymentId => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
-            expect(response.body.items[0].parameters.xxx).to.be.equal('hello');
-            expect(response.body.items[0].parameters.yyy).to.be.equal('world');
+            expect(response.body.items[0].parameters.xxx).to.be.equal(customInstallWorkflowParam1);
+            expect(response.body.items[0].parameters.yyy).to.be.equal(customInstallWorkflowParam2);
             expect(response.body.items[0].is_dry_run).to.be.true;
         });
     };
