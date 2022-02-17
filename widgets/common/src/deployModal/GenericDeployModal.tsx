@@ -333,7 +333,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         installWorkflowParameters?: WorkflowParameters,
         installWorkflowOptions?: WorkflowOptions
     ) {
-        this.setState({ loading: true, errors: {} });
+        this.setState({ activeSection: -1, loading: true, errors: {} });
         this.setLoadingMessage(validationMessage);
 
         let stepPromise = this.validateInputs();
@@ -397,7 +397,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentId
         } = this.state;
         const deploymentsList: string[] = _.compact([deploymentId]);
-        this.setState({ loading: true, errors: {} });
+        this.setState({ activeSection: -1, loading: true, errors: {} });
         return this.validateInputs()
             .then(() =>
                 executeWorkflow({
