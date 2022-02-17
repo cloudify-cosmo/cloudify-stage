@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
-import { Modal, Form, ApproveButton } from '../../basic';
+import { Modal, Form, ApproveButton, UnsafelyTypedFormField } from '../../basic';
 import type { FormField } from './formFields';
 import { FormFieldType, formFields, requiredFormFields } from './formFields';
 import CheckboxLabel from './CheckboxLabel';
@@ -86,7 +86,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {formFields.map(formField => (
-                        <Form.Field key={formField.name} required={formField.isRequired}>
+                        <UnsafelyTypedFormField key={formField.name} required={formField.isRequired}>
                             {formField.type === FormFieldType.Text ? (
                                 <Form.Input
                                     type="text"
@@ -105,7 +105,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                                     onChange={setFormInputs}
                                 />
                             )}
-                        </Form.Field>
+                        </UnsafelyTypedFormField>
                     ))}
                 </Form>
             </Modal.Content>
