@@ -9,6 +9,7 @@ describe('Community version', () => {
             });
             cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
             cy.intercept('/console/config', { fixture: 'community/config.json' });
+            cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: true });
             cy.usePageMock().login();
         });
     });
@@ -36,5 +37,30 @@ describe('Community version', () => {
             'href',
             'https://cloudify.co/license-community/'
         );
+    });
+
+    it('should display contact details modal', () => {
+        cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: false });
+        cy.refreshTemplate();
+
+        cy.typeToFieldInput('First name', 'Ja');
+        cy.typeToFieldInput('Last name', 'Ma');
+        cy.typeToFieldInput('Email address', 'a@o.pl');
+        cy.typeToFieldInput('Phone number', '1234');
+        cy.contains('Cloudify Hosted Service').click();
+
+        cy.intercept('POST', '/console/contactDetails').as('contactDetailsSubmit');
+        cy.clickButton('Continue');
+        cy.wait('@contactDetailsSubmit').then(({ request, response }) => {
+            expect(request.body).to.deep.equal({
+                first_name: 'Ja',
+                last_name: 'Ma',
+                email: 'a@o.pl',
+                phone: '1234',
+                is_eula: true
+            });
+            expect(response?.statusCode).to.equal(200);
+        });
+        cy.get('.modal').should('not.exist');
     });
 });
