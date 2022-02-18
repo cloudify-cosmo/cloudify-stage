@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import GenericDeployModal from './GenericDeployModal';
+import GenericDeployModal from './deployModal/GenericDeployModal';
 
 function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, toolbox }) {
     const { useEffect } = React;

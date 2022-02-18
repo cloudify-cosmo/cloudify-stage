@@ -1216,10 +1216,8 @@ describe('Deployments View widget', () => {
                 cy.get('[aria-label=Add]').click();
                 cy.get('a.label').should('be.visible');
 
-                cy.contains('Install').click();
+                cy.clickButton('Install');
             });
-
-            cy.contains('.modal button', 'Execute').click();
 
             cy.wait('@searchDeployments');
             cy.wait('@createDeploymentGroup').then(({ request }) => {

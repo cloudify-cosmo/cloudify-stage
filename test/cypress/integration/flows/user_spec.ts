@@ -62,7 +62,6 @@ describe('User flow', () => {
         cy.get('input[name=deploymentName]').type(resourceName);
         cy.clickButton('Install');
 
-        cy.clickButton('Execute');
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
         cy.waitForExecutionToEnd('install', { deploymentDisplayName: resourceName });

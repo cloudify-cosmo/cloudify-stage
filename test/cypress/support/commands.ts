@@ -16,6 +16,7 @@ import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/typ
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import Consts from 'app/utils/consts';
 
+import { secondsToMs } from './resource_commons';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -85,7 +86,7 @@ const commands = {
     waitUntilLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
-            .get('#loader', { timeout: 20000 })
+            .get('#loader', { timeout: secondsToMs(25) })
             .should('be.not.visible')
             .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>

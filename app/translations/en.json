@@ -620,7 +620,8 @@
                         "deploymentInputs": "Deployment Inputs",
                         "deploymentMetadata": "Deployment Metadata",
                         "executionParameters": "Execution Parameters",
-                        "advanced": "Advanced"
+                        "advanced": "Advanced",
+                        "install": "Install"
                     },
                     "buttons": {
                         "showDataTypes": "Show Data Types",
