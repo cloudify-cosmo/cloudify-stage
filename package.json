@@ -55,7 +55,7 @@
     "better-console": "^0.2.4",
     "blueimp-md5": "^2.7.0",
     "cloudify-blueprint-topology": "^2.5.5",
-    "cloudify-ui-common": "^5.1.2",
+    "cloudify-ui-common": "^5.2.0",
     "cloudify-ui-components": "^2.12.1",
     "connected-react-router": "^6.5.2",
     "d3": "^3.5.17",
