@@ -1,7 +1,6 @@
 import type { LatLngBounds, MapOptions } from 'leaflet';
 import { siteToLatLng, SiteWithPosition } from './site';
 
-// eslint-disable-next-line import/prefer-default-export
 export function getMapOptions(sites: SiteWithPosition[]): { options: MapOptions; bounds?: LatLngBounds } {
     const { initialZoom, mapOptions: defaultMapOptions } = Stage.Common.Consts.leaflet;
     const mapOptions: MapOptions = { ...defaultMapOptions };

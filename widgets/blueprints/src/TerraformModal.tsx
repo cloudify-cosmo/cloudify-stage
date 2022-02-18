@@ -26,7 +26,6 @@ function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfi
         <Input
             name={name}
             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
         >
             <input maxLength={inputMaxLength} />
@@ -42,7 +41,6 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
                 selection
                 options={options}
                 onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...rest}
             />
         );

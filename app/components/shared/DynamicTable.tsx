@@ -58,9 +58,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                                             value={val[id]}
                                             rowValues={val}
                                             onChange={handleEditRow(id, index)}
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
                                             {...rest}
-                                            // eslint-disable-next-line react/jsx-props-no-spreading
                                             {...columnRest}
                                         />
                                     </Table.Cell>

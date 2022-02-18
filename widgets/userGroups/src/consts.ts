@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const menuActions = {
     editUsers: 'users',
     editTenants: 'tenants',

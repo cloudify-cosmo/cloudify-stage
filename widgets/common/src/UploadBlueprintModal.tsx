@@ -96,7 +96,6 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
             .doUpload(blueprintName, {
                 blueprintYamlFile,
                 blueprintUrl,
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 file: blueprintFile!,
                 imageUrl,
                 image: imageFile,

@@ -51,14 +51,12 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
     useEffect(() => {
         dispatch(setTemplateManagementActive(true));
         // NOTE: use void to return `undefined` from the cleanup handler (fix a type error)
-        // eslint-disable-next-line no-void
         return () => void dispatch(setTemplateManagementActive(false));
     }, []);
 
     useEffect(() => {
         dispatch(setPageEditMode(isEditMode));
         // NOTE: use void to return `undefined` from the cleanup handler (fix a type error)
-        // eslint-disable-next-line no-void
         return () => void dispatch(setPageEditMode(false));
     }, []);
 

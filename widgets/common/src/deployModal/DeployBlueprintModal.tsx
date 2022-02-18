@@ -72,7 +72,6 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
 
     return (
         <GenericDeployModal
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
             toolbox={toolbox}
             onHide={onHide}

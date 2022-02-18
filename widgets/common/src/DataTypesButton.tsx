@@ -200,7 +200,6 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
 export default DataTypesButton;
 
 declare global {
-    // eslint-disable-next-line import/prefer-default-export
     namespace Stage.Common {
         export { DataTypesButton };
     }

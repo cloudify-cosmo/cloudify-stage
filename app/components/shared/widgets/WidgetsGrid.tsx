@@ -24,7 +24,6 @@ function renderWidgetGridItem<Configuration>(widgetProps: WidgetOwnProps<Configu
             className={`widget ${widgetDefId}Widget`}
             maximized={widget.maximized}
         >
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Widget {...widgetProps} />
         </GridItem>
     );

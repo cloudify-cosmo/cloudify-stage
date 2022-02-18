@@ -6,7 +6,6 @@ import { userPageGroupsFolder } from './PageGroupsHandler';
 
 const logger = getLogger('TemplatesHandler');
 
-// eslint-disable-next-line import/prefer-default-export
 export function init() {
     return new Promise<void>((resolve, reject) => {
         try {

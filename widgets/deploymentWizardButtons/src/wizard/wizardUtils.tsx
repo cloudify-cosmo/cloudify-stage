@@ -8,7 +8,6 @@ function getDisplayName(WrappedComponent) {
 
 function createStepContent(ContentComponent, id) {
     function StepContentComponent(props) {
-        // eslint-disable-next-line react/jsx-props-no-spreading
         return <ContentComponent id={id} {...props} />;
     }
 
@@ -21,7 +20,6 @@ function createStepContent(ContentComponent, id) {
 
 function createStepActions(ActionsComponent, id) {
     function StepActionsComponent(props) {
-        // eslint-disable-next-line react/jsx-props-no-spreading
         return <ActionsComponent id={id} {...props} />;
     }
 

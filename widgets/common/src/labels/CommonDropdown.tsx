@@ -25,7 +25,6 @@ interface CommonDropdownProps
 }
 
 const CommonDropdown: FunctionComponent<CommonDropdownProps> = ({ allowAdditions = false, ...rest }) =>
-    // eslint-disable-next-line react/jsx-props-no-spreading
     allowAdditions ? <CommonDropdownWithAdditions {...rest} /> : <CommonDropdownWithoutAdditions {...rest} />;
 export default CommonDropdown;
 
@@ -48,7 +47,6 @@ const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
             onChange={v => onChange(v as any)}
             selectOnNavigation
             value={value}
-            /* eslint-disable-next-line react/jsx-props-no-spreading */
             {...rest}
         />
     );
@@ -94,7 +92,6 @@ const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = (
                 }
                 searchQuery={inputValue}
                 value={value}
-                /* eslint-disable-next-line react/jsx-props-no-spreading */
                 {...rest}
             />
         </>
