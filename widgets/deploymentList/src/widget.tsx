@@ -1,7 +1,5 @@
-import DeploymentsList from './DeploymentsList';
-
-import type DeploymentsTableDataType from './types/DeploymentsTableDataType';
-import type { DeploymentListWidget } from './types/DeploymentList';
+import DeploymentList from './DeploymentList';
+import type { DeploymentListWidget, DeploymentsTableDataType } from './types';
 
 type DeploymentLabelType = {
     key: string;
@@ -72,6 +70,6 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
             return <Loading />;
         }
 
-        return <DeploymentsList widget={widget} data={data} toolbox={toolbox} />;
+        return <DeploymentList widget={widget} data={data} toolbox={toolbox} />;
     }
 });

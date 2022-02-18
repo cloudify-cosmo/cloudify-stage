@@ -1,6 +1,4 @@
-import DeploymentsTable from './DeploymentsTable';
-import { DeploymentListWidget } from './types/DeploymentList';
-import type DeploymentsTableDataType from './types/DeploymentsTableDataType';
+import type { DeploymentListWidget, DeploymentsTableDataType } from './types';
 
 interface DeploymentListProps {
     widget: Stage.Types.Widget<DeploymentListWidget.Configuration>;
@@ -58,21 +56,57 @@ export default class DeploymentList extends React.Component<DeploymentListProps,
         toolbox.refresh();
     }
 
-    render() {
-        const { error } = this.state;
+    renderDeploymentTable() {
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Deployments available.';
+
+        const { DataTable } = Stage.Basic;
+        const tableName = 'deploymentsTable';
+
+        const tableRowList = data.items.map(item => (
+            <DataTable.Row id={`${tableName}_${item.id}`} key={item.id}>
+                {/* ID */}
+                <DataTable.Data>{item.id}</DataTable.Data>
+
+                {/* Deployment Name */}
+                <DataTable.Data>{item.displayName}</DataTable.Data>
+
+                {/* Blueprint Name */}
+                <DataTable.Data>{item.blueprintId}</DataTable.Data>
+
+                {/* Status */}
+                <DataTable.Data>{item.label}</DataTable.Data>
+            </DataTable.Row>
+        ));
+
+        return (
+            <DataTable
+                fetchData={this.fetchData}
+                totalSize={data.total}
+                pageSize={widget.configuration.pageSize}
+                sortColumn={widget.configuration.sortColumn}
+                sortAscending={widget.configuration.sortAscending}
+                className={tableName}
+                noDataMessage={NO_DATA_MESSAGE}
+            >
+                <DataTable.Column label="ID" name="id" />
+                <DataTable.Column label="Deployment Name" name="display_name" width="30%" />
+                <DataTable.Column label="Blueprint Name" name="blueprint_id" width="30%" />
+                <DataTable.Column label="Status" width="10%" />
+
+                {tableRowList}
+            </DataTable>
+        );
+    }
+
+    render() {
+        const { error } = this.state;
         const { ErrorMessage } = Stage.Basic;
 
         return (
             <>
                 <ErrorMessage error={error} onDismiss={this.onDismiss} autoHide />
-                <DeploymentsTable
-                    widget={widget}
-                    data={data}
-                    fetchData={this.fetchData}
-                    noDataMessage={NO_DATA_MESSAGE}
-                />
+                {this.renderDeploymentTable()}
             </>
         );
     }
