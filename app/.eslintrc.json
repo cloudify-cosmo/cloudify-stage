@@ -6,8 +6,7 @@
     ],
     "rules": {
         "no-console": "error",
-        "prefer-promise-reject-errors": "off",
-        "@typescript-eslint/no-namespace": "off"
+        "prefer-promise-reject-errors": "off"
     },
     "env": {
         "jquery": true
