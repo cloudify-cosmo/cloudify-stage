@@ -454,8 +454,10 @@ describe('Filters widget', () => {
             withinLastRuleRow(() => {
                 const searchEndpoint: Record<FilterRuleRowType, string> = {
                     blueprint_id: 'blueprints',
-                    site_name: 'sites',
                     created_by: 'users',
+                    display_name: 'deployments',
+                    site_name: 'sites',
+                    tenant_name: 'tenants',
                     label: '' // NOTE: Only endpoints for attribute rules are necessary
                 };
 
