@@ -103,8 +103,19 @@ export function importWidgetBackend(widgetId, isCustom = true) {
     }
     const backendFile = pathlib.resolve(widgetsFolder, widgetId, getConfig().app.widgets.backendFilename);
 
-    if (fs.existsSync(backendFile)) {
-        logger.info(`-- initializing file ${backendFile}`);
+    function importWidgetBackendFromFile(extensions: string[]) {
+        if (extensions.length === 0) {
+            return Promise.resolve();
+        }
+
+        const extension = extensions.pop();
+
+        const backendFileWithExtension = `${backendFile}.${extension}`;
+        if (!fs.existsSync(backendFileWithExtension)) {
+            return importWidgetBackendFromFile(extensions);
+        }
+
+        logger.info(`-- initializing file ${backendFileWithExtension}`);
 
         try {
             const vm = new NodeVM({
@@ -118,11 +129,11 @@ export function importWidgetBackend(widgetId, isCustom = true) {
                     external: getConfig().app.widgets.allowedModules
                 },
                 compiler: source => ts.transpile(source, tsConfig.compilerOptions),
-                sourceExtensions: ['ts']
+                sourceExtensions: getConfig().app.widgets.backendFilenameExtensions
             });
 
             const script = `
-                    import backend from '${backendFile}';
+                    import backend from '${backendFileWithExtension.replace('\\', '\\\\')}';
                     module.exports = new Promise((resolve, reject) => {
                          try {
                              if (_.isFunction(backend)) {
@@ -137,12 +148,14 @@ export function importWidgetBackend(widgetId, isCustom = true) {
 
             return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`));
         } catch (err) {
-            logger.info('reject', backendFile);
-            return Promise.reject(`Error during importing widget backend from file ${backendFile} - ${err.message}`);
+            logger.info('reject', backendFileWithExtension);
+            return Promise.reject(
+                `Error during importing widget backend from file ${backendFileWithExtension} - ${err.message}`
+            );
         }
-    } else {
-        return Promise.resolve();
     }
+
+    return importWidgetBackendFromFile([...getConfig().app.widgets.backendFilenameExtensions]);
 }
 
 export function initWidgetBackends() {

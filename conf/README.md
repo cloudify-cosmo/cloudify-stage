@@ -26,7 +26,8 @@ The following section describes different configuration files used in cloudify-s
   * `ignoreFolders` - array of strings, list of directories to be ignored when importing widgets 
   * `tempDir` - string, directory name used to store widgets temporary files 
   * `requiredFiles` - array of strings, list of filenames required to properly load widget
-  * `backendFilename` - string, name of the file containing widget backend inside widget directory
+  * `backendFilename` - string, name of the file containing widget backend inside widget directory (excluding file extension)
+  * `backendFilenameExtensions` - array of strings, list of supported extensions for backend file
 
 * `ssl` - object, configuration for SSL connection
   * `ca` - string, absolute path to SSL CA certificate

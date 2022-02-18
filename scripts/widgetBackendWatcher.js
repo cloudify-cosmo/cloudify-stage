@@ -4,7 +4,7 @@ const path = require('path');
 
 const appConfig = require('../conf/config.json');
 
-const widgetBackendFilename = appConfig.widgets.backendFilename;
+const widgetBackendFilename = `${appConfig.widgets.backendFilename}.${appConfig.widgets.backendFilenameExtensions[0]}`;
 const widgetBackendFilesGlob = `./widgets/*/src/${widgetBackendFilename}`;
 
 const logger = {
