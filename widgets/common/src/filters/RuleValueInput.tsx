@@ -2,7 +2,14 @@ import type { FunctionComponent } from 'react';
 
 import type { FilterRule } from './types';
 import { FilterRuleRowType } from './types';
-import { BlueprintValueInput, SiteNameValueInput, CreatorValueInput, LabelValueInput } from './inputs';
+import {
+    BlueprintValueInput,
+    CreatorValueInput,
+    DisplayNameValueInput,
+    SiteNameValueInput,
+    TenantNameValueInput,
+    LabelValueInput
+} from './inputs';
 
 interface RuleValueInputProps {
     onKeyChange: (key: string) => void;
@@ -26,10 +33,15 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
     switch (ruleType) {
         case FilterRuleRowType.Blueprint:
             return <BlueprintValueInput {...attributeInputProps} />;
-        case FilterRuleRowType.SiteName:
-            return <SiteNameValueInput {...attributeInputProps} />;
         case FilterRuleRowType.Creator:
             return <CreatorValueInput {...attributeInputProps} />;
+        case FilterRuleRowType.DisplayName:
+            return <DisplayNameValueInput {...attributeInputProps} />;
+        case FilterRuleRowType.SiteName:
+            return <SiteNameValueInput {...attributeInputProps} />;
+        case FilterRuleRowType.TenantName:
+            return <TenantNameValueInput {...attributeInputProps} />;
+
         case FilterRuleRowType.Label:
             return (
                 <LabelValueInput
