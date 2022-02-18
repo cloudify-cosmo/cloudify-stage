@@ -42,9 +42,11 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchData(_widget, toolbox, params): Promise<DeploymentsTableDataType> {
-        const deploymentDataPromise = new Stage.Common.DeploymentActions(toolbox).doGetDeployments({
-            _include: 'id,display_name,blueprint_id,labels',
-            ...params
+        const deploymentDataPromise = toolbox.getManager().doGet(`/deployments`, {
+            params: {
+                _include: 'id,display_name,blueprint_id,labels',
+                ...params
+            }
         });
 
         return deploymentDataPromise.then(function mapDataFetchedToTable(
