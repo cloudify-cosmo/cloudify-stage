@@ -1,14 +1,21 @@
-import type { AccordionTitleProps } from 'semantic-ui-react';
+import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
 import type { ChangeEvent } from 'react';
-import Consts from './Consts';
-import MissingSecretsError from './MissingSecretsError';
-import AccordionSectionWithDivider from './AccordionSectionWithDivider';
-import DeplomentInputsSection from './deployModal/DeploymentInputsSection';
-import DeployModalActions from './deployModal/DeployModalActions';
-import type { Workflow, WorkflowParameters, WorkflowOptions } from './executeWorkflow';
-import type { DropdownValue, Field } from './types';
-import type { BlueprintDeployParams } from './BlueprintActions';
-import type { Label } from './labels/types';
+import Consts from '../Consts';
+import MissingSecretsError from '../MissingSecretsError';
+import AccordionSectionWithDivider from '../AccordionSectionWithDivider';
+import DeplomentInputsSection from './DeploymentInputsSection';
+import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
+import { ExecuteWorkflowInputs, executeWorkflow } from '../executeWorkflow';
+import type {
+    BaseWorkflowInputs,
+    UserWorkflowInputsState,
+    Workflow,
+    WorkflowParameters,
+    WorkflowOptions
+} from '../executeWorkflow';
+import type { DropdownValue, Field } from '../types';
+import type { BlueprintDeployParams } from '../BlueprintActions';
+import type { Label } from '../labels/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -25,14 +32,16 @@ type Blueprint = {
 
 type Errors = Record<string, string>;
 
+type ExecuteStep = (
+    deploymentIdOrPreviousStepOutcome: string | any,
+    deploymentParameters: BlueprintDeployParams,
+    installWorkflowParameters?: WorkflowParameters,
+    installWorkflowOptions?: WorkflowOptions
+) => void;
+
 type StepsProp = {
-    message: string;
-    executeStep: (
-        previousStepOutcome: any,
-        deploymentParameters: BlueprintDeployParams & { deploymentId: string },
-        installWorkflowParameters?: WorkflowParameters,
-        installWorkflowOptions?: WorkflowOptions
-    ) => void;
+    message?: string;
+    executeStep: ExecuteStep;
 };
 
 type GenericDeployModalProps = {
@@ -143,11 +152,18 @@ type GenericDeployModalState = {
     loading: boolean;
     loadingMessage: string;
     runtimeOnlyEvaluation: boolean;
-    showInstallModal: boolean;
     siteName: string;
     skipPluginsValidation: boolean;
     visibility: any;
-    workflow: Workflow;
+    installWorkflow: Workflow;
+    baseInstallWorkflowParams: BaseWorkflowInputs;
+    userInstallWorkflowParams: UserWorkflowInputsState;
+    force: boolean;
+    dryRun: boolean;
+    queue: boolean;
+    schedule: boolean;
+    scheduledTime: string;
+    selectedApproveButton: ApproveButtons;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -160,7 +176,15 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         deploymentInputs: 0,
         deploymentMetadata: 1,
         executionParameters: 2,
-        advanced: 3
+        advanced: 3,
+        install: 4
+    };
+
+    static initialInstallWorkflow: Workflow = {
+        ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install,
+        name: 'install',
+        parameters: {},
+        plugin: ''
     };
 
     static initialState = {
@@ -173,14 +197,21 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         loading: false,
         loadingMessage: '',
         runtimeOnlyEvaluation: false,
-        showInstallModal: false,
         siteName: '',
         skipPluginsValidation: false,
         visibility: Consts.defaultVisibility,
-        workflow: { name: '', parameters: {}, plugin: '' },
+        installWorkflow: GenericDeployModal.initialInstallWorkflow,
         activeSection: 0,
         deploymentId: '',
-        labels: []
+        labels: [],
+        baseInstallWorkflowParams: {},
+        userInstallWorkflowParams: {},
+        force: false,
+        dryRun: false,
+        queue: false,
+        schedule: false,
+        scheduledTime: '',
+        selectedApproveButton: ApproveButtons.install
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -192,15 +223,31 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         this.handleDeploymentInputChange = this.handleDeploymentInputChange.bind(this);
         this.handleYamlFileChange = this.handleYamlFileChange.bind(this);
+        this.handleExecuteInputChange = this.handleExecuteInputChange.bind(this);
 
         this.onCancel = this.onCancel.bind(this);
         this.onDeploy = this.onDeploy.bind(this);
         this.onDeployAndInstall = this.onDeployAndInstall.bind(this);
 
-        this.closeInstallModal = this.closeInstallModal.bind(this);
-        this.openInstallModal = this.openInstallModal.bind(this);
         this.onAccordionClick = this.onAccordionClick.bind(this);
         this.onErrorsDismiss = this.onErrorsDismiss.bind(this);
+
+        this.onForceChange = this.onForceChange.bind(this);
+        this.onDryRunChange = this.onDryRunChange.bind(this);
+        this.onQueueChange = this.onQueueChange.bind(this);
+        this.onScheduleChange = this.onScheduleChange.bind(this);
+        this.onScheduledTimeChange = this.onScheduledTimeChange.bind(this);
+    }
+
+    componentDidMount() {
+        const { installWorkflow } = this.state;
+        const { InputsUtils } = Stage.Common;
+        this.setState({
+            baseInstallWorkflowParams: installWorkflow.parameters,
+            userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
+                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+            )
+        });
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
@@ -249,6 +296,17 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             });
     }
 
+    handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement>, field: any) {
+        this.setState((prevState: any) => {
+            return {
+                userInstallWorkflowParams: {
+                    ...prevState.userInstallWorkflowParams,
+                    ...Stage.Basic.Form.fieldNameValue(field)
+                }
+            };
+        });
+    }
+
     onAccordionClick(_: React.MouseEvent<HTMLDivElement, MouseEvent>, { index }: AccordionTitleProps) {
         const { activeSection } = this.state;
         const newIndex = activeSection === index ? -1 : index;
@@ -275,7 +333,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         installWorkflowParameters?: WorkflowParameters,
         installWorkflowOptions?: WorkflowOptions
     ) {
-        this.setState({ loading: true, errors: {} });
+        this.setState({ activeSection: -1, loading: true, errors: {} });
         this.setLoadingMessage(validationMessage);
 
         let stepPromise = this.validateInputs();
@@ -284,9 +342,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         steps.forEach(step => {
             stepPromise = stepPromise.then(previousStepOutcome => {
-                this.setLoadingMessage(step.message);
+                this.setLoadingMessage(step.message || '');
                 return step.executeStep(
-                    previousStepOutcome,
+                    previousStepOutcome as any,
                     deploymentParameters,
                     installWorkflowParameters,
                     installWorkflowOptions
@@ -325,14 +383,97 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return this.onSubmit(deployValidationMessage, deploySteps);
     }
 
-    onDeployAndInstall(installWorkflowParameters: WorkflowParameters, installWorkflowOptions: WorkflowOptions) {
-        const { deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
-        return this.onSubmit(
-            deployAndInstallValidationMessage,
-            deployAndInstallSteps,
-            installWorkflowParameters,
-            installWorkflowOptions
-        );
+    onDeployAndInstall() {
+        const { toolbox, deployAndInstallValidationMessage, deployAndInstallSteps } = this.props;
+        const {
+            installWorkflow,
+            baseInstallWorkflowParams,
+            userInstallWorkflowParams,
+            schedule,
+            scheduledTime,
+            force,
+            dryRun,
+            queue,
+            deploymentId
+        } = this.state;
+        const deploymentsList: string[] = _.compact([deploymentId]);
+        this.setState({ activeSection: -1, loading: true, errors: {} });
+        return this.validateInputs()
+            .then(() =>
+                executeWorkflow({
+                    deploymentsList,
+                    setLoading: () => this.setState({ loading: true }),
+                    unsetLoading: () => this.setState({ loading: false }),
+                    toolbox,
+                    workflow: installWorkflow,
+                    baseWorkflowInputs: baseInstallWorkflowParams,
+                    userWorkflowInputsState: userInstallWorkflowParams,
+                    schedule,
+                    scheduledTime,
+                    force,
+                    dryRun,
+                    queue,
+                    clearErrors: () => this.setState({ errors: {} }),
+                    onExecute: (
+                        installWorkflowParameters: WorkflowParameters,
+                        installWorkflowOptions: WorkflowOptions
+                    ) => {
+                        return this.onSubmit(
+                            deployAndInstallValidationMessage,
+                            deployAndInstallSteps,
+                            installWorkflowParameters,
+                            installWorkflowOptions
+                        );
+                    },
+                    onHide: () => {}
+                })
+            )
+            .catch(err => {
+                if (typeof err === 'string') {
+                    this.setState({ errors: { message: err }, loading: false });
+                } else {
+                    this.setState({ errors: err, loading: false });
+                }
+            });
+    }
+
+    onForceChange(_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        this.setState({
+            errors: {},
+            queue: false,
+            force: checked as boolean
+        });
+    }
+
+    onDryRunChange(_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        this.setState({
+            errors: {},
+            queue: false,
+            dryRun: checked as boolean
+        });
+    }
+
+    onQueueChange(_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        this.setState({
+            errors: {},
+            force: false,
+            dryRun: false,
+            schedule: false,
+            scheduledTime: '',
+            queue: checked as boolean
+        });
+    }
+
+    onScheduleChange(_event: React.FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        this.setState({
+            errors: {},
+            queue: false,
+            schedule: checked as boolean
+        });
+    }
+
+    onScheduledTimeChange(_event: Event, { value }: { name?: string | undefined; value?: string | undefined }) {
+        this.setState({ errors: {}, queue: false, scheduledTime: value as string });
     }
 
     getDeploymentParams() {
@@ -366,19 +507,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.setState({ loadingMessage: message });
     }
 
-    openInstallModal() {
-        this.setState({ loading: true, errors: {} });
-        return this.validateInputs()
-            .then(() => this.setState({ loading: false, showInstallModal: true }))
-            .catch(errors => {
-                this.setState({ loading: false, errors });
-            });
-    }
-
-    closeInstallModal() {
-        this.setState({ showInstallModal: false });
-    }
-
     isBlueprintSelectable() {
         const { blueprintId } = this.props;
         return _.isEmpty(blueprintId);
@@ -395,7 +523,21 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 .doGetFullBlueprintData(id)
                 .then(blueprint => {
                     const deploymentInputs = InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
-                    this.setState({ deploymentInputs, blueprint, errors: {}, loading: false });
+                    const installWorkflow = {
+                        ...(blueprint.plan.workflows.install as Record<string, unknown>),
+                        name: 'install'
+                    } as Workflow;
+                    this.setState({
+                        deploymentInputs,
+                        blueprint,
+                        installWorkflow,
+                        baseInstallWorkflowParams: installWorkflow.parameters,
+                        userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
+                            InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+                        ),
+                        errors: {},
+                        loading: false
+                    });
                 })
                 .catch(err => {
                     this.setState({
@@ -442,7 +584,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } = Stage.Basic;
         const {
             DynamicDropdown,
-            ExecuteWorkflowModal,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
         const {
@@ -470,12 +611,18 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             loading,
             loadingMessage,
             runtimeOnlyEvaluation,
-            showInstallModal,
             skipPluginsValidation,
             siteName,
-            visibility
+            visibility,
+            baseInstallWorkflowParams,
+            userInstallWorkflowParams,
+            force,
+            dryRun,
+            queue,
+            schedule,
+            scheduledTime,
+            selectedApproveButton
         } = this.state;
-        const workflow = { ...blueprint.plan.workflows.install, name: 'install' };
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
         return (
@@ -653,25 +800,48 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     />
                                 </Form.Field>
                             </AccordionSectionWithDivider>
+                            {selectedApproveButton === ApproveButtons.install && (
+                                <AccordionSectionWithDivider
+                                    title={t('sections.install')}
+                                    index={DEPLOYMENT_SECTIONS.install}
+                                    activeSection={activeSection}
+                                    onClick={this.onAccordionClick}
+                                >
+                                    <ExecuteWorkflowInputs
+                                        baseWorkflowInputs={baseInstallWorkflowParams}
+                                        userWorkflowInputsState={userInstallWorkflowParams}
+                                        onYamlFileChange={this.handleYamlFileChange}
+                                        onWorkflowInputChange={this.handleExecuteInputChange}
+                                        fileLoading={fileLoading}
+                                        errors={errors}
+                                        showInstallOptions={showInstallOptions || false}
+                                        force={force}
+                                        dryRun={dryRun}
+                                        queue={queue}
+                                        schedule={schedule}
+                                        scheduledTime={scheduledTime}
+                                        onForceChange={this.onForceChange}
+                                        onDryRunChange={this.onDryRunChange}
+                                        onQueueChange={this.onQueueChange}
+                                        onScheduleChange={this.onScheduleChange}
+                                        onScheduledTimeChange={this.onScheduledTimeChange}
+                                    />
+                                </AccordionSectionWithDivider>
+                            )}
                         </Accordion>
                     </Form>
-
-                    <ExecuteWorkflowModal
-                        open={showInstallModal}
-                        workflow={workflow}
-                        onExecute={this.onDeployAndInstall}
-                        onHide={this.closeInstallModal}
-                        toolbox={toolbox}
-                        hideOptions={!showInstallOptions}
-                    />
                 </Modal.Content>
 
                 <DeployModalActions
                     loading={loading}
                     showDeployButton={showDeployButton}
                     onCancel={this.onCancel}
-                    onInstall={this.openInstallModal}
+                    onInstall={this.onDeployAndInstall}
                     onDeploy={this.onDeploy}
+                    selectedApproveButton={selectedApproveButton}
+                    onApproveButtonChange={(value, field) =>
+                        this.setState({ selectedApproveButton: field ? field.value ?? field.checked : value })
+                    }
                 />
             </Modal>
         );
