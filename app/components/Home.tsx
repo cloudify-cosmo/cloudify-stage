@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 import Page from './Page';
 import GettingStartedModal from './GettingStartedModal';
+import ContactDetailsModal from './ContactDetailsModal';
 import { createPagesMap } from '../actions/pageMenu';
 import Consts from '../utils/consts';
 import { clearContext, setValue } from '../actions/context';
@@ -90,6 +91,7 @@ class Home extends Component {
         return (
             <div className="main">
                 <SideBar pageId={pageId} />
+                <ContactDetailsModal />
                 <GettingStartedModal />
 
                 <div className="page" style={{ marginLeft: isEditMode ? expandedSidebarWidth : collapsedSidebarWidth }}>

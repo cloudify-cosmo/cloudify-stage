@@ -1,7 +1,17 @@
 import ExecuteWorkflowModal from './ExecuteWorkflowModal';
-import type { Workflow, WorkflowParameters, WorkflowOptions } from './types';
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import { getWorkflowName, executeWorkflow } from './common';
+import type {
+    Workflow,
+    WorkflowParameters,
+    WorkflowOptions,
+    BaseWorkflowInputs,
+    UserWorkflowInputsState
+} from './types';
 
-export type { Workflow, WorkflowParameters, WorkflowOptions };
+export type { Workflow, WorkflowParameters, WorkflowOptions, BaseWorkflowInputs, UserWorkflowInputsState };
+
+export { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow };
 
 declare global {
     namespace Stage.Common {

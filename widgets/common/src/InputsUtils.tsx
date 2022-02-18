@@ -53,7 +53,7 @@ class InputsUtils {
         return stringValue;
     }
 
-    static getInputFieldInitialValue(defaultValue, type = undefined, dataType = undefined) {
+    static getInputFieldInitialValue(defaultValue, type?: string = undefined, dataType = undefined) {
         const { Json } = Stage.Utils;
 
         if (_.isUndefined(defaultValue)) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import log from 'loglevel';
 
 import { useFetch } from './common/fetchHooks';
-import { useManager } from './common/managerHooks';
+import useManager from '../../utils/hooks/useManager';
 import EventBus from '../../utils/EventBus';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 
