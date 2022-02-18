@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 
 import Internal from '../../../utils/Internal';
 import Manager from '../../../utils/Manager';
-import { useInternal, useManager } from './managerHooks';
+import { useInternal } from './managerHooks';
+import useManager from '../../../utils/hooks/useManager';
 
 export type FetchHook<T> = {
     loading: boolean;
