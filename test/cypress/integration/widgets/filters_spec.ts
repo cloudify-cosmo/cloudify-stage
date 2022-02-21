@@ -1,5 +1,6 @@
 import { without } from 'lodash';
 import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import Consts from 'app/utils/consts';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
@@ -693,6 +694,19 @@ describe('Filters widget', () => {
                         key: 'created_by',
                         values: ['admin'],
                         operator: FilterRuleOperators.NotAnyOf
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'tenant_name',
+                        values: [`${testPrefix}_tenant`],
+                        operator: FilterRuleOperators.AnyOf,
+                        newValues: [`${testPrefix}_tenant`]
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'tenant_name',
+                        values: [Consts.DEFAULT_TENANT],
+                        operator: FilterRuleOperators.NotAnyOf
                     }
                 ]
             },
@@ -727,6 +741,20 @@ describe('Filters widget', () => {
                         values: ['operator'],
                         operator: FilterRuleOperators.EndsWith,
                         newValues: ['operator']
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'display_name',
+                        values: ['deployment'],
+                        operator: FilterRuleOperators.Contains,
+                        newValues: ['deployment']
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'display_name',
+                        values: ['prefix'],
+                        operator: FilterRuleOperators.StartsWith,
+                        newValues: ['prefix']
                     }
                 ]
             }
