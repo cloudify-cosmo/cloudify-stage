@@ -28,32 +28,28 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
     toolbox
 }) => {
     const commonProps = { operator: rule.operator, toolbox };
-    const attributeInputProps = { ...commonProps, onChange: onValuesChange, value: rule.values };
 
-    switch (ruleType) {
-        case FilterRuleRowType.Blueprint:
-            return <BlueprintValueInput {...attributeInputProps} />;
-        case FilterRuleRowType.Creator:
-            return <CreatorValueInput {...attributeInputProps} />;
-        case FilterRuleRowType.DisplayName:
-            return <DisplayNameValueInput {...attributeInputProps} />;
-        case FilterRuleRowType.SiteName:
-            return <SiteNameValueInput {...attributeInputProps} />;
-        case FilterRuleRowType.TenantName:
-            return <TenantNameValueInput {...attributeInputProps} />;
-
-        case FilterRuleRowType.Label:
-            return (
-                <LabelValueInput
-                    {...commonProps}
-                    onKeyChange={onKeyChange}
-                    onValueChange={onValuesChange}
-                    labelKey={rule.key}
-                    labelValue={rule.values}
-                />
-            );
-        default:
-            throw new Error('Unsupported filter rule row type was passed to RuleValueInput component.');
+    if (ruleType === FilterRuleRowType.Label) {
+        return (
+            <LabelValueInput
+                {...commonProps}
+                onKeyChange={onKeyChange}
+                onValueChange={onValuesChange}
+                labelKey={rule.key}
+                labelValue={rule.values}
+            />
+        );
     }
+
+    const attributeInputProps = { ...commonProps, onChange: onValuesChange, value: rule.values };
+    const attributeInputComponents = {
+        [FilterRuleRowType.Blueprint]: BlueprintValueInput,
+        [FilterRuleRowType.Creator]: CreatorValueInput,
+        [FilterRuleRowType.DisplayName]: DisplayNameValueInput,
+        [FilterRuleRowType.SiteName]: SiteNameValueInput,
+        [FilterRuleRowType.TenantName]: TenantNameValueInput
+    };
+    const AttributeInputComponent = attributeInputComponents[ruleType];
+    return <AttributeInputComponent {...attributeInputProps} />;
 };
 export default RuleValueInput;
