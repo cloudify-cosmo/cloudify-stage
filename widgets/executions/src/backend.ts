@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-export default r => {
+import type { WidgetBackendRegistrator } from '../../../backend/routes/WidgetBackend.types';
+
+export default (r: WidgetBackendRegistrator) => {
     r.register('get_tasks_graph', 'GET', (req, res, next, helper) => {
         /**
          * ### Due to the nature of widgetBackend, the whole logic of a function must be placed inside that function

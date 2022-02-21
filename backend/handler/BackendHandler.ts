@@ -1,84 +1,116 @@
-// @ts-nocheck File not migrated fully to TS
 import fs from 'fs-extra';
 import pathlib from 'path';
 import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';
-import ts from 'typescript';
+import ts, { ModuleKind, ScriptTarget } from 'typescript';
 import tsConfig from '@tsconfig/node14/tsconfig.json';
+
+import type { Request, Response, NextFunction } from 'express';
+import type { CompilerOptions } from 'typescript';
 
 import { getConfig } from '../config';
 import { ALLOWED_METHODS_OBJECT, ALLOWED_METHODS_ARRAY, WIDGET_ID_HEADER } from '../consts';
 import { db } from '../db/Connection';
 import { getResourcePath } from '../utils';
-import * as helper from './services';
+import * as services from './services';
 
 import { getLogger } from './LoggerHandler';
+import type { AllowedRequestMethod } from '../types';
 
 const logger = getLogger('WidgetBackend');
 
 const builtInWidgetsFolder = getResourcePath('widgets', false);
 const userWidgetsFolder = getResourcePath('widgets', true);
-const getServiceString = (widgetId, method, serviceName) => `widget=${widgetId} method=${method} name=${serviceName}`;
+const getServiceString = (widgetId: string, method: AllowedRequestMethod, serviceName: string) =>
+    `widget=${widgetId} method=${method} name=${serviceName}`;
 const allowedModulesPaths = _.map(
     getConfig().app.widgets.allowedModules,
     module => `${process.cwd()}/node_modules/${module}`
 );
 
-/* eslint-disable no-param-reassign */
-const BackendRegistrator = (widgetId, resolve, reject) => ({
-    register: (serviceName, method, service) => {
+// NOTE: TS configurations from @tsconfig are not compatible with CompilerOptions type
+// used in ts.transpile method's second argument type)
+const compilerOptions: CompilerOptions = {
+    ...tsConfig.compilerOptions,
+    module: ModuleKind.CommonJS,
+    target: ScriptTarget.ES2020
+};
+
+type BackendService = (req: Request, res: Response, next: NextFunction, helper: typeof services) => void;
+const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, reject: (reason?: any) => void) => ({
+    register: (serviceName: string, method: AllowedRequestMethod | BackendService, service?: BackendService) => {
         if (!serviceName) {
             return reject('Service name must be provided');
         }
-        serviceName = _.toUpper(serviceName);
 
-        if (!_.isString(method)) {
-            service = method;
-            method = ALLOWED_METHODS_OBJECT.get;
-        } else if (!_.isNil(method)) {
-            method = _.toUpper(method);
-            if (!_.includes(ALLOWED_METHODS_ARRAY, method)) {
-                return reject(`Method '${method}' not allowed. Valid methods: ${ALLOWED_METHODS_ARRAY.toString()}`);
-            }
+        const normalizedServiceName = _.toUpper(serviceName);
+        let normalizedMethod: AllowedRequestMethod = ALLOWED_METHODS_OBJECT.get;
+        let normalizedService = service;
+        if (typeof method !== 'string') {
+            normalizedService = method;
+            normalizedMethod = ALLOWED_METHODS_OBJECT.get;
+        } else if (_.includes(ALLOWED_METHODS_ARRAY, method.toUpperCase())) {
+            normalizedMethod = method.toUpperCase() as AllowedRequestMethod;
+        } else {
+            return reject(`Method '${method}' not allowed. Valid methods: ${ALLOWED_METHODS_ARRAY.toString()}`);
         }
 
-        if (!service) {
+        if (!normalizedService) {
             return reject('Service body must be provided');
         }
-        if (!_.isFunction(service)) {
+        if (!_.isFunction(normalizedService)) {
             return reject('Service body must be a function (function(request, response, next, helper) {...})');
         }
 
-        logger.info(`--- registering service ${getServiceString(widgetId, method, serviceName)}`);
+        logger.info(`--- registering service ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`);
 
-        return db.WidgetBackends.findOrCreate({
-            where: {
-                widgetId,
-                serviceName,
-                method
-            },
-            defaults: {
-                script: ''
-            }
-        })
-            .then(([widgetBackend]) => {
-                logger.debug(`--- updating entry for service: ${getServiceString(widgetId, method, serviceName)}`);
-                return widgetBackend.update(
-                    { script: new VMScript(`module.exports = ${service.toString()}`) },
-                    { fields: ['script'] }
-                );
+        return (
+            db.WidgetBackends.findOrCreate({
+                where: {
+                    widgetId,
+                    serviceName,
+                    method
+                },
+                defaults: {
+                    script: ''
+                }
             })
-            .then(() => {
-                logger.info(`--- registered service: ${getServiceString(widgetId, method, serviceName)}`);
-                return resolve();
-            })
-            .catch(error => {
-                logger.error(error);
-                return reject(`--- error registering service: ${getServiceString(widgetId, method, serviceName)}`);
-            });
+                // @ts-ignore TODO(RD-3119) Update typings when types for WidgetBackends model are ready
+                .then(([widgetBackend]) => {
+                    logger.debug(
+                        `--- updating entry for service: ${getServiceString(
+                            widgetId,
+                            normalizedMethod,
+                            normalizedServiceName
+                        )}`
+                    );
+                    return widgetBackend.update(
+                        { script: new VMScript(`module.exports = ${normalizedService!.toString()}`) },
+                        { fields: ['script'] }
+                    );
+                })
+                .then(() => {
+                    logger.info(
+                        `--- registered service: ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`
+                    );
+                    return resolve();
+                })
+                .catch((error: Error) => {
+                    logger.error(error);
+                    return reject(
+                        `--- error registering service: ${getServiceString(
+                            widgetId,
+                            normalizedMethod,
+                            normalizedServiceName
+                        )}`
+                    );
+                })
+        );
     }
 });
 /* eslint-enable no-param-reassign */
+
+export type RegistratorObject = ReturnType<typeof BackendRegistrator>;
 
 function getUserWidgets() {
     return fs
@@ -100,7 +132,7 @@ function getBuiltInWidgets() {
         );
 }
 
-export function importWidgetBackend(widgetId, isCustom = true) {
+export function importWidgetBackend(widgetId: string, isCustom = true) {
     let widgetsFolder = userWidgetsFolder;
     if (!isCustom) {
         widgetsFolder = builtInWidgetsFolder;
@@ -122,7 +154,7 @@ export function importWidgetBackend(widgetId, isCustom = true) {
                     external: true,
                     root: [backendFile, ...allowedModulesPaths]
                 },
-                compiler: source => ts.transpile(source, tsConfig.compilerOptions),
+                compiler: source => ts.transpile(source, compilerOptions),
                 sourceExtensions: ['ts']
             });
 
@@ -156,7 +188,7 @@ export function initWidgetBackends() {
     const userWidgets = getUserWidgets();
     const builtInWidgets = getBuiltInWidgets();
 
-    const promises = [];
+    const promises: Promise<any>[] = [];
     _.each(userWidgets, widgetId =>
         promises.push(new Promise((resolve, reject) => importWidgetBackend(widgetId).then(resolve).catch(reject)))
     );
@@ -177,36 +209,45 @@ export function initWidgetBackends() {
         });
 }
 
-/* eslint-disable no-param-reassign */
-export function callService(serviceName, method, req, res, next) {
+export function callService(
+    serviceName: string,
+    method: AllowedRequestMethod,
+    req: Request,
+    res: Response,
+    next: NextFunction
+) {
     const widgetId = req.header(WIDGET_ID_HEADER);
-    method = _.toUpper(method);
-    serviceName = _.toUpper(serviceName);
+    const normalizedMethod = _.toUpper(method) as AllowedRequestMethod;
+    const normalizedServiceName = _.toUpper(serviceName);
 
-    return db.WidgetBackends.findOne({ where: { widgetId, serviceName, method } })
-        .catch(() => {
-            return Promise.reject(
-                `There is no service ${serviceName} for method ${method} for widget ${widgetId} registered`
-            );
-        })
-        .then(widgetBackend => {
-            const script = _.get(widgetBackend, 'script.code', null);
+    return (
+        db.WidgetBackends.findOne({ where: { widgetId, serviceName: normalizedServiceName, method: normalizedMethod } })
+            .catch(() => {
+                return Promise.reject(
+                    `There is no service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId} registered`
+                );
+            })
+            // @ts-ignore TODO(RD-3119) Update typings when types for WidgetBackends model are ready
+            .then(widgetBackend => {
+                const script = _.get(widgetBackend, 'script.code', null);
 
-            if (script) {
-                const vm = new NodeVM({
-                    require: {
-                        external: true,
-                        root: allowedModulesPaths
-                    }
-                });
-                return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`))(req, res, next, helper);
-            }
-            return Promise.reject(`No script for service ${serviceName} for method ${method} for widget ${widgetId}`);
-        });
+                if (script) {
+                    const vm = new NodeVM({
+                        require: {
+                            external: true,
+                            root: allowedModulesPaths
+                        }
+                    });
+                    return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`))(req, res, next, services);
+                }
+                return Promise.reject(
+                    `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
+                );
+            })
+    );
 }
-/* eslint-enable no-param-reassign */
 
-export function removeWidgetBackend(widgetId) {
+export function removeWidgetBackend(widgetId: string) {
     return db.WidgetBackends.destroy({ where: { widgetId } }).then(() =>
         logger.debug(`Deleted widget backend for ${widgetId}.`)
     );
