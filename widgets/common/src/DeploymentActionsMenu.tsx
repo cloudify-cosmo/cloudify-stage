@@ -46,12 +46,10 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
         : {};
 
     const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         onActionClick(name!);
     };
 
     return (
-        // eslint-disable-next-line react/jsx-props-no-spreading
         <PopupMenu className="deploymentActionsMenu" {...popupMenuProps}>
             {trigger && <Popup.Trigger>{trigger}</Popup.Trigger>}
             <Menu pointing vertical onItemClick={onItemClick} items={items} />

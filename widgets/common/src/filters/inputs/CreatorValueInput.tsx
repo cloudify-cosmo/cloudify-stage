@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import type { FunctionComponent } from 'react';
 import type { CommonAttributeValueInputProps } from './types';
 import AttributeValueInput from './AttributeValueInput';

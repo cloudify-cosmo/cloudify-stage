@@ -1306,7 +1306,6 @@ const SemanticIconDropdown: FunctionComponent<SemanticIconDropdownProps> = ({
             selection
             trigger={trigger}
             value={value}
-            /* eslint-disable-next-line react/jsx-props-no-spreading */
             {...rest}
         />
     );

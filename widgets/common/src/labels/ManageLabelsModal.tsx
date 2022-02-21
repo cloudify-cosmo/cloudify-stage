@@ -8,7 +8,6 @@ const ManageLabelsModal: FunctionComponent<ManageLabelsModalProps> = props => {
         <LabelsModal
             i18nHeaderKey="widgets.common.labels.modalHeader"
             i18nApplyKey="widgets.common.labels.modalApplyButton"
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
         />
     );

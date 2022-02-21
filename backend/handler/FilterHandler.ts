@@ -6,7 +6,6 @@ import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('FilterHandler');
 
-// eslint-disable-next-line import/prefer-default-export
 export async function getFilterUsage(filterId) {
     const userAppsArr = await db.UserApps.findAll({ attributes: ['appData', 'username'] });
 

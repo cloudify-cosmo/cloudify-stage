@@ -29,7 +29,6 @@ const BaseDeploymentStatusIcon: FunctionComponent<{ iconName?: StatusIconName; i
     const label = Stage.i18n.t(`${i18nPrefix}.iconLabels.${iconName}`);
 
     return (
-        // eslint-disable-next-line react/jsx-props-no-spreading
         <Popup trigger={<Icon aria-label={label} {...iconProps} style={iconStyle} />} position="top center">
             {label}
         </Popup>

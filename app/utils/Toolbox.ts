@@ -132,7 +132,6 @@ const getToolbox = (
     widget: ReturnType<Stage.Types.Toolbox['getWidget']>
 ) => {
     // NOTE: assumes the toolbox is already created
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return new Proxy(toolbox!, {
         get: (target, name) => {
             if (name === 'refresh') {

@@ -302,7 +302,6 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
         const page = pagesMap[pageId];
         if (page && page.parent) {
             // NOTE: assume page is always found
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const parentPage = pagesMap[page.parent];
             dispatch(popDrilldownContext());
             dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
@@ -347,7 +346,6 @@ export function removePageMenuItem(
             // Check if current page is in group being removed
             if (find(pageListItem.pages, { id: selectedRootPageId })) {
                 // Select first page that is not in the group
-                /* eslint-disable @typescript-eslint/no-non-null-assertion */
                 dispatch(selectPage(find(pagesMap, page => !includes(pageListItem.pages, page))!.id));
             }
 

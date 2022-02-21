@@ -58,7 +58,6 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
 
     return (
         <SideBarItemWrapper>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Menu.Item style={menuItemStyle} {...rest}>
                 <SideBarAnimatedItemWrapper subItem={subItem}>
                     {typeof icon === 'string' ? <SideBarItemIcon name={icon as SemanticICONS} /> : icon}
