@@ -170,7 +170,7 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
                          }
                      });`;
 
-            return vm.run(script);
+            return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) });
         } catch (err) {
             logger.error('reject', backendFile, err);
             return Promise.reject(`Error during importing widget backend from file ${backendFile} - ${err.message}`);
@@ -236,7 +236,12 @@ export function callService(
                             root: allowedModulesPaths
                         }
                     });
-                    return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`))(req, res, next, services);
+                    return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) })(
+                        req,
+                        res,
+                        next,
+                        services
+                    );
                 }
                 return Promise.reject(
                     `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
