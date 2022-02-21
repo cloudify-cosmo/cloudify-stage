@@ -27,7 +27,7 @@ Stage.defineWidget<any, any, DeploymentListWidget.Configuration>({
     name: 'Deployment list',
     description: 'The widget displays deployment list',
     initialWidth: 12,
-    initialHeight: 20,
+    initialHeight: 26,
     color: 'green',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
     initialConfiguration: [
