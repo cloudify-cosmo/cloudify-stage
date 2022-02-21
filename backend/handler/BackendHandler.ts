@@ -19,6 +19,10 @@ const logger = getLogger('WidgetBackend');
 const builtInWidgetsFolder = getResourcePath('widgets', false);
 const userWidgetsFolder = getResourcePath('widgets', true);
 const getServiceString = (widgetId, method, serviceName) => `widget=${widgetId} method=${method} name=${serviceName}`;
+const allowedModulesPaths = _.map(
+    getConfig().app.widgets.allowedModules,
+    module => `${process.cwd()}/node_modules/${module}`
+);
 
 /* eslint-disable no-param-reassign */
 const BackendRegistrator = (widgetId, resolve, reject) => ({
@@ -115,7 +119,8 @@ export function importWidgetBackend(widgetId, isCustom = true) {
                 },
                 require: {
                     context: 'sandbox',
-                    external: getConfig().app.widgets.allowedModules
+                    external: true,
+                    root: [backendFile, ...allowedModulesPaths]
                 },
                 compiler: source => ts.transpile(source, tsConfig.compilerOptions),
                 sourceExtensions: ['ts']
@@ -135,9 +140,9 @@ export function importWidgetBackend(widgetId, isCustom = true) {
                          }
                      });`;
 
-            return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`));
+            return vm.run(script);
         } catch (err) {
-            logger.info('reject', backendFile);
+            logger.error('reject', backendFile, err);
             return Promise.reject(`Error during importing widget backend from file ${backendFile} - ${err.message}`);
         }
     } else {
@@ -190,7 +195,8 @@ export function callService(serviceName, method, req, res, next) {
             if (script) {
                 const vm = new NodeVM({
                     require: {
-                        external: getConfig().app.widgets.allowedModules
+                        external: true,
+                        root: allowedModulesPaths
                     }
                 });
                 return vm.run(script, pathlib.resolve(`${process.cwd()}/${widgetId}`))(req, res, next, helper);
