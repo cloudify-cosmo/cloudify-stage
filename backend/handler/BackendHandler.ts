@@ -110,8 +110,6 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
 });
 /* eslint-enable no-param-reassign */
 
-export type RegistratorObject = ReturnType<typeof BackendRegistrator>;
-
 function getUserWidgets() {
     return fs
         .readdirSync(userWidgetsFolder)

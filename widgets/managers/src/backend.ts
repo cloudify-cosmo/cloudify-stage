@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import type { WidgetBackendRegistrator } from '../../../backend/routes/WidgetBackend.types';
-
-export default (r: WidgetBackendRegistrator) => {
+export default r => {
     r.register('get_cluster_status', 'GET', (req, res, next, helper) => {
         const _ = require('lodash');
         const logger = helper.Logger('get_cluster_status');
