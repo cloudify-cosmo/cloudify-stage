@@ -36,7 +36,8 @@ Add, edit and clone operation modals share a common component for defining filte
 
 The component presents a list of rows, each representing a single filter rule. Each row contains three inputs:
 
-* Rule type selection dropdown - selecting the context of the rule which can be based on labels or supported deployment attributes such as blueprint ID, site name, or creator.
+* Rule type selection dropdown - selecting the context of the rule which can be based on labels or supported 
+  deployment attributes such as blueprint ID, creator, display name, site name or tenant name.
 * Rule operator dropdown. The set of available operators to choose from depends on the selected rule type. See **Table 1.** and **Table 2.** below for details.
 * Value input (for attribute rules) or key/value input(s) (for label rules). 
 
@@ -128,7 +129,7 @@ The component presents a list of rows, each representing a single filter rule. E
       <td>The deployment attribute ends with the specified value.</td>
     </tr>
   </tbody>
-  <caption style="caption-side: bottom; text-align: left"><strong>Table 2.</strong> Attributes (Blueprint, Site name, Creator) operators 
+  <caption style="caption-side: bottom; text-align: left"><strong>Table 2.</strong> Attributes operators 
 mapping</caption>
 </table>
 
