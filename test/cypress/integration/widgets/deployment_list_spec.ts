@@ -16,7 +16,7 @@ describe('DeploymentList widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
-            .usePageMock('deploymentList', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
+            .usePageMock('deploymentList', { pollingTime: 5 })
             .mockLogin();
     });
 
