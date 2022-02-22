@@ -319,8 +319,8 @@
              "type": "text"
           },
           {
-             "name": "vsphere_datacenter_nameas",
-             "label": "vSphere Datacenter Nameas",
+             "name": "vsphere_datacenter_name",
+             "label": "vSphere Datacenter Name",
              "type": "text"
           },
           {
