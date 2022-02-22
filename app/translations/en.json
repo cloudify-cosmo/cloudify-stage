@@ -680,15 +680,19 @@
                     },
                     "inputsPlaceholders": {
                         "blueprintId": "Select or type in blueprints",
-                        "siteName": "Select or type in site names",
                         "createdBy": "Select or type in usernames",
+                        "displayName": "Select or type in display names",
+                        "siteName": "Select or type in site names",
+                        "tenantName": "Select or type in tenant names",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
-                        "label": "Label",
                         "blueprintId": "Blueprint",
+                        "createdBy": "Creator",
+                        "displayName": "Display name",
                         "siteName": "Site name",
-                        "createdBy": "Creator"
+                        "tenantName": "Tenant name",
+                        "label": "Label"
                     },
                     "operatorsLabels": {
                         "anyOf": "is one of",
