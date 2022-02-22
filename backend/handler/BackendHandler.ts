@@ -68,8 +68,8 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
             db.WidgetBackends.findOrCreate({
                 where: {
                     widgetId,
-                    serviceName,
-                    method
+                    serviceName: normalizedServiceName,
+                    method: normalizedMethod
                 },
                 defaults: {
                     script: ''
