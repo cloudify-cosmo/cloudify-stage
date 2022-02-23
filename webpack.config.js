@@ -16,6 +16,8 @@ const CONTEXT_PATH = '/console';
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
     const isDevelopment = argv.mode === 'development';
+    const isSingleWidgetBuild = !!argv.widget;
+    const widgetName = argv.widget;
     const mode = isProduction ? 'production' : 'development';
     const context = path.join(__dirname);
     const devtool = isProduction ? undefined : 'eval-source-map';
@@ -130,12 +132,16 @@ module.exports = (env, argv) => {
         TEST: ''
     });
 
+    const exitWithError = error => {
+        console.error(`ERROR: ${error}`);
+        process.exit(-1);
+    };
+
     if (isProduction && fs.existsSync(outputPath)) {
         try {
             fs.rmdirSync(outputPath, { recursive: true });
         } catch (err) {
-            console.error(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
-            process.exit(-1);
+            exitWithError(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
         }
     }
 
@@ -229,32 +235,37 @@ module.exports = (env, argv) => {
             resolve: {
                 extensions: resolveExtensions
             },
-            entry: glob.sync(`./widgets/*/src/widget.${globExtensions}`).reduce((acc, item) => {
-                const name = item
-                    .replace('./widgets/', '')
-                    .replace('/src/widget', '/widget')
-                    .replace(/(tsx)|(jsx)/, 'js');
-                acc[name] = item;
-                return acc;
-            }, {}),
+            entry: glob
+                .sync(`./widgets/${isSingleWidgetBuild ? widgetName : '*'}/src/widget.${globExtensions}`)
+                .reduce((acc, item) => {
+                    const name = item
+                        .replace('./widgets/', '')
+                        .replace('/src/widget', '/widget')
+                        .replace(/(tsx)|(jsx)/, 'js');
+                    acc[name] = item;
+                    return acc;
+                }, {}),
             output: {
-                path: path.join(outputPath, 'appData'),
+                path: isSingleWidgetBuild ? outputPath : path.join(outputPath, 'appData'),
                 filename: 'widgets/[name]',
                 publicPath: CONTEXT_PATH
             },
             module,
             plugins: _.flatten(
                 _.compact([
-                    new CopyWebpackPlugin({
-                        patterns: [
-                            {
-                                from: 'widgets/**/src/backend.ts',
-                                to: '[path]../backend.ts'
-                            }
-                        ]
-                    }),
+                    (!isSingleWidgetBuild || fs.existsSync(`widgets/${widgetName}/src/backend.ts`)) &&
+                        new CopyWebpackPlugin({
+                            patterns: [
+                                {
+                                    from: `widgets/${isSingleWidgetBuild ? widgetName : '**'}/src/backend.ts`,
+                                    to: `${
+                                        isSingleWidgetBuild ? `[path]/widgets/${widgetName}` : '[path]..'
+                                    }/backend.ts`
+                                }
+                            ]
+                        }),
                     environmentPlugin,
-                    isProduction && getProductionPlugins(env && env.analyse === 'widgets')
+                    (isProduction || isSingleWidgetBuild) && getProductionPlugins(env && env.analyse === 'widgets')
                 ])
             ),
             externals
@@ -287,6 +298,18 @@ module.exports = (env, argv) => {
 
     if (argv.debug) {
         console.log('Webpack Configuration', configuration);
+    }
+
+    if (isSingleWidgetBuild) {
+        const widgetsConfiguration = configuration[1];
+        const widgetPath = path.join(__dirname, `./widgets/${widgetName}`);
+        if (fs.existsSync(widgetPath)) {
+            console.log('Building widget', widgetName);
+        } else {
+            exitWithError(`Invalid widget name provided. Widget directory "${widgetPath}" does not exist.`);
+        }
+
+        return widgetsConfiguration;
     }
 
     return configuration;
