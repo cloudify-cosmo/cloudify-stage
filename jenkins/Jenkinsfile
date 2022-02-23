@@ -162,6 +162,13 @@ pipeline {
                 echo 'Run backend tests'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
+                echo 'Verify backend start'
+                sh '''
+                  cd backend
+                  npm run db-migrate
+                  npm run start &
+                  npm run wait-on-server
+                '''
               }
             }
           }

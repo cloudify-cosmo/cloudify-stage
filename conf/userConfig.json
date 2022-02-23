@@ -21,6 +21,6 @@
     "customCssPath": ""
   },
   "widgets": {
-    "allowedModules": ["lodash", "body/json", "elkjs"]
+    "allowedModules": ["lodash", "body", "elkjs"]
   }
 }
