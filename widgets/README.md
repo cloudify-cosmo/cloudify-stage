@@ -30,4 +30,5 @@ To use your custom widget outside of the development environment, you need to cr
 Assuming you are working on widget named `myWidget` just run `npm run build:widget myWidget` 
 and your custom widget package will be available in `dist/widgets` directory. 
 
-You can install widget ZIP package on Cloudify Manager (check [Adding widget section in Edit Mode page](https://docs.cloudify.co/staging/dev/working_with/customization/edit-mode/#adding-widgets) for details)
+You can install widget ZIP package on Cloudify Manager (check
+[Adding widget section in Edit Mode page](https://docs.cloudify.co/staging/dev/working_with/console/customization/edit-mode/#adding-widgets) for details)
