@@ -79,6 +79,15 @@ pipeline {
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
               }
+              dir("${WORKSPACE}/templates"){
+                echo 'Validate templates, pages and page groups JSON files'
+                sh '''
+                  npm i -g ajv-cli
+                  ajv -s schemas/template.schema.json -d "*.json"
+                  ajv -s schemas/page-group.schema.json -d "page-groups/*.json"
+                  ajv -s schemas/page.schema.json -d "pages/*.json"
+                '''
+              }
             }
           }
         }
