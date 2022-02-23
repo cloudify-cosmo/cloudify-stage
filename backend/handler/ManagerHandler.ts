@@ -5,6 +5,7 @@ import type { CoreOptions, Headers, Response } from 'request';
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
 import * as RequestHandler from './RequestHandler';
+import { AllowedRequestMethod } from '../types';
 
 const logger = getLogger('ManagerHandler');
 
@@ -63,7 +64,7 @@ export function request(
     updateOptions(requestOptions, method, timeout, headers, data);
 
     logger.debug(`Preparing ${method} request to manager: ${requestUrl}`);
-    return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
+    return RequestHandler.request(method as AllowedRequestMethod, requestUrl, requestOptions, onSuccess, onError);
 }
 
 // the request assumes the response is JSON
