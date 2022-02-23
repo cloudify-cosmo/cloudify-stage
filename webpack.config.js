@@ -192,13 +192,6 @@ module.exports = (env, argv) => {
                                 to: 'static/images/[name].[ext]'
                             },
                             {
-                                from: 'widgets',
-                                to: 'appData/widgets',
-                                globOptions: {
-                                    ignore: ['**/src/**']
-                                }
-                            },
-                            {
                                 from: 'templates',
                                 to: 'appData/templates'
                             }
@@ -253,17 +246,21 @@ module.exports = (env, argv) => {
             module,
             plugins: _.flatten(
                 _.compact([
-                    (!isSingleWidgetBuild || fs.existsSync(`widgets/${widgetName}/src/backend.ts`)) &&
-                        new CopyWebpackPlugin({
-                            patterns: [
-                                {
-                                    from: `widgets/${isSingleWidgetBuild ? widgetName : '**'}/src/backend.ts`,
-                                    to: `${
-                                        isSingleWidgetBuild ? `[path]/widgets/${widgetName}` : '[path]..'
-                                    }/backend.ts`
+                    new CopyWebpackPlugin({
+                        patterns: _.compact([
+                            fs.existsSync(`widgets/${widgetName}/src/backend.ts`) && {
+                                from: `widgets/${isSingleWidgetBuild ? widgetName : '**'}/src/backend.ts`,
+                                to: `${isSingleWidgetBuild ? `[path]/widgets/${widgetName}` : '[path]..'}/backend.ts`
+                            },
+                            {
+                                from: isSingleWidgetBuild ? `widgets/${widgetName}` : 'widgets',
+                                to: isSingleWidgetBuild ? `widgets/${widgetName}` : 'widgets',
+                                globOptions: {
+                                    ignore: ['**/src/**']
                                 }
-                            ]
-                        }),
+                            }
+                        ])
+                    }),
                     environmentPlugin,
                     (isProduction || isSingleWidgetBuild) && getProductionPlugins(env && env.analyse === 'widgets')
                 ])
