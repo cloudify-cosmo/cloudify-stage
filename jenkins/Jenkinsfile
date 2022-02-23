@@ -78,8 +78,6 @@ pipeline {
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
-              }
-              dir("${WORKSPACE}/templates"){
                 echo 'Validate templates, pages and page groups JSON files'
                 sh '''
                   npm i -g ajv-cli
