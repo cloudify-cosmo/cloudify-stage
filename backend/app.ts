@@ -25,6 +25,7 @@ import Applications from './routes/Applications';
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
 import ClientConfig from './routes/ClientConfig';
+import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -107,10 +108,10 @@ const authenticatedApiRoutes: Record<string, Router> = {
     applications: Applications,
     bud: BlueprintUserData,
     clientConfig: ClientConfig,
+    contactDetails: ContactDetails,
     file: File,
     filters: Filters,
     github: GitHub,
-    maps: Maps,
     plugins: Plugins,
     source: SourceBrowser,
     templates: Templates,
@@ -136,6 +137,7 @@ app.use(`${contextPath}/config`, Config); // used to get white-labelling configu
 app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
+app.use(`${contextPath}/maps`, Maps);
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
