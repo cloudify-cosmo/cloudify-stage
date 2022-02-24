@@ -27,6 +27,7 @@ const options = {
         [`${CONTEXT_PATH}/ba`]: proxyOptions,
         [`${CONTEXT_PATH}/bud`]: proxyOptions,
         [`${CONTEXT_PATH}/clientConfig`]: proxyOptions,
+        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions,
         [`${CONTEXT_PATH}/config`]: proxyOptions,
         [`${CONTEXT_PATH}/external`]: proxyOptions,
         [`${CONTEXT_PATH}/file`]: proxyOptions,
