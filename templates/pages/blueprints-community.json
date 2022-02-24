@@ -1,5 +1,6 @@
 {
   "name": "Blueprints",
+  "icon": "copy outline",
   "layout": [{
     "type": "widgets",
     "content": [
