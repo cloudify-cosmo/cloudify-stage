@@ -262,7 +262,7 @@ module.exports = (env, argv) => {
                         ])
                     }),
                     environmentPlugin,
-                    (isProduction || isSingleWidgetBuild) && getProductionPlugins(env && env.analyse === 'widgets')
+                    isProduction && getProductionPlugins(env && env.analyse === 'widgets')
                 ])
             ),
             externals
