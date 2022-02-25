@@ -48,6 +48,7 @@ describe('Community version', () => {
         cy.getField('Email address').find('input').clear().type('a@o.pl');
         cy.getField('Phone number').find('input').clear().type('1234');
         cy.contains('Cloudify Hosted Service').click();
+        cy.contains('Cloudify uses the information').click();
 
         cy.intercept('POST', '/console/contactDetails').as('contactDetailsSubmit');
         cy.clickButton('Continue');
@@ -57,7 +58,8 @@ describe('Community version', () => {
                 last_name: 'Ma',
                 email: 'a@o.pl',
                 phone: '1234',
-                is_eula: true
+                is_eula: true,
+                is_send_services_details: true
             });
             expect(response?.statusCode).to.equal(200);
         });
