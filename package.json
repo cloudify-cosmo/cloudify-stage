@@ -23,6 +23,7 @@
     "build:analyse:widgets": "npm run build -- --env.analyse=widgets",
     "build:analyse:widgets-common": "npm run build -- --env.analyse=widgets-common",
     "build:coverage": "cross-env COVERAGE_CHECK=1 npm run build",
+    "build:widget": "scripts/buildWidget.sh",
     "ci:frontend": "npm ci --prefer-offline",
     "ci:backend": "npm ci --prefix backend --prefer-offline",
     "check-types": "npm run check-types:frontend && npm run check-types:backend",
