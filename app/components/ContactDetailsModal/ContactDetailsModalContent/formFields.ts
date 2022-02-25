@@ -1,4 +1,5 @@
 import * as ValidationRegexpPatterns from './validationRegexpPatterns';
+import StageUtils from '../../../utils/stageUtils';
 
 export enum FormFieldType {
     Text,
@@ -18,70 +19,68 @@ export interface FormField {
     validation?: FormFieldValidation;
 }
 
-const getFormFieldTranslationPath = (fieldName: string) => {
-    return `fields.${fieldName}`;
+const { getT, composeT } = StageUtils;
+
+const t = getT('contactDetailsModal.form.fields');
+
+const getFormFieldValidationMessage = (fieldName: string) => {
+    return composeT(t, fieldName)('validationMessage');
 };
 
-export const getFormFieldValidationMessagePath = (fieldName: string) => {
-    return `${getFormFieldTranslationPath(fieldName)}.validationMessage`;
+const getFormFieldLabel = (fieldName: string, params?: Record<string, any>) => {
+    return composeT(t, fieldName)('label', params);
 };
 
-export const getFormFieldLabelPath = (fieldName: string) => {
-    return `${getFormFieldTranslationPath(fieldName)}.label`;
-};
-
-export const formFields: FormField[] = [
+export const getFormFields = () => [
     {
         name: 'first_name',
-        label: getFormFieldLabelPath('firstName'),
+        label: getFormFieldLabel('firstName'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: getFormFieldValidationMessagePath('firstName'),
+            errorMessage: getFormFieldValidationMessage('firstName'),
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
         },
         isRequired: true
     },
     {
         name: 'last_name',
-        label: getFormFieldLabelPath('lastName'),
+        label: getFormFieldLabel('lastName'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: getFormFieldValidationMessagePath('lastName'),
+            errorMessage: getFormFieldValidationMessage('lastName'),
             regexp: ValidationRegexpPatterns.isBetweenCharactersRange(2, 20)
         },
         isRequired: true
     },
     {
         name: 'email',
-        label: getFormFieldLabelPath('email'),
+        label: getFormFieldLabel('email'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: getFormFieldValidationMessagePath('email'),
+            errorMessage: getFormFieldValidationMessage('email'),
             regexp: ValidationRegexpPatterns.emailRegexp
         },
         isRequired: true
     },
     {
         name: 'phone',
-        label: getFormFieldLabelPath('phone'),
+        label: getFormFieldLabel('phone'),
         type: FormFieldType.Text,
         validation: {
-            errorMessage: getFormFieldValidationMessagePath('phone'),
+            errorMessage: getFormFieldValidationMessage('phone'),
             regexp: ValidationRegexpPatterns.isBetweenDigitCharactersRange(4, 20)
         },
         isRequired: true
     },
     {
         name: 'is_eula',
-        label: getFormFieldLabelPath('isEULA'),
+        label: getFormFieldLabel('isEULA', { eulaLink: getT('licenseManagement')('eulaLinkCommunity') }),
         type: FormFieldType.Checkbox,
         isRequired: true
     },
     {
         name: 'is_send_services_details',
-        label: getFormFieldLabelPath('isSendServicesDetails'),
+        label: getFormFieldLabel('isSendServicesDetails'),
         type: FormFieldType.Checkbox
     }
 ];
-
-export const requiredFormFields = formFields.filter(formField => formField.isRequired);

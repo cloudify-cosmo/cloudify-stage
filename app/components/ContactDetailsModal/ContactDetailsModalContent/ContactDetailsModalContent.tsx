@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useMemo } from 'react';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, ApproveButton } from '../../basic';
 import type { FormField } from './formFields';
-import { FormFieldType, formFields, requiredFormFields } from './formFields';
+import { FormFieldType, getFormFields } from './formFields';
 import CheckboxLabel from './CheckboxLabel';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
@@ -27,6 +27,8 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
     const [loading, setLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
+    const formFields = useMemo(getFormFields, undefined);
+    const requiredFormFields = useMemo(() => formFields.filter(formField => formField.isRequired), undefined);
 
     const isFieldEmpty = (formField: FormField) => {
         const fieldValue = formInputs[formField.name];
@@ -59,7 +61,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                 validationErrors[formField.name] = `${formFieldLabel} - ${t('validation.isFieldRequired')}`;
             } else if (!isFieldValid(formField)) {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                validationErrors[formField.name] = `${formFieldLabel} - ${t(formField.validation!.errorMessage)}`;
+                validationErrors[formField.name] = `${formFieldLabel} - ${formField.validation!.errorMessage}`;
             }
         });
 
@@ -91,7 +93,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                                 <Form.Input
                                     type="text"
                                     name={formField.name}
-                                    label={t(formField.label)}
+                                    label={formField.label}
                                     value={formInputs[formField.name]}
                                     onChange={setFormInputs}
                                     required={formField.isRequired}
