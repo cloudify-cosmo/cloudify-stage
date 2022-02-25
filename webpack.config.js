@@ -171,8 +171,8 @@ module.exports = (env, argv) => {
                 new CopyWebpackPlugin({
                     patterns: _.compact([
                         {
-                            from: `widgets/**/src/backend.ts`,
-                            to: `[path]../backend.ts`
+                            from: 'widgets/**/src/backend.ts',
+                            to: '[path]../backend.ts'
                         },
                         {
                             from: 'widgets',
