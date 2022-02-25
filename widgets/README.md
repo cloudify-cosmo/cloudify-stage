@@ -32,3 +32,25 @@ and your custom widget package will be available in `dist/widgets` directory.
 
 You can install widget ZIP package on Cloudify Manager (check
 [Adding widget section in Edit Mode page](https://docs.cloudify.co/staging/dev/working_with/console/customization/edit-mode/#adding-widgets) for details)
+
+## Development guidelines
+
+### Accessing application framework
+
+As widget JS bundle is independently built using Webpack, importing a code from the outside of a widget directory should be avoided to keep widget JS bundle small.
+
+Most common method for accessing application framework code ([app directory](../app)) is through `Stage` global object (see [Stage API definition](../app/typings/stage-api.d.ts)).
+
+### Accessing Redux store
+
+There are few methods how you can access application Redux store from the widget:
+
+1. In functional components you can use `ReactRedux` global object which provides Redux
+   hooks (see `ReactRedux` definition in
+   [Stage API definition](../app/typings/stage-api.d.ts))
+2. In class components you can use `connectToStore` global function 
+   (see `connectToStore` definition in
+   [Stage API definition](../app/typings/stage-api.d.ts))
+3. You can use `toolbox.getManagerState()` method if you need just `manager` 
+   part of the Redux state (see `getManagerState` description in
+   [Widget APIs page](https://docs.cloudify.co/staging/dev/developer/writing_widgets/widget-apis/#getmanagerstate))
