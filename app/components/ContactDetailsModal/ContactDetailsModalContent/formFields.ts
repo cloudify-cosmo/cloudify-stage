@@ -81,6 +81,7 @@ export const getFormFields = () => [
     {
         name: 'is_send_services_details',
         label: getFormFieldLabel('isSendServicesDetails'),
-        type: FormFieldType.Checkbox
+        type: FormFieldType.Checkbox,
+        isRequired: true
     }
 ];

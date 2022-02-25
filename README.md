@@ -154,7 +154,7 @@ Go to [test/README.md](./test/README.md).
 1. Source Code documentation
    * [Frontend](./app/README.md) - client-side of the application
    * [Backend](./backend/README.md) - servers-side of the application
-   * [Widgets](./widgets/README.md) - widgets documentation
+   * [Widgets](./widgets/README.md) - widgets documentation (including custom widget development)
    
 2. Documentation way-of-work
    
