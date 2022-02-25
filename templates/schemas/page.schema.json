@@ -4,7 +4,7 @@
   "type": "object",
   "definitions": {
     "widget": {
-      "description": "Widget definition",
+      "description": "Widget definition (see https://docs.cloudify.co/staging/dev/developer/writing_widgets/widget-definition/ for details)",
       "type": "object",
       "properties": {
         "name": {
@@ -30,6 +30,10 @@
         "definition": {
           "description": "Widget definition",
           "type": "string"
+        },
+        "configuration": {
+          "description": "Widget configuration",
+          "type": "object"
         }
       },
       "required": [
