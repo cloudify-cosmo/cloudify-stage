@@ -43,7 +43,7 @@ Most common method for accessing application framework code ([app directory](../
 
 ### Accessing Redux store
 
-There are few methods how you can access application Redux store from the widget:
+There are a few methods how you can access application Redux store from the widget:
 
 1. In functional components you can use `ReactRedux` global object which provides Redux
    hooks (see `ReactRedux` definition in
