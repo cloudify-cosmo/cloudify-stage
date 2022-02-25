@@ -80,7 +80,8 @@ export const formFields: FormField[] = [
     {
         name: 'is_send_services_details',
         label: getFormFieldLabelPath('isSendServicesDetails'),
-        type: FormFieldType.Checkbox
+        type: FormFieldType.Checkbox,
+        isRequired: true
     }
 ];
 
