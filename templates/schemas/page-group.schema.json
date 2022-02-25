@@ -1,23 +1,23 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "type": "object",
   "description": "Page Group definition",
+  "type": "object",
   "properties": {
     "name": {
-      "type": "string",
-      "description": "Page Group name"
+      "description": "Page Group name",
+      "type": "string"
     },
     "icon": {
-      "type": "string",
-      "description": "Page Group icon (one of Semantic UI React icons)"
+      "description": "Page Group icon (one of Semantic UI React icons)",
+      "type": "string"
     },
     "pages": {
+      "description": "List of Pages",
       "type": "array",
       "minItems": 1,
-      "description": "List of Pages",
       "items": {
-        "type": "string",
-        "description": "Page ID"
+        "description": "Page ID",
+        "type": "string"
       }
     }
   },
