@@ -145,6 +145,98 @@ module.exports = (env, argv) => {
         }
     }
 
+    const widgetsConfiguration = {
+        mode,
+        context,
+        devtool,
+        resolve: {
+            extensions: resolveExtensions
+        },
+        entry: glob.sync(`./widgets/*/src/widget.${globExtensions}`).reduce((acc, item) => {
+            const name = item
+                .replace('./widgets/', '')
+                .replace('/src/widget', '/widget')
+                .replace(/(tsx)|(jsx)/, 'js');
+            acc[name] = item;
+            return acc;
+        }, {}),
+        output: {
+            path: path.join(outputPath, 'appData'),
+            filename: 'widgets/[name]',
+            publicPath: CONTEXT_PATH
+        },
+        module,
+        plugins: _.flatten(
+            _.compact([
+                new CopyWebpackPlugin({
+                    patterns: _.compact([
+                        {
+                            from: `widgets/**/src/backend.ts`,
+                            to: `[path]../backend.ts`
+                        },
+                        {
+                            from: 'widgets',
+                            to: 'widgets',
+                            globOptions: {
+                                ignore: ['**/src/**']
+                            }
+                        }
+                    ])
+                }),
+                environmentPlugin,
+                isProduction && getProductionPlugins(env && env.analyse === 'widgets')
+            ])
+        ),
+        externals
+    };
+
+    if (isSingleWidgetBuild) {
+        const widgetPath = path.join(__dirname, `./widgets/${widgetName}`);
+        if (fs.existsSync(widgetPath)) {
+            console.log('Building widget', widgetName);
+        } else {
+            exitWithError(`Invalid widget name provided. Widget directory "${widgetPath}" does not exist.`);
+        }
+
+        return {
+            ...widgetsConfiguration,
+            entry: glob.sync(`./widgets/${widgetName}/src/widget.${globExtensions}`).reduce((acc, item) => {
+                const name = item
+                    .replace('./widgets/', '')
+                    .replace('/src/widget', '/widget')
+                    .replace(/(tsx)|(jsx)/, 'js');
+                acc[name] = item;
+                return acc;
+            }, {}),
+            output: {
+                path: outputPath,
+                filename: 'widgets/[name]',
+                publicPath: CONTEXT_PATH
+            },
+            plugins: _.flatten(
+                _.compact([
+                    new CopyWebpackPlugin({
+                        patterns: _.compact([
+                            fs.existsSync(`widgets/${widgetName}/src/backend.ts`) && {
+                                from: `widgets/${widgetName}/src/backend.ts`,
+                                to: `widgets/${widgetName}`
+                            },
+                            {
+                                from: `widgets/${widgetName}`,
+                                to: `widgets/${widgetName}`,
+                                globOptions: {
+                                    ignore: ['**/src/**']
+                                }
+                            }
+                        ])
+                    }),
+                    environmentPlugin,
+                    isProduction && getProductionPlugins(env && env.analyse === 'widgets')
+                ])
+            )
+        };
+    }
+
     const configuration = [
         {
             mode,
@@ -221,52 +313,7 @@ module.exports = (env, argv) => {
                 ])
             )
         },
-        {
-            mode,
-            context,
-            devtool,
-            resolve: {
-                extensions: resolveExtensions
-            },
-            entry: glob
-                .sync(`./widgets/${isSingleWidgetBuild ? widgetName : '*'}/src/widget.${globExtensions}`)
-                .reduce((acc, item) => {
-                    const name = item
-                        .replace('./widgets/', '')
-                        .replace('/src/widget', '/widget')
-                        .replace(/(tsx)|(jsx)/, 'js');
-                    acc[name] = item;
-                    return acc;
-                }, {}),
-            output: {
-                path: isSingleWidgetBuild ? outputPath : path.join(outputPath, 'appData'),
-                filename: 'widgets/[name]',
-                publicPath: CONTEXT_PATH
-            },
-            module,
-            plugins: _.flatten(
-                _.compact([
-                    new CopyWebpackPlugin({
-                        patterns: _.compact([
-                            fs.existsSync(`widgets/${widgetName}/src/backend.ts`) && {
-                                from: `widgets/${isSingleWidgetBuild ? widgetName : '**'}/src/backend.ts`,
-                                to: `${isSingleWidgetBuild ? `[path]/widgets/${widgetName}` : '[path]..'}/backend.ts`
-                            },
-                            {
-                                from: isSingleWidgetBuild ? `widgets/${widgetName}` : 'widgets',
-                                to: isSingleWidgetBuild ? `widgets/${widgetName}` : 'widgets',
-                                globOptions: {
-                                    ignore: ['**/src/**']
-                                }
-                            }
-                        ])
-                    }),
-                    environmentPlugin,
-                    isProduction && getProductionPlugins(env && env.analyse === 'widgets')
-                ])
-            ),
-            externals
-        },
+        widgetsConfiguration,
         {
             mode,
             context,
@@ -295,18 +342,6 @@ module.exports = (env, argv) => {
 
     if (argv.debug) {
         console.log('Webpack Configuration', configuration);
-    }
-
-    if (isSingleWidgetBuild) {
-        const widgetsConfiguration = configuration[1];
-        const widgetPath = path.join(__dirname, `./widgets/${widgetName}`);
-        if (fs.existsSync(widgetPath)) {
-            console.log('Building widget', widgetName);
-        } else {
-            exitWithError(`Invalid widget name provided. Widget directory "${widgetPath}" does not exist.`);
-        }
-
-        return widgetsConfiguration;
     }
 
     return configuration;
