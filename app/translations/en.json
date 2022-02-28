@@ -46,7 +46,7 @@
                     "validationMessage": "Please provide a valid phone number, which should consists only of 4 - 20 digits"
                 },
                 "isEULA": {
-                    "label": "By registering for the Cloudify Hosted Service you agree to the <a href=\"https://cloudify.co/license-community/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Hosted Trial End User License Agreement</a>"
+                    "label": "By registering for the Cloudify Hosted Service you agree to the <a href=\"{{eulaLink}}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Hosted Trial End User License Agreement</a>"
                 },
                 "isSendServicesDetails": {
                     "label": "Cloudify uses the information provided to send you your service details. For more information see our <a href=\"https://cloudify.co/privacy-policy/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>"
