@@ -58,6 +58,12 @@ To update threshold levels edit `.nycrc` file.
 
 ## Bundle size checks
 
-After building application (`npm run build`) you can its size by running `npm run size` command.
+After building application (`npm run build`), you can check its size by running `npm run size` command.
 
-To get more detailed information about JS bundles sizes, you can use `npm run build:analyse:<area>` scripts, see [package.json](../package.json) file for the list of available scripts. 
+If size limits are exceeded, then it should be checked where that increase comes from. 
+To get more detailed information about JS bundles sizes, 
+you can use `npm run build:analyse:<area>` scripts, 
+see [package.json](../package.json) file for the list of available scripts.
+
+If it turns out that size limits are exceeded expectedly (e.g. new code was added), 
+then [.size-limit](../.size-limit) should be updated accordingly. 
