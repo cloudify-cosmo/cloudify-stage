@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 02/02/2017.
- */
 
 import Actions from './actions';
 import UserRoles from './UserRoles';

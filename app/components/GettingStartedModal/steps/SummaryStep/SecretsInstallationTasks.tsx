@@ -1,7 +1,7 @@
 import React from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
-import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { createSecretTaskDescriptionGetter } from './descriptionGetters';
 import { Divider, Label, List } from '../../../basic';
 
 import type { createSecretsInstallationTasks } from '../../installation/tasks';
@@ -18,10 +18,11 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
     if (tasks == null || (_.isEmpty(tasks.createdSecrets) && _.isEmpty(tasks.updatedSecrets))) {
         return null;
     }
-    const getSecretTaskDescription = createTaskDescriptionGetter(
+    const getSecretTaskDescription = createSecretTaskDescriptionGetter(
         t('settingProgressMessageSuffix'),
         t('settingDoneMessageSuffix'),
-        t('settingErrorMessageSuffix')
+        t('settingErrorMessageSuffix'),
+        t('skipScheduledMessageSufix')
     );
     return (
         <>
@@ -30,7 +31,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={createdSecret.name}>
                         <Label horizontal>{createdSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(createdSecret.name, statuses, t('creationScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(createdSecret, statuses, t('creationScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}
@@ -38,7 +39,7 @@ const SecretsInstallationTasks = ({ tasks, statuses }: Props) => {
                 return (
                     <List.Item key={updatedSecret.name}>
                         <Label horizontal>{updatedSecret.name}</Label>{' '}
-                        {getSecretTaskDescription(updatedSecret.name, statuses, t('updateScheduledMessageSuffix'))}
+                        {getSecretTaskDescription(updatedSecret, statuses, t('updateScheduledMessageSuffix'))}
                     </List.Item>
                 );
             })}

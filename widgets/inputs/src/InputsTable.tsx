@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pawelposel on 07/11/2016.
- */
 
 export default class InputsTable extends React.Component {
     constructor(props, context) {

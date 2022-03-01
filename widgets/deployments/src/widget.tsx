@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 07/09/2016.
- */
 
 import DeploymentsList from './DeploymentsList';
 
@@ -73,34 +70,32 @@ Stage.defineWidget({
     },
 
     fetchData(widget, toolbox, params) {
-        const deploymentDataPromise = toolbox.getManager().doGet('/deployments', {
-            params: {
-                _include:
-                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name',
-                ...params
-            }
+        const deploymentDataPromise = new Stage.Common.DeploymentActions(toolbox).doGetDeployments({
+            _include:
+                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+            ...params
         });
-        const deploymentIdsPromise = deploymentDataPromise.then(data => _.map(data.items, item => item.id));
 
-        const nodeInstanceDataPromise = deploymentIdsPromise.then(ids =>
-            new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
-                _sub_field: 'state',
-                deployment_id: ids
-            })
-        );
+        const nodeInstanceDataPromise = deploymentDataPromise
+            .then(data => _.map(data.items, item => item.id))
+            .then(ids =>
+                new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
+                    _sub_field: 'state',
+                    deployment_id: ids
+                })
+            );
 
-        const executionsDataPromise = deploymentIdsPromise.then(ids =>
-            toolbox.getManager().doGet('/executions', {
-                params: {
+        const latestExecutionsDataPromise = deploymentDataPromise
+            .then(data => _.map(data.items, item => item.latest_execution))
+            .then(ids =>
+                new Stage.Common.ExecutionActions(toolbox).doGetAll({
                     _include:
                         'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
-                    _sort: '-ended_at',
-                    deployment_id: ids
-                }
-            })
-        );
+                    id: ids
+                })
+            );
 
-        return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, executionsDataPromise]).then(data => {
+        return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, latestExecutionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
             const nodeInstanceData = _.reduce(
@@ -114,7 +109,14 @@ Stage.defineWidget({
                 },
                 {}
             );
-            const executionsData = _.groupBy(data[2].items, 'deployment_id');
+            const latestExecutionData = _.reduce(
+                data[2].items,
+                (result, latestExecution) => {
+                    result[latestExecution.deployment_id] = latestExecution;
+                    return result;
+                },
+                {}
+            );
 
             return {
                 ...deploymentData,
@@ -126,8 +128,7 @@ Stage.defineWidget({
                         created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                         updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
                         isUpdated: !_.isEqual(item.created_at, item.updated_at),
-                        executions: _.filter(executionsData[item.id], Stage.Utils.Execution.isActiveExecution),
-                        lastExecution: _.first(executionsData[item.id])
+                        lastExecution: latestExecutionData[item.id]
                     };
                 }),
                 total: _.get(deploymentData, 'metadata.pagination.total', 0),

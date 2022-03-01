@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 30/01/2017.
- */
 
 import Actions from './actions';
 import CreateModal from './CreateModal';
@@ -10,6 +7,8 @@ import MenuAction from './MenuAction';
 import TenantDetails from './TenantDetails';
 import UsersModal from './UsersModal';
 import TenantPropType from './props/TenantPropType';
+
+const t = Stage.Utils.getT(`widgets.tenants.tenantsTable`);
 
 export default class TenantsTable extends React.Component {
     constructor(props, context) {
@@ -91,7 +90,7 @@ export default class TenantsTable extends React.Component {
         } else if (value === MenuAction.DELETE_TENANT_ACTION) {
             this.setState({ tenant, modalType: value, showModal: true });
         } else {
-            this.setState({ error: `Internal error: Unknown action ('${value}') cannot be handled.` });
+            this.setState({ error: t('errors.unknownAction', { actionName: value }) });
         }
     };
 
@@ -106,7 +105,6 @@ export default class TenantsTable extends React.Component {
             .then((/* tenant */) => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('tenants:refresh');
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
             })
             .catch(err => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: err.message });
@@ -132,7 +130,6 @@ export default class TenantsTable extends React.Component {
     render() {
         const { data, toolbox, widget } = this.props;
         const { error, modalType, showModal, tenant, userGroups, users } = this.state;
-        const NO_DATA_MESSAGE = 'There are no Tenants available. Click "Add" to add Tenants.';
         const { ErrorMessage, DataTable, Label } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
 
@@ -148,11 +145,11 @@ export default class TenantsTable extends React.Component {
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="tenantsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noDataMessage')}
                 >
-                    <DataTable.Column label="Name" name="name" width="30%" />
-                    <DataTable.Column label="# Groups" width="30%" />
-                    <DataTable.Column label="# Users" width="30%" />
+                    <DataTable.Column label={t('columns.name')} name="name" width="30%" />
+                    <DataTable.Column label={t('columns.groups')} width="30%" />
+                    <DataTable.Column label={t('columns.users')} width="30%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
@@ -196,7 +193,9 @@ export default class TenantsTable extends React.Component {
                 </DataTable>
 
                 <DeleteModal
-                    content={`Are you sure you want to delete tenant '${tenant.name}'?`}
+                    content={t('deleteModal.content', {
+                        tenantName: tenant.name
+                    })}
                     open={modalType === MenuAction.DELETE_TENANT_ACTION && showModal}
                     onConfirm={this.deleteTenant}
                     onCancel={this.hideModal}

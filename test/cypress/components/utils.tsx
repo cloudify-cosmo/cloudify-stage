@@ -7,19 +7,20 @@ import thunkMiddleware from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 
 import createRootReducer from 'app/reducers';
+import { Router } from 'react-router';
 
 // eslint-disable-next-line import/prefer-default-export
 export function mountWithProvider(component: ReactNode, initialState?: Record<string, any>) {
     const history = createBrowserHistory();
-    mount(
-        <Provider
-            store={createStore(
-                createRootReducer(history),
-                initialState,
-                applyMiddleware(thunkMiddleware, routerMiddleware(history))
-            )}
-        >
-            {component}
-        </Provider>
+    const store = createStore(
+        createRootReducer(history),
+        initialState,
+        applyMiddleware(thunkMiddleware, routerMiddleware(history))
     );
+    mount(
+        <Router history={history}>
+            <Provider store={store}>{component}</Provider>
+        </Router>
+    );
+    return { store, history };
 }

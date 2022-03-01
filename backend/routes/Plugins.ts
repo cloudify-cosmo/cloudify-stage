@@ -1,11 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 import express from 'express';
-import passport from 'passport';
+import type { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import yaml from 'js-yaml';
-
 import _ from 'lodash';
-
 import request from 'request';
 import archiver from 'archiver';
 import * as ManagerHandler from '../handler/ManagerHandler';
@@ -14,15 +11,15 @@ import { getResponseJson } from '../handler/RequestHandler';
 import { getLogger } from '../handler/LoggerHandler';
 
 const defaultedRequest = request.defaults({ encoding: null });
-
 const router = express.Router();
-
 const upload = multer();
 const logger = getLogger('Plugins');
+const getFiles = (req: Request) => req.files as { [fieldname: string]: Express.Multer.File[] };
 
-function checkParams(req, res, next) {
-    const noWagon = req.files && _.isEmpty(req.files.wagon_file) && !req.query.wagonUrl;
-    const noYaml = req.files && _.isEmpty(req.files.yaml_file) && !req.query.yamlUrl;
+function checkParams(req: Request, res: Response, next: NextFunction) {
+    const files = getFiles(req);
+    const noWagon = files && _.isEmpty(files.wagon_file) && !req.query.wagonUrl;
+    const noYaml = files && _.isEmpty(files.yaml_file) && !req.query.yamlUrl;
 
     if (noWagon) {
         const errorMessage = 'Must provide a wagon file or url.';
@@ -37,9 +34,9 @@ function checkParams(req, res, next) {
     }
 }
 
-function downloadFile(url) {
-    return new Promise((resolve, reject) => {
-        defaultedRequest.get(url, (err, res, body) => {
+function downloadFile(url: string) {
+    return new Promise<any>((resolve, reject) => {
+        defaultedRequest.get(url, (err, _res, body) => {
             if (err) {
                 logger.error(`Failed downloading ${url}. ${err}`);
                 reject(err);
@@ -50,7 +47,13 @@ function downloadFile(url) {
     });
 }
 
-function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
+function zipFiles(
+    wagonFile: string | Buffer,
+    wagonFilename: string,
+    yamlFile: string | Buffer,
+    iconFile: string | Buffer,
+    output: request.Request
+) {
     return new Promise((resolve, reject) => {
         const archive = archiver('zip');
         archive.append(wagonFile, { name: wagonFilename });
@@ -66,7 +69,7 @@ function zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, output) {
 
         archive.on('end', () => {
             logger.info('Finished archiving plugin');
-            resolve();
+            resolve(null);
         });
 
         archive.pipe(output);
@@ -87,6 +90,7 @@ router.get('/icons/:pluginId', (req, res) => {
             function (response) {
                 if (response.statusCode === 404) {
                     res.status(200).end();
+                    // @ts-ignore TODO(RD-382) It will be removed, so no need to fix TS issue
                     this.abort();
                 }
             }
@@ -95,50 +99,60 @@ router.get('/icons/:pluginId', (req, res) => {
 });
 
 router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res) => {
-    let getPluginYaml;
-    if (req.query.yamlUrl) {
+    let getPluginYaml: Promise<any>;
+    if (typeof req.query.yamlUrl === 'string') {
         getPluginYaml = downloadFile(req.query.yamlUrl);
     } else {
-        getPluginYaml = Promise.resolve(req.files.yaml_file[0].buffer);
+        const files = getFiles(req);
+        getPluginYaml = Promise.resolve(files.yaml_file[0].buffer);
     }
 
+    // eslint-disable-next-line camelcase
+    type PluginYaml = { plugins: Record<string, { package_name: string }> };
     getPluginYaml
-        .then(yaml.safeLoad)
-        .then(pluginYamlData =>
+        .then(pluginYamlString => yaml.load(pluginYamlString) as PluginYaml)
+        .then(pluginYaml =>
             res.status(200).send({
-                title: _.chain(pluginYamlData.plugins).values().head().get('package_name', '')
+                title: _.chain(pluginYaml.plugins).values().head().get('package_name', '')
             })
         )
         .catch(() => res.status(200).send({ title: '' }));
 });
 
-router.post(
+interface PostUploadQuery {
+    iconUrl?: string;
+    title: string;
+    visibility: string;
+    wagonUrl?: string;
+    yamlUrl?: string;
+}
+router.post<any, any, any, any, PostUploadQuery>(
     '/upload',
-    passport.authenticate('token', { session: false }),
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,
     (req, res) => {
+        const files = getFiles(req);
         const promises = [];
-        let wagonFilename;
+        let wagonFilename = '';
 
         if (req.query.wagonUrl) {
             promises.push(downloadFile(req.query.wagonUrl));
-            wagonFilename = _.last(req.query.wagonUrl.split('/'));
+            wagonFilename = _.last(req.query.wagonUrl.split('/')) || '';
         } else {
-            promises.push(Promise.resolve(req.files.wagon_file[0].buffer));
-            wagonFilename = req.files.wagon_file[0].originalname;
+            promises.push(Promise.resolve(files.wagon_file[0].buffer));
+            wagonFilename = files.wagon_file[0].originalname;
         }
 
         if (req.query.yamlUrl) {
             promises.push(downloadFile(req.query.yamlUrl));
         } else {
-            promises.push(Promise.resolve(req.files.yaml_file[0].buffer));
+            promises.push(Promise.resolve(files.yaml_file[0].buffer));
         }
 
         if (req.query.iconUrl) {
             promises.push(downloadFile(req.query.iconUrl));
         } else if (_.get(req.files, 'icon_file')) {
-            promises.push(Promise.resolve(req.files.icon_file[0].buffer));
+            promises.push(Promise.resolve(files.icon_file[0].buffer));
         } else {
             promises.push(null);
         }

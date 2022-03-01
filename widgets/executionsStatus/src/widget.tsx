@@ -1,21 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
 import { format as d3format } from 'd3-format';
+import type { ExecutionsStatusWidget } from './types';
 
-Stage.defineWidget({
-    id: 'executionsStatus',
-    name: 'Executions Statuses Graph',
-    description: 'Shows the number of executions per status',
+const { Loading } = Stage.Basic;
+const { Graph } = Stage.Shared;
+
+const widgetId = 'executionsStatus';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
+Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, ExecutionsStatusWidget.Configuration>({
+    id: widgetId,
+    name: t('name'),
+    description: t('description'),
     initialWidth: 4,
     initialHeight: 24,
     color: 'blue',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('executionsStatus'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(5)],
     fetchUrl: '[manager]/summary/executions?_target_field=status_display[params]',
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         return {
             blueprint_id: toolbox.getContext().getValue('blueprintId'),
             deployment_id: toolbox.getContext().getValue('deploymentId'),
@@ -24,28 +30,29 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data) {
-        const { Loading } = Stage.Basic;
-
+    render(_widget, data) {
         if (_.isEmpty(data)) {
             return <Loading />;
         }
-        if (_.isEmpty(data.items)) {
+
+        if (_.isEmpty(data?.items)) {
             const { Message } = Stage.Basic;
-            return <Message content="There are no Executions available." />;
+            return <Message content={t('noExecutions')} />;
         }
 
         const formattedData = _.sortBy(
-            _.map(data.items, statusSum => ({
+            _.map(data?.items, statusSum => ({
                 status: _.startCase(statusSum.status_display),
                 number_of_executions: statusSum.executions
             })),
             statusSum => statusSum.status
         );
-        const { Graph } = Stage.Shared;
-        const charts = [{ name: 'number_of_executions', label: 'Number of executions', axisLabel: 'status' }];
+
+        const charts = [{ name: 'number_of_executions', label: t('charts.tooltip.label'), axisLabel: 'status' }];
+
         return (
             <Graph
+                // @ts-expect-error Graph is not converted to TS yet
                 type={Graph.BAR_CHART_TYPE}
                 data={formattedData}
                 charts={charts}

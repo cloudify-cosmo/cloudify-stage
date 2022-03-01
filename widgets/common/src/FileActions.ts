@@ -17,6 +17,12 @@ class FileActions {
     }
 }
 
+declare global {
+    namespace Stage.Common {
+        export { FileActions };
+    }
+}
+
 Stage.defineCommon({
     name: 'FileActions',
     common: FileActions

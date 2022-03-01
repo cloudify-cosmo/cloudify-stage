@@ -38,8 +38,16 @@ describe('Blueprint Action Buttons widget', () => {
 
         cy.get('div.deployBlueprintModal').should('be.visible');
         cy.get('.actions > .ui:nth-child(1)').should('have.text', 'Cancel');
-        cy.get('.actions > .ui:nth-child(2)').should('have.text', 'Deploy');
-        cy.get('.actions > .ui:nth-child(3)').should('have.text', 'Deploy & Install');
+        cy.get('.actions > .ui:nth-child(2)').within(() => {
+            cy.get('button').should('have.text', 'Install');
+            cy.contains('.dropdown', 'Install')
+                .click() // open dropdown
+                .within(() => {
+                    cy.get('.item:nth-child(1)').should('have.text', 'Deploy');
+                    cy.get('.item:nth-child(2)').should('have.text', 'Install');
+                })
+                .click(); // close dropdown
+        });
 
         cy.get('.actions > .ui:nth-child(1)').click();
         cy.get('div.deployBlueprintModal').should('not.exist');

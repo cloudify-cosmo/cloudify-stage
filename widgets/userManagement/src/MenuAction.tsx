@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 19/10/2016.
- */
 import UserPropType from './props/UserPropType';
 
 export default class MenuAction extends React.Component {

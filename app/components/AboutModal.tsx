@@ -1,27 +1,40 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React, { useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import { HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 
+import { push } from 'connected-react-router';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, CancelButton, Divider, Header, Modal } from './basic';
 import Banner from './banner/Banner';
 import CurrentLicense from './license/CurrentLicense';
 import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
+import stageUtils from '../utils/stageUtils';
+import Consts from '../utils/consts';
+import { ReduxState } from '../reducers';
 
-export default function AboutModal({ canLicenseManagement, license, onHide, onLicenseManagement, open, version }) {
+interface AboutModalProps {
+    open: boolean;
+    onHide: () => void;
+}
+
+const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
     const theme = useContext(ThemeContext);
+    const dispatch = useDispatch();
+
+    const canLicenseManagement = useSelector(
+        (state: ReduxState) =>
+            state.manager.license.isRequired &&
+            stageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, state.manager)
+    );
+    const version = useSelector((state: ReduxState) => state.manager.version);
+    const license = useSelector((state: ReduxState) => state.manager.license.data);
+
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header style={{ padding: 0, backgroundColor: theme.mainColor }}>
-                <HeaderBar>
+                <HeaderBar className={undefined}>
                     <Banner hideOnSmallScreen={false} />
                 </HeaderBar>
             </Modal.Header>
@@ -44,25 +57,13 @@ export default function AboutModal({ canLicenseManagement, license, onHide, onLi
                         content={i18n.t('help.aboutModal.licenseManagement', 'License Management')}
                         icon="key"
                         color="yellow"
-                        onClick={onLicenseManagement}
+                        onClick={() => dispatch(push(Consts.LICENSE_PAGE_PATH))}
                     />
                 )}
                 <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={onHide} />
             </Modal.Actions>
         </Modal>
     );
-}
-
-AboutModal.propTypes = {
-    canLicenseManagement: PropTypes.bool.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    version: PropTypes.shape({}).isRequired,
-    license: PropTypes.shape({}),
-    onLicenseManagement: PropTypes.func
 };
 
-AboutModal.defaultProps = {
-    license: {},
-    onLicenseManagement: _.noop
-};
+export default AboutModal;

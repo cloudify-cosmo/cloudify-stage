@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 18/10/2016.
- */
 
 export default class DeploymentButton extends React.Component {
     constructor(props, context) {

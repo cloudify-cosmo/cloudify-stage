@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 24/03/2017.
- */
 
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
@@ -39,8 +36,8 @@ function SecretValue({
                 <Popup.Trigger>
                     <Icon bordered name="dont" color="red" />
                 </Popup.Trigger>
-                User `{currentUsername}` is not permitted to show the secret `{secretKey}
-                {secretKey}` in the tenant `{selectedTenant}` .
+                User `{currentUsername}` is not permitted to show the secret `{secretKey} in the tenant `
+                {selectedTenant}` .
             </Popup>
         );
     }

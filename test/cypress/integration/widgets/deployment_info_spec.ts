@@ -49,8 +49,7 @@ describe('Deployment Info', () => {
         cy.contains('h3.header', 'Blueprint').should('be.visible');
 
         // Turn on edit mode and open widget configuration
-        cy.get('.usersMenu').click();
-        cy.get('div#editModeMenuItem').click();
+        cy.enterEditMode();
         cy.get('div.deploymentInfoWidget div.loader').should('be.not.visible');
         cy.get('div.react-grid-item div.deploymentInfoWidget .editWidgetIcon').click({ force: true });
 
@@ -61,8 +60,7 @@ describe('Deployment Info', () => {
         });
 
         // Turn off edit mode
-        cy.get('.usersMenu').click();
-        cy.get('div#editModeMenuItem').click();
+        cy.exitEditMode();
 
         // Verify that changes were applied
         cy.contains('h3.header', 'Blueprint').should('not.exist');

@@ -1,0 +1,17 @@
+{
+  "name": "Filters",
+  "icon": "filter",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Filters",
+          "width": 12,
+          "height": 24,
+          "definition": "filters"
+        }
+      ]
+    }
+  ]
+}

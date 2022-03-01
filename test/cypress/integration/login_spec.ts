@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import { getCurrentAppVersion } from '../support/app_commons';
+import Consts from 'app/utils/consts';
 
 describe('Login', () => {
     it('succeeds when provided credentials are valid and license is active', () => {
@@ -20,7 +20,7 @@ describe('Login', () => {
     });
 
     it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
-        const currentAppDataVersion = getCurrentAppVersion();
+        const currentAppDataVersion = Consts.APP_VERSION;
         const fetchUserAppsTimeout = 20000;
 
         cy.intercept('GET', '/console/ua', req => {

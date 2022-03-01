@@ -6,8 +6,6 @@ import { browseArchiveFile, browseArchiveTree, listYamlFiles, getBlueprintResour
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
-
 router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     const { timestamp } = req.params;
     const path = req.params[0];

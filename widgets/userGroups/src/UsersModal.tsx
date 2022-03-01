@@ -1,10 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
+
+const t = Stage.Utils.getT('widgets.userGroups.modals.user');
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
     const { useState } = React;
@@ -70,22 +69,22 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> Edit users for {group.name}
+                <Icon name="user" />
+                {t('header', {
+                    groupName: group.name
+                })}
             </Modal.Header>
 
             <Modal.Content>
                 {waitingForConfirmation && (
                     <Message warning onDismiss={() => setWaitingForConfirmation(false)}>
-                        <Message.Header>Confirmation request</Message.Header>
-                        You are about to remove yourself from this group. Your administrative privileges will be removed
-                        and you will be logged out of the system so the changes take effect. Are you sure you want to
-                        continue?
+                        <Message.Header>{t('message.header')}</Message.Header>
+                        {t('message.content')}
                     </Message>
                 )}
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <Form.Field label={t('fields.users')}>
                         <Form.Dropdown
-                            placeholder="Users"
                             multiple
                             selection
                             options={options}
@@ -101,14 +100,14 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                 <CancelButton
                     onClick={onCancel}
                     disabled={isLoading}
-                    content={waitingForConfirmation ? 'No' : undefined}
+                    content={waitingForConfirmation ? t('buttons.cancel') : undefined}
                 />
                 <ApproveButton
                     onClick={submitUsers}
                     disabled={isLoading}
                     icon="user"
                     color="green"
-                    content={waitingForConfirmation ? 'Yes' : undefined}
+                    content={waitingForConfirmation ? t('buttons.approve') : undefined}
                 />
             </Modal.Actions>
         </Modal>

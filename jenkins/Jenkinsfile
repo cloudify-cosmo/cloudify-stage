@@ -34,7 +34,7 @@ pipeline {
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
-    CFY_NODE_RPM = 'http://repository.cloudifysource.org/cloudify/components/nodejs-12.22.1-1nodesource.x86_64.rpm'
+    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
   }
 
@@ -56,11 +56,13 @@ pipeline {
         stage('Prepare & Run first test group'){
           steps {
             container('node'){
+              echo "Install required packages"
+              sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client && apt-get -y install jq'
               dir("${STAGE_DIR}/conf") {
                 withVault([configuration: configuration, vaultSecrets: secrets]) {
-                  sh """
-                    jq '.maps.accessToken = "${env.MAPS_ACCESS_TOKEN}"' app.json > app.json.tmp && mv app.json.tmp app.json
-                  """
+                  sh '''
+                    jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
+                  '''
                 }
                 dir("${STAGE_DIR}") {
                   restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
@@ -71,11 +73,13 @@ pipeline {
                   sh 'npm run build'
                 }
               }
-              echo 'prepare test folder'
+              echo 'Prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
+                echo 'Validate JSON files'
+                sh 'npm run test:json'
               }
             }
           }
@@ -88,7 +92,7 @@ pipeline {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
               sh """
-                cd && mkdir rpmbuild && cd rpmbuild
+                cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
                 curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info"
               """
@@ -96,8 +100,8 @@ pipeline {
               echo 'Check for cache'
               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
-              echo 'Install NodeJS & RPM development tools'
-              sh "yum install -y ${CFY_NODE_RPM} rpmdevtools rpmlint"
+              echo 'Install NodeJS'
+              sh "yum install -y ${CFY_NODE_RPM}"
 
               echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
               sh '''
@@ -133,12 +137,22 @@ pipeline {
     }
     stage('Run second tests group') {
       parallel {
-        stage('Test frontend'){
+        stage('Test frontend unit'){
           steps{
             container('node'){
               dir("${WORKSPACE}/test"){
-                echo 'Run frontend tests'
+                echo 'Run frontend unit tests'
                 sh 'npm run test:frontend:unit'
+              }
+            }
+          }
+        }
+        stage('Test frontend components'){
+          steps{
+            container('node'){
+              dir("${WORKSPACE}/test"){
+                echo 'Run frontend component tests'
+                sh 'npm run test:frontend:components'
               }
             }
           }
@@ -148,9 +162,15 @@ pipeline {
             container('node'){
               dir("${WORKSPACE}/test"){
                 echo 'Run backend tests'
-                sh 'sudo rm -rf /var/lib/apt/lists/* && sudo apt update && sudo apt install postgresql-client'
                 sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
                 sh 'npm run test:backend'
+                echo 'Verify backend start'
+                sh '''
+                  cd backend
+                  npm run db-migrate
+                  npm run start &
+                  npm run wait-on-server
+                '''
               }
             }
           }

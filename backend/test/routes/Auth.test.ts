@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import request from 'supertest';
 import app from 'app';
 import {
@@ -31,13 +30,41 @@ function mockSamlConfig() {
 
 describe('/auth endpoint', () => {
     describe('/login handles', () => {
-        it('valid token', () => {
+        it('valid token via https in CaaS environment', () => {
+            (<jest.Mock>getToken).mockResolvedValue({ value: 'xyz', role: 'default' });
+            return request(app)
+                .post('/console/auth/login')
+                .set('X-Force-Secure', 'true')
+                .expect(200)
+                .then(response => {
+                    expect(response.body).toStrictEqual({ role: 'default' });
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; Secure; SameSite=Strict']);
+                });
+        });
+
+        it('valid token via https in non-CaaS environment', () => {
+            (<jest.Mock>getToken).mockResolvedValue({ value: 'xyz', role: 'default' });
+            return request(app)
+                .post('/console/auth/login')
+                .set('X-Scheme', 'https')
+                .expect(200)
+                .then(response => {
+                    expect(response.body).toStrictEqual({ role: 'default' });
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; Secure; SameSite=Strict']);
+                });
+        });
+
+        it('valid token via http', () => {
             (<jest.Mock>getToken).mockResolvedValue({ value: 'xyz', role: 'default' });
             return request(app)
                 .post('/console/auth/login')
                 .expect(200)
                 .then(response => {
                     expect(response.body).toStrictEqual({ role: 'default' });
+                    const { 'set-cookie': setCookie } = response.headers;
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; SameSite=Strict']);
                 });
         });
 

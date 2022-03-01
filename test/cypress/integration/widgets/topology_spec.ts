@@ -1,5 +1,5 @@
 import { pick, size } from 'lodash';
-import { secondsToMs, waitUntilEmpty, waitUntilNotEmpty } from '../../support/resource_commons';
+import { secondsToMs } from '../../support/resource_commons';
 
 /**
  * Performs a deep equality check assuming the `assertedValue` can
@@ -17,15 +17,8 @@ describe('Topology', () => {
     const resourcePrefix = 'topology_test_';
     const getNodeTopologyButton = (index: number) => cy.get(`.nodeTopologyButton:eq(${index})`);
 
-    const waitForDeploymentToBeInstalled = (deploymentId: string) => {
-        cy.log(`Waiting for deployment ${deploymentId} to be installed.`);
-        const startedInstallWorkflowsOnDeploymentUrl = `executions?_include=id,workflow_id,status&deployment_id=${deploymentId}&workflow_id=install&status=started`;
-
-        // NOTE: First, wait for execution to start as it can happen not to start immediately.
-        // Then, wait for install workflow to change the status not to be `started`.
-        waitUntilNotEmpty(startedInstallWorkflowsOnDeploymentUrl);
-        waitUntilEmpty(startedInstallWorkflowsOnDeploymentUrl);
-    };
+    const waitForDeploymentToBeInstalled = (deploymentId: string) =>
+        cy.waitForExecutionToEnd('install', { deploymentId });
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('topology', { pollingTime: pollingTimeSeconds });
@@ -39,7 +32,6 @@ describe('Topology', () => {
         before(() => {
             cy.mockLogin()
                 .deletePlugins()
-                .uploadPluginFromCatalog('Terraform')
                 .deleteDeployments(resourcePrefix, true)
                 .deleteBlueprints(resourcePrefix, true)
                 .uploadBlueprint(blueprintFile, blueprintId)
@@ -71,6 +63,7 @@ describe('Topology', () => {
 
             cy.log('Check terraform module details');
             waitForDeploymentToBeInstalled(deploymentId);
+            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
             getTerraformDetailsButton().should('not.have.css', 'visibility', 'hidden').click({ force: true });

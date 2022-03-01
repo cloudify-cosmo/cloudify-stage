@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 11/09/2016.
- */
 
 import { connect } from 'react-redux';
 import Layout from '../../components/layout/Layout';

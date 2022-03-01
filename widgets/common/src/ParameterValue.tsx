@@ -77,6 +77,12 @@ ParameterValue.defaultProps = {
     showCopyButton: true
 };
 
+declare global {
+    namespace Stage.Common {
+        export { ParameterValue };
+    }
+}
+
 Stage.defineCommon({
     name: 'ParameterValue',
     common: ParameterValue

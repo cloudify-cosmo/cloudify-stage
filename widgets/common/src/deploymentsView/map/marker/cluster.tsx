@@ -92,7 +92,6 @@ const worstToBestDeploymentStatuses = [
     DeploymentStatus.Good
 ];
 const getAggregatedClusterStatus = (statusCounts: DeploymentStatusCounts): DeploymentStatus => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const aggregatedStatus = worstToBestDeploymentStatuses.find(status => statusCounts[status]! > 0);
     if (!aggregatedStatus) {
         throw new Error("Cannot determine the cluster's aggregated status when there are no deployments inside");

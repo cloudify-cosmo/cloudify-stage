@@ -3,6 +3,7 @@ import type { ComponentProps } from 'react';
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
+import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;
@@ -134,7 +135,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { ErrorMessage } = Stage.Basic;
-        const { DeleteConfirm, DeployBlueprintModal, BlueprintUploadActionsMenu } = Stage.Common;
+        const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 

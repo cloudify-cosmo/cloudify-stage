@@ -1,8 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 /* eslint-disable max-classes-per-file */
-/**
- * Created by jakub.niezgoda on 31/07/2018.
- */
 
 import StepActions from '../wizard/StepActions';
 import { createWizardStep } from '../wizard/wizardUtils';

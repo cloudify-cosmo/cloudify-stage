@@ -1,0 +1,5 @@
+{
+  "name": "Deployments",
+  "icon": "rocket",
+  "pages": ["services", "environments"]
+}

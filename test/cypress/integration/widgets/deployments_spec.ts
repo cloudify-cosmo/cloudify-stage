@@ -1,4 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
+import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
@@ -9,26 +9,18 @@ describe('Deployments widget', () => {
     const site = { name: siteName };
     const blueprintUrl = exampleBlueprintUrl;
 
-    const selectDeploymentActionFromMenu = (id, menuClassName, action) => {
+    const selectDeploymentActionFromMenu = (id: string, menuClassName: string, action: string) => {
         cy.searchInDeploymentsWidget(id);
         cy.contains('div.row', id).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
-    const executeDeploymentAction = (id, action) => {
+    const executeDeploymentAction = (id: string, action: string) => {
         selectDeploymentActionFromMenu(id, '.deploymentActionsMenu', action);
     };
-    const executeDeploymentWorkflow = (id, workflow) => {
+    const executeDeploymentWorkflow = (id: string, workflow: string) => {
         selectDeploymentActionFromMenu(id, '.workflowsMenu', workflow);
     };
-    const verifyWorkflowIsStarted = () => {
-        cy.contains('div.row', deploymentId).find('.spinner.loading.icon').should('be.visible');
-    };
-    const waitUntilWorkflowIsFinished = () => {
-        const workflowExecutionTimeout = 60000;
-        cy.contains('div.row', deploymentId)
-            .find('.spinner.loading.icon', { timeout: workflowExecutionTimeout })
-            .should('not.exist');
-    };
+    const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -123,18 +115,12 @@ describe('Deployments widget', () => {
     });
 
     describe('should allow to execute', () => {
-        beforeEach(() => {
-            cy.interceptSp('POST', `/executions`).as('executeDeploymentWorkflow');
-        });
-
         const startAndVerifyWorkflowExecution = (workflow: string) => {
             cy.get('.executeWorkflowModal').within(() => {
                 cy.contains(`Execute workflow ${workflow} on ${deploymentName} (${deploymentId})`);
                 cy.get('button.ok').click();
             });
-            cy.wait('@executeDeploymentWorkflow');
-            verifyWorkflowIsStarted();
-            waitUntilWorkflowIsFinished();
+            verifyExecutionHasEnded(workflow);
         };
 
         it('install workflow from deployment actions menu', () => {
@@ -190,8 +176,7 @@ describe('Deployments widget', () => {
 
         cy.wait('@updateDeployment');
         cy.get('.updateDetailsModal').should('not.exist');
-        verifyWorkflowIsStarted();
-        waitUntilWorkflowIsFinished();
+        verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
         cy.contains('div.row', deploymentId)
             .get('div.column:nth-child(3) h5:nth-child(2)')
             .should('contain.text', 'Updated');
@@ -206,7 +191,7 @@ describe('Deployments widget', () => {
         cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
         cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
 
-        const typeInput = (name, value) => {
+        const typeInput = (name: string, value: string) => {
             cy.get(`div[name=${name}]`).click();
             cy.get(`div[name=${name}] input`).type(value);
         };
@@ -230,7 +215,7 @@ describe('Deployments widget', () => {
 
         cy.getDeployment(deploymentId).then(response => {
             const { labels } = response.body;
-            const verifyLabel = (index, key, value) => {
+            const verifyLabel = (index: number, key: string, value: string) => {
                 expect(labels[index]).to.have.property('key', key);
                 expect(labels[index]).to.have.property('value', value);
             };

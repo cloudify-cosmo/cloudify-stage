@@ -1,12 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
 import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import request from 'request';
 import { getLogger } from '../handler/LoggerHandler';
 
 const router = express.Router();
 const logger = getLogger('External');
 
-function pipeRequest(req, res, next, url, queryString) {
+interface GetContentQuery extends Record<string, string> {
+    url: string;
+}
+
+function pipeRequest(
+    req: Request<any, any, any, GetContentQuery>,
+    res: Response,
+    _next: NextFunction,
+    url: string,
+    queryString: any
+) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
 
     req.pipe(
@@ -16,7 +26,7 @@ function pipeRequest(req, res, next, url, queryString) {
     ).pipe(res);
 }
 
-router.get('/content', (req, res, next) => {
+router.get<any, any, any, any, GetContentQuery>('/content', (req, res, next) => {
     const { url, ...queryString } = req.query;
     pipeRequest(req, res, next, url, queryString);
 });

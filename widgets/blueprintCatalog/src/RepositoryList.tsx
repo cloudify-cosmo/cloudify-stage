@@ -82,7 +82,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         repositoryName,
         zipUrl,
         imageUrl,
-        defaultYamlFile = 'blueprint.yaml'
+        defaultYamlFile = Stage.Common.Consts.defaultBlueprintYamlFileName
     ) => {
         const { toolbox, widget } = this.props;
         const { BlueprintActions } = Stage.Common;
@@ -90,15 +90,11 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
 
         new BlueprintActions(toolbox)
-            .doUpload(
-                repositoryName,
-                defaultYamlFile,
-                zipUrl,
-                null,
-                Stage.Utils.Url.url(imageUrl),
-                null,
-                Stage.Common.Consts.defaultVisibility
-            )
+            .doUpload(repositoryName, {
+                blueprintYamlFile: defaultYamlFile,
+                blueprintUrl: zipUrl,
+                imageUrl: Stage.Utils.Url.url(imageUrl)
+            })
             .then(() => {
                 toolbox.drillDown(widget, 'blueprint', { blueprintId: repositoryName }, repositoryName);
             })

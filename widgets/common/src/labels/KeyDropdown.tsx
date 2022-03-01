@@ -1,5 +1,6 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useContext } from 'react';
 import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
+import ResourceTypeContext from '../filters/resourceTypeContext';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {
     onChange: (value: string) => void;
@@ -14,12 +15,13 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
     value
 }) => {
     const { i18n } = Stage;
+    const resourceType = useContext(ResourceTypeContext);
 
     return (
         <CommonDropdown
             type="key"
             innerRef={innerRef}
-            fetchUrl="/labels/deployments"
+            fetchUrl={`/labels/${resourceType}`}
             noResultsMessage={value && !allowAdditions ? i18n.t('widgets.common.labels.newKey') : undefined}
             placeholder={i18n.t('widgets.common.labels.keyPlaceholder')}
             name="labelKey"

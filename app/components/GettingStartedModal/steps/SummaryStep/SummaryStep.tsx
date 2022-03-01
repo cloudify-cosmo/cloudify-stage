@@ -10,7 +10,8 @@ import {
     useSecretsInstallationTasks,
     useBlueprintsInstallationTasks
 } from '../../installation/tasks';
-import { useInternal, useManager } from '../../common/managerHooks';
+import { useInternal } from '../../common/managerHooks';
+import useManager from '../../../../utils/hooks/useManager';
 import { createResourcesInstaller, TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
@@ -92,7 +93,7 @@ const SummaryStep = ({
             resourcesInstaller.install(
                 pluginsInstallationTasks.tasks.scheduledPlugins,
                 secretsInstallationTasks.tasks.updatedSecrets,
-                secretsInstallationTasks.tasks.createdSecrets,
+                secretsInstallationTasks.tasks.createdSecrets.filter(secret => !!secret.value),
                 blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
             return () => {
@@ -134,7 +135,7 @@ const SummaryStep = ({
                 blueprintsInstallationTasks.tasks) && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
-                    <List ordered relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
+                    <List relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
                         <PluginsInstallationTasks
                             tasks={pluginsInstallationTasks.tasks}
                             statuses={installationStatuses.plugin}

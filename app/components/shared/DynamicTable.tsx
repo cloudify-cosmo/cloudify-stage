@@ -1,14 +1,12 @@
 import React, { ComponentProps, FunctionComponent } from 'react';
 
-interface KeyValueEditorProps
-    extends Pick<
-        Stage.Types.CustomConfigurationComponentProps<Partial<Record<string, any>>[]>,
-        'name' | 'onChange' | 'value'
-    > {
+export interface DynamicTableProps
+    extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {
     columns?: Stage.Types.WidgetConfigurationDefinition[];
+    [key: string]: any;
 }
 
-const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = [], onChange, columns = [] }) => {
+const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], onChange, columns = [], ...rest }) => {
     const { GenericField, Input, Button, Table } = Stage.Basic;
     const t = Stage.Utils.getT('shared.dynamicTable');
 
@@ -49,23 +47,23 @@ const DynamicTable: FunctionComponent<KeyValueEditorProps> = ({ name, value = []
                     <Table.Row key={index}>
                         {columns
                             .filter(column => !column.hidden)
-                            .map(column => (
-                                <Table.Cell key={column.id}>
-                                    <GenericField
-                                        label=""
-                                        component={column.component}
-                                        default={column.default}
-                                        items={column.items}
-                                        min={column.min}
-                                        max={column.max}
-                                        type={column.type}
-                                        key={column.id}
-                                        name={column.id}
-                                        value={val[column.id]}
-                                        onChange={handleEditRow(column.id, index)}
-                                    />
-                                </Table.Cell>
-                            ))}
+                            .map(column => {
+                                const { id, label, ...columnRest } = column;
+                                return (
+                                    <Table.Cell key={id}>
+                                        <GenericField
+                                            label=""
+                                            key={id}
+                                            name={id}
+                                            value={val[id]}
+                                            rowValues={val}
+                                            onChange={handleEditRow(id, index)}
+                                            {...rest}
+                                            {...columnRest}
+                                        />
+                                    </Table.Cell>
+                                );
+                            })}
                         <Table.Cell textAlign="right" width={1}>
                             <Button
                                 basic

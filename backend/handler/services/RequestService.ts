@@ -1,17 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
+import type { CoreOptions } from 'request';
 import _ from 'lodash';
-import param from 'jquery-param';
 import { request } from '../RequestHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
+import { getUrlWithQueryString } from './common';
+import type { AllowedRequestMethod, QueryStringParams } from '../../types';
 
-export function call(method, url, { params, body, parseResponse = true, headers, certificate } = {}) {
+interface RequestOptions {
+    body?: any;
+    certificate?: string;
+    headers?: Record<string, string>;
+    params?: QueryStringParams;
+    parseResponse?: boolean;
+}
+
+export function call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions = {}) {
+    const { params, body, parseResponse = true, headers, certificate } = requestOptions;
     return new Promise((resolve, reject) => {
-        const options = { headers: {} };
-        let fullUrl = url;
-        if (!_.isEmpty(params)) {
-            const queryString = (url.indexOf('?') > 0 ? '&' : '?') + param(params, true);
-            fullUrl = `${url}${queryString}`;
-        }
+        const options: CoreOptions | undefined = { headers: {} };
         if (headers) {
             options.headers = _.omit(headers, 'cert');
         }
@@ -24,6 +29,7 @@ export function call(method, url, { params, body, parseResponse = true, headers,
             options.json = body;
             try {
                 const strData = JSON.stringify(body);
+                if (!options.headers) options.headers = {};
                 options.headers['content-length'] = Buffer.byteLength(strData);
             } catch (error) {
                 throw new Error(`Invalid (non-json) payload data. Error: ${error}`);
@@ -32,7 +38,7 @@ export function call(method, url, { params, body, parseResponse = true, headers,
 
         request(
             method,
-            fullUrl,
+            getUrlWithQueryString(url, params),
             options,
             res => {
                 const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
@@ -65,22 +71,22 @@ export function call(method, url, { params, body, parseResponse = true, headers,
     });
 }
 
-export function doGet(url, requestOptions) {
+export function doGet(url: string, requestOptions: RequestOptions) {
     return call(ALLOWED_METHODS_OBJECT.get, url, requestOptions);
 }
 
-export function doPost(url, requestOptions) {
+export function doPost(url: string, requestOptions: RequestOptions) {
     return call(ALLOWED_METHODS_OBJECT.post, url, requestOptions);
 }
 
-export function doDelete(url, requestOptions) {
+export function doDelete(url: string, requestOptions: RequestOptions) {
     return call(ALLOWED_METHODS_OBJECT.delete, url, requestOptions);
 }
 
-export function doPut(url, requestOptions) {
+export function doPut(url: string, requestOptions: RequestOptions) {
     return call(ALLOWED_METHODS_OBJECT.put, url, requestOptions);
 }
 
-export function doPatch(url, requestOptions) {
+export function doPatch(url: string, requestOptions: RequestOptions) {
     return call(ALLOWED_METHODS_OBJECT.patch, url, requestOptions);
 }

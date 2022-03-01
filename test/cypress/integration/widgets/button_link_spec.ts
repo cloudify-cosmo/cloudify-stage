@@ -35,35 +35,35 @@ describe('Button link widget', () => {
         it('color', () => {
             const color = 'violet';
             cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
-            cy.get('button').should('have.class', color);
+            cy.getWidget(widgetId).find('button').should('have.class', color);
         });
 
         it('label', () => {
             const label = 'Setup cloud account';
             cy.setStringConfigurationField(widgetId, 'Label', label);
-            cy.get('button').should('have.text', label);
+            cy.getWidget(widgetId).find('button').should('have.text', label);
         });
 
         it('icon', () => {
             const icon = 'wizard';
             cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
-            cy.get('button i').should('have.class', icon);
+            cy.getWidget(widgetId).find('button i').should('have.class', icon);
         });
 
         it('basicness', () => {
             const basicButtonToggleName = 'Basic button';
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, false);
-            cy.get('button').should('not.have.class', 'basic');
+            cy.getWidget(widgetId).find('button').should('not.have.class', 'basic');
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
-            cy.get('button').should('have.class', 'basic');
+            cy.getWidget(widgetId).find('button').should('have.class', 'basic');
         });
 
         it('full height', () => {
             const fullHeightToggleName = 'Full height';
             cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, false);
-            cy.get('button').should('not.have.attr', 'style');
+            cy.getWidget(widgetId).find('button').should('not.have.attr', 'style');
             cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, true);
-            cy.get('button').should('have.attr', 'style').and('include', 'height: 100%');
+            cy.getWidget(widgetId).find('button').should('have.attr', 'style').and('include', 'height: 100%');
         });
     });
 });

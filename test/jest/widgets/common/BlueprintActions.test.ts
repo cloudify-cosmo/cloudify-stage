@@ -12,7 +12,8 @@ describe('(Widgets common) BlueprintActions', () => {
             PollHelper() {
                 this.wait = wait;
                 this.resetAttempts = resetAttempts;
-            }
+            },
+            Consts: {}
         };
     });
 
@@ -29,7 +30,7 @@ describe('(Widgets common) BlueprintActions', () => {
         return new BlueprintActions({
             getManager: _.constant({ doPut: _.constant(Promise.resolve()), doGet: getBlueprintData })
         })
-            .doUpload(null, null, null, null, null, null, null, onStateChanged)
+            .doUpload('', { onStateChanged })
             .then(() => {
                 expect(onStateChanged).toHaveBeenCalledTimes(4);
                 expect(onStateChanged).toHaveBeenNthCalledWith(1, InProgressBlueprintStates.Uploading);
@@ -56,7 +57,7 @@ describe('(Widgets common) BlueprintActions', () => {
         return new BlueprintActions({
             getManager: _.constant({ doPut: _.constant(Promise.resolve()), doGet: getBlueprintData })
         })
-            .doUpload(null, null, null, null, null, null, null, onStateChanged)
+            .doUpload('', { onStateChanged })
             .catch(e => {
                 expect(e.message).toBe(error);
                 expect(e.state).toBe(BlueprintActions.CompletedBlueprintStates.FailedUploading);

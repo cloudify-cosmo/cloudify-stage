@@ -55,7 +55,7 @@ describe('Number of Deployments widget', () => {
         function setWidgetConfiguration(filterId: string, pageToOpenOnClick: string) {
             cy.editWidgetConfiguration(widgetId, () => {
                 cy.setSearchableDropdownValue('Filter ID', filterId);
-                cy.setDropdownValues('Page to open on click', [pageToOpenOnClick]);
+                cy.setSingleDropdownValue('Page to open on click', pageToOpenOnClick);
             });
         }
 
@@ -64,7 +64,7 @@ describe('Number of Deployments widget', () => {
         }
 
         function verifyUrl(expectedPageId: string, expectedSearch: string) {
-            cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`);
+            cy.verifyLocationByPageId(expectedPageId);
             cy.location('search').should('be.equal', expectedSearch);
         }
 

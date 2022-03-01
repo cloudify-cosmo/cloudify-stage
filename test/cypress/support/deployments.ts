@@ -70,6 +70,10 @@ const commands = {
             cy.get('.input.loading').should('not.exist');
             cy.get('.widgetLoader').should('be.not.visible');
         }),
+    selectAndClickDeploy: () => {
+        cy.get('[aria-label="Deploy or Install"]').click().contains('Deploy').click();
+        cy.get('.actions').clickButton('Deploy');
+    },
     revertToDefaultValue: () => {
         const revertToDefaultAriaLabel = '[aria-label="Revert value to default"]';
         return cy.get(revertToDefaultAriaLabel).click().should('not.exist');

@@ -29,23 +29,25 @@ export interface FilterRule {
 
 export enum FilterRuleAttribute {
     Blueprint = 'blueprint_id',
+    Creator = 'created_by',
+    DisplayName = 'display_name',
     SiteName = 'site_name',
-    Creator = 'created_by'
+    TenantName = 'tenant_name'
 }
 type LabelKey = string;
 
-enum CommonRuleOperator {
+export enum CommonRuleOperator {
     AnyOf = 'any_of',
     NotAnyOf = 'not_any_of'
 }
 
-enum LabelsOnlyRuleOperator {
+export enum LabelsOnlyRuleOperator {
     IsNot = 'is_not',
     IsNull = 'is_null',
     IsNotNull = 'is_not_null'
 }
 
-enum AttributesOnlyRuleOperator {
+export enum AttributesOnlyRuleOperator {
     Contains = 'contains',
     NotContains = 'not_contains',
     StartsWith = 'starts_with',
@@ -67,10 +69,15 @@ export interface FilterRuleRow {
 
 export enum FilterRuleRowType {
     Blueprint = 'blueprint_id',
-    SiteName = 'site_name',
     Creator = 'created_by',
+    DisplayName = 'display_name',
+    SiteName = 'site_name',
+    TenantName = 'tenant_name',
+
     Label = 'label'
 }
+
+export type FilterResourceType = 'deployments' | 'blueprints';
 
 export const FilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator, ...AttributesOnlyRuleOperator };
 export const LabelsFilterRuleOperators = { ...CommonRuleOperator, ...LabelsOnlyRuleOperator };

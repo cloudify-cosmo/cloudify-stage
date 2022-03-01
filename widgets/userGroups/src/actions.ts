@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 function isAdminGroup(group) {
     return group.role === Stage.Common.Consts.sysAdminRole;

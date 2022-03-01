@@ -204,6 +204,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     defaultSize="40%"
                     split="vertical"
                     resizerClassName="master-details-view-resizer"
+                    style={{ position: 'relative' }}
                 >
                     <DeploymentsTableContainer>
                         <DeploymentsTable

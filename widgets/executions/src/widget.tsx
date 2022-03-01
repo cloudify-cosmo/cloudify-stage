@@ -1,20 +1,32 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 20/10/2016.
- */
-
+import { castArray, isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
-Stage.defineWidget({
+export interface ExecutionsWidgetParams {
+    /* eslint-disable camelcase */
+    blueprint_id: any;
+    deployment_id: string | string[] | null | undefined;
+    status_display: any;
+    _include_system_workflows?: boolean;
+    /* eslint-enable camelcase */
+}
+
+export interface ExecutionsWidgetConfiguration {
+    fieldsToShow?: string;
+    showSystemExecutions?: boolean;
+    singleExecutionView?: boolean;
+}
+
+const t = Stage.Utils.getT('widgets.executions');
+
+Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
     id: 'executions',
-    name: 'Executions',
-    description: 'This widget shows the deployment executions',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     hasStyle: true,
     color: 'teal',
-    fetchUrl: '[manager]/executions?[params]',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
@@ -25,8 +37,7 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
+            name: t('configuration.fieldsToShow.name'),
             items: [
                 'Blueprint',
                 'Deployment',
@@ -46,7 +57,7 @@ Stage.defineWidget({
         },
         {
             id: 'showSystemExecutions',
-            name: 'Show system executions',
+            name: t('configuration.showSystemExecutions.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
@@ -54,11 +65,37 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'singleExecutionView',
-            name: 'Show most recent execution only',
+            name: t('configuration.singleExecutionView.name'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],
+
+    fetchData(widget, toolbox, params) {
+        const { singleExecutionView } = widget.configuration;
+        const executionActions = new Stage.Common.ExecutionActions(toolbox);
+
+        if (singleExecutionView) {
+            const deploymentIdFromParams = castArray(params.deployment_id)[0];
+
+            if (deploymentIdFromParams) {
+                return new Stage.Common.DeploymentActions(toolbox)
+                    .doGet(
+                        {
+                            id: deploymentIdFromParams
+                        },
+                        {
+                            _include: 'id,latest_execution'
+                        }
+                    )
+                    .then(deployment => executionActions.doGet(deployment.latest_execution));
+            }
+
+            return Promise.reject(t('invalidConfigurationError'));
+        }
+
+        return executionActions.doGetAll(params);
+    },
 
     fetchParams(widget, toolbox) {
         return {
@@ -72,7 +109,7 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
         const { singleExecutionView } = widget.configuration;
 
@@ -81,16 +118,16 @@ Stage.defineWidget({
         }
 
         if (singleExecutionView) {
-            const lastExecution = _.chain(data.items).sortBy('started_at').last().value();
-            if (!lastExecution) {
+            const lastExecution = data;
+            if (isEmpty(lastExecution)) {
                 const { ErrorMessage } = Stage.Basic;
-                return <ErrorMessage error={Stage.i18n.t('widgets.executions.noExecutionFound')} />;
+                return <ErrorMessage error={t('noExecutionFound')} />;
             }
             return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
         }
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
-        const params = this.fetchParams(widget, toolbox);
+        const params = this.fetchParams!(widget, toolbox);
 
         const formattedData = {
             items: _.map(data.items, item => ({
@@ -105,6 +142,7 @@ Stage.defineWidget({
             deploymentId: !!params.deployment_id
         };
 
+        // @ts-ignore ExecutionsTable is not migrated yet
         return <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

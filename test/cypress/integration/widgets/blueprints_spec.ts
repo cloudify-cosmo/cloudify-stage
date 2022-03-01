@@ -1,3 +1,4 @@
+import { secondsToMs, waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
 describe('Blueprints widget', () => {
@@ -6,15 +7,15 @@ describe('Blueprints widget', () => {
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json'
         },
         {
             name: 'Kubernetes Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/k8s-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/k8s-examples.json'
         },
         {
             name: 'Orchestrator Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/orc-examples.json'
+            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/orc-examples.json'
         }
     ];
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
@@ -24,6 +25,7 @@ describe('Blueprints widget', () => {
         showComposerOptions: true,
         marketplaceTabs,
         marketplaceDisplayStyle: 'catalog',
+        filterRules: [],
         marketplaceColumnsToShow: ['Name', 'Description']
     };
 
@@ -32,6 +34,7 @@ describe('Blueprints widget', () => {
             .activate('valid_trial_license')
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
+            .deletePlugins()
             .usePageMock('blueprints', blueprintsWidgetConfiguration, {
                 additionalWidgetIdsToLoad: ['blueprintCatalog']
             })
@@ -79,20 +82,23 @@ describe('Blueprints widget', () => {
             cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
 
             cy.get('input[name=deploymentName]').type(deploymentName);
+            cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentId);
-            cy.contains('Show Data Types').click();
+            cy.openAccordionSection('Deployment Inputs');
+            cy.get('button[aria-label="Show Data Types"]').click();
             cy.contains('.modal button', 'Close').click();
 
             const serverIp = '127.0.0.1';
             cy.get('textarea').type(serverIp);
 
+            cy.openAccordionSection('Deployment Metadata');
             cy.contains('div', 'Labels').find('.selection').click();
             cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
+            cy.get('div[name=labelValue] > input').type('sample_value', { force: true });
             cy.get('.add').click();
             cy.get('a.label').should('be.visible');
 
-            cy.contains('.modal .basic', 'Deploy').click();
+            cy.selectAndClickDeploy();
             cy.get('.modal').should('not.exist');
 
             cy.wait('@deploy').then(({ request }) => {
@@ -129,9 +135,9 @@ describe('Blueprints widget', () => {
 
     describe('should render blueprint items', () => {
         beforeEach(() => {
-            cy.interceptSp('GET', '/blueprints', { fixture: 'blueprints/blueprints' });
-            cy.interceptSp('GET', {
-                pathname: '/blueprints',
+            cy.interceptSp('POST', '/searches/blueprints', { fixture: 'blueprints/blueprints' });
+            cy.interceptSp('POST', {
+                pathname: '/searches/blueprints',
                 query: {
                     state: 'uploaded'
                 }
@@ -339,9 +345,22 @@ describe('Blueprints widget', () => {
             cy.contains('Cancel').click();
         });
 
-        describe('should upload a blueprint', () => {
-            before(() => cy.deletePlugins().uploadPluginFromCatalog('Utilities'));
+        it('should successfully dismiss error messages', () => {
+            const errorBoxSelector = '.error.message';
 
+            cy.get('.modal').within(() => {
+                cy.contains('button', 'Upload').click();
+
+                cy.get(errorBoxSelector).within(() => {
+                    cy.get('.header').should('contain', 'Errors');
+                    cy.get('.close.icon').click();
+                });
+
+                cy.get(errorBoxSelector).should('not.exist');
+            });
+        });
+
+        describe('should upload a blueprint', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
 
@@ -421,8 +440,304 @@ describe('Blueprints widget', () => {
         });
     });
 
+    describe('should open upload from Terraform module modal and', () => {
+        const terraformTemplatesBaseUrl =
+            'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
+        const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
+        const multipleModulesTerraformTemplateUrl = `${terraformTemplatesBaseUrl}multiple.zip`;
+
+        beforeEach(cy.refreshPage);
+
+        function openTerraformModal() {
+            cy.contains('Upload').click();
+            cy.contains('Upload from Terraform module').click();
+        }
+
+        function setTemplateDetails(templateUrl: string, modulePath: string) {
+            cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', templateUrl).blur();
+            cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
+        }
+
+        function selectVariableSource(source: string) {
+            cy.get('td:eq(1) .selection').click();
+            cy.contains('.item', source).click();
+        }
+
+        function addFirstSegmentRow(segmentName: string) {
+            cy.contains(segmentName).click().parent().clickButton('Add');
+        }
+
+        function getSegment(segmentName: string) {
+            return cy.contains('.segment', segmentName);
+        }
+
+        it('validate individual form fields', () => {
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.log('Check mandatory fields validations');
+                addFirstSegmentRow('Variables');
+                addFirstSegmentRow('Environment variables');
+                addFirstSegmentRow('Outputs');
+                cy.clickButton('Create');
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide blueprint name').should('be.visible');
+                cy.contains('Please provide Terraform template').should('be.visible');
+                cy.contains('Please provide resource location').should('be.visible');
+                cy.contains('Please provide variable name').should('be.visible');
+                cy.contains('Please provide variable source').should('be.visible');
+                cy.contains('Please provide environment variable name').should('be.visible');
+                cy.contains('Please provide environment variable source').should('be.visible');
+                cy.contains('Please provide output name').should('be.visible');
+                cy.contains('Please provide output type').should('be.visible');
+                cy.contains('Please provide Terraform output').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+
+                getSegment('Variables').within(() => {
+                    selectVariableSource('Secret');
+                });
+                getSegment('Environment variables').within(() => {
+                    selectVariableSource('Secret');
+                });
+                cy.clickButton('Create');
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide variable value').should('be.visible');
+                cy.contains('Please provide environment variable value').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+
+                cy.log('Check allowed characters validations');
+                getSegment('Variables').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    selectVariableSource('Static');
+                    cy.get('td:eq(2) input').type('$');
+                });
+                getSegment('Environment variables').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    selectVariableSource('Static');
+                    cy.get('td:eq(2) input').type('$');
+                });
+                getSegment('Outputs').within(() => {
+                    cy.get('input[name=name]').type('$');
+                    cy.get('input[name=terraformOutput]').type('$');
+                });
+                cy.clickButton('Create');
+                cy.contains('Errors in the form').scrollIntoView();
+                cy.contains('Please provide valid variable name').should('be.visible');
+                cy.contains('Please provide valid variable value').should('be.visible');
+                cy.contains('Please provide valid environment variable name').should('be.visible');
+                cy.contains('Please provide valid environment variable value').should('be.visible');
+                cy.contains('Please provide valid output name').should('be.visible');
+                cy.contains('Please provide valid Terraform output').should('be.visible');
+                cy.get('.error.message li').should('have.length', 10);
+            });
+        });
+
+        it('validate static variable values', () => {
+            const invalidVariableValues = ['123$', '~123_', 'abc+123', '    abc'];
+            const validVariableValue = '321.test-test_test';
+            const validVariableName = 'abc';
+            const validationMessage =
+                'Please provide valid variable value - allowed only letters, digits and the characters "-", "." and "_". If special characters or complex structures are needed please provide this value inside a secret';
+
+            const setVariableValue = (value: string) => {
+                getSegment('Variables').within(() => {
+                    cy.get('td:eq(2) input').clear().type(value);
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                addFirstSegmentRow('Variables');
+
+                getSegment('Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectVariableSource('Static');
+                });
+
+                invalidVariableValues.forEach(invalidVariableValue => {
+                    setVariableValue(invalidVariableValue);
+                    cy.clickButton('Create');
+                    cy.contains(validationMessage).should('exist');
+                });
+
+                setVariableValue(validVariableValue);
+                cy.clickButton('Create');
+                cy.contains(validationMessage).should('not.exist');
+            });
+        });
+
+        it('enable to enter non-existing secret', () => {
+            const validVariableName = 'abc';
+            const notExistingSecret = `${blueprintNamePrefix}_terraform_secret`;
+
+            const setNotExistingSecret = () => {
+                getSegment('Variables').within(() => {
+                    cy.get('td:eq(2) input').type(notExistingSecret);
+                    cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecret}`).click();
+                });
+            };
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                addFirstSegmentRow('Variables');
+
+                getSegment('Variables').within(() => {
+                    cy.get('input[name=name]').type(validVariableName);
+                    selectVariableSource('Secret');
+                });
+
+                setNotExistingSecret();
+                cy.contains(notExistingSecret);
+            });
+        });
+
+        it('validate variables and outputs uniqueness', () => {
+            openTerraformModal();
+
+            function addDuplicatedNames(segmentName: string) {
+                cy.contains(segmentName)
+                    .click()
+                    .parent()
+                    .within(() => {
+                        cy.clickButton('Add').click();
+                        cy.get('input[name=name]:eq(0)').type('name');
+                        cy.get('input[name=name]:eq(1)').type('name');
+                    });
+            }
+
+            addDuplicatedNames('Variables');
+            addDuplicatedNames('Environment variables');
+            addDuplicatedNames('Outputs');
+
+            cy.clickButton('Create');
+            cy.contains('Errors in the form').scrollIntoView();
+            cy.contains('Variables must be unique, duplicates are not allowed').should('be.visible');
+            cy.contains('Environment variables must be unique, duplicates are not allowed').should('be.visible');
+            cy.contains('Outputs must be unique, duplicates are not allowed').should('be.visible');
+        });
+
+        it('validate blueprint name uniqueness', () => {
+            openTerraformModal();
+
+            const existingBlueprintName = `${blueprintNamePrefix}_existing`;
+            cy.uploadBlueprint('blueprints/empty.zip', existingBlueprintName);
+
+            cy.typeToFieldInput('Blueprint name', existingBlueprintName);
+            setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
+
+            cy.clickButton('Create');
+            cy.contains('Errors in the form').scrollIntoView();
+            cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
+        });
+
+        it('handle template URL 401', () => {
+            cy.intercept(
+                {
+                    method: 'POST',
+                    pathname: '/console/terraform/resources',
+                    query: { zipUrl: singleModuleTerraformTemplateUrl }
+                },
+                { statusCode: 401 }
+            );
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.typeToFieldInput(
+                    'URL to a zip archive that contains the Terraform module',
+                    singleModuleTerraformTemplateUrl
+                ).blur();
+                cy.contains('The URL requires authentication');
+            });
+        });
+
+        it('handle template URL authentication', () => {
+            const blueprintName = `${blueprintNamePrefix}_terraform_url_auth`;
+            const username = 'username';
+            const password = 'password';
+
+            cy.deleteSecrets(blueprintName);
+
+            openTerraformModal();
+
+            cy.get('.modal').within(() => {
+                cy.intercept({
+                    method: 'POST',
+                    pathname: '/console/terraform/resources',
+                    query: { zipUrl: singleModuleTerraformTemplateUrl },
+                    headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
+                }).as('resources');
+
+                cy.typeToFieldInput('Blueprint name', blueprintName);
+
+                cy.getField('URL authentication').find('label').click();
+                cy.typeToFieldInput('Username', username);
+                cy.typeToFieldInput('Password', password);
+
+                cy.typeToFieldInput(
+                    'URL to a zip archive that contains the Terraform module',
+                    singleModuleTerraformTemplateUrl
+                ).blur();
+
+                cy.wait('@resources');
+
+                cy.setSingleDropdownValue('Terraform folder in the archive', 'local');
+                cy.clickButton('Create');
+                cy.contains('Generating Terraform blueprint').should('be.visible');
+                cy.contains('Uploading Terraform blueprint').should('be.visible');
+            });
+            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.get('.modal').should('not.exist');
+
+            cy.getSecret(`${blueprintName}.username`).then(response => {
+                expect(response.body.value).to.equal(username);
+            });
+            cy.getSecret(`${blueprintName}.password`).then(response => {
+                expect(response.body.value).to.equal(password);
+            });
+        });
+
+        describe('create installable blueprint on submit from', () => {
+            beforeEach(openTerraformModal);
+
+            function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
+                const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
+                const deploymentId = blueprintName;
+                cy.get('.modal').within(() => {
+                    cy.typeToFieldInput('Blueprint name', blueprintName);
+                    setTemplateDetails(terraformTemplateUrl, modulePath);
+                    cy.clickButton('Create');
+                    cy.contains('Uploading Terraform blueprint').should('be.visible');
+                });
+                cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
+                cy.getWidget('blueprints').within(() => {
+                    cy.getSearchInput().type(blueprintName);
+                    cy.contains('tr', blueprintName).find('.rocket').click();
+                });
+                cy.get('.modal').within(() => {
+                    cy.typeToFieldInput('Deployment name', deploymentId);
+                    cy.openAccordionSection('Advanced');
+                    cy.typeToFieldInput('Deployment ID', deploymentId);
+                    cy.clickButton('Install');
+                });
+
+                cy.waitForExecutionToEnd('install', { deploymentId }, { numberOfRetriesLeft: 120 });
+                cy.getDeployment(deploymentId).then(response => {
+                    expect(response.body.latest_execution_status).to.be.equal('completed');
+                });
+            }
+
+            it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
+            it('multiple modules template', () =>
+                testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
+        });
+    });
+
     describe('should open Composer', () => {
         before(() => {
+            cy.visitTestPage();
             cy.reload();
         });
 
@@ -453,7 +768,7 @@ describe('Blueprints widget', () => {
             const testTabMarketplaceName = 'Blueprints from Dagobah';
 
             cy.editWidgetConfiguration('blueprints', () => {
-                cy.contains('Add').click();
+                cy.get('.marketplaceTabs').contains('Add').click();
                 cy.get('input[name="name"]').eq(marketplaceTabs.length).type(testTabMarketplaceName);
                 cy.get('input[name="url"]').eq(marketplaceTabs.length).type('https://localhost');
             });

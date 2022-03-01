@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 03/21/2017.
- */
 
 import Actions from './actions';
 import SnapshotPropType from './props/SnapshotPropType';
@@ -30,7 +27,6 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
                 clearErrors();
                 toolbox.refresh();
                 toolbox.getEventBus().trigger('snapshots:refresh');
-                toolbox.getEventBus().trigger('menu.tenants:refresh');
                 onHide();
             })
             .catch(setMessageAsError)

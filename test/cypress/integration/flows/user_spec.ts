@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { minutesToMs } from '../../support/resource_commons';
 
 describe('User flow', () => {
@@ -15,7 +14,7 @@ describe('User flow', () => {
             .deleteSecrets('openstack_config__lab1_tenantA')
     );
 
-    function createSecret(secretName) {
+    function createSecret(secretName: string) {
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
@@ -24,7 +23,7 @@ describe('User flow', () => {
         });
     }
     it('installs deployment from scratch', () => {
-        cy.visitPage('Resources').openTab('Plugins');
+        cy.visitSubPage('Resources', 'Plugins');
 
         cy.contains('Upload').click();
         cy.contains('Upload from Marketplace').click();
@@ -34,7 +33,9 @@ describe('User flow', () => {
             cy.get('button', { timeout: minutesToMs(2) }).should('to.be.disabled');
         });
 
-        cy.visitPage('Resources').openTab('Secrets');
+        cy.contains('Close').click();
+
+        cy.visitPage('Secrets');
         createSecret('some_key_1');
         createSecret('some_key_4');
         createSecret('some_key_7');
@@ -56,14 +57,14 @@ describe('User flow', () => {
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
         cy.getSearchInput().clear().type(resourceName);
-        cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
-        cy.get('.rocket').click();
+        cy.contains('Main Blueprint File').should('have.length', 1);
+        cy.clickButton('Deploy');
         cy.get('input[name=deploymentName]').type(resourceName);
-        cy.get('button.green').click();
+        cy.clickButton('Install');
 
-        cy.get('.modal').find('button.ok').click();
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
+        cy.waitForExecutionToEnd('install', { deploymentDisplayName: resourceName });
         cy.contains('.executionsWidget', 'install completed');
         cy.contains('.eventsTable', "'install' workflow execution succeeded");
 

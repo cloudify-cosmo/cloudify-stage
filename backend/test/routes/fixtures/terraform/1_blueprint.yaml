@@ -1,0 +1,50 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+description: >
+  This blueprint was automatically created from a Terraform template.
+
+imports:
+  - http://cloudify.co/spec/cloudify/6.3.0/types.yaml
+  - plugin:cloudify-terraform-plugin
+
+inputs:
+  inputA:
+    type: string
+    default: ""
+  inputC:
+    type: string
+    default: ""
+
+node_templates:
+  terraform:
+    type: cloudify.nodes.terraform
+    properties:
+      resource_config:
+        installation_source: https://releases.hashicorp.com/terraform/1.2.2/terraform_1.2.2_linux_amd64.zip
+
+  cloud_resources:
+    type: cloudify.nodes.terraform.Module
+    properties:
+      resource_config:
+        source:
+          location: "http://host/path/template.zip"
+          username: { get_secret: "bpName.username" }
+          password: { get_secret: "bpName.password" }
+        source_path: "/ft_folder/template"
+        variables:
+          variableA: { get_secret: secretA }
+          variableB: { get_input: inputA }
+          variableD: "test-value"
+        environment_variables:
+          variableC: { get_input: inputC }
+    relationships:
+      - target: terraform
+        type: cloudify.terraform.relationships.run_on_host
+
+outputs:
+  outputA:
+    value: { get_attribute: [ cloud_resources, outputs, outA, value ] }
+
+capabilities:
+  outputB:
+    value: { get_attribute: [ cloud_resources, outputs, outB, value ] }

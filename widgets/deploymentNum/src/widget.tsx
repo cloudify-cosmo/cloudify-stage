@@ -47,7 +47,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
             name: t('configuration.icon.name'),
             description: t('configuration.icon.description'),
             default: 'cube',
-            component: Stage.Common.SemanticIconDropdown,
+            component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {

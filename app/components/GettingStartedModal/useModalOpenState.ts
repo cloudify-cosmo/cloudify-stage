@@ -2,52 +2,52 @@ import { useEffect, useState } from 'react';
 import log from 'loglevel';
 
 import { useFetch } from './common/fetchHooks';
-import { useManager } from './common/managerHooks';
+import useManager from '../../utils/hooks/useManager';
 import EventBus from '../../utils/EventBus';
-import useSearchParam from '../../utils/hooks/useSearchParam';
+import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 
 type UserResponse = {
     // eslint-disable-next-line camelcase
     show_getting_started: boolean;
 };
 
-const gettingStartedParameterName = 'gettingStarted';
-const gettingStartedParameterValue = 'true';
-
 const useModalOpenState = () => {
     const manager = useManager();
     const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
     const [modalOpen, setModalOpen] = useState(false);
-    const [gettingStartedParameter, , deleteGettingStartedParameter] = useSearchParam(gettingStartedParameterName);
+    const [shouldAutomaticallyShowModal, setShouldAutomaticallyShowModal] = useState(false);
+    const [cloudSetupUrlParam, deleteCloudSetupUrlParam] = useCloudSetupUrlParam();
 
     useEffect(() => {
         if (response?.show_getting_started) {
+            setShouldAutomaticallyShowModal(true);
             setModalOpen(true);
         }
     }, [response]);
 
     useEffect(() => {
-        if (gettingStartedParameter === gettingStartedParameterValue) {
+        if (cloudSetupUrlParam) {
             setModalOpen(true);
         }
-    }, [gettingStartedParameter]);
+    }, [cloudSetupUrlParam]);
 
-    const closeModal = async (disabled: boolean) => {
+    const closeModal = async (shouldDisableModal: boolean) => {
         try {
-            if (disabled) {
+            const modalVisibilityHasChanged = shouldDisableModal === shouldAutomaticallyShowModal;
+            if (modalVisibilityHasChanged) {
                 // TODO(RD-1874): use common api for backend requests
                 await manager.doPost(`/users/${manager.getCurrentUsername()}`, {
-                    body: { show_getting_started: false }
+                    body: { show_getting_started: !shouldDisableModal }
                 });
                 EventBus.trigger('users:refresh');
             }
             setModalOpen(false);
-            deleteGettingStartedParameter();
+            deleteCloudSetupUrlParam();
         } catch (error) {
             log.error(error);
         }
     };
-    return { modalOpen, closeModal };
+    return { modalOpen, closeModal, shouldAutomaticallyShowModal };
 };
 
 export default useModalOpenState;

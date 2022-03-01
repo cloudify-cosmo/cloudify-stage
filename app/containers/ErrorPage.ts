@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pawelposel on 03/11/2016.
- */
 
 import { connect } from 'react-redux';
 import ErrorPage from '../components/ErrorPage';

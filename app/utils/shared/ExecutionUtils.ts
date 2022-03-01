@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 31/01/2017.
- */
 
 import _ from 'lodash';
 
@@ -80,6 +77,8 @@ export default class ExecutionUtils {
         ...ExecutionUtils.WAITING_EXECUTION_STATUSES
     ]);
 
+    static UPDATE_WORKFLOW_ID = 'update';
+
     /* Helper methods */
     static isCancelledExecution(execution) {
         return execution.status === 'cancelled';
@@ -98,7 +97,7 @@ export default class ExecutionUtils {
     }
 
     static isUpdateExecution(execution) {
-        return execution.workflow_id === 'update';
+        return execution.workflow_id === ExecutionUtils.UPDATE_WORKFLOW_ID;
     }
 
     static isActiveExecution(execution) {

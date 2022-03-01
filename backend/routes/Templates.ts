@@ -1,13 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
 import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/', (_req, res, next) => {
@@ -28,6 +26,24 @@ router.get('/page-groups', (_req, res, next) => {
     } catch (err) {
         next(err);
     }
+});
+
+router.post('/page-groups', (req, res, next) => {
+    PageGroupsHandler.createPageGroup(req.user!.username, req.body)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
+});
+
+router.delete('/page-groups/:groupId', (req, res, next) => {
+    PageGroupsHandler.deletePageGroup(req.params.groupId)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
+});
+
+router.put('/page-groups/:groupId', (req, res, next) => {
+    PageGroupsHandler.updatePageGroup(req.user!.username, req.params.groupId, req.body)
+        .then(() => res.send({ status: 'ok' }))
+        .catch(next);
 });
 
 router.post('/', (req, res, next) => {

@@ -28,9 +28,17 @@ export const useSubdeploymentInfo = (deploymentId: string, toolbox: Stage.Types.
         { refetchInterval }
     );
 
-export type SubdeploymentsResult =
-    | { loading: true }
-    | { loading: false; count: number; status: DeploymentStatus | null };
+export interface LoadingSubdeploymentsResult {
+    loading: true;
+}
+
+export interface LoadedSubdeploymentsResult {
+    loading: false;
+    count: number;
+    status: DeploymentStatus | null;
+}
+
+export type SubdeploymentsResult = LoadingSubdeploymentsResult | LoadedSubdeploymentsResult;
 
 export const getSubdeploymentResults = (
     subdeploymentInfoResult:

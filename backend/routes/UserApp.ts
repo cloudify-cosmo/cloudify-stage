@@ -8,7 +8,6 @@ import { getMode } from '../serverSettings';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 /**

@@ -6,6 +6,7 @@ import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import type { Router } from 'express';
 
 import { getConfig, getClientConfig } from './config';
 import { CONTEXT_PATH } from './consts';
@@ -16,6 +17,7 @@ import { getResourcePath } from './utils';
 import getCookieStrategy from './auth/CookieStrategy';
 import getTokenStrategy from './auth/TokenStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
+import { authenticateWithCookie, authenticateWithToken } from './auth/AuthMiddlewares';
 import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
@@ -23,6 +25,7 @@ import Applications from './routes/Applications';
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
 import ClientConfig from './routes/ClientConfig';
+import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
@@ -32,6 +35,7 @@ import ServerProxy from './routes/ServerProxy';
 import SourceBrowser from './routes/SourceBrowser';
 import Style from './routes/Style';
 import Templates from './routes/Templates';
+import Terraform from './routes/Terraform';
 import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
@@ -81,7 +85,7 @@ app.use(passport.initialize());
 // Static Routes
 app.use(
     `${contextPath}/appData`,
-    passport.authenticate('cookie', { session: false }),
+    authenticateWithCookie,
     expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { indexFromEmptyFile: false })
 );
 
@@ -94,33 +98,45 @@ app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) => {
 
 app.use(
     `${contextPath}/userData`,
-    passport.authenticate('cookie', { session: false }),
+    authenticateWithCookie,
     expressStaticGzip(getResourcePath('', true), {
         indexFromEmptyFile: false
     })
 );
+// API Routes with authentication
+const authenticatedApiRoutes: Record<string, Router> = {
+    applications: Applications,
+    bud: BlueprintUserData,
+    clientConfig: ClientConfig,
+    contactDetails: ContactDetails,
+    file: File,
+    filters: Filters,
+    github: GitHub,
+    plugins: Plugins,
+    source: SourceBrowser,
+    templates: Templates,
+    terraform: Terraform,
+    ua: UserApp,
+    wb: WidgetBackend,
+    widgets: Widgets
+};
+Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
+    app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
+);
 
-// API Routes
-app.use(`${contextPath}/sp`, ServerProxy);
+// TODO(RD-3827): All API routes should be authenticated
+// API Routes with authentication only for some endpoints (see routers for details)
 app.use(`${contextPath}/auth`, Auth);
-app.use(`${contextPath}/ua`, UserApp);
-app.use(`${contextPath}/applications`, Applications);
-app.use(`${contextPath}/source`, SourceBrowser);
 app.use(`${contextPath}/ba`, BlueprintAdditions);
-app.use(`${contextPath}/bud`, BlueprintUserData);
-app.use(`${contextPath}/style`, Style);
-app.use(`${contextPath}/widgets`, Widgets);
-app.use(`${contextPath}/filters`, Filters);
-app.use(`${contextPath}/templates`, Templates);
-app.use(`${contextPath}/clientConfig`, ClientConfig);
-app.use(`${contextPath}/github`, GitHub);
-app.use(`${contextPath}/external`, External);
-app.use(`${contextPath}/file`, File);
-app.use(`${contextPath}/config`, (req, res) => {
+
+// API Routes without authentication
+const Config = (req, res) => {
     res.send(getClientConfig(getMode()));
-});
-app.use(`${contextPath}/wb`, WidgetBackend);
-app.use(`${contextPath}/plugins`, Plugins);
+};
+app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
+app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
+app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
+app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
 app.use(`${contextPath}/maps`, Maps);
 
 // Redirect URLs with old context path (/stage)

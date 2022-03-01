@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 30/10/2018.
- */
 
 export default function ExecuteWorkflowButton({ noManagers, onClick, workflows }) {
     const { Button, Popup } = Stage.Basic;

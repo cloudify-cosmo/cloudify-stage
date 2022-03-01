@@ -1,16 +1,16 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupDetails from './GroupDetails';
-import MenuAction from './MenuAction';
+import { menuActions } from './consts';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
 import GroupPropType from './props/GroupPropType';
+import MenuAction from './MenuAction';
 
-export default class UserGroupsTable extends React.Component {
+const t = Stage.Utils.getT('widgets.userGroups');
+
+class UserGroupsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -59,7 +59,7 @@ export default class UserGroupsTable extends React.Component {
             .then(() => {
                 this.setState({ error: null, settingGroupRoleLoading: false });
                 toolbox.loading(false);
-                if (modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && showModal) {
+                if (modalType === menuActions.setDefaultGroupRole && showModal) {
                     toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
                     toolbox.refresh();
@@ -115,23 +115,33 @@ export default class UserGroupsTable extends React.Component {
         const { data, toolbox } = this.props;
         const actions = new Actions(toolbox);
 
-        if (value === MenuAction.EDIT_TENANTS_ACTION) {
-            this.getAvailableTenants(value, group);
-        } else if (value === MenuAction.EDIT_USERS_ACTION) {
-            this.getAvailableUsers(value, group);
-        } else if (
-            value === MenuAction.DELETE_ACTION ||
-            (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION &&
-                actions.isLogoutToBePerformed(group, data.items, group.users))
+        if (
+            value === menuActions.setDefaultGroupRole &&
+            actions.isLogoutToBePerformed(group, data.items, group.users)
         ) {
             this.setState({ group, modalType: value, showModal: true });
-        } else if (value === MenuAction.SET_ADMIN_GROUP_ROLE_ACTION) {
+        } else if (value === menuActions.setAdminGroupRole) {
             this.setRole(group, true);
-        } else if (value === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION) {
+        } else if (value === menuActions.setDefaultGroupRole) {
             this.setRole(group, false);
         } else {
-            this.setState({ error: `Internal error: Unknown action ('${value}') cannot be handled.` });
+            const errorMessage = t('exceptions.unknownAction', {
+                actionName: value
+            });
+            this.setState({ error: errorMessage });
         }
+    };
+
+    showEditTenantsModal = group => {
+        this.getAvailableTenants(menuActions.editTenants, group);
+    };
+
+    showEditUsersModal = group => {
+        this.getAvailableUsers(menuActions.editUsers, group);
+    };
+
+    showDeleteModal = group => {
+        this.setState({ group, modalType: menuActions.delete, showModal: true });
     };
 
     hideModal = newState => {
@@ -180,8 +190,7 @@ export default class UserGroupsTable extends React.Component {
 
     render() {
         const { error, group, modalType, settingGroupRoleLoading, showModal, tenants, users } = this.state;
-        const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no User Groups available. Click "Add" to add User Groups.';
+        const { data, toolbox, widget, isLdapEnabled } = this.props;
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
 
         return (
@@ -196,13 +205,13 @@ export default class UserGroupsTable extends React.Component {
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="userGroupsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noGroups')}
                 >
-                    <DataTable.Column label="Group" name="name" width="35%" />
-                    <DataTable.Column label="LDAP group" name="ldap_dn" width="20%" />
-                    <DataTable.Column label="Admin" name="role" width="10%" />
-                    <DataTable.Column label="# Users" width="10%" />
-                    <DataTable.Column label="# Tenants" width="10%" />
+                    <DataTable.Column label={t('columns.groupName')} name="name" width="35%" />
+                    {isLdapEnabled && <DataTable.Column label={t('columns.ldapGroup')} name="ldap_dn" width="20%" />}
+                    <DataTable.Column label={t('columns.admin')} name="role" width="10%" />
+                    <DataTable.Column label={t('columns.users')} width="10%" />
+                    <DataTable.Column label={t('columns.tenants')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => {
                         return (
@@ -213,7 +222,7 @@ export default class UserGroupsTable extends React.Component {
                                     onClick={() => this.selectUserGroup(item.name)}
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
-                                    <DataTable.Data>{item.ldap_dn}</DataTable.Data>
+                                    {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
                                     <DataTable.Data className="center aligned">
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
@@ -222,8 +231,8 @@ export default class UserGroupsTable extends React.Component {
                                                 checked={item.isAdmin}
                                                 onChange={() =>
                                                     item.isAdmin
-                                                        ? this.showModal(MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION, item)
-                                                        : this.showModal(MenuAction.SET_ADMIN_GROUP_ROLE_ACTION, item)
+                                                        ? this.showModal(menuActions.setDefaultGroupRole, item)
+                                                        : this.showModal(menuActions.setAdminGroupRole, item)
                                                 }
                                                 onClick={e => {
                                                     e.stopPropagation();
@@ -242,7 +251,12 @@ export default class UserGroupsTable extends React.Component {
                                         </Label>
                                     </DataTable.Data>
                                     <DataTable.Data className="center aligned">
-                                        <MenuAction item={item} onSelectAction={this.showModal} />
+                                        <MenuAction
+                                            item={item}
+                                            onEditTenants={this.showEditTenantsModal}
+                                            onEditUsers={this.showEditUsersModal}
+                                            onDelete={this.showDeleteModal}
+                                        />
                                     </DataTable.Data>
                                 </DataTable.Row>
                                 <DataTable.DataExpandable key={item.name}>
@@ -257,12 +271,12 @@ export default class UserGroupsTable extends React.Component {
                         );
                     })}
                     <DataTable.Action>
-                        <CreateModal toolbox={toolbox} />
+                        <CreateModal toolbox={toolbox} isLdapEnabled={isLdapEnabled} />
                     </DataTable.Action>
                 </DataTable>
 
                 <UsersModal
-                    open={modalType === MenuAction.EDIT_USERS_ACTION && showModal}
+                    open={modalType === menuActions.editUsers && showModal}
                     group={group}
                     groups={data.items}
                     users={users}
@@ -271,7 +285,7 @@ export default class UserGroupsTable extends React.Component {
                 />
 
                 <TenantsModal
-                    open={modalType === MenuAction.EDIT_TENANTS_ACTION && showModal}
+                    open={modalType === menuActions.editTenants && showModal}
                     group={group}
                     tenants={tenants}
                     onHide={this.hideModal}
@@ -279,19 +293,15 @@ export default class UserGroupsTable extends React.Component {
                 />
 
                 <Confirm
-                    content={`Are you sure you want to remove group ${group.name}?`}
-                    open={modalType === MenuAction.DELETE_ACTION && showModal}
+                    content={t('confirm.deleteGroup', { groupName: group.name })}
+                    open={modalType === menuActions.delete && showModal}
                     onConfirm={this.deleteUserGroup}
                     onCancel={this.hideModal}
                 />
 
                 <Confirm
-                    content={
-                        `You have administrator privileges from the '${group.name}' group. ` +
-                        'Are you sure you want to remove administrator privileges from this group? ' +
-                        'You will be logged out of the system so the changes take effect.'
-                    }
-                    open={modalType === MenuAction.SET_DEFAULT_GROUP_ROLE_ACTION && showModal}
+                    content={t('confirm.defaultGroup', { groupName: group.name })}
+                    open={modalType === menuActions.setDefaultGroupRole && showModal}
                     onConfirm={() => this.setRole(group, false)}
                     onCancel={this.hideModal}
                 />
@@ -306,5 +316,13 @@ UserGroupsTable.propTypes = {
         total: PropTypes.number.isRequired
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
+    widget: Stage.PropTypes.Widget.isRequired,
+    isLdapEnabled: PropTypes.bool.isRequired
 };
+
+export default connectToStore(
+    state => ({
+        isLdapEnabled: _.get(state, 'manager.isLdapEnabled', false)
+    }),
+    {}
+)(UserGroupsTable);

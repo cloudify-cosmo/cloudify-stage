@@ -1,5 +1,6 @@
 import { without } from 'lodash';
 import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import Consts from 'app/utils/consts';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
@@ -12,8 +13,10 @@ import {
 } from '../../../../widgets/common/src/filters/types';
 
 describe('Filters widget', () => {
+    const widgetId = 'filters';
+
     before(() => {
-        cy.usePageMock(['filters', 'onlyMyResources']).activate().mockLogin();
+        cy.usePageMock([widgetId, 'onlyMyResources']).activate().mockLogin();
     });
 
     const filterName = 'filters_test_filter';
@@ -122,36 +125,38 @@ describe('Filters widget', () => {
         });
 
         it('list existing filters', () => {
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(1);
-                    expect(tableData[0]['Filter name']).to.eq(filterName);
-                    expect(tableData[0].Creator).to.eq('admin');
-                    expect(tableData[0].Created).not.to.be.null;
-                });
-            cy.get('.filtersWidget .checkbox:not(.checked)');
+            cy.getWidget(widgetId).within(() => {
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(1);
+                        expect(tableData[0]['Filter name']).to.eq(filterName);
+                        expect(tableData[0].Creator).to.eq('admin');
+                        expect(tableData[0].Created).not.to.be.null;
+                    });
+                cy.get('.checkbox:not(.checked)');
 
-            const systemFilterName = 'csys-environment-filter';
-            searchFilter(systemFilterName);
+                const systemFilterName = 'csys-environment-filter';
+                searchFilter(systemFilterName);
 
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(1);
-                    expect(tableData[0]['Filter name']).to.eq(systemFilterName);
-                    expect(tableData[0].Creator).to.eq('admin');
-                    expect(tableData[0].Created).not.to.be.null;
-                });
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(1);
+                        expect(tableData[0]['Filter name']).to.eq(systemFilterName);
+                        expect(tableData[0].Creator).to.eq('admin');
+                        expect(tableData[0].Created).not.to.be.null;
+                    });
 
-            cy.get('.filtersWidget .checkbox.checked');
+                cy.get('.checkbox.checked');
 
-            const disabledIconTitle = "System filter can't be edited or deleted";
-            cy.get('.edit').should('have.class', 'disabled');
-            cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
-            cy.get('.trash').should('have.class', 'disabled');
-            cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
-            cy.get('.clone').should('not.have.class', 'disabled');
+                const disabledIconTitle = "System filter can't be edited or deleted";
+                cy.get('.edit').should('have.class', 'disabled');
+                cy.get('.edit').should('have.prop', 'title', disabledIconTitle);
+                cy.get('.trash').should('have.class', 'disabled');
+                cy.get('.trash').should('have.prop', 'title', disabledIconTitle);
+                cy.get('.clone').should('not.have.class', 'disabled');
+            });
         });
 
         it('allow to add new filter', () => {
@@ -202,17 +207,21 @@ describe('Filters widget', () => {
             });
 
             cy.get('.modal').should('not.exist');
-            cy.contains(newFilterName);
 
-            cy.get('table')
-                .getTable()
-                .should(tableData => {
-                    expect(tableData).to.have.length(2);
-                    expect(tableData[1]['Filter name']).to.eq(newFilterName);
-                    expect(tableData[1].Creator).to.eq('admin');
-                    expect(tableData[1].Created).not.to.be.null;
-                });
-            cy.get('.filtersWidget .checkbox:not(.checked)').should('have.length', 2);
+            cy.getWidget(widgetId).within(() => {
+                cy.contains(newFilterName);
+
+                cy.get('table')
+                    .getTable()
+                    .should(tableData => {
+                        expect(tableData).to.have.length(2);
+                        expect(tableData[1]['Filter name']).to.eq(newFilterName);
+                        expect(tableData[1].Creator).to.eq('admin');
+                        expect(tableData[1].Created).not.to.be.null;
+                    });
+
+                cy.get('.checkbox:not(.checked)').should('have.length', 2);
+            });
         });
 
         it('allow to edit existing filter', () => {
@@ -446,8 +455,10 @@ describe('Filters widget', () => {
             withinLastRuleRow(() => {
                 const searchEndpoint: Record<FilterRuleRowType, string> = {
                     blueprint_id: 'blueprints',
-                    site_name: 'sites',
                     created_by: 'users',
+                    display_name: 'deployments',
+                    site_name: 'sites',
+                    tenant_name: 'tenants',
                     label: '' // NOTE: Only endpoints for attribute rules are necessary
                 };
 
@@ -683,6 +694,19 @@ describe('Filters widget', () => {
                         key: 'created_by',
                         values: ['admin'],
                         operator: FilterRuleOperators.NotAnyOf
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'tenant_name',
+                        values: [`${testPrefix}_tenant`],
+                        operator: FilterRuleOperators.AnyOf,
+                        newValues: [`${testPrefix}_tenant`]
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'tenant_name',
+                        values: [Consts.DEFAULT_TENANT],
+                        operator: FilterRuleOperators.NotAnyOf
                     }
                 ]
             },
@@ -717,6 +741,20 @@ describe('Filters widget', () => {
                         values: ['operator'],
                         operator: FilterRuleOperators.EndsWith,
                         newValues: ['operator']
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'display_name',
+                        values: ['deployment'],
+                        operator: FilterRuleOperators.Contains,
+                        newValues: ['deployment']
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'display_name',
+                        values: ['prefix'],
+                        operator: FilterRuleOperators.StartsWith,
+                        newValues: ['prefix']
                     }
                 ]
             }

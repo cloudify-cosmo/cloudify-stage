@@ -1,0 +1,17 @@
+{
+  "name": "System Health",
+  "icon": "heartbeat",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Cluster Status",
+          "width": 12,
+          "height": 24,
+          "definition": "highAvailability"
+        }
+      ]
+    }
+  ]
+}

@@ -3,10 +3,12 @@ export {};
 class ExecutionActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    doGetExecutions(deploymentId: string) {
-        return this.toolbox
-            .getManager()
-            .doGet('/executions?_include=id,status,ended_at', { params: { deployment_id: deploymentId } });
+    doGet(executionId: string) {
+        return this.toolbox.getManager().doGet(`/executions/${executionId}`);
+    }
+
+    doGetAll(params: Record<string, any> = {}) {
+        return this.toolbox.getManager().doGet('/executions', { params });
     }
 
     doGetStatus(executionId: string) {
@@ -26,7 +28,6 @@ class ExecutionActions {
 
 declare global {
     namespace Stage.Common {
-        // eslint-disable-next-line import/prefer-default-export
         export { ExecutionActions };
     }
 }

@@ -1,13 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 30/08/2016.
- */
 
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import type { History } from 'history';
 
-import pages from './pageReducer';
+import pageMenuItemsReducer from './pageReducer';
 import widgetDefinitions from './widgetDefinitionsReducer';
 import templates from './templatesReducer';
 import templateManagement from './templateManagementReducer';
@@ -24,7 +21,7 @@ const rootReducer = (history: History) =>
         router: connectRouter(history),
         app,
         manager,
-        pages,
+        pages: pageMenuItemsReducer,
         widgetDefinitions,
         templates,
         templateManagement,

@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 09/02/2017.
- */
 
 import _ from 'lodash';
 import log from 'loglevel';

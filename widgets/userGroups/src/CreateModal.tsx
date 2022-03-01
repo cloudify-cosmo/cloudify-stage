@@ -1,11 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
 
 import Actions from './actions';
 
-export default function CreateModal({ toolbox }) {
+const t = Stage.Utils.getT('widgets.userGroups.modals.create');
+
+export default function CreateModal({ toolbox, isLdapEnabled }) {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -21,7 +20,8 @@ export default function CreateModal({ toolbox }) {
         const { groupName, isAdmin, ldapGroup } = inputs;
 
         if (_.isEmpty(groupName)) {
-            setErrors({ groupName: 'Please provide group name' });
+            const validationMessage = t('validation.groupName');
+            setErrors({ groupName: validationMessage });
             return;
         }
 
@@ -42,31 +42,29 @@ export default function CreateModal({ toolbox }) {
 
     const { groupName, isAdmin, ldapGroup } = inputs;
     const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-    const addButton = <Button content="Add" icon="add user" labelPosition="left" />;
+    const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add user" /> Add user group
+                <Icon name="add user" />
+                {t('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.groupName}>
-                        <Form.Input name="groupName" placeholder="Group name" value={groupName} onChange={setInput} />
+                    <Form.Field error={errors.groupName} label={t('fields.groupName')}>
+                        <Form.Input name="groupName" value={groupName} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field error={errors.ldapGroup}>
-                        <Form.Input
-                            name="ldapGroup"
-                            placeholder="LDAP group name"
-                            value={ldapGroup}
-                            onChange={setInput}
-                        />
-                    </Form.Field>
+                    {isLdapEnabled && (
+                        <Form.Field error={errors.ldapGroup} label={t('fields.ldapGroup')}>
+                            <Form.Input name="ldapGroup" value={ldapGroup} onChange={setInput} />
+                        </Form.Field>
+                    )}
 
                     <Form.Field error={errors.isAdmin}>
-                        <Form.Checkbox label="Admin" name="isAdmin" checked={isAdmin} onChange={setInput} />
+                        <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
                     </Form.Field>
                 </Form>
             </Modal.Content>
@@ -76,7 +74,7 @@ export default function CreateModal({ toolbox }) {
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={isLoading}
-                    content="Add"
+                    content={t('buttons.add')}
                     icon="add user"
                     color="green"
                 />
@@ -86,5 +84,6 @@ export default function CreateModal({ toolbox }) {
 }
 
 CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    isLdapEnabled: PropTypes.bool
 };

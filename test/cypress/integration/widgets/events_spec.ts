@@ -1,7 +1,9 @@
 describe('Events/logs widget', () => {
+    const widgetId = 'events';
+
     before(() => {
         cy.activate()
-            .usePageMock('events', {
+            .usePageMock(widgetId, {
                 fieldsToShow: ['Message', 'Workflow', 'Deployment', 'Deployment Id'],
                 pageSize: 15
             })
@@ -13,7 +15,8 @@ describe('Events/logs widget', () => {
             .mockLogin();
     });
     it('should show deployment ID and display name', () => {
-        cy.get('table')
+        cy.getWidget(widgetId)
+            .find('table')
             .getTable()
             .should(tableData => {
                 expect(tableData[0].Deployment).to.eq('Mustafar Env Deployment');

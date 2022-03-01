@@ -1,0 +1,43 @@
+{
+  "blueprintName": "bpName",
+  "urlAuthentication": true,
+  "terraformVersion": "1.2.2",
+  "terraformTemplate": "http://host/path/template.zip",
+  "resourceLocation": "/ft_folder/template",
+  "variables": [
+    {
+      "name": "variableA",
+      "source": "secret",
+      "value": "secretA"
+    },
+    {
+      "name": "variableB",
+      "source": "input",
+      "value": "inputA"
+    },
+    {
+      "name": "variableD",
+      "source": "static",
+      "value": "test-value"
+    }
+  ],
+  "environmentVariables": [
+    {
+      "name": "variableC",
+      "source": "input",
+      "value": "inputC"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "outputA",
+      "type": "output",
+      "terraformOutput": "outA"
+    },
+    {
+      "name": "outputB",
+      "type": "capability",
+      "terraformOutput": "outB"
+    }
+  ]
+}

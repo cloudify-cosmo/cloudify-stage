@@ -1,13 +1,12 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 01/09/2016.
- */
 
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import styled from 'styled-components';
 
 import React, { useEffect, useState } from 'react';
+import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { useBoolean, useResettableState } from '../utils/hooks';
 import GenericConfig from '../utils/GenericConfig';
 import LoaderUtils from '../utils/LoaderUtils';
@@ -31,6 +30,65 @@ import {
 } from './basic/index';
 import InstallWidgetModal from './InstallWidgetModal';
 import EditModeButton from './EditModeButton';
+
+const AddWidgetModalWrapper = styled.div`
+    display: inline-block;
+`;
+
+const StyledAddWidgetModal = styled(Modal)`
+    max-height: 600px !important;
+    padding: 14px;
+`;
+
+const WidgetListWrapper = styled.div`
+    height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+`;
+
+const WidgetList = styled(Item.Group)`
+    height: 435px;
+    padding-top: 5px;
+
+    .selectWidgetButton {
+        margin-right: 10px !important;
+    }
+`;
+
+const AddWidgetCheckBox = styled(Checkbox)`
+    margin-left: 10px;
+    margin-right: 20px;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: 20px;
+`;
+
+const StyledItem = styled(Item)`
+    padding: 40px 10px;
+    cursor: pointer;
+    align-items: center;
+    &:hover {
+        background-color: ${colors.greyLight};
+        border-radius: 5px;
+    }
+    .image {
+        & > img {
+            object-fit: contain;
+            height: 80px !important;
+            border-radius: 5px;
+            background: ${colors.white};
+            border: 1px dotted ${colors.greyLight};
+            transition: all 500ms ease-in-out;
+            &:hover {
+                transform: scale(1.3);
+                box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.75);
+            }
+        }
+    }
+    .header {
+        margin: 0 !important;
+    }
+`;
 
 let nameIndex = 0;
 
@@ -279,46 +337,44 @@ function AddWidgetModal({
         StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
     return (
-        <div style={{ display: 'inline-block' }}>
-            <Modal
+        <AddWidgetModalWrapper>
+            <StyledAddWidgetModal
                 trigger={addWidgetBtn}
-                className="addWidgetModal"
                 open={open}
                 closeIcon
                 onOpen={openModal}
                 onClose={closeModal}
                 size="large"
             >
-                <Segment basic size="large">
-                    <ErrorMessage error={error} />
+                <ErrorMessage error={error} />
 
-                    <Input
-                        icon="search"
-                        fluid
-                        size="mini"
-                        placeholder={i18n.t('editMode.addWidget.search', 'Search widgets ...')}
-                        onChange={filterWidgets}
-                        value={search}
-                    />
+                <Input
+                    icon="search"
+                    fluid
+                    size="mini"
+                    placeholder={i18n.t('editMode.addWidget.search', 'Search widgets ...')}
+                    onChange={filterWidgets}
+                    value={search}
+                />
 
-                    <Divider />
+                <Divider />
 
-                    <Grid columns={2}>
-                        <Grid.Row>
-                            <Grid.Column width={4}>{menuContent}</Grid.Column>
-                            <Grid.Column width={12}>
-                                <Item.Group divided className="widgetsList">
+                <Grid columns={2}>
+                    <Grid.Row>
+                        <Grid.Column width={4}>{menuContent}</Grid.Column>
+                        <Grid.Column width={12}>
+                            <WidgetListWrapper>
+                                <WidgetList divided>
                                     {filteredWidgetDefinitions.map(
                                         widget => (
-                                            <Item
+                                            <StyledItem
                                                 key={widget.id}
                                                 data-id={widget.id}
                                                 onClick={() => {
                                                     toggleWidgetInstall(widget.id);
                                                 }}
                                             >
-                                                <Checkbox
-                                                    className="addWidgetCheckbox"
+                                                <AddWidgetCheckBox
                                                     readOnly
                                                     title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
                                                     checked={widgetsToAdd.includes(widget.id)}
@@ -368,7 +424,7 @@ function AddWidgetModal({
                                                         )}
                                                     </Item.Extra>
                                                 </Item.Content>
-                                            </Item>
+                                            </StyledItem>
                                         ),
                                         this
                                     )}
@@ -379,48 +435,44 @@ function AddWidgetModal({
                                             content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
                                         />
                                     )}
-                                </Item.Group>
+                                </WidgetList>
+                            </WidgetListWrapper>
+                            <Button.Group widths="2">
+                                <Button
+                                    animated="vertical"
+                                    id="addWidgetsBtn"
+                                    onClick={addWidgets}
+                                    color="green"
+                                    disabled={widgetsToAdd.length === 0}
+                                >
+                                    <Button.Content visible>
+                                        {i18n.t(
+                                            'editMode.addWidget.submitButton',
+                                            'Add selected widgets ({{widgetsCount}})',
+                                            { widgetsCount: widgetsToAdd.length }
+                                        )}
+                                    </Button.Content>
+                                    <Button.Content hidden>
+                                        <Icon name="check" />
+                                    </Button.Content>
+                                </Button>
 
-                                <Button.Group widths="2">
-                                    <Button
-                                        animated="vertical"
-                                        id="addWidgetsBtn"
-                                        onClick={addWidgets}
-                                        color="green"
-                                        disabled={widgetsToAdd.length === 0}
-                                    >
-                                        <Button.Content visible>
-                                            {i18n.t(
-                                                'editMode.addWidget.submitButton',
-                                                'Add selected widgets ({{widgetsCount}})',
-                                                { widgetsCount: widgetsToAdd.length }
-                                            )}
-                                        </Button.Content>
-                                        <Button.Content hidden>
-                                            <Icon name="check" />
-                                        </Button.Content>
-                                    </Button>
-
-                                    {canInstallWidgets && (
-                                        <InstallWidgetModal
-                                            onWidgetInstalled={onWidgetInstalled}
-                                            trigger={installWidgetBtn}
-                                            header={i18n.t(
-                                                'editMode.addWidget.installModal.header',
-                                                'Install new widget'
-                                            )}
-                                            buttonLabel={i18n.t(
-                                                'editMode.addWidget.installModal.submitButton',
-                                                'Install Widget'
-                                            )}
-                                        />
-                                    )}
-                                </Button.Group>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
-                </Segment>
-            </Modal>
+                                {canInstallWidgets && (
+                                    <InstallWidgetModal
+                                        onWidgetInstalled={onWidgetInstalled}
+                                        trigger={installWidgetBtn}
+                                        header={i18n.t('editMode.addWidget.installModal.header', 'Install new widget')}
+                                        buttonLabel={i18n.t(
+                                            'editMode.addWidget.installModal.submitButton',
+                                            'Install Widget'
+                                        )}
+                                    />
+                                )}
+                            </Button.Group>
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+            </StyledAddWidgetModal>
 
             <Confirm
                 open={showConfirm}
@@ -440,7 +492,7 @@ function AddWidgetModal({
                     <Image centered src={imageSrc(thumbnailWidget)} />
                 </div>
             </Modal>
-        </div>
+        </AddWidgetModalWrapper>
     );
 }
 

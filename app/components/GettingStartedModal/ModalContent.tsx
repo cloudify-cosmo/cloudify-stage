@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Divider, ErrorMessage, Modal } from '../basic';
-import gettingStartedSchema from './schema.json';
+import { Modal } from '../basic';
 import EnvironmentsStep from './steps/EnvironmentsStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
@@ -15,17 +14,14 @@ import type {
     GettingStartedEnvironmentsData
 } from './model';
 
-const castedGettingStartedSchema = gettingStartedSchema as GettingStartedSchema;
-
 type Props = {
-    stepErrors?: string[];
     stepName: StepName;
     environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
     summaryStepSchemas: GettingStartedSchemaItem[];
-    onStepErrorsDismiss: () => void;
+    schema: GettingStartedSchema;
     onEnvironmentsStepChange: (environments: GettingStartedEnvironmentsData) => void;
     onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
     onInstallationStarted: () => void;
@@ -34,14 +30,13 @@ type Props = {
 };
 
 const ModalContent = ({
-    stepErrors,
     stepName,
     environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
     summaryStepSchemas,
-    onStepErrorsDismiss,
+    schema,
     onEnvironmentsStepChange,
     onSecretsStepChange,
     onInstallationStarted,
@@ -53,17 +48,11 @@ const ModalContent = ({
     const statusStepActive = stepName === StepName.Status;
     return (
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
-            {!_.isEmpty(stepErrors) && (
-                <>
-                    <ErrorMessage header={null} error={stepErrors} onDismiss={onStepErrorsDismiss} />
-                    <Divider hidden />
-                </>
-            )}
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
                 <EnvironmentsStep
-                    schema={castedGettingStartedSchema}
-                    selectedEnvironments={environmentsStepData}
+                    schema={schema}
+                    selectedEnvironment={environmentsStepData}
                     onChange={onEnvironmentsStepChange}
                 />
             )}
@@ -72,7 +61,6 @@ const ModalContent = ({
                     selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
-                    markEmptyInputs={!_.isEmpty(stepErrors)}
                 />
             )}
             {(stepName === StepName.Summary || statusStepActive) && (

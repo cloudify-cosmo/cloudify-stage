@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 09/08/2018.
- */
 
 export default function ResourceAction({ children }) {
     const action = children;

@@ -1,19 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import fs from 'fs-extra';
+import type { CoreOptions, Headers, Response } from 'request';
+
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
 import * as RequestHandler from './RequestHandler';
+import { AllowedRequestMethod } from '../types';
 
 const logger = getLogger('ManagerHandler');
 
-let caFile = null;
+let caFile: Buffer | null = null;
 try {
     const caPath = _.get(getConfig(), 'app.ssl.ca');
     caFile = caPath ? fs.readFileSync(caPath) : null;
 } catch (e) {
-    throw new Error('Could not setup ssl ca, error loading file.', e);
+    throw new Error('Could not setup ssl ca, error loading file.');
 }
 
 export function getManagerUrl() {
@@ -24,7 +25,7 @@ export function getApiUrl() {
     return `${getConfig().managerUrl}/api/${getConfig().manager.apiVersion}`;
 }
 
-export function updateOptions(options, method, timeout, headers, data) {
+export function updateOptions(options: CoreOptions, method: string, timeout?: number, headers?: Headers, data?: any) {
     if (caFile) {
         logger.debug('Adding CA file to Agent Options');
         options.agentOptions = {
@@ -49,18 +50,26 @@ export function updateOptions(options, method, timeout, headers, data) {
     }
 }
 
-export function request(method, url, headers, data, onSuccess, onError, timeout) {
+export function request(
+    method: string,
+    url: string,
+    headers: Headers,
+    data: any,
+    onSuccess: (response: Response) => void,
+    onError: (error: Error) => void,
+    timeout?: number
+) {
     const requestUrl = getApiUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
     const requestOptions = {};
     updateOptions(requestOptions, method, timeout, headers, data);
 
     logger.debug(`Preparing ${method} request to manager: ${requestUrl}`);
-    return RequestHandler.request(method, requestUrl, requestOptions, onSuccess, onError);
+    return RequestHandler.request(method as AllowedRequestMethod, requestUrl, requestOptions, onSuccess, onError);
 }
 
 // the request assumes the response is JSON
-export function jsonRequest(method, url, headers, data, timeout) {
-    return new Promise((resolve, reject) => {
+export function jsonRequest<ResponseBody>(method: string, url: string, headers: Headers, data?: any, timeout?: number) {
+    return new Promise<ResponseBody>((resolve, reject) => {
         request(
             method,
             url,
@@ -70,7 +79,7 @@ export function jsonRequest(method, url, headers, data, timeout) {
                 const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
 
                 RequestHandler.getResponseJson(res)
-                    .then(json => (isSuccess ? resolve(json) : reject(json)))
+                    .then(json => (isSuccess ? resolve(<ResponseBody>json) : reject(json)))
                     .catch(e =>
                         isSuccess
                             ? reject(`response data could not be parsed to JSON: ${e}`)

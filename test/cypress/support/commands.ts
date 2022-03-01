@@ -14,34 +14,40 @@ import 'cypress-get-table';
 import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import Consts from 'app/utils/consts';
 
+import { secondsToMs } from './resource_commons';
 import './asserts';
 import './blueprints';
 import './deployments';
-import './executions';
-import './users';
-import './sites';
-import './templates';
-import './plugins';
 import './editMode';
-import './widgets';
-import './secrets';
-import './snapshots';
+import './executions';
 import './filters';
 import './getting_started';
-import { getCurrentAppVersion } from './app_commons';
+import './plugins';
+import './secrets';
+import './sites';
+import './snapshots';
+import './templates';
+import './users';
+import './widgets';
 
 let token = '';
 
 const getCommonHeaders = () => ({
     'Authentication-Token': token,
-    tenant: 'default_tenant'
+    cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
+    tenant: Consts.DEFAULT_TENANT
 });
+
+const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.interceptSp('GET', `/users/*`, {
         body: { show_getting_started: modalEnabled }
     });
+
+const collapseSidebar = () => cy.get('.breadcrumb').click();
 
 export const testPageName = 'Test Page';
 
@@ -58,6 +64,8 @@ declare global {
 
             /** Similar to `cy.contains(num)`, but makes sure the number is not a substring of some other number */
             containsNumber: (num: number) => Cypress.Chainable;
+
+            clickButton: (buttonLabel: string) => Cypress.Chainable;
         }
     }
 }
@@ -78,7 +86,7 @@ const commands = {
     waitUntilLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
-            .get('#loader', { timeout: 20000 })
+            .get('#loader', { timeout: secondsToMs(25) })
             .should('be.not.visible')
             .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
@@ -87,7 +95,7 @@ const commands = {
                 method: 'PUT',
                 url: '/console/sp/license',
                 headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
+                    ...getAdminAuthorizationHeader(),
                     'Content-Type': 'text/plain'
                 },
                 body: yaml
@@ -101,14 +109,18 @@ const commands = {
                 token = adminToken;
             })
             .then(() =>
-                cy.stageRequest(`/console/ua/clear-pages?tenant=default_tenant`, 'GET', { failOnStatusCode: false })
+                cy.stageRequest(`/console/ua/clear-pages?tenant=${Consts.DEFAULT_TENANT}`, 'GET', {
+                    failOnStatusCode: false
+                })
             ),
     cfyRequest: (
         url: string,
         method = 'GET',
         headers: any = null,
         body: any = null,
-        options: Partial<Cypress.RequestOptions> = {}
+        options: Partial<Cypress.RequestOptions> & { useAdminAuthorization?: boolean } = {
+            useAdminAuthorization: false
+        }
     ) =>
         cy.request({
             method,
@@ -116,6 +128,7 @@ const commands = {
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
+                ...(options.useAdminAuthorization ? getAdminAuthorizationHeader() : {}),
                 ...headers
             },
             body,
@@ -207,15 +220,30 @@ const commands = {
         });
         return cy.visit('/console');
     },
-    visitPage: (name: string, id: string | null = null) => {
-        cy.log(`Switching to '${name}' page`);
-        cy.get('.sidebar.menu .pages').within(() => cy.contains(name).click({ force: true }));
-        if (id) {
-            cy.location('pathname').should('be.equal', `/console/page/${id}`);
+    clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
+        cy.log(`Clicking '${name}' page menu item`);
+        cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
+        if (expectedPageId) {
+            cy.verifyLocationByPageId(expectedPageId);
         }
         return cy.waitUntilPageLoaded();
     },
-    visitTestPage: () => cy.visitPage(testPageName),
+    clickSystemMenuItem: (name: string) => {
+        cy.log(`Clicking '${name}' system menu item`);
+        cy.get('.sidebar.menu').contains('a.item', name).click({ force: true });
+    },
+    visitPage: (name: string, expectedPageId: string | null = null) => {
+        cy.clickPageMenuItem(name, expectedPageId);
+        return collapseSidebar();
+    },
+    visitSubPage: (groupName: string, pageName: string, expectedPageId: string | null = null) => {
+        cy.clickPageMenuItem(groupName).visitPage(pageName, expectedPageId);
+        return collapseSidebar();
+    },
+    visitTestPage: () => {
+        cy.clickPageMenuItem(testPageName);
+        return collapseSidebar();
+    },
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
@@ -241,7 +269,7 @@ const commands = {
         );
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
-            appDataVersion: getCurrentAppVersion(),
+            appDataVersion: Consts.APP_VERSION,
             appData: {
                 pages: [
                     {
@@ -285,34 +313,6 @@ const commands = {
                                   }
                               ]
                             : []
-                    },
-                    // used by tests that require plugins
-                    {
-                        name: 'Plugins Catalog',
-                        id: 'plugin_catalog',
-                        type: 'page',
-                        layout: [
-                            {
-                                type: 'widgets',
-                                content: [
-                                    {
-                                        id: 'pluginsCatalog',
-                                        name: 'Plugins Catalog',
-                                        definition: 'pluginsCatalog',
-                                        configuration: {
-                                            jsonPath:
-                                                'http://repository.cloudifysource.org/cloudify/wagons/plugins.json'
-                                        },
-                                        drillDownPages: {},
-                                        height: 20,
-                                        width: widgetsWidth,
-                                        x: 0,
-                                        y: 0,
-                                        maximized: false
-                                    }
-                                ]
-                            }
-                        ]
                     }
                 ]
             }
@@ -328,12 +328,12 @@ const commands = {
             .editWidgetConfiguration(widgetId, noop),
     refreshPage: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        return cy.get('.pageMenuItem.active').click({ force: true });
+        cy.get('.pageMenuItem.active').click({ force: true });
+        return collapseSidebar();
     },
     refreshTemplate: (disableGettingStarted = true) => {
         mockGettingStarted(!disableGettingStarted);
-        cy.get('.tenantsMenu').click({ force: true });
-        return cy.contains('.text', 'default_tenant').click({ force: true });
+        return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
     clearBlueprintContext: () => clearContext('blueprint'),
@@ -375,7 +375,17 @@ const commands = {
             .then(commandResult => commandResult.stdout);
     },
 
+    getAccordionSection: (sectionTitle: string) => cy.contains('.accordion .title', sectionTitle),
+
+    openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
+
+    withinAccordionSection: (sectionTitle: string, callback: () => void) => {
+        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
+    },
+
     getField: (fieldName: string) => cy.contains('.field', fieldName),
+
+    typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
 
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
@@ -397,7 +407,13 @@ const commands = {
 
     clearSearchableDropdown: (fieldName: string) => cy.getField(fieldName).find('.dropdown.clear.icon').click(),
 
-    setDropdownValues: (fieldName: string, values: string[]) =>
+    setSingleDropdownValue: (fieldName: string, value: string) =>
+        cy
+            .getField(fieldName)
+            .click()
+            .within(() => cy.contains('div[role=option]', value).click()),
+
+    setMultipleDropdownValues: (fieldName: string, values: string[]) =>
         cy
             .getField(fieldName)
             .click()
@@ -408,7 +424,10 @@ const commands = {
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
     mockEnabledGettingStarted: () => mockGettingStarted(true),
 
-    mockDisabledGettingStarted: () => mockGettingStarted(false)
+    mockDisabledGettingStarted: () => mockGettingStarted(false),
+
+    getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
+    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
 };
 
 addCommands(commands);
@@ -417,6 +436,9 @@ addCommands(commands);
 Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: unknown | undefined, num: number) =>
     // eslint-disable-next-line security/detect-non-literal-regexp
     (subject ? cy.wrap(subject) : cy).contains(new RegExp(`\\b${num}\\b`))
+);
+Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unknown | undefined, buttonLabel: string) =>
+    (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
 );
 
 function toIdObj(id: string) {

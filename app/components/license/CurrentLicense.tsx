@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
 import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -11,6 +8,10 @@ import StageUtils from '../../utils/stageUtils';
 import { Icon, Header, Segment, Table } from '../basic';
 
 export default function CurrentLicense({ license }) {
+    if (_.isEmpty(license)) {
+        return null;
+    }
+
     const formatExpirationDate = stringDate =>
         _.isEmpty(stringDate)
             ? i18n.t('licenseManagement.expirationDateNever', 'Never')
@@ -63,33 +64,31 @@ export default function CurrentLicense({ license }) {
     ];
 
     return (
-        !_.isEmpty(license) && (
-            <Segment>
-                <Table basic="very" size="large" celled>
-                    <Table.Body>
-                        {_.map(fields, field => {
-                            const value = license[field.name];
+        <Segment>
+            <Table basic="very" size="large" celled>
+                <Table.Body>
+                    {_.map(fields, field => {
+                        const value = license[field.name];
 
-                            return !!field.hide && field.hide(value) ? null : (
-                                <Table.Row key={field.header}>
-                                    <Table.Cell width={5}>
-                                        <Header as="h4">
-                                            <Icon
-                                                name={field.icon}
-                                                size="large"
-                                                style={{ display: 'inline-block', float: 'left' }}
-                                            />
-                                            <Header.Content>{field.header}</Header.Content>
-                                        </Header>
-                                    </Table.Cell>
-                                    <Table.Cell>{field.format(license[field.name])}</Table.Cell>
-                                </Table.Row>
-                            );
-                        })}
-                    </Table.Body>
-                </Table>
-            </Segment>
-        )
+                        return !!field.hide && field.hide(value) ? null : (
+                            <Table.Row key={field.header}>
+                                <Table.Cell width={5}>
+                                    <Header as="h4">
+                                        <Icon
+                                            name={field.icon}
+                                            size="large"
+                                            style={{ display: 'inline-block', float: 'left' }}
+                                        />
+                                        <Header.Content>{field.header}</Header.Content>
+                                    </Header>
+                                </Table.Cell>
+                                <Table.Cell>{field.format(license[field.name])}</Table.Cell>
+                            </Table.Row>
+                        );
+                    })}
+                </Table.Body>
+            </Table>
+        </Segment>
     );
 }
 

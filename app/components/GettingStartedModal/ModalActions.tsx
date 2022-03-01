@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import StageUtils from '../../utils/stageUtils';
 import { Button, Modal } from '../basic';
-import { StepName } from './model';
+import { GettingStartedEnvironmentsData, StepName } from './model';
 
 const t = StageUtils.getT('gettingStartedModal.buttons');
 
@@ -12,10 +12,24 @@ type Props = {
     onBackClick: () => void;
     onNextClick: () => void;
     onModalClose: () => void;
+    environmentsStepData: GettingStartedEnvironmentsData;
 };
 
-const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextClick, onModalClose }: Props) => {
+const ModalActions = ({
+    stepName,
+    installationProcessing,
+    environmentsStepData,
+    onBackClick,
+    onNextClick,
+    onModalClose
+}: Props) => {
     const statusStepActive = stepName === StepName.Status;
+    const disableNextButton = useMemo(() => {
+        const isEnvironmentsStep = stepName === StepName.Environments;
+        const anyEnvironmentHasBeenSelected = Object.values(environmentsStepData).some(Boolean);
+        return isEnvironmentsStep && !anyEnvironmentHasBeenSelected;
+    }, [stepName, environmentsStepData]);
+
     return (
         <Modal.Actions style={{ minHeight: 60 }}>
             {stepName !== StepName.Welcome && (
@@ -38,6 +52,7 @@ const ModalActions = ({ stepName, installationProcessing, onBackClick, onNextCli
                         content={stepName === StepName.Summary ? t('stepFinish') : t('stepNext')}
                         labelPosition="right"
                         onClick={onNextClick}
+                        disabled={disableNextButton}
                     />
                 </Button.Group>
             )}

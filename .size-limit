@@ -1,28 +1,34 @@
 [
     {
         "name": "Main JS bundle",
-        "limit": "328 KB",
+        "limit": "364 KB",
         "gzip": false,
         "path": "dist/static/js/main.bundle.js"
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "4.12 MB",
+        "limit": "4.13 MB",
         "gzip": false,
         "path": "dist/static/js/vendor.bundle.js"
     },
     {
         "name": "Widgets",
-        "limit": "3.14 MB",
+        "limit": "3.17 MB",
         "gzip": false,
         "running": false,
-        "path": ["dist/appData/widgets", "!dist/appData/widgets/**/*.gz"]
+        "path": [
+            "dist/appData/widgets",
+            "!dist/appData/widgets/**/*.gz"
+        ]
     },
     {
         "name": "Application package",
-        "limit": "13.73 MB",
+        "limit": "13.84 MB",
         "gzip": false,
         "running": false,
-        "path": ["dist", "!dist/**/*.gz"]
-    },
+        "path": [
+            "dist",
+            "!dist/**/*.gz"
+        ]
+    }
 ]

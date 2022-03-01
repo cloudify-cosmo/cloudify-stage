@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Executions', () => {
+    const widgetId = 'executions';
     const blueprintName = 'executions_test';
 
     before(() => {
@@ -9,7 +10,7 @@ describe('Executions', () => {
             .deleteSites()
             .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
-            .usePageMock('executions', {
+            .usePageMock(widgetId, {
                 fieldsToShow: ['Deployment', 'Deployment ID', 'Status', 'Workflow'],
                 pollingTime: 5
             })
@@ -17,13 +18,14 @@ describe('Executions', () => {
             .executeWorkflow(blueprintName, 'install');
 
         cy.setDeploymentContext(blueprintName);
-        cy.get('.executionsWidget tbody tr').should('have.length', 2);
+        cy.getWidget(widgetId).find('tbody tr').should('have.length', 2);
     });
 
     describe('in table mode', () => {
         it('allows showing the deployment display name', () => {
             cy.log('Check if display name is provided');
-            cy.get('table')
+            cy.getWidget(widgetId)
+                .find('table')
                 .getTable()
                 .should(tableData => {
                     expect(tableData).to.have.length(2);
@@ -32,14 +34,14 @@ describe('Executions', () => {
         });
 
         it('shows execution graph', () => {
-            cy.get('.executionsWidget').contains('tr', 'failed').contains('install').click();
+            cy.getWidget(widgetId).contains('tr', 'failed').contains('install').click();
 
             cy.log('Check if Task Graph is visible');
-            cy.get('.executionsWidget svg').should('be.visible');
+            cy.getWidget(widgetId).find('svg').should('be.visible');
         });
 
         it('provides message when there is no Task Execution Graph', () => {
-            cy.get('.executionsWidget').contains('tr', 'create_deployment_environment').click();
+            cy.getWidget(widgetId).contains('tr', 'create_deployment_environment').click();
 
             cy.log('Check if message is provided');
             cy.get('table.executionsTable').scrollIntoView();
@@ -55,15 +57,15 @@ describe('Executions', () => {
         );
 
         it('displays tasks graph', () => {
-            cy.get('.executionsWidget svg').should('be.visible');
+            cy.getWidget(widgetId).find('svg').should('be.visible');
         });
 
         it('displays Last Execution popup', () => {
             cy.log('Check if Task Graph is visible');
-            cy.get('.executionsWidget svg').should('be.visible');
+            cy.getWidget(widgetId).find('svg').should('be.visible');
 
             cy.log('Check if Executions widget has Last Execution status icon');
-            cy.get('.executionsWidget').contains('.ui.label', 'install failed').as('statusLabel');
+            cy.getWidget(widgetId).contains('.ui.label', 'install failed').as('statusLabel');
 
             cy.get('@statusLabel').trigger('mouseover');
             cy.get('.popup .header').should('have.text', 'Last Execution');
@@ -77,11 +79,12 @@ describe('Executions', () => {
         });
 
         it('allows to fit graph to view', () => {
-            cy.get('.executionsWidget svg > g')
+            cy.getWidget(widgetId)
+                .find('svg > g')
                 .invoke('attr', 'transform')
                 .then(transformNotFit => {
                     cy.get('.expand.arrows.alternate').click();
-                    cy.get('.executionsWidget svg > g').should('not.equal', transformNotFit);
+                    cy.getWidget(widgetId).find('svg > g').should('not.equal', transformNotFit);
                 });
         });
 

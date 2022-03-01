@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import log from 'loglevel';
-import marked from 'marked';
 import i18n from 'i18next';
 import React, { Component, createRef, ErrorInfo, ReactElement } from 'react';
 import { connect, ConnectedProps, MapStateToProps } from 'react-redux';
@@ -98,7 +97,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
         let readmeContent = '';
 
         if (typeof readme === 'string') {
-            readmeContent = marked(readme);
+            readmeContent = stageUtils.parseMarkdown(readme);
         }
         this.setState({ readmeContent, showReadmeModal: true });
     };
@@ -250,9 +249,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                         />
                     )}
                     {!hasError &&
-                        (widget.definition &&
-                        !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) &&
-                        !_.get(this.props, 'manager.tenants.isFetching') ? (
+                        (widget.definition && !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) ? (
                             <WidgetDynamicContent
                                 widget={widget}
                                 context={context}
@@ -289,7 +286,6 @@ const mapStateToProps: MapStateToProps<ReduxStateToProps<any>, WidgetOwnProps<an
         widget: {
             ...ownProps.widget,
             // NOTE: assume definition will always be found
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             definition: getWidgetDefinitionById(ownProps.widget.definition, state.widgetDefinitions)!
         }
     };

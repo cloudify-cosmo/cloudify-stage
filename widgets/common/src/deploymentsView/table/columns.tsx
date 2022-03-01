@@ -102,7 +102,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
                 </div>
             );
         }
-        /* eslint-enable camelcase, react/prop-types */
+        /* eslint-enable camelcase */
     }
 };
 

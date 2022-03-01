@@ -1,6 +1,7 @@
 [
   {
     "type": "page",
+    "icon": "rocket",
     "id": "topLevelPage",
     "name": "Top Level Page",
     "description": "",
@@ -10,11 +11,13 @@
   {
     "type": "pageGroup",
     "id": "g1",
+    "icon": "group",
     "name": "Group 1",
     "pages": [
       {
         "type": "page",
         "id": "subPage1",
+        "icon": "user",
         "name": "Subpage 1",
         "description": "",
         "isDrillDown": false,

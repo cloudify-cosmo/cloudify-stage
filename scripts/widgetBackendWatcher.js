@@ -1,14 +1,10 @@
-/**
- * Created by jakub.niezgoda on 21/02/2019.
- */
-
 const chokidar = require('chokidar');
 const fs = require('fs');
 const path = require('path');
 
 const appConfig = require('../conf/config.json');
 
-const widgetBackendFilename = appConfig.widgets.backendFilename;
+const widgetBackendFilename = `${appConfig.widgets.backendFilename}.${appConfig.widgets.backendFilenameExtensions[0]}`;
 const widgetBackendFilesGlob = `./widgets/*/src/${widgetBackendFilename}`;
 
 const logger = {

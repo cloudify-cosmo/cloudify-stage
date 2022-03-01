@@ -1,5 +1,6 @@
 {
   "name": "Environments",
+  "icon": "bullseye",
   "layout": [
     {
       "type": "widgets",
@@ -15,7 +16,7 @@
         {
           "name": "Environments",
           "width": 12,
-          "height": 28,
+          "height": 150,
           "definition": "deploymentsView",
           "configuration": {
             "filterId": "csys-environment-filter"

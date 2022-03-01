@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 11/04/2017.
- */
 
 import _ from 'lodash';
 import PropTypes from 'prop-types';

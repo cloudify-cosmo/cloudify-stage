@@ -14,7 +14,8 @@ This widget is only available to admin users.
 The widget displays the following information regarding each of the user groups:
 
 * **Name**
-* **LDAP group** When working with an ldap-based external authentication system, this fields identifies the LDAP user group which is connected to the current {{< param product_name >}} user-group.
+* **LDAP group** When working with an LDAP-based external authentication system, this field identifies the LDAP user group which is connected to the current {{< param product_name >}} user-group.   
+   This column will not be visible if LDAP is disabled in {{< param product_name >}}.
 * **Admin** If checked, all users who are members of this groups will have the role of sys-admins on the manager.
 * **# Users** number of users who are members of the group
 * **# Tenants** number of tenants the user-group is assigned with.
@@ -38,7 +39,8 @@ Please notice that by belonging to several groups, users might be assigned to a 
 1. Click **Add** in the User Groups Management widget.
 2. Enter a name for the group.   
    The name must contain at least five alphanumeric characters and begin with a letter. It can also include the following characters: `-`, `_` or `.`.
-3. (Optional) If you want to add user group that is configured in your LDAP/AD system, enter the LDAP Group Distinguished Name (DN). The format must be `CN=GroupName,OU=OUName,DC=Domaincomponent,DC=DomainComponent`, for example `CN=ldapwiki,OU=groups,DC=example,DC=com`.
+3. (Optional) If you want to add user group that is configured in your LDAP/AD system, enter the LDAP Group Distinguished Name (DN). The format must be `CN=GroupName,OU=OUName,DC=Domaincomponent,DC=DomainComponent`, for example `CN=ldapwiki,OU=groups,DC=example,DC=com`.   
+   This field will not be visible if LDAP is disabled in {{< param product_name >}}.
 4. Check **Admin** checkbox if you want group members to have administrator privileges.
 5. Click **Add**.
 

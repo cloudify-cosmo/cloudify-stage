@@ -79,14 +79,30 @@ function validateHugoParams(widget, content) {
 function convertHugoShortcodes(widget, content) {
     return new Promise(resolve => {
         // NOTE: See http://www.regular-expressions.info/repeat.html#lazy for an explanation of `*?`
-        const noteRegex = /{{%\s*note.*%}}([^]*?){{%\s*\/note\s*%}}/gm;
-        const tipRegex = /{{%\s*tip.*%}}([^]*?){{%\s*\/tip\s*%}}/gm;
-        const warningRegex = /{{%\s*warning.*%}}([^]*?){{%\s*\/warning\s*%}}/gm;
+        const anyCharacterRegex = '[^]*?';
+
+        /* eslint-disable security/detect-non-literal-regexp */
+        const getStyledMessageRegex = (messageType = '') =>
+            new RegExp(`{{%\\s*${messageType}.*%}}(${anyCharacterRegex}){{%\\s*\\/${messageType}\\s*%}}`, 'gm');
+
+        const getRelrefMarkdownLinkRegex = (linkPrefix = '') =>
+            new RegExp(`\\[(.+)\\]\\({{<\\s*relref\\s*"(${linkPrefix}\\S*)"\\s*>}}\\)`, 'gm');
+        /* eslint-enable security/detect-non-literal-regexp */
+
+        const noteRegex = getStyledMessageRegex('note');
+        const tipRegex = getStyledMessageRegex('tip');
+        const warningRegex = getStyledMessageRegex('warning');
+        const styledContentWrappersRegex = getStyledMessageRegex('(?:note|tip|warning)');
+        const tableRegex = /<table>([^]*?)<\/table>/gm;
 
         // relref
         const relrefRegex = /{{<\s*relref\s*"(\S*)"\s*>}}/gm;
+        const relrefToCurrentPageRegex = getRelrefMarkdownLinkRegex('#');
         const indexRegex = /_index.md/gm;
         const mdRegex = /\.md/gm;
+
+        const onLinkRedirectionToTheCurrentPage =
+            "document.getElementById(this.getAttribute('href')).scrollIntoView();";
 
         let newContent = content;
 
@@ -96,14 +112,25 @@ function convertHugoShortcodes(widget, content) {
         logChange(widget, 'warning shortcodes', newContent.match(warningRegex));
 
         newContent = newContent
+            .replace(styledContentWrappersRegex, match => {
+                return match?.replace(getRelrefMarkdownLinkRegex(), '<a href="/$2">$1</a>');
+            })
             .replace(noteRegex, '<div class="ui message info">$1</div>')
             .replace(tipRegex, '<div class="ui message info">$1</div>')
-            .replace(warningRegex, '<div class="ui message warning">$1</div>');
+            .replace(warningRegex, '<div class="ui message warning">$1</div>')
+            .replace(tableRegex, '<table class="ui celled table">$1</table>');
+
+        log(widget, 'Converting relref links which are pointing out to the current MD file:');
+        logChange(widget, 'relref shortcodes', newContent.match(relrefToCurrentPageRegex));
 
         log(widget, 'Converting relref links:');
         logChange(widget, 'relref shortcodes', newContent.match(relrefRegex));
 
-        newContent = newContent.replace(relrefRegex, '/$1').replace(indexRegex, 'index.html').replace(mdRegex, '');
+        newContent = newContent
+            .replace(relrefToCurrentPageRegex, `<a href="$2" onclick="${onLinkRedirectionToTheCurrentPage}">$1</a>`)
+            .replace(relrefRegex, '/$1')
+            .replace(indexRegex, 'index.html')
+            .replace(mdRegex, '');
 
         resolve(newContent);
     });

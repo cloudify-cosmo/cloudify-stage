@@ -1,5 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
+import Consts from 'app/utils/consts';
+
 describe('Sites Management', () => {
+    const widgetId = 'sites';
     const siteWithLocation = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
     const siteWithNoLocation = { name: 'London' };
     const siteWithPrivateVisibility = {
@@ -68,31 +71,39 @@ describe('Sites Management', () => {
 
     const verifySiteRow = (index, site) => {
         const siteRow = `tbody > tr:nth-child(${index})`;
-        cy.get(`${siteRow} > td:nth-child(1)`).should('have.text', site.name);
-
         let visibilityColor = 'green';
         if (site.visibility === 'private') {
             visibilityColor = 'red';
         }
-        cy.get(`${siteRow} > td:nth-child(1) span > .${visibilityColor}`).should('be.visible', true);
+
+        cy.getWidget(widgetId).within(() => {
+            cy.get(`${siteRow} > td:nth-child(1)`).should('have.text', site.name);
+            cy.get(`${siteRow} > td:nth-child(1) span > .${visibilityColor}`).should('be.visible', true);
+        });
 
         if (site.location) {
             const [latitude, longitude] = site.location.split(',');
-            cy.get(`${siteRow} > td:nth-child(2)`).should(
-                'have.text',
-                `Latitude: ${latitude}, Longitude: ${longitude}`
-            );
-            cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseover');
+            cy.getWidget(widgetId).within(() => {
+                cy.get(`${siteRow} > td:nth-child(2)`).should(
+                    'have.text',
+                    `Latitude: ${latitude}, Longitude: ${longitude}`
+                );
+                cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseover');
+            });
             cy.get('.popup .leaflet-marker-icon').should('have.length', 1);
-            cy.get(`${siteRow} > td:nth-child(2) i`).trigger('mouseout');
+            cy.getWidget(widgetId).find(`${siteRow} > td:nth-child(2) i`).trigger('mouseout');
             cy.get('.popup').should('not.exist');
         } else {
-            cy.get(`${siteRow} > td:nth-child(2)`).should('have.text', '');
-            cy.get(`${siteRow} > td:nth-child(2) i`).should('not.exist');
+            cy.getWidget(widgetId).within(() => {
+                cy.get(`${siteRow} > td:nth-child(2)`).should('have.text', '');
+                cy.get(`${siteRow} > td:nth-child(2) i`).should('not.exist');
+            });
         }
 
-        cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', 'default_tenant');
-        cy.get(`${siteRow} > td:nth-child(6)`).should('have.text', '0');
+        cy.getWidget(widgetId).within(() => {
+            cy.get(`${siteRow} > td:nth-child(5)`).should('have.text', Consts.DEFAULT_TENANT);
+            cy.get(`${siteRow} > td:nth-child(6)`).should('have.text', '0');
+        });
     };
 
     const deleteSite = index => {
@@ -104,7 +115,7 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate().deleteAllUsersAndTenants().usePageMock('sites').mockLogin().waitUntilLoaded();
+        cy.activate().deleteAllUsersAndTenants().usePageMock(widgetId).mockLogin().waitUntilLoaded();
     });
 
     beforeEach(() => {

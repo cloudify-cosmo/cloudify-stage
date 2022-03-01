@@ -1,10 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 describe('Edit mode', () => {
-    before(() => cy.activate('valid_trial_license').removeCustomWidgets().usePageMock('blueprints').mockLogin());
+    before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
     beforeEach(() => {
         cy.usePageMock('blueprints');
-        cy.refreshTemplate();
+        cy.mockLogin();
         cy.enterEditMode();
         cy.intercept('POST', '/console/ua').as('updateUserApps');
     });
@@ -170,7 +170,7 @@ describe('Edit mode', () => {
                 cy.wait('@deleteWidget').its('response.statusCode').should('equal', 200);
             }
 
-            cy.get('.modal .message ul').should('have.text', expectedError);
+            cy.contains('.modal .message ul', expectedError).should('be.visible');
         }
 
         it('validate widget installation', () => {
@@ -206,7 +206,7 @@ describe('Edit mode', () => {
                 200,
                 true
             );
-            submitInvalidWidget('ModuleNotAllowed', "The module 'fs-extra' is not whitelisted in VM.", 404);
+            submitInvalidWidget('ModuleNotAllowed', "Cannot find module 'fs-extra'", 404);
         });
 
         it('install and manage a widget', () => {
@@ -260,7 +260,7 @@ describe('Edit mode', () => {
 
             cy.wait('@managerService').its('response.statusCode').should('equal', 404);
 
-            cy.get('.message .content').should('have.text', "404 - The module 'fs-extra' is not whitelisted in VM.");
+            cy.get('.message .content').should('contain.text', "404 - Cannot find module 'fs-extra'");
         });
 
         it('install and use a widget with working backend services', () => {

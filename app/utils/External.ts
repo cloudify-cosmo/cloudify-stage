@@ -26,6 +26,7 @@ interface RequestOptions {
     headers?: Record<string, any>;
     parseResponse?: boolean;
     withCredentials?: boolean;
+    validateAuthentication?: boolean;
 }
 
 function getContentType(type?: string) {
@@ -69,7 +70,7 @@ export default class External {
             compressFile
         }: {
             params?: Record<string, any>;
-            files?: File | Record<string, any>;
+            files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
             compressFile?: boolean;
@@ -127,7 +128,7 @@ export default class External {
             });
 
             if (files) {
-                if (files instanceof File) {
+                if (files instanceof Blob) {
                     // Single file
                     if (compressFile) {
                         const reader = new FileReader();
@@ -187,7 +188,8 @@ export default class External {
             headers = {},
             parseResponse = true,
             fileName,
-            withCredentials
+            withCredentials,
+            validateAuthentication = true
         }: RequestOptions & { fileName?: string } = {}
     ) {
         const actualUrl = this.buildActualUrl(url, params);
@@ -223,7 +225,7 @@ export default class External {
                 .then(blob => saveAs(blob, fileName));
         }
         return fetch(actualUrl, options)
-            .then(this.checkStatus.bind(this))
+            .then(response => this.checkStatus.bind(this)(response, validateAuthentication))
             .then(response => {
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
@@ -247,12 +249,12 @@ export default class External {
         return false;
     }
 
-    private checkStatus(response: Response) {
+    private checkStatus(response: Response, validateAuthentication: boolean) {
         if (response.ok) {
             return response;
         }
 
-        if (this.isUnauthorized(response)) {
+        if (validateAuthentication && this.isUnauthorized(response)) {
             const interceptor = Interceptor.getInterceptor();
             interceptor.handle401();
             return Promise.reject(UNAUTHORIZED_ERR);

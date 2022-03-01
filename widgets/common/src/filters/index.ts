@@ -1,14 +1,16 @@
 import RulesForm from './RulesForm';
 import FilterActions from './FilterActions';
 import FilterIdDropdown from './FilterIdDropdown';
-import { FilterRule } from './types';
+import { FilterRule, FilterRuleOperators, FilterRuleType } from './types';
 import { filterIdQueryParameterName } from './common';
 
 const Filters = {
     Actions: FilterActions,
     FilterIdDropdown,
     filterIdQueryParameterName,
-    RulesForm
+    RulesForm,
+    FilterRuleOperators,
+    FilterRuleType
 };
 
 // NOTE: alias name to avoid name shadowing inside the namespace

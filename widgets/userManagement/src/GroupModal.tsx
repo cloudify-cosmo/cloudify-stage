@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by pposel on 31/01/2017.
- */
 
 import Actions from './actions';
 import UserPropType from './props/UserPropType';

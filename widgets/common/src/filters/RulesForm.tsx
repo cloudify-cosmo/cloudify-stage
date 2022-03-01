@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
 import type { FunctionComponent } from 'react';
+import { useEffect, useState } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
 import type { FilterRule, FilterRuleRow } from './types';
-import { FilterRuleType, FilterRuleOperators, FilterRuleRowType } from './types';
+import { FilterResourceType, FilterRuleOperators, FilterRuleRowType, FilterRuleType } from './types';
 import { isMultipleValuesOperator } from './common';
+import ResourceTypeContext from './resourceTypeContext';
 
 function hasError({ type, key, operator, values }: FilterRule) {
     const noValuesDefined = !values?.length;
@@ -18,11 +19,11 @@ function hasError({ type, key, operator, values }: FilterRule) {
     return noValuesDefined;
 }
 
-function getNewRow(): FilterRuleRow {
+function getNewRow(defaultType?: FilterRuleType): FilterRuleRow {
     const { uuid } = Stage.Utils;
     const emptyRule: FilterRule = {
-        type: FilterRuleType.Attribute,
-        key: FilterRuleRowType.Blueprint,
+        type: defaultType || FilterRuleType.Attribute,
+        key: defaultType === FilterRuleType.Label ? '' : FilterRuleRowType.Blueprint,
         operator: FilterRuleOperators.Contains,
         values: []
     };
@@ -34,12 +35,12 @@ function getNewRow(): FilterRuleRow {
     };
 }
 
-function getFilterRuleRows(filterRules: FilterRule[]): FilterRuleRow[] {
+function getFilterRuleRows(filterRules: FilterRule[], minCount: number, defaultType?: FilterRuleType): FilterRuleRow[] {
     const { uuid } = Stage.Utils;
 
-    return filterRules.length > 0
+    return filterRules.length >= minCount
         ? filterRules.map(rule => ({ id: uuid(), rule, hasError: hasError(rule) }))
-        : [getNewRow()];
+        : [getNewRow(defaultType)];
 }
 
 function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
@@ -47,21 +48,34 @@ function getFilterRule(filterRuleRow: FilterRuleRow): FilterRule {
 }
 
 export interface RulesFormProps {
+    defaultType?: FilterRuleType;
+    hideType?: boolean;
     initialFilters: FilterRule[];
     onChange: (filterRules: FilterRule[], hasErrors: boolean) => void;
     markErrors: boolean;
-    toolbox: Stage.Types.Toolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
+    resourceType: FilterResourceType;
+    minLength?: number;
 }
 
-const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange, markErrors, toolbox }) => {
-    const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters));
+const RulesForm: FunctionComponent<RulesFormProps> = ({
+    defaultType,
+    hideType,
+    initialFilters,
+    onChange,
+    markErrors,
+    toolbox,
+    resourceType,
+    minLength = 0
+}) => {
+    const [rows, setRows] = useState(() => getFilterRuleRows(initialFilters, minLength, defaultType));
 
     function handleChange(newRows: FilterRuleRow[]) {
         onChange(newRows.map(getFilterRule), newRows.filter(row => row.hasError).length > 0);
     }
 
     function addRule() {
-        const newRows = [...rows, getNewRow()];
+        const newRows = [...rows, getNewRow(defaultType)];
         setRows(newRows);
         handleChange(newRows);
     }
@@ -81,24 +95,25 @@ const RulesForm: FunctionComponent<RulesFormProps> = ({ initialFilters, onChange
     }
 
     useEffect(() => {
-        setRows(getFilterRuleRows(initialFilters));
-    }, [initialFilters]);
+        setRows(getFilterRuleRows(initialFilters, minLength, defaultType));
+    }, [initialFilters, defaultType, minLength]);
 
     return (
-        <>
+        <ResourceTypeContext.Provider value={resourceType}>
             {rows.map(row => (
                 <RuleRow
                     key={row.id}
                     error={markErrors && row.hasError}
+                    hideType={hideType}
                     rule={getFilterRule(row)}
-                    removable={rows.length > 1}
+                    removable={rows.length > minLength}
                     onChange={rule => updateRule(row.id, rule)}
                     onRemove={() => removeRule(row.id)}
                     toolbox={toolbox}
                 />
             ))}
             <AddRuleButton onClick={addRule} />
-        </>
+        </ResourceTypeContext.Provider>
     );
 };
 export default RulesForm;

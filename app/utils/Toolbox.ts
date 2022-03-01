@@ -5,7 +5,7 @@ import 'proxy-polyfill';
 import type { AnyAction, Store, Unsubscribe } from 'redux';
 
 import { drillDownToPage } from '../actions/drilldownPage';
-import { selectPageByName, selectHomePage, selectParentPage } from '../actions/page';
+import { selectPageByName, selectHomePage, selectParentPage } from '../actions/pageMenu';
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -132,7 +132,6 @@ const getToolbox = (
     widget: ReturnType<Stage.Types.Toolbox['getWidget']>
 ) => {
     // NOTE: assumes the toolbox is already created
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return new Proxy(toolbox!, {
         get: (target, name) => {
             if (name === 'refresh') {

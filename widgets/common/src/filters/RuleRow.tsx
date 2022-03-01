@@ -8,20 +8,29 @@ import type { FilterRule, FilterRuleOperator } from './types';
 import { FilterRuleType, FilterRuleRowType, FilterRuleOperators } from './types';
 
 interface RuleRowProps {
+    hideType?: boolean;
     onRemove: ComponentProps<typeof RuleRemoveButton>['onClick'];
     onChange: (rule: FilterRule) => void;
     removable: boolean;
     error: boolean;
     rule: FilterRule;
-    toolbox: Stage.Types.Toolbox;
+    toolbox: Stage.Types.WidgetlessToolbox;
 }
 
 const defaultOperator = FilterRuleOperators.AnyOf;
 const defaultValues: string[] = [];
 const defaultOperatorAndValues = { operator: defaultOperator, values: defaultValues };
 
-const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removable, error, rule, toolbox }) => {
-    const { UnsafelyTypedFormField: FormField, UnsafelyTypedFormGroup: FormGroup } = Stage.Basic;
+const RuleRow: FunctionComponent<RuleRowProps> = ({
+    hideType = false,
+    onChange,
+    onRemove,
+    removable,
+    error,
+    rule,
+    toolbox
+}) => {
+    const { Form } = Stage.Basic;
     const { key, operator, type } = rule;
     const ruleType = type === FilterRuleType.Label ? FilterRuleRowType.Label : (key as FilterRuleRowType);
 
@@ -46,14 +55,16 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
     }
 
     return (
-        <FormGroup widths="equal">
-            <FormField width={4}>
-                <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
-            </FormField>
-            <FormField width={4}>
+        <Form.Group widths="equal">
+            {hideType === false && (
+                <Form.Field width={4}>
+                    <RuleRowTypeDropdown onChange={onRuleTypeChange} value={ruleType} />
+                </Form.Field>
+            )}
+            <Form.Field width={4}>
                 <RuleOperatorDropdown onChange={onOperatorChange} value={operator} ruleType={ruleType} />
-            </FormField>
-            <FormField width={7} error={error}>
+            </Form.Field>
+            <Form.Field width={7} error={error}>
                 <RuleValueInput
                     onKeyChange={onKeyChange}
                     onValuesChange={onValuesChange}
@@ -61,9 +72,9 @@ const RuleRow: FunctionComponent<RuleRowProps> = ({ onChange, onRemove, removabl
                     rule={rule}
                     toolbox={toolbox}
                 />
-            </FormField>
-            <FormField width={1}>{removable && <RuleRemoveButton onClick={onRemove} />}</FormField>
-        </FormGroup>
+            </Form.Field>
+            <Form.Field width={1}>{removable && <RuleRemoveButton onClick={onRemove} />}</Form.Field>
+        </Form.Group>
     );
 };
 export default RuleRow;

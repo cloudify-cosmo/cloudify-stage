@@ -34,9 +34,11 @@ describe('User-defined widgets', () => {
 
             cy.contains('Content on the left');
             cy.contains('Content on the right');
-            cy.contains('Plugins Catalog');
-            // NOTE: make sure the content of the widget is rendered
-            cy.get('th').contains('Name');
+            cy.getWidget('pluginsCatalog').within(() => {
+                cy.contains('Plugins Catalog').should('be.visible');
+                // NOTE: make sure the content of the widget is rendered
+                cy.contains('th', 'Name').should('be.visible');
+            });
         });
     });
 });

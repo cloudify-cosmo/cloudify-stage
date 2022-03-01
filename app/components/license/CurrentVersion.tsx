@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 15/03/2019.
- */
 import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';

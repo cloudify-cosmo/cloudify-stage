@@ -1,8 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 /* eslint-disable max-classes-per-file */
-/**
- * Created by jakub.niezgoda on 31/07/2018.
- */
 
 import StepActions from '../wizard/StepActions';
 import { createWizardStep } from '../wizard/wizardUtils';
@@ -219,15 +216,14 @@ class ConfirmationStepContent extends React.Component {
 
         tasks.push(
             new Task(`Upload blueprint ${blueprint.blueprintName}`, () =>
-                blueprintActions.doUpload(
-                    blueprint.blueprintName,
-                    blueprint.blueprintYamlFile,
+                blueprintActions.doUpload(blueprint.blueprintName, {
+                    blueprintYamlFile: blueprint.blueprintYamlFile,
                     blueprintUrl,
-                    blueprint.blueprintFile,
+                    file: blueprint.blueprintFile,
                     imageUrl,
-                    blueprint.imageFile,
-                    blueprint.visibility
-                )
+                    image: blueprint.imageFile,
+                    visibility: blueprint.visibility
+                })
             )
         );
 

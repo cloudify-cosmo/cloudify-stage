@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import Consts from 'app/utils/consts';
 
 declare global {
     namespace Cypress {
@@ -15,7 +16,7 @@ const commands = {
     addTenant: (tenant: string) => cy.cfyRequest(`/tenants/${tenant}`, 'POST'),
 
     deleteTenant: (tenant: string): Cypress.Chainable => {
-        if (tenant !== 'default_tenant') {
+        if (tenant !== Consts.DEFAULT_TENANT) {
             cy.cfyRequest(`/tenants/${tenant}`, 'DELETE', null, null, { failOnStatusCode: false });
         }
         return cy;
@@ -36,7 +37,7 @@ const commands = {
         }),
 
     removeUserFromTenant: (username: string, tenant: string): Cypress.Chainable => {
-        if (tenant !== 'default_tenant' || !_.includes(builtInUsernames, username)) {
+        if (tenant !== Consts.DEFAULT_TENANT || !_.includes(builtInUsernames, username)) {
             return cy.cfyRequest(
                 '/tenants/users',
                 'DELETE',
@@ -52,7 +53,7 @@ const commands = {
     },
 
     removeUserGroupFromTenant: (groupName: string, tenant: string): Cypress.Chainable => {
-        if (tenant !== 'default_tenant') {
+        if (tenant !== Consts.DEFAULT_TENANT) {
             return cy.cfyRequest(
                 '/tenants/user-groups',
                 'DELETE',

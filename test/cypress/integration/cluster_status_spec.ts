@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
@@ -14,7 +13,7 @@ describe('Cluster Status', () => {
         ).as('clusterStatusSummary');
     });
 
-    function interceptFullStatus(responseFixtures) {
+    function interceptFullStatus(responseFixtures: string[]) {
         const responses = responseFixtures.map(fixture => ({ fixture }));
         cy.interceptSp('GET', { path: '/cluster-status?summary=false' }, req => req.reply(responses.shift())).as(
             'clusterStatusFull'
@@ -23,7 +22,11 @@ describe('Cluster Status', () => {
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 
-    const checkServicesStatus = (expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
+    const checkServicesStatus = (
+        expectedManagerStatus: keyof typeof styles,
+        expectedDbStatus: keyof typeof styles,
+        expectedBrokerStatus: keyof typeof styles
+    ) => {
         const managerCell = 'tbody tr:nth-child(1)';
         const databaseCell = 'tbody tr:nth-child(2)';
         const brokerCell = 'tbody tr:nth-child(3)';
@@ -43,52 +46,39 @@ describe('Cluster Status', () => {
         cy.wait('@clusterStatusSummary', clusterStatusFetchTimeout);
     });
 
-    it('is presented on hovering status icon in header', () => {
-        interceptFullStatus(['cluster_status/degraded.json']);
-
-        cy.wait('@clusterStatusSummary', clusterStatusFetchTimeout);
-        cy.get('.menu i.heartbeat.statusIcon').should('have.class', 'yellow');
-
-        cy.get('.menu i.heartbeat.statusIcon').trigger('mouseover');
-        cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-
-        cy.get('table.servicesData').within(() => {
-            cy.get('button.refreshButton').should('not.have.class', 'loading');
-            checkServicesStatus('Degraded', 'OK', 'OK');
-        });
-    });
-
     it('shows correct data', () => {
-        const checkOverallStatus = (overallStatus, expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
-            cy.get('.menu i.heartbeat.statusIcon').trigger('mouseover');
+        const checkStatus = (
+            expectedManagerStatus: keyof typeof styles,
+            expectedDbStatus: keyof typeof styles,
+            expectedBrokerStatus: keyof typeof styles,
+            expectedStatusIndicatorColor?: string
+        ) => {
+            cy.contains('Health').click({ force: true });
             cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
 
             cy.log('Check system status icon');
-            let iconColor = 'gray';
-            if (overallStatus === 'OK') {
-                iconColor = 'green';
-            } else if (overallStatus === 'Degraded') {
-                iconColor = 'yellow';
-            } else if (overallStatus === 'Fail') {
-                iconColor = 'red';
+            if (expectedStatusIndicatorColor) {
+                cy.contains('.item', 'Health').find('.circle').should('have.class', expectedStatusIndicatorColor);
+            } else {
+                cy.contains('.item', 'Health').find('.circle').should('not.exist');
             }
-            cy.get('.menu i.heartbeat.statusIcon').should('have.class', iconColor);
 
             cy.log('Check system status popup content');
-            cy.get('table.servicesData').within(() => {
+
+            cy.contains('.dropdown', 'Health').within(() => {
                 cy.get('button.refreshButton').should('not.have.class', 'loading');
                 checkServicesStatus(expectedManagerStatus, expectedDbStatus, expectedBrokerStatus);
             });
 
-            cy.get('.menu i.heartbeat.statusIcon').trigger('mouseout');
+            cy.contains('Health').click();
         };
 
         interceptFullStatus(['cluster_status/degraded.json', 'cluster_status/ok.json', 'cluster_status/fail.json']);
 
-        checkOverallStatus('Degraded', 'Degraded', 'OK', 'OK');
+        checkStatus('Degraded', 'OK', 'OK', 'yellow');
 
-        checkOverallStatus('OK', 'OK', 'OK', 'OK');
+        checkStatus('OK', 'OK', 'OK');
 
-        checkOverallStatus('Fail', 'Fail', 'OK', 'Fail');
+        checkStatus('Fail', 'OK', 'Fail', 'red');
     });
 });

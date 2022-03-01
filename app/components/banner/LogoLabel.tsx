@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
-
-import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
+import { productFont } from '../fonts';
 
 interface LogoLabelProps {
     color: string;
@@ -13,7 +12,7 @@ const LogoLabel: FunctionComponent<LogoLabelProps> = ({ color, content }) => {
             style={{
                 color,
                 fontSize: '2em',
-                fontFamily: 'JosefinSans-Bold, sans-serif'
+                fontFamily: `${productFont}, sans-serif`
             }}
         >
             {content}

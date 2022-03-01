@@ -1,17 +1,21 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import configureMockStore from 'redux-mock-store';
 
 import Grid from 'components/layout/Grid';
+import { Provider } from 'react-redux';
 
 describe('(Component) Grid', () => {
     function testGridRender(isEditMode: boolean) {
         const wrapper = shallow(
-            <Grid isEditMode={isEditMode} onGridDataChange={() => {}}>
-                {[]}
-            </Grid>
+            <Provider store={configureMockStore()()}>
+                <Grid isEditMode={isEditMode} onGridDataChange={() => {}}>
+                    {[]}
+                </Grid>
+            </Provider>
         );
 
-        expect(wrapper).toHaveLength(1);
+        expect(wrapper.find(Grid)).toHaveLength(1);
     }
 
     // eslint-disable-next-line jest/expect-expect

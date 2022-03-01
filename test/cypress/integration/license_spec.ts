@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('License Management', () => {
     const validTrialLicense = { name: 'valid trial', file: 'valid_trial_license.yaml', header: 'License is valid' };
     const expiredTrialLicense = {
@@ -28,10 +27,10 @@ describe('License Management', () => {
         }
     ];
 
-    const verifyMessageHeader = header => {
+    const verifyMessageHeader = (header: string) => {
         cy.get('.content > .header').should('have.text', header);
     };
-    const verifyError = error => {
+    const verifyError = (error: string) => {
         cy.get('.form > .message')
             .scrollIntoView()
             .within(() => {
@@ -46,7 +45,7 @@ describe('License Management', () => {
         cy.get('textarea').as('licenseTextArea');
         cy.get('@licenseTextArea').should('be.visible', true);
     };
-    const uploadLicense = licenseFile => {
+    const uploadLicense = (licenseFile: string) => {
         cy.get('textarea').as('licenseTextArea');
         cy.get('.form > button').as('updateButton');
 
@@ -70,15 +69,13 @@ describe('License Management', () => {
 
     describe('is accessible from', () => {
         it('users menu', () => {
-            cy.get('.usersMenu').click();
-            cy.get('.usersMenu').contains('License Management').click();
+            cy.clickSystemMenuItem('admin').clickSystemMenuItem('License Management');
 
             cy.location('pathname').should('be.equal', licenseManagementUrl);
         });
 
         it('About modal', () => {
-            cy.get('.helpMenu').click();
-            cy.get('.helpMenu').contains('About').click();
+            cy.clickSystemMenuItem('Help').clickSystemMenuItem('About');
 
             cy.get('.actions > button.yellow').should('have.text', 'License Management');
 

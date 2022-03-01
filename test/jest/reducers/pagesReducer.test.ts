@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 11/12/2016.
- */
 import { parse } from 'query-string';
 
 import configureMockStore from 'redux-mock-store';
@@ -13,7 +10,8 @@ import pageReducer from 'reducers/pageReducer';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
 import { drillDownToPage } from 'actions/drilldownPage';
-import { changePageName, changePageDescription, removePageWithChildren } from 'actions/page';
+import { changePageDescription } from 'actions/page';
+import { changePageMenuItemName, removePageWithChildren } from 'actions/pageMenu';
 
 import * as types from 'actions/types';
 
@@ -578,7 +576,7 @@ describe('(Reducer) Pages', () => {
         it('Changing page name should affect only name property and not id', () => {
             const store = createStore(combineReducers({ pages: pageReducer }), initialState, applyMiddleware(thunk));
 
-            store.dispatch(changePageName(dashboardPage, 'Control Panel'));
+            store.dispatch(changePageMenuItemName(dashboardPage.id, 'Control Panel'));
 
             const { pages } = store.getState();
             expect(pages[0]).toEqual({ ...dashboardPage, name: 'Control Panel' });

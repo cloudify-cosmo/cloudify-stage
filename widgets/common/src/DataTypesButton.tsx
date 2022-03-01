@@ -1,4 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
+
+const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
         description: PropTypes.string,
@@ -97,7 +100,26 @@ DataType.defaultProps = {
     version: null
 };
 
-class DataTypesButton extends React.Component {
+interface DataTypesButtonProps {
+    iconButton?: boolean;
+    types: {
+        // eslint-disable-next-line camelcase
+        derived_from: string;
+        version: string;
+        properties: {
+            description: string;
+            type: string;
+            default: unknown;
+            required: boolean;
+        };
+    };
+}
+
+interface DataTypesButtonState {
+    open: boolean;
+}
+
+class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesButtonState> {
     constructor(props) {
         super(props);
 
@@ -122,19 +144,33 @@ class DataTypesButton extends React.Component {
     }
 
     render() {
-        const { types } = this.props;
+        const { types, iconButton } = this.props;
         const { open } = this.state;
-        const { Button, CancelButton, Modal } = Stage.Basic;
+        const { Button, CancelButton, Modal, Popup } = Stage.Basic;
 
         return (
             <div>
-                <Button
-                    icon="code"
-                    content="Show Data Types"
-                    onClick={this.onOpen}
-                    className="rightFloated"
-                    labelPosition="left"
-                />
+                {iconButton ? (
+                    <Popup
+                        content={t('buttons.showDataTypes')}
+                        trigger={
+                            <Button
+                                icon="code"
+                                onClick={this.onOpen}
+                                floated="right"
+                                aria-label={t('buttons.showDataTypes')}
+                            />
+                        }
+                    />
+                ) : (
+                    <Button
+                        icon="code"
+                        content={t('buttons.showDataTypes')}
+                        onClick={this.onOpen}
+                        floated="right"
+                        labelPosition="left"
+                    />
+                )}
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
@@ -160,17 +196,14 @@ class DataTypesButton extends React.Component {
         );
     }
 }
+
 export default DataTypesButton;
 
-DataTypesButton.propTypes = {
-    types: PropTypes.objectOf(
-        PropTypes.shape({
-            derived_from: PropTypes.string,
-            version: PropTypes.string,
-            properties: PropertiesPropType.isRequired
-        }).isRequired
-    ).isRequired
-};
+declare global {
+    namespace Stage.Common {
+        export { DataTypesButton };
+    }
+}
 
 Stage.defineCommon({
     name: 'DataTypesButton',

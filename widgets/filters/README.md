@@ -14,8 +14,8 @@ The table has 5 columns:
 
 The actions column contains the following action icons:
 
-* **Clone filter** opens the **filter clone** modal allowing to create a modified copy of the selected filter (see [defining filter rules](/#defining-filter-rules) for details on rule definition)
-* **Edit filter** available only to `user` filters, opens the **filter rules edit** modal (see [defining filter rules](/#defining-filter-rules) for details on rule definition)
+* **Clone filter** opens the **filter clone** modal allowing to create a modified copy of the selected filter (see <a href="#defining-filter-rules" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">defining filter rules</a> for details on rule definition)
+* **Edit filter** available only to `user` filters, opens the **filter rules edit** modal (see <a href="#defining-filter-rules" onclick="document.getElementById(this.getAttribute('href')).scrollIntoView();">defining filter rules</a> for details on rule definition)
 * **Delete filter** available only to non-`system` filters, removes the selected filter (see note below)
 
 Filters used as a default filter in
@@ -36,11 +36,12 @@ Add, edit and clone operation modals share a common component for defining filte
 
 The component presents a list of rows, each representing a single filter rule. Each row contains three inputs:
 
-* Rule type selection dropdown - selecting the context of the rule which can be based on labels or supported deployment attributes such as blueprint ID, site name, or creator.
+* Rule type selection dropdown - selecting the context of the rule which can be based on labels or supported 
+  deployment attributes such as blueprint ID, creator, display name, site name or tenant name.
 * Rule operator dropdown. The set of available operators to choose from depends on the selected rule type. See **Table 1.** and **Table 2.** below for details.
 * Value input (for attribute rules) or key/value input(s) (for label rules). 
 
-<table>
+<table class="ui celled table">
   <thead>
     <th width="20%">UI</th>
     <th width="15%">API</th>
@@ -83,7 +84,7 @@ The component presents a list of rows, each representing a single filter rule. E
 </table>
 
 
-<table>
+<table class="ui celled table">
   <thead>
     <th width="20%">UI</th>
     <th width="15%">API</th>
@@ -128,7 +129,7 @@ The component presents a list of rows, each representing a single filter rule. E
       <td>The deployment attribute ends with the specified value.</td>
     </tr>
   </tbody>
-  <caption style="caption-side: bottom; text-align: left"><strong>Table 2.</strong> Attributes (Blueprint, Site name, Creator) operators 
+  <caption style="caption-side: bottom; text-align: left"><strong>Table 2.</strong> Attributes operators 
 mapping</caption>
 </table>
 

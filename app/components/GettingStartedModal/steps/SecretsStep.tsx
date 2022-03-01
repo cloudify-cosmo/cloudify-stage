@@ -1,41 +1,53 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 
 import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
-import { UnsafelyTypedFormField } from '../unsafelyTypedForm';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
-    onChange?: (typedSecrets: GettingStartedSecretsData) => void;
-    markEmptyInputs: boolean;
+    onChange: (typedSecrets: GettingStartedSecretsData) => void;
 };
 
-const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, markEmptyInputs }: Props) => {
-    const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets ?? {});
+const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
+    const defaultSecretInputs: Record<string, any> = useMemo(
+        () =>
+            selectedEnvironment.secrets.reduce(
+                (finalObject, secret) => ({
+                    ...finalObject,
+                    [secret.name]: ''
+                }),
+                {}
+            ),
+        [selectedEnvironment]
+    );
+
+    const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
+
     useEffect(() => resetSecretInputs(), [typedSecrets]);
+    useEffect(() => {
+        if (!typedSecrets) onChange(defaultSecretInputs);
+    }, []);
 
     return (
         <Form>
             {selectedEnvironment.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
-                    onChange?.(secretInputs);
+                    onChange(secretInputs);
                 };
                 return (
-                    <UnsafelyTypedFormField key={name}>
+                    <Form.Field key={name}>
                         <Form.Input
                             type={type}
                             name={name}
                             label={label}
-                            value={secretInputs[name] ?? ''}
+                            value={secretInputs[name]}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
-                            required
-                            error={markEmptyInputs && !secretInputs[name]}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 );
             })}
         </Form>

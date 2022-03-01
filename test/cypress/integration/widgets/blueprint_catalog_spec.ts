@@ -5,7 +5,7 @@ describe('Blueprints catalog widget', () => {
         cy
             .activate()
             .usePageMock('blueprintCatalog', {
-                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.2/vm-examples.json',
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json',
                 displayStyle: 'catalog',
                 fieldsToShow: ['Name', 'Description', 'Created', 'Updated']
             })
@@ -39,7 +39,7 @@ describe('Blueprints catalog widget', () => {
 
     it('should allow to change display style', () => {
         cy.editWidgetConfiguration('blueprintCatalog', () => {
-            cy.setDropdownValues('Display style', ['Table']);
+            cy.setMultipleDropdownValues('Display style', ['Table']);
         });
 
         cy.get('.blueprintCatalogWidget table').should('be.visible');
@@ -48,7 +48,7 @@ describe('Blueprints catalog widget', () => {
     it('should allow to customize fields to show', () => {
         cy.editWidgetConfiguration('blueprintCatalog', () => {
             cy.clearMultipleDropdown('List of fields to show in the table');
-            cy.setDropdownValues('List of fields to show in the table', ['Name', 'Created']);
+            cy.setMultipleDropdownValues('List of fields to show in the table', ['Name', 'Created']);
         });
         cy.get('.blueprintCatalogWidget').within(() => {
             cy.contains('Name').should('be.visible');

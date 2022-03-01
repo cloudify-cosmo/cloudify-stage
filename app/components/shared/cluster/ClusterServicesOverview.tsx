@@ -5,60 +5,57 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import i18n from 'i18next';
 import { Link } from 'react-router-dom';
-import { ErrorMessage, Message, Table } from '../../basic';
+import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
 import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from './consts';
 import './ClusterServicesOverview.css';
+import { createPagesMap } from '../../../actions/pageMenu';
 
 export default function ClusterServicesOverview({ services, clickable, isFetching, fetchingError, header }) {
-    const adminPageId = 'admin_operations';
-    const adminPageUrl = `/page/${adminPageId}`;
-    const isAdminPagePresent = !!useSelector(state => _.find(state.pages, { id: adminPageId }));
+    const systemHealthPageId = 'system_health';
+    const systemHealthPageUrl = `/page/${systemHealthPageId}`;
+    const isSystemHealthPagePresent = !!useSelector(state => createPagesMap(state.pages)[systemHealthPageId]);
 
     return (
-        <Table celled basic="very" collapsing className="servicesData">
-            {!_.isEmpty(header) && <Table.Header>{header}</Table.Header>}
-            <Table.Body>
-                {!isFetching && (
-                    <>
-                        {fetchingError && (
-                            <ErrorMessage
-                                error={fetchingError}
-                                header={i18n.t('cluster.overview.errorHeader', 'Failed to fetch status')}
-                            />
-                        )}
-                        {!fetchingError &&
-                            (!_.isEmpty(services) ? (
-                                _.map(services, (service, serviceName) => (
-                                    <Table.Row
-                                        key={serviceName}
-                                        style={{ backgroundColor: clusterServiceBgColor(service.status) }}
-                                    >
-                                        <Table.Cell>
-                                            {clickable && isAdminPagePresent ? (
-                                                <Link to={adminPageUrl}>
-                                                    <ClusterService
-                                                        isExternal={service.is_external}
-                                                        name={serviceName}
-                                                    />
-                                                </Link>
-                                            ) : (
+        <>
+            {!_.isEmpty(header) && header}
+            <Table celled basic="very" collapsing className="servicesData" style={{ position: 'relative' }}>
+                <Table.Body>
+                    {isFetching && <LoadingOverlay />}
+                    {fetchingError && (
+                        <ErrorMessage
+                            error={fetchingError}
+                            header={i18n.t('cluster.overview.errorHeader', 'Failed to fetch status')}
+                        />
+                    )}
+                    {!fetchingError &&
+                        (!_.isEmpty(services) ? (
+                            _.map(services, (service, serviceName) => (
+                                <Table.Row
+                                    key={serviceName}
+                                    style={{ backgroundColor: clusterServiceBgColor(service.status) }}
+                                >
+                                    <Table.Cell>
+                                        {clickable && isSystemHealthPagePresent ? (
+                                            <Link to={systemHealthPageUrl}>
                                                 <ClusterService isExternal={service.is_external} name={serviceName} />
-                                            )}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ))
-                            ) : (
-                                <Message>
-                                    <Message.Header>
-                                        {i18n.t('cluster.overview.noServices', 'No services available')}
-                                    </Message.Header>
-                                </Message>
-                            ))}
-                    </>
-                )}
-            </Table.Body>
-        </Table>
+                                            </Link>
+                                        ) : (
+                                            <ClusterService isExternal={service.is_external} name={serviceName} />
+                                        )}
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))
+                        ) : (
+                            <Message>
+                                <Message.Header>
+                                    {i18n.t('cluster.overview.noServices', 'No services available')}
+                                </Message.Header>
+                            </Message>
+                        ))}
+                </Table.Body>
+            </Table>
+        </>
     );
 }
 

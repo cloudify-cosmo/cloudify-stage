@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by Tamer on 14/08/2017.
- */
 
 export default function MyResourcesCheckbox({ toolbox }) {
     function handleChange(proxy, elm) {

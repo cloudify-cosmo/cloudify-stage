@@ -13,13 +13,14 @@
     "loginPageHeaderColor": "white",
     "loginPageTextColor": "white",
 
-    "sidebarColor": "#E2E2E2",
-    "sidebarTextColor" : "#585860",
-    "sidebarHoverActiveColor": "rgba(0,0,0,.05)",
+    "sidebarColor": "#050229",
+    "sidebarTextColor" : "white",
+    "sidebarHoverActiveColor": "#1e1a3d",
+    "sidebarHoverActiveTextColor": "#65adff",
 
     "customCssPath": ""
   },
   "widgets": {
-    "allowedModules": ["lodash", "body/json", "elkjs"]
+    "allowedModules": ["lodash", "body", "elkjs"]
   }
 }

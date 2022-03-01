@@ -26,7 +26,6 @@ function useLabelInput(onChange: (value: string) => void, type: LabelInputType, 
         invalidCharacterTyped,
         submitChange: (_event: SyntheticEvent | null, data: { value: string; searchQuery?: string }) => {
             // supports both dropdown as well as regular input
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const formattedNewValue = formatNewValue(type, data.searchQuery! ?? data.value);
 
             if (formattedNewValue === '' || allowedCharacters.test(formattedNewValue)) {

@@ -1,7 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import request from 'request';
+import type { CoreOptions } from 'request';
 import { isRbacInCache, getAndCacheConfig } from '../handler/AuthHandler';
 import { getApiUrl, updateOptions } from '../handler/ManagerHandler';
 
@@ -10,7 +10,11 @@ import { getLogger } from '../handler/LoggerHandler';
 const router = express.Router();
 const logger = getLogger('ServerProxy');
 
-function errorHandler(url, res, err) {
+interface RequestWithServerUrl extends Request {
+    su?: string;
+}
+
+function errorHandler(url: string, res: Response, err: any) {
     const isTimeout = err.code === 'ETIMEDOUT';
     const isSocketTimeout = err.code === 'ESOCKETTIMEDOUT';
     const isConnTimeout = err.connect;
@@ -34,7 +38,7 @@ function errorHandler(url, res, err) {
     }
 }
 
-function buildManagerUrl(req, res, next) {
+function buildManagerUrl(req: RequestWithServerUrl, _res: Response, next: NextFunction) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     if (serverUrl) {
         req.su = getApiUrl() + serverUrl;
@@ -45,19 +49,19 @@ function buildManagerUrl(req, res, next) {
     }
 }
 
-async function proxyRequest(req, res) {
-    const options = {};
+async function proxyRequest(req: RequestWithServerUrl, res: Response) {
+    const options: CoreOptions = {};
 
     // if is a maintenance status fetch then update RBAC cache if empty
     if (req.su === `${getApiUrl()}/maintenance` && req.method === 'GET' && !isRbacInCache()) {
-        await getAndCacheConfig(req.headers['authentication-token']);
+        await getAndCacheConfig(req.headers['authentication-token'] as string);
     }
 
     updateOptions(options, req.method);
 
     req.pipe(
-        request(req.su, options).on('error', err => {
-            errorHandler(req.su, res, err);
+        request(req.su!, options).on('error', err => {
+            errorHandler(req.su!, res, err);
         })
     ).pipe(res);
 }

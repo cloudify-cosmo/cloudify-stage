@@ -1,11 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 27/01/2017.
- */
-
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { memo } from 'react';
+import type { FunctionComponent, MouseEvent } from 'react';
+import type { SemanticICONS, SemanticCOLORS, StrictIconProps, StrictLabelProps } from 'semantic-ui-react';
 import i18n from 'i18next';
 import { Icon, Label, Popup } from '../basic';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
@@ -30,40 +26,90 @@ import ExecutionUtils from '../../utils/shared/ExecutionUtils';
  * ```
  *
  */
-export default function ExecutionStatus({
+
+interface Execution {
+    /* eslint-disable camelcase */
+    status_display?: string;
+    status?: string;
+    scheduled_for?: string;
+    workflow_id?: string;
+    /* eslint-enable camelcase  */
+}
+
+interface ExecutionStatusProps {
+    /**
+     * Execution resource object
+     */
+    execution: Execution;
+
+    /**
+     * If set to true and execution is in one of the waiting states, then popup will be shown on hovering execution status label displaying scheduled_for value
+     */
+    allowShowingPopup?: boolean;
+
+    /**
+     * Defines how the label should be attached to a content segment
+     */
+    labelAttached?: StrictLabelProps['attached'];
+
+    /**
+     * Defines how the icon should be attached to a content segment
+     */
+    iconAttached?: string;
+
+    /**
+     * Icon size
+     */
+    iconSize?: StrictIconProps['size'];
+
+    /**
+     * If set to true, then execution status will be added to label
+     */
+    showLabel?: boolean;
+
+    /**
+     * If set to true, then workflow ID will be added to label
+     */
+    showWorkflowId?: boolean;
+}
+
+const ExecutionStatus: FunctionComponent<ExecutionStatusProps> = ({
     execution,
-    allowShowingPopup,
+    allowShowingPopup = true,
     labelAttached,
     iconAttached,
     iconSize,
-    showLabel,
-    showWorkflowId
-}) {
+    showLabel = true,
+    showWorkflowId = false
+}) => {
     const executionStatusDisplay = execution.status_display || execution.status;
     const showPopup =
         allowShowingPopup && ExecutionUtils.isWaitingExecution(execution) && !_.isEmpty(execution.scheduled_for);
 
-    function renderIcon(onClick) {
+    const stopPropagation = (e: MouseEvent<HTMLElement, globalThis.MouseEvent>) => {
+        e.stopPropagation();
+    };
+
+    function renderIcon() {
         const iconParams = ExecutionUtils.getExecutionStatusIconParams(execution);
         return (
             <Icon
-                name={iconParams.name}
-                color={iconParams.color}
+                name={iconParams.name as SemanticICONS}
+                color={iconParams.color as SemanticCOLORS}
                 loading={iconParams.loading}
                 size={iconSize}
                 attached={iconAttached}
-                onClick={onClick}
+                onClick={stopPropagation}
             />
         );
     }
 
     return showLabel ? (
-        <Popup on={showPopup ? 'hover' : []}>
+        <Popup on="hover" disabled={!showPopup}>
             <Popup.Trigger>
-                <Label attached={labelAttached} onClick={e => e.stopPropagation()}>
+                <Label attached={labelAttached} onClick={stopPropagation}>
                     {renderIcon()}
-                    {showWorkflowId && execution.workflow_id}
-                    {showWorkflowId && ' '}
+                    {showWorkflowId && `${execution.workflow_id} `}
                     {executionStatusDisplay}
                 </Label>
             </Popup.Trigger>
@@ -71,67 +117,14 @@ export default function ExecutionStatus({
                 <span
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                        __html: i18n.t(
-                            'shared.executionStatus.scheduledFor',
-                            'Scheduled for: <strong>{{datetime}}}</strong>',
-                            { datetime: execution.scheduled_for }
-                        )
+                        __html: i18n.t('shared.executionStatus.scheduledFor', { datetime: execution.scheduled_for })
                     }}
                 />
             ) : null}
         </Popup>
     ) : (
-        renderIcon(e => e.stopPropagation())
+        renderIcon()
     );
-}
-
-ExecutionStatus.propTypes = {
-    /**
-     * Execution resource object
-     */
-    execution: PropTypes.shape({
-        status_display: PropTypes.string,
-        status: PropTypes.string,
-        scheduled_for: PropTypes.string,
-        workflow_id: PropTypes.string
-    }).isRequired,
-
-    /**
-     * If set to true and execution is in one of the waiting states, then popup will be shown on hovering execution status label displaying scheduled_for value
-     */
-    allowShowingPopup: PropTypes.bool,
-
-    /**
-     * Icon size
-     */
-    iconSize: PropTypes.string,
-
-    /**
-     * Defines how the icon should be attached to a content segment
-     */
-    iconAttached: PropTypes.string,
-
-    /**
-     * Defines how the label should be attached to a content segment
-     */
-    labelAttached: PropTypes.string,
-
-    /**
-     * If set to true, then execution status will be added to label
-     */
-    showLabel: PropTypes.bool,
-
-    /**
-     * If set to true, then workflow ID will be added to label
-     */
-    showWorkflowId: PropTypes.bool
 };
 
-ExecutionStatus.defaultProps = {
-    allowShowingPopup: true,
-    iconSize: undefined,
-    iconAttached: undefined,
-    labelAttached: undefined,
-    showLabel: true,
-    showWorkflowId: false
-};
+export default memo(ExecutionStatus);

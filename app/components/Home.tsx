@@ -1,18 +1,25 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 29/08/2016.
- */
 
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 
-import SideBar from './sidebar/SideBar';
+import { parse } from 'query-string';
+import { push } from 'connected-react-router';
+import { connect } from 'react-redux';
+import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 import Page from './Page';
 import GettingStartedModal from './GettingStartedModal';
+import ContactDetailsModal from './ContactDetailsModal';
+import { createPagesMap } from '../actions/pageMenu';
+import Consts from '../utils/consts';
+import { clearContext, setValue } from '../actions/context';
+import { setDrilldownContext } from '../actions/drilldownContext';
+import { setAppError } from '../actions/appState';
+import { storeCurrentPageId } from '../actions/app';
 
-export default class Home extends Component {
+class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillMount() {
@@ -75,7 +82,7 @@ export default class Home extends Component {
     }
 
     render() {
-        const { emptyPages, pageId, pageName } = this.props;
+        const { emptyPages, pageId, pageName, isEditMode } = this.props;
 
         if (emptyPages) {
             return null;
@@ -84,9 +91,10 @@ export default class Home extends Component {
         return (
             <div className="main">
                 <SideBar pageId={pageId} />
+                <ContactDetailsModal />
                 <GettingStartedModal />
 
-                <div className="page">
+                <div className="page" style={{ marginLeft: isEditMode ? expandedSidebarWidth : collapsedSidebarWidth }}>
                     <div className="ui basic segment">
                         <Page pageId={pageId} pageName={pageName} />
                     </div>
@@ -115,3 +123,52 @@ Home.propTypes = {
 Home.defaultProps = {
     selectedPage: null
 };
+
+const mapStateToProps = (state, ownProps) => {
+    const { pages } = state;
+    const homePageId = _.isEmpty(pages) ? '' : pages[0].id;
+    const selectedPageId = ownProps.match.params.pageId || homePageId;
+    const selectedPageName = ownProps.match.params.pageName || '';
+
+    const query = parse(ownProps.location.search);
+    const context = query.c ? JSON.parse(query.c) : [];
+
+    return {
+        emptyPages: _.isEmpty(pages),
+        selectedPage: createPagesMap(pages)[selectedPageId],
+        pageId: selectedPageId,
+        pageName: selectedPageName,
+        contextParams: context,
+        isMaintenance: state.manager.maintenance === Consts.MAINTENANCE_ACTIVATED,
+        isEditMode: state.config.isEditMode || false
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onClearContext: () => {
+            dispatch(clearContext());
+        },
+        onSetContextValue: (key, value) => {
+            dispatch(setValue(key, value));
+        },
+        onSetDrilldownContext(drilldownContext) {
+            dispatch(setDrilldownContext(drilldownContext));
+        },
+        navigateTo404: () => {
+            dispatch(push(Consts.ERROR_404_PAGE_PATH));
+        },
+        navigateToError: message => {
+            dispatch(setAppError(message));
+            dispatch(push(Consts.ERROR_PAGE_PATH));
+        },
+        navigateToMaintenancePage: () => {
+            dispatch(push(Consts.MAINTENANCE_PAGE_PATH));
+        },
+        onStorePageId: pageId => {
+            dispatch(storeCurrentPageId(pageId));
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

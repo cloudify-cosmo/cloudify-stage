@@ -1,5 +1,6 @@
 {
   "name": "Services",
+  "icon": "wrench",
   "layout": [
     {
       "type": "widgets",
@@ -15,7 +16,7 @@
         {
           "name": "Services",
           "width": 12,
-          "height": 28,
+          "height": 150,
           "definition": "deploymentsView",
           "configuration": {
             "filterId": "csys-service-filter",

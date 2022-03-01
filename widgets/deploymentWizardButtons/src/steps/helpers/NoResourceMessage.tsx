@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakub.niezgoda on 16/08/2018.
- */
 
 export default function NoResourceMessage({ resourceName }) {
     const { Message } = Stage.Basic;

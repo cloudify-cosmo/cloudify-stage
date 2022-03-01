@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by kinneretzin on 17/11/2016.
- */
 
 import { JSDOM } from 'jsdom';
 import _ from 'lodash';
@@ -12,6 +9,8 @@ import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Utils from 'utils/stageUtils';
+import * as Basic from 'components/basic';
 import i18nInit from './i18n';
 
 configure({ adapter: new Adapter() });
@@ -37,7 +36,7 @@ global.d3 = d3;
 global.moment = moment;
 global.HTMLElement = window.HTMLElement;
 global.log = log;
-global.Stage = { defineCommon: noop };
+global.Stage = { defineCommon: noop, Basic, Shared: {}, Utils };
 global.PropTypes = PropTypes;
 global.React = React;
 global.ResizeObserver = function ResizeObserver() {
@@ -51,3 +50,5 @@ require.extensions['.css'] = noop;
 require.extensions['.scss'] = noop;
 require.extensions['.svg'] = noop;
 require.extensions['.png'] = noop;
+
+jest.mock('utils/SplashLoadingScreen');

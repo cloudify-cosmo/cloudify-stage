@@ -5,6 +5,7 @@ import path from 'path';
 import _ from 'lodash';
 import passport from 'passport';
 import { db } from '../db/Connection';
+import { authenticateWithToken } from '../auth/AuthMiddlewares';
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.get('/image/:blueprint', (req, res, next) => {
         .catch(next);
 });
 
-router.post('/image/:blueprint', passport.authenticate('token', { session: false }), (req, res, next) => {
+router.post('/image/:blueprint', authenticateWithToken, (req, res, next) => {
     db.BlueprintAdditions.findOrCreate({ where: { blueprintId: req.params.blueprint } })
         .then(([blueprintAdditions]) => {
             blueprintAdditions
@@ -52,7 +53,7 @@ router.post('/image/:blueprint', passport.authenticate('token', { session: false
         .catch(next);
 });
 
-router.delete('/image/:blueprint', passport.authenticate('token', { session: false }), (req, res, next) => {
+router.delete('/image/:blueprint', authenticateWithToken, (req, res, next) => {
     db.BlueprintAdditions.destroy({ where: { blueprintId: req.params.blueprint } })
         .then(() => {
             res.end(JSON.stringify({ status: 'ok' }));

@@ -80,19 +80,20 @@ describe('Spire Manager widget', () => {
 
     it('allows checking deployment cluster status details', () => {
         const checkServiceRow = (rowNumber, managerStatus, databaseStatus, brokerStatus) => {
-            cy.get('table.servicesData').should('not.exist');
+            cy.get('.popup table.servicesData').should('not.exist');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
-            cy.get('table.servicesData').should('be.visible');
-            cy.get('table.servicesData').within(() => {
-                cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
-                cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles[managerStatus]);
-                cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
-                cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles[databaseStatus]);
-                cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
-                cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles[brokerStatus]);
-            });
+            cy.get('.popup table.servicesData')
+                .should('be.visible')
+                .within(() => {
+                    cy.get('tbody tr:nth-child(1)').should('have.text', ' Manager');
+                    cy.get('tbody tr:nth-child(1)').should('have.attr', 'style', styles[managerStatus]);
+                    cy.get('tbody tr:nth-child(2)').should('have.text', ' Database');
+                    cy.get('tbody tr:nth-child(2)').should('have.attr', 'style', styles[databaseStatus]);
+                    cy.get('tbody tr:nth-child(3)').should('have.text', ' Message Broker');
+                    cy.get('tbody tr:nth-child(3)').should('have.attr', 'style', styles[brokerStatus]);
+                });
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseout');
-            cy.get('table.servicesData').should('not.exist');
+            cy.get('.popup table.servicesData').should('not.exist');
         };
 
         checkServiceRow(1, 'OK', 'OK', 'OK');

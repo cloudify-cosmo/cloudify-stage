@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 08/11/2017.
- */
 import i18n from 'i18next';
 import { push } from 'connected-react-router';
 import { showAppError } from '../actions/auth';

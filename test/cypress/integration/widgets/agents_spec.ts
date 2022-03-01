@@ -1,4 +1,5 @@
 import { camelCase, snakeCase, upperFirst } from 'lodash';
+import Consts from 'app/utils/consts';
 import { secondsToMs } from '../../support/resource_commons';
 
 describe('Agents widget', () => {
@@ -45,7 +46,7 @@ describe('Agents widget', () => {
                         version: '6.1.0-.dev1',
                         node: nodeName,
                         deployment: deploymentName,
-                        tenant_name: 'default_tenant'
+                        tenant_name: Consts.DEFAULT_TENANT
                     }
                 ]
             }).as('fetchAgents');
@@ -74,7 +75,7 @@ describe('Agents widget', () => {
 
         type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
         function selectInstallMethod(installMethods: InstallMethod[]) {
-            cy.setDropdownValues('Install Methods filter', installMethods);
+            cy.setMultipleDropdownValues('Install Methods filter', installMethods);
         }
 
         function verifyExecution(

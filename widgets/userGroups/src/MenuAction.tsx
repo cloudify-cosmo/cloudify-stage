@@ -1,53 +1,43 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 03/02/2017.
- */
-import GroupPropType from './props/GroupPropType';
+import type { FunctionComponent } from 'react';
 
-export default class MenuAction extends React.Component {
-    static EDIT_USERS_ACTION = 'users';
+const { PopupMenu, Menu } = Stage.Basic;
+const t = Stage.Utils.getT('widgets.userGroups.menu');
 
-    static EDIT_TENANTS_ACTION = 'tenants';
-
-    static DELETE_ACTION = 'delete';
-
-    static SET_DEFAULT_GROUP_ROLE_ACTION = 'set-default-role';
-
-    static SET_ADMIN_GROUP_ROLE_ACTION = 'set-admin-role';
-
-    actionClick = (proxy, { name }) => {
-        const { item, onSelectAction } = this.props;
-        onSelectAction(name, item);
-    };
-
-    render() {
-        const { PopupMenu, Menu } = Stage.Basic;
-
-        return (
-            <PopupMenu>
-                <Menu pointing vertical>
-                    <Menu.Item
-                        icon="users"
-                        content="Edit group's users"
-                        name={MenuAction.EDIT_USERS_ACTION}
-                        onClick={this.actionClick}
-                    />
-                    <Menu.Item
-                        icon="user"
-                        content="Edit group's tenants"
-                        name={MenuAction.EDIT_TENANTS_ACTION}
-                        onClick={this.actionClick}
-                    />
-                    <Menu.Item
-                        icon="trash"
-                        content="Delete"
-                        name={MenuAction.DELETE_ACTION}
-                        onClick={this.actionClick}
-                    />
-                </Menu>
-            </PopupMenu>
-        );
-    }
+interface Item {
+    name: string;
+    tenants: unknown;
+    users: string[];
 }
 
-MenuAction.propTypes = { item: GroupPropType.isRequired, onSelectAction: PropTypes.func.isRequired };
+interface MenuActionProps {
+    item: Item;
+    onDelete: (item: Item) => void;
+    onEditTenants: (item: Item) => void;
+    onEditUsers: (item: Item) => void;
+}
+
+const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onEditUsers, onEditTenants, onDelete }) => {
+    const handleEditUsers = () => {
+        onEditUsers(item);
+    };
+
+    const handleEditTenants = () => {
+        onEditTenants(item);
+    };
+
+    const handleDelete = () => {
+        onDelete(item);
+    };
+
+    return (
+        <PopupMenu>
+            <Menu pointing vertical>
+                <Menu.Item icon="users" content={t('editGroupUsers')} onClick={handleEditUsers} />
+                <Menu.Item icon="user" content={t('editGroupTenants')} onClick={handleEditTenants} />
+                <Menu.Item icon="trash" content={t('delete')} onClick={handleDelete} />
+            </Menu>
+        </PopupMenu>
+    );
+};
+
+export default MenuAction;

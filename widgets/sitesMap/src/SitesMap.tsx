@@ -156,7 +156,7 @@ const NoSitesDataMessage: FunctionComponent<NoSitesDataMessageProps> = ({ sitesA
     return (
         <NoDataMessage>
             <>
-                {NO_DATA_MESSAGE} <Link to="/page/site_management">Site Management page</Link>.
+                {NO_DATA_MESSAGE} <Link to="/page/sites">Sites page</Link>.
             </>
         </NoDataMessage>
     );

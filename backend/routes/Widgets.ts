@@ -8,7 +8,6 @@ import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 
 const router = express.Router();
 
-router.use(passport.authenticate('token', { session: false }));
 router.use(bodyParser.json());
 
 router.get('/list', (req, res, next) => {

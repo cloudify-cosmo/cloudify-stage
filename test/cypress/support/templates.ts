@@ -8,37 +8,30 @@ declare global {
     }
 }
 
-type BuiltInTemplateName = 'main-default' | 'main-sys_admin';
-type Page = {
+const builtInTemplates = ['main-default', 'main-sys_admin'] as const;
+
+type BuiltInTemplate = typeof builtInTemplates[number];
+
+type TemplateResource = {
     custom: boolean;
     id: string;
-    name: string;
-    updatedAt: string;
-    updatedBy: string;
-};
-type Template = {
-    custom: boolean;
-    data: {
-        roles: string[];
-        tenants: string[];
-    };
-    id: string;
-    name: string;
-    updatedAt: string;
-    updatedBy: string;
 };
 
 const commands = {
     getPages: () => cy.stageRequest('/console/templates/pages'),
 
+    getPageGroups: () => cy.stageRequest('/console/templates/page-groups'),
+
     getTemplates: () => cy.stageRequest('/console/templates'),
 
-    getBuiltInTemplate: (name: BuiltInTemplateName) => cy.stageRequest(`/console/appData/templates/${name}.json`),
+    getBuiltInTemplateIds: () => cy.wrap(builtInTemplates),
+
+    getBuiltInTemplate: (name: BuiltInTemplate) => cy.stageRequest(`/console/appData/templates/${name}.json`),
 
     removeUserPages: () =>
         cy.getPages().then(response => {
             const pages = response.body;
-            pages.forEach((page: Page) => {
+            pages.forEach((page: TemplateResource) => {
                 if (page.custom) {
                     cy.stageRequest(`/console/templates/pages/${page.id}`, 'DELETE');
                 }
@@ -48,12 +41,24 @@ const commands = {
     removeUserTemplates: () =>
         cy.getTemplates().then(response => {
             const templates = response.body;
-            templates.forEach((template: Template) => {
+            templates.forEach((template: TemplateResource) => {
                 if (template.custom) {
                     cy.stageRequest(`/console/templates/${template.id}`, 'DELETE');
                 }
             });
-        })
+        }),
+
+    removeUserPageGroups: () =>
+        cy.getPageGroups().then(response => {
+            const pageGroups = response.body;
+            pageGroups.forEach((pageGroup: TemplateResource) => {
+                if (pageGroup.custom) {
+                    cy.stageRequest(`/console/templates/page-groups/${pageGroup.id}`, 'DELETE');
+                }
+            });
+        }),
+
+    goToTemplateManagement: () => cy.clickSystemMenuItem('admin').clickSystemMenuItem('Template Management')
 };
 
 addCommands(commands);

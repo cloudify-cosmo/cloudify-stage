@@ -8,7 +8,7 @@ import styled, { ThemeContext } from 'styled-components';
 import { HeaderBanner } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import Consts from '../../utils/consts';
-import LicenseTag from './LicenseTag';
+import LicenseLabel from '../LicenseLabel';
 
 function Banner({ className }) {
     const isCommunity = useSelector(
@@ -32,7 +32,7 @@ function Banner({ className }) {
                     showVersionDetails={!isCommunity && showVersionDetails}
                 />
             </Link>
-            {showVersionDetails && <LicenseTag className={className} />}
+            {showVersionDetails && <LicenseLabel size="large" style={{ marginLeft: 15 }} />}
         </>
     );
 }
@@ -45,18 +45,14 @@ Banner.defaultProps = {
     className: ''
 };
 
-const StyledBanner = styled(Banner)`
-    @media (max-width: 800px) {
+interface StyledBannerProps {
+    hideOnSmallScreen?: boolean;
+}
+
+const StyledBanner = styled(Banner)<StyledBannerProps>`
+    @media (max-width: 600px) {
         ${props => (props.hideOnSmallScreen ? 'display: none !important' : '')};
     }
 `;
-
-StyledBanner.propTypes = {
-    hideOnSmallScreen: PropTypes.bool
-};
-
-StyledBanner.defaultProps = {
-    hideOnSmallScreen: true
-};
 
 export default StyledBanner;

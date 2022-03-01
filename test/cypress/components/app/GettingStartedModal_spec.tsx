@@ -10,7 +10,7 @@ import { mountWithProvider } from '../utils';
 
 describe('GettingStartedModal', () => {
     it('renders', () => {
-        cy.interceptSp('GET', '/users/null', { show_getting_started: true });
+        cy.interceptSp('GET', '/users/', { show_getting_started: true });
         cy.stub(StageUtils, 'isUserAuthorized').returns(true);
 
         mountWithProvider(

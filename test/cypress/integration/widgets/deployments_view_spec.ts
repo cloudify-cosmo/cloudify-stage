@@ -766,7 +766,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton().containsNumber(0).should('be.disabled');
+                getSubenvironmentsButton().should('not.exist');
                 cy.log('Drill down to subservices of db-env');
                 getSubservicesButton().containsNumber(2).click();
             });
@@ -780,23 +780,9 @@ describe('Deployments View widget', () => {
                 cy.contains('db-env').should('not.exist');
             });
 
-            const expectOnlySubdeploymentTypeIcon = () => {
-                cy.get('i').should('have.length', 1).not('.object.group.icon, .cube.icon').should('have.length', 0);
-            };
-
             getDeploymentsViewDetailsPane().within(() => {
-                getSubenvironmentsButton()
-                    .should('be.disabled')
-                    .within(() => {
-                        cy.containsNumber(0);
-                        expectOnlySubdeploymentTypeIcon();
-                    });
-                getSubservicesButton()
-                    .should('be.disabled')
-                    .within(() => {
-                        cy.containsNumber(0);
-                        expectOnlySubdeploymentTypeIcon();
-                    });
+                getSubenvironmentsButton().should('not.exist');
+                getSubservicesButton().should('not.exist');
             });
 
             cy.log('Go back to the parent environment');
@@ -881,7 +867,7 @@ describe('Deployments View widget', () => {
             cy.getSearchInput().type(deploymentId);
 
             getDeploymentsViewDetailsPane().within(() => {
-                getSubservicesButton().containsNumber(0);
+                getSubservicesButton().should('not.exist');
 
                 cy.interceptSp(
                     'GET',
@@ -1223,16 +1209,15 @@ describe('Deployments View widget', () => {
 
                 cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
 
+                cy.openAccordionSection('Deployment Metadata');
                 cy.contains('.field', 'Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
                 cy.get('div[name=labelValue] > input').type(labelValue);
                 cy.get('[aria-label=Add]').click();
                 cy.get('a.label').should('be.visible');
 
-                cy.contains('Deploy & Install').click();
+                cy.clickButton('Install');
             });
-
-            cy.contains('.modal button', 'Execute').click();
 
             cy.wait('@searchDeployments');
             cy.wait('@createDeploymentGroup').then(({ request }) => {

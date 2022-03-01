@@ -1,4 +1,4 @@
-import { getCurrentAppVersion } from '../support/app_commons';
+import Consts from 'app/utils/consts';
 
 describe('Page', () => {
     before(() => {
@@ -18,7 +18,7 @@ describe('Page', () => {
                             }
                         ]
                     },
-                    appDataVersion: getCurrentAppVersion()
+                    appDataVersion: Consts.APP_VERSION
                 }
             })
         );
@@ -46,8 +46,8 @@ describe('Page', () => {
         cy.get('.deploymentNumWidget');
 
         cy.log('Verify page switching reverts active tab to default');
-        cy.contains('Another Page').click();
-        cy.contains('Admin Dashboard').click();
+        cy.visitPage('Another Page');
+        cy.visitPage('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
 

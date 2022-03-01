@@ -1,51 +1,89 @@
-// @ts-nocheck File not migrated fully to TS
-import type { FunctionComponent } from 'react';
-import React, { ReactNode, useCallback, useMemo, useState } from 'react';
-import { chain, find, includes, map, without } from 'lodash';
+import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { chain, find, includes, map } from 'lodash';
 import type { DragEndEvent, DragOverEvent, DragStartEvent } from '@dnd-kit/core';
 import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
-import { Icon } from '../basic';
+import { SemanticICONS } from 'semantic-ui-react';
+import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
 import SortableMenuItem from './SortableMenuItem';
 
-import type { PageDefinition, PageMenuItem } from '../../actions/page';
-import Consts from '../../utils/consts';
-import { useBoolean } from '../../utils/hooks';
-
+import type { PageDefinition } from '../../actions/page';
+import type { PageGroup, PageMenuItem } from '../../actions/pageMenu';
 import {
+    changePageMenuItemIcon,
+    changePageMenuItemName,
     createPagesMap,
+    findSelectedRootPageId,
     InsertPosition,
-    removePageWithChildren,
-    removeSinglePageMenuItem,
+    removePageMenuItem,
     reorderPageMenu,
     selectPage
-} from '../../actions/page';
+} from '../../actions/pageMenu';
+import Consts from '../../utils/consts';
+import { useBoolean, useResettableState } from '../../utils/hooks';
+import { ReduxState } from '../../reducers';
+import IconSelection from './IconSelection';
+import { SideBarItemWrapper, sideBarItemFontSize } from './SideBarItem';
 
 export interface PagesListProps {
-    onPageSelected: (page: PageDefinition) => void;
-    onItemRemoved: (page: PageMenuItem) => void;
-    pages: PageMenuItem[];
-    selected?: string;
-    isEditMode: boolean;
+    pageId: string;
+    expandedGroupIds: string[];
+    onGroupCollapse: (groupId: string) => void;
+    onGroupExpand: (groupId: string) => void;
 }
 
 function drillDownPagesFilter(pageMenuItem: PageMenuItem) {
     return pageMenuItem.type === 'pageGroup' || !pageMenuItem.isDrillDown;
 }
 
-const PagesList: FunctionComponent<PagesListProps> = ({
-    isEditMode,
-    onItemRemoved,
-    onPageSelected,
-    pages,
-    selected = ''
-}) => {
-    const [expandedGroupIds, setExpandedGroupIds] = useState<string[]>([]);
+function consumeEvent(event: React.MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+}
+
+const RemoveIcon = styled(Icon)`
+    position: relative;
+    top: 3px;
+    right: 3px;
+    visibility: hidden;
+    float: right;
+
+    ${SideBarItemWrapper}:hover & {
+        visibility: visible;
+    }
+`;
+
+const EditIcon = styled(Icon)`
+    position: relative;
+    top: -10px;
+    margin-left: 1em !important;
+    display: none !important;
+
+    ${SideBarItemWrapper}:hover & {
+        display: inline !important;
+    }
+`;
+
+const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds, onGroupCollapse, onGroupExpand }) => {
+    const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
+    const [dragging, setDragging, unsetDragging] = useBoolean();
+    const [nameEditedMenuItemId, setNameEditedMenuItemId, stopNameEdit] = useResettableState<string | null>(null);
+
+    const isEditMode = useSelector((state: ReduxState) => state.config.isEditMode || false);
+    const pages = useSelector((state: ReduxState) => state.pages);
+    const selected = useMemo(() => {
+        const pagesMap = createPagesMap(pages);
+        const page = pagesMap[pageId];
+        const homePageId = pages[0].id;
+        return pages && pages.length > 0 ? findSelectedRootPageId(pagesMap, page ? page.id : homePageId) : null;
+    }, [pages, pageId]);
     const pageMenuItemsIds = useMemo(
         () =>
             chain(pages)
@@ -60,11 +98,18 @@ const PagesList: FunctionComponent<PagesListProps> = ({
         [pages, expandedGroupIds]
     );
     const pageIds = useMemo(() => pages.filter(drillDownPagesFilter).map(({ id }) => id), [pages]);
+
+    useEffect(() => {
+        const containingGroup = find(
+            pages,
+            pageMenuItem => pageMenuItem.type === 'pageGroup' && find(pageMenuItem.pages, { id: pageId })
+        ) as PageGroup;
+        if (containingGroup && !_.includes(expandedGroupIds, containingGroup.id)) onGroupExpand(containingGroup.id);
+    }, [pageId]);
+
+    const dispatch = useDispatch();
     const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 1 } }));
     const pageCount = pageIds.length;
-    const [dragForbidden, setDragForbidden, unsetDragForbidden] = useBoolean();
-    const [dragging, setDragging, unsetDragging] = useBoolean();
-    const dispatch = useDispatch();
 
     const handleDragEnd = useCallback(
         (event: DragEndEvent) => {
@@ -129,19 +174,46 @@ const PagesList: FunctionComponent<PagesListProps> = ({
             setDragging();
             const activePageMenuItem = getPageMenuItem(event.active.id);
             if (activePageMenuItem.type === 'pageGroup' && includes(expandedGroupIds, activePageMenuItem.id)) {
-                setExpandedGroupIds(without(expandedGroupIds, activePageMenuItem.id));
+                onGroupCollapse(activePageMenuItem.id);
             }
         },
         [pages, expandedGroupIds]
     );
 
     function onPageGroupClick(clickedPageGroupId: string) {
-        if (includes(expandedGroupIds, clickedPageGroupId))
-            setExpandedGroupIds(without(expandedGroupIds, clickedPageGroupId));
-        else setExpandedGroupIds([...expandedGroupIds, clickedPageGroupId]);
+        if (includes(expandedGroupIds, clickedPageGroupId)) onGroupCollapse(clickedPageGroupId);
+        else onGroupExpand(clickedPageGroupId);
+    }
+
+    function onPageSelected(page: PageDefinition) {
+        dispatch(selectPage(page.id, page.isDrillDown));
+    }
+
+    function onItemRemoved(pageListItem: PageMenuItem) {
+        dispatch(removePageMenuItem(pageListItem, pageId));
+    }
+
+    function onNameChange(pageMenuItemId: string, newName: string) {
+        dispatch(changePageMenuItemName(pageMenuItemId, newName));
+        stopNameEdit();
+    }
+
+    function onIconChange(pageMenuItemId: string, icon?: SemanticICONS) {
+        dispatch(changePageMenuItemIcon(pageMenuItemId, icon || undefined));
     }
 
     function renderPageMenuItem(pageMenuItem: PageMenuItem, subItem = false): ReactNode[] {
+        const itemNameInEdit = nameEditedMenuItemId === pageMenuItem.id;
+
+        const style: CSSProperties = {
+            paddingTop: itemNameInEdit ? 3 : undefined,
+            paddingBottom: 3,
+            paddingRight: 0,
+            cursor: dragging ? 'inherit' : undefined
+        };
+
+        if (itemNameInEdit) style.paddingLeft = 0;
+
         const renderedMenuItem = (
             <SortableMenuItem
                 id={pageMenuItem.id}
@@ -151,45 +223,69 @@ const PagesList: FunctionComponent<PagesListProps> = ({
                 href={`${Consts.CONTEXT_PATH}/page/${pageMenuItem.id}`}
                 active={selected === pageMenuItem.id}
                 className={`pageMenuItem ${pageMenuItem.id}PageMenuItem`}
-                onClick={event => {
-                    event.stopPropagation();
-                    event.preventDefault();
+                onClick={(event: React.MouseEvent) => {
+                    consumeEvent(event);
                     if (pageMenuItem.type === 'page') onPageSelected(pageMenuItem);
                     else onPageGroupClick(pageMenuItem.id);
                 }}
-                style={{ paddingLeft: subItem ? 25 : undefined, cursor: dragging ? 'inherit' : undefined }}
+                subItem={subItem}
+                style={style}
+                expandable={pageMenuItem.type === 'pageGroup' && !itemNameInEdit}
+                expanded={includes(expandedGroupIds, pageMenuItem.id)}
             >
-                {pageMenuItem.name}
-                {isEditMode && (
+                {!itemNameInEdit && (
+                    <IconSelection
+                        style={{
+                            position: 'relative',
+                            top: -1,
+                            verticalAlign: 'top'
+                        }}
+                        value={pageMenuItem.icon}
+                        onChange={icon => onIconChange(pageMenuItem.id, icon)}
+                        enabled={isEditMode}
+                    />
+                )}
+                <EditableLabel
+                    value={pageMenuItem.name}
+                    editing={itemNameInEdit}
+                    onCancel={stopNameEdit}
+                    onChange={newName => onNameChange(pageMenuItem.id, newName)}
+                    style={{
+                        color: 'inherit',
+                        float: 'none',
+                        padding: 0,
+                        margin: 0,
+                        fontSize: sideBarItemFontSize,
+                        fontWeight: 'inherit',
+                        ...(!itemNameInEdit && {
+                            height: 20,
+                            maxWidth: 113,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        })
+                    }}
+                />
+                {isEditMode && !nameEditedMenuItemId && (
                     <>
-                        <Icon
+                        <EditIcon
                             name="edit"
                             size="small"
-                            style={{ float: 'none' }}
-                            onClick={(event: MouseEvent) => {
-                                event.preventDefault();
-                                event.stopPropagation();
+                            onClick={(event: React.MouseEvent) => {
+                                consumeEvent(event);
+                                setNameEditedMenuItemId(pageMenuItem.id);
                             }}
                         />
                         {pageCount > 1 && (
-                            <Icon
+                            <RemoveIcon
                                 name="remove"
                                 size="small"
-                                className="pageRemoveButton"
-                                onClick={(event: MouseEvent) => {
-                                    event.preventDefault();
-                                    event.stopPropagation();
+                                onClick={(event: React.MouseEvent) => {
+                                    consumeEvent(event);
                                     onItemRemoved(pageMenuItem);
                                 }}
                             />
                         )}
                     </>
-                )}
-                {pageMenuItem.type === 'pageGroup' && (
-                    <Icon
-                        name="dropdown"
-                        rotated={includes(expandedGroupIds, pageMenuItem.id) ? undefined : 'counterclockwise'}
-                    />
                 )}
             </SortableMenuItem>
         );
@@ -202,8 +298,16 @@ const PagesList: FunctionComponent<PagesListProps> = ({
     if (dragForbidden) cursor = 'not-allowed';
     else if (dragging) cursor = 'grabbing';
 
+    const wrapperStyle = {
+        flexGrow: 1,
+        flexShrink: 1,
+        minHeight: 0,
+        overflowY: 'auto',
+        overflowX: 'hidden'
+    } as const;
+
     const pagesContainer = (
-        <div className="pages" style={{ cursor }}>
+        <div className="pages" style={{ cursor, ...wrapperStyle }}>
             {chain(pages)
                 .filter(drillDownPagesFilter)
                 .map(pageMenuItem => renderPageMenuItem(pageMenuItem, false))
@@ -214,7 +318,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({
 
     if (isEditMode) {
         return (
-            <>
+            <div style={wrapperStyle}>
                 <DndContext
                     sensors={sensors}
                     collisionDetection={closestCenter}
@@ -228,87 +332,14 @@ const PagesList: FunctionComponent<PagesListProps> = ({
                     </SortableContext>
                 </DndContext>
                 <div style={{ textAlign: 'center', marginTop: 10 }}>
-                    {/* @ts-expect-error until the AddPageButton not fully migrated to ts */}
                     <AddPageButton />
                     <AddPageGroupButton />
                 </div>
-            </>
+            </div>
         );
     }
 
     return pagesContainer;
 };
 
-const findSelectedRootPageId = (pagesMap, selectedPageId) => {
-    const getParentPageId = page => {
-        if (!page.parent) {
-            return page.id;
-        }
-        return getParentPageId(pagesMap[page.parent]);
-    };
-
-    return getParentPageId(pagesMap[selectedPageId]);
-};
-
-const mapStateToProps = (state, ownProps) => {
-    const { pages } = state;
-    const pagesMap = createPagesMap(pages);
-    const page = pagesMap[ownProps.pageId];
-    const homePageId = pages[0].id;
-    const pageId = page ? page.id : homePageId;
-    const selected = pages && pages.length > 0 ? findSelectedRootPageId(pagesMap, pageId) : null;
-
-    return {
-        pages,
-        selected
-    };
-};
-
-function mergeProps(stateProps, dispatchProps, ownProps) {
-    return {
-        ...ownProps,
-        ...dispatchProps,
-        ...stateProps,
-        onItemRemoved: pageListItem => {
-            dispatchProps.onItemRemoved(pageListItem, stateProps.pages);
-        }
-    };
-}
-
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        onPageSelected: page => {
-            dispatch(selectPage(page.id, page.isDrillDown));
-        },
-        onItemRemoved: (pageListItem, pages) => {
-            const pagesMap = createPagesMap(pages);
-            const selectedRootPageId = findSelectedRootPageId(pagesMap, ownProps.pageId);
-
-            if (pageListItem.type === 'page') {
-                // Check if user removes current page
-                if (selectedRootPageId === pageListItem.id) {
-                    // Check if current page is home page
-                    if (selectedRootPageId === ownProps.homePageId) {
-                        dispatch(selectPage(pages[1].id, false));
-                    } else {
-                        dispatch(selectPage(ownProps.homePageId, false));
-                    }
-                }
-
-                dispatch(removePageWithChildren(pageListItem));
-            } else {
-                // Check if current page is in group being removed
-                if (includes(pageListItem.pages, selectedRootPageId)) {
-                    // Select first page that is not in the group
-                    dispatch(selectPage(find(pagesMap, page => !includes(pageListItem.pages, page)).id));
-                }
-
-                dispatch(removeSinglePageMenuItem(pageListItem.id));
-            }
-        }
-    };
-};
-
-const ConnectedPagesList = connect(mapStateToProps, mapDispatchToProps, mergeProps)(PagesList);
-
-export default ConnectedPagesList;
+export default PagesList;

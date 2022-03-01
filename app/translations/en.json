@@ -2,7 +2,7 @@
     "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
-        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/plugins.json"
+        "pluginsCatalog": "http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json"
     },
     "cluster": {
         "manager": "Manager",
@@ -25,6 +25,41 @@
         "servicesStatus": "Services Status",
         "systemStatus": "System Status"
     },
+    "contactDetailsModal": {
+        "header": "Welcome to Cloudify",
+        "form": {
+            "fields": {
+                "firstName": {
+                    "label": "First name",
+                    "validationMessage": "Please provide a valid first name, which should be between 2 to 20 characters long"
+                },
+                "lastName": {
+                    "label": "Last name",
+                    "validationMessage": "Please provide a valid last name, which should be between 2 and 20 characters long"
+                },
+                "email": {
+                    "label": "Email address",
+                    "validationMessage": "Please provide a valid email address"
+                },
+                "phone": {
+                    "label": "Phone number",
+                    "validationMessage": "Please provide a valid phone number, which should consists only of 4 - 20 digits"
+                },
+                "isEULA": {
+                    "label": "By registering for the Cloudify Hosted Service you agree to the <a href=\"{{eulaLink}}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Hosted Trial End User License Agreement</a>"
+                },
+                "isSendServicesDetails": {
+                    "label": "Cloudify uses the information provided to send you your service details. For more information see our <a href=\"https://cloudify.co/privacy-policy/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>"
+                }
+            },
+            "validation": {
+                "isFieldRequired": "Field is required"
+            },
+            "buttons": {
+                "submit": "Continue"
+            }
+        }
+    },
     "gettingStartedModal": {
         "cancelConfirm": "Are you sure you want to cancel the setup process?",
         "disableModalLabel": "Don't show next time",
@@ -46,10 +81,6 @@
             "secretsLoadingError": "Secrets information loading error.",
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
-        "validation": {
-            "environmentRequiredError": "At least one environment needs to be selected.",
-            "allSecretsRequiredError": "All secret values need to be specified."
-        },
         "summary": {
             "taskListTitle": "Task List",
             "plugin": {
@@ -63,6 +94,7 @@
             "secret": {
                 "creationScheduledMessageSuffix": "secret will be created",
                 "updateScheduledMessageSuffix": "secret will be updated",
+                "skipScheduledMessageSufix": "secret will be skipped",
                 "settingProgressMessageSuffix": "secret setting in progress",
                 "settingDoneMessageSuffix": "secret setting done",
                 "settingErrorMessageSuffix": "secret setting error"
@@ -296,9 +328,21 @@
             "removeButton": "Remove"
         }
     },
+    "sidebar": {
+        "licenseTag": {
+            "expired": "Expired",
+            "trial": "Trial",
+            "community": "Community"
+        }
+    },
     "templates": {
         "breadcrumb": "Template management",
         "close": "Close",
+        "templates": "Templates",
+        "pageGroups": "Page groups",
+        "pages": "Pages",
+        "usedByTemplates": "Used in templates",
+        "usedByPageGroups": "Used in page groups",
         "createPageModal": {
             "create": "Create",
             "header": "Create page",
@@ -306,23 +350,26 @@
             "pageNameError": "Please provide correct page name"
         },
         "createTemplateModal": {
+            "allTenants": "All tenants",
             "addPage": "Add page",
+            "addPageGroup": "Add page group",
             "availablePages": "Available pages",
-            "button": "Create template",
+            "availablePageGroups": "Available page groups",
             "create": "Create",
             "createHeader": "Create template",
             "errors": {
-                "page": "Please select page",
+                "pageMenuItem": "Please select at least one page menu item",
                 "role": "Please select role",
                 "templateName": "Please provide correct template name",
                 "tenant": "Please select tenant"
             },
             "noPagesAvailable": "No pages available",
-            "noPagesSelected": "No pages selected",
+            "noPageGroupsAvailable": "No page groups available",
+            "noPageMenuItemsSelected": "No page menu items selected",
             "removePage": "Remove page",
             "reorderPage": "Reorder page",
             "roles": "Roles",
-            "selectedPages": "Selected pages",
+            "selectedItems": "Selected page menu items",
             "templateName": "Template name",
             "tenants": "Tenants",
             "update": "Update",
@@ -335,27 +382,62 @@
             "drillDownWarning": "Drill down action is not available in the template management",
             "editHeader": "Page management",
             "exit": "Exit",
-            "header": "Pages",
             "invalidWidgets": "Page template contains invalid widgets definitions: {{widgetsList}}",
             "pageNamePlaceholder": "You must fill a page name",
             "previewHeader": "Page preview",
             "removeConfirm": "Are you sure to remove this page?",
             "save": "Save",
+            "notUsedByTemplate": "Page not used by any template",
+            "notUsedByGroup": "Page not used by any page group",
             "table": {
                 "pageID": "Page id",
                 "pageName": "Page name",
+                "icon": "Icon",
                 "templates": "Templates",
+                "pageGroups": "Page groups",
                 "updatedAt": "Updated at",
                 "updatedBy": "Updated by"
             }
         },
-        "templateManagement": {
-            "header": "Templates",
-            "pageList": {
-                "noPages": "No pages available",
-                "removeConfirm": "Are you sure to remove this page from template?"
+        "pageGroupManagement": {
+            "notUsed": "Page group not used by any template",
+            "removeConfirm": "Are you sure to remove this page group?",
+            "removePageConfirm": "Are you sure to remove this page from the page group?",
+            "createPageGroup": "Create page group",
+            "table": {
+                "groupId": "Group id",
+                "groupName": "Group name",
+                "icon": "Icon",
+                "pages": "Pages",
+                "templates": "Templates",
+                "updatedAt": "Updated at",
+                "updatedBy": "Updated by"
             },
-            "pageNotUsed": "Page not used by any template",
+            "modal": {
+                "addPage": "Add page",
+                "availablePages": "Available pages",
+                "createHeader": "Create page group",
+                "groupName": "Group name",
+                "icon": "Group icon",
+                "noPagesAvailable": "No pages available",
+                "noPagesSelected": "No pages selected",
+                "selectedPages": "Selected pages",
+                "submitCreate": "Create",
+                "submitUpdate": "Update",
+                "updateHeader": "Update page group {{pageGroupName}}",
+                "errors": {
+                    "selectedPages": "Please select at least one page",
+                    "groupName": "Please provide group name"
+                }
+            }
+        },
+        "templateManagement": {
+            "addTemplateButton": "Create template",
+            "pageMenuItemsList": {
+                "header": "Page menu items",
+                "noItems": "No page menu items available",
+                "removeConfirm": "Are you sure to remove this page menu item from the template?"
+            },
             "removeConfirm": "Are you sure to remove this template?",
             "roleList": {
                 "noRoles": "No roles available",
@@ -396,7 +478,11 @@
             "label": "Reset Templates",
             "title": "Reset application screens"
         },
-        "templateManagement": "Template Management"
+        "templateManagement": "Template Management",
+        "noTenants": "No Tenants",
+        "tenantsHeader": "Tenant selection",
+        "help": "Help",
+        "health": "Health"
     },
     "widget": {
         "config": {
@@ -439,7 +525,7 @@
                 "workflowsMenu": {
                     "tooltip": "Execute workflow"
                 },
-                "executeModal": {
+                "execute": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
                         "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
@@ -486,6 +572,15 @@
                     "detachSiteLabel": "Detach from the current site",
                     "updateButton": "Update"
                 },
+                "secretsModal": {
+                    "header": "Add Secrets",
+                    "buttons": {
+                        "add": "Add"
+                    },
+                    "errors": {
+                        "noSecretValues": "Please provide values for secrets"
+                    }
+                },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
@@ -522,11 +617,17 @@
                         }
                     },
                     "sections": {
-                        "deploymentMetadata": "Deployment metadata",
-                        "executionParameters": "Execution parameters"
+                        "deploymentInputs": "Deployment Inputs",
+                        "deploymentMetadata": "Deployment Metadata",
+                        "executionParameters": "Execution Parameters",
+                        "advanced": "Advanced",
+                        "install": "Install"
                     },
                     "buttons": {
+                        "showDataTypes": "Show Data Types",
+                        "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
+                        "install": "Install",
                         "deployAndInstall": "Deploy & Install"
                     },
                     "steps": {
@@ -546,6 +647,8 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "missingSecretsHeading": "Missing Secrets Error",
+                        "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
                         "deploymentInstallationFailed": "Deployment {{ deploymentName }} installation failed: {{ error }}"
                     }
@@ -577,15 +680,19 @@
                     },
                     "inputsPlaceholders": {
                         "blueprintId": "Select or type in blueprints",
-                        "siteName": "Select or type in site names",
                         "createdBy": "Select or type in usernames",
+                        "displayName": "Select or type in display names",
+                        "siteName": "Select or type in site names",
+                        "tenantName": "Select or type in tenant names",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
-                        "label": "Label",
                         "blueprintId": "Blueprint",
+                        "createdBy": "Creator",
+                        "displayName": "Display name",
                         "siteName": "Site name",
-                        "createdBy": "Creator"
+                        "tenantName": "Tenant name",
+                        "label": "Label"
                     },
                     "operatorsLabels": {
                         "anyOf": "is one of",
@@ -614,7 +721,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.2/examples.json",
+                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.3/examples.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -669,6 +776,7 @@
                     "uploadButton": "Upload",
                     "uploadFromMarketplace": "Upload from Marketplace",
                     "uploadFromPackage": "Upload a blueprint package",
+                    "uploadFromTerraformTemplate": "Upload from Terraform module",
                     "generateInComposer": "Generate in the Composer"
                 }
             },
@@ -708,27 +816,27 @@
                         "defaultValues": [
                             {
                                 "name": "AWS",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/aws_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json"
                             },
                             {
                                 "name": "Azure",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/azure_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json"
                             },
                             {
                                 "name": "GCP",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/gcp_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json"
                             },
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
                             },
                             {
                                 "name": "Helm",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/helm_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json"
                             },
                             {
                                 "name": "Other",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.2/other_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json"
                             }
                         ]
                     }
@@ -743,6 +851,86 @@
                 "marketplaceColumnsToShow": {
                     "label": "List of fields to show in the marketplace table",
                     "placeholder": "Select fields from the list"
+                },
+                "labelFilterRules": "Label filter rules"
+            },
+            "terraformModal": {
+                "header": "Create blueprint from Terraform",
+                "submit": "Create",
+                "blueprintName": "Blueprint name",
+                "terraformVersion": "Terraform version",
+                "blueprintInformation": "Blueprint main information",
+                "template": "URL to a zip archive that contains the Terraform module",
+                "resourceLocation": "Terraform folder in the archive",
+                "urlAuthentication": "URL authentication",
+                "username": "Username",
+                "password": "Password",
+                "mapping": "Terraform variables and outputs mapping",
+                "variables": "Variables",
+                "environment": "Environment variables",
+                "outputs": "Outputs",
+                "variablesTable": {
+                    "name": "Variable",
+                    "source": "Source",
+                    "value": "Value / Secret key / Input name",
+                    "sources": {
+                        "secret": "Secret",
+                        "input": "Input",
+                        "static": "Static"
+                    },
+                    "newSecretPrefix": "[new]"
+                },
+                "outputsTable": {
+                    "name": "Output",
+                    "type": "Output type",
+                    "terraformOutput": "Terraform output",
+                    "types": {
+                        "output": "Output",
+                        "capability": "Capability"
+                    }
+                },
+                "progress": {
+                    "generation": "1/2: Generating Terraform blueprint...",
+                    "upload": "2/2: Uploading Terraform blueprint..."
+                },
+                "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
+                "default": "Default",
+                "errors": {
+                    "noBlueprintName": "Please provide blueprint name",
+                    "noTerraformTemplate": "Please provide Terraform template URL",
+                    "terraformTemplateUnauthorized": "The URL requires authentication",
+                    "noUsername": "Please provide username",
+                    "noPassword": "Please provide password",
+                    "noResourceLocation": "Please provide resource location",
+                    "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                    "invalidTerraformTemplate": "Please provide valid Terraform template URL",
+                    "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
+                    "variable": {
+                        "nameMissing": "Please provide variable name",
+                        "nameInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameDuplicated": "Variables must be unique, duplicates are not allowed",
+                        "sourceMissing": "Please provide variable source",
+                        "valueMissing": "Please provide variable value",
+                        "valueInvalid": "Please provide valid variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "staticValueInvalid": "Please provide valid variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\". If special characters or complex structures are needed please provide this value inside a secret"
+                    },
+                    "environmentVariable": {
+                        "nameMissing": "Please provide environment variable name",
+                        "nameInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameDuplicated": "Environment variables must be unique, duplicates are not allowed",
+                        "sourceMissing": "Please provide environment variable source",
+                        "valueMissing": "Please provide environment variable value",
+                        "valueInvalid": "Please provide valid environment variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "staticValueInvalid": "Please provide valid environment variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\". If special characters or complex structures are needed please provide this value inside a secret"
+                    },
+                    "output": {
+                        "nameMissing": "Please provide output name",
+                        "nameInvalid": "Please provide valid output name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameDuplicated": "Outputs must be unique, duplicates are not allowed",
+                        "typeMissing": "Please provide output type",
+                        "outputMissing": "Please provide Terraform output",
+                        "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                    }
                 }
             }
         },
@@ -1068,7 +1256,21 @@
             }
         },
         "executions": {
-            "noExecutionFound": "There are no executions that could be shown."
+            "name": "Executions",
+            "description": "This widget shows the deployment executions",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table"
+                },
+                "showSystemExecutions": {
+                    "name": "Show system executions"
+                },
+                "singleExecutionView": {
+                    "name": "Show most recent execution only"
+                }
+            },
+            "noExecutionFound": "There are no executions that could be shown.",
+            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on."
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
@@ -1202,6 +1404,123 @@
             "addHeader": "Add labels for deployment '{{deploymentId}}'",
             "revert": "Revert to initial value",
             "deleteConfirm": "Are you sure you want to remove label"
+        },
+        "userGroups": {
+            "columns": {
+                "groupName": "Group",
+                "ldapGroup": "LDAP group",
+                "admin": "Admin",
+                "users": "# Users",
+                "tenants": "# Tenants"
+            },
+            "noGroups": "There are no User Groups available. Click \"Add\" to add User Groups.",
+            "confirm": {
+                "deleteGroup": "Are you sure you want to remove group {{groupName}}?",
+                "defaultGroup": "You have administrator privileges from the {{groupName}} group. Are you sure you want to remove administrator privileges from this group? You will be logged out of the system so the changes take effect."
+            },
+            "modals": {
+                "user": {
+                    "header": "Edit users for {{groupName}}",
+                    "message": {
+                        "header": "",
+                        "content": "You are about to remove yourself from this. Your administrative privileges will be removed and you will be logged out of the system so the changes take . Are you sure you want to continue?"
+                    },
+                    "fields": {
+                        "users": "Users"
+                    },
+                    "buttons": {
+                        "cancel": "No",
+                        "approve": "Yes"
+                    }
+                },
+                "create": {
+                    "header": "Add user group",
+                    "fields": {
+                        "groupName": "Group name",
+                        "ldapGroup": "LDAP group name",
+                        "admin": "Admin"
+                    },
+                    "validation": {
+                        "groupName": "Please provide group name"
+                    },
+                    "buttons": {
+                        "add": "Add"
+                    }
+                },
+                "tenants": {
+                    "header": "Edit tenants for {{groupName}}",
+                    "fields": {
+                        "tenants": "Tenants"
+                    }
+                }
+            },
+            "details": {
+                "group": {
+                    "segments": {
+                        "users": {
+                            "header": "Users",
+                            "empty": "No users available"
+                        },
+                        "tenants": {
+                            "header": "Tenants",
+                            "empty": "No tenants available"
+                        },
+                        "confirm": {
+                            "removeFromGroup": "You have administrator privileges from the '{{groupName}}' group. Are you sure you want to remove yourself from this group? You will be logged out of the system so the changes take effect."
+                        }
+                    }
+                }
+            },
+            "menu": {
+                "editGroupUsers": "Edit group's users",
+                "editGroupTenants": "Edit group's tenants",
+                "delete": "Delete"
+            },
+            "exceptions": {
+                "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+            }
+        },
+        "executionsStatus": {
+            "name": "Executions Statuses Graph",
+            "description": "Shows the number of executions per status",
+            "noExecutions": "There are no Executions available",
+            "charts": {
+                "tooltip": {
+                    "label": "Number of executions"
+                }
+            }
+        },
+        "tenants": {
+            "name": "Tenants management",
+            "description": "This widget shows a list of available tenants, and allow managing them",
+            "createModal": {
+                "header": "Add tenant",
+                "form": {
+                    "errors": {
+                        "emptyTenantName": "Please provide tenant name"
+                    },
+                    "buttons": {
+                        "addTenant": "Add"
+                    },
+                    "fields": {
+                        "tenantName": "Tenant name"
+                    }
+                }
+            },
+            "tenantsTable": {
+                "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
+                "columns": {
+                    "name": "Name",
+                    "groups": "# Groups",
+                    "users": "# Users"
+                },
+                "errors": {
+                    "unknownAction": "Internal error: Unknown action {{actionName}} cannot be handled."
+                },
+                "deleteModal": {
+                    "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                }
+            }
         }
     }
 }

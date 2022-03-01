@@ -1,0 +1,7 @@
+<% if (Array.isArray(outputs) && outputs.length) { _%>
+<%= name %>:
+<% } _%>
+<% outputs.forEach(output => { _%>
+  <%= output.name %>:
+    value: { get_attribute: [ cloud_resources, outputs, <%= output.terraformOutput %>, value ] }
+<% }) _%>

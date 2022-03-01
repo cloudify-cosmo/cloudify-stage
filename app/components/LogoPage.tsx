@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by edenp on 11/10/2017.
- */
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';

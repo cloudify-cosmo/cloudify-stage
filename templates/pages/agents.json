@@ -1,0 +1,17 @@
+{
+  "name": "Agents",
+  "icon": "user secret",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Agents",
+          "width": 12,
+          "height": 24,
+          "definition": "agents"
+        }
+      ]
+    }
+  ]
+}

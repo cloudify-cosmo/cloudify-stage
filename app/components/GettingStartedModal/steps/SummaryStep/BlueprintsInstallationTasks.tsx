@@ -2,7 +2,7 @@ import React from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
 import { Divider, Label, List } from '../../../basic';
-import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { createTaskDescriptionGetter } from './descriptionGetters';
 import { SuccessDescription } from './descriptions';
 
 import type { createBlueprintsInstallationTasks } from '../../installation/tasks';

@@ -11,7 +11,7 @@ The Cloudify Console provides User Interface for managing and analyzing [Cloudif
 
 The following requirements should be met prior starting the application:
 
-- [Node.js](https://nodejs.org) (version 12.x, at least 12.22.1) installed
+- [Node.js](https://nodejs.org) (version 14.x, at least 14.18.1) installed
     - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
 - [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
     - Make a database named `stage` 
@@ -21,7 +21,7 @@ The following requirements should be met prior starting the application:
         docker pull postgres
         docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
         ```
-- [Cloudify Manager](https://cloudify.co/download) (version >= 5.x) accessible from your local machine
+- [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
 
 ## Setup
 
@@ -125,7 +125,8 @@ Package tarball archive contains the following resources:
         * `widget.png` - widget thumbnail
       * ...
     * `templates` - built-in templates - whole [templates](./templates) folder
-      * `pages` - built-in pages - whole [templates/pages](./templates/pages) folder 
+      * `pages` - built-in pages - whole [templates/pages](./templates/pages) folder
+      * `page-groups` - built-in page groups - whole [templates/page-groups](./templates/page-groups) folder
   * `static` - static files
     * `images` - image files
     * `fonts` - font files
@@ -153,7 +154,7 @@ Go to [test/README.md](./test/README.md).
 1. Source Code documentation
    * [Frontend](./app/README.md) - client-side of the application
    * [Backend](./backend/README.md) - servers-side of the application
-   * [Widgets](./widgets/README.md) - widgets documentation
+   * [Widgets](./widgets/README.md) - widgets documentation (including custom widget development)
    
 2. Documentation way-of-work
    

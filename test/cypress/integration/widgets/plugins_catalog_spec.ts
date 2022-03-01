@@ -21,7 +21,7 @@ function uploadPlugins(pluginNames: string[]) {
 
 describe('Plugins Catalog widget', () => {
     const widgetConfiguration: PluginsCatalogWidgetConfiguration = {
-        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/plugins.json',
+        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json',
         sortByName: true
     };
 
@@ -36,7 +36,6 @@ describe('Plugins Catalog widget', () => {
             cy.get('.pluginsCatalogWidget table')
                 .getTable()
                 .then(pluginsCatalogTableRows => {
-                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === pluginToUpload)!;
                     expect(pluginCatalogRow).not.to.be.undefined;
                     const latestPluginVersion: string = pluginCatalogRow.Version;
@@ -78,7 +77,6 @@ describe('Plugins Catalog widget', () => {
         cy.get('.pluginsCatalogWidget table')
             .getTable()
             .then(pluginsCatalogTableRows => {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === pluginToUpload)!;
                 expect(pluginCatalogRow).not.to.be.undefined;
                 expect(pluginCatalogRow['Uploaded version']).to.equal(mockPluginVersion);
@@ -127,7 +125,6 @@ describe('Plugins Catalog widget', () => {
         cy.get('.pluginsCatalogWidget table')
             .getTable()
             .then(pluginsCatalogTableRows => {
-                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const pluginCatalogRow = pluginsCatalogTableRows.find(row => row.Name === 'AWS')!;
                 expect(pluginCatalogRow).not.to.be.undefined;
                 const latestPluginVersion: string = pluginCatalogRow.Version;

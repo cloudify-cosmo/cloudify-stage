@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
 import PluginTaskItem from './PluginTaskItem';
-import createTaskDescriptionGetter from './createTaskDescriptionGetter';
+import { createTaskDescriptionGetter } from './descriptionGetters';
 import { ErrorDescription, SuccessDescription } from './descriptions';
 
 import type { PluginInstallationTask } from '../../installation/tasks';

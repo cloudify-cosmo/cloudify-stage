@@ -1,0 +1,17 @@
+{
+  "name": "Snapshots",
+  "icon": "photo",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
+        {
+          "name": "Snapshots list",
+          "width": 12,
+          "height": 24,
+          "definition": "snapshots"
+        }
+      ]
+    }
+  ]
+}

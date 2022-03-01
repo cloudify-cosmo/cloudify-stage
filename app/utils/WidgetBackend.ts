@@ -1,7 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-/**
- * Created by jakubniezgoda on 13/09/2017.
- */
 
 import Internal from './Internal';
 import consts from './consts';
