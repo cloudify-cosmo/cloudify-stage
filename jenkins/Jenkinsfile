@@ -78,6 +78,8 @@ pipeline {
               dir("${WORKSPACE}/test"){
                 echo 'Run static code analysis and code style check'
                 sh 'npm run lint'
+                echo 'Validate JSON files'
+                sh 'npm run test:json'
               }
             }
           }
