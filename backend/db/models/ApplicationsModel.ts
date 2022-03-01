@@ -1,6 +1,6 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend';
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const ApplicationsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define('Applications', {
         id: {
             type: dataTypes.INTEGER,
@@ -15,3 +15,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
         isPrivate: { type: dataTypes.BOOLEAN },
         extras: { type: dataTypes.JSON }
     });
+export default ApplicationsModelFactory;

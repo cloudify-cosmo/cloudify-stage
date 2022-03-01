@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelDefined, Optional, Sequelize } from 'sequelize';
+import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
 import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
 
 interface UserAppsAttributes {
@@ -15,7 +15,7 @@ interface UserAppsInstance extends Model<UserAppsAttributes, UserAppsAttributesC
     readonly updatedAt: Date;
 }
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const UserAppsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define<UserAppsInstance>(
         'UserApps',
         {
@@ -39,3 +39,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
             ]
         }
     );
+export default UserAppsModelFactory;

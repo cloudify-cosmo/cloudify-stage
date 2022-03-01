@@ -1,6 +1,6 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend';
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const WidgetBackendsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define(
         'WidgetBackends',
         {
@@ -11,3 +11,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
         },
         { indexes: [{ unique: true, fields: ['widgetId', 'serviceName', 'method'] }] }
     );
+export default WidgetBackendsModelFactory;

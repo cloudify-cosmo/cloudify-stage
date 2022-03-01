@@ -1,6 +1,6 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend';
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const ClientConfigsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define(
         'ClientConfigs',
         {
@@ -16,3 +16,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
             ]
         }
     );
+export default ClientConfigsModelFactory;

@@ -1,4 +1,4 @@
-import { DataTypes, Model, ModelDefined, Optional, Sequelize } from 'sequelize';
+import type { Model, Optional, ModelFactory } from 'cloudify-ui-common/backend';
 import ResourceTypes, { ResourceType } from '../types/ResourceTypes';
 
 interface ResourcesAttributes {
@@ -14,7 +14,7 @@ interface ResourcesInstance extends Model<ResourcesAttributes, ResourcesCreation
     readonly updatedAt: Date;
 }
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const ResourcesModelFactory: ModelFactory<ResourcesInstance> = (sequelize, dataTypes) =>
     sequelize.define<ResourcesInstance>(
         'Resources',
         {
@@ -25,3 +25,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
         },
         { indexes: [{ unique: true, fields: ['resourceId'] }] }
     );
+export default ResourcesModelFactory;

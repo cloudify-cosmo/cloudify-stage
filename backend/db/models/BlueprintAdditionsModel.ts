@@ -1,6 +1,6 @@
-import { Sequelize, DataTypes } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend';
 
-export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
+const BlueprintAddintionsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define(
         'BlueprintAdditions',
         {
@@ -17,3 +17,4 @@ export default (sequelize: Sequelize, dataTypes: typeof DataTypes) =>
             ]
         }
     );
+export default BlueprintAddintionsModelFactory;
