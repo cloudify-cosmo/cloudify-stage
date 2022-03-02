@@ -2,18 +2,18 @@
 
 import _ from 'lodash';
 
-export const MODE_MAIN = 'main';
-export const MODE_CUSTOMER = 'customer';
-export const MODE_COMMUNITY = 'community';
+export const MODE_MAIN = 'main' as const;
+export const MODE_CUSTOMER = 'customer' as const;
+export const MODE_COMMUNITY = 'community' as const;
 export type Mode = typeof MODE_MAIN | typeof MODE_CUSTOMER | typeof MODE_COMMUNITY;
 
-let serverMode: string;
+let serverMode: Mode;
 
-export function setMode(mode: string) {
+export function setMode(mode: Mode) {
     serverMode = mode;
 }
 
-export function getMode() {
+export function getMode(): Mode {
     return serverMode;
 }
 
@@ -35,7 +35,7 @@ export function init() {
             if (process.argv.length > index + 1) {
                 const mode = process.argv[index + 1].toLowerCase();
                 if (_.includes(modes, mode)) {
-                    serverMode = mode;
+                    serverMode = <Mode>mode;
                 } else {
                     displayUsage();
                 }

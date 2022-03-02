@@ -1,10 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
 import express from 'express';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';
+import { UserAppsInstance } from '../db/models/UserAppsModel';
 
 const router = express.Router();
 
@@ -14,9 +14,9 @@ router.use(bodyParser.json());
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
 router.get('/', (req, res, next) => {
-    db.UserApps.findOne({
+    db.UserApps.findOne<UserAppsInstance>({
         where: {
-            username: req.user.username,
+            username: req.user!.username,
             mode: getMode(),
             tenant: req.headers.tenant
         }
@@ -28,13 +28,19 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    db.UserApps.findOrCreate({
+    db.UserApps.findOrCreate<UserAppsInstance>({
         where: {
-            username: req.user.username,
+            username: req.user!.username,
             mode: getMode(),
             tenant: req.headers.tenant
         },
-        defaults: { appData: {}, appDataVersion: req.body.version }
+        defaults: {
+            appData: { pages: [] },
+            appDataVersion: req.body.version,
+            mode: getMode(),
+            tenant: 'default_tenant',
+            username: ''
+        }
     })
         .then(([userApp]) =>
             userApp
@@ -48,9 +54,9 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/clear-pages', (req, res, next) => {
-    db.UserApps.findOne({
+    db.UserApps.findOne<UserAppsInstance>({
         where: {
-            username: req.user.username,
+            username: req.user!.username,
             mode: getMode(),
             tenant: req.query.tenant
         }

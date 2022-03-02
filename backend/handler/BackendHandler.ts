@@ -16,6 +16,7 @@ import * as services from './services';
 
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
+import type { WidgetBackendsInstance } from '../db/models/WidgetBackendsModel';
 
 const logger = getLogger('WidgetBackend');
 
@@ -65,13 +66,16 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
         logger.info(`--- registering service ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`);
 
         return (
-            db.WidgetBackends.findOrCreate({
+            db.WidgetBackends.findOrCreate<WidgetBackendsInstance>({
                 where: {
                     widgetId,
                     serviceName: normalizedServiceName,
                     method: normalizedMethod
                 },
                 defaults: {
+                    widgetId: 'unknown',
+                    serviceName: 'unkown',
+                    method: 'GET',
                     script: ''
                 }
             })
@@ -85,7 +89,9 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
                         )}`
                     );
                     return widgetBackend.update(
-                        { script: new VMScript(`module.exports = ${normalizedService!.toString()}`) },
+                        {
+                            script: <string>(<unknown>new VMScript(`module.exports = ${normalizedService!.toString()}`))
+                        },
                         { fields: ['script'] }
                     );
                 })
@@ -108,6 +114,7 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
         );
     }
 });
+
 /* eslint-enable no-param-reassign */
 
 function getUserWidgets() {
@@ -231,40 +238,39 @@ export function callService(
     const normalizedMethod = _.toUpper(method) as AllowedRequestMethod;
     const normalizedServiceName = _.toUpper(serviceName);
 
-    return (
-        db.WidgetBackends.findOne({ where: { widgetId, serviceName: normalizedServiceName, method: normalizedMethod } })
-            .catch(() => {
-                return Promise.reject(
-                    `There is no service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId} registered`
-                );
-            })
-            // @ts-ignore TODO(RD-3119) Update typings when types for WidgetBackends model are ready
-            .then(widgetBackend => {
-                const script = _.get(widgetBackend, 'script.code', null);
+    return db.WidgetBackends.findOne<WidgetBackendsInstance>({
+        where: { widgetId, serviceName: normalizedServiceName, method: normalizedMethod }
+    })
+        .catch(() => {
+            return Promise.reject(
+                `There is no service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId} registered`
+            );
+        })
+        .then(widgetBackend => {
+            const script = _.get(widgetBackend, 'script.code', null);
 
-                if (script) {
-                    const vm = new NodeVM({
-                        require: {
-                            external: true,
-                            root: allowedModulesPaths
-                        }
-                    });
-                    return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) })(
-                        req,
-                        res,
-                        next,
-                        services
-                    );
-                }
-                return Promise.reject(
-                    `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
+            if (script) {
+                const vm = new NodeVM({
+                    require: {
+                        external: true,
+                        root: allowedModulesPaths
+                    }
+                });
+                return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) })(
+                    req,
+                    res,
+                    next,
+                    services
                 );
-            })
-    );
+            }
+            return Promise.reject(
+                `No script for service ${normalizedServiceName} for method ${normalizedMethod} for widget ${widgetId}`
+            );
+        });
 }
 
 export function removeWidgetBackend(widgetId: string) {
-    return db.WidgetBackends.destroy({ where: { widgetId } }).then(() =>
+    return db.WidgetBackends.destroy<WidgetBackendsInstance>({ where: { widgetId } }).then(() =>
         logger.debug(`Deleted widget backend for ${widgetId}.`)
     );
 }

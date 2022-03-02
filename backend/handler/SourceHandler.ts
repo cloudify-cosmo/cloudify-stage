@@ -40,7 +40,8 @@ function scanRecursive(rootDir, scannedFileOrDirPath) {
         return null;
     }
 
-    const item = {
+    type Item = { key: string; title: string; isDir: boolean; children?: typeof item[] };
+    const item: Item = {
         key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
         title: name,
         isDir: false

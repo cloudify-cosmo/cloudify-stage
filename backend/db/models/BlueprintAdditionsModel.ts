@@ -1,7 +1,18 @@
-import type { ModelFactory } from 'cloudify-ui-common/backend';
+import type { Model, ModelFactory, Optional } from 'cloudify-ui-common/backend';
+import { CommonAttributes } from './types';
 
-const BlueprintAddintionsModelFactory: ModelFactory = (sequelize, dataTypes) =>
-    sequelize.define(
+interface BlueprintAdditionsAttributes {
+    blueprintId: string;
+    image: any;
+    imageUrl: string;
+}
+type BlueprintAdditionsCreationAttributes = Optional<BlueprintAdditionsAttributes, 'image' | 'imageUrl'>;
+export type BlueprintAdditionsInstance = Model<BlueprintAdditionsAttributes, BlueprintAdditionsAttributes> &
+    BlueprintAdditionsAttributes &
+    CommonAttributes;
+
+const BlueprintAddintionsModelFactory: ModelFactory<BlueprintAdditionsInstance> = (sequelize, dataTypes) =>
+    sequelize.define<BlueprintAdditionsInstance>(
         'BlueprintAdditions',
         {
             blueprintId: { type: dataTypes.STRING, allowNull: false },

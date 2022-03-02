@@ -1,5 +1,6 @@
 import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
 import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
+import { CommonAttributes } from './types';
 
 interface UserAppsAttributes {
     username: string;
@@ -8,14 +9,12 @@ interface UserAppsAttributes {
     tenant: string;
     appData: { pages: any[] };
 }
-type UserAppsAttributesCreationAttributes = UserAppsAttributes;
-interface UserAppsInstance extends Model<UserAppsAttributes, UserAppsAttributesCreationAttributes>, UserAppsAttributes {
-    readonly id: number;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
-}
+type UserAppsCreationAttributes = UserAppsAttributes;
+export type UserAppsInstance = Model<UserAppsAttributes, UserAppsCreationAttributes> &
+    UserAppsAttributes &
+    CommonAttributes;
 
-const UserAppsModelFactory: ModelFactory = (sequelize, dataTypes) =>
+const UserAppsModelFactory: ModelFactory<UserAppsInstance> = (sequelize, dataTypes) =>
     sequelize.define<UserAppsInstance>(
         'UserApps',
         {

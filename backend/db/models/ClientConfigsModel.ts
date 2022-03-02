@@ -1,7 +1,17 @@
-import type { ModelFactory } from 'cloudify-ui-common/backend';
+import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
+import { CommonAttributes } from './types';
 
-const ClientConfigsModelFactory: ModelFactory = (sequelize, dataTypes) =>
-    sequelize.define(
+interface ClientConfigsAttributes {
+    managerIp: string;
+    config: any;
+}
+type ClientConfigsCreationAttributes = ClientConfigsAttributes;
+export type ClientConfigsInstance = Model<ClientConfigsAttributes, ClientConfigsAttributes> &
+    ClientConfigsAttributes &
+    CommonAttributes;
+
+const ClientConfigsModelFactory: ModelFactory<ClientConfigsInstance> = (sequelize, dataTypes) =>
+    sequelize.define<ClientConfigsInstance>(
         'ClientConfigs',
         {
             managerIp: { type: dataTypes.STRING, allowNull: false },

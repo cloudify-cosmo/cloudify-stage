@@ -1,10 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
-
 import os from 'os';
 import fs from 'fs-extra';
 import pathlib from 'path';
 import mkdirp from 'mkdirp';
 import _ from 'lodash';
+import type { Request } from 'express';
 import { db } from '../db/Connection';
 
 import { getLogger } from './LoggerHandler';
@@ -13,6 +12,7 @@ import { getConfig } from '../config';
 import { getResourcePath } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
+import { UserAppsInstance } from '../db/models/UserAppsModel';
 
 const logger = getLogger('WidgetHandler');
 
@@ -20,19 +20,19 @@ const builtInWidgetsFolder = getResourcePath('widgets', false);
 const userWidgetsFolder = getResourcePath('widgets', true);
 const widgetTempDir = pathlib.join(os.tmpdir(), getConfig().app.widgets.tempDir);
 
-function saveMultipartData(req) {
+function saveMultipartData(req: Request) {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
     return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
 }
 
-function saveDataFromUrl(archiveUrl) {
+function saveDataFromUrl(archiveUrl: string): Promise<any> {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
 }
 
 // Credits to: https://geedew.com/remove-a-directory-that-is-not-empty-in-nodejs/
 
-function rmdirSync(path) {
+function rmdirSync(path: string) {
     if (fs.existsSync(path)) {
         fs.readdirSync(path).forEach(file => {
             const curPath = `${path}/${file}`;
@@ -68,7 +68,7 @@ function getAllWidgets() {
     return _.concat(getBuiltInWidgets(), getUserWidgets());
 }
 
-function validateUniqueness(widgetId) {
+function validateUniqueness(widgetId: string) {
     logger.debug(`Validating widget ${widgetId} uniqueness.`);
 
     const widgets = getAllWidgets();
@@ -79,7 +79,7 @@ function validateUniqueness(widgetId) {
     return Promise.resolve();
 }
 
-function validateConsistency(widgetId, dirName) {
+function validateConsistency(widgetId: string, dirName: string) {
     logger.debug(`Validating widget ${widgetId} consistency.`);
 
     if (widgetId !== dirName) {
@@ -92,7 +92,7 @@ function validateConsistency(widgetId, dirName) {
     return Promise.resolve();
 }
 
-function validateWidget(widgetId, extractedDir) {
+function validateWidget(widgetId: string, extractedDir: string) {
     logger.debug(`Validating widget ${widgetId}.`);
 
     let files = fs.readdirSync(extractedDir);
@@ -128,13 +128,13 @@ function validateWidget(widgetId, extractedDir) {
     return Promise.resolve(tempPath);
 }
 
-function installFiles(widgetId, tempPath) {
+function installFiles(widgetId: string, tempPath: string) {
     logger.debug('Installing widget files to the target path:', pathlib.resolve(userWidgetsFolder));
     logger.debug('Widget temp path:', tempPath);
 
     const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         rmdirSync(installPath);
         fs.move(tempPath, installPath, err => {
             if (err) {
@@ -146,12 +146,12 @@ function installFiles(widgetId, tempPath) {
     });
 }
 
-function backupWidget(widgetId, tempPath) {
+function backupWidget(widgetId: string, tempPath: string) {
     const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
     const backupPath = pathlib.resolve(tempPath, 'backup');
 
     logger.debug(`Creating backup of widget ${widgetId} in ${backupPath}`);
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         fs.copy(installPath, backupPath, err => {
             if (err) {
                 reject(err);
@@ -162,12 +162,12 @@ function backupWidget(widgetId, tempPath) {
     });
 }
 
-function restoreBackup(widgetId, tempPath) {
+function restoreBackup(widgetId: string, tempPath: string) {
     const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
     const backupPath = pathlib.resolve(tempPath, 'backup');
 
     logger.debug(`Restoring backup of widget ${widgetId} from ${backupPath}`);
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         fs.removeSync(installPath);
         fs.move(backupPath, installPath, err => {
             if (err) {
@@ -179,11 +179,11 @@ function restoreBackup(widgetId, tempPath) {
     });
 }
 
-export function deleteWidget(widgetId) {
+export function deleteWidget(widgetId: string) {
     const path = pathlib.resolve(userWidgetsFolder, widgetId);
 
     logger.debug(`Deleting widget ${widgetId} from ${path}`);
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
         fs.remove(path, err => {
             if (err) {
                 reject(err);
@@ -194,7 +194,7 @@ export function deleteWidget(widgetId) {
     }).then(() => BackendHandler.removeWidgetBackend(widgetId));
 }
 
-export function installWidget(archiveUrl, username, req) {
+export function installWidget(archiveUrl: string, username: string, req: Request) {
     logger.debug('Installing widget from', archiveUrl || 'file');
 
     return ArchiveHelper.removeOldExtracts(widgetTempDir)
@@ -231,7 +231,7 @@ export function installWidget(archiveUrl, username, req) {
         });
 }
 
-export function updateWidget(updateWidgetId, archiveUrl, req) {
+export function updateWidget(updateWidgetId: string, archiveUrl: string, req: Request) {
     logger.debug('Updating widget', updateWidgetId, 'from', archiveUrl || 'file');
 
     return ArchiveHelper.removeOldExtracts(widgetTempDir)
@@ -278,9 +278,10 @@ export function listWidgets() {
     return Promise.resolve(_.concat(builtInWidgets, userWidgets));
 }
 
-export function isWidgetUsed(widgetId) {
-    return db.UserApps.findAll({ attributes: ['appData', 'username'] }).then(userApp => {
-        const result = [];
+export function isWidgetUsed(widgetId: string) {
+    return db.UserApps.findAll<UserAppsInstance>({ attributes: ['appData', 'username'] }).then(userApp => {
+        type WidgetUsage = { username: string; managerIp: string };
+        const result: WidgetUsage[] = [];
         _.forEach(userApp, row => {
             const filter = _.filter(row.appData.pages, { widgets: [{ definition: widgetId }] });
             if (!_.isEmpty(filter)) {

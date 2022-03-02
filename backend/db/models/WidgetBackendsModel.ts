@@ -1,6 +1,18 @@
-import type { ModelFactory } from 'cloudify-ui-common/backend';
+import type { Model, ModelFactory, Optional } from 'cloudify-ui-common/backend';
+import { CommonAttributes } from './types';
 
-const WidgetBackendsModelFactory: ModelFactory = (sequelize, dataTypes) =>
+interface WidgetBackendsAttributes {
+    widgetId: string;
+    serviceName: string;
+    method: string;
+    script: string;
+}
+type WidgetBackendsCreationAttributes = Optional<WidgetBackendsAttributes, 'script'>;
+export type WidgetBackendsInstance = Model<WidgetBackendsAttributes, WidgetBackendsCreationAttributes> &
+    WidgetBackendsAttributes &
+    CommonAttributes;
+
+const WidgetBackendsModelFactory: ModelFactory<WidgetBackendsInstance> = (sequelize, dataTypes) =>
     sequelize.define(
         'WidgetBackends',
         {

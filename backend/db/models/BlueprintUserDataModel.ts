@@ -1,7 +1,18 @@
-import type { ModelFactory } from 'cloudify-ui-common/backend';
+import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
+import { CommonAttributes } from './types';
 
-const BlueprintUserDataModelFactory: ModelFactory = (sequelize, dataTypes) =>
-    sequelize.define(
+interface BlueprintUserDataAttributes {
+    blueprintId: string;
+    username: string;
+    layout: any;
+}
+type BlueprintUserDataCreationAttributes = BlueprintUserDataAttributes;
+export type BlueprintUserDataInstance = Model<BlueprintUserDataAttributes, BlueprintUserDataAttributes> &
+    BlueprintUserDataAttributes &
+    CommonAttributes;
+
+const BlueprintUserDataModelFactory: ModelFactory<BlueprintUserDataInstance> = (sequelize, dataTypes) =>
+    sequelize.define<BlueprintUserDataInstance>(
         'BlueprintUserData',
         {
             blueprintId: { type: dataTypes.INTEGER, allowNull: false },
