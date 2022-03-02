@@ -1,5 +1,4 @@
-import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
-import { CommonAttributes } from './types';
+import type { CommonAttributes, Model, ModelFactory } from './types';
 
 interface ClientConfigsAttributes {
     managerIp: string;

@@ -1,6 +1,5 @@
-import type { Model, ModelFactory } from 'cloudify-ui-common/backend';
+import type { CommonAttributes, Model, ModelFactory } from './types';
 import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
-import { CommonAttributes } from './types';
 
 interface UserAppsAttributes {
     username: string;

@@ -1,4 +1,4 @@
-import type { ModelFactory } from 'cloudify-ui-common/backend';
+import type { ModelFactory } from './types';
 
 const ApplicationsModelFactory: ModelFactory = (sequelize, dataTypes) =>
     sequelize.define('Applications', {

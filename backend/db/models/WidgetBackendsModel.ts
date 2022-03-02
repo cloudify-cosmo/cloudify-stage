@@ -1,5 +1,4 @@
-import type { Model, ModelFactory, Optional } from 'cloudify-ui-common/backend';
-import { CommonAttributes } from './types';
+import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
 
 interface WidgetBackendsAttributes {
     widgetId: string;

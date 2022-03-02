@@ -1,6 +1,5 @@
-import type { Model, Optional, ModelFactory } from 'cloudify-ui-common/backend';
+import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
 import ResourceTypes, { ResourceType } from '../types/ResourceTypes';
-import { CommonAttributes } from './types';
 
 interface ResourcesAttributes {
     resourceId: string;
