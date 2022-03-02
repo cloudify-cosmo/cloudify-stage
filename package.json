@@ -118,6 +118,7 @@
     "@babel/register": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "@types/d3-format": "^1.3.1",
+    "@types/webpack-dev-server": "^4.0.0",
     "babel-loader": "^8.0.6",
     "compression-webpack-plugin": "^6.1.1",
     "copy-webpack-plugin": "^6.3.2",
@@ -143,7 +144,7 @@
   "optionalDependencies": {
     "@cypress/code-coverage": "^3.9.12",
     "@cypress/react": "^5.10.0",
-    "@cypress/webpack-dev-server": "^1.6.0",
+    "@cypress/webpack-dev-server": "^1.8.1",
     "@size-limit/preset-app": "^4.5.5",
     "@types/blueimp-md5": "^2.7.0",
     "@types/enzyme": "^3.10.8",
@@ -210,7 +211,7 @@
     "timekeeper": "^1.0.0",
     "ts-node": "^10.2.1",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^4.0.0"
   },
   "engines": {
     "node": "14.x"
