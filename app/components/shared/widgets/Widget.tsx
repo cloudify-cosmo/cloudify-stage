@@ -286,7 +286,6 @@ const mapStateToProps: MapStateToProps<ReduxStateToProps<any>, WidgetOwnProps<an
         widget: {
             ...ownProps.widget,
             // NOTE: assume definition will always be found
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             definition: getWidgetDefinitionById(ownProps.widget.definition, state.widgetDefinitions)!
         }
     };

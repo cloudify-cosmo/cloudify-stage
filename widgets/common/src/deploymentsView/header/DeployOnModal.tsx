@@ -1,6 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
-import GenericDeployModal from '../../GenericDeployModal';
+import type { WorkflowParameters } from '../../executeWorkflow';
+import GenericDeployModal from '../../deployModal/GenericDeployModal';
 import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
 import { BlueprintDeployParams } from '../../BlueprintActions';
@@ -51,7 +51,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     function startInstallWorkflow(
         deploymentGroupId: string,
         _deploymentParameters: BlueprintDeployParams,
-        installWorkflowParameters: Record<string, any>
+        installWorkflowParameters: WorkflowParameters | undefined
     ) {
         return new ExecutionGroupsActions(toolbox).doStart(deploymentGroupId, 'install', installWorkflowParameters);
     }

@@ -5,7 +5,8 @@
     "extends": [
         "plugin:jest/recommended",
         "plugin:react/recommended",
-        "../../node_modules/cloudify-ui-common/configs/eslint-common-react.json"
+        "../../node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+        "../../.eslintrc.temp-overrides.json"
     ],
     "settings": {
         "import/resolver": {

@@ -42,7 +42,6 @@ export default function LicenseLabel({ style, ...rest }: LabelProps) {
                 color: '#000000',
                 ...style
             }}
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
         >
             {t(licenseLabelKey)}

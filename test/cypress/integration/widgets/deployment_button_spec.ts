@@ -3,6 +3,9 @@ describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
+    const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
+    const customInstallWorkflowParam1 = 'hello';
+    const customInstallWorkflowParam2 = 'world';
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
@@ -10,7 +13,8 @@ describe('Create Deployment Button widget', () => {
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
-            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint);
+            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];
         types.forEach(type =>
@@ -74,21 +78,35 @@ describe('Create Deployment Button widget', () => {
             cy.openAccordionSection('Advanced');
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
-            cy.withinAccordionSection('Deployment Inputs', () => {
-                // check hidden input is not rendered
-                cy.get('.field')
-                    .should('have.length', 1)
-                    .should('have.class', 'field')
-                    .within(() => {
-                        cy.contains('label', 'Server IP');
-                        cy.get('textarea').type('127.0.0.1');
+            if (blueprintId === customInstallWorkflowBlueprint) {
+                cy.withinAccordionSection('Install', () => {
+                    cy.getField('xxx').within(() => {
+                        cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam1);
                     });
-            });
+                    cy.getField('yyy').within(() => {
+                        cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam2);
+                    });
+                    cy.getField('Dry run').within(() => cy.get('input[type="checkbox"]').click({ force: true }));
+                });
+            }
+
+            if (blueprintId === testBlueprintId) {
+                cy.withinAccordionSection('Deployment Inputs', () => {
+                    // check hidden input is not rendered
+                    cy.get('.field')
+                        .should('have.length', 1)
+                        .should('have.class', 'field')
+                        .within(() => {
+                            cy.contains('label', 'Server IP');
+                            cy.get('textarea').type('127.0.0.1');
+                        });
+                });
+            }
         });
     };
 
-    const deployBlueprint = (deploymentId, deploymentName, install = false) => {
-        fillDeployBlueprintModal(deploymentId, deploymentName, testBlueprintId);
+    const deployBlueprint = (deploymentId, deploymentName, install = false, blueprintId = testBlueprintId) => {
+        fillDeployBlueprintModal(deploymentId, deploymentName, blueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
             if (install) {
@@ -97,10 +115,6 @@ describe('Create Deployment Button widget', () => {
                 cy.selectAndClickDeploy();
             }
         });
-
-        if (install) {
-            cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
-        }
 
         waitForDeployBlueprintModal(install);
     };
@@ -115,6 +129,9 @@ describe('Create Deployment Button widget', () => {
     const verifyDeploymentInstallStarted = deploymentId => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
+            expect(response.body.items[0].parameters.xxx).to.be.equal(customInstallWorkflowParam1);
+            expect(response.body.items[0].parameters.yyy).to.be.equal(customInstallWorkflowParam2);
+            expect(response.body.items[0].is_dry_run).to.be.true;
         });
     };
 
@@ -155,8 +172,8 @@ describe('Create Deployment Button widget', () => {
     it('allows to deploy and install a blueprint', () => {
         const deploymentName = `${resourcePrefix}deployAndInstall`;
         const deploymentId = `${deploymentName}Id`;
-        deployBlueprint(deploymentId, deploymentName, true);
-        verifyBlueprintDeployed(testBlueprintId, deploymentId);
+        deployBlueprint(deploymentId, deploymentName, true, customInstallWorkflowBlueprint);
+        verifyBlueprintDeployed(customInstallWorkflowBlueprint, deploymentId);
         verifyRedirectionToDeploymentPage(deploymentId, deploymentName);
         verifyDeploymentInstallStarted(deploymentId);
     });
@@ -187,7 +204,6 @@ describe('Create Deployment Button widget', () => {
                 }
             });
             cy.get('div.deployBlueprintModal').clickButton('Install');
-            cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.get('div.deployBlueprintModal div.error.message').within(() => {
                 cy.get('li:nth-child(1)').should('have.text', 'Cannot deploy blueprint');
             });
@@ -206,7 +222,6 @@ describe('Create Deployment Button widget', () => {
             }).as('installDeployment');
 
             cy.get('div.deployBlueprintModal').clickButton('Install');
-            cy.get('div.executeWorkflowModal .actions > .ui:nth-child(2)').click();
             cy.wait('@installDeployment');
 
             cy.get('div.deployBlueprintModal div.error.message').within(() => {

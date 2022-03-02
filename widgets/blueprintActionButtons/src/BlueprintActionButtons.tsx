@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 
 interface BlueprintActionButtonsProps {
-    blueprintId?: string;
+    blueprintId: string;
     toolbox: Stage.Types.Toolbox;
     showEditCopyInComposerButton: boolean;
 }
@@ -56,7 +56,6 @@ export default class BlueprintActionButtons extends React.Component<
 
         actions
             // NOTE: If it was undefined, the button would be disabled
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             .doDelete(blueprintId!, force)
             .then(() => {
                 toolbox.getEventBus().trigger('blueprints:refresh');
@@ -131,7 +130,6 @@ export default class BlueprintActionButtons extends React.Component<
                                 .then(data =>
                                     new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
                                         // NOTE: If it was undefined, the button would be disabled
-                                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                                         blueprintId!,
                                         data.items[0].main_file_name
                                     )

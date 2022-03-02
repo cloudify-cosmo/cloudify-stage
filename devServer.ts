@@ -15,11 +15,10 @@ const proxyOptions = {
     secure: false
 };
 
-const options: WebpackDevServer.Configuration = {
-    hot: true,
+const options = {
     publicPath: CONTEXT_PATH,
     host: SERVER_HOST,
-    inline: true,
+    inline: false,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`
     },
@@ -28,6 +27,7 @@ const options: WebpackDevServer.Configuration = {
         [`${CONTEXT_PATH}/ba`]: proxyOptions,
         [`${CONTEXT_PATH}/bud`]: proxyOptions,
         [`${CONTEXT_PATH}/clientConfig`]: proxyOptions,
+        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions,
         [`${CONTEXT_PATH}/config`]: proxyOptions,
         [`${CONTEXT_PATH}/external`]: proxyOptions,
         [`${CONTEXT_PATH}/file`]: proxyOptions,

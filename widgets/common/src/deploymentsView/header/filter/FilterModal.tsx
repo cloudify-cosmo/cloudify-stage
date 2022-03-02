@@ -53,7 +53,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
     toolbox
 }) => {
     const { i18n } = Stage;
-    const { ApproveButton, CancelButton, Dimmer, Icon, Modal, Form, UnsafelyTypedFormField } = Stage.Basic;
+    const { ApproveButton, CancelButton, Dimmer, Icon, Modal, Form } = Stage.Basic;
     const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
 
@@ -133,7 +133,6 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
         setFilterSaving();
         new FilterActions(toolbox)
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             .doUpdate(filterId.value!, filterRules.value)
             .then(() => filterDirty.set(false))
             .catch(setMessageAsError)
@@ -201,7 +200,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={tModal('filterId')}>
+                    <Form.Field label={tModal('filterId')}>
                         <DynamicDropdown
                             toolbox={toolbox}
                             onChange={handleFilterIdChange}
@@ -209,8 +208,8 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                             prefetch
                             value={filterId.value ?? null}
                         />
-                    </UnsafelyTypedFormField>
-                    <UnsafelyTypedFormField label={tModal('filterRules')}>
+                    </Form.Field>
+                    <Form.Field label={tModal('filterRules')}>
                         {interactionsDisabled && <Stage.Basic.LoadingOverlay />}
                         {filterRulesResult.isSuccess && (
                             <RulesForm
@@ -222,7 +221,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                                 minLength={1}
                             />
                         )}
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                 </Form>
             </Modal.Content>
 

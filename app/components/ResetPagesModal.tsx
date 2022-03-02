@@ -39,7 +39,6 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
     private toggleCheckbox: CheckboxProps['onChange'] = (_event, elem) => {
         const { unselectedTenantNames } = this.state;
         // NOTE: tenant names are always defined
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const clickedTenant = elem.name!;
         const newUnselectedTenantNames = new Set(unselectedTenantNames);
 

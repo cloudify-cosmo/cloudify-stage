@@ -26,7 +26,6 @@ function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfi
         <Input
             name={name}
             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...rest}
         >
             <input maxLength={inputMaxLength} />
@@ -42,7 +41,6 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
                 selection
                 options={options}
                 onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...rest}
             />
         );
@@ -108,6 +106,19 @@ const outputsColumns: Columns<Output> = [
         component: LengthLimitedDynamicTableInput
     }
 ];
+
+export function getResourceLocation(templateModules: string[], resourceLocation: string) {
+    if (
+        _(templateModules)
+            .map(modulePath => modulePath.split('/')[0])
+            .uniq()
+            .size() > 1
+    ) {
+        return resourceLocation;
+    }
+    // Remove first dir from the path ('dir1/dir2' -> 'dir2')
+    return resourceLocation.replace(/^[^/]*[/]?/, '');
+}
 
 export default function TerraformModal({
     onHide,
@@ -280,25 +291,13 @@ export default function TerraformModal({
 
         setProcessPhase('generation');
 
-        function getResourceLocation() {
-            if (
-                _(templateModules)
-                    .map(modulePath => modulePath.split('/')[0])
-                    .uniq()
-                    .size() > 1
-            ) {
-                return resourceLocation;
-            }
-            return resourceLocation.replace(/^[^/]*[/]?/, '');
-        }
-
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 blueprintName,
                 terraformTemplate: templateUrl,
                 urlAuthentication,
                 terraformVersion: version,
-                resourceLocation: getResourceLocation(),
+                resourceLocation: getResourceLocation(templateModules, resourceLocation),
                 variables,
                 environmentVariables: environment,
                 outputs
@@ -361,19 +360,7 @@ export default function TerraformModal({
 
     const { AccordionSectionWithDivider } = Stage.Common;
 
-    const {
-        Accordion,
-        ApproveButton,
-        CancelButton,
-        Confirm,
-        Header,
-        Image,
-        LoadingOverlay,
-        Modal,
-        Form,
-        UnsafelyTypedFormField,
-        UnsafelyTypedFormGroup
-    } = Stage.Basic;
+    const { Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } = Stage.Basic;
 
     return (
         <Modal open onClose={onHide}>
@@ -385,12 +372,12 @@ export default function TerraformModal({
 
             <Modal.Content>
                 <Form errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField label={t(`blueprintName`)} required error={errors.blueprint}>
+                    <Form.Field label={t(`blueprintName`)} required error={errors.blueprint}>
                         <Form.Input value={blueprintName} onChange={setBlueprintName}>
                             <input maxLength={inputMaxLength} />
                         </Form.Input>
-                    </UnsafelyTypedFormField>
-                    <UnsafelyTypedFormField label={t(`terraformVersion`)} required>
+                    </Form.Field>
+                    <Form.Field label={t(`terraformVersion`)} required>
                         <Form.Dropdown
                             search
                             selection
@@ -399,18 +386,18 @@ export default function TerraformModal({
                             onChange={setVersion}
                             clearable={false}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
                     <Accordion>
                         <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
-                            <UnsafelyTypedFormField label={t(`template`)} required error={errors.template}>
+                            <Form.Field label={t(`template`)} required error={errors.template}>
                                 <Form.Input
                                     value={templateUrl}
                                     onChange={setTemplateUrl}
                                     onBlur={handleTemplateUrlBlur}
                                 />
-                            </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormField label={t(`resourceLocation`)} required error={errors.resource}>
+                            </Form.Field>
+                            <Form.Field label={t(`resourceLocation`)} required error={errors.resource}>
                                 <Form.Dropdown
                                     selection
                                     options={templateModules.map(moduleLocation => ({
@@ -422,9 +409,9 @@ export default function TerraformModal({
                                     clearable={false}
                                     disabled={isEmpty(templateModules)}
                                 />
-                            </UnsafelyTypedFormField>
-                            <UnsafelyTypedFormGroup widths="equal">
-                                <UnsafelyTypedFormField>
+                            </Form.Field>
+                            <Form.Group widths="equal">
+                                <Form.Field>
                                     <Form.Checkbox
                                         toggle
                                         label={t(`urlAuthentication`)}
@@ -432,8 +419,8 @@ export default function TerraformModal({
                                         checked={urlAuthentication}
                                         onChange={handleUrlAuthenticationChange}
                                     />
-                                </UnsafelyTypedFormField>
-                                <UnsafelyTypedFormField error={errors.username}>
+                                </Form.Field>
+                                <Form.Field error={errors.username}>
                                     <Form.Input
                                         disabled={!urlAuthentication}
                                         value={username}
@@ -442,8 +429,8 @@ export default function TerraformModal({
                                         onBlur={handleTemplateUrlBlur}
                                         required={urlAuthentication}
                                     />
-                                </UnsafelyTypedFormField>
-                                <UnsafelyTypedFormField error={errors.password}>
+                                </Form.Field>
+                                <Form.Field error={errors.password}>
                                     <Form.Input
                                         disabled={!urlAuthentication}
                                         value={password}
@@ -452,8 +439,8 @@ export default function TerraformModal({
                                         onBlur={handleTemplateUrlBlur}
                                         required={urlAuthentication}
                                     />
-                                </UnsafelyTypedFormField>
-                            </UnsafelyTypedFormGroup>
+                                </Form.Field>
+                            </Form.Group>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion

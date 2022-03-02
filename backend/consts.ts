@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const allowedMethods = { get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH' };
+const allowedMethods = { get: 'GET', post: 'POST', put: 'PUT', delete: 'DELETE', patch: 'PATCH' } as const;
 
 export const ALLOWED_METHODS_OBJECT = allowedMethods;
 export const ALLOWED_METHODS_ARRAY = _.values(allowedMethods);

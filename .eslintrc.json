@@ -1,26 +1,18 @@
 {
-    "extends": ["./node_modules/cloudify-ui-common/configs/eslint-common.json", "./.eslintrc.temp-overrides.json"],
     "rules": {
-        "no-console": "error",
-        "prefer-promise-reject-errors": "off",
-
         "@typescript-eslint/no-namespace": [
             "error",
             {
                 "allowDeclarations": true
             }
-        ],
-
-        // TODO(RD-1690) extract the rule to cloudify-ui-common
-        "@typescript-eslint/ban-ts-comment": [
-            "error",
-            {
-                "ts-ignore": "allow-with-description"
-            }
         ]
     },
     "overrides": [
         {
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "./.eslintrc.temp-overrides.json"
+            ],
             "files": ["./*.{js,ts}", "scripts/*.js"],
             "rules": {
                 "import/no-extraneous-dependencies": [
@@ -30,7 +22,8 @@
                     }
                 ],
                 "no-console": "off",
-                "security/detect-child-process": "off"
+                "security/detect-child-process": "off",
+                "no-process-exit": "off"
             },
             "env": {
                 "node": true

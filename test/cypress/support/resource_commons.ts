@@ -8,12 +8,18 @@ export type WaitUntilOptions = {
     search?: string;
     numberOfRetriesLeft?: number;
     waitingInterval?: number;
+    useAdminAuthorization?: boolean;
 };
 
 export function waitUntil(
     resource: string,
     predicate: (response: Cypress.Response<any>) => boolean,
-    { search = '', numberOfRetriesLeft = 60, waitingInterval = 1000 }: WaitUntilOptions = {}
+    {
+        search = '',
+        numberOfRetriesLeft = 60,
+        waitingInterval = 1000,
+        useAdminAuthorization = false
+    }: WaitUntilOptions = {}
 ) {
     if (numberOfRetriesLeft <= 0) {
         throw new Error(`Number of retries exceeded for resource=${resource}, search=${search}.`);
@@ -23,7 +29,7 @@ export function waitUntil(
     if (search) {
         url = appendQueryParam(url, `_search`, search);
     }
-    cy.cfyRequest(url, 'GET').then(response => {
+    cy.cfyRequest(url, 'GET', null, null, { useAdminAuthorization }).then(response => {
         if (predicate(response)) {
             return;
         }

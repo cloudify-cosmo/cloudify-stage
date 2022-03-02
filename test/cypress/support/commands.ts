@@ -16,20 +16,21 @@ import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/typ
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import Consts from 'app/utils/consts';
 
+import { secondsToMs } from './resource_commons';
 import './asserts';
 import './blueprints';
 import './deployments';
-import './executions';
-import './users';
-import './sites';
-import './templates';
-import './plugins';
 import './editMode';
-import './widgets';
-import './secrets';
-import './snapshots';
+import './executions';
 import './filters';
 import './getting_started';
+import './plugins';
+import './secrets';
+import './sites';
+import './snapshots';
+import './templates';
+import './users';
+import './widgets';
 
 let token = '';
 
@@ -38,6 +39,8 @@ const getCommonHeaders = () => ({
     cookie: `${Consts.TOKEN_COOKIE_NAME}=${token}`,
     tenant: Consts.DEFAULT_TENANT
 });
+
+const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.interceptSp('GET', `/users/*`, {
@@ -83,7 +86,7 @@ const commands = {
     waitUntilLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
-            .get('#loader', { timeout: 20000 })
+            .get('#loader', { timeout: secondsToMs(25) })
             .should('be.not.visible')
             .waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
@@ -92,7 +95,7 @@ const commands = {
                 method: 'PUT',
                 url: '/console/sp/license',
                 headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
+                    ...getAdminAuthorizationHeader(),
                     'Content-Type': 'text/plain'
                 },
                 body: yaml
@@ -115,7 +118,9 @@ const commands = {
         method = 'GET',
         headers: any = null,
         body: any = null,
-        options: Partial<Cypress.RequestOptions> = {}
+        options: Partial<Cypress.RequestOptions> & { useAdminAuthorization?: boolean } = {
+            useAdminAuthorization: false
+        }
     ) =>
         cy.request({
             method,
@@ -123,6 +128,7 @@ const commands = {
             headers: {
                 'Content-Type': 'application/json',
                 ...getCommonHeaders(),
+                ...(options.useAdminAuthorization ? getAdminAuthorizationHeader() : {}),
                 ...headers
             },
             body,

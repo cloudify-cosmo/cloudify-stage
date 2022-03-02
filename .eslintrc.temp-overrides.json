@@ -16,8 +16,7 @@
         {
             "files": ["**/*.ts", "**/*.tsx"],
             "rules": {
-                "no-useless-constructor": "off",
-                "react/prop-types": "off"
+                "no-useless-constructor": "off"
             }
         }
     ]

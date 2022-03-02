@@ -41,11 +41,9 @@ const PageFilter: FunctionComponent<PageFilterProps> = ({
 
     function getPageName(id: PageDefinition['id']): string {
         // NOTE: assumes the page is always found
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         const page = filteredPagesMap[id];
         if (page.isDrillDown) {
             // NOTE: assumes the drilldown page always have a parent set
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             return `${getPageName(page.parent!)} > ${page.name}`;
         }
         return page.name;

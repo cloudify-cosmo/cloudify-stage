@@ -206,7 +206,7 @@ describe('Edit mode', () => {
                 200,
                 true
             );
-            submitInvalidWidget('ModuleNotAllowed', "The module 'fs-extra' is not whitelisted in VM.", 404);
+            submitInvalidWidget('ModuleNotAllowed', "Cannot find module 'fs-extra'", 404);
         });
 
         it('install and manage a widget', () => {
@@ -260,7 +260,7 @@ describe('Edit mode', () => {
 
             cy.wait('@managerService').its('response.statusCode').should('equal', 404);
 
-            cy.get('.message .content').should('have.text', "404 - The module 'fs-extra' is not whitelisted in VM.");
+            cy.get('.message .content').should('contain.text', "404 - Cannot find module 'fs-extra'");
         });
 
         it('install and use a widget with working backend services', () => {

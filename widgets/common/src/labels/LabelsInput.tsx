@@ -52,7 +52,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 }) => {
     const { useEffect, useRef } = React;
     const {
-        Basic: { Divider, Form, Icon, Segment, UnsafelyTypedFormField },
+        Basic: { Divider, Form, Icon, Segment },
         Common: {
             DeploymentActions,
             // @ts-expect-error RevertToDefaultIcon is not converted to TS yet
@@ -163,7 +163,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                 <div style={{ padding: '0 0.5em' }}>
                     <Divider hidden={_.isEmpty(labels)} />
                     <Form.Group>
-                        <UnsafelyTypedFormField width={7}>
+                        <Form.Field width={7}>
                             {newLabelKeyIsNotPermitted && (
                                 <InvalidKeyErrorPopup keyPrefix={internalKeyPrefix} reservedKeys={reservedKeys} />
                             )}
@@ -173,8 +173,8 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                                 toolbox={toolbox}
                                 value={newLabelKey}
                             />
-                        </UnsafelyTypedFormField>
-                        <UnsafelyTypedFormField width={7}>
+                        </Form.Field>
+                        <Form.Field width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
@@ -182,14 +182,14 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                                 toolbox={toolbox}
                                 value={newLabelValue}
                             />
-                        </UnsafelyTypedFormField>
-                        <UnsafelyTypedFormField width={2}>
+                        </Form.Field>
+                        <Form.Field width={2}>
                             <AddButton
                                 onClick={onAddLabel}
                                 onEnterPress={onEnterPressOnAddButton}
                                 disabled={addLabelNotAllowed}
                             />
-                        </UnsafelyTypedFormField>
+                        </Form.Field>
                     </Form.Group>
                 </div>
             )}

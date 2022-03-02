@@ -6,17 +6,7 @@ import { useSelector } from 'react-redux';
 import Consts from '../../../utils/consts';
 import StageUtils from '../../../utils/stageUtils';
 
-import {
-    Accordion,
-    ApproveButton,
-    CancelButton,
-    Divider,
-    Form,
-    Icon,
-    Modal,
-    Segment,
-    UnsafelyTypedFormField
-} from '../../basic';
+import { Accordion, ApproveButton, CancelButton, Divider, Form, Icon, Modal, Segment } from '../../basic';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
 import { ReduxState } from '../../../reducers';
 import { PageMenuItem } from './types';
@@ -178,11 +168,11 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <UnsafelyTypedFormField error={errors.templateName} label={t('templateName')}>
+                    <Form.Field error={errors.templateName} label={t('templateName')}>
                         <Form.Input name="templateName" value={templateName} onChange={setTemplateName} />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
 
-                    <UnsafelyTypedFormField error={errors.roles} label={t('roles')}>
+                    <Form.Field error={errors.roles} label={t('roles')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -194,9 +184,9 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                             value={roles}
                             onChange={setRoles}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
 
-                    <UnsafelyTypedFormField error={errors.tenants} label={t('tenants')}>
+                    <Form.Field error={errors.tenants} label={t('tenants')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -205,7 +195,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                             value={tenants}
                             onChange={handleTenantsChange}
                         />
-                    </UnsafelyTypedFormField>
+                    </Form.Field>
 
                     <Segment.Group horizontal>
                         <Segment style={{ width: '50%' }}>

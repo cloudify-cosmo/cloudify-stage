@@ -1,7 +1,8 @@
 {
-    "extends": "ts-node/node12/tsconfig.json",
+    "extends": "ts-node/node14/tsconfig.json",
     "compilerOptions": {
-        "noEmit": true
+        "noEmit": true,
+        "resolveJsonModule": true
     },
     "exclude": ["**/__mocks__/*", "test"],
 

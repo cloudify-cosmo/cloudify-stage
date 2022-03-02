@@ -53,7 +53,7 @@ class InputsUtils {
         return stringValue;
     }
 
-    static getInputFieldInitialValue(defaultValue, type = undefined, dataType = undefined) {
+    static getInputFieldInitialValue(defaultValue, type?: string = undefined, dataType = undefined) {
         const { Json } = Stage.Utils;
 
         if (_.isUndefined(defaultValue)) {
@@ -381,7 +381,7 @@ class InputsUtils {
         return inputsState[input.name];
     }
 
-    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes) {
+    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes?) {
         return _(inputs)
             .map((input, name) => ({ name, ...input }))
             .reject('hidden')
