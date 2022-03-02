@@ -2,17 +2,16 @@ import _ from 'lodash';
 import fs from 'fs-extra';
 import moment from 'moment';
 import path from 'path';
-import { Logger } from 'cloudify-ui-common/backend/logger';
-import sequelize, { QueryInterface } from 'sequelize';
 
 import ResourceTypes from '../db/types/ResourceTypes';
 import ResourcesModel from '../db/models/ResourcesModel';
 import { getResourcePath } from '../utils';
+import { MigrationObject } from './types';
 
 const userTemplatesFolder = getResourcePath('templates', true);
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, Sequelize, logger) => {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.TEMPLATE },

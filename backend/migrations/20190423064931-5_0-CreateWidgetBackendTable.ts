@@ -1,8 +1,7 @@
-import { Logger } from 'cloudify-ui-common/backend/logger';
-import sequelize, { QueryInterface } from 'sequelize';
+import { MigrationObject } from './types';
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, Sequelize) => {
         return queryInterface
             .createTable('WidgetBackends', {
                 id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
@@ -22,7 +21,7 @@ export const { up, down } = {
             );
     },
 
-    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
+    down: (queryInterface, Sequelize, logger) => {
         return queryInterface
             .dropTable('WidgetBackends', { cascade: true, logging: logger.info, benchmark: true })
             .then(() =>

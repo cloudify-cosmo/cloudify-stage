@@ -1,7 +1,7 @@
-import { QueryInterface } from 'sequelize';
+import { MigrationObject } from './types';
 
-export const { up, down } = {
-    up(queryInterface: QueryInterface) {
+export const { up, down }: MigrationObject = {
+    up(queryInterface) {
         // NOTE: Cannot use db-agnostic queryInterface.changeColumn method, because of error.
         // It is known issue: https://github.com/sequelize/sequelize/issues/2554
         // Used solution from: https://stackoverflow.com/questions/25048702/how-do-you-add-enum-labels-using-sequelize
@@ -10,5 +10,6 @@ export const { up, down } = {
 
     down() {
         // Nothing to do
+        return Promise.resolve();
     }
 };

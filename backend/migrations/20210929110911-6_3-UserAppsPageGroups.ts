@@ -1,14 +1,13 @@
-import sequelize, { QueryInterface, QueryInterfaceIndexOptions } from 'sequelize';
-import { Logger } from 'cloudify-ui-common/backend/logger';
 import { each, map } from 'lodash';
 
 import fs from 'fs-extra';
 import path from 'path';
 import UserApp from '../db/models/UserAppsModel';
 import { userTemplatesFolder } from '../handler/templates/TemplatesHandler';
+import { MigrationObject } from './types';
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, Sequelize, logger) => {
         UserApp(queryInterface.sequelize, Sequelize)
             .findAll()
             .then(async results => {
@@ -40,9 +39,11 @@ export const { up, down } = {
                 }));
                 fs.writeJsonSync(templateFilePath, templateFileContent, { spaces: 2, EOL: '\n' });
             });
+
+        return Promise.resolve();
     },
 
-    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
+    down: (queryInterface, Sequelize, logger) => {
         if (fs.existsSync(userTemplatesFolder))
             each(fs.readdirSync(userTemplatesFolder), templateFile => {
                 const templateFilePath = path.resolve(userTemplatesFolder, templateFile);
@@ -57,5 +58,7 @@ export const { up, down } = {
                 templateFileContent.pages = map(templateFileContent.pages, 'id');
                 fs.writeJsonSync(templateFilePath, templateFileContent, { spaces: 2, EOL: '\n' });
             });
+
+        return Promise.resolve();
     }
 };

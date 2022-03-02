@@ -1,6 +1,7 @@
-import sequelize, { QueryInterface } from 'sequelize';
+import type { QueryInterface, DataTypes } from 'cloudify-ui-common/backend';
+import { MigrationObject } from './types';
 
-function createClientConfigs(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('ClientConfigs', {
             id: {
@@ -33,7 +34,7 @@ function createClientConfigs(queryInterface: QueryInterface, Sequelize: typeof s
         );
 }
 
-function createUserAppModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createUserAppModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('UserApps', {
             id: {
@@ -66,7 +67,7 @@ function createUserAppModel(queryInterface: QueryInterface, Sequelize: typeof se
         );
 }
 
-function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('BlueprintAdditions', {
             id: {
@@ -96,7 +97,7 @@ function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize
         );
 }
 
-function createApplicationModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createApplicationModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('Applications', {
             id: {
@@ -130,14 +131,14 @@ function createApplicationModel(queryInterface: QueryInterface, Sequelize: typeo
         );
 }
 
-export const { up, down } = {
-    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+export const { up, down }: MigrationObject = {
+    up(queryInterface, Sequelize) {
         return createClientConfigs(queryInterface, Sequelize)
             .then(() => createUserAppModel(queryInterface, Sequelize))
             .then(() => createBlueprintAdditionsModel(queryInterface, Sequelize))
             .then(() => createApplicationModel(queryInterface, Sequelize));
     },
-    down(queryInterface: QueryInterface) {
+    down(queryInterface) {
         return queryInterface
             .dropTable('ClientConfigs')
             .then(() => queryInterface.dropTable('UserApps'))

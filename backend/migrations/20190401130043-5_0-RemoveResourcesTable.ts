@@ -1,15 +1,14 @@
-import { Logger } from 'cloudify-ui-common/backend/logger';
-import sequelize, { QueryInterface } from 'sequelize';
 import ResourceTypes from '../db/types/ResourceTypes';
+import type { MigrationObject } from './types';
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize, logger: Logger) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, Sequelize, logger) => {
         return queryInterface
             .dropTable('Resources', { cascade: true, logging: logger.info, benchmark: true })
             .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));
     },
 
-    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
+    down: (queryInterface, Sequelize) => {
         return queryInterface
             .createTable('Resources', {
                 id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },

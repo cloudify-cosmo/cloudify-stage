@@ -1,7 +1,7 @@
-import sequelize, { QueryInterface } from 'sequelize';
+import { MigrationObject } from './types';
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, Sequelize) => {
         return queryInterface
             .createTable('BlueprintUserData', {
                 id: {
@@ -37,7 +37,7 @@ export const { up, down } = {
                 })
             );
     },
-    down: (queryInterface: QueryInterface) => {
+    down: queryInterface => {
         return queryInterface.dropTable('BlueprintUserData').then(() =>
             queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
                 type: 'UNIQUE'

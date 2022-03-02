@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import _ from 'lodash';
-import sequelize, { QueryInterface } from 'sequelize';
+import { DataTypes, MigrationObject, QueryInterface } from './types';
 import { LAYOUT } from '../consts';
 import { getResourcePath } from '../utils';
 import UserApps from '../db/models/UserAppsModel';
@@ -15,11 +15,7 @@ type PageData = OldPageData & NewPageData;
 const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-function migrate(
-    queryInterface: QueryInterface,
-    Sequelize: typeof sequelize,
-    pageProcessor: (pageData: PageData) => void
-) {
+function migrate(queryInterface: QueryInterface, Sequelize: DataTypes, pageProcessor: (pageData: PageData) => void) {
     UserApps(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(async results => {
@@ -42,8 +38,9 @@ function migrate(
         });
 }
 
-export const { up, down } = {
-    up: (queryInterface: QueryInterface, Sequelize: typeof sequelize) =>
+export const { up, down }: MigrationObject = {
+    // @ts-ignore TODO: Function returns void instead of Promise<any>
+    up: (queryInterface, Sequelize) => {
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             function migrateLayoutSection(type: LayoutSectionType) {
                 if (pageData[type]) {
@@ -58,8 +55,10 @@ export const { up, down } = {
 
             migrateLayoutSection(LAYOUT.WIDGETS);
             migrateLayoutSection(LAYOUT.TABS);
-        }),
-    down: (queryInterface: QueryInterface, Sequelize: typeof sequelize) => {
+        });
+    },
+    // @ts-ignore TODO: Function returns void instead of Promise<any>
+    down: (queryInterface, Sequelize) => {
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             if (pageData.layout && pageData.layout.length > 0) {
                 let layoutSection = pageData.layout[0];

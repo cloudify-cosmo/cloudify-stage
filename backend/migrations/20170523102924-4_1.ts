@@ -1,6 +1,7 @@
-import sequelize, { QueryInterface } from 'sequelize';
+import type { DataTypes, QueryInterface } from 'cloudify-ui-common/backend';
+import { MigrationObject } from './types';
 
-function createResourcesModel(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createResourcesModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('Resources', {
             id: {
@@ -30,12 +31,12 @@ function createResourcesModel(queryInterface: QueryInterface, Sequelize: typeof 
         );
 }
 
-export const { up, down } = {
-    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+export const { up, down }: MigrationObject = {
+    up(queryInterface, Sequelize) {
         return createResourcesModel(queryInterface, Sequelize);
     },
 
-    down(queryInterface: QueryInterface) {
+    down(queryInterface) {
         return queryInterface.dropTable('Resources');
     }
 };

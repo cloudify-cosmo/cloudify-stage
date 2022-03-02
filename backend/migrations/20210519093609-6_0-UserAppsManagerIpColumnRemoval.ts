@@ -1,12 +1,12 @@
-import sequelize, { QueryInterface, QueryInterfaceIndexOptions } from 'sequelize';
+import { MigrationObject, QueryInterfaceIndexOptions } from './types';
 
 const managerIpColumnName = 'managerIp';
 const indexWithoutManagerIp = ['username', 'mode', 'tenant'];
 const indexWithManagerIp = indexWithoutManagerIp.concat(managerIpColumnName);
 const indexOptions: QueryInterfaceIndexOptions = { type: 'UNIQUE' };
 
-export const { up, down } = {
-    async up(queryInterface: QueryInterface) {
+export const { up, down }: MigrationObject = {
+    async up(queryInterface) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
             await queryInterface.removeColumn('UserApps', managerIpColumnName);
@@ -21,7 +21,7 @@ export const { up, down } = {
             throw error;
         }
     },
-    async down(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+    async down(queryInterface, Sequelize) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
             await queryInterface.addColumn('UserApps', managerIpColumnName, {

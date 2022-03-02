@@ -1,11 +1,11 @@
-import sequelize, { QueryInterface, QueryInterfaceIndexOptions } from 'sequelize';
+import { DataTypes, MigrationObject, QueryInterface, QueryInterfaceIndexOptions } from './types';
 
 const TENANT_COLUMN_NAME = 'tenant';
 const INDEX_WITHOUT_TENANT = ['managerIp', 'username', 'role', 'mode'];
 const INDEX_WITH_TENANT = INDEX_WITHOUT_TENANT.concat(TENANT_COLUMN_NAME);
 const INDEX_OPTIONS: QueryInterfaceIndexOptions = { type: 'UNIQUE' };
 
-function createTenantColumnInUserAppTable(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+function createTenantColumnInUserAppTable(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .addColumn('UserApps', TENANT_COLUMN_NAME, {
             type: Sequelize.STRING,
@@ -27,12 +27,12 @@ function removeTenantColumnInUserAppTable(queryInterface: QueryInterface) {
         .then(() => queryInterface.addIndex('UserApps', INDEX_WITHOUT_TENANT, INDEX_OPTIONS));
 }
 
-export const { up, down } = {
-    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+export const { up, down }: MigrationObject = {
+    up(queryInterface, Sequelize) {
         return createTenantColumnInUserAppTable(queryInterface, Sequelize);
     },
 
-    down(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+    down(queryInterface, Sequelize) {
         return removeTenantColumnInUserAppTable(queryInterface);
     }
 };

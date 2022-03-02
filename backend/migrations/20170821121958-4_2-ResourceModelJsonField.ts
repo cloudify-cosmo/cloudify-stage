@@ -1,16 +1,16 @@
-import sequelize, { QueryInterface } from 'sequelize';
+import type { MigrationObject } from './types';
 
 const DATA_COLUMN_NAME = 'data';
 
-export const { up, down } = {
-    up(queryInterface: QueryInterface, Sequelize: typeof sequelize) {
+export const { up, down }: MigrationObject = {
+    up(queryInterface, Sequelize) {
         return queryInterface.addColumn('Resources', DATA_COLUMN_NAME, {
             type: Sequelize.JSONB,
             allowNull: true
         });
     },
 
-    down(queryInterface: QueryInterface) {
+    down(queryInterface) {
         return queryInterface.removeColumn('Resources', DATA_COLUMN_NAME);
     }
 };
