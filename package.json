@@ -40,6 +40,7 @@
     "lint": "eslint --cache --ignore-path .gitignore --ext js,jsx,ts,tsx .",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run test:frontend && npm run test:backend",
+    "test:json": "scripts/checkJsonFiles.sh",
     "test:frontend": "npm run test:frontend:unit && npm run test:frontend:components",
     "test:frontend:unit": "jest test/jest",
     "test:frontend:components": "cypress run-ct -C node_modules/cloudify-ui-common/cypress/cypress.json",
