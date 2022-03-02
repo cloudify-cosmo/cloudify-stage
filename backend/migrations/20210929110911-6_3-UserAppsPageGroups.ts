@@ -4,7 +4,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import UserApp from '../db/models/UserAppsModel';
 import { userTemplatesFolder } from '../handler/templates/TemplatesHandler';
-import { MigrationObject } from './types';
+import { MigrationObject } from './common/types';
 
 export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize, logger) => {

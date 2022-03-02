@@ -1,4 +1,4 @@
-import { MigrationObject, QueryInterfaceIndexOptions } from './types';
+import { MigrationObject, QueryInterfaceIndexOptions } from './common/types';
 
 const managerIpColumnName = 'managerIp';
 const indexWithoutManagerIp = ['username', 'mode', 'tenant'];

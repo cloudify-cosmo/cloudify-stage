@@ -1,4 +1,4 @@
-import type { MigrationObject, QueryInterfaceIndexOptions } from './types';
+import type { MigrationObject, QueryInterfaceIndexOptions } from './common/types';
 
 const ROLE_COLUMN_NAME = 'role';
 const INDEX_WITHOUT_ROLE = ['managerIp', 'username', 'mode', 'tenant'];

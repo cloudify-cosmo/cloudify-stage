@@ -1,4 +1,4 @@
-import type { MigrationObject } from './types';
+import type { MigrationObject } from './common/types';
 
 const DATA_COLUMN_NAME = 'data';
 

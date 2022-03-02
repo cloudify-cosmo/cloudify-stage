@@ -1,4 +1,4 @@
-import type { DataTypes, MigrationObject, QueryInterface } from './types';
+import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 
 function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
