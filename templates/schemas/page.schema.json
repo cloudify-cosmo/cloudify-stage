@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Page definition",
+  "type": "object",
+  "definitions": {
+    "widget": {
+      "description": "Widget definition (see https://docs.cloudify.co/staging/dev/developer/writing_widgets/widget-definition/ for details)",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Widget name",
+          "type": "string"
+        },
+        "width": {
+          "description": "Widget width",
+          "type": "integer"
+        },
+        "height": {
+          "description": "Widget height",
+          "type": "integer"
+        },
+        "x": {
+          "description": "Widget horizontal position",
+          "type": "integer"
+        },
+        "y": {
+          "description": "Widget vertical position",
+          "type": "integer"
+        },
+        "definition": {
+          "description": "Widget definition",
+          "type": "string"
+        },
+        "configuration": {
+          "description": "Widget configuration",
+          "type": "object"
+        }
+      },
+      "required": [
+        "definition"
+      ]
+    }
+  },
+  "properties": {
+    "name": {
+      "description": "Page name",
+      "type": "string"
+    },
+    "layout": {
+      "description": "List of page layouts",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {
+            "description": "Widgets container definition",
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "widgets"
+              },
+              "content": {
+                "description": "List of widgets",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/definitions/widget"
+                }
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ]
+          },
+          {
+            "description": "Tabs container definition",
+            "type": "object",
+            "properties": {
+              "type": {
+                "const": "tabs"
+              },
+              "content": {
+                "description": "List of tabs",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "description": "Tab name",
+                      "type": "string"
+                    },
+                    "widgets": {
+                      "description": "List of widgets",
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "$ref": "#/definitions/widget"
+                      }
+                    },
+                    "isDefault": {
+                      "description": "Should tab be set as default",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "widgets"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "type",
+              "content"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "name",
+    "layout"
+  ]
+}
