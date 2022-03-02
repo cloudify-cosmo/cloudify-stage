@@ -15,10 +15,9 @@ const proxyOptions = {
     secure: false
 };
 
-const options = {
-    publicPath: CONTEXT_PATH,
+const options: WebpackDevServer.Configuration = {
     host: SERVER_HOST,
-    inline: false,
+    port: devServerPort,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`
     },
@@ -45,16 +44,18 @@ const options = {
         [`${CONTEXT_PATH}/wb`]: proxyOptions,
         [`${CONTEXT_PATH}/widgets`]: proxyOptions
     },
-    watchOptions: {
-        ignored: ['**/userData/**']
+    static: {
+        publicPath: CONTEXT_PATH,
+        watch: {
+            ignored: ['**/userData/**']
+        }
     }
 };
 
-WebpackDevServer.addDevServerEntrypoints(webpackConfig[0], options);
 const compiler = webpack(webpackConfig);
-const server = new WebpackDevServer(compiler, options);
+const server = new WebpackDevServer(options, compiler);
 
-server.listen(devServerPort, SERVER_HOST, err => {
+server.startCallback(err => {
     if (err) {
         console.log(err);
     } else {
