@@ -7,8 +7,8 @@ import UserApps from '../db/models/UserAppsModel';
 import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 
 type LayoutSectionType = typeof LAYOUT.TABS | typeof LAYOUT.WIDGETS;
-type LayoutSection = { type: LayoutSectionType; content: any };
-type NewPageData = { layout: LayoutSection[] };
+type LayoutSection = { type?: LayoutSectionType; content?: any };
+type NewPageData = { layout?: LayoutSection[] };
 type OldPageData = Record<LayoutSectionType, any>;
 type PageData = OldPageData & NewPageData;
 
@@ -45,7 +45,7 @@ export const { up, down }: MigrationObject = {
             function migrateLayoutSection(type: LayoutSectionType) {
                 if (pageData[type]) {
                     if (!_.isEmpty(pageData[type])) {
-                        pageData.layout.push({ type, content: pageData[type] });
+                        pageData?.layout?.push({ type, content: pageData[type] });
                     }
                     delete pageData[type];
                 }
@@ -60,17 +60,16 @@ export const { up, down }: MigrationObject = {
     // @ts-ignore TODO: Function returns void instead of Promise<any>
     down: (queryInterface, Sequelize) => {
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
-            if (pageData.layout && pageData.layout.length > 0) {
-                let layoutSection = pageData.layout[0];
-                pageData[layoutSection.type] = layoutSection.content;
+            if (pageData?.layout?.length) {
+                let layoutSection = pageData.layout![0];
+                pageData[layoutSection.type!] = layoutSection?.content;
 
-                if (layoutSection.type === LAYOUT.WIDGETS) {
-                    layoutSection = _.nth(pageData.layout, 1) || { type: LAYOUT.WIDGETS, content: [] };
+                if (layoutSection?.type === LAYOUT.WIDGETS) {
+                    layoutSection = _.nth(pageData.layout, 1) || {};
                     if (layoutSection.type === LAYOUT.TABS) pageData[layoutSection.type] = layoutSection.content;
                 }
             }
 
-            // @ts-ignore Intentionally removing layout to convert pageData into OldPageData type
             delete pageData.layout;
         });
     }
