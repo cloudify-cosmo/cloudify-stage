@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "noEmit": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "skipLibCheck": true
     },
     "include": ["*.ts"],
     "references": [
