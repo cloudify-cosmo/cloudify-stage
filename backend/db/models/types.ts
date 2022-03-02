@@ -1,4 +1,4 @@
-export type { ModelFactory } from 'cloudify-ui-common/backend';
+export type { ModelFactory } from 'cloudify-ui-common/backend/db';
 // eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
 export type { Model, Optional } from 'sequelize';
 
