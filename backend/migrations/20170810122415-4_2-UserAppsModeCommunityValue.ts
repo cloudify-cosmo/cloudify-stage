@@ -1,4 +1,4 @@
-import { MigrationObject } from './types';
+import type { MigrationObject } from './types';
 
 export const { up, down }: MigrationObject = {
     up(queryInterface) {

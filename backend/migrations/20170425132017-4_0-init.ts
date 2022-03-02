@@ -1,5 +1,4 @@
-import type { QueryInterface, DataTypes } from 'cloudify-ui-common/backend';
-import { MigrationObject } from './types';
+import type { DataTypes, MigrationObject, QueryInterface } from './types';
 
 function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface

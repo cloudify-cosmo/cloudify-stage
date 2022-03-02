@@ -1,5 +1,4 @@
-import type { DataTypes, QueryInterface } from 'cloudify-ui-common/backend';
-import { MigrationObject } from './types';
+import type { DataTypes, MigrationObject, QueryInterface } from './types';
 
 function createResourcesModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
