@@ -1,4 +1,4 @@
-import { MigrationObject } from './common/types';
+import type { MigrationObject } from './common/types';
 
 export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize) => {

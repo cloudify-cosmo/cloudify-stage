@@ -1,10 +1,10 @@
 import fs from 'fs-extra';
 import path from 'path';
 import _ from 'lodash';
-import { DataTypes, MigrationObject, QueryInterface } from './common/types';
 import { LAYOUT } from '../consts';
 import { getResourcePath } from '../utils';
 import UserApps from '../db/models/UserAppsModel';
+import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 
 type LayoutSectionType = typeof LAYOUT.TABS | typeof LAYOUT.WIDGETS;
 type LayoutSection = { type: LayoutSectionType; content: any };

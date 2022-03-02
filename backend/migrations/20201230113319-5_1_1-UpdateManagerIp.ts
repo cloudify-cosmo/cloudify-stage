@@ -1,6 +1,6 @@
 import UserApps from '../db/models/UserAppsModel';
 import { getConfig } from '../config';
-import { MigrationObject } from './common/types';
+import type { MigrationObject } from './common/types';
 
 const config = getConfig();
 

@@ -1,4 +1,4 @@
-import { DataTypes, MigrationObject, QueryInterface, QueryInterfaceIndexOptions } from './common/types';
+import type { DataTypes, MigrationObject, QueryInterface, QueryInterfaceIndexOptions } from './common/types';
 
 const TENANT_COLUMN_NAME = 'tenant';
 const INDEX_WITHOUT_TENANT = ['managerIp', 'username', 'role', 'mode'];

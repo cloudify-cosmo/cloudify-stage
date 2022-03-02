@@ -6,7 +6,7 @@ import path from 'path';
 import ResourceTypes from '../db/types/ResourceTypes';
 import ResourcesModel from '../db/models/ResourcesModel';
 import { getResourcePath } from '../utils';
-import { MigrationObject } from './common/types';
+import type { MigrationObject } from './common/types';
 
 const userTemplatesFolder = getResourcePath('templates', true);
 
