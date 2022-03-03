@@ -37,8 +37,8 @@ router.post('/', (req, res, next) => {
             appData: { pages: [] },
             appDataVersion: req.body.version,
             mode: getMode(),
-            tenant: 'default_tenant',
-            username: ''
+            tenant: req.headers.tenant as string,
+            username: req.user!.username
         }
     })
         .then(([userApp]) =>

@@ -73,10 +73,9 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
                     method: normalizedMethod
                 },
                 defaults: {
-                    widgetId: 'unknown',
-                    serviceName: 'unkown',
-                    method: 'GET',
-                    script: ''
+                    widgetId,
+                    serviceName: normalizedServiceName,
+                    method: normalizedMethod
                 }
             })
                 // @ts-ignore TODO(RD-3119) Update typings when types for WidgetBackends model are ready

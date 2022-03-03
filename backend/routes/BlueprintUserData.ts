@@ -40,7 +40,7 @@ router.get('/layout/:blueprintId', (req, res) => {
 router.put('/layout/:blueprint', (req, res) => {
     db.BlueprintUserData.findOrCreate<BlueprintUserDataInstance>({
         where: { blueprintId: req.params.blueprint, username: req.user!.username },
-        defaults: { blueprintId: '', username: '', layout: {} }
+        defaults: { blueprintId: req.params.blueprint, username: req.user!.username, layout: {} }
     }).then(([blueprintData]) => blueprintData.update({ layout: req.body }).then(() => res.sendStatus(200)));
 });
 
