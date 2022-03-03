@@ -18,10 +18,10 @@ services:
       - 5671:5671
       - 53333:53333
       - 8000:8000
-    profiles: ["dev"]
+    profiles: ["prod"]
 
   cfy_manager_local:
-    image: cloudifyplatform/premium-cloudify-manager-aio:latest
+    image: cloudify-manager-aio:latest
     restart: "unless-stopped"
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -38,7 +38,7 @@ services:
       - 5671:5671
       - 53333:53333
       - 8000:8000
-    profiles: ["prod"]
+    profiles: ["dev"]
 
   postgres-cfy:
     image: postgres:latest

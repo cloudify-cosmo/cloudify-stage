@@ -20,12 +20,10 @@ up: docker-up backend-up frontend-up
 # $ make -j2 up-dev
 up-dev: docker-up-dev backend-up frontend-up
 docker-up:
-	docker-compose down cfy_manager_local
-	docker-compose --profile prod up -d
+	docker-compose --profile prod --profile dev stop && docker-compose --profile prod up -d
 
 docker-up-dev:
-	docker-compose down cfy_manager_local_dockerhub
-	docker-compose --profile dev up -d
+	docker-compose --profile prod --profile dev stop && docker-compose --profile dev up -d
 
 backend-up:
 	cd backend && npm run devStart
@@ -34,4 +32,4 @@ frontend-up:
 	npm run devServer
 
 down:
-	docker-compose stop
+	docker-compose --profile prod --profile dev stop

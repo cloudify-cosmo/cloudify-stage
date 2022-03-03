@@ -27,6 +27,25 @@ The following requirements should be met prior starting the application:
 
 To setup development environment and start the application follow the steps below.
 
+---
+### Automated way
+
+
+`make install` - It would do manual prerequired steps described above for you.
+
+`make install-dev` - It will do everything what command above and download latest dev docker image.
+
+`make -j2 up` - It would ran the backend and frontend in one console with public available recent docker image.
+
+`make -j2 up-dev` - It would ran the backend and frontend in one console and dev recent downloaded docker image.
+
+`make down` - it would stop the docker containers.
+
+`./scripts/scripts/loadLatestPremiumDockerImage.sh` - it would download and load into docker latest `cloudify-manager-aio` docker image.
+
+---
+### Manual way (useful in the case of errors or problems with automated way)
+
 1. **Configuration**
    
    * Create `conf/me.json` file basing on `conf/me.json.template`.
