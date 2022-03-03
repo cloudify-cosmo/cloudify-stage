@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import { db } from '../db/Connection';
 
 import { getConfig } from '../config';
@@ -13,7 +12,7 @@ router.use(bodyParser.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res, next) => {
     db.ClientConfigs.findOrCreate<ClientConfigsInstance>({
         where: { managerIp: getConfig().manager.ip },
         defaults: { managerIp: getConfig().manager.ip, config: { canUserEdit: true } }

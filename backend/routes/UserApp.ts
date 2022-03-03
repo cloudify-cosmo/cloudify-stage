@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';

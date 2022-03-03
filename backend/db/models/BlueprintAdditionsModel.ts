@@ -6,7 +6,7 @@ interface BlueprintAdditionsAttributes {
     imageUrl: string;
 }
 type BlueprintAdditionsCreationAttributes = Optional<BlueprintAdditionsAttributes, 'image' | 'imageUrl'>;
-export type BlueprintAdditionsInstance = Model<BlueprintAdditionsAttributes, BlueprintAdditionsAttributes> &
+export type BlueprintAdditionsInstance = Model<BlueprintAdditionsAttributes, BlueprintAdditionsCreationAttributes> &
     BlueprintAdditionsAttributes &
     CommonAttributes;
 

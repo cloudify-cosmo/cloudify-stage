@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import _ from 'lodash';
-import passport from 'passport';
 import { db } from '../db/Connection';
 import { authenticateWithToken } from '../auth/AuthMiddlewares';
 import type { BlueprintAdditionsInstance } from '../db/models/BlueprintAdditionsModel';

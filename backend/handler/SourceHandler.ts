@@ -21,6 +21,8 @@ const lookupYamlsDir = pathlib.join(os.tmpdir(), sourceConfig.lookupYamlsDir);
 
 const blueprintExtractDir = 'extracted';
 
+export type ScanningItem = { key: string; title: string; isDir: boolean; children?: ScanningItem[] };
+
 function isUnixHiddenPath(path) {
     // eslint-disable-next-line no-useless-escape
     return /(^|.\/)\.+[^\/\.]/g.test(path);
@@ -40,8 +42,7 @@ function scanRecursive(rootDir, scannedFileOrDirPath) {
         return null;
     }
 
-    type Item = { key: string; title: string; isDir: boolean; children?: typeof item[] };
-    const item: Item = {
+    const item: ScanningItem = {
         key: toRelativeUrl(pathlib.relative(rootDir, scannedFileOrDirPath)),
         title: name,
         isDir: false

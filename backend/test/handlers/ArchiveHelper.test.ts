@@ -13,7 +13,7 @@ describe('ArchiveHelper', () => {
     it('fetches external data with correct headers', () => {
         expect.assertions(1);
         const url = 'http://wp';
-        return saveDataFromUrl(url, '', {}).catch(() =>
+        return saveDataFromUrl(url, '').catch(() =>
             expect(request).toHaveBeenCalledWith(
                 'GET',
                 url,

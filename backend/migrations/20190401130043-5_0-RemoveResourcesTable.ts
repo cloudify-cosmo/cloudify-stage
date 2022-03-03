@@ -2,7 +2,7 @@ import ResourceTypes from '../db/types/ResourceTypes';
 import type { MigrationObject } from './common/types';
 
 export const { up, down }: MigrationObject = {
-    up: (queryInterface, Sequelize, logger) => {
+    up: (queryInterface, _Sequelize, logger) => {
         return queryInterface
             .dropTable('Resources', { cascade: true, logging: logger.info, benchmark: true })
             .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));

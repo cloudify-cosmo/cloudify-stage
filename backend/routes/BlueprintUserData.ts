@@ -1,6 +1,5 @@
 import yaml from 'js-yaml';
 import express from 'express';
-import passport from 'passport';
 import bodyParser from 'body-parser';
 import _ from 'lodash';
 

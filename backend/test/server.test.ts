@@ -15,7 +15,6 @@ jest.mock('vm2', () => {
 
 describe('Server', () => {
     it('should start', async () => {
-        // eslint-disable-next-line global-require
         const server = await serverStart;
         expect(server.listening).toBeTruthy();
         await server.close();

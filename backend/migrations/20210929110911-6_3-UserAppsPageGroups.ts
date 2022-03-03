@@ -43,7 +43,7 @@ export const { up, down }: MigrationObject = {
         return Promise.resolve();
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (_queryInterface, _Sequelize, logger) => {
         if (fs.existsSync(userTemplatesFolder))
             each(fs.readdirSync(userTemplatesFolder), templateFile => {
                 const templateFilePath = path.resolve(userTemplatesFolder, templateFile);

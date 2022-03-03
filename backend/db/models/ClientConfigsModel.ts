@@ -5,7 +5,7 @@ interface ClientConfigsAttributes {
     config: any;
 }
 type ClientConfigsCreationAttributes = ClientConfigsAttributes;
-export type ClientConfigsInstance = Model<ClientConfigsAttributes, ClientConfigsAttributes> &
+export type ClientConfigsInstance = Model<ClientConfigsAttributes, ClientConfigsCreationAttributes> &
     ClientConfigsAttributes &
     CommonAttributes;
 

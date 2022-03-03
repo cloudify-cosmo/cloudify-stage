@@ -6,7 +6,7 @@ interface BlueprintUserDataAttributes {
     layout: any;
 }
 type BlueprintUserDataCreationAttributes = BlueprintUserDataAttributes;
-export type BlueprintUserDataInstance = Model<BlueprintUserDataAttributes, BlueprintUserDataAttributes> &
+export type BlueprintUserDataInstance = Model<BlueprintUserDataAttributes, BlueprintUserDataCreationAttributes> &
     BlueprintUserDataAttributes &
     CommonAttributes;
 

@@ -194,7 +194,7 @@ export function deleteWidget(widgetId: string) {
     }).then(() => BackendHandler.removeWidgetBackend(widgetId));
 }
 
-export function installWidget(archiveUrl: string, username: string, req: Request) {
+export function installWidget(archiveUrl: string, _username: string, req: Request) {
     logger.debug('Installing widget from', archiveUrl || 'file');
 
     return ArchiveHelper.removeOldExtracts(widgetTempDir)

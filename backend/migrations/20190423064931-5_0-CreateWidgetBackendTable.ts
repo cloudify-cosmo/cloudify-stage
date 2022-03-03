@@ -21,7 +21,7 @@ export const { up, down }: MigrationObject = {
             );
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (queryInterface, _Sequelize, logger) => {
         return queryInterface
             .dropTable('WidgetBackends', { cascade: true, logging: logger.info, benchmark: true })
             .then(() =>

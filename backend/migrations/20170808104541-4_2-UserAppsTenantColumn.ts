@@ -32,7 +32,7 @@ export const { up, down }: MigrationObject = {
         return createTenantColumnInUserAppTable(queryInterface, Sequelize);
     },
 
-    down(queryInterface, Sequelize) {
+    down(queryInterface) {
         return removeTenantColumnInUserAppTable(queryInterface);
     }
 };
