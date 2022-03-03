@@ -5,7 +5,7 @@ import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
 
-const latestMigration = '20210929110911-6_3-UserAppsPageGroups.ts';
+const latestMigration = '20210929110911-6_3-UserAppsPageGroups.js';
 const userTemplatesFolder = getResourcePath('templates', true);
 const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
@@ -59,9 +59,9 @@ describe('Migration script', () => {
         });
     }
 
-    testMigrationUp('4.5.5', '20171011082922-4_2-UserAppsRoleColumnRemoval.ts');
-    testMigrationUp('4.6', '20171011082922-4_2-UserAppsRoleColumnRemoval.ts');
-    testMigrationUp('5.0.5', '20190423064931-5_0-CreateWidgetBackendTable.ts');
-    testMigrationUp('5.1', '20200123095213-5_1-CreateBlueprintUserData.ts');
-    testMigrationUp('6.0', '20210519093609-6_0-UserAppsManagerIpColumnRemoval.ts');
+    testMigrationUp('4.5.5', '20171011082922-4_2-UserAppsRoleColumnRemoval.js');
+    testMigrationUp('4.6', '20171011082922-4_2-UserAppsRoleColumnRemoval.js');
+    testMigrationUp('5.0.5', '20190423064931-5_0-CreateWidgetBackendTable.js');
+    testMigrationUp('5.1', '20200123095213-5_1-CreateBlueprintUserData.js');
+    testMigrationUp('6.0', '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js');
 });
