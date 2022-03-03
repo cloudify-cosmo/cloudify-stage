@@ -22,6 +22,7 @@ router.get('/layout/:blueprintId', (req, res) => {
             browseArchiveTree(req).then(data => {
                 const layoutFilePath = _.chain(data)
                     .get('children[0].children')
+                    // @ts-ignore FIXME: Property 'find' does not exist on type 'LoDashExplicitWrapper<any>'
                     .find({ title: 'info.yaml' })
                     .get('key')
                     .value();
