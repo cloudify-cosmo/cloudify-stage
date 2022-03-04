@@ -1,6 +1,6 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import axios, { AxiosRequestHeaders } from 'axios';
+import type { AxiosRequestHeaders } from 'axios';
 import _ from 'lodash';
 import { getConfig } from '../config';
 import { jsonRequest } from '../handler/ManagerHandler';

@@ -1,6 +1,5 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import axios from 'axios';
 import { getLogger } from '../handler/LoggerHandler';
 import { requestAndForwardResponse } from '../handler/RequestHandler';
 
@@ -12,7 +11,7 @@ interface GetContentQuery extends Record<string, string> {
 }
 
 function pipeRequest(
-    req: Request<any, any, any, GetContentQuery>,
+    _req: Request<any, any, any, GetContentQuery>,
     res: Response,
     _next: NextFunction,
     url: string,

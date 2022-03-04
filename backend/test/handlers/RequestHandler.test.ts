@@ -13,7 +13,7 @@ jest.mock('request', () => {
 describe('RequestHandler', () => {
     it('allows to send an HTTP request', () => {
         const mockRequest = request;
-        requestHandler('GET', 'http://test.url', undefined, noop, noop);
+        requestHandler('GET', 'http://test.url');
         expect(mockRequest).toHaveBeenCalledWith('http://test.url', { method: 'GET' });
         expect(mockRequest('').on).toHaveBeenNthCalledWith(1, 'error', noop);
         expect(mockRequest('').on).toHaveBeenNthCalledWith(2, 'response', noop);

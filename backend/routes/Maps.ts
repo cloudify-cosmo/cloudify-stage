@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import axios from 'axios';
 
 import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
