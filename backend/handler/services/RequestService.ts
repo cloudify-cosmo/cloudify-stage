@@ -1,5 +1,6 @@
-import type { CoreOptions } from 'request';
+import type { AxiosRequestConfig } from 'axios';
 import _ from 'lodash';
+import https from 'https';
 import { request } from '../RequestHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
 import { getUrlWithQueryString } from './common';
@@ -15,60 +16,28 @@ interface RequestOptions {
 
 export function call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions = {}) {
     const { params, body, parseResponse = true, headers, certificate } = requestOptions;
-    return new Promise((resolve, reject) => {
-        const options: CoreOptions | undefined = { headers: {} };
-        if (headers) {
-            options.headers = _.omit(headers, 'cert');
-        }
-        if (certificate) {
-            options.agentOptions = {
-                ca: certificate
-            };
-        }
-        if (body) {
-            options.json = body;
-            try {
-                const strData = JSON.stringify(body);
-                if (!options.headers) options.headers = {};
-                options.headers['content-length'] = Buffer.byteLength(strData);
-            } catch (error) {
-                throw new Error(`Invalid (non-json) payload data. Error: ${error}`);
-            }
-        }
 
-        request(
-            method,
-            getUrlWithQueryString(url, params),
-            options,
-            res => {
-                const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
-                let responseBody = '';
-                res.on('data', chunk => {
-                    responseBody += chunk;
-                });
-                res.on('end', () => {
-                    if (isSuccess) {
-                        if (parseResponse) {
-                            const contentType = _.toLower(res.headers['content-type']);
-                            if (contentType.indexOf('application/json') >= 0) {
-                                try {
-                                    responseBody = JSON.parse(responseBody);
-                                } catch (error) {
-                                    reject(`Invalid JSON response. Cannot parse. Data received: ${responseBody}`);
-                                }
-                            }
-                        }
-                        resolve(responseBody);
-                    } else {
-                        reject(`Status: ${res.statusCode} ${res.statusMessage}. Data received: ${responseBody}`);
-                    }
-                });
-            },
-            err => {
-                reject(err);
+    const options: AxiosRequestConfig | undefined = { headers: {} };
+    if (headers) {
+        options.headers = _.omit(headers, 'cert');
+    }
+    if (certificate) {
+        options.httpsAgent = new https.Agent({
+            ca: certificate
+        });
+    }
+    if (body) {
+        options.data = body;
+    }
+
+    return request(method, getUrlWithQueryString(url, params), options)
+        .then(res => res.data)
+        .catch(err => {
+            if (err.response) {
+                throw Error(`Status: ${err.status} ${err.statusText}. Data received: ${err.response.data}`);
             }
-        );
-    });
+            throw err;
+        });
 }
 
 export function doGet(url: string, requestOptions: RequestOptions) {

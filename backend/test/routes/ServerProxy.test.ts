@@ -2,7 +2,7 @@ import request from 'supertest';
 import nock from 'nock';
 
 import app from 'app';
-import { updateOptions } from 'handler/ManagerHandler';
+import { setManagerSpecificOptions } from 'handler/ManagerHandler';
 
 const mockApiUrl = 'https://raw.githubusercontent.com';
 const mockTimeout = 1000;
@@ -35,7 +35,7 @@ describe('/sp endpoint', () => {
         return request(app)
             .put(proxyBlueprintsUrl)
             .then(response => {
-                expect(updateOptions).toHaveBeenCalledWith(expect.any(Object), 'PUT');
+                expect(setManagerSpecificOptions).toHaveBeenCalledWith(expect.any(Object), 'PUT');
                 expect(response.statusCode).toBe(200);
             });
     });

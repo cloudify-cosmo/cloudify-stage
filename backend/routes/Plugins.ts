@@ -3,14 +3,13 @@ import type { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
-import request from 'request';
+import axios, { AxiosRequestHeaders } from 'axios';
 import archiver from 'archiver';
 import * as ManagerHandler from '../handler/ManagerHandler';
-import { getResponseJson } from '../handler/RequestHandler';
 
 import { getLogger } from '../handler/LoggerHandler';
+import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 
-const defaultedRequest = request.defaults({ encoding: null });
 const router = express.Router();
 const upload = multer();
 const logger = getLogger('Plugins');
@@ -35,16 +34,15 @@ function checkParams(req: Request, res: Response, next: NextFunction) {
 }
 
 function downloadFile(url: string) {
-    return new Promise<any>((resolve, reject) => {
-        defaultedRequest.get(url, (err, _res, body) => {
-            if (err) {
-                logger.error(`Failed downloading ${url}. ${err}`);
-                reject(err);
-            }
+    return axios(url, { responseType: 'arraybuffer' })
+        .then(({ data }) => {
             logger.info(`Finished downloading ${url}`);
-            resolve(body);
+            return data;
+        })
+        .catch(err => {
+            logger.error(`Failed downloading ${url}. ${err}`);
+            throw err;
         });
-    });
 }
 
 function zipFiles(
@@ -52,50 +50,36 @@ function zipFiles(
     wagonFilename: string,
     yamlFile: string | Buffer,
     iconFile: string | Buffer,
-    output: request.Request
+    onError: (err: any) => void
 ) {
-    return new Promise((resolve, reject) => {
-        const archive = archiver('zip');
-        archive.append(wagonFile, { name: wagonFilename });
-        archive.append(yamlFile, { name: 'plugin.yaml' });
-        if (iconFile) {
-            archive.append(iconFile, { name: 'icon.png' });
-        }
+    const archive = archiver('zip');
+    archive.append(wagonFile, { name: wagonFilename });
+    archive.append(yamlFile, { name: 'plugin.yaml' });
+    if (iconFile) {
+        archive.append(iconFile, { name: 'icon.png' });
+    }
 
-        archive.on('error', err => {
-            logger.error(`Failed archiving plugin. ${err}`);
-            reject(err);
-        });
+    archive.on('error', onError);
+    archive.finalize();
 
-        archive.on('end', () => {
-            logger.info('Finished archiving plugin');
-            resolve(null);
-        });
-
-        archive.pipe(output);
-        archive.finalize();
-    });
+    return archive;
 }
 
 router.get('/icons/:pluginId', (req, res) => {
-    const options = {};
-    ManagerHandler.updateOptions(options, 'get');
-    req.pipe(
-        defaultedRequest(
-            `${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`,
-            options
-        ).on(
-            'response',
-            // eslint-disable-next-line func-names
-            function (response) {
-                if (response.statusCode === 404) {
-                    res.status(200).end();
-                    // @ts-ignore TODO(RD-382) It will be removed, so no need to fix TS issue
-                    this.abort();
-                }
-            }
-        )
-    ).pipe(res);
+    const options = { headers: req.headers as AxiosRequestHeaders };
+    ManagerHandler.setManagerSpecificOptions(options, 'get');
+    requestAndForwardResponse(
+        `${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`,
+        res,
+        options
+    ).catch(err => {
+        if (err.response?.status === 404) {
+            res.status(200).end();
+        } else {
+            logger.error(err.message);
+            res.status(500).end();
+        }
+    });
 });
 
 router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res) => {
@@ -159,34 +143,26 @@ router.post<any, any, any, any, PostUploadQuery>(
 
         Promise.all(promises)
             .then(([wagonFile, yamlFile, iconFile]) => {
-                const uploadRequest = ManagerHandler.request(
-                    'post',
-                    `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`,
-                    {
-                        'authentication-token': req.headers['authentication-token'],
-                        tenant: req.headers.tenant
-                    },
-                    null,
-                    response => {
-                        getResponseJson(response)
-                            .then(data => {
-                                res.status(response.statusCode).send(data);
-                            })
-                            .catch(() => {
-                                res.sendStatus(response.statusCode);
-                            });
-                    },
-                    err => {
-                        res.status(500).send({ message: err });
-                    }
+                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
+                    res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
                 );
-
-                zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, uploadRequest).catch(err => {
-                    res.status(500).send({ message: `Failed zipping the plugin. ${err}` });
-                });
+                ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
+                    headers: {
+                        'authentication-token': req.headers['authentication-token'] as string,
+                        tenant: req.headers.tenant as string,
+                        'content-type': 'application/zip'
+                    },
+                    responseType: 'stream',
+                    data: zipStream,
+                    maxBodyLength: Infinity
+                })
+                    .then(getResponseForwarder(res))
+                    .catch(err =>
+                        err.response ? forward(err.response, res) : res.status(500).send({ message: err.message })
+                    );
             })
             .catch(err => {
-                res.status(500).send({ message: `Failed downloading files. ${err}` });
+                res.status(500).send({ message: `Failed downloading files. ${err.message}` });
             });
     }
 );

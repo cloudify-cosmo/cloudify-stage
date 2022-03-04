@@ -5,6 +5,7 @@ import pathlib from 'path';
 import sanitize from 'sanitize-filename';
 import decompress from 'decompress';
 import multer from 'multer';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as ManagerHandler from './ManagerHandler';
 import * as RequestHandler from './RequestHandler';
 import { getLogger } from './LoggerHandler';
@@ -75,7 +76,7 @@ export function saveDataFromUrl(url, targetDir, req) {
         let getRequest = null;
         const onErrorFetch = reject;
 
-        const onSuccessFetch = response => {
+        const onSuccessFetch = (response: AxiosResponse) => {
             let archiveFile = extractFilename(response.headers['content-disposition']);
 
             logger.debug('Filename extracted from content-disposition', archiveFile);
@@ -105,7 +106,7 @@ export function saveDataFromUrl(url, targetDir, req) {
 
             logger.debug('Streaming to file', archivePath);
 
-            response.pipe(
+            response.data.pipe(
                 fs
                     .createWriteStream(archivePath)
                     .on('error', reject)
@@ -116,16 +117,14 @@ export function saveDataFromUrl(url, targetDir, req) {
             );
         };
 
+        const options: AxiosRequestConfig = { headers: HEADERS, responseType: 'stream' };
         if (isExternalUrl(archiveUrl)) {
-            const options = { options: { headers: HEADERS } };
-            getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
+            getRequest = RequestHandler.request('GET', archiveUrl, options);
         } else {
-            getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, null, onSuccessFetch, onErrorFetch);
+            getRequest = ManagerHandler.request('GET', archiveUrl, options);
         }
 
-        if (req) {
-            req.pipe(getRequest);
-        }
+        getRequest.then(onSuccessFetch).catch(onErrorFetch);
     });
 }
 

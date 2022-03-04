@@ -81,7 +81,7 @@ export function getTokenViaSamlResponse(samlResponse: string) {
 
 export function getAndCacheConfig(token?: string) {
     return jsonRequest<ConfigResponse>('GET', '/config', {
-        'Authentication-Token': token
+        'Authentication-Token': token as string
     }).then(config => {
         authorizationCache = config.authorization;
         logger.debug('Authorization config cached successfully.');
