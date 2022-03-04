@@ -33,7 +33,7 @@
     "archiver": "^2.1.1",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",
-    "cloudify-ui-common": "https://github.com/cloudify-cosmo/cloudify-ui-common/raw/RD-3119/cloudify-ui-common-5.2.0.tgz",
+    "cloudify-ui-common": "^6.0.0",
     "cookie-parser": "^1.4.3",
     "cross-env": "^5.2.0",
     "decompress": "^4.2.1",
