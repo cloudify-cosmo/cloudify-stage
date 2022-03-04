@@ -31,7 +31,7 @@ To setup development environment and start the application follow the steps belo
 ### Automated way
 
 
-`make install` - It would do manual prerequired steps described above for you.
+`make install` - It would do manual prerequired steps for you (described below).
 
 `make install-dev` - It will do everything what command above and download latest dev docker image.
 
