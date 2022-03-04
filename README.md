@@ -33,13 +33,13 @@ To setup development environment and start the application follow the steps belo
 
 `make install` - It would do manual prerequired steps for you (described below).
 
-`make install-dev` - It will do everything what command above and download latest dev docker image.
+`make install-dev` - It would do everything what command above and download latest dev docker image.
 
 `make -j2 up` - It would ran the backend and frontend in one console with public available recent docker image.
 
 `make -j2 up-dev` - It would ran the backend and frontend in one console and dev recent downloaded docker image.
 
-`make down` - it would stop the docker containers.
+`make down` - It would stop the docker containers.
 
 `./scripts/loadLatestPremiumDockerImage.sh` - it would download and load into docker the latest `cloudify-manager-aio` docker image.
 
