@@ -1,13 +1,12 @@
 import type { CommonAttributes, Model, ModelFactory } from './types';
 
-interface ClientConfigsAttributes {
+interface ClientConfigsAttributes extends CommonAttributes {
     managerIp: string;
     config: any;
 }
 type ClientConfigsCreationAttributes = ClientConfigsAttributes;
 export type ClientConfigsInstance = Model<ClientConfigsAttributes, ClientConfigsCreationAttributes> &
-    ClientConfigsAttributes &
-    CommonAttributes;
+    ClientConfigsAttributes;
 
 const ClientConfigsModelFactory: ModelFactory<ClientConfigsInstance> = (sequelize, dataTypes) =>
     sequelize.define<ClientConfigsInstance>(

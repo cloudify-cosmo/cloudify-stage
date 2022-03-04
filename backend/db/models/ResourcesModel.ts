@@ -1,16 +1,14 @@
 import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
 import ResourceTypes, { ResourceType } from '../types/ResourceTypes';
 
-interface ResourcesAttributes {
+interface ResourcesAttributes extends CommonAttributes {
     resourceId: string;
     type: ResourceType;
     creator: string;
     data: any;
 }
 type ResourcesCreationAttributes = Optional<ResourcesAttributes, 'creator' | 'data'>;
-export type ResourcesInstance = Model<ResourcesAttributes, ResourcesCreationAttributes> &
-    ResourcesAttributes &
-    CommonAttributes;
+export type ResourcesInstance = Model<ResourcesAttributes, ResourcesCreationAttributes> & ResourcesAttributes;
 
 const ResourcesModelFactory: ModelFactory<ResourcesInstance> = (sequelize, dataTypes) =>
     sequelize.define<ResourcesInstance>(

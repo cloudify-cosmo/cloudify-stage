@@ -1,14 +1,13 @@
 import type { CommonAttributes, Model, ModelFactory } from './types';
 
-interface BlueprintUserDataAttributes {
+interface BlueprintUserDataAttributes extends CommonAttributes {
     blueprintId: string;
     username: string;
     layout: any;
 }
 type BlueprintUserDataCreationAttributes = BlueprintUserDataAttributes;
 export type BlueprintUserDataInstance = Model<BlueprintUserDataAttributes, BlueprintUserDataCreationAttributes> &
-    BlueprintUserDataAttributes &
-    CommonAttributes;
+    BlueprintUserDataAttributes;
 
 const BlueprintUserDataModelFactory: ModelFactory<BlueprintUserDataInstance> = (sequelize, dataTypes) =>
     sequelize.define<BlueprintUserDataInstance>(

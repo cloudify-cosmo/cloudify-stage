@@ -1,7 +1,7 @@
 import type { CommonAttributes, Model, ModelFactory } from './types';
 import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
 
-interface UserAppsAttributes {
+interface UserAppsAttributes extends CommonAttributes {
     username: string;
     appDataVersion: number;
     mode: Mode;
@@ -9,9 +9,7 @@ interface UserAppsAttributes {
     appData: { pages: any[] };
 }
 type UserAppsCreationAttributes = UserAppsAttributes;
-export type UserAppsInstance = Model<UserAppsAttributes, UserAppsCreationAttributes> &
-    UserAppsAttributes &
-    CommonAttributes;
+export type UserAppsInstance = Model<UserAppsAttributes, UserAppsCreationAttributes> & UserAppsAttributes;
 
 const UserAppsModelFactory: ModelFactory<UserAppsInstance> = (sequelize, dataTypes) =>
     sequelize.define<UserAppsInstance>(

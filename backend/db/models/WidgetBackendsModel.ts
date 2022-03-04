@@ -1,6 +1,6 @@
 import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
 
-interface WidgetBackendsAttributes {
+interface WidgetBackendsAttributes extends CommonAttributes {
     widgetId: string;
     serviceName: string;
     method: string;
@@ -8,8 +8,7 @@ interface WidgetBackendsAttributes {
 }
 type WidgetBackendsCreationAttributes = Optional<WidgetBackendsAttributes, 'script'>;
 export type WidgetBackendsInstance = Model<WidgetBackendsAttributes, WidgetBackendsCreationAttributes> &
-    WidgetBackendsAttributes &
-    CommonAttributes;
+    WidgetBackendsAttributes;
 
 const WidgetBackendsModelFactory: ModelFactory<WidgetBackendsInstance> = (sequelize, dataTypes) =>
     sequelize.define(
