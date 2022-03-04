@@ -41,7 +41,7 @@ To setup development environment and start the application follow the steps belo
 
 `make down` - it would stop the docker containers.
 
-`./scripts/scripts/loadLatestPremiumDockerImage.sh` - it would download and load into docker latest `cloudify-manager-aio` docker image.
+`./scripts/loadLatestPremiumDockerImage.sh` - it would download and load into docker the latest `cloudify-manager-aio` docker image.
 
 ---
 ### Manual way (useful in the case of errors or problems with automated way)
