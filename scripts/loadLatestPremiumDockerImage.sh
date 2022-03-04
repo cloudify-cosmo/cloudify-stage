@@ -9,12 +9,12 @@ PACKAGE_VERSION=$(cat package.json \
   | awk -F: '{ print $2 }' \
   | sed 's/[", ]//g');
 
-PACKAGE_VERSION_WITH_BACKSLESH="${PACKAGE_VERSION/-/\/}";
+PACKAGE_VERSION_WITH_BACKSLASH="${PACKAGE_VERSION/-/\/}";
 
 FILENAME="cloudify-manager-aio-docker-${PACKAGE_VERSION}-x86_64.tar";
 
 # we are getting premium image version URL
-LINK="https://repository.cloudifysource.org/cloudify/${PACKAGE_VERSION_WITH_BACKSLESH}-release/${FILENAME}";
+LINK="https://repository.cloudifysource.org/cloudify/${PACKAGE_VERSION_WITH_BACKSLASH}-release/${FILENAME}";
 # premium images addresses:
 # https://github.com/cloudify-cosmo/cloudify-premium/blob/master/packages-urls/docker-image-release.yaml
 # community image addresses:
