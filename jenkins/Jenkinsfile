@@ -46,6 +46,7 @@ pipeline {
             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE'){
               container('node'){
                 dir("${STAGE_DIR}") {
+                  sh 'npm --v'
                   echo 'Run npm production dependencies security audit'
                   sh 'npm run audit'
                 }
