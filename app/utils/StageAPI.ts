@@ -6,6 +6,7 @@ import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';
 import type * as StageHooks from './hooks';
+import type { WidgetDefinition } from '../../backend/routes/Templates.types';
 import type GenericConfigType from './GenericConfig';
 import type StageUtils from './stageUtils';
 import type WidgetContext from './Context';
@@ -48,13 +49,9 @@ interface StageToolbox extends StageWidgetlessToolbox {
 }
 export type { StageToolbox as Toolbox, StageWidgetlessToolbox as WidgetlessToolbox };
 
-interface StageWidget<Configuration = Record<string, unknown>> {
+interface StageWidget<Configuration = Record<string, unknown>>
+    extends Omit<WidgetDefinition, 'configuration' | 'definition'> {
     id: string;
-    name: string;
-    height: number;
-    width: number;
-    x: number;
-    y: number;
     configuration: Configuration;
     // TODO(RD-1649): consider renaming the field to resolvedDefinition
     definition: StageWidgetDefinition;

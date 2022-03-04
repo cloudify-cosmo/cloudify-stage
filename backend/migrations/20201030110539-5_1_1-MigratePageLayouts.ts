@@ -1,14 +1,12 @@
 import fs from 'fs-extra';
 import path from 'path';
 import _ from 'lodash';
-import { LAYOUT } from '../consts';
 import { getResourcePath } from '../utils';
 import UserApps from '../db/models/UserAppsModel';
 import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
+import type { LayoutSection, LayoutSectionType, PageFileDefinition } from '../routes/Templates.types';
 
-type LayoutSectionType = typeof LAYOUT.TABS | typeof LAYOUT.WIDGETS;
-type LayoutSection = { type?: LayoutSectionType; content?: any };
-type NewPageData = { layout?: LayoutSection[] };
+type NewPageData = Partial<PageFileDefinition>;
 type OldPageData = Record<LayoutSectionType, any>;
 type PageData = OldPageData & NewPageData;
 
@@ -21,6 +19,7 @@ function migrate(queryInterface: QueryInterface, Sequelize: DataTypes, pageProce
         .then(async results => {
             for (let i = 0; i < results.length; i += 1) {
                 const userAppRow = results[i];
+                // @ts-ignore Not possible to handle types properly as UserApps model is already in the migrated shape
                 _.each(userAppRow.appData.pages, pageProcessor);
                 userAppRow.appData = { ...userAppRow.appData };
                 // NOTE: It's intentional to await before processing next row
@@ -53,20 +52,20 @@ export const { up, down }: MigrationObject = {
 
             pageData.layout = [];
 
-            migrateLayoutSection(LAYOUT.WIDGETS);
-            migrateLayoutSection(LAYOUT.TABS);
+            migrateLayoutSection('widgets');
+            migrateLayoutSection('tabs');
         });
     },
     // @ts-ignore TODO: Function returns void instead of Promise<any>
     down: (queryInterface, Sequelize) => {
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             if (pageData?.layout?.length) {
-                let layoutSection = pageData.layout![0];
-                pageData[layoutSection.type!] = layoutSection?.content;
+                let layoutSection: LayoutSection | Record<string, never> = pageData.layout![0];
+                pageData[layoutSection.type] = layoutSection.content;
 
-                if (layoutSection?.type === LAYOUT.WIDGETS) {
+                if (layoutSection.type === 'widgets') {
                     layoutSection = _.nth(pageData.layout, 1) || {};
-                    if (layoutSection.type === LAYOUT.TABS) pageData[layoutSection.type] = layoutSection.content;
+                    if (layoutSection.type === 'tabs') pageData[layoutSection.type] = layoutSection.content;
                 }
             }
 

@@ -1,12 +1,13 @@
 import type { CommonAttributes, Model, ModelFactory } from './types';
 import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
+import type { PageFileDefinition } from '../../routes/Templates.types';
 
 interface UserAppsAttributes extends CommonAttributes {
     username: string;
     appDataVersion: number;
     mode: Mode;
     tenant: string;
-    appData: { pages: any[] };
+    appData: { pages: PageFileDefinition[] };
 }
 type UserAppsCreationAttributes = UserAppsAttributes;
 export type UserAppsInstance = Model<UserAppsAttributes, UserAppsCreationAttributes> & UserAppsAttributes;
