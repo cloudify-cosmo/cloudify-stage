@@ -20,7 +20,7 @@ export default function BlueprintsCatalog({
 
     const blueprintsItems = data.items.map(item => {
         return (
-            <Grid.Column key={item.id}>
+            <Grid.Column key={item.id} width="3">
                 <DataSegment.Item
                     selected={item.isSelected}
                     className={`fullHeight ${item.id}`}
@@ -149,7 +149,7 @@ export default function BlueprintsCatalog({
     let row: ReactElement[] = [];
     _.each(blueprintsItems, (blueprintItem, index) => {
         row.push(blueprintItem);
-        if ((index + 1) % 3 === 0) {
+        if ((index + 1) % 5 === 0) {
             blueprintsRows.push(
                 <div key={blueprintsRows.length + 1} className="three column row">
                     {row}
