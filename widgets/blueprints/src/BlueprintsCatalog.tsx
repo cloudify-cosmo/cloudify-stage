@@ -52,37 +52,10 @@ export default function BlueprintsCatalog({
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
                                 <Header as="h5" icon textAlign="left">
-                                    Created
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.created_at}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Updated
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.updated_at}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
                                     Creator
                                 </Header>
                             </Grid.Column>
                             <Grid.Column width="9">{item.created_by}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Main Blueprint File
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.main_file_name}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
