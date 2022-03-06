@@ -47,7 +47,18 @@ export default function BlueprintsCatalog({
                             </Grid.Column>
                         </Grid.Row>
 
-                        <Grid.Column width="16">{item.description}</Grid.Column>
+                        <Grid.Column
+                            width="16"
+                            style={{
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                maxWidth: 400
+                            }}
+                            title={item.description}
+                        >
+                            {item.description}
+                        </Grid.Column>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="7">
