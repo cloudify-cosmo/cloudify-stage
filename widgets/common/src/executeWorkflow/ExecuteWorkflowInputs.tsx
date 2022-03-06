@@ -75,10 +75,15 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     return (
         <>
             {!_.isEmpty(baseWorkflowInputs) && (
-                <YamlFileButton onChange={onYamlFileChange} dataType="execution parameters" fileLoading={fileLoading} />
+                <YamlFileButton
+                    onChange={onYamlFileChange}
+                    dataType="execution parameters"
+                    fileLoading={fileLoading}
+                    iconButton
+                />
             )}
-            <InputsHeader header={t('paramsHeader')} compact />
-            {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} />}
+            <InputsHeader header={t('paramsHeader')} compact iconButton />
+            {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} style={{ marginTop: 65 }} />}
 
             {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
             {showInstallOptions && (
