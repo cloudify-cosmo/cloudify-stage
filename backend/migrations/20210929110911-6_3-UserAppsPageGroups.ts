@@ -1,11 +1,12 @@
-const { each, map } = require('lodash');
-const fs = require('fs-extra');
-const path = require('path');
+import { each, map } from 'lodash';
 
-const UserApp = require('../db/models/UserAppsModel');
-const { userTemplatesFolder } = require('../handler/templates/TemplatesHandler');
+import fs from 'fs-extra';
+import path from 'path';
+import UserApp from '../db/models/UserAppsModel';
+import { userTemplatesFolder } from '../handler/templates/TemplatesHandler';
+import type { MigrationObject } from './common/types';
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize, logger) => {
         UserApp(queryInterface.sequelize, Sequelize)
             .findAll()
@@ -38,9 +39,11 @@ module.exports = {
                 }));
                 fs.writeJsonSync(templateFilePath, templateFileContent, { spaces: 2, EOL: '\n' });
             });
+
+        return Promise.resolve();
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (_queryInterface, _Sequelize, logger) => {
         if (fs.existsSync(userTemplatesFolder))
             each(fs.readdirSync(userTemplatesFolder), templateFile => {
                 const templateFilePath = path.resolve(userTemplatesFolder, templateFile);
@@ -55,5 +58,7 @@ module.exports = {
                 templateFileContent.pages = map(templateFileContent.pages, 'id');
                 fs.writeJsonSync(templateFilePath, templateFileContent, { spaces: 2, EOL: '\n' });
             });
+
+        return Promise.resolve();
     }
 };

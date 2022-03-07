@@ -1,10 +1,11 @@
-const ResourceTypes = require('../db/types/ResourceTypes');
+import ResourceTypes from '../db/types/ResourceTypes';
+import type { MigrationObject } from './common/types';
 
-module.exports = {
-    up: (queryInterface, Sequelize, logger) => {
+export const { up, down }: MigrationObject = {
+    up: (queryInterface, _Sequelize, logger) => {
         return queryInterface
             .dropTable('Resources', { cascade: true, logging: logger.info, benchmark: true })
-            .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
+            .then(() => queryInterface.removeIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));
     },
 
     down: (queryInterface, Sequelize) => {
@@ -20,6 +21,6 @@ module.exports = {
                 createdAt: { type: Sequelize.DATE, allowNull: false },
                 updatedAt: { type: Sequelize.DATE, allowNull: false }
             })
-            .then(() => queryInterface.addIndex('Resources', ['resourceId', 'type'], { indicesType: 'UNIQUE' }));
+            .then(() => queryInterface.addIndex('Resources', ['resourceId', 'type'], { type: 'UNIQUE' }));
     }
 };

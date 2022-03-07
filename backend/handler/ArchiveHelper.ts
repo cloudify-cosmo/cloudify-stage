@@ -12,7 +12,11 @@ import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('ArchiveHelper');
 
-export function saveMultipartData(req, targetDir, multipartId) {
+export function saveMultipartData(
+    req,
+    targetDir,
+    multipartId
+): Promise<{ archiveFolder: string; archiveFile: string }> {
     const storage = multer.diskStorage({
         destination(request, file, cb) {
             logger.debug('Saving file on disk');
@@ -32,7 +36,7 @@ export function saveMultipartData(req, targetDir, multipartId) {
 
     const upload = multer({ storage }).single(multipartId);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<{ archiveFolder: string; archiveFile: string }>((resolve, reject) => {
         upload(req, null, err => {
             if (err) {
                 reject(err);
@@ -66,7 +70,7 @@ function extractFilename(contentDisposition) {
     return match[1];
 }
 
-export function saveDataFromUrl(url, targetDir, req) {
+export function saveDataFromUrl(url, targetDir, req?: Request) {
     return new Promise((resolve, reject) => {
         const HEADERS = { 'User-Agent': 'Node.js' };
         const archiveUrl = decodeURIComponent(url.trim());

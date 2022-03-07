@@ -1,4 +1,6 @@
-function createResourcesModel(queryInterface, Sequelize) {
+import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
+
+function createResourcesModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('Resources', {
             id: {
@@ -23,12 +25,12 @@ function createResourcesModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('Resources', ['resourceId', 'type'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up(queryInterface, Sequelize) {
         return createResourcesModel(queryInterface, Sequelize);
     },

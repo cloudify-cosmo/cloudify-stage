@@ -1,11 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
 import bodyParser from 'body-parser';
-import passport from 'passport';
 import { db } from '../db/Connection';
 
 import { getConfig } from '../config';
+import type { ClientConfigsInstance } from '../db/models/ClientConfigsModel';
 
 const router = express.Router();
 
@@ -14,10 +12,10 @@ router.use(bodyParser.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get('/', (req, res, next) => {
-    db.ClientConfigs.findOrCreate({
+router.get('/', (_req, res, next) => {
+    db.ClientConfigs.findOrCreate<ClientConfigsInstance>({
         where: { managerIp: getConfig().manager.ip },
-        defaults: { config: { canUserEdit: true } }
+        defaults: { managerIp: getConfig().manager.ip, config: { canUserEdit: true } }
     })
         .then(([clientConfig]) => {
             res.send(clientConfig);
@@ -26,9 +24,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    db.ClientConfigs.findOrCreate({
+    db.ClientConfigs.findOrCreate<ClientConfigsInstance>({
         where: { managerIp: getConfig().manager.ip },
-        defaults: { config: { canUserEdit: true } }
+        defaults: { managerIp: getConfig().manager.ip, config: { canUserEdit: true } }
     })
         .then(([clientConfig]) => {
             clientConfig.update({ config: req.body }, { fields: ['config'] }).then(c => {
