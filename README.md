@@ -30,18 +30,32 @@ To setup development environment and start the application follow the steps belo
 ---
 ### Automated way
 
+#### Run the project with public released latest docker image
+```bash
+$ make install # configure project
+$ make -j2 up-public # run the project with development docker image
+```
 
-`make install` - It would do manual prerequired steps for you (described below).
+#### Run the project with development docker laterst image
+```bash
+$ make install # configure project
+$ make install-dev # download latest docker dev image
+$ make -j2 up-public # run the project with public docker image
+```
 
-`make install-dev` - It would do everything what command above and download latest dev docker image.
+#### Commands description
 
-`make -j2 up` - It would ran the backend and frontend in one console with public available recent docker image.
+`make install` - It would do prerequired manual steps for you (described below).
 
-`make -j2 up-dev` - It would ran the backend and frontend in one console and dev recent downloaded docker image.
+`make install-dev` - It would download latest dev docker image.
+
+`make -j2 up-public` - It would ran the backend and frontend and latest public available docker image and postgres database.
+
+`make -j2 up-dev` - It would ran the backend and frontend and development latest downloaded docker image and postgres database.
 
 `make down` - It would stop the docker containers.
 
-`./scripts/loadLatestPremiumDockerImage.sh` - it would download and load into docker the latest `cloudify-manager-aio` docker image.
+The commands are farther self-described inside of `Makefile`.
 
 ---
 ### Manual way (useful in the case of errors or problems with automated way)
