@@ -1,11 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 import _ from 'lodash';
-import passport from 'passport';
 import { db } from '../db/Connection';
 import { authenticateWithToken } from '../auth/AuthMiddlewares';
+import type { BlueprintAdditionsInstance } from '../db/models/BlueprintAdditionsModel';
 
 const router = express.Router();
 
@@ -19,7 +18,7 @@ router.use(
 // This path returns image resource so there is no point to secure that
 // (if yes all credentials should be passed in the query string)
 router.get('/image/:blueprint', (req, res, next) => {
-    db.BlueprintAdditions.findOne({ where: { blueprintId: req.params.blueprint } })
+    db.BlueprintAdditions.findOne<BlueprintAdditionsInstance>({ where: { blueprintId: req.params.blueprint } })
         .then(additions => {
             if (additions) {
                 if (additions.image) {
@@ -38,8 +37,8 @@ router.get('/image/:blueprint', (req, res, next) => {
         .catch(next);
 });
 
-router.post('/image/:blueprint', authenticateWithToken, (req, res, next) => {
-    db.BlueprintAdditions.findOrCreate({ where: { blueprintId: req.params.blueprint } })
+router.post<any, any, any, any, { imageUrl?: string }>('/image/:blueprint', authenticateWithToken, (req, res, next) => {
+    db.BlueprintAdditions.findOrCreate<BlueprintAdditionsInstance>({ where: { blueprintId: req.params.blueprint } })
         .then(([blueprintAdditions]) => {
             blueprintAdditions
                 .update(
@@ -54,7 +53,7 @@ router.post('/image/:blueprint', authenticateWithToken, (req, res, next) => {
 });
 
 router.delete('/image/:blueprint', authenticateWithToken, (req, res, next) => {
-    db.BlueprintAdditions.destroy({ where: { blueprintId: req.params.blueprint } })
+    db.BlueprintAdditions.destroy<BlueprintAdditionsInstance>({ where: { blueprintId: req.params.blueprint } })
         .then(() => {
             res.end(JSON.stringify({ status: 'ok' }));
         })
