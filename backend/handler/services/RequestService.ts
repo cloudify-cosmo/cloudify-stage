@@ -17,7 +17,10 @@ interface RequestOptions {
 export function call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions = {}) {
     const { params, body, parseResponse = true, headers, certificate } = requestOptions;
 
-    const options: AxiosRequestConfig | undefined = { headers: {} };
+    const options: AxiosRequestConfig = { headers: {} };
+    if (!parseResponse) {
+        options.responseType = 'arraybuffer';
+    }
     if (headers) {
         options.headers = _.omit(headers, 'cert');
     }

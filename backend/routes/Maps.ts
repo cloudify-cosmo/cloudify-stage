@@ -2,10 +2,10 @@ import _ from 'lodash';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 
+import axios from 'axios';
 import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
 import { getMode, MODE_COMMUNITY } from '../serverSettings';
-import { requestAndForwardResponse } from '../handler/RequestHandler';
 
 const logger = getLogger('Maps');
 const router = express.Router();
@@ -27,11 +27,17 @@ router.get('/:z/:x/:y/:r?', (req, res) => {
 
     logger.debug(`Fetching map tiles from ${tilesUrlTemplate}, x=${x}, y=${y}, z=${z}, r='${r}'.`);
 
-    requestAndForwardResponse(url, res).catch(err => {
-        const message = 'Cannot fetch map tiles.';
-        logger.error(message, err);
-        res.status(500).send({ message });
-    });
+    axios(url, { responseType: 'stream' })
+        .then(axiosResponse => {
+            delete axiosResponse.headers['strict-transport-security'];
+            res.status(axiosResponse.status).set(axiosResponse.headers);
+            axiosResponse.data.pipe(res);
+        })
+        .catch(err => {
+            const message = 'Cannot fetch map tiles.';
+            logger.error(message, err);
+            res.status(500).send({ message });
+        });
 });
 
 export default router;

@@ -1,10 +1,9 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import { request as requestHandler, forward } from 'handler/RequestHandler';
 import { Response } from 'express';
 
-jest.mock('axios', () => {
-    return () => 'responseMock';
-});
+jest.mock('axios', () => jest.fn(() => 'responseMock'));
 
 describe('RequestHandler', () => {
     it('allows to send an HTTP request', () => {

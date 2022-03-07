@@ -9,7 +9,7 @@ const mockTimeout = 1000;
 
 jest.mock('handler/ManagerHandler', () => ({
     getApiUrl: () => mockApiUrl,
-    updateOptions: jest.fn(options => {
+    setManagerSpecificOptions: jest.fn(options => {
         options.timeout = mockTimeout;
     })
 }));
@@ -48,7 +48,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Manager is not available')
+                    message: 'Requested URL: /blueprints Manager is not available'
                 });
             });
     });
@@ -65,7 +65,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Request timed out')
+                    message: 'Requested URL: /blueprints ETIMEDOUT'
                 });
             });
     });
@@ -81,7 +81,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Connected to the Manager but timed out')
+                    message: 'Requested URL: /blueprints ECONNABORTED timeout of 1000ms exceeded'
                 });
             });
     });

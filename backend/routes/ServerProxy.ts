@@ -28,7 +28,8 @@ async function proxyRequest(req: Request, res: Response) {
         if (err.response) {
             forward(err.response, res);
         } else {
-            res.status(500).send({ message: `${serverUrl} ${err.message}` });
+            const message = `${err.code ?? ''} ${err.message ?? ''}`.trim() || 'Manager is not available';
+            res.status(500).send({ message: `Requested URL: ${serverUrl} ${message}` });
         }
     });
 }

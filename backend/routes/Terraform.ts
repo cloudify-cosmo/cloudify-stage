@@ -21,7 +21,7 @@ router.post('/resources', (req, res) => {
     const { zipUrl } = req.query;
 
     axios(zipUrl as string, {
-        responseEncoding: undefined,
+        responseType: 'arraybuffer',
         headers: { Authorization: req.get('Authorization') as string }
     })
         .then(response =>
