@@ -1,28 +1,26 @@
-import request from 'request';
-import { noop } from 'lodash';
-import { request as requestHandler, getResponseJson } from 'handler/RequestHandler';
+import axios, { AxiosResponse } from 'axios';
+import { request as requestHandler, forward } from 'handler/RequestHandler';
+import { Response } from 'express';
 
-jest.mock('request', () => {
-    const mockRequest: { pipe: () => typeof mockRequest; on: () => typeof mockRequest } = {
-        pipe: jest.fn(),
-        on: jest.fn(() => mockRequest)
-    };
-    return jest.fn(() => mockRequest);
+jest.mock('axios', () => {
+    return () => 'responseMock';
 });
 
 describe('RequestHandler', () => {
     it('allows to send an HTTP request', () => {
-        const mockRequest = request;
-        requestHandler('GET', 'http://test.url');
-        expect(mockRequest).toHaveBeenCalledWith('http://test.url', { method: 'GET' });
-        expect(mockRequest('').on).toHaveBeenNthCalledWith(1, 'error', noop);
-        expect(mockRequest('').on).toHaveBeenNthCalledWith(2, 'response', noop);
+        const result = requestHandler('GET', 'http://test.url');
+        expect(axios).toHaveBeenCalledWith('http://test.url', { method: 'GET' });
+        expect(result).toEqual('responseMock');
     });
 
-    it('allows to parse JSON response', () => {
-        const res = <request.Response>(<unknown>{ on: jest.fn() });
-        getResponseJson(res);
-        expect(res.on).toHaveBeenNthCalledWith(1, 'data', expect.any(Function));
-        expect(res.on).toHaveBeenNthCalledWith(2, 'end', expect.any(Function));
+    it('allows to forward axios response', () => {
+        const axiosResponse = { data: { pipe: jest.fn() } } as AxiosResponse;
+        const expressResponse = {
+            status: (_code: number) => expressResponse,
+            set: jest.fn() as (_field: any) => Response
+        } as Response;
+        forward(axiosResponse, expressResponse);
+        expect(expressResponse.set).toHaveBeenCalledWith(axiosResponse.headers);
+        expect(axiosResponse.data.pipe).toHaveBeenCalledWith(expressResponse);
     });
 });

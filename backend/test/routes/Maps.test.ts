@@ -1,14 +1,14 @@
 import request from 'supertest';
 import app from 'app';
-import mockRequest from 'request';
-import type { Response } from 'request';
+import axios from 'axios';
 import type { Response as ExpressReponse } from 'express';
+import type { AxiosResponse } from 'axios';
 
 jest.mock('handler/ManagerHandler');
 
-jest.mock('request', () => {
+jest.mock('axios', () => {
     const mock = jest.fn(() => {
-        const response: Partial<Response> = {
+        const response: Partial<AxiosResponse> = {
             headers: {
                 'content-type': 'image/png',
                 'content-disposition': 'attachment',
@@ -65,8 +65,8 @@ describe('/maps endpoint', () => {
                 expect(response.status).toBe(200);
                 expect(response.headers['strict-transport-security']).toBe(undefined);
 
-                expect(mockRequest).toHaveBeenCalledTimes(1);
-                const proxiedUrl = (<jest.Mock>(<unknown>mockRequest)).mock.calls[0][0];
+                expect(axios).toHaveBeenCalledTimes(1);
+                const proxiedUrl = (<jest.Mock>(<unknown>axios)).mock.calls[0][0];
                 expect(proxiedUrl).toEqual(expect.stringContaining('stadiamaps.com'));
             });
     });
