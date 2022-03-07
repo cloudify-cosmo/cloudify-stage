@@ -1,4 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Server } from 'http';
 import app from './app';
 import { SERVER_HOST, SERVER_PORT } from './consts';
 import DBConnection from './db/Connection';
@@ -37,4 +37,4 @@ export default DBConnection.init()
         logger.error(`Server initialization failed`, error);
         // eslint-disable-next-line no-process-exit
         process.exit(1);
-    });
+    }) as Promise<Server>;
