@@ -1,4 +1,3 @@
-import React from 'react';
 import { shallow } from 'enzyme';
 
 import InputsUtils from 'common/src/InputsUtils';

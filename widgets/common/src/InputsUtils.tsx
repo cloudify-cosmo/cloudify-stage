@@ -339,10 +339,8 @@ class InputsUtils {
                         </div>
                     </div>
                 );
-            case 'textarea':
-                const {
-                    display: { rows = InputsUtils.DEFAULT_TEXTAREA_ROWS }
-                } = input;
+            case 'textarea': {
+                const rows = input?.display?.rows ?? InputsUtils.DEFAULT_TEXTAREA_ROWS;
 
                 return (
                     <div style={{ position: 'relative' }}>
@@ -351,9 +349,10 @@ class InputsUtils {
                             {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         </div>
                     </div>
-                )
+                );
+            }
             case 'string':
-            case 'regex': {
+            case 'regex':
                 return _.includes(value, '\n') ? (
                     <div style={{ position: 'relative' }}>
                         <Form.TextArea name={name} value={value} onChange={onChange} />
@@ -371,7 +370,6 @@ class InputsUtils {
                         onChange={onChange}
                     />
                 );
-            }
             default:
                 return (
                     <div style={{ position: 'relative' }}>
