@@ -20,9 +20,11 @@ router.use(bodyParser.json());
 router.post('/resources', (req, res) => {
     const { zipUrl } = req.query;
 
+    const authHeader = req.get('Authorization');
+
     axios(zipUrl as string, {
         responseType: 'arraybuffer',
-        headers: { Authorization: req.get('Authorization') as string }
+        headers: authHeader ? { Authorization: authHeader } : {}
     })
         .then(response =>
             decompress(response.data)
