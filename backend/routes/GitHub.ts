@@ -21,14 +21,14 @@ function getSecretName(secretName: string) {
 }
 
 function pipeRequest(req: Request, res: ResponseWithData, next: NextFunction, url: string, isMiddleware = false) {
-    const authorization = req.header('authorization')!;
+    const authorization = req.header('authorization');
 
     logger.debug(
         `Calling pipe request to: ${url} with${_.isUndefined(next) ? 'out' : ''} possibility to modify response`
     );
 
     requestAndForwardResponse(url, res, {
-        headers: { authorization },
+        headers: authorization ? { authorization } : {},
         params: req.query,
         responseEncoding: 'utf8',
         decompress: !isMiddleware
