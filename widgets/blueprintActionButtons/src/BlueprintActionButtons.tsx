@@ -1,5 +1,7 @@
 import type { ComponentProps } from 'react';
 
+const t = Stage.Utils.getT('widgets.blueprintActionButtons.buttons');
+
 interface BlueprintActionButtonsProps {
     blueprintId: string;
     toolbox: Stage.Types.Toolbox;
@@ -19,7 +21,6 @@ export default class BlueprintActionButtons extends React.Component<
     BlueprintActionButtonsState
 > {
     static DEPLOY_ACTION = 'deploy';
-
     static DELETE_ACTION = 'delete';
 
     constructor(props: BlueprintActionButtonsProps) {
@@ -111,7 +112,7 @@ export default class BlueprintActionButtons extends React.Component<
                     icon="rocket"
                     disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DEPLOY_ACTION)}
-                    content="Create deployment"
+                    content={t('createDeployment')}
                     id="createDeploymentButton"
                 />
 
@@ -121,7 +122,7 @@ export default class BlueprintActionButtons extends React.Component<
                     icon="trash"
                     disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DELETE_ACTION)}
-                    content="Delete blueprint"
+                    content={t('deleteBlueprint')}
                     id="deleteBlueprintButton"
                 />
 
@@ -131,7 +132,7 @@ export default class BlueprintActionButtons extends React.Component<
                     icon="download"
                     disabled={disableButtons}
                     onClick={this.downloadBlueprint}
-                    content="Download blueprint"
+                    content={t('downloadBlueprint')}
                     id="downloadBlueprintButton"
                 />
 
@@ -158,7 +159,7 @@ export default class BlueprintActionButtons extends React.Component<
                                     this.setState({ loading: false });
                                 });
                         }}
-                        content="Edit a copy in Composer"
+                        content={t('editCopy')}
                     />
                 )}
 
