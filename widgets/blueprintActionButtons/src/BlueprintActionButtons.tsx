@@ -99,6 +99,7 @@ export default class BlueprintActionButtons extends React.Component<
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
         const manager = toolbox.getManager();
         const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const disableButtons = _.isEmpty(blueprintId) || loading;
 
         return (
             <div>
@@ -108,7 +109,7 @@ export default class BlueprintActionButtons extends React.Component<
                     className="labeled icon"
                     color="teal"
                     icon="rocket"
-                    disabled={_.isEmpty(blueprintId) || loading}
+                    disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DEPLOY_ACTION)}
                     content="Create deployment"
                     id="createDeploymentButton"
@@ -118,7 +119,7 @@ export default class BlueprintActionButtons extends React.Component<
                     className="labeled icon"
                     color="teal"
                     icon="trash"
-                    disabled={_.isEmpty(blueprintId) || loading}
+                    disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DELETE_ACTION)}
                     content="Delete blueprint"
                     id="deleteBlueprintButton"
@@ -128,7 +129,7 @@ export default class BlueprintActionButtons extends React.Component<
                     className="labeled icon"
                     color="teal"
                     icon="download"
-                    disabled={_.isEmpty(blueprintId) || loading}
+                    disabled={disableButtons}
                     onClick={this.downloadBlueprint}
                     content="Download blueprint"
                     id="downloadBlueprintButton"
@@ -139,7 +140,7 @@ export default class BlueprintActionButtons extends React.Component<
                         className="labeled icon"
                         color="teal"
                         icon="external share"
-                        disabled={_.isEmpty(blueprintId) || loading}
+                        disabled={disableButtons}
                         onClick={() => {
                             toolbox.loading(true);
                             this.setState({ loading: true });
