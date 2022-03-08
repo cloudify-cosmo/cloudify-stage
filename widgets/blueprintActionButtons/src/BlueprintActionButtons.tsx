@@ -84,6 +84,14 @@ export default class BlueprintActionButtons extends React.Component<
         return modalType === type && showModal;
     }
 
+    downloadBlueprint = () => {
+        const { toolbox, blueprintId } = this.props;
+        const blueprintDownloadUrl = `/blueprints/${blueprintId}/archive`;
+        const blueprintFileName = `${blueprintId}.zip`;
+
+        toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
+    }
+
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
@@ -114,6 +122,16 @@ export default class BlueprintActionButtons extends React.Component<
                     onClick={() => this.showModal(BlueprintActionButtons.DELETE_ACTION)}
                     content="Delete blueprint"
                     id="deleteBlueprintButton"
+                />
+
+                <Button
+                    className="labeled icon"
+                    color="teal"
+                    icon="download"
+                    disabled={_.isEmpty(blueprintId) || loading}
+                    onClick={this.downloadBlueprint}
+                    content="Download blueprint"
+                    id="downloadBlueprintButton"
                 />
 
                 {!manager.isCommunityEdition() && showEditCopyInComposerButton && (
