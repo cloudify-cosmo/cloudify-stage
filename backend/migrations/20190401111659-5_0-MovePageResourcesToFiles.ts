@@ -1,30 +1,31 @@
-const _ = require('lodash');
-const fs = require('fs-extra');
-const moment = require('moment');
-const path = require('path');
+import _ from 'lodash';
+import fs from 'fs-extra';
+import moment from 'moment';
+import path from 'path';
 
-const ResourceTypes = require('../db/types/ResourceTypes');
-const ResourcesModel = require('../db/models/ResourcesModel');
-const Utils = require('../utils');
+import ResourceTypes from '../db/types/ResourceTypes';
+import ResourcesModel from '../db/models/ResourcesModel';
+import { getResourcePath } from '../utils';
+import type { MigrationObject } from './common/types';
 
-const userTemplatesFolder = Utils.getResourcePath('templates', true);
+const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize, logger) => {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.PAGE },
-                attributes: [['resourceId', 'id'], 'createdAt', 'updatedAt', 'creator'],
+                attributes: ['resourceId', 'createdAt', 'updatedAt', 'creator'],
                 raw: true
             })
             .then(results => {
                 logger.info(`Found ${results.length} page rows to migrate.`);
                 _.forEach(results, pageRow => {
-                    const pageFilePath = path.resolve(userPagesFolder, `${pageRow.id}.json`);
+                    const pageFilePath = path.resolve(userPagesFolder, `${pageRow.resourceId}.json`);
 
                     logger.info(`Updating ${pageFilePath}`);
-                    let pageFileContent = {};
+                    let pageFileContent: { name?: string; updatedBy?: string; updatedAt?: string; widgets?: any } = {};
                     try {
                         pageFileContent = fs.readJsonSync(pageFilePath);
                         logger.info('File exists. Updating it...');
@@ -33,7 +34,7 @@ module.exports = {
                     } catch (error) {
                         logger.info('File does not exist. Creating new one...');
                         pageFileContent = {
-                            name: pageRow.id,
+                            name: pageRow.resourceId,
                             updatedBy: pageRow.creator,
                             updatedAt: moment(pageRow.updatedAt).format(),
                             widgets: []

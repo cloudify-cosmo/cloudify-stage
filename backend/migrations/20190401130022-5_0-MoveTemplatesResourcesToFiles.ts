@@ -1,26 +1,27 @@
-const _ = require('lodash');
-const fs = require('fs-extra');
-const moment = require('moment');
-const path = require('path');
+import _ from 'lodash';
+import fs from 'fs-extra';
+import moment from 'moment';
+import path from 'path';
 
-const ResourceTypes = require('../db/types/ResourceTypes');
-const ResourcesModel = require('../db/models/ResourcesModel');
-const Utils = require('../utils');
+import ResourceTypes from '../db/types/ResourceTypes';
+import ResourcesModel from '../db/models/ResourcesModel';
+import { getResourcePath } from '../utils';
+import type { MigrationObject } from './common/types';
 
-const userTemplatesFolder = Utils.getResourcePath('templates', true);
+const userTemplatesFolder = getResourcePath('templates', true);
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize, logger) => {
         return ResourcesModel(queryInterface.sequelize, Sequelize)
             .findAll({
                 where: { type: ResourceTypes.TEMPLATE },
-                attributes: [['resourceId', 'id'], 'createdAt', 'updatedAt', 'creator', 'data'],
+                attributes: ['resourceId', 'createdAt', 'updatedAt', 'creator', 'data'],
                 raw: true
             })
             .then(results => {
                 logger.info(`Found ${results.length} template rows to migrate.`);
                 _.forEach(results, templateRow => {
-                    const templateFilePath = path.resolve(userTemplatesFolder, `${templateRow.id}.json`);
+                    const templateFilePath = path.resolve(userTemplatesFolder, `${templateRow.resourceId}.json`);
                     const { data } = templateRow;
                     const { roles } = data;
                     const { tenants } = data;
@@ -54,7 +55,7 @@ module.exports = {
                     }
 
                     templateFileContent = {
-                        name: templateRow.id,
+                        name: templateRow.resourceId,
                         updatedBy: templateRow.creator,
                         updatedAt: moment(templateRow.updatedAt).format(),
                         roles,

@@ -1,32 +1,34 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { db } from '../db/Connection';
-import { LAYOUT } from '../consts';
 import { getLogger } from './LoggerHandler';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
+import type { TabContent, WidgetDefinition } from '../routes/Templates.types';
 
 const logger = getLogger('FilterHandler');
 
-export async function getFilterUsage(filterId) {
-    const userAppsArr = await db.UserApps.findAll({ attributes: ['appData', 'username'] });
+export async function getFilterUsage(filterId: string) {
+    const userAppsArr = await db.UserApps.findAll<UserAppsInstance>({ attributes: ['appData', 'username'] });
 
-    const filterUses = [];
+    type FilterUses = { pageName: string; widgetName: string; username: string };
+
+    const filterUses: FilterUses[] = [];
     _.forEach(userAppsArr, ({ appData, username }) => {
         _.forEach(appData.pages, page => {
-            function checkWidgets(widgets) {
+            function checkWidgets(widgets: WidgetDefinition[]) {
                 _.forEach(widgets, widget => {
                     const filterUsed =
-                        widget.definition === 'deploymentsView' && widget.configuration.filterId === filterId;
+                        widget.definition === 'deploymentsView' && widget?.configuration?.filterId === filterId;
                     if (filterUsed) {
-                        filterUses.push({ pageName: page.name, widgetName: widget.name, username });
+                        filterUses.push({ pageName: page.name, widgetName: widget?.name || '', username });
                     }
                 });
             }
 
             _.forEach(page.layout, ({ type, content }) => {
-                if (type === LAYOUT.WIDGETS) {
-                    checkWidgets(content);
-                } else if (type === LAYOUT.TABS) {
-                    _.forEach(content, tab => checkWidgets(tab.widgets));
+                if (type === 'widgets') {
+                    checkWidgets(content as WidgetDefinition[]);
+                } else if (type === 'tabs') {
+                    _.forEach(content as TabContent[], tab => checkWidgets(tab.widgets));
                 } else {
                     logger.warn('Unsupported layout type:', type);
                 }
