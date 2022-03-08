@@ -36,7 +36,6 @@
     "docCheck": "scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
     "e2e": "cypress run -C node_modules/cloudify-ui-common/cypress/cypress.json",
-    "e2e:ci": "npm run beforebuild && cross-env TEST=1 run-system-tests ${TEST_SPEC}",
     "lint": "eslint --cache --ignore-path .gitignore --ext js,jsx,ts,tsx .",
     "size": "[ -d \"dist\" ] && size-limit",
     "test": "npm run test:frontend && npm run test:backend",
