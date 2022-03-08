@@ -4,7 +4,7 @@ import nock from 'nock';
 
 describe('/maps endpoint', () => {
     it('forwards requests to stadia and removes the HSTS header', () => {
-        nock('https://tiles.stadiamaps.com').get('/tiles/osm_bright/0/0/0.png?api_key=').reply(200, undefined, {
+        nock('https://tiles.stadiamaps.com').get('/tiles/osm_bright/0/0/0.png').query(true).reply(200, undefined, {
             'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
             'stadia-tileserver': 'lon-tileserver-g10-orlui'
         });
