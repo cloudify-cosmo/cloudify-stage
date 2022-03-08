@@ -1,15 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
-
 import bodyParser from 'body-parser';
 import express from 'express';
-import passport from 'passport';
 import { db } from '../db/Connection';
+import { ApplicationsInstance } from '../db/models/ApplicationsModel';
 
 const router = express.Router();
 
 router.use(bodyParser.json());
 
-router.get('/', (req, res, next) => {
+router.get('/', (_req, res, next) => {
     db.Applications.findAll()
         .then(applications => {
             res.send(applications);
@@ -31,7 +29,7 @@ router.post('/', (req, res, next) => {
     const { isPrivate } = req.body;
     const { extras } = req.body;
 
-    db.Applications.findOrCreate({ where: { name } })
+    db.Applications.findOrCreate<ApplicationsInstance>({ where: { name } })
         .then(([application]) => {
             application.update({ name, status, isPrivate, extras }).then(response => {
                 res.send(response);
@@ -46,7 +44,7 @@ router.post('/:id', (req, res, next) => {
     const { isPrivate } = req.body;
     const { extras } = req.body;
 
-    db.Applications.findOrCreate({ where: { id: req.params.id } })
+    db.Applications.findOrCreate<ApplicationsInstance>({ where: { id: req.params.id } })
         .then(([application]) => {
             application.update({ name, status, isPrivate, extras }).then(response => {
                 res.send(response);

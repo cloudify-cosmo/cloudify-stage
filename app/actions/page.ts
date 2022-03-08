@@ -1,8 +1,14 @@
 import _ from 'lodash';
 import type { ThunkAction } from 'redux-thunk';
 import type { AnyAction } from 'redux';
-
 import type { SemanticICONS } from 'semantic-ui-react';
+import type {
+    WidgetsSection as BackendWidgetsSection,
+    TabContent as BackendTabContent,
+    TabsSection as BackendTabsSection,
+    PageFileDefinition
+} from '../../backend/routes/Templates.types';
+
 import * as types from './types';
 import { addWidget } from './widgets';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
@@ -12,19 +18,15 @@ import type { ReduxState } from '../reducers';
 // TODO(RD-1649): rename the added field to `definitionId`
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
 
-export interface WidgetsSection {
-    type: 'widgets';
+export interface WidgetsSection extends Omit<BackendWidgetsSection, 'content'> {
     content: SimpleWidgetObj[];
 }
 
-export interface TabContent {
-    name: string;
+export interface TabContent extends Omit<BackendTabContent, 'widgets'> {
     widgets: SimpleWidgetObj[];
-    isDefault?: boolean;
 }
 
-export interface TabsSection {
-    type: 'tabs';
+export interface TabsSection extends Omit<BackendTabsSection, 'content'> {
     content: TabContent[];
 }
 
@@ -37,16 +39,12 @@ export function isTabsSection(layoutSection: LayoutSection): layoutSection is Ta
     return layoutSection.type === 'tabs';
 }
 
-export interface PageDefinition {
-    id: string;
-    name: string;
-    type: 'page';
+export interface PageDefinition extends Omit<PageFileDefinition, 'icon' | 'layout'> {
     icon?: SemanticICONS;
-    description: string;
-    layout: LayoutSection[];
     isDrillDown: boolean;
     parent?: string;
     children?: string[];
+    layout: LayoutSection[];
 }
 
 export function addTab(pageId: string, layoutSection: number) {

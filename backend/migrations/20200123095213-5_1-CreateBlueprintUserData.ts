@@ -1,4 +1,6 @@
-module.exports = {
+import type { MigrationObject } from './common/types';
+
+export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize) => {
         return queryInterface
             .createTable('BlueprintUserData', {
@@ -31,14 +33,14 @@ module.exports = {
             })
             .then(() =>
                 queryInterface.addIndex('BlueprintUserData', ['blueprintId', 'username'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     },
     down: queryInterface => {
         return queryInterface.dropTable('BlueprintUserData').then(() =>
             queryInterface.removeIndex('BlueprintUserData', ['blueprintId', 'username'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
     }

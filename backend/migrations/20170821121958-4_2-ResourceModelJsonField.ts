@@ -1,6 +1,8 @@
+import type { MigrationObject } from './common/types';
+
 const DATA_COLUMN_NAME = 'data';
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up(queryInterface, Sequelize) {
         return queryInterface.addColumn('Resources', DATA_COLUMN_NAME, {
             type: Sequelize.JSONB,
