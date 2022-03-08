@@ -19,7 +19,7 @@ export function requestAndForwardResponse(url: string, response: Response, optio
 }
 
 export function setUpRequestForwarding(router: Router) {
-    router.use(bodyParser.raw({ inflate: false, type: '*/*' }));
+    router.use(bodyParser.raw({ inflate: false, type: () => true }));
 }
 
 export function forward(axiosResponse: AxiosResponse, expressResponse: Response) {

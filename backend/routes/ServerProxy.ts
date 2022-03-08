@@ -17,14 +17,14 @@ async function proxyRequest(req: Request, res: Response) {
         await getAndCacheConfig(req.headers['authentication-token'] as string);
     }
 
-    const options: AxiosRequestConfig = { headers: req.headers as AxiosRequestHeaders, data: req.body };
+    const options: AxiosRequestConfig = {
+        headers: req.headers as AxiosRequestHeaders,
+        method: req.method as Method,
+        data: req.body
+    };
     setManagerSpecificOptions(options, req.method);
 
-    requestAndForwardResponse(getApiUrl() + serverUrl, res, {
-        method: req.method as Method,
-        responseType: 'stream',
-        ...options
-    }).catch(err => {
+    requestAndForwardResponse(getApiUrl() + serverUrl, res, options).catch(err => {
         if (err.response) {
             forward(err.response, res);
         } else {
