@@ -70,9 +70,10 @@ function extractFilename(contentDisposition) {
     return match[1];
 }
 
+const userAgentHeader = { 'User-Agent': 'Node.js' };
+
 export function saveDataFromUrl(url, targetDir, req?: Request) {
     return new Promise((resolve, reject) => {
-        const HEADERS = { 'User-Agent': 'Node.js' };
         const archiveUrl = decodeURIComponent(url.trim());
 
         logger.debug('Fetching file from url', archiveUrl);
@@ -121,10 +122,13 @@ export function saveDataFromUrl(url, targetDir, req?: Request) {
             );
         };
 
-        const options: AxiosRequestConfig = { headers: HEADERS, responseType: 'stream' };
+        const options: AxiosRequestConfig = { headers: userAgentHeader, responseType: 'stream' };
         if (isExternalUrl(archiveUrl)) {
             getRequest = RequestHandler.request('GET', archiveUrl, options);
         } else {
+            if (req) {
+                options.headers = { ...req.headers, ...userAgentHeader };
+            }
             getRequest = ManagerHandler.request('GET', archiveUrl, options);
         }
 
