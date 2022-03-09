@@ -79,21 +79,6 @@ type License =
     | 'valid_trial_license';
 
 const commands = {
-    getAdminToken: () =>
-        cy
-            .request({
-                method: 'POST',
-                url: '/console/sp/tokens',
-                headers: {
-                    Authorization: `Basic ${btoa('admin:admin')}`,
-                    'Content-Type': 'application/json'
-                },
-                body: {
-                    description: 'UI tests authentication token',
-                    expiration_date: '+10h'
-                }
-            })
-            .then(response => response.body.value),
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
         return cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
