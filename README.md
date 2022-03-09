@@ -36,7 +36,7 @@ $ make install # configure project
 $ make -j2 up-public # run the project with development docker image
 ```
 
-#### Run the project with development docker laterst image
+#### Run the project with development docker latest image
 ```bash
 $ make install # configure project
 $ make install-dev # download latest docker dev image
