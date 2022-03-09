@@ -113,8 +113,8 @@ Changes in the source code shall be loaded to the development version of the app
 
 ### License
 
-First time you run Cloudify-Manager you would be asked about the license.
-  You can fine [the license here](https://github.com/cloudify-cosmo/cloudify-build-system/blob/master/pipelines-k8s/system-ui-tests/license/cfy-license.yaml). The access to the license is restricted.
+First time you run Cloudify Manager you would be asked about the license (see [Activating Cloudify Manager and License Management](https://docs.cloudify.co/staging/dev/install_maintain/installation/manager-license/) for more details).
+  You can find [the license here](https://github.com/cloudify-cosmo/cloudify-build-system/blob/master/pipelines-k8s/system-ui-tests/license/cfy-license.yaml). The access to the license is restricted.
 
 
 ## TypeScript support in IDEs
