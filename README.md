@@ -52,18 +52,6 @@ The commands are farther self-described inside of the `Makefile`.
 
 ### Manual way
 
-1. **Configuring postgres database locally**
-
-  - Make a database named `stage` 
-  - Make a user named `cloudify` with `cloudify` as password
-  - You can do this easily by:
-    - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
-    - or more manually with docker:
-      ```bash
-      docker pull postgres
-      docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
-      ```
-
 1. **Install Cloudify-Manager locally**
 
     You can install the docker image using the way [described here](https://docs.cloudify.co/latest/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
@@ -92,7 +80,19 @@ The commands are farther self-described inside of the `Makefile`.
    Run `npm run beforebuild` to install application dependencies.
 
 1. **Database setup**
-   
+
+   Running postgres database locally make sure that:
+    - You have a database named `stage` 
+    - You have a user named `cloudify` with `cloudify` as password
+
+ 
+   You can do this easily by:
+    - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
+    - or more manually with docker:
+      ```bash
+      docker pull postgres
+      docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
+      ```
    Run `cd backend && npm run db-migrate` to initialize database.
 
 1. **Application start**
