@@ -11,16 +11,7 @@ The following requirements should be met prior starting the application:
 
 - [Node.js](https://nodejs.org) (version 14.x, at least 14.18.1) installed
     - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
-- [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
-    - Make a database named `stage` 
-    - Make a user named `cloudify` with `cloudify` as password
-    - You can do this easily by:
-      - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
-      - or more manually with docker:
-        ```bash
-        docker pull postgres
-        docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
-        ```
+- [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured
 - [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
 ## Setup
 
@@ -61,7 +52,19 @@ The commands are farther self-described inside of the `Makefile`.
 
 ### Manual way
 
-1. **Install Cloudify-Manager locally.**
+1. **Configuring postgres database locally**
+
+  - Make a database named `stage` 
+  - Make a user named `cloudify` with `cloudify` as password
+  - You can do this easily by:
+    - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
+    - or more manually with docker:
+      ```bash
+      docker pull postgres
+      docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
+      ```
+
+1. **Install Cloudify-Manager locally**
 
     You can install the docker image using the way [described here](https://docs.cloudify.co/latest/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
     - **Available docker images:**
