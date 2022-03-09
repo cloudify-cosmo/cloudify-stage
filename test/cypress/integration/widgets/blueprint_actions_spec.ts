@@ -34,11 +34,11 @@ describe('Blueprint Action Buttons widget', () => {
     });
 
     it.only('should download the blueprint', () => {
-        const downloadsFolder = Cypress.config('downloadsFolder');
+        const downloadedFileName = `${blueprintName}.zip`;
         useBlueprintActionButtonsWidget();
 
         cy.contains('Download blueprint').click();
-        cy.readFile(path.join(downloadsFolder, `${blueprintName}.zip`)).should('exist');
+        cy.verifyDownloadedFileExistence(downloadedFileName);
     });
 
     it('should open deployment modal', () => {

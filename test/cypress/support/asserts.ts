@@ -1,3 +1,4 @@
+import path from 'path';
 import { last } from 'lodash';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 
@@ -22,7 +23,13 @@ const commands = {
         });
     },
     verifyLocationByPageId: (expectedPageId: string) =>
-        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`)
+        cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`),
+    verifyDownloadedFileExistence: (fileName: string) => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+        const downloadedFilePath = path.join(downloadsFolder, `${fileName}.zip`);
+
+        cy.readFile(downloadedFilePath).should('exist');
+    }
 };
 
 addCommands(commands);
