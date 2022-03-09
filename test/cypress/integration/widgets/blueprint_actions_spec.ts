@@ -1,4 +1,3 @@
-import path from 'path';
 import type { BlueprintActionButtonsConfiguration } from '../../../../widgets/blueprintActionButtons/src/widget';
 
 describe('Blueprint Action Buttons widget', () => {

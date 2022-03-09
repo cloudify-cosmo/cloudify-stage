@@ -21,6 +21,7 @@ export default class BlueprintActionButtons extends React.Component<
     BlueprintActionButtonsState
 > {
     static DEPLOY_ACTION = 'deploy';
+
     static DELETE_ACTION = 'delete';
 
     constructor(props: BlueprintActionButtonsProps) {
@@ -76,6 +77,14 @@ export default class BlueprintActionButtons extends React.Component<
         return false;
     };
 
+    downloadBlueprint = () => {
+        const { toolbox, blueprintId } = this.props;
+        const blueprintDownloadUrl = `/blueprints/${blueprintId}/archive`;
+        const blueprintFileName = `${blueprintId}.zip`;
+
+        toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
+    };
+
     showModal(type: string) {
         this.setState({ modalType: type, showModal: true, force: false });
     }
@@ -84,14 +93,6 @@ export default class BlueprintActionButtons extends React.Component<
         const { modalType, showModal } = this.state;
         return modalType === type && showModal;
     }
-
-    downloadBlueprint = () => {
-        const { toolbox, blueprintId } = this.props;
-        const blueprintDownloadUrl = `/blueprints/${blueprintId}/archive`;
-        const blueprintFileName = `${blueprintId}.zip`;
-
-        toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
-    };
 
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
