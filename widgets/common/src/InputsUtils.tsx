@@ -23,6 +23,8 @@ HelpProperty.defaultProps = {
 };
 
 class InputsUtils {
+    static DEFAULT_TEXTAREA_ROWS = 10;
+
     static DEFAULT_INITIAL_VALUE_FOR_LIST = '[]';
 
     static DEFAULT_INITIAL_VALUE_FOR_DICT = '{}';
@@ -239,63 +241,52 @@ class InputsUtils {
         }
     }
 
-    static getInputField(
-        { name, display_label: displayLabel, default: defaultValue, description, type, constraints },
-        value,
-        onChange,
-        error
-    ) {
+    static getConstraintValueFunction = constraints => constraintName => {
+        if (_.isEmpty(constraints)) {
+            return undefined;
+        }
+        const index = _.findIndex(constraints, constraintName);
+        return index >= 0 ? constraints[index][constraintName] : null;
+    };
+
+    static getInputField(input, value, onChange, error) {
+        const { name, default: defaultValue, type, constraints } = input;
         const { Form } = Stage.Basic;
-        let min;
-        let max;
+        const getConstraintValue = InputsUtils.getConstraintValueFunction(constraints);
+        const validValues = getConstraintValue('valid_values');
 
-        if (!_.isEmpty(constraints)) {
-            const getConstraintValue = constraintName => {
-                const index = _.findIndex(constraints, constraintName);
-                return index >= 0 ? constraints[index][constraintName] : null;
-            };
+        // Show only valid values in dropdown if 'valid_values' constraint is set
+        if (!_.isUndefined(validValues) && !_.isNull(validValues)) {
+            const options = _.map(validValues, validValue => ({
+                name: validValue,
+                text: validValue,
+                value: validValue
+            }));
 
-            // Show only valid values in dropdown if 'valid_values' constraint is set
-            const validValues = getConstraintValue('valid_values');
-            if (!_.isNull(validValues)) {
-                const options = _.map(validValues, validValue => ({
-                    name: validValue,
-                    text: validValue,
-                    value: validValue
-                }));
-                return (
-                    <div style={{ position: 'relative' }}>
-                        <Form.Dropdown
-                            name={name}
-                            value={value}
-                            fluid
-                            selection
-                            error={!!error}
-                            options={options}
-                            onChange={onChange}
-                        />
-                        <div style={{ position: 'absolute', top: 10, right: 30 }}>
-                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        </div>
+            return (
+                <div style={{ position: 'relative' }}>
+                    <Form.Dropdown
+                        name={name}
+                        value={value}
+                        fluid
+                        selection
+                        error={!!error}
+                        options={options}
+                        onChange={onChange}
+                    />
+                    <div style={{ position: 'absolute', top: 10, right: 30 }}>
+                        {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                     </div>
-                );
-            }
-
-            // Limit numerical values if at least one of range limitation constraints is set
-            const inRange = getConstraintValue('in_range');
-            const greaterThan = getConstraintValue('greater_than');
-            const greaterOrEqual = getConstraintValue('greater_or_equal');
-            const lessThan = getConstraintValue('less_than');
-            const lessOrEqual = getConstraintValue('less_or_equal');
-
-            min = _.max([inRange ? inRange[0] : null, greaterThan, greaterOrEqual]);
-            max = _.min([inRange ? inRange[1] : null, lessThan, lessOrEqual]);
+                </div>
+            );
         }
 
-        const isBooleanValue = value === false || value === true;
-        const checked = isBooleanValue ? value : undefined;
         switch (type) {
-            case 'boolean':
+            case 'boolean': {
+                const isBooleanValue = value === false || value === true;
+                const checked = isBooleanValue ? value : undefined;
+                const { displayLabel } = input;
+
                 return (
                     <>
                         <Form.Checkbox
@@ -310,9 +301,19 @@ class InputsUtils {
                         {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                     </>
                 );
-
+            }
             case 'integer':
-            case 'float':
+            case 'float': {
+                // Limit numerical values if at least one of range limitation constraints is set
+                const inRange = getConstraintValue('in_range');
+                const greaterThan = getConstraintValue('greater_than');
+                const greaterOrEqual = getConstraintValue('greater_or_equal');
+                const lessThan = getConstraintValue('less_than');
+                const lessOrEqual = getConstraintValue('less_or_equal');
+
+                const min = _.max([inRange ? inRange[0] : null, greaterThan, greaterOrEqual]);
+                const max = _.min([inRange ? inRange[1] : null, lessThan, lessOrEqual]);
+
                 return (
                     <Form.Input
                         name={name}
@@ -327,7 +328,7 @@ class InputsUtils {
                         onChange={onChange}
                     />
                 );
-
+            }
             case 'dict':
             case 'list':
                 return (
@@ -338,7 +339,18 @@ class InputsUtils {
                         </div>
                     </div>
                 );
+            case 'textarea': {
+                const rows = input?.display?.rows ?? InputsUtils.DEFAULT_TEXTAREA_ROWS;
 
+                return (
+                    <div style={{ position: 'relative' }}>
+                        <Form.TextArea name={name} value={value} onChange={onChange} rows={rows} />
+                        <div style={{ position: 'absolute', top: 10, right: 10 }}>
+                            {InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        </div>
+                    </div>
+                );
+            }
             case 'string':
             case 'regex':
                 return _.includes(value, '\n') ? (
@@ -358,7 +370,6 @@ class InputsUtils {
                         onChange={onChange}
                     />
                 );
-
             default:
                 return (
                     <div style={{ position: 'relative' }}>
