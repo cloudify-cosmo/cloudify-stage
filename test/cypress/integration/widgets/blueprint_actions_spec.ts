@@ -1,3 +1,4 @@
+import path from 'path';
 import type { BlueprintActionButtonsConfiguration } from '../../../../widgets/blueprintActionButtons/src/widget';
 
 describe('Blueprint Action Buttons widget', () => {
@@ -30,6 +31,14 @@ describe('Blueprint Action Buttons widget', () => {
         cy.window()
             .its('open')
             .should('be.calledWith', `/composer/import/default_tenant/${blueprintName}/blueprint.yaml`);
+    });
+
+    it.only('should download the blueprint', () => {
+        const downloadsFolder = Cypress.config('downloadsFolder');
+        useBlueprintActionButtonsWidget();
+
+        cy.contains('Download blueprint').click();
+        cy.readFile(path.join(downloadsFolder, `${blueprintName}.zip`)).should('exist');
     });
 
     it('should open deployment modal', () => {

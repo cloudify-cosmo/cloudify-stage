@@ -124,14 +124,6 @@ describe('Blueprints widget', () => {
             cy.contains(blueprintName).should('not.exist');
         });
 
-        it('should allow to download the blueprint', () => {
-            const blueprintName = `${blueprintNamePrefix}_download`;
-
-            cy.uploadBlueprint('blueprints/empty.zip', blueprintName);
-            getBlueprintRow(blueprintName).find('.download').click();
-            cy.readFile(`${blueprintName}.zip`);
-        });
-
         it('should do nothing on click when drill down is disabled', () => {
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=clickToDrillDown]').parent().click());
 
