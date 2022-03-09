@@ -45,20 +45,20 @@ $ make -j2 up-public # run the project with public docker image
 
 #### Commands description
 
-`make install` - It would do prerequired manual steps for you (described below).
+Run `make install` to do prerequired manual steps for you (described below).
 
-`make install-dev` - It would download latest dev docker image.
+Run `make install-dev` to download latest dev docker image.
 
-`make -j2 up-public` - It would ran the backend and frontend and latest public available docker image and postgres database.
+Run `make -j2 up-public` to fire the backend and frontend and the latest public available docker image and postgres database.
 
-`make -j2 up-dev` - It would ran the backend and frontend and development latest downloaded docker image and postgres database.
+Run `make -j2 up-dev` to fire the backend and frontend and development latest downloaded docker image and postgres database.
 
-`make down` - It would stop the docker containers.
+Run `make down` to stop the docker containers.
 
-The commands are farther self-described inside of `Makefile`.
+The commands are farther self-described inside of the `Makefile`.
 
 ---
-### Manual way (useful in the case of errors or problems with automated way)
+### Manual way
 
 1. **Configuration**
    
