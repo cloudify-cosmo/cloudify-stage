@@ -32,7 +32,7 @@ describe('Blueprint Action Buttons widget', () => {
             .should('be.calledWith', `/composer/import/default_tenant/${blueprintName}/blueprint.yaml`);
     });
 
-    it.only('should download the blueprint', () => {
+    it('should download the blueprint', () => {
         const downloadedFileName = `${blueprintName}.zip`;
         useBlueprintActionButtonsWidget();
 

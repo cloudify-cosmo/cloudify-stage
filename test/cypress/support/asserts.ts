@@ -26,7 +26,7 @@ const commands = {
         cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`),
     verifyDownloadedFileExistence: (fileName: string) => {
         const downloadsFolder = Cypress.config('downloadsFolder');
-        const downloadedFilePath = path.join(downloadsFolder, `${fileName}.zip`);
+        const downloadedFilePath = path.join(downloadsFolder, fileName);
 
         cy.readFile(downloadedFilePath).should('exist');
     }
