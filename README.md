@@ -46,7 +46,7 @@ Run `make -j2 up-dev` to fire the backend and frontend and development latest do
 
 Run `make down` to stop the docker containers.
 
-The commands are farther self-described inside of the `Makefile`.
+The commands are described further inside of the `Makefile`.
 
 ---
 
