@@ -91,7 +91,7 @@ export default class BlueprintActionButtons extends React.Component<
         const blueprintFileName = `${blueprintId}.zip`;
 
         toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
-    }
+    };
 
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
