@@ -1,6 +1,4 @@
 # Cloudify Console 
-[![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
-[![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 
 The Cloudify Console provides User Interface for managing and analyzing [Cloudify Manager](https://cloudify.co).
 
@@ -16,18 +14,20 @@ The following requirements should be met prior starting the application:
 - [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
     - Make a database named `stage` 
     - Make a user named `cloudify` with `cloudify` as password
-    - You can do this easily with docker:
+    - You can do this easily by:
+      - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
+      - or more manually with docker:
         ```bash
         docker pull postgres
         docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
         ```
 - [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
-
 ## Setup
 
 To setup development environment and start the application follow the steps below.
 
 ---
+
 ### Automated way
 
 #### Run the project with public released latest docker image
@@ -58,7 +58,26 @@ Run `make down` to stop the docker containers.
 The commands are farther self-described inside of the `Makefile`.
 
 ---
+
 ### Manual way
+
+1. **Install Cloudify-Manager locally.**
+
+    You can install the docker image using the way [described here](https://docs.cloudify.co/latest/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
+    - **Available docker images:**
+      
+      Production docker images available on docker hub:
+      
+      - Premium: `cloudifyplatform/premium-cloudify-manager-aio`
+      - Community: `cloudifyplatform/community-cloudify-manager-aio`
+      
+      Premium dev docker images:
+      
+      - https://github.com/cloudify-cosmo/cloudify-premium/blob/master/packages-urls/docker-image-release.yaml (access restricted)
+      
+      Community edition dev docker images:
+        
+      - https://github.com/cloudify-cosmo/cloudify-versions/blob/master/packages-urls/docker-image-release.yaml
 
 1. **Configuration**
    
@@ -87,6 +106,13 @@ At this point you should have development environment configured and running. Op
 Changes in the source code shall be loaded to the development version of the application: 
 - for changes in [app](./app) and [widgets](./widgets) directory you need to reload page to see your updates,
 - for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
+
+
+### License
+
+First time you run Cloudify-Manager you would be asked about the license.
+  You can fine [the license here](https://github.com/cloudify-cosmo/cloudify-build-system/blob/master/pipelines-k8s/system-ui-tests/license/cfy-license.yaml). The access to the license is restricted.
+
 
 ## TypeScript support in IDEs
 
