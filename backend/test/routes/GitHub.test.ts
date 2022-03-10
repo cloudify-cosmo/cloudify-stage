@@ -8,8 +8,8 @@ describe('/github endpoint', () => {
         request(app)
             .get('/console/github/content/cloudify-cosmo/cloudify-stage/master/LICENSE')
             .then(response => {
-                expect(response.type).toContain('text/plain');
-                expect(response.statusCode).toBe(200);
                 expect(response.text).toStrictEqual(expect.stringContaining('Apache License'));
+                expect(response.statusCode).toBe(200);
+                expect(response.type).toContain('text/plain');
             }));
 });

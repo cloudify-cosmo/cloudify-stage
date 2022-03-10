@@ -5,7 +5,7 @@ import ejs from 'ejs';
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import request from 'request';
+import axios from 'axios';
 import { STATUS_CODES } from 'http';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
@@ -20,27 +20,14 @@ router.use(bodyParser.json());
 router.post('/resources', (req, res) => {
     const { zipUrl } = req.query;
 
-    request.get(
-        { url: zipUrl as string, encoding: null, headers: { Authorization: req.get('Authorization') } },
-        (err, zipRes, body) => {
-            if (err) {
-                logger.error(`Error while fetching zip file: ${err}`);
-                if (zipRes) {
-                    const statusCode = zipRes.statusCode >= 400 && zipRes.statusCode < 500 ? zipRes.statusCode : 400;
-                    res.status(statusCode).send({
-                        message: `The URL is not accessible - Error ${zipRes.statusCode} ${
-                            STATUS_CODES[zipRes.statusCode]
-                        }`
-                    });
-                } else {
-                    res.status(400).send({
-                        message: 'The URL is not accessible'
-                    });
-                }
-                return;
-            }
+    const authHeader = req.get('Authorization');
 
-            decompress(body)
+    axios(zipUrl as string, {
+        responseType: 'arraybuffer',
+        headers: authHeader ? { Authorization: authHeader } : {}
+    })
+        .then(response =>
+            decompress(response.data)
                 .then((files: File[]) => {
                     const modules = _(files)
                         .filter({ type: 'directory' })
@@ -61,9 +48,23 @@ router.post('/resources', (req, res) => {
                 .catch((decompressErr: any) => {
                     logger.error(`Error while decompressing zip file:`, decompressErr);
                     res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
+                })
+        )
+        .catch(err => {
+            logger.error(`Error while fetching zip file: ${err.message}`);
+            if (err.response) {
+                const statusCode = err.response.status >= 400 && err.response.status < 500 ? err.response.status : 400;
+                res.status(statusCode).send({
+                    message: `The URL is not accessible - Error ${err.response.status} ${
+                        STATUS_CODES[err.response.status]
+                    }`
                 });
-        }
-    );
+            } else {
+                res.status(400).send({
+                    message: 'The URL is not accessible'
+                });
+            }
+        });
 });
 
 router.post('/blueprint', (req, res) => {
