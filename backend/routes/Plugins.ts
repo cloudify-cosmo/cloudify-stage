@@ -3,7 +3,8 @@ import type { Request, Response, NextFunction } from 'express';
 import multer from 'multer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
+import type { AxiosRequestHeaders } from 'axios'
 import archiver from 'archiver';
 import * as ManagerHandler from '../handler/ManagerHandler';
 
