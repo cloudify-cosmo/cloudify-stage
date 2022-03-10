@@ -13,7 +13,7 @@ interface Props {
     errors: Record<string, string>;
 }
 
-const DeplomentInputsSection: FunctionComponent<Props> = ({
+const DeploymentInputs: FunctionComponent<Props> = ({
     blueprint,
     onYamlFileChange,
     fileLoading,
@@ -54,4 +54,4 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
     );
 };
 
-export default DeplomentInputsSection;
+export default DeploymentInputs;
