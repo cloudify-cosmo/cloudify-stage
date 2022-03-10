@@ -106,10 +106,12 @@
             "extends": [
                 "plugin:react/recommended",
                 "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
-                "./.eslintrc.temp-overrides.json",
-                "./backend/.eslintrc.json"
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "plugin:node/recommended-module",
+                "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
+                "node/no-missing-import": ["error", {"tryExtensions": [".js", ".json", ".ts"]}],
                 "no-console": "error",
                 "prefer-promise-reject-errors": "off",
                 "@typescript-eslint/no-namespace": "off",
@@ -165,6 +167,25 @@
                 "React": true,
                 "Stage": true
             }
-        }        
+        },
+        {
+            "files": ["backend/**"],
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "plugin:node/recommended-module",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "prefer-promise-reject-errors": "off",
+                "node/no-missing-require": ["error", {
+                    "tryExtensions": [".js", ".ts", ".json"]
+                }],
+                "node/no-missing-import": ["error", {"tryExtensions": [".js", ".json", ".ts"]}]
+            }
+        },
+        {
+            "files": "backend/**/*.js",
+            "extends": "./node_modules/cloudify-ui-common/configs/eslint-common-node.json"
+        }                
     ]
 }
