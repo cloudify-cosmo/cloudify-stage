@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 export {};
 
 const PopupContent = () => {
@@ -44,7 +43,7 @@ interface InputsHeaderProps {
 }
 
 class InputsHeader extends React.Component<InputsHeaderProps> {
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps: InputsHeaderProps) {
         return !_.isEqual(this.props, nextProps);
     }
 
