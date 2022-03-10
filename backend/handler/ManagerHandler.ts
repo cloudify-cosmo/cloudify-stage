@@ -57,11 +57,11 @@ export function jsonRequest<ResponseBody>(
     timeout?: number
 ) {
     return request(method, url, { headers, data }, timeout)
+        .then(res => <ResponseBody>res.data)
         .catch(err => {
             if (err.response) {
                 throw err.response.data;
             }
             throw err;
-        })
-        .then(res => <ResponseBody>res.data);
+        });
 }
