@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
-import type { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
+import type { AxiosResponse, AxiosRequestConfig } from 'axios';
 import type { Response, Router } from 'express';
 import bodyParser from 'body-parser';
 import { getLogger } from './LoggerHandler';
