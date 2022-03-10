@@ -9,7 +9,7 @@ describe('Edit mode', () => {
         cy.intercept('POST', '/console/ua').as('updateUserApps');
     });
 
-    it('should allow to edit widget settings', () => {
+    it('should allow to edit widget settings', { retries: { runMode: 2 } }, () => {
         cy.get('.blueprintsWidget .setting').click({ force: true });
 
         cy.get('.pollingTime input').type(0);
@@ -28,7 +28,7 @@ describe('Edit mode', () => {
         cy.get('.blueprintsWidget').should('not.exist');
     });
 
-    it('should allow to add widget', () => {
+    it('should allow to add widget', { retries: { runMode: 2 } }, () => {
         const widget1Id = 'pluginsCatalog';
         cy.get('.addWidgetBtn').click();
         cy.get(`*[data-id=${widget1Id}]`).click();
