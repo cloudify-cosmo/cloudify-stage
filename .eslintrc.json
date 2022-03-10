@@ -186,6 +186,31 @@
         {
             "files": "backend/**/*.js",
             "extends": "./node_modules/cloudify-ui-common/configs/eslint-common-node.json"
-        }                
+        },
+        // from /backend/test/.eslintrc.json
+        {
+            "files": "backend/test/**",
+            "plugins": [
+                "jest"
+            ],
+            "extends": [
+                "plugin:jest/recommended"
+            ],
+            "rules": {
+                "global-require": "off",
+                "no-console": "off",
+                "node/no-missing-import": ["error", {"tryExtensions": [".js", ".json", ".ts"], "resolvePaths":  ["backend", ".."]}],
+                "import/no-unresolved": "off",
+                "import/no-extraneous-dependencies": [
+                    "error",
+                    {
+                        "devDependencies": true
+                    }
+                ]
+            },
+            "env": {
+                "jest": true
+            }
+        }                        
     ]
 }
