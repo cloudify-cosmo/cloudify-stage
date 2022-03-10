@@ -19,25 +19,29 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', redirectUrl);
     });
 
-    it('succeeds and resets user pages when application version is different than the one stored in the DB', () => {
-        const currentAppDataVersion = Consts.APP_VERSION;
-        const fetchUserAppsTimeout = 20000;
+    it(
+        'succeeds and resets user pages when application version is different than the one stored in the DB',
+        { retries: { runMode: 2 } },
+        () => {
+            const currentAppDataVersion = Consts.APP_VERSION;
+            const fetchUserAppsTimeout = 20000;
 
-        cy.intercept('GET', '/console/ua', req => {
-            req.reply(res => {
-                res.body.appDataVersion = currentAppDataVersion - 1;
-                res.send(res.body);
-            });
-        }).as('fetchUserApps');
-        cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
-        cy.intercept('POST', '/console/ua').as('updateUserApps');
+            cy.intercept('GET', '/console/ua', req => {
+                req.reply(res => {
+                    res.body.appDataVersion = currentAppDataVersion - 1;
+                    res.send(res.body);
+                });
+            }).as('fetchUserApps');
+            cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
+            cy.intercept('POST', '/console/ua').as('updateUserApps');
 
-        cy.activate().login('admin', 'admin', false);
+            cy.activate().login('admin', 'admin', false);
 
-        cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
-        cy.wait('@fetchTemplateId').its('response.body').should('equal', 'main-sys_admin');
-        cy.wait('@updateUserApps').its('response.body.appDataVersion').should('equal', currentAppDataVersion);
-    });
+            cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
+            cy.wait('@fetchTemplateId').its('response.body').should('equal', 'main-sys_admin');
+            cy.wait('@updateUserApps').its('response.body.appDataVersion').should('equal', currentAppDataVersion);
+        }
+    );
 
     it('succeeds when provided credentials are valid and license is not active', () => {
         cy.uploadLicense('expired_trial_license').login();
