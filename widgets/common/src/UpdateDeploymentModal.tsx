@@ -202,7 +202,7 @@ function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, too
     const {
         DataTypesButton,
         DynamicDropdown,
-        InputsInfo,
+        InputsHeader,
         NodeInstancesFilter,
         YamlFileButton,
         UpdateDetailsModal
@@ -252,7 +252,7 @@ function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, too
                             {!_.isEmpty(blueprint.plan.data_types) && (
                                 <DataTypesButton types={blueprint.plan.data_types} />
                             )}
-                            <InputsInfo />
+                            <InputsHeader />
                             {_.isEmpty(blueprint.plan.inputs) && (
                                 <Message content="No inputs available for the selected blueprint" />
                             )}

@@ -37,14 +37,14 @@ const PopupContent = () => {
     );
 };
 
-interface InputsInfoProps {
+interface InputsHeaderProps {
     iconButton?: boolean;
     compact?: boolean;
     dividing?: boolean;
     header?: string;
 }
 
-const InputsInfo: FunctionComponent<InputsInfoProps> = React.memo(
+const InputsHeader: FunctionComponent<InputsHeaderProps> = React.memo(
     ({ compact = false, dividing = true, header = 'Deployment inputs', iconButton = false }) => {
         const { Form, Header, Button, Popup, PopupHelp } = Stage.Basic;
 
@@ -82,11 +82,11 @@ const InputsInfo: FunctionComponent<InputsInfoProps> = React.memo(
 declare global {
     namespace Stage.Common {
         // eslint-disable-next-line import/prefer-default-export
-        export { InputsInfo };
+        export { InputsHeader };
     }
 }
 
 Stage.defineCommon({
-    name: 'InputsInfo',
-    common: InputsInfo
+    name: 'InputsHeader',
+    common: InputsHeader
 });
