@@ -134,6 +134,8 @@ export default class External {
                         const reader = new FileReader();
                         const zip = new JSZip();
 
+                        xhr.setRequestHeader('content-type', 'application/octet-stream');
+
                         reader.onload = event => {
                             const { name } = files;
                             const fileContent = event.target?.result as string | ArrayBuffer;

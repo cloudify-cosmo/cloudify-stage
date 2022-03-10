@@ -5,7 +5,7 @@ import pathlib from 'path';
 import sanitize from 'sanitize-filename';
 import decompress from 'decompress';
 import multer from 'multer';
-import { Request } from 'express';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as ManagerHandler from './ManagerHandler';
 import * as RequestHandler from './RequestHandler';
 import { getLogger } from './LoggerHandler';
@@ -70,9 +70,10 @@ function extractFilename(contentDisposition) {
     return match[1];
 }
 
+const userAgentHeader = { 'User-Agent': 'Node.js' };
+
 export function saveDataFromUrl(url, targetDir, req?: Request) {
     return new Promise((resolve, reject) => {
-        const HEADERS = { 'User-Agent': 'Node.js' };
         const archiveUrl = decodeURIComponent(url.trim());
 
         logger.debug('Fetching file from url', archiveUrl);
@@ -80,7 +81,7 @@ export function saveDataFromUrl(url, targetDir, req?: Request) {
         let getRequest = null;
         const onErrorFetch = reject;
 
-        const onSuccessFetch = response => {
+        const onSuccessFetch = (response: AxiosResponse) => {
             let archiveFile = extractFilename(response.headers['content-disposition']);
 
             logger.debug('Filename extracted from content-disposition', archiveFile);
@@ -110,7 +111,7 @@ export function saveDataFromUrl(url, targetDir, req?: Request) {
 
             logger.debug('Streaming to file', archivePath);
 
-            response.pipe(
+            response.data.pipe(
                 fs
                     .createWriteStream(archivePath)
                     .on('error', reject)
@@ -121,16 +122,17 @@ export function saveDataFromUrl(url, targetDir, req?: Request) {
             );
         };
 
+        const options: AxiosRequestConfig = { headers: userAgentHeader, responseType: 'stream' };
         if (isExternalUrl(archiveUrl)) {
-            const options = { options: { headers: HEADERS } };
-            getRequest = RequestHandler.request('GET', archiveUrl, options, onSuccessFetch, onErrorFetch);
+            getRequest = RequestHandler.request('GET', archiveUrl, options);
         } else {
-            getRequest = ManagerHandler.request('GET', archiveUrl, HEADERS, null, onSuccessFetch, onErrorFetch);
+            if (req) {
+                options.headers = { ...req.headers, ...userAgentHeader };
+            }
+            getRequest = ManagerHandler.request('GET', archiveUrl, options);
         }
 
-        if (req) {
-            req.pipe(getRequest);
-        }
+        getRequest.then(onSuccessFetch).catch(onErrorFetch);
     });
 }
 

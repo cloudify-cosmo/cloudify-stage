@@ -1,10 +1,11 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import request from 'request';
+import type { AxiosRequestHeaders } from 'axios';
 import _ from 'lodash';
 import { getConfig } from '../config';
 import { jsonRequest } from '../handler/ManagerHandler';
 import { getLogger } from '../handler/LoggerHandler';
+import { requestAndForwardResponse } from '../handler/RequestHandler';
 
 const router = express.Router();
 const logger = getLogger('GitHub');
@@ -25,29 +26,13 @@ function pipeRequest(req: Request, res: ResponseWithData, next: NextFunction, ur
     logger.debug(
         `Calling pipe request to: ${url} with${_.isUndefined(next) ? 'out' : ''} possibility to modify response`
     );
-    if (isMiddleware) {
-        let data = '';
-        req.pipe(
-            request
-                .get({ url, headers: { authorization }, qs: req.query, gzip: true, encoding: 'utf8' })
-                .on('data', chunk => {
-                    data += chunk;
-                })
-                .on('end', () => {
-                    res.data = data;
-                    next();
-                })
-                .on('error', err => {
-                    res.status(500).send({ message: err.message });
-                })
-        );
-    } else {
-        req.pipe(
-            request.get({ url, headers: { authorization }, qs: req.query }).on('error', err => {
-                res.status(500).send({ message: err.message });
-            })
-        ).pipe(res);
-    }
+
+    requestAndForwardResponse(url, res, {
+        headers: authorization ? { authorization } : {},
+        params: req.query,
+        responseEncoding: 'utf8',
+        decompress: !isMiddleware
+    }).catch(err => res.status(500).send({ message: err.message }));
 }
 
 function getAuthorizationHeader(user: string, tenant?: string) {
@@ -64,8 +49,8 @@ function setAuthorizationHeader(req: Request, _res: Response, next: NextFunction
         const userSecret = getSecretName(params.username);
         const passSecret = getSecretName(params.password);
         Promise.all([
-            jsonRequest<SecretsResponse>('GET', `/secrets/${userSecret}`, req.headers),
-            jsonRequest<SecretsResponse>('GET', `/secrets/${passSecret}`, req.headers)
+            jsonRequest<SecretsResponse>('GET', `/secrets/${userSecret}`, req.headers as AxiosRequestHeaders),
+            jsonRequest<SecretsResponse>('GET', `/secrets/${passSecret}`, req.headers as AxiosRequestHeaders)
         ])
             .then(([username, password]) => {
                 const authorization = `Basic ${Buffer.from(`${username.value}:${password.value}`).toString('base64')}`;

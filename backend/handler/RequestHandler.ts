@@ -1,36 +1,32 @@
-import req from 'request';
-import type { Response } from 'request';
+import axios from 'axios';
+import type { AxiosResponse, AxiosRequestConfig } from 'axios';
+import type { Response, Router } from 'express';
+import bodyParser from 'body-parser';
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
 
 const logger = getLogger('RequestHandler');
 
-export function request(
-    method: AllowedRequestMethod,
-    requestUrl: string,
-    options: req.CoreOptions = {},
-    onSuccess: (response: req.Response) => void,
-    onError: (error: Error) => void
-) {
+export function request(method: AllowedRequestMethod, requestUrl: string, options: AxiosRequestConfig = {}) {
     options.method = method;
 
     logger.debug(`Calling ${options.method} request to: ${requestUrl}`);
-    return req(requestUrl, options).on('error', onError).on('response', onSuccess);
+    return axios(requestUrl, options);
 }
 
-export function getResponseJson(res: Response) {
-    return new Promise((resolve, reject) => {
-        let body = '';
-        res.on('data', chunk => {
-            body += chunk;
-        });
-        res.on('end', () => {
-            try {
-                const jsonResponse = JSON.parse(body);
-                resolve(jsonResponse);
-            } catch (e) {
-                reject(e);
-            }
-        });
-    });
+export function requestAndForwardResponse(url: string, response: Response, options?: AxiosRequestConfig) {
+    return axios(url, { responseType: 'stream', ...options }).then(getResponseForwarder(response));
+}
+
+export function setUpRequestForwarding(router: Router) {
+    router.use(bodyParser.raw({ inflate: false, type: () => true }));
+}
+
+export function forward(axiosResponse: AxiosResponse, expressResponse: Response) {
+    expressResponse.status(axiosResponse.status).set(axiosResponse.headers);
+    axiosResponse.data.pipe(expressResponse);
+}
+
+export function getResponseForwarder(expressResponse: Response) {
+    return (axiosResponse: AxiosResponse) => forward(axiosResponse, expressResponse);
 }

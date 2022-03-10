@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import request from 'request';
 
+import axios from 'axios';
 import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
 import { getMode, MODE_COMMUNITY } from '../serverSettings';
@@ -26,18 +26,18 @@ router.get('/:z/:x/:y/:r?', (req, res) => {
     const url = _.template(tilesUrlTemplate)({ x, y, z, r, accessToken });
 
     logger.debug(`Fetching map tiles from ${tilesUrlTemplate}, x=${x}, y=${y}, z=${z}, r='${r}'.`);
-    req.pipe(
-        request(url)
-            .on('error', err => {
-                const message = 'Cannot fetch map tiles.';
-                logger.error(message, err);
-                res.status(500).send({ message });
-            })
-            .on('response', proxiedResponse => {
-                // NOTE: Stadia enforces HSTS, but SSL is not required when using Cloudify Manager
-                delete proxiedResponse.headers['strict-transport-security'];
-            })
-    ).pipe(res);
+
+    axios(url, { responseType: 'stream' })
+        .then(axiosResponse => {
+            delete axiosResponse.headers['strict-transport-security'];
+            res.status(axiosResponse.status).set(axiosResponse.headers);
+            axiosResponse.data.pipe(res);
+        })
+        .catch(err => {
+            const message = 'Cannot fetch map tiles.';
+            logger.error(message, err);
+            res.status(500).send({ message });
+        });
 });
 
 export default router;
