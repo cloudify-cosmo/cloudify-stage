@@ -2,14 +2,14 @@ import request from 'supertest';
 import nock from 'nock';
 
 import app from 'app';
-import { updateOptions } from 'handler/ManagerHandler';
+import { setManagerSpecificOptions } from 'handler/ManagerHandler';
 
 const mockApiUrl = 'https://raw.githubusercontent.com';
 const mockTimeout = 1000;
 
 jest.mock('handler/ManagerHandler', () => ({
     getApiUrl: () => mockApiUrl,
-    updateOptions: jest.fn(options => {
+    setManagerSpecificOptions: jest.fn(options => {
         options.timeout = mockTimeout;
     })
 }));
@@ -35,7 +35,7 @@ describe('/sp endpoint', () => {
         return request(app)
             .put(proxyBlueprintsUrl)
             .then(response => {
-                expect(updateOptions).toHaveBeenCalledWith(expect.any(Object), 'PUT');
+                expect(setManagerSpecificOptions).toHaveBeenCalledWith(expect.any(Object), 'PUT');
                 expect(response.statusCode).toBe(200);
             });
     });
@@ -48,7 +48,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Manager is not available')
+                    message: 'Requested URL: /blueprints Manager is not available'
                 });
             });
     });
@@ -65,7 +65,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Request timed out')
+                    message: 'Requested URL: /blueprints ETIMEDOUT'
                 });
             });
     });
@@ -81,7 +81,7 @@ describe('/sp endpoint', () => {
             .then(response => {
                 expect(response.statusCode).toBe(500);
                 expect(response.body).toEqual({
-                    message: expect.stringContaining('Connected to the Manager but timed out')
+                    message: 'Requested URL: /blueprints ECONNABORTED timeout of 1000ms exceeded'
                 });
             });
     });

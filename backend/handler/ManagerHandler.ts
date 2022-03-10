@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import fs from 'fs-extra';
-import type { CoreOptions, Headers, Response } from 'request';
+import https from 'https';
+
+import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
@@ -25,69 +27,41 @@ export function getApiUrl() {
     return `${getConfig().managerUrl}/api/${getConfig().manager.apiVersion}`;
 }
 
-export function updateOptions(options: CoreOptions, method: string, timeout?: number, headers?: Headers, data?: any) {
+export function setManagerSpecificOptions(options: AxiosRequestConfig, method: string, timeout?: number) {
     if (caFile) {
         logger.debug('Adding CA file to Agent Options');
-        options.agentOptions = {
+        options.httpsAgent = new https.Agent({
             ca: caFile
-        };
+        });
     }
 
     options.timeout = timeout || getConfig().app.proxy.timeouts[method.toLowerCase()];
 
-    if (headers) {
-        options.headers = _.omit(headers, 'host');
-    }
-
-    if (data) {
-        options.json = data;
-        try {
-            const strData = JSON.stringify(data);
-            options.headers = { ...options.headers, 'content-length': Buffer.byteLength(strData) };
-        } catch (error) {
-            logger.error('Invalid payload data. Error:', error);
-        }
-    }
+    options.headers = _.omit(options.headers, 'host');
 }
 
-export function request(
-    method: string,
-    url: string,
-    headers: Headers,
-    data: any,
-    onSuccess: (response: Response) => void,
-    onError: (error: Error) => void,
-    timeout?: number
-) {
+export function request(method: string, url: string, requestOptions: AxiosRequestConfig, timeout?: number) {
     const requestUrl = getApiUrl() + (_.startsWith(url, '/') ? url : `/${url}`);
-    const requestOptions = {};
-    updateOptions(requestOptions, method, timeout, headers, data);
+    setManagerSpecificOptions(requestOptions, method, timeout);
 
     logger.debug(`Preparing ${method} request to manager: ${requestUrl}`);
-    return RequestHandler.request(method as AllowedRequestMethod, requestUrl, requestOptions, onSuccess, onError);
+    return RequestHandler.request(method as AllowedRequestMethod, requestUrl, requestOptions);
 }
 
 // the request assumes the response is JSON
-export function jsonRequest<ResponseBody>(method: string, url: string, headers: Headers, data?: any, timeout?: number) {
-    return new Promise<ResponseBody>((resolve, reject) => {
-        request(
-            method,
-            url,
-            headers,
-            data,
-            res => {
-                const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
-
-                RequestHandler.getResponseJson(res)
-                    .then(json => (isSuccess ? resolve(<ResponseBody>json) : reject(json)))
-                    .catch(e =>
-                        isSuccess
-                            ? reject(`response data could not be parsed to JSON: ${e}`)
-                            : reject(res.statusMessage)
-                    );
-            },
-            err => reject(err),
-            timeout
-        );
-    });
+export function jsonRequest<ResponseBody>(
+    method: string,
+    url: string,
+    headers: AxiosRequestHeaders,
+    data?: any,
+    timeout?: number
+) {
+    return request(method, url, { headers, data }, timeout)
+        .then(res => <ResponseBody>res.data)
+        .catch(err => {
+            if (err.response) {
+                throw err.response.data;
+            }
+            throw err;
+        });
 }
