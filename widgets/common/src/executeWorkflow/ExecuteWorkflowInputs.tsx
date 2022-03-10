@@ -71,7 +71,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const { Message, Form, Header, Divider, DateInput } = Stage.Basic;
-    const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
+    const { YamlFileButton, InputsHelpIcon, InputsUtils } = Stage.Common;
     return (
         <>
             {!_.isEmpty(baseWorkflowInputs) && (
@@ -82,7 +82,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     iconButton
                 />
             )}
-            <InputsHeader iconButton />
+            <InputsHelpIcon />
             {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} style={{ marginTop: 65 }} />}
 
             {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
