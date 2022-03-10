@@ -46,6 +46,10 @@
       "description": "Page name",
       "type": "string"
     },
+    "icon": {
+      "description": "Page icon (one of Semantic UI React icons)",
+      "type": "string"
+    },
     "layout": {
       "description": "List of page layouts",
       "type": "array",

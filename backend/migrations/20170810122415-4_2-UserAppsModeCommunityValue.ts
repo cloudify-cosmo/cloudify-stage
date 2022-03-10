@@ -1,4 +1,6 @@
-module.exports = {
+import type { MigrationObject } from './common/types';
+
+export const { up, down }: MigrationObject = {
     up(queryInterface) {
         // NOTE: Cannot use db-agnostic queryInterface.changeColumn method, because of error.
         // It is known issue: https://github.com/sequelize/sequelize/issues/2554
@@ -8,5 +10,6 @@ module.exports = {
 
     down() {
         // Nothing to do
+        return Promise.resolve();
     }
 };

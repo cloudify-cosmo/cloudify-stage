@@ -1,9 +1,11 @@
+import type { MigrationObject, QueryInterfaceIndexOptions } from './common/types';
+
 const managerIpColumnName = 'managerIp';
 const indexWithoutManagerIp = ['username', 'mode', 'tenant'];
 const indexWithManagerIp = indexWithoutManagerIp.concat(managerIpColumnName);
-const indexOptions = { indicesType: 'UNIQUE' };
+const indexOptions: QueryInterfaceIndexOptions = { type: 'UNIQUE' };
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     async up(queryInterface) {
         const transaction = await queryInterface.sequelize.transaction();
         try {
@@ -24,7 +26,7 @@ module.exports = {
         try {
             await queryInterface.addColumn('UserApps', managerIpColumnName, {
                 type: Sequelize.STRING,
-                notNull: false
+                allowNull: false
             });
             await queryInterface.removeIndex('UserApps', indexWithoutManagerIp, indexOptions);
             await queryInterface.addIndex('UserApps', indexWithManagerIp, indexOptions);

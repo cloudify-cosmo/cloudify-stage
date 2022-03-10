@@ -1,4 +1,6 @@
-module.exports = {
+import type { MigrationObject } from './common/types';
+
+export const { up, down }: MigrationObject = {
     up: (queryInterface, Sequelize) => {
         return queryInterface
             .createTable('WidgetBackends', {
@@ -14,17 +16,17 @@ module.exports = {
             })
             .then(() =>
                 queryInterface.addIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     },
 
-    down: (queryInterface, Sequelize, logger) => {
+    down: (queryInterface, _Sequelize, logger) => {
         return queryInterface
             .dropTable('WidgetBackends', { cascade: true, logging: logger.info, benchmark: true })
             .then(() =>
                 queryInterface.removeIndex('WidgetBackends', ['widgetId', 'serviceName', 'method'], {
-                    indicesType: 'UNIQUE'
+                    type: 'UNIQUE'
                 })
             );
     }

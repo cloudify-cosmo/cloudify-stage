@@ -1,4 +1,6 @@
-function createClientConfigs(queryInterface, Sequelize) {
+import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
+
+function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('ClientConfigs', {
             id: {
@@ -26,12 +28,12 @@ function createClientConfigs(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('ClientConfigs', ['managerIp'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createUserAppModel(queryInterface, Sequelize) {
+function createUserAppModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('UserApps', {
             id: {
@@ -59,12 +61,12 @@ function createUserAppModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('UserApps', ['managerIp', 'username', 'role', 'mode'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createBlueprintAdditionsModel(queryInterface, Sequelize) {
+function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('BlueprintAdditions', {
             id: {
@@ -89,12 +91,12 @@ function createBlueprintAdditionsModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('BlueprintAdditions', ['blueprintId'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-function createApplicationModel(queryInterface, Sequelize) {
+function createApplicationModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('Applications', {
             id: {
@@ -123,12 +125,12 @@ function createApplicationModel(queryInterface, Sequelize) {
         })
         .then(() =>
             queryInterface.addIndex('Applications', ['id'], {
-                indicesType: 'UNIQUE'
+                type: 'UNIQUE'
             })
         );
 }
 
-module.exports = {
+export const { up, down }: MigrationObject = {
     up(queryInterface, Sequelize) {
         return createClientConfigs(queryInterface, Sequelize)
             .then(() => createUserAppModel(queryInterface, Sequelize))
