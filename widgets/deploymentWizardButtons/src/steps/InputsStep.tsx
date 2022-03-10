@@ -153,7 +153,7 @@ class InputsStepContent extends React.Component {
 
     render() {
         const { Divider, Form, Table } = Stage.Basic;
-        const { DataTypesButton, InputsUtils, InputsHeader, YamlFileButton } = Stage.Common;
+        const { DataTypesButton, InputsUtils, InputsInfo, YamlFileButton } = Stage.Common;
         const { errors, loading, stepData, wizardData } = this.props;
         const { fileLoading } = this.state;
 
@@ -179,7 +179,7 @@ class InputsStepContent extends React.Component {
                                 <Table.Row>
                                     <Table.HeaderCell>Input</Table.HeaderCell>
                                     <Table.HeaderCell colSpan="2">
-                                        <InputsHeader header="Value" dividing={false} />
+                                        <InputsInfo header="Value" dividing={false} />
                                     </Table.HeaderCell>
                                 </Table.Row>
                             </Table.Header>
