@@ -1,3 +1,5 @@
+import type { FunctionComponent } from 'react';
+
 export {};
 
 const PopupContent = () => {
@@ -42,13 +44,8 @@ interface InputsHeaderProps {
     header?: string;
 }
 
-class InputsHeader extends React.Component<InputsHeaderProps> {
-    shouldComponentUpdate(nextProps: InputsHeaderProps) {
-        return !_.isEqual(this.props, nextProps);
-    }
-
-    render() {
-        const { compact = false, dividing = true, header = 'Deployment inputs', iconButton = false } = this.props;
+const InputsHeader: FunctionComponent<InputsHeaderProps> = React.memo(
+    ({ compact = false, dividing = true, header = 'Deployment inputs', iconButton = false }) => {
         const { Form, Header, Button, Popup, PopupHelp } = Stage.Basic;
 
         if (iconButton) {
@@ -80,7 +77,7 @@ class InputsHeader extends React.Component<InputsHeaderProps> {
             <HeaderWithDescription />
         );
     }
-}
+);
 
 declare global {
     namespace Stage.Common {
