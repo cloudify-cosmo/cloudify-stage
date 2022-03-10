@@ -5,7 +5,7 @@ import pathlib from 'path';
 import sanitize from 'sanitize-filename';
 import decompress from 'decompress';
 import multer from 'multer';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as ManagerHandler from './ManagerHandler';
 import * as RequestHandler from './RequestHandler';
 import { getLogger } from './LoggerHandler';
