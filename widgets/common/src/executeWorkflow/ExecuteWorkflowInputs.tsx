@@ -82,7 +82,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     iconButton
                 />
             )}
-            <InputsHeader header={t('paramsHeader')} compact iconButton />
+            <InputsHeader iconButton />
             {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} style={{ marginTop: 65 }} />}
 
             {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
