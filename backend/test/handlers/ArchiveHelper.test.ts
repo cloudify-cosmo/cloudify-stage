@@ -17,9 +17,7 @@ describe('ArchiveHelper', () => {
             expect(request).toHaveBeenCalledWith(
                 'GET',
                 url,
-                expect.objectContaining({ options: { headers: { 'User-Agent': 'Node.js' } } }),
-                expect.anything(),
-                expect.anything()
+                expect.objectContaining({ headers: { 'User-Agent': 'Node.js' } })
             )
         );
     });

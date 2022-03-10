@@ -3,7 +3,7 @@ import app from 'app';
 
 jest.mock('handler/ManagerHandler', () => ({
     getManagerUrl: () => 'http://blank.page',
-    updateOptions: () => ({})
+    setManagerSpecificOptions: () => ({})
 }));
 
 describe('/plugins/icons/:pluginId endpoint', () => {
