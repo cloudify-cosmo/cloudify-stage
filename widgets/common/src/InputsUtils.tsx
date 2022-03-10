@@ -252,6 +252,8 @@ class InputsUtils {
     static getInputField(input, value, onChange, error) {
         const { name, default: defaultValue, type, constraints } = input;
         const { Form } = Stage.Basic;
+        const { DynamicDropdown } = Stage.Common;
+
         const getConstraintValue = InputsUtils.getConstraintValueFunction(constraints);
         const validValues = getConstraintValue('valid_values');
 
@@ -368,6 +370,16 @@ class InputsUtils {
                         error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         onChange={onChange}
+                    />
+                );
+            case 'deployment_id':
+            case 'blueprint_id':
+                return (
+                    <DynamicDropdown
+                        placeholder="Select Blueprint"
+                        name="blueprintName"
+                        fetchUrl="/blueprints?_include=id&amp;state=uploaded"
+                        onChange={selectBlueprint}
                     />
                 );
             default:
