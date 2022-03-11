@@ -52,23 +52,12 @@ The commands are described further inside of the `Makefile`.
 
 ### Manual way
 
-1. **Install Cloudify-Manager locally**
+1. **Cloudify Manager installation**
 
-    You can install the docker image using the way [described here](https://docs.cloudify.co/latest/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
-    - **Available docker images:**
-      
-      Production docker images available on docker hub:
-      
-      - Premium: `cloudifyplatform/premium-cloudify-manager-aio`
-      - Community: `cloudifyplatform/community-cloudify-manager-aio`
-      
-      Premium dev docker images:
-      
-      - https://github.com/cloudify-cosmo/cloudify-premium/blob/master/packages-urls/docker-image-release.yaml (access restricted)
-      
-      Community edition dev docker images:
-        
-      - https://github.com/cloudify-cosmo/cloudify-versions/blob/master/packages-urls/docker-image-release.yaml
+    There are many way to install Cloudify Manager. You can install the docker image of Cloudify Manager using the way described here:
+
+     - [Production docker premium image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/trial_install/#step-1-install-the-cloudify-manager-as-a-docker-container).
+     - [Production docker community image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
 
 1. **Configuration**
    
