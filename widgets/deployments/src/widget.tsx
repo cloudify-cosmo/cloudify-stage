@@ -28,6 +28,12 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
+            id: 'showFirstUserJourneyButtons',
+            name: 'Show first user journey buttons',
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
             id: 'blueprintIdFilter',
             name: 'Blueprint ID to filter by',
             placeHolder: 'Enter the blueprint id you wish to filter by',
