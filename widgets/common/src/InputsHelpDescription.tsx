@@ -1,4 +1,4 @@
-const PopupContent = () => {
+const InputsHelpDescription = () => {
     const { List } = Stage.Basic;
     return (
         <div>
@@ -33,4 +33,4 @@ const PopupContent = () => {
     );
 };
 
-export default PopupContent;
+export default InputsHelpDescription;

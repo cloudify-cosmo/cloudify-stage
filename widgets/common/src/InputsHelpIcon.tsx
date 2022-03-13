@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import PopupContent from './PopupContent';
+import InputsHelpDescription from './InputsHelpDescription';
 
 const InputsHelpIcon: FunctionComponent = () => {
     const { Button, Popup } = Stage.Basic;
@@ -8,7 +8,7 @@ const InputsHelpIcon: FunctionComponent = () => {
             flowing
             trigger={<Button icon="help" floated="right" />}
             header="Value type"
-            content={<PopupContent />}
+            content={<InputsHelpDescription />}
         />
     );
 };

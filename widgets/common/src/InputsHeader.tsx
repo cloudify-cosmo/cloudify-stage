@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import PopupContent from './PopupContent';
+import InputsHelpDescription from './InputsHelpDescription';
 
 interface InputsHeaderProps {
     iconButton?: boolean;
@@ -17,7 +17,7 @@ const InputsHeader: FunctionComponent<InputsHeaderProps> = React.memo(
                 {header}
                 <Header.Subheader>
                     See values typing details:&nbsp;
-                    <PopupHelp flowing header="Value type" content={<PopupContent />} />
+                    <PopupHelp flowing header="Value type" content={<InputsHelpDescription />} />
                 </Header.Subheader>
             </Header>
         );
