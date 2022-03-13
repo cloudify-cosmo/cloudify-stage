@@ -1,5 +1,7 @@
 import type { ComponentProps } from 'react';
 
+const t = Stage.Utils.getT('widgets.blueprintActionButtons.buttons');
+
 interface BlueprintActionButtonsProps {
     blueprintId: string;
     toolbox: Stage.Types.Toolbox;
@@ -75,6 +77,14 @@ export default class BlueprintActionButtons extends React.Component<
         return false;
     };
 
+    downloadBlueprint = () => {
+        const { toolbox, blueprintId } = this.props;
+        const blueprintDownloadUrl = `/blueprints/${blueprintId}/archive`;
+        const blueprintFileName = `${blueprintId}.zip`;
+
+        toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
+    };
+
     showModal(type: string) {
         this.setState({ modalType: type, showModal: true, force: false });
     }
@@ -91,6 +101,7 @@ export default class BlueprintActionButtons extends React.Component<
         const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
         const manager = toolbox.getManager();
         const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const disableButtons = _.isEmpty(blueprintId) || loading;
 
         return (
             <div>
@@ -100,9 +111,9 @@ export default class BlueprintActionButtons extends React.Component<
                     className="labeled icon"
                     color="teal"
                     icon="rocket"
-                    disabled={_.isEmpty(blueprintId) || loading}
+                    disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DEPLOY_ACTION)}
-                    content="Create deployment"
+                    content={t('createDeployment')}
                     id="createDeploymentButton"
                 />
 
@@ -110,10 +121,20 @@ export default class BlueprintActionButtons extends React.Component<
                     className="labeled icon"
                     color="teal"
                     icon="trash"
-                    disabled={_.isEmpty(blueprintId) || loading}
+                    disabled={disableButtons}
                     onClick={() => this.showModal(BlueprintActionButtons.DELETE_ACTION)}
-                    content="Delete blueprint"
+                    content={t('deleteBlueprint')}
                     id="deleteBlueprintButton"
+                />
+
+                <Button
+                    className="labeled icon"
+                    color="teal"
+                    icon="download"
+                    disabled={disableButtons}
+                    onClick={this.downloadBlueprint}
+                    content={t('downloadBlueprint')}
+                    id="downloadBlueprintButton"
                 />
 
                 {!manager.isCommunityEdition() && showEditCopyInComposerButton && (
@@ -121,7 +142,7 @@ export default class BlueprintActionButtons extends React.Component<
                         className="labeled icon"
                         color="teal"
                         icon="external share"
-                        disabled={_.isEmpty(blueprintId) || loading}
+                        disabled={disableButtons}
                         onClick={() => {
                             toolbox.loading(true);
                             this.setState({ loading: true });
@@ -139,7 +160,7 @@ export default class BlueprintActionButtons extends React.Component<
                                     this.setState({ loading: false });
                                 });
                         }}
-                        content="Edit a copy in Composer"
+                        content={t('editCopy')}
                     />
                 )}
 

@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import request from 'request';
 import { getLogger } from '../handler/LoggerHandler';
+import { requestAndForwardResponse } from '../handler/RequestHandler';
 
 const router = express.Router();
 const logger = getLogger('External');
@@ -11,7 +11,7 @@ interface GetContentQuery extends Record<string, string> {
 }
 
 function pipeRequest(
-    req: Request<any, any, any, GetContentQuery>,
+    _req: Request<any, any, any, GetContentQuery>,
     res: Response,
     _next: NextFunction,
     url: string,
@@ -19,11 +19,9 @@ function pipeRequest(
 ) {
     logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
 
-    req.pipe(
-        request.get({ url: url.startsWith('//') ? `http:${url}` : url, qs: queryString }).on('error', err => {
-            res.status(500).send({ message: err.message });
-        })
-    ).pipe(res);
+    requestAndForwardResponse(url.startsWith('//') ? `http:${url}` : url, res, { params: queryString }).catch(err =>
+        res.status(500).send({ message: err.message })
+    );
 }
 
 router.get<any, any, any, any, GetContentQuery>('/content', (req, res, next) => {
