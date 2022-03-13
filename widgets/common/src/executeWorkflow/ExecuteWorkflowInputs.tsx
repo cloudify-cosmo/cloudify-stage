@@ -74,16 +74,19 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     const { YamlFileButton, InputsHelpIcon, InputsUtils } = Stage.Common;
     return (
         <>
-            {!_.isEmpty(baseWorkflowInputs) && (
-                <YamlFileButton
-                    onChange={onYamlFileChange}
-                    dataType="execution parameters"
-                    fileLoading={fileLoading}
-                    iconButton
-                />
+            {_.isEmpty(baseWorkflowInputs) ? (
+                <Message content={t('noParams')} />
+            ) : (
+                <>
+                    <YamlFileButton
+                        onChange={onYamlFileChange}
+                        dataType="execution parameters"
+                        fileLoading={fileLoading}
+                        iconButton
+                    />
+                    <InputsHelpIcon />
+                </>
             )}
-            <InputsHelpIcon />
-            {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} style={{ marginTop: 65 }} />}
 
             {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
             {showInstallOptions && (

@@ -23,11 +23,12 @@ const DeploymentInputs: FunctionComponent<Props> = ({
 }) => {
     const { DataTypesButton, InputsHelpIcon, YamlFileButton, InputsUtils } = Stage.Common;
     const { Message } = Stage.Basic;
+    const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
     return (
         <>
             {blueprint.id && (
                 <>
-                    {!_.isEmpty(blueprint.plan.inputs) && (
+                    {deploymentHasInputs && (
                         <YamlFileButton
                             onChange={onYamlFileChange}
                             dataType="deployment's inputs"
@@ -38,8 +39,11 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                     {!_.isEmpty(blueprint.plan.data_types) && (
                         <DataTypesButton iconButton types={blueprint.plan.data_types} />
                     )}
-                    <InputsHelpIcon />
-                    {_.isEmpty(blueprint.plan.inputs) && <Message content={t('inputs.deploymentInputs.noInputs')} />}
+                    {deploymentHasInputs ? (
+                        <InputsHelpIcon />
+                    ) : (
+                        <Message content={t('inputs.deploymentInputs.noInputs')} />
+                    )}
                 </>
             )}
 
