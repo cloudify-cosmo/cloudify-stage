@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { FirstUserJourneyButton } from './FirstUserJourneyButton';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
+import { FunctionComponent } from 'react';
+import { WidgetlessToolbox } from '../../../app/utils/StageAPI';
 
 const Wrapper = styled.div`
     margin: 0 auto;
@@ -8,7 +10,7 @@ const Wrapper = styled.div`
 
 const {
     Hooks: { useBoolean },
-    Common: { BlueprintMarketplace }
+    Common: { BlueprintMarketplace, TerraformModal }
 } = Stage;
 
 const defaultTabs: MarketplaceTab[] = [
@@ -38,10 +40,13 @@ const defaultTabs: MarketplaceTab[] = [
     }
 ];
 
-export const FirstUserJourneyButtons = () => {
+interface Props {
+    toolbox: WidgetlessToolbox;
+}
+
+export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) => {
     const [isMarketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
-    // eslint-disable-next-line
-    const [_isTerraformModalVisible, showTerraformModal, _hideTerraformModal] = useBoolean();
+    const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
         showMarketplaceModal();
@@ -59,6 +64,8 @@ export const FirstUserJourneyButtons = () => {
             {isMarketplaceModalVisible && (
                 <BlueprintMarketplace.Modal open onHide={hideMarketplaceModal} tabs={defaultTabs} />
             )}
+
+            {isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
         </Wrapper>
     );
 };

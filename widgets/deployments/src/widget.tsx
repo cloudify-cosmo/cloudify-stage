@@ -151,7 +151,7 @@ Stage.defineWidget({
         } = widget;
 
         if (showFirstUserJourneyButtons) {
-            return <FirstUserJourneyButtons />;
+            return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 
         if (_.isEmpty(data)) {
