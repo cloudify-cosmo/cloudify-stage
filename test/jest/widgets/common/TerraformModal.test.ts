@@ -1,4 +1,4 @@
-import { getResourceLocation } from 'blueprints/src/TerraformModal';
+import { getResourceLocation } from 'common/src/TerraformModal';
 
 describe('(Widget) Blueprints', () => {
     describe('should provide Terraform resource location', () => {
