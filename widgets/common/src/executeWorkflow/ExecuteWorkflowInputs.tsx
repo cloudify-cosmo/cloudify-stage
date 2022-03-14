@@ -71,14 +71,22 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const { Message, Form, Header, Divider, DateInput } = Stage.Basic;
-    const { YamlFileButton, InputsHeader, InputsUtils } = Stage.Common;
+    const { YamlFileButton, InputsHelpIcon, InputsUtils } = Stage.Common;
     return (
         <>
-            {!_.isEmpty(baseWorkflowInputs) && (
-                <YamlFileButton onChange={onYamlFileChange} dataType="execution parameters" fileLoading={fileLoading} />
+            {_.isEmpty(baseWorkflowInputs) ? (
+                <Message content={t('noParams')} />
+            ) : (
+                <>
+                    <YamlFileButton
+                        onChange={onYamlFileChange}
+                        dataType="execution parameters"
+                        fileLoading={fileLoading}
+                        iconButton
+                    />
+                    <InputsHelpIcon />
+                </>
             )}
-            <InputsHeader header={t('paramsHeader')} compact />
-            {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} />}
 
             {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
             {showInstallOptions && (
