@@ -5,9 +5,9 @@ import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from 
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
-import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
-import type { Variable, Output } from '../../../backend/routes/Terraform.types';
-import terraformLogo from '../images/terraform-icon.png';
+import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
+import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
+import terraformLogo from '../../images/terraform-icon.png';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');

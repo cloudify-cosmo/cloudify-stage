@@ -1,6 +1,6 @@
 import React from 'react';
-import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
-import type { Variable } from '../../../backend/routes/Terraform.types';
+import { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
+import type { Variable } from '../../../../backend/routes/Terraform.types';
 import { inputMaxLength } from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal.variablesTable');

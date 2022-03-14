@@ -41,7 +41,7 @@ const defaultTabs: MarketplaceTab[] = [
 export const FirstUserJourneyButtons = () => {
     const [isMarketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     // eslint-disable-next-line
-    const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    const [_isTerraformModalVisible, showTerraformModal, _hideTerraformModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
         showMarketplaceModal();
