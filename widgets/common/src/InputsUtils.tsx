@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
+import { getToolbox } from '../../../app/utils/Toolbox';
+
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
     return (
@@ -212,7 +214,7 @@ class InputsUtils {
         ) : null;
     }
 
-    static getFormInputField(input, value, onChange, error, dataType) {
+    static getFormInputField(input, value, onChange, error, toolbox, dataType) {
         const { name, display_label: displayLabel, default: defaultValue, description, type, constraints } = input;
         const { Form } = Stage.Basic;
         const help = InputsUtils.getHelp(description, type, constraints, defaultValue, dataType);
@@ -222,20 +224,15 @@ class InputsUtils {
             case 'boolean':
                 return (
                     <Form.Field key={name} help={help} required={required}>
-                        {InputsUtils.getInputField(input, value, onChange, error)}
+                        {InputsUtils.getInputField(input, value, onChange, error, toolbox)}
                     </Form.Field>
                 );
             case 'integer':
-                return (
-                    <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
-                        {InputsUtils.getInputField(input, value, onChange, error)}
-                    </Form.Field>
-                );
             case 'string':
             default:
                 return (
                     <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
-                        {InputsUtils.getInputField(input, value, onChange, error)}
+                        {InputsUtils.getInputField(input, value, onChange, error, toolbox)}
                     </Form.Field>
                 );
         }
@@ -249,9 +246,10 @@ class InputsUtils {
         return index >= 0 ? constraints[index][constraintName] : null;
     };
 
-    static getInputField(input, value, onChange, error) {
+    static getInputField(input, value, onChange, error, toolbox) {
         const { name, default: defaultValue, type, constraints } = input;
         const { Form } = Stage.Basic;
+        const { DynamicDropdown } = Stage.Common;
         const getConstraintValue = InputsUtils.getConstraintValueFunction(constraints);
         const validValues = getConstraintValue('valid_values');
 
@@ -370,6 +368,18 @@ class InputsUtils {
                         onChange={onChange}
                     />
                 );
+            case 'deployment_id':
+                return (
+                    <DynamicDropdown
+                        type="string"
+                        value={value}
+                        fetchUrl="/deployments"
+                        onChange={onChange}
+                        toolbox={toolbox}
+                        constraints={constraints}
+                    />
+                );
+            case 'blueprint_id':
             default:
                 return (
                     <div style={{ position: 'relative' }}>
@@ -392,7 +402,7 @@ class InputsUtils {
         return inputsState[input.name];
     }
 
-    static getInputFields(inputs, onChange, inputsState, errorsState, dataTypes?) {
+    static getInputFields(inputs, onChange, inputsState, errorsState, toolbox, dataTypes?) {
         return _(inputs)
             .map((input, name) => ({ name, ...input }))
             .reject('hidden')
@@ -400,7 +410,14 @@ class InputsUtils {
             .map(input => {
                 const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes[input.type] : undefined;
                 const value = InputsUtils.normalizeValue(input, inputsState, dataType);
-                return InputsUtils.getFormInputField(input, value, onChange, errorsState[input.name], dataType);
+                return InputsUtils.getFormInputField(
+                    input,
+                    value,
+                    onChange,
+                    errorsState[input.name],
+                    toolbox,
+                    dataType
+                );
             })
             .value();
     }

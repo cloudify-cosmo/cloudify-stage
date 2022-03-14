@@ -49,6 +49,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     onQueueChange: OnCheckboxChange;
     onScheduleChange: OnCheckboxChange;
     onScheduledTimeChange: OnDateInputChange;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
@@ -58,6 +59,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     fileLoading,
     onWorkflowInputChange,
     errors,
+    toolbox,
     showInstallOptions,
     force,
     dryRun,
@@ -80,7 +82,13 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
             <InputsHeader header={t('paramsHeader')} compact />
             {_.isEmpty(baseWorkflowInputs) && <Message content={t('noParams')} />}
 
-            {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
+            {InputsUtils.getInputFields(
+                baseWorkflowInputs,
+                onWorkflowInputChange,
+                userWorkflowInputsState,
+                errors,
+                toolbox
+            )}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

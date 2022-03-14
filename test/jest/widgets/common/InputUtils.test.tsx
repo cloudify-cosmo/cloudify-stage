@@ -25,14 +25,14 @@ describe('InputsUtils.getInputField', () => {
 
     it('Renders Textarea with default rows value', () => {
         delete input.display.rows;
-        const wrapper = shallow(InputsUtils.getInputField(input, value, onChange, error));
+        const wrapper = shallow(InputsUtils.getInputField(input, value, onChange, error, {}));
         const wrapperTextArea = wrapper.find(Form.TextArea);
         expect(wrapper.find(Form.TextArea)).toHaveLength(1);
         expect(wrapperTextArea.props().rows).toEqual(InputsUtils.DEFAULT_TEXTAREA_ROWS);
     });
 
     it('Renders Textarea with appropriate rows prop', () => {
-        const wrapper = shallow(InputsUtils.getInputField(input, value, onChange, error));
+        const wrapper = shallow(InputsUtils.getInputField(input, value, onChange, error, {}));
         const wrapperTextArea = wrapper.find(Form.TextArea);
         expect(wrapperTextArea.props().rows).toEqual(5);
     });
