@@ -18,8 +18,11 @@ const RowWrapper = styled.div`
 
 const {
     Hooks: { useBoolean },
-    Common: { BlueprintMarketplace, TerraformModal }
+    Common: { BlueprintMarketplace, TerraformModal },
+    Utils: { getT }
 } = Stage;
+
+const t = getT('widgets.deployments.firstJourney');
 
 interface Props {
     toolbox: WidgetlessToolbox;
@@ -39,10 +42,14 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
 
     return (
         <Wrapper>
-            <RowWrapper>No Deployments Yet</RowWrapper>
+            <RowWrapper>{t('header')}</RowWrapper>
             <RowWrapper>
-                <FirstUserJourneyButton onClick={handleDeploymentsClick}>Create new Deployment</FirstUserJourneyButton>
-                <FirstUserJourneyButton onClick={handleTerraformClick}>Upload from Terraform</FirstUserJourneyButton>
+                <FirstUserJourneyButton onClick={handleDeploymentsClick}>
+                    {t('buttons.createDeployment')}
+                </FirstUserJourneyButton>
+                <FirstUserJourneyButton onClick={handleTerraformClick}>
+                    {t('buttons.uploadFromTerraform')}
+                </FirstUserJourneyButton>
             </RowWrapper>
 
             {isMarketplaceModalVisible && (

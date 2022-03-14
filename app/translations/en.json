@@ -1527,6 +1527,36 @@
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
                 }
             }
+        },
+        "deployments": {
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "lastExecution": "Last execution",
+                    "blueprint": "Blueprint",
+                    "siteName": "Site Name",
+                    "created": "Created",
+                    "updated": "Updated",
+                    "creator": "Creator"
+                }
+            },
+            "list": {
+                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+            },
+            "updatedIcon": {
+                "header": "Deployment updated",
+                "content": {
+                    "description": "This deployment has been updated at least once since creation.",
+                    "lastUpdate": "Last update was on: "
+                }
+            },
+            "firstJourney": {
+                "header": "No Deployments Yet",
+                "buttons": {
+                    "createDeployment": "Create new Deployment",
+                    "uploadFromTerraform": "Upload from Terraform"
+                }
+            }
         }
     }
 }

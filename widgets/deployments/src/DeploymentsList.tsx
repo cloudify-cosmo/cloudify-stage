@@ -1,6 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
+import StageUtils from '../../../app/utils/stageUtils';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
+
+const t = StageUtils.getT('widgets.deployments.list');
 
 export default class DeploymentsList extends React.Component {
     constructor(props, context) {
@@ -92,7 +95,6 @@ export default class DeploymentsList extends React.Component {
     render() {
         const { activeAction, deployment, error, executeModalOpen, workflowName } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Deployments available. Click "Create deployment" to add deployments.';
         const { ErrorMessage } = Stage.Basic;
         const { DeploymentActionsModals, ExecuteWorkflowModal } = Stage.Common;
 
@@ -114,7 +116,7 @@ export default class DeploymentsList extends React.Component {
                     onActOnExecution={this.actOnExecution}
                     onError={this.setError}
                     onSetVisibility={this.setDeploymentVisibility}
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noDeployments')}
                     showExecutionStatusLabel={showExecutionStatusLabel}
                     toolbox={toolbox}
                 />

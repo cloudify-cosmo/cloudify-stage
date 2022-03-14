@@ -10,6 +10,8 @@ const defaultDeployment: DeploymentUpdatedIconProps['deployment'] = {
     updated_at: null
 };
 
+const t = Stage.Utils.getT('widgets.deployments.updatedIcon');
+
 export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }: DeploymentUpdatedIconProps) {
     const { Icon, Popup } = Stage.Basic;
 
@@ -21,11 +23,12 @@ export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }
                     <Icon corner name="refresh" color="blue" />
                 </Icon.Group>
             </Popup.Trigger>
-            <Popup.Header>Deployment updated</Popup.Header>
+            <Popup.Header>{t('header')}</Popup.Header>
             <Popup.Content>
-                <p>This deployment has been updated at least once since creation.</p>
+                <p>{t('content.description')}</p>
                 <p>
-                    Last update was on: <strong>{deployment.updated_at}</strong>.
+                    {t('content.lastUpdate')}
+                    <strong>{deployment.updated_at}</strong>.
                 </p>
             </Popup.Content>
         </Popup>
