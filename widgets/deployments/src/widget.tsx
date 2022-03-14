@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import DeploymentsList from './DeploymentsList';
-import { FirstUserJourneyButtons } from './FirstUserJourneyButtons';
+import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 
 Stage.defineWidget({
     id: 'deployments',

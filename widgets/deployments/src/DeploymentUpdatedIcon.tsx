@@ -1,12 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
+interface DeploymentUpdatedIconProps {
+    deployment: {
+        isUpdated: boolean;
+        updated_at: string | null;
+    };
+}
 
-export default function DeploymentUpdatedIcon({ className, deployment }) {
+const defaultDeployment: DeploymentUpdatedIconProps['deployment'] = {
+    isUpdated: false,
+    updated_at: null
+};
+
+export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }: DeploymentUpdatedIconProps) {
     const { Icon, Popup } = Stage.Basic;
 
     return deployment.isUpdated ? (
         <Popup wide on="hover">
             <Popup.Trigger>
-                <Icon.Group size="large" className={className} style={{ marginLeft: '6px', marginTop: '-4px' }}>
+                <Icon.Group size="large" style={{ marginLeft: '6px', marginTop: '-4px' }}>
                     <Icon name="cube" color="blue" />
                     <Icon corner name="refresh" color="blue" />
                 </Icon.Group>
@@ -21,13 +31,3 @@ export default function DeploymentUpdatedIcon({ className, deployment }) {
         </Popup>
     ) : null;
 }
-
-DeploymentUpdatedIcon.propTypes = {
-    deployment: PropTypes.shape({ isUpdated: PropTypes.bool, updated_at: PropTypes.string }),
-    className: PropTypes.string
-};
-
-DeploymentUpdatedIcon.defaultProps = {
-    deployment: { isUpdated: false, updated_at: null },
-    className: ''
-};
