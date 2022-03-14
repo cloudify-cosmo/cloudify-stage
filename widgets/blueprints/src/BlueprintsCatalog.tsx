@@ -17,6 +17,7 @@ export default function BlueprintsCatalog({
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
+    const { fieldsToShow } = widget.configuration;
 
     const blueprintsItems = data.items.map(item => {
         return (
@@ -60,38 +61,66 @@ export default function BlueprintsCatalog({
                             {item.description}
                         </Grid.Column>
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Creator
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.created_by}</Grid.Column>
-                        </Grid.Row>
+                        {fieldsToShow.includes('Created') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Created
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.created_at}</Grid.Column>
+                            </Grid.Row>
+                        )}
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    State
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">
-                                <BlueprintState blueprint={item} />
-                            </Grid.Column>
-                        </Grid.Row>
+                        {fieldsToShow.includes('Updated') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Updated
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.updated_at}</Grid.Column>
+                            </Grid.Row>
+                        )}
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    # Deployments
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">
-                                <Label color="green" horizontal>
-                                    {item.depCount}
-                                </Label>
-                            </Grid.Column>
-                        </Grid.Row>
+                        {fieldsToShow.includes('Creator') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Creator
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.created_by}</Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow.includes('State') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        State
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">
+                                    <BlueprintState blueprint={item} />
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow.includes('Deployments') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        # Deployments
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">
+                                    <Label color="green" horizontal>
+                                        {item.depCount}
+                                    </Label>
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
                     </Grid>
 
                     <Grid.Column width="16">

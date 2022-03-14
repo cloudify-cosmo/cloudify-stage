@@ -24,6 +24,14 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
+            id: 'fieldsToShow',
+            name: 'List of fields to show in the blueprint tile',
+            placeHolder: 'Select fields from the list',
+            items: ['Creator', 'State', 'Deployments'],
+            default: 'Creator,State,Deployments',
+            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
+        },
+        {
             id: 'clickToDrillDown',
             name: t('configuration.clickToDrillDown'),
             default: true,
