@@ -16,7 +16,12 @@ const proxyOptions = {
 };
 
 const options: WebpackDevServer.Configuration = {
+    liveReload: false,
+    hot: false,
     host: SERVER_HOST,
+    client: {
+        logging: 'none'
+    },
     port: devServerPort,
     historyApiFallback: {
         index: `${CONTEXT_PATH}/static/index.html`

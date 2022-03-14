@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import DeploymentsList from './DeploymentsList';
+import { FirstUserJourneyButtons } from './FirstUserJourneyButtons';
 
 Stage.defineWidget({
     id: 'deployments',
@@ -145,6 +146,13 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
+        const {
+            configuration: { showFirstUserJourneyButtons }
+        } = widget;
+
+        if (showFirstUserJourneyButtons) {
+            return <FirstUserJourneyButtons />;
+        }
 
         if (_.isEmpty(data)) {
             return <Loading />;
