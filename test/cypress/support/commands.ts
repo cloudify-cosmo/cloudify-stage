@@ -150,6 +150,9 @@ const commands = {
                         Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
                             xhr.setRequestHeader(name, value as string)
                         );
+                        if (isBinaryFile) {
+                            xhr.setRequestHeader('Content-type', 'application/octet-stream');
+                        }
                         xhr.send(fileContent);
                     })
             )

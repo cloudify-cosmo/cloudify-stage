@@ -1,6 +1,4 @@
 # Cloudify Console 
-[![CircleCI](https://circleci.com/gh/cloudify-cosmo/cloudify-stage.svg?style=svg)](https://circleci.com/gh/cloudify-cosmo/cloudify-stage)
-[![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 
 The Cloudify Console provides User Interface for managing and analyzing [Cloudify Manager](https://cloudify.co).
 
@@ -13,19 +11,53 @@ The following requirements should be met prior starting the application:
 
 - [Node.js](https://nodejs.org) (version 14.x, at least 14.18.1) installed
     - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
-- [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured:
-    - Make a database named `stage` 
-    - Make a user named `cloudify` with `cloudify` as password
-    - You can do this easily with docker:
-        ```bash
-        docker pull postgres
-        docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
-        ```
+- [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured
 - [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
-
 ## Setup
 
 To setup development environment and start the application follow the steps below.
+
+---
+
+### Automated way
+
+#### Run the project with public released latest docker image
+```bash
+$ make install # configure project
+$ make -j2 up-public # run the project with development docker image
+```
+
+#### Run the project with development docker latest image
+```bash
+$ make install # configure project
+$ make install-dev # download latest docker dev image
+$ make -j2 up-public # run the project with public docker image
+```
+
+#### Commands description
+
+Run `make install` to do prerequired manual steps for you (described below).
+
+Run `make install-dev` to download latest dev docker image.
+
+Run `make -j2 up-public` to fire the backend and frontend and the latest public available docker image and postgres database.
+
+Run `make -j2 up-dev` to fire the backend and frontend and development latest downloaded docker image and postgres database.
+
+Run `make down` to stop the docker containers.
+
+The commands are described further inside of the `Makefile`.
+
+---
+
+### Manual way
+
+1. **Cloudify Manager installation**
+
+    There are many ways to install Cloudify Manager. You can install the docker image of Cloudify Manager using the way described here:
+
+     - [Production docker premium image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/trial_install/#step-1-install-the-cloudify-manager-as-a-docker-container).
+     - [Production docker community image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
 
 1. **Configuration**
    
@@ -37,7 +69,19 @@ To setup development environment and start the application follow the steps belo
    Run `npm run beforebuild` to install application dependencies.
 
 1. **Database setup**
-   
+
+   Running postgres database locally make sure that:
+    - You have a database named `stage` 
+    - You have a user named `cloudify` with `cloudify` as password
+
+ 
+   You can do this easily by:
+    - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
+    - or more manually with docker:
+      ```bash
+      docker pull postgres
+      docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres
+      ```
    Run `cd backend && npm run db-migrate` to initialize database.
 
 1. **Application start**
@@ -54,6 +98,13 @@ At this point you should have development environment configured and running. Op
 Changes in the source code shall be loaded to the development version of the application: 
 - for changes in [app](./app) and [widgets](./widgets) directory you need to reload page to see your updates,
 - for changes in [backend](./backend) directory you don't need to reload page as backend server will automatically be restarted.
+
+
+### License
+
+First time you run Cloudify Manager you would be asked about the license (see [Activating Cloudify Manager and License Management](https://docs.cloudify.co/staging/dev/install_maintain/installation/manager-license/) for more details).
+  You can find [the license here](https://github.com/cloudify-cosmo/cloudify-build-system/blob/master/pipelines-k8s/system-ui-tests/license/cfy-license.yaml). The access to the license is restricted.
+
 
 ## TypeScript support in IDEs
 

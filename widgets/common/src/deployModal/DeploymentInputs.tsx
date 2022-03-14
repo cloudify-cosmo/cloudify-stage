@@ -14,7 +14,7 @@ interface Props {
     toolbox: Stage.Types.Toolbox;
 }
 
-const DeplomentInputsSection: FunctionComponent<Props> = ({
+const DeploymentInputs: FunctionComponent<Props> = ({
     blueprint,
     onYamlFileChange,
     fileLoading,
@@ -23,13 +23,14 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
     errors,
     toolbox
 }) => {
-    const { DataTypesButton, InputsHeader, YamlFileButton, InputsUtils } = Stage.Common;
+    const { DataTypesButton, InputsHelpIcon, YamlFileButton, InputsUtils } = Stage.Common;
     const { Message } = Stage.Basic;
+    const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
     return (
         <>
             {blueprint.id && (
                 <>
-                    {!_.isEmpty(blueprint.plan.inputs) && (
+                    {deploymentHasInputs && (
                         <YamlFileButton
                             onChange={onYamlFileChange}
                             dataType="deployment's inputs"
@@ -40,8 +41,11 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
                     {!_.isEmpty(blueprint.plan.data_types) && (
                         <DataTypesButton iconButton types={blueprint.plan.data_types} />
                     )}
-                    <InputsHeader iconButton header="" />
-                    {_.isEmpty(blueprint.plan.inputs) && <Message content={t('inputs.deploymentInputs.noInputs')} />}
+                    {deploymentHasInputs ? (
+                        <InputsHelpIcon />
+                    ) : (
+                        <Message content={t('inputs.deploymentInputs.noInputs')} />
+                    )}
                 </>
             )}
 
@@ -57,4 +61,4 @@ const DeplomentInputsSection: FunctionComponent<Props> = ({
     );
 };
 
-export default DeplomentInputsSection;
+export default DeploymentInputs;

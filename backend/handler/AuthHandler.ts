@@ -7,13 +7,21 @@ import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('AuthHandler');
 
+const tokenRequestPayload = {
+    description: 'UI authentication token',
+    expiration_date: '+10h'
+};
 let authorizationCache = {} as ConfigResponse['authorization'];
 
+/* eslint-disable camelcase */
 export interface TokenResponse {
     username: string;
     value: string;
     role: string;
+    expiration_date: string;
+    last_used: string;
 }
+/* eslint-enable camelcase */
 
 export interface ConfigResponse {
     metadata: any;
@@ -41,9 +49,14 @@ export interface VersionResponse {
 }
 
 export function getToken(basicAuth: string) {
-    return jsonRequest<TokenResponse>('GET', '/tokens', {
-        Authorization: basicAuth
-    });
+    return jsonRequest<TokenResponse>(
+        'POST',
+        '/tokens',
+        {
+            Authorization: basicAuth
+        },
+        tokenRequestPayload
+    );
 }
 
 export function getTenants(token: string) {
@@ -74,12 +87,13 @@ export function getTokenViaSamlResponse(samlResponse: string) {
         '/tokens',
         {},
         {
-            'saml-response': samlResponse
+            'saml-response': samlResponse,
+            ...tokenRequestPayload
         }
     );
 }
 
-export function getAndCacheConfig(token?: string) {
+export function getAndCacheConfig(token: string) {
     return jsonRequest<ConfigResponse>('GET', '/config', {
         'Authentication-Token': token
     }).then(config => {

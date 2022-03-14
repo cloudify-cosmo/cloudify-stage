@@ -3,7 +3,7 @@ import type { ChangeEvent } from 'react';
 import Consts from '../Consts';
 import MissingSecretsError from '../MissingSecretsError';
 import AccordionSectionWithDivider from '../AccordionSectionWithDivider';
-import DeplomentInputsSection from './DeploymentInputsSection';
+import DeploymentInputs from './DeploymentInputs';
 import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
 import { ExecuteWorkflowInputs, executeWorkflow } from '../executeWorkflow';
 import type {
@@ -696,7 +696,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 activeSection={activeSection}
                                 onClick={this.onAccordionClick}
                             >
-                                <DeplomentInputsSection
+                                <DeploymentInputs
                                     toolbox={toolbox}
                                     blueprint={blueprint}
                                     onYamlFileChange={this.handleYamlFileChange}
