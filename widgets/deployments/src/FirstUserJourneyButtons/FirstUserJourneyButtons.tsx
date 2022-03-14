@@ -5,10 +5,14 @@ import { WidgetlessToolbox } from '../../../../app/utils/StageAPI';
 import { MARKETPLACE_TABS } from './consts';
 
 const Wrapper = styled.div`
+    display: flex;
     margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
 `;
 
 const RowWrapper = styled.div`
+    display: flex;
     align-items: center;
 `;
 
