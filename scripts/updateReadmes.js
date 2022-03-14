@@ -1,4 +1,4 @@
-const request = require('request').defaults({ encoding: 'utf8' });
+const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 
@@ -25,17 +25,16 @@ function logChange(prefix, type, changes) {
 }
 
 function downloadFile(widget, url) {
-    return new Promise((resolve, reject) => {
-        request.get(url, (err, res, body) => {
-            const isSuccess = res.statusCode >= 200 && res.statusCode < 300;
-            if (err || !isSuccess) {
-                reject(new Error(`Failed downloading ${url}. Status code: ${res.statusCode}. Error: ${err}.`));
-            } else {
-                log(widget, `Downloaded ${url}.`);
-                resolve(String(body));
-            }
+    return axios(url, { responseEncoding: 'utf8' })
+        .then(({ data }) => {
+            log(widget, `Downloaded ${url}.`);
+            return String(data);
+        })
+        .catch(err => {
+            throw new Error(
+                `Failed downloading ${url}. Status code: ${err.status}. Error: ${err.code || err.message}.`
+            );
         });
-    });
 }
 
 function updateTitle(widget, content) {

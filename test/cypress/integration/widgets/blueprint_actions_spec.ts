@@ -32,6 +32,14 @@ describe('Blueprint Action Buttons widget', () => {
             .should('be.calledWith', `/composer/import/default_tenant/${blueprintName}/blueprint.yaml`);
     });
 
+    it('should download the blueprint', () => {
+        const downloadedFileName = `${blueprintName}.zip`;
+        useBlueprintActionButtonsWidget();
+
+        cy.contains('Download blueprint').click();
+        cy.verifyDownloadedFileExistence(downloadedFileName);
+    });
+
     it('should open deployment modal', () => {
         useBlueprintActionButtonsWidget();
         cy.get('button#createDeploymentButton').click();

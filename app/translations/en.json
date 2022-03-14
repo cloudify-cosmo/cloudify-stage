@@ -794,6 +794,12 @@
         "blueprintActionButtons": {
             "configuration": {
                 "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
+            },
+            "buttons": {
+                "createDeployment": "Create deployment",
+                "deleteBlueprint": "Delete blueprint",
+                "downloadBlueprint": "Download blueprint",
+                "editCopy": "Edit a copy in Composer"
             }
         },
         "blueprints": {
