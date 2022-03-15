@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  cfy_manager_local_dockerhub:
+    image: cloudifyplatform/premium-cloudify-manager-aio:latest
+    restart: "unless-stopped"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN
+    ports:
+      - 80:80
+      - 443:443
+      - 5671:5671
+      - 53333:53333
+      - 8000:8000
+    profiles: ["prod"]
+
+  cfy_manager_local:
+    image: cloudify-manager-aio:latest
+    restart: "unless-stopped"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    security_opt:
+      - seccomp:unconfined
+    cap_add:
+      - SYS_ADMIN
+    ports:
+      - 80:80
+      - 443:443
+      - 5671:5671
+      - 53333:53333
+      - 8000:8000
+    profiles: ["dev"]
+
+  postgres-cfy:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=cloudify
+      - POSTGRES_USER=cloudify
+      - POSTGRES_DB=stage
+    ports:
+      - 5432:5432
