@@ -3,6 +3,15 @@
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 
+const getInfo = (success?: boolean = true) =>
+    new Promise((resolve, reject) => {
+        if (success) {
+            resolve([]);
+        } else {
+            reject('sad');
+        }
+    });
+
 Stage.defineWidget({
     id: 'deployments',
     name: 'Blueprint deployments',
@@ -76,7 +85,22 @@ Stage.defineWidget({
         return obj;
     },
 
-    fetchData(widget, toolbox, params) {
+    async fetchData(widget, toolbox, params) {
+        const {
+            configuration: { showFirstUserJourneyButtons }
+        } = widget;
+
+        if (showFirstUserJourneyButtons) {
+            const installedDeployments = await getInfo();
+            const shouldDisplayFirstUserJourneyButtons = installedDeployments.length === 0;
+
+            if (shouldDisplayFirstUserJourneyButtons) {
+                return {
+                    showFirstUserJourneyButtons: true
+                };
+            }
+        }
+
         const deploymentDataPromise = new Stage.Common.DeploymentActions(toolbox).doGetDeployments({
             _include:
                 'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -146,16 +170,13 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
-        const {
-            configuration: { showFirstUserJourneyButtons }
-        } = widget;
-
-        if (showFirstUserJourneyButtons) {
-            return <FirstUserJourneyButtons toolbox={toolbox} />;
-        }
 
         if (_.isEmpty(data)) {
             return <Loading />;
+        }
+
+        if (data?.showFirstUserJourneyButtons) {
+            return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
