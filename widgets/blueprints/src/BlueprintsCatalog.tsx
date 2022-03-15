@@ -180,7 +180,7 @@ export default function BlueprintsCatalog({
         row.push(blueprintItem);
         if ((index + 1) % 5 === 0) {
             blueprintsRows.push(
-                <div key={blueprintsRows.length + 1} className="three column row">
+                <div key={blueprintsRows.length + 1} className="five column row">
                     {row}
                 </div>
             );
@@ -189,7 +189,7 @@ export default function BlueprintsCatalog({
     });
     if (row.length > 0) {
         blueprintsRows.push(
-            <div key={blueprintsRows.length + 1} className="three column row">
+            <div key={blueprintsRows.length + 1} className="five column row">
                 {row}
             </div>
         );
