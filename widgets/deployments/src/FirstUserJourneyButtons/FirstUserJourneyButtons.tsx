@@ -3,6 +3,15 @@ import { FirstUserJourneyButton } from './FirstUserJourneyButton';
 import { FunctionComponent } from 'react';
 import { WidgetlessToolbox } from '../../../../app/utils/StageAPI';
 import { MARKETPLACE_TABS } from './consts';
+import { StyledLabel } from './styles';
+import { ButtonIcon } from './ButtonIcon';
+
+const {
+    Hooks: { useBoolean },
+    Common: { BlueprintMarketplace, TerraformModal },
+    Utils: { getT },
+    Basic: { Grid }
+} = Stage;
 
 const Wrapper = styled.div`
     display: flex;
@@ -14,13 +23,17 @@ const Wrapper = styled.div`
 const RowWrapper = styled.div`
     display: flex;
     align-items: center;
+
+    & + & {
+        margin-top: 32px;
+    }
 `;
 
-const {
-    Hooks: { useBoolean },
-    Common: { BlueprintMarketplace, TerraformModal },
-    Utils: { getT }
-} = Stage;
+const StyledColumn = styled(Grid.Column)`
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+`;
 
 const t = getT('widgets.deployments.firstJourney');
 
@@ -42,14 +55,23 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
 
     return (
         <Wrapper>
-            <RowWrapper>{t('header')}</RowWrapper>
             <RowWrapper>
-                <FirstUserJourneyButton onClick={handleDeploymentsClick}>
-                    {t('buttons.createDeployment')}
-                </FirstUserJourneyButton>
-                <FirstUserJourneyButton onClick={handleTerraformClick}>
-                    {t('buttons.uploadFromTerraform')}
-                </FirstUserJourneyButton>
+                <StyledColumn>
+                    <ButtonIcon icon="hand lizard outline" />
+                    <StyledLabel>{t('header')}</StyledLabel>
+                </StyledColumn>
+            </RowWrapper>
+            <RowWrapper>
+                <FirstUserJourneyButton
+                    onClick={handleDeploymentsClick}
+                    icon="rocket"
+                    label={t('buttons.createDeployment')}
+                />
+                <FirstUserJourneyButton
+                    onClick={handleTerraformClick}
+                    icon="teletype"
+                    label={t('buttons.uploadFromTerraform')}
+                />
             </RowWrapper>
 
             {isMarketplaceModalVisible && (
