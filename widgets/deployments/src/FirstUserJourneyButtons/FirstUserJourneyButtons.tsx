@@ -57,7 +57,7 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
         <Wrapper>
             <RowWrapper>
                 <StyledColumn>
-                    <ButtonIcon icon="hand lizard outline" />
+                    <ButtonIcon icon="home" />
                     <StyledLabel>{t('header')}</StyledLabel>
                 </StyledColumn>
             </RowWrapper>
