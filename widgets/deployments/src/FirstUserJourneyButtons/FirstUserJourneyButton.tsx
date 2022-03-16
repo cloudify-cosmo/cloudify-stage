@@ -8,7 +8,6 @@ const { DataSegment, Grid } = Stage.Basic;
 
 const ButtonWrapper = styled.div`
     width: 210px;
-    height: 190px;
 
     & + & {
         margin-left: 16px;
