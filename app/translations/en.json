@@ -969,6 +969,7 @@
                     }
                 },
                 "fieldsToShow": {
+                    "tileLabel": "List of fields to show in the blueprint tile",
                     "label": "List of fields to show in the table",
                     "placeholder": "Select fields from the list",
                     "items": {
