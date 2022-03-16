@@ -806,7 +806,14 @@
             "configuration": {
                 "fieldsToShow": {
                     "label": "List of fields to show",
-                    "placeholder": "Select fields from the list"
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "Created": "Created",
+                        "Updated": "Updated",
+                        "Creator": "Creator",
+                        "State": "State",
+                        "Deployments": "Deployments"
+                    }
                 },
                 "clickToDrillDown": "Enable click to drill down",
                 "displayStyle": {
