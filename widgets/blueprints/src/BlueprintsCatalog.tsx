@@ -31,20 +31,33 @@ export default function BlueprintsCatalog({
                     }}
                 >
                     <Grid>
-                        <Grid.Row className="bottomDivider">
+                        <Grid.Row>
                             <Grid.Column width="16">
-                                <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} />
-                                <Header>
-                                    <a href="#!" className="breakWord">
-                                        {item.id}
-                                    </a>
-                                </Header>
+                                <Image
+                                    src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}
+                                    style={{ maxWidth: 50, display: 'inline' }}
+                                />
                                 <ResourceVisibility
                                     visibility={item.visibility}
                                     onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
                                     allowedSettingTo={['tenant', 'global']}
                                     className="rightFloated"
                                 />
+                            </Grid.Column>
+                        </Grid.Row>
+                        <Grid.Row className="bottomDivider">
+                            <Grid.Column width="16">
+                                <Header
+                                    style={{
+                                        maxWidth: 'fit-content',
+                                        marginLeft: 'unset',
+                                        display: 'block'
+                                    }}
+                                >
+                                    <a href="#!" className="breakWord">
+                                        {item.id}
+                                    </a>
+                                </Header>
                             </Grid.Column>
                         </Grid.Row>
 
