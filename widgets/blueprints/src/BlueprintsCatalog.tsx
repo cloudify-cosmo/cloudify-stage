@@ -20,16 +20,16 @@ export default function BlueprintsCatalog({
     const { fieldsToShow } = widget.configuration;
 
     const StyledGridColumn = styled(Grid.Column)`
-        whitespace: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
+        whitespace: 'nowrap';
+        text-overflow: 'ellipsis';
+        overflow: 'hidden';
         max-width: 400;
     `;
 
     const StyledHeader = styled(Header)`
-        max-width: fit-content;
-        margin-left: unset;
-        display: block;
+        max-width: 'fit-content';
+        margin-left: 'unset';
+        display: 'block';
     `;
 
     const blueprintsItems = data.items.map(item => {
