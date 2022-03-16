@@ -25,7 +25,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'fieldsToShow',
-            name: tCatalogConfiguration('tileLabel'),
+            name: tCatalogConfiguration('label'),
             placeHolder: tCatalogConfiguration('placeholder'),
             items: ['Created', 'Updated', 'Creator', 'State', 'Deployments'],
             default: 'Creator,State,Deployments',
