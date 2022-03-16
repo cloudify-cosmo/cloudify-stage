@@ -21,14 +21,14 @@ export default function BlueprintsCatalog({
 
     const StyledGridColumn = styled(Grid.Column)`
         whitespace: 'nowrap';
-        textoverflow: 'ellipsis';
+        text-overflow: 'ellipsis';
         overflow: 'hidden';
-        maxwidth: 400;
+        max-width: 400;
     `;
 
     const StyledHeader = styled(Header)`
-        maxwidth: 'fit-content';
-        marginleft: 'unset';
+        max-width: 'fit-content';
+        margin-left: 'unset';
         display: 'block';
     `;
 
