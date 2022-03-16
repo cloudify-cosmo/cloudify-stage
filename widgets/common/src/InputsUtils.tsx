@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import { getToolbox } from '../../../app/utils/Toolbox';
+import i18n from 'i18next';
 
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
@@ -349,6 +349,41 @@ class InputsUtils {
                     </div>
                 );
             }
+            case 'deployment_id': {
+                const fetchUrl = '/searches/deployments?_include=id';
+                const constraintsObject = Object.assign({}, ...constraints);
+
+                return (
+                    <DynamicDropdown
+                        name={name}
+                        error={!!error}
+                        icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        placeholder="Select Deployment"
+                        value={value}
+                        fetchUrl={fetchUrl}
+                        onChange={newValue => onChange(null, { name, value: newValue })}
+                        toolbox={toolbox}
+                        constraints={constraints}
+                    />
+                );
+            }
+            case 'blueprint_id': {
+                const fetchUrl = '/searches/blueprints?_include=id&state=uploaded';
+                const constraintsObject = Object.assign({}, ...constraints);
+                return (
+                    <DynamicDropdown
+                        name={name}
+                        error={!!error}
+                        icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                        placeholder="Select Blueprint"
+                        value={value}
+                        fetchUrl={fetchUrl}
+                        onChange={newValue => onChange(null, { name, value: newValue })}
+                        toolbox={toolbox}
+                        constraints={constraints}
+                    />
+                );
+            }
             case 'string':
             case 'regex':
                 return _.includes(value, '\n') ? (
@@ -368,18 +403,6 @@ class InputsUtils {
                         onChange={onChange}
                     />
                 );
-            case 'deployment_id':
-                return (
-                    <DynamicDropdown
-                        type="string"
-                        value={value}
-                        fetchUrl="/deployments"
-                        onChange={onChange}
-                        toolbox={toolbox}
-                        constraints={constraints}
-                    />
-                );
-            case 'blueprint_id':
             default:
                 return (
                     <div style={{ position: 'relative' }}>

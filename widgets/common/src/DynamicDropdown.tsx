@@ -78,6 +78,7 @@ interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     name?: string;
     prefetch?: boolean;
     refreshEvent?: string;
+    constraints?: Record<string, any>;
     itemsFormatter?: (items: any[]) => Option[];
 }
 
@@ -103,6 +104,7 @@ export default function DynamicDropdown({
     textFormatter,
     value,
     valueProp = 'id',
+    constraints,
     ...rest
 }: DynamicDropdownProps) {
     const { useState, useEffect } = React;
@@ -167,23 +169,35 @@ export default function DynamicDropdown({
                 .finally(onFetchFinished);
         } else {
             const nextPage = fetchState.currentPage + 1;
+            const params = searchParams.reduce<Record<string, unknown>>(
+                (result, param) => {
+                    result[param] = searchQuery;
 
-            toolbox
-                .getManager()
-                .doGet(fetchUrl, {
-                    params: searchParams.reduce<Record<string, unknown>>(
-                        (result, param) => {
-                            result[param] = searchQuery;
+                    return result;
+                },
+                {
+                    _sort: valueProp,
+                    _size: pageSize,
+                    _offset: nextPage * pageSize
+                }
+            );
+            let fetchPromise;
 
-                            return result;
-                        },
-                        {
-                            _sort: valueProp,
-                            _size: pageSize,
-                            _offset: nextPage * pageSize
-                        }
-                    )
-                })
+            if (!_.isEmpty(constraints)) {
+                const constraintsObject = _.isArray(constraints) ? Object.assign({}, ...constraints) : constraints;
+                fetchPromise = toolbox.getManager().doPost(fetchUrl, {
+                    params,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: { constraints: constraintsObject }
+                });
+            } else {
+                fetchPromise = toolbox.getManager().doGet(fetchUrl, {
+                    params
+                });
+            }
+            fetchPromise
                 .then(data => {
                     const isMoreDataAvailable = data.metadata.pagination.total > (nextPage + 1) * pageSize;
                     if (isMoreDataAvailable) {
