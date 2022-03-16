@@ -25,8 +25,8 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'fieldsToShow',
-            name: tCatalogConfiguration('label'),
-            placeHolder: tCatalogConfiguration('placeholder'),
+            name: tCatalogConfiguration('fieldsToShow.label'),
+            placeHolder: tCatalogConfiguration('pfieldsToShow.laceholder'),
             items: ['Created', 'Updated', 'Creator', 'State', 'Deployments'],
             default: 'Creator,State,Deployments',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
