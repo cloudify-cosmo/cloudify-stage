@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import styled from 'styled-components';
+
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
 
@@ -18,19 +18,6 @@ export default function BlueprintsCatalog({
     const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
-
-    const StyledGridColumn = styled(Grid.Column)`
-        whitespace: 'nowrap';
-        textoverflow: 'ellipsis';
-        overflow: 'hidden';
-        maxwidth: 400;
-    `;
-
-    const StyledHeader = styled(Header)`
-        maxwidth: 'fit-content';
-        marginleft: 'unset';
-        display: 'block';
-    `;
 
     const blueprintsItems = data.items.map(item => {
         return (
@@ -60,17 +47,32 @@ export default function BlueprintsCatalog({
                         </Grid.Row>
                         <Grid.Row className="bottomDivider">
                             <Grid.Column width="16">
-                                <StyledHeader>
+                                <Header
+                                    style={{
+                                        maxWidth: 'fit-content',
+                                        marginLeft: 'unset',
+                                        display: 'block'
+                                    }}
+                                >
                                     <a href="#!" className="breakWord">
                                         {item.id}
                                     </a>
-                                </StyledHeader>
+                                </Header>
                             </Grid.Column>
                         </Grid.Row>
 
-                        <StyledGridColumn width="16" title={item.description}>
+                        <Grid.Column
+                            width="16"
+                            style={{
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                maxWidth: 400
+                            }}
+                            title={item.description}
+                        >
                             {item.description}
-                        </StyledGridColumn>
+                        </Grid.Column>
 
                         {fieldsToShow.includes('Created') && (
                             <Grid.Row className="noPadded">
