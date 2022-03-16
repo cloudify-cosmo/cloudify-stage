@@ -969,7 +969,7 @@
                     }
                 },
                 "fieldsToShow": {
-                    "label": "List of fields to show in the table and the tiles",
+                    "label": "List of fields to show",
                     "placeholder": "Select fields from the list",
                     "items": {
                         "name": "Name",
