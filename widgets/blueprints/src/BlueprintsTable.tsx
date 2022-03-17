@@ -16,6 +16,7 @@ export default function BlueprintsTable({
     const { BlueprintActions } = Stage.Common;
     const tableName = 'blueprintsTable';
     const { fieldsToShow } = widget.configuration;
+    console.log(fieldsToShow);
 
     return (
         <DataTable
@@ -30,12 +31,12 @@ export default function BlueprintsTable({
             noDataMessage={noDataMessage}
         >
             <DataTable.Column label="Name" name="id" width="20%" />
-            <DataTable.Column show={fieldsToShow.includes('Created')} label="Created" name="created_at" width="15%" />
-            <DataTable.Column show={fieldsToShow.includes('Updated')} label="Updated" name="updated_at" width="15%" />
-            <DataTable.Column show={fieldsToShow.includes('Creator')} label="Creator" name="created_by" width="15%" />
+            <DataTable.Column show={fieldsToShow?.includes('Created')} label="Created" name="created_at" width="15%" />
+            <DataTable.Column show={fieldsToShow?.includes('Updated')} label="Updated" name="updated_at" width="15%" />
+            <DataTable.Column show={fieldsToShow?.includes('Creator')} label="Creator" name="created_by" width="15%" />
             <DataTable.Column label="Main Blueprint File" name="main_file_name" width="15%" />
-            <DataTable.Column show={fieldsToShow.includes('State')} label="State" name="state" />
-            <DataTable.Column show={fieldsToShow.includes('Deployments')} label="# Deployments" />
+            <DataTable.Column show={fieldsToShow?.includes('State')} label="State" name="state" />
+            <DataTable.Column show={fieldsToShow?.includes('Deployments')} label="# Deployments" />
             <DataTable.Column width="10%" />
 
             {data.items.map(item => (
