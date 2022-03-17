@@ -32,6 +32,7 @@ Stage.defineWidget({
         {
             id: 'showFirstUserJourneyButtons',
             name: 'Show first user journey buttons',
+            description: "When there are no installed deployments, it will show a simplified view. View will contain buttons, which may be used to show Blueprint Marketplace or Create blueprint from Terraform modal",
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
