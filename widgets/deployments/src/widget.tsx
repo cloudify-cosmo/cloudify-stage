@@ -3,14 +3,6 @@
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 
-const getInfo = (success?: boolean = true) =>
-    new Promise((resolve, reject) => {
-        if (success) {
-            resolve([]);
-        } else {
-            reject('sad');
-        }
-    });
 
 Stage.defineWidget({
     id: 'deployments',

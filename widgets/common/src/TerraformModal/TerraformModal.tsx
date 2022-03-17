@@ -7,6 +7,7 @@ import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
+import terraformLogo from './images/terraform-icon.png';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -313,7 +314,9 @@ export default function TerraformModal({
 
             const file: any = new Blob([blueprintContent]);
             file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
-            await new BlueprintActions(toolbox).doUpload(blueprintName, { file });
+            const image = await (await fetch(terraformLogo)).blob();
+
+            await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
 
             toolbox.getEventBus().trigger('blueprints:refresh');
             onHide();
@@ -365,7 +368,7 @@ export default function TerraformModal({
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
             <Modal.Header>
-                <Image size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
+                <Image src={terraformLogo} size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
             </Modal.Header>
 
             <Modal.Content>
