@@ -3,11 +3,12 @@
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 
+const t = Stage.Utils.getT('widgets.deployments');
 
 Stage.defineWidget({
     id: 'deployments',
-    name: 'Blueprint deployments',
-    description: 'Shows blueprint deployments list',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     color: 'purple',
@@ -18,33 +19,33 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'clickToDrillDown',
-            name: 'Enable click to drill down',
+            name: t('configuration.clickToDrillDown.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showExecutionStatusLabel',
-            name: 'Show execution status label',
-            description: 'Show last execution workflow ID and status',
+            name: t('configuration.showExecutionStatusLabel.name'),
+            description: t('configuration.showExecutionStatusLabel.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showFirstUserJourneyButtons',
-            name: 'Show first user journey buttons',
-            description: "When there are no installed deployments, it will show a simplified view. View will contain buttons, which may be used to show Blueprint Marketplace or Create blueprint from Terraform modal",
+            name: t('configuration.showFirstUserJourneyButtons.name'),
+            description: t('configuration.showFirstUserJourneyButtons.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'blueprintIdFilter',
-            name: 'Blueprint ID to filter by',
+            name: t('configuration.blueprintIdFilter.name'),
             placeHolder: 'Enter the blueprint id you wish to filter by',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: 'Display style',
+            name: t('configuration.displayStyle.name'),
             items: [
                 { name: 'Table', value: 'table' },
                 { name: 'List', value: 'list' }
