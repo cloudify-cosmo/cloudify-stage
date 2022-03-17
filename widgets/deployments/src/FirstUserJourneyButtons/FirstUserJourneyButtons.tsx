@@ -3,8 +3,8 @@ import { FirstUserJourneyButton } from './FirstUserJourneyButton';
 import { FunctionComponent } from 'react';
 import { WidgetlessToolbox } from '../../../../app/utils/StageAPI';
 import { MARKETPLACE_TABS } from './consts';
-import { StyledLabel } from './styles';
-import { ButtonIcon } from './ButtonIcon';
+import { StyledIcon, StyledLabel } from './styles';
+import terraformLogo from './images/terraform_logo.png';
 
 const {
     Hooks: { useBoolean },
@@ -35,6 +35,10 @@ const StyledColumn = styled(Grid.Column)`
     text-align: center;
 `;
 
+const IconWrapper = styled.div`
+    padding: 12px 0;
+`;
+
 const t = getT('widgets.deployments.firstJourney');
 
 interface Props {
@@ -57,7 +61,9 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
         <Wrapper>
             <RowWrapper>
                 <StyledColumn>
-                    <ButtonIcon icon="home" />
+                    <IconWrapper>
+                        <StyledIcon name="home" />
+                    </IconWrapper>
                     <StyledLabel>{t('header')}</StyledLabel>
                 </StyledColumn>
             </RowWrapper>
@@ -69,7 +75,7 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
                 />
                 <FirstUserJourneyButton
                     onClick={handleTerraformClick}
-                    icon="teletype"
+                    image={terraformLogo}
                     label={t('buttons.uploadFromTerraform')}
                 />
             </RowWrapper>

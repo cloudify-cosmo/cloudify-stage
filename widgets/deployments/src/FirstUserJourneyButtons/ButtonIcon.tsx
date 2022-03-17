@@ -1,30 +1,30 @@
 import React from 'react';
 import styled from 'styled-components';
 import type { SemanticICONS } from 'semantic-ui-react';
-
-const { Icon } = Stage.Basic;
-
-export const StyledIcon = styled(Icon)`
-    color: #65adff;
-    line-height: 1;
-
-    && {
-        font-size: 56px;
-    }
-`;
+import { StyledIcon } from './styles';
 
 export const IconWrapper = styled.div`
-    padding: 12px 0;
+    padding: 16px 0;
 `;
 
-interface ButtonIconProps {
-    icon: SemanticICONS;
+export const StyledImage = styled.img`
+    width: 82px;
+`;
+
+export interface ButtonIconProps {
+    icon?: SemanticICONS;
+    image?: string;
 }
 
-export const ButtonIcon = ({ icon }: ButtonIconProps) => {
+export const ButtonIcon = ({ icon, image }: ButtonIconProps) => {
     return (
-        <IconWrapper>
-            <StyledIcon name={icon} />
-        </IconWrapper>
+        <>
+            {icon && (
+                <IconWrapper>
+                    <StyledIcon name={icon} />
+                </IconWrapper>
+            )}
+            {image && <StyledImage src={image} />}
+        </>
     );
 };
