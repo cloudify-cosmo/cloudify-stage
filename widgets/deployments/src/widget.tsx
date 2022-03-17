@@ -90,13 +90,11 @@ Stage.defineWidget({
             configuration: { showFirstUserJourneyButtons }
         } = widget;
 
-        new Stage.Common.SearchActions(toolbox).doListDeployments([
-            { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
-        ]);
-
         if (showFirstUserJourneyButtons) {
-            const installedDeployments = await getInfo();
-            const shouldDisplayFirstUserJourneyButtons = installedDeployments.length === 0;
+            const installedDeployments = await new Stage.Common.SearchActions(toolbox).doListDeployments([
+                { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
+            ]);
+            const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
 
             if (shouldDisplayFirstUserJourneyButtons) {
                 return {
