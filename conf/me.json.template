@@ -8,7 +8,7 @@
   },
   "manager": {
     "ip":"<MANAGER_IP>",
-    "protocol" : "https",
-    "port": "443"
+    "protocol" : "http",
+    "port": "80"
   }
 }
