@@ -1,8 +1,7 @@
-import { FunctionComponent } from 'react';
 import styled from 'styled-components';
 import { StyledLabel } from './styles';
 import { ButtonIcon } from './ButtonIcon';
-import { ButtonIconProps } from './ButtonIcon';
+import type { ButtonIconProps } from './ButtonIcon';
 
 const { DataSegment, Grid } = Stage.Basic;
 
@@ -18,12 +17,12 @@ const StyledGridColumn = styled(Grid.Column)`
     text-align: center;
 `;
 
-interface Props extends Omit<ButtonIconProps, 'isTileIcon'> {
+interface FirstUserJourneyButtonProps extends Omit<ButtonIconProps, 'isTileIcon'> {
     label: string;
     onClick: () => void;
 }
 
-export const FirstUserJourneyButton: FunctionComponent<Props> = ({ icon, image, label, onClick }) => {
+const FirstUserJourneyButton = ({ icon, image, label, onClick }: FirstUserJourneyButtonProps) => {
     return (
         <ButtonWrapper>
             <DataSegment.Item onClick={onClick}>
@@ -43,3 +42,5 @@ export const FirstUserJourneyButton: FunctionComponent<Props> = ({ icon, image, 
         </ButtonWrapper>
     );
 };
+
+export default FirstUserJourneyButton;

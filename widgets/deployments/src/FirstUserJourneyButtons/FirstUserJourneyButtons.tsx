@@ -1,7 +1,6 @@
 import styled from 'styled-components';
-import { FirstUserJourneyButton } from './FirstUserJourneyButton';
-import { FunctionComponent } from 'react';
-import { WidgetlessToolbox } from '../../../../app/utils/StageAPI';
+import FirstUserJourneyButton from './FirstUserJourneyButton';
+import type { WidgetlessToolbox } from '../../../../app/utils/StageAPI';
 import { MARKETPLACE_TABS } from './consts';
 import { StyledIcon, StyledLabel } from './styles';
 import terraformLogo from './images/terraform_logo.png';
@@ -41,11 +40,11 @@ const IconWrapper = styled.div`
 
 const t = getT('widgets.deployments.firstJourney');
 
-interface Props {
+interface FirstUserJourneyButtonsProps {
     toolbox: WidgetlessToolbox;
 }
 
-export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) => {
+const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const [isMarketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
@@ -88,3 +87,5 @@ export const FirstUserJourneyButtons: FunctionComponent<Props> = ({ toolbox }) =
         </Wrapper>
     );
 };
+
+export default FirstUserJourneyButtons;

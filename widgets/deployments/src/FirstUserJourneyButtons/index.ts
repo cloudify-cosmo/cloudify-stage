@@ -1,1 +1,1 @@
-export { FirstUserJourneyButtons as default } from './FirstUserJourneyButtons';
+export { default } from './FirstUserJourneyButtons';

@@ -1,6 +1,7 @@
 interface DeploymentUpdatedIconProps {
     deployment: {
         isUpdated: boolean;
+        // eslint-disable-next-line camelcase
         updated_at: string | null;
     };
 }
