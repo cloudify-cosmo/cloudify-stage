@@ -42,6 +42,12 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
+    const verifyTextarea = (value = '') => {
+        cy.get('textarea').then($input => {
+            checkAttribute($input, 'value', value);
+        });
+    };
+
     const verifyNumberInput = (min = null, max = null, value = '', step = 1) => {
         cy.get('input').then($input => {
             checkAttribute($input, 'min', min);
@@ -519,6 +525,31 @@ describe('Create Deployment Button widget', () => {
             cy.contains('.field', 'string_default_null').within(() => {
                 verifyTextInput('null');
             });
+        });
+
+        it('textarea', () => {
+            selectBlueprintInModal('textarea');
+
+            cy.contains('.field', 'string_no_default').within(() => {
+                verifyTextArea();
+            });
+        });
+
+        it('deployment_id', () => {
+            selectBlueprintInModal('deployment_id');
+
+            cy.contains('.field', 'string_no_default').within(() => {
+                verifyTextInput();
+            });
+        });
+
+    });
+
+    it('blueprint_id', () => {
+        selectBlueprintInModal('deployment_id');
+
+        cy.contains('.field', 'string_no_default').within(() => {
+            verifyTextInput();
         });
     });
 });

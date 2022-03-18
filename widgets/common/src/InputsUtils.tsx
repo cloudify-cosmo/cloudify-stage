@@ -358,7 +358,7 @@ class InputsUtils {
                         name={name}
                         error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        placeholder="Select Deployment"
+                        placeholder={i18n.t('input.deployment_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
                         onChange={newValue => onChange(null, { name, value: newValue })}
@@ -375,7 +375,7 @@ class InputsUtils {
                         name={name}
                         error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        placeholder="Select Blueprint"
+                        placeholder={i18n.t('input.blueprint_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
                         onChange={newValue => onChange(null, { name, value: newValue })}
