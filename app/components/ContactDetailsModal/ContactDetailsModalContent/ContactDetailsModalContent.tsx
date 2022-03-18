@@ -103,7 +103,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                                     name={formField.name}
                                     label={<CheckboxLabel label={formField.label} />}
                                     help=""
-                                    checked={formInputs[formField.name]}
+                                    checked={!!formInputs[formField.name]}
                                     onChange={setFormInputs}
                                 />
                             )}

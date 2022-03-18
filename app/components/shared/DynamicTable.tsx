@@ -7,10 +7,13 @@ export interface DynamicTableProps
 }
 
 const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], onChange, columns = [], ...rest }) => {
-    const { GenericField, Input, Button, Table } = Stage.Basic;
+    const { GenericField, Button, Table } = Stage.Basic;
     const t = Stage.Utils.getT('shared.dynamicTable');
 
-    const handleEditRow = (key: string, index: number): ComponentProps<typeof Input>['onChange'] => (event, data) => {
+    const handleEditRow = (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] => (
+        event,
+        data
+    ) => {
         onChange(event, {
             name,
             value: [...value.slice(0, index), { ...value[index], [key]: data.value }, ...value.slice(index + 1)]
