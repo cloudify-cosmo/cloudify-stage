@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import type { SemanticICONS } from 'semantic-ui-react';
 import { StyledIcon } from './styles';
 
-export const IconWrapper = styled.div`
+const IconWrapper = styled.div`
     padding: 16px 0;
 `;
 
-export const StyledImage = styled.img`
+const StyledImage = styled.img`
     width: 82px;
 `;
 
@@ -16,7 +16,7 @@ export interface ButtonIconProps {
     image?: string;
 }
 
-export const ButtonIcon = ({ icon, image }: ButtonIconProps) => {
+const ButtonIcon = ({ icon, image }: ButtonIconProps) => {
     return (
         <>
             {icon && (
@@ -28,3 +28,5 @@ export const ButtonIcon = ({ icon, image }: ButtonIconProps) => {
         </>
     );
 };
+
+export default ButtonIcon;

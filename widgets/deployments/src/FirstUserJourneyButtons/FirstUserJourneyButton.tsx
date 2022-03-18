@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { StyledLabel } from './styles';
-import { ButtonIcon } from './ButtonIcon';
+import ButtonIcon from './ButtonIcon';
 import type { ButtonIconProps } from './ButtonIcon';
 
 const { DataSegment, Grid } = Stage.Basic;
