@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
@@ -325,7 +326,7 @@ export default function TerraformModal({
         }
     }
 
-    function handleUrlAuthenticationChange(_event: Event, { checked }: CheckboxProps) {
+    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
         setUrlAuthentication(checked);
         if (!checked) {
             clearUsername();
