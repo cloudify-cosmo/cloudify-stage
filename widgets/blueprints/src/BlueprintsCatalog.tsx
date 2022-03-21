@@ -74,7 +74,7 @@ export default function BlueprintsCatalog({
                             {item.description}
                         </Grid.Column>
 
-                        {fieldsToShow.includes('Created') && (
+                        {fieldsToShow?.includes('Created') && (
                             <Grid.Row className="noPadded">
                                 <Grid.Column width="7">
                                     <Header as="h5" icon textAlign="left">
@@ -85,7 +85,7 @@ export default function BlueprintsCatalog({
                             </Grid.Row>
                         )}
 
-                        {fieldsToShow.includes('Updated') && (
+                        {fieldsToShow?.includes('Updated') && (
                             <Grid.Row className="noPadded">
                                 <Grid.Column width="7">
                                     <Header as="h5" icon textAlign="left">
@@ -96,7 +96,7 @@ export default function BlueprintsCatalog({
                             </Grid.Row>
                         )}
 
-                        {fieldsToShow.includes('Creator') && (
+                        {fieldsToShow?.includes('Creator') && (
                             <Grid.Row className="noPadded">
                                 <Grid.Column width="7">
                                     <Header as="h5" icon textAlign="left">
@@ -107,7 +107,7 @@ export default function BlueprintsCatalog({
                             </Grid.Row>
                         )}
 
-                        {fieldsToShow.includes('State') && (
+                        {fieldsToShow?.includes('State') && (
                             <Grid.Row className="noPadded">
                                 <Grid.Column width="7">
                                     <Header as="h5" icon textAlign="left">
@@ -120,7 +120,7 @@ export default function BlueprintsCatalog({
                             </Grid.Row>
                         )}
 
-                        {fieldsToShow.includes('Deployments') && (
+                        {fieldsToShow?.includes('Deployments') && (
                             <Grid.Row className="noPadded">
                                 <Grid.Column width="7">
                                     <Header as="h5" icon textAlign="left">
