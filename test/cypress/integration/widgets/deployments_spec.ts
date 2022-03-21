@@ -24,19 +24,16 @@ describe('Deployments widget', () => {
 
     const clickConfigurationToggle = (fieldName: string) => cy.get(`input[name="${fieldName}"]`).parent().click();
 
-    const deployBlueprint = () =>
-        cy.deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName });
-
     before(() => {
         cy.activate('valid_trial_license')
             .deleteSites(siteName)
             .deleteDeployments(deploymentId, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
+            .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
             .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
             .mockLogin();
-        deployBlueprint();
     });
 
     it('should be present in Deployments page', () => {
@@ -84,18 +81,28 @@ describe('Deployments widget', () => {
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
-            before(() => {
-                cy.deleteDeployments('', true);
+            const getMockedResponse = (deployments: unknown[] = []) => ({
+                items: [deployments],
+                metadata: {
+                    pagination: {
+                        total: 0,
+                        size: 1000,
+                        offset: 0
+                    },
+                    filtered: 0
+                }
             });
 
-            after(() => {
-                deployBlueprint();
-            });
+            const mockDeploymentsResponse = (mockedResponse: any) =>
+                cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
 
             it('should display showFirstUserJourneyButtons view', () => {
+                const mockedResponse = getMockedResponse([]);
+                mockDeploymentsResponse(mockedResponse);
                 cy.editWidgetConfiguration('deployments', () => {
                     clickConfigurationToggle('showFirstUserJourneyButtons');
                 });
+
                 cy.contains('No Deployments Yet').should('be.visible');
 
                 cy.contains('Create new Deployment').click();
@@ -122,18 +129,7 @@ describe('Deployments widget', () => {
                     updated_at: '2022-03-21T08:52:31.251Z',
                     visibility: 'tenant'
                 };
-                const mockedResponse = {
-                    items: [mockedDeployment],
-                    metadata: {
-                        pagination: {
-                            total: 0,
-                            size: 1000,
-                            offset: 0
-                        },
-                        filtered: 0
-                    }
-                };
-
+                const mockedResponse = getMockedResponse([mockedDeployment]);
                 cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
 
                 cy.editWidgetConfiguration('deployments', () => {
