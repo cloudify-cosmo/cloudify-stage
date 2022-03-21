@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
+import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable } from '../../../../backend/routes/Terraform.types';
 import { inputMaxLength } from './TerraformModal';
 

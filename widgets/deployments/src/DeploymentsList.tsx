@@ -1,9 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-import StageUtils from '../../../app/utils/stageUtils';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
-const t = StageUtils.getT('widgets.deployments.list');
+const t = Stage.Utils.getT('widgets.deployments.list');
 
 export default class DeploymentsList extends React.Component {
     constructor(props, context) {

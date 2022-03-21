@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import type { SemanticICONS } from 'semantic-ui-react';
 import { StyledIcon } from './styles';

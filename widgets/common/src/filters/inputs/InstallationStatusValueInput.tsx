@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import { DropdownProps } from 'semantic-ui-react';
+import type { DropdownProps } from 'semantic-ui-react';
 import type { CommonAttributeValueInputProps } from './types';
 import { getPlaceholderTranslation } from '../common';
 
