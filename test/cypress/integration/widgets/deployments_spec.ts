@@ -24,16 +24,19 @@ describe('Deployments widget', () => {
 
     const clickConfigurationToggle = (fieldName: string) => cy.get(`input[name="${fieldName}"]`).parent().click();
 
+    const deployBlueprint = () =>
+        cy.deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName });
+
     before(() => {
         cy.activate('valid_trial_license')
             .deleteSites(siteName)
             .deleteDeployments(deploymentId, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(blueprintUrl, blueprintName)
-            .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
             .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
             .mockLogin();
+        deployBlueprint();
     });
 
     it('should be present in Deployments page', () => {
@@ -83,6 +86,10 @@ describe('Deployments widget', () => {
         describe('showFirstUserJourneyButtons option and', () => {
             before(() => {
                 cy.deleteDeployments('', true);
+            });
+
+            after(() => {
+                deployBlueprint();
             });
 
             it('should display showFirstUserJourneyButtons view', () => {
