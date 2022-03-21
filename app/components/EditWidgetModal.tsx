@@ -2,57 +2,55 @@
 import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getToolbox } from '../utils/Toolbox';
 
 import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from './basic';
 
+const getInitialFields = (configDef, configuration) =>
+    configDef
+        .filter(config => !config.hidden)
+        .reduce((fields, config) => {
+            fields[config.id] = _.get(configuration, `[${config.id}]`, config.value || config.default);
+            return fields;
+        }, {});
+
+function EditWidgetGenericField({ fields, setFields, ...restProps }) {
+    const handleInputChange = (proxy, field) => {
+        const { name } = field;
+        const value = GenericField.formatValue(
+            restProps.type,
+            restProps.type === GenericField.BOOLEAN_TYPE ? field.checked : field.value
+        );
+
+        setFields({ ...fields, [name]: value });
+    };
+    return <GenericField onChange={handleInputChange} {...restProps} />;
+}
+
 export default function EditWidgetModal({ configDef, configuration, show, onHideConfig, onWidgetEdited, widget }) {
-    function getInitialFields() {
-        const fields = {};
-
-        configDef
-            .filter(config => !config.hidden)
-            .forEach(config => {
-                const currValue = _.get(configuration, `[${config.id}]`, config.value || config.default);
-                fields[config.id] = currValue;
-            });
-
-        return fields;
-    }
-
-    const [fields, setFields] = useState(getInitialFields());
+    const [fields, setFields] = useState(getInitialFields(configDef, configuration));
 
     useEffect(() => {
-        if (show) setFields(getInitialFields());
+        if (show) setFields(getInitialFields(configDef, configuration));
     }, [show]);
 
-    function onApprove() {
+    const onApprove = useCallback(() => {
         if (configuration) {
             onWidgetEdited(widget.id, { configuration: { ...configuration, ...fields } });
         }
 
         onHideConfig();
         return true;
-    }
+    }, [fields]);
 
-    function onDeny() {
+    const onDeny = useCallback(() => {
         onHideConfig();
         return true;
-    }
-
-    function handleInputChange(proxy, field) {
-        const { name } = field;
-        const value = GenericField.formatValue(
-            field.genericType,
-            field.genericType === GenericField.BOOLEAN_TYPE ? field.checked : field.value
-        );
-
-        setFields({ ...fields, [name]: value });
-    }
+    }, []);
 
     return (
-        <Modal open={show} onClose={() => onHideConfig()} className="editWidgetModal">
+        <Modal open={show} onClose={onHideConfig} className="editWidgetModal">
             <Modal.Header>Configure Widget</Modal.Header>
 
             <Modal.Content>
@@ -60,7 +58,9 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                     {configDef
                         .filter(config => !config.hidden)
                         .map(config => (
-                            <GenericField
+                            <EditWidgetGenericField
+                                fields={fields}
+                                setFields={setFields}
                                 component={config.component}
                                 default={config.default}
                                 description={config.description}
@@ -73,7 +73,6 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 label={config.name}
                                 value={fields[config.id]}
                                 columns={config.columns}
-                                onChange={handleInputChange}
                                 widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                             />
                         ))}
