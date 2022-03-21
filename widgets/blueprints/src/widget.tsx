@@ -7,7 +7,7 @@ import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
 
-const fileds = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
+const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
 Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
@@ -29,8 +29,8 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             id: 'fieldsToShow',
             name: t('configuration.fieldsToShow.label'),
             placeHolder: t('configuration.fieldsToShow.placeholder'),
-            items: fileds.map(item => t(`configuration.fieldsToShow.items.${item}`)),
-            default: join(fileds.map(item => t(`configuration.fieldsToShow.items.${item}`))),
+            items: fields.map(item => t(`configuration.fieldsToShow.items.${item}`)),
+            default: join(fields.map(item => t(`configuration.fieldsToShow.items.${item}`))),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
