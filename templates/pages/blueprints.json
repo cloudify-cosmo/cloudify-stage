@@ -126,7 +126,8 @@
                     "x": 0,
                     "y": 11,
                     "configuration": {
-                        "displayStyle": "catalog"
+                        "displayStyle": "catalog",
+                        "fieldsToShow": ["Creator", "State", "Deployments"]
                     }
                 }
             ]
