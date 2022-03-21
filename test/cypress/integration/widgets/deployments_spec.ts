@@ -22,6 +22,8 @@ describe('Deployments widget', () => {
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
 
+    const clickConfigurationToggle = (fieldName: string) => cy.get(`input[name="${fieldName}"]`).parent().click();
+
     before(() => {
         cy.activate('valid_trial_license')
             .deleteSites(siteName)
@@ -50,7 +52,7 @@ describe('Deployments widget', () => {
 
             cy.refreshPage();
             cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="clickToDrillDown"]').parent().click();
+                clickConfigurationToggle('clickToDrillDown');
             });
 
             cy.get('.deploymentsWidget').contains(deploymentId).click();
@@ -68,7 +70,7 @@ describe('Deployments widget', () => {
             });
 
             cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="showExecutionStatusLabel"]').parent().click();
+                clickConfigurationToggle('showExecutionStatusLabel');
             });
 
             cy.searchInDeploymentsWidget(deploymentId);
@@ -78,11 +80,60 @@ describe('Deployments widget', () => {
             });
         });
 
-        describe.only('showFirstUserJourneyButtons option and', () => {
-            it('do nothing xD', () => {
+        describe('showFirstUserJourneyButtons option and', () => {
+            before(() => {
+                cy.deleteDeployments('', true);
+            });
+
+            it('should display showFirstUserJourneyButtons view', () => {
                 cy.editWidgetConfiguration('deployments', () => {
-                    cy.get('input[name="showFirstUserJourneyButtons"]').click();
+                    clickConfigurationToggle('showFirstUserJourneyButtons');
                 });
+                cy.contains('No Deployments Yet').should('be.visible');
+
+                cy.contains('Create new Deployment').click();
+                cy.contains('Blueprint marketplace')
+                    .parent()
+                    .within(() => {
+                        cy.contains('button', 'Close').click();
+                    });
+
+                cy.contains('Upload from Terraform').click();
+                cy.contains('Create blueprint from Terraform').should('be.visible');
+            });
+
+            it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
+                const mockedDeployment = {
+                    blueprint_id: 'test',
+                    created_at: '2022-03-21T08:52:31.251Z',
+                    created_by: 'admin',
+                    display_name: 'Test',
+                    id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
+                    inputs: { webserver_port: 8000 },
+                    latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
+                    site_name: null,
+                    updated_at: '2022-03-21T08:52:31.251Z',
+                    visibility: 'tenant'
+                };
+                const mockedResponse = {
+                    items: [mockedDeployment],
+                    metadata: {
+                        pagination: {
+                            total: 0,
+                            size: 1000,
+                            offset: 0
+                        },
+                        filtered: 0
+                    }
+                };
+
+                cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
+
+                cy.editWidgetConfiguration('deployments', () => {
+                    clickConfigurationToggle('showFirstUserJourneyButtons');
+                });
+
+                cy.contains('No Deployments Yet').should('not.exist');
             });
         });
 

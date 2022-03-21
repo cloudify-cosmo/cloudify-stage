@@ -1,8 +1,7 @@
 import type { FunctionComponent } from 'react';
-
+import { DropdownProps } from 'semantic-ui-react';
 import type { CommonAttributeValueInputProps } from './types';
 import { getPlaceholderTranslation } from '../common';
-import { DropdownProps } from 'semantic-ui-react';
 
 const { Dropdown } = Stage.Basic;
 
@@ -18,7 +17,7 @@ const options: DropdownProps['options'] = [
     }
 ];
 
-interface InstallationStatusValueInputProps extends Pick<CommonAttributeValueInputProps, 'value' | 'onChange'> {}
+type InstallationStatusValueInputProps = Pick<CommonAttributeValueInputProps, 'value' | 'onChange'>;
 
 const InstallationStatusValueInput: FunctionComponent<InstallationStatusValueInputProps> = ({ onChange, value }) => {
     return (
