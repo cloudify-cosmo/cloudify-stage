@@ -40,14 +40,6 @@ describe('Deployments widget', () => {
     });
 
     describe('should provide display configuration for', () => {
-        /*
-        Default configuration
-        - clickToDrillDown = true
-        - showExecutionStatusLabel = false
-        - blueprintIdFilter = ''
-        - displayStyle = List
-        */
-
         before(cy.refreshPage);
 
         it('clickToDrillDown option', () => {
@@ -83,6 +75,14 @@ describe('Deployments widget', () => {
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
+            });
+        });
+
+        describe.only('showFirstUserJourneyButtons option and', () => {
+            it('do nothing xD', () => {
+                cy.editWidgetConfiguration('deployments', () => {
+                    cy.get('input[name="showFirstUserJourneyButtons"]').click();
+                });
             });
         });
 

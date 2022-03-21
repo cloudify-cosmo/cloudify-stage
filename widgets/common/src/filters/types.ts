@@ -32,7 +32,8 @@ export enum FilterRuleAttribute {
     Creator = 'created_by',
     DisplayName = 'display_name',
     SiteName = 'site_name',
-    TenantName = 'tenant_name'
+    TenantName = 'tenant_name',
+    InstallationStatus = 'installation_status'
 }
 type LabelKey = string;
 
@@ -73,6 +74,7 @@ export enum FilterRuleRowType {
     DisplayName = 'display_name',
     SiteName = 'site_name',
     TenantName = 'tenant_name',
+    InstallationStatus = 'installation_status',
 
     Label = 'label'
 }

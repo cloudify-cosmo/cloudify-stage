@@ -684,6 +684,7 @@
                         "displayName": "Select or type in display names",
                         "siteName": "Select or type in site names",
                         "tenantName": "Select or type in tenant names",
+                        "installationStatus": "Select or type in installation status",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
@@ -692,6 +693,7 @@
                         "displayName": "Display name",
                         "siteName": "Site name",
                         "tenantName": "Tenant name",
+                        "installationStatus": "Installation status",
                         "label": "Label"
                     },
                     "operatorsLabels": {

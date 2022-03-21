@@ -8,7 +8,8 @@ import {
     DisplayNameValueInput,
     SiteNameValueInput,
     TenantNameValueInput,
-    LabelValueInput
+    LabelValueInput,
+    InstallationStatusValueInput
 } from './inputs';
 
 interface RuleValueInputProps {
@@ -47,7 +48,8 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
         [FilterRuleRowType.Creator]: CreatorValueInput,
         [FilterRuleRowType.DisplayName]: DisplayNameValueInput,
         [FilterRuleRowType.SiteName]: SiteNameValueInput,
-        [FilterRuleRowType.TenantName]: TenantNameValueInput
+        [FilterRuleRowType.TenantName]: TenantNameValueInput,
+        [FilterRuleRowType.InstallationStatus]: InstallationStatusValueInput
     };
     const AttributeInputComponent = attributeInputComponents[ruleType];
     return <AttributeInputComponent {...attributeInputProps} />;

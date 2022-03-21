@@ -3,6 +3,7 @@ import CreatorValueInput from './CreatorValueInput';
 import DisplayNameValueInput from './DisplayNameValueInput';
 import TenantNameValueInput from './TenantNameValueInput';
 import SiteNameValueInput from './SiteNameValueInput';
+import InstallationStatusValueInput from './InstallationStatusValueInput';
 
 import LabelValueInput from './LabelValueInput';
 
@@ -12,5 +13,6 @@ export {
     DisplayNameValueInput,
     LabelValueInput,
     SiteNameValueInput,
-    TenantNameValueInput
+    TenantNameValueInput,
+    InstallationStatusValueInput
 };
