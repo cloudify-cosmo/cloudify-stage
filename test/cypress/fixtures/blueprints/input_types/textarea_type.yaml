@@ -1,0 +1,15 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+
+  textarea_no_default:
+    type: textarea
+
+  textarea_default_en:
+    default: en
+    type: textarea
+
+  textarea_display_rows_10:
+    type: textarea
+    display:
+      rows: 10

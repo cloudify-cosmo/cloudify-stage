@@ -1,0 +1,30 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+
+  string_no_default:
+    type: string
+
+  string_constraint_pattern:
+    type: string
+    default: "Ubuntu 18.04"
+    constraints:
+      - pattern: 'Ubuntu \d{2}\.\d{2}'
+
+  string_constraint_valid_values:
+    default: en
+    type: string
+    constraints:
+      - max_length: 2
+      - min_length: 2
+      - valid_values: [ 'pl', 'en', 'fr' ]
+      - length: 2
+      - pattern: '(pl)|(en)|(fr)'
+
+  string_default:
+    type: string
+    default: "Some default string"
+
+  string_default_null:
+    type: string
+    default: null

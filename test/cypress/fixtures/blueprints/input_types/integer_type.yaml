@@ -1,0 +1,66 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+
+  integer_constraint_max_1:
+    type: integer
+    constraints:
+      - less_than: 50
+
+  integer_constraint_max_2:
+    type: integer
+    constraints:
+      - less_or_equal: 60
+
+  integer_constraint_max_3:
+    type: integer
+    constraints:
+      - less_than: 50
+      - less_or_equal: 60
+
+  integer_constraint_max_4:
+    type: integer
+    constraints:
+      - less_than: 25
+      - less_or_equal: 15
+      - in_range: [5, 20]
+
+  integer_constraint_min_1:
+    type: integer
+    constraints:
+      - greater_than: 2
+
+  integer_constraint_min_2:
+    type: integer
+    constraints:
+      - greater_or_equal: 4
+
+  integer_constraint_min_3:
+    type: integer
+    constraints:
+      - greater_than: 2
+      - greater_or_equal: 4
+
+  integer_constraint_min_4:
+    type: integer
+    constraints:
+      - greater_than: 2
+      - greater_or_equal: 4
+      - in_range: [5, 8]
+
+  integer_no_default:
+    type: integer
+
+  integer_constraint_min_max:
+    type: integer
+    default: 10
+    constraints:
+      - less_than: 25
+      - less_or_equal: 15
+      - greater_than: 2
+      - greater_or_equal: 4
+      - in_range: [5, 20]
+
+  integer_default:
+    type: integer
+    default: 50

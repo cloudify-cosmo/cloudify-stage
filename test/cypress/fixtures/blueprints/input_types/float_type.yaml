@@ -1,0 +1,10 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+
+  float_no_default:
+    type: float
+
+  float_default:
+    type: float
+    default: 3.14

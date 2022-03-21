@@ -1,0 +1,12 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+
+  blueprint_id_all:
+    type: blueprint_id
+
+  blueprint_id_name_starts_with_b:
+    type: blueprint_id
+    constraints:
+      - name_pattern:
+          starts_with: b

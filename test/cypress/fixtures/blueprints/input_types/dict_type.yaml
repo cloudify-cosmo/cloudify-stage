@@ -1,0 +1,9 @@
+tosca_definitions_version: cloudify_dsl_1_3
+
+inputs:
+  dict_no_default:
+    type: dict
+
+  dict_default:
+    type: dict
+    default: {"a": 1, "b": 3.14, "c": [1, 2, 3], "d": { "e": 1, "f": null }, "g": "abc"}

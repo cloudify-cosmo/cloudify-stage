@@ -16,9 +16,10 @@ describe('Create Deployment Button widget', () => {
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
-        const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string'];
+        const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string', 'textarea', 'blueprint_id', 'deployment_id'];
+
         types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+            cy.uploadBlueprint(`blueprints/input_types/${resourcePrefix}${type}_type.yaml`, `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
         );
     });
 
@@ -535,21 +536,20 @@ describe('Create Deployment Button widget', () => {
             });
         });
 
-        it('deployment_id', () => {
-            selectBlueprintInModal('deployment_id');
+        // it('deployment_id', () => {
+        //     selectBlueprintInModal('deployment_id');
 
-            cy.contains('.field', 'string_no_default').within(() => {
-                verifyTextInput();
-            });
-        });
+        //     cy.contains('.field', 'string_no_default').within(() => {
+        //         verifyTextInput();
+        //     });
+        // });
 
-    });
-
-    it('blueprint_id', () => {
-        selectBlueprintInModal('deployment_id');
-
-        cy.contains('.field', 'string_no_default').within(() => {
-            verifyTextInput();
-        });
+        // it('blueprint_id', () => {
+        //     selectBlueprintInModal('blueprint_id');
+    
+        //     cy.contains('.field', 'string_no_default').within(() => {
+        //         verifyTextInput();
+        //     });
+        // });
     });
 });
