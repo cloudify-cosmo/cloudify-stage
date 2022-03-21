@@ -16,7 +16,6 @@ export default function BlueprintsTable({
     const { BlueprintActions } = Stage.Common;
     const tableName = 'blueprintsTable';
     const { fieldsToShow } = widget.configuration;
-    console.log(fieldsToShow);
 
     return (
         <DataTable
