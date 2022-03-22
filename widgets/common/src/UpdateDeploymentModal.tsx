@@ -264,6 +264,7 @@ function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, too
                         setDeploymentInputs,
                         deploymentInputs,
                         errors,
+                        toolbox,
                         blueprint.plan.data_types
                     )}
 

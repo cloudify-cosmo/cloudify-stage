@@ -11,6 +11,7 @@ interface Props {
     onDeploymentInputChange: (event: React.ChangeEvent, field: Field) => void;
     deploymentInputs: { [key: string]: unknown };
     errors: Record<string, string>;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const DeploymentInputs: FunctionComponent<Props> = ({
@@ -19,7 +20,8 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     fileLoading,
     onDeploymentInputChange,
     deploymentInputs,
-    errors
+    errors,
+    toolbox
 }) => {
     const { DataTypesButton, InputsHelpIcon, YamlFileButton, InputsUtils } = Stage.Common;
     const { Message } = Stage.Basic;
@@ -52,6 +54,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 onDeploymentInputChange,
                 deploymentInputs,
                 errors,
+                toolbox,
                 blueprint.plan.data_types
             )}
         </>

@@ -1593,5 +1593,13 @@
                 }
             }
         }
+    },
+    "input": {
+        "deployment_id": {
+            "placeholder": "Select Deployment"
+        },
+        "blueprint_id": {
+            "placeholder": "Select Blueprint"
+        }
     }
 }

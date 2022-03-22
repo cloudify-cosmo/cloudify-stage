@@ -697,6 +697,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 onClick={this.onAccordionClick}
                             >
                                 <DeploymentInputs
+                                    toolbox={toolbox}
                                     blueprint={blueprint}
                                     onYamlFileChange={this.handleYamlFileChange}
                                     fileLoading={fileLoading}
@@ -808,6 +809,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     onClick={this.onAccordionClick}
                                 >
                                     <ExecuteWorkflowInputs
+                                        toolbox={toolbox}
                                         baseWorkflowInputs={baseInstallWorkflowParams}
                                         userWorkflowInputsState={userInstallWorkflowParams}
                                         onYamlFileChange={this.handleYamlFileChange}
