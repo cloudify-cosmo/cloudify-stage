@@ -96,7 +96,7 @@ describe('Deployments widget', () => {
             const mockDeploymentsResponse = (mockedResponse: any) =>
                 cy.interceptSp('POST', '/searches/deployments', mockedResponse);
 
-            it('should display showFirstUserJourneyButtons view when there's at least one deployment installed', () => {
+            it("should display showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
                 cy.editWidgetConfiguration('deployments', () => {
