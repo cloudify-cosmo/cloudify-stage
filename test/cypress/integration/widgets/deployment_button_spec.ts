@@ -43,12 +43,6 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const verifyTextarea = (value = '') => {
-        cy.get('textarea').then($input => {
-            checkAttribute($input, 'value', value);
-        });
-    };
-
     const verifyNumberInput = (min = null, max = null, value = '', step = 1) => {
         cy.get('input').then($input => {
             checkAttribute($input, 'min', min);

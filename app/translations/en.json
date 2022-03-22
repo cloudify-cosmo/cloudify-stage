@@ -804,6 +804,17 @@
         },
         "blueprints": {
             "configuration": {
+                "fieldsToShow": {
+                    "label": "List of fields to show",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "Created": "Created",
+                        "Updated": "Updated",
+                        "Creator": "Creator",
+                        "State": "State",
+                        "Deployments": "Deployments"
+                    }
+                },
                 "clickToDrillDown": "Enable click to drill down",
                 "displayStyle": {
                     "label": "Display style",
@@ -969,7 +980,7 @@
                     }
                 },
                 "fieldsToShow": {
-                    "label": "List of fields to show in the table",
+                    "label": "List of fields to show",
                     "placeholder": "Select fields from the list",
                     "items": {
                         "name": "Name",

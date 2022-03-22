@@ -36,11 +36,11 @@ export default function BlueprintSources({ data, toolbox, widget }) {
             .then(setContent)
             .then(() => {
                 let fileType = 'json';
-                if (_.endsWith(path, '.yaml') || _.endsWith(path, '.yml')) {
+                if (_.endsWith(path.toLowerCase(), '.yaml') || _.endsWith(path.toLowerCase(), '.yml')) {
                     fileType = 'yaml';
-                } else if (_.endsWith(path, '.py')) {
+                } else if (_.endsWith(path.toLowerCase(), '.py')) {
                     fileType = 'python';
-                } else if (_.endsWith(path, '.sh')) {
+                } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
                 }
 

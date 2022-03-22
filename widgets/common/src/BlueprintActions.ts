@@ -241,7 +241,8 @@ export default class BlueprintActions {
 
         let promise;
         if (file) {
-            const compressFile = _.endsWith(file.name, '.yaml') || _.endsWith(file.name, '.yml');
+            const compressFile =
+                _.endsWith(file.name.toLowerCase(), '.yaml') || _.endsWith(file.name.toLowerCase(), '.yml');
             promise = this.toolbox
                 .getManager()
                 .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
