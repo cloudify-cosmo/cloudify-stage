@@ -1,4 +1,4 @@
-import type { RequestBody } from '../../../backend/routes/Terraform.types';
+import type { RequestBody } from '../../../../backend/routes/Terraform.types';
 
 export default class TerraformActions {
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
