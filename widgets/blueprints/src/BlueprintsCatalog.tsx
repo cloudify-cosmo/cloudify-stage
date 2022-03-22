@@ -17,6 +17,7 @@ export default function BlueprintsCatalog({
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { BlueprintActions } = Stage.Common;
     const manager = toolbox.getManager();
+    const { fieldsToShow } = widget.configuration;
 
     const blueprintsItems = data.items.map(item => {
         return (
@@ -30,14 +31,12 @@ export default function BlueprintsCatalog({
                     }}
                 >
                     <Grid>
-                        <Grid.Row className="bottomDivider">
+                        <Grid.Row>
                             <Grid.Column width="16">
-                                <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} />
-                                <Header>
-                                    <a href="#!" className="breakWord">
-                                        {item.id}
-                                    </a>
-                                </Header>
+                                <Image
+                                    src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}
+                                    style={{ maxWidth: 50, display: 'inline' }}
+                                />
                                 <ResourceVisibility
                                     visibility={item.visibility}
                                     onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
@@ -46,68 +45,95 @@ export default function BlueprintsCatalog({
                                 />
                             </Grid.Column>
                         </Grid.Row>
-
-                        <Grid.Column width="16">{item.description}</Grid.Column>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Created
+                        <Grid.Row className="bottomDivider">
+                            <Grid.Column width="16">
+                                <Header
+                                    style={{
+                                        maxWidth: 'fit-content',
+                                        marginLeft: 'unset',
+                                        display: 'block'
+                                    }}
+                                >
+                                    <a href="#!" className="breakWord">
+                                        {item.id}
+                                    </a>
                                 </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.created_at}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Updated
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.updated_at}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Creator
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.created_by}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    Main Blueprint File
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">{item.main_file_name}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    State
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">
-                                <BlueprintState blueprint={item} />
                             </Grid.Column>
                         </Grid.Row>
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="7">
-                                <Header as="h5" icon textAlign="left">
-                                    # Deployments
-                                </Header>
-                            </Grid.Column>
-                            <Grid.Column width="9">
-                                <Label color="green" horizontal>
-                                    {item.depCount}
-                                </Label>
-                            </Grid.Column>
-                        </Grid.Row>
+                        <Grid.Column
+                            width="16"
+                            style={{
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis',
+                                overflow: 'hidden',
+                                maxWidth: 400
+                            }}
+                            title={item.description}
+                        >
+                            {item.description}
+                        </Grid.Column>
+
+                        {fieldsToShow?.includes('Created') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Created
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.created_at}</Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow?.includes('Updated') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Updated
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.updated_at}</Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow?.includes('Creator') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        Creator
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">{item.created_by}</Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow?.includes('State') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        State
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">
+                                    <BlueprintState blueprint={item} />
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
+
+                        {fieldsToShow?.includes('Deployments') && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column width="7">
+                                    <Header as="h5" icon textAlign="left">
+                                        # Deployments
+                                    </Header>
+                                </Grid.Column>
+                                <Grid.Column width="9">
+                                    <Label color="green" horizontal>
+                                        {item.depCount}
+                                    </Label>
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
                     </Grid>
 
                     <Grid.Column width="16">
@@ -165,9 +191,9 @@ export default function BlueprintsCatalog({
     let row: ReactElement[] = [];
     _.each(blueprintsItems, (blueprintItem, index) => {
         row.push(blueprintItem);
-        if ((index + 1) % 3 === 0) {
+        if ((index + 1) % 5 === 0) {
             blueprintsRows.push(
-                <div key={blueprintsRows.length + 1} className="three column row">
+                <div key={blueprintsRows.length + 1} className="five column row">
                     {row}
                 </div>
             );
@@ -176,7 +202,7 @@ export default function BlueprintsCatalog({
     });
     if (row.length > 0) {
         blueprintsRows.push(
-            <div key={blueprintsRows.length + 1} className="three column row">
+            <div key={blueprintsRows.length + 1} className="five column row">
                 {row}
             </div>
         );
