@@ -684,6 +684,7 @@
                         "displayName": "Select or type in display names",
                         "siteName": "Select or type in site names",
                         "tenantName": "Select or type in tenant names",
+                        "installationStatus": "Select or type in installation status",
                         "multipleStrings": "Type in values"
                     },
                     "ruleTypesLabels": {
@@ -692,6 +693,7 @@
                         "displayName": "Display name",
                         "siteName": "Site name",
                         "tenantName": "Tenant name",
+                        "installationStatus": "Installation status",
                         "label": "Label"
                     },
                     "operatorsLabels": {
@@ -1536,6 +1538,58 @@
                 },
                 "deleteModal": {
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                }
+            }
+        },
+        "deployments": {
+            "name": "Blueprint deployments",
+            "description": "Shows blueprint deployments list",
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "lastExecution": "Last execution",
+                    "blueprint": "Blueprint",
+                    "siteName": "Site Name",
+                    "created": "Created",
+                    "updated": "Updated",
+                    "creator": "Creator"
+                }
+            },
+            "list": {
+                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+            },
+            "updatedIcon": {
+                "header": "Deployment updated",
+                "content": {
+                    "description": "This deployment has been updated at least once since creation.",
+                    "lastUpdate": "Last update was on: "
+                }
+            },
+            "firstJourney": {
+                "header": "No Deployments Yet",
+                "buttons": {
+                    "createDeployment": "Create new Deployment",
+                    "uploadFromTerraform": "Upload from Terraform"
+                }
+            },
+            "configuration": {
+                "clickToDrillDown": {
+                    "name": "Enable click to drill down"
+                },
+                "showExecutionStatusLabel": {
+                    "name": "Show execution status label",
+                    "description": "Show last execution workflow ID and status"
+                },
+                "showFirstUserJourneyButtons": {
+                    "name": "Show first user journey buttons",
+                    "description": "When there are no installed deployments, it will show a simplified view. View will contain buttons, which may be used to show Blueprint Marketplace or Create blueprint from Terraform modal"
+                },
+                "blueprintIdFilter": {
+                    "name": "Blueprint ID to filter by",
+                    "description": "Enter the blueprint id you wish to filter by"
+                },
+                "displayStyle": {
+                    "name": "Display style"
                 }
             }
         }

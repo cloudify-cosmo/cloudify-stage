@@ -2,6 +2,7 @@ import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
+    const widgetId = 'deployments';
     const blueprintName = 'deployments_test_hw';
     const deploymentId = 'deployments_test_hw_dep';
     const deploymentName = `${deploymentId}_name`;
@@ -40,14 +41,6 @@ describe('Deployments widget', () => {
     });
 
     describe('should provide display configuration for', () => {
-        /*
-        Default configuration
-        - clickToDrillDown = true
-        - showExecutionStatusLabel = false
-        - blueprintIdFilter = ''
-        - displayStyle = List
-        */
-
         before(cy.refreshPage);
 
         it('clickToDrillDown option', () => {
@@ -57,9 +50,7 @@ describe('Deployments widget', () => {
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="clickToDrillDown"]').parent().click();
-            });
+            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', true);
 
             cy.get('.deploymentsWidget').contains(deploymentId).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
@@ -75,14 +66,69 @@ describe('Deployments widget', () => {
                 cy.get('.label').should('not.exist');
             });
 
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="showExecutionStatusLabel"]').parent().click();
-            });
+            cy.setBooleanConfigurationField(widgetId, 'Show execution status label', true);
 
             cy.searchInDeploymentsWidget(deploymentId);
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
+            });
+        });
+
+        describe('showFirstUserJourneyButtons option and', () => {
+            before(() => {
+                cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
+            });
+
+            const getMockedResponse = (deployments: unknown[] = []) => ({
+                items: deployments,
+                metadata: {
+                    pagination: {
+                        total: 0,
+                        size: 1000,
+                        offset: 0
+                    },
+                    filtered: 0
+                }
+            });
+
+            const mockDeploymentsResponse = (mockedResponse: any) =>
+                cy.interceptSp('POST', '/searches/deployments', mockedResponse);
+
+            it("should display showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
+                const mockedResponse = getMockedResponse([]);
+                mockDeploymentsResponse(mockedResponse);
+
+                cy.contains('No Deployments Yet').should('be.visible');
+
+                cy.contains('Create new Deployment').click();
+                cy.contains('Blueprint marketplace')
+                    .parent()
+                    .within(() => {
+                        cy.contains('button', 'Close').click();
+                    });
+
+                cy.contains('Upload from Terraform').click();
+                cy.contains('Create blueprint from Terraform').should('be.visible');
+            });
+
+            it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
+                const mockedDeployment = {
+                    blueprint_id: 'test',
+                    created_at: '2022-03-21T08:52:31.251Z',
+                    created_by: 'admin',
+                    display_name: 'Test',
+                    id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
+                    inputs: { webserver_port: 8000 },
+                    latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
+                    site_name: null,
+                    updated_at: '2022-03-21T08:52:31.251Z',
+                    visibility: 'tenant'
+                };
+                const mockedResponse = getMockedResponse([mockedDeployment]);
+                cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
+
+                cy.contains('No Deployments Yet').should('not.exist');
             });
         });
 
