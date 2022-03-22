@@ -73,7 +73,7 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                 <FirstUserJourneyButton
                     onClick={handleTerraformClick}
                     // NOTE: Functionality for terraform image has been implemented, but for now we don't have this image.
-                    // It should be availble in the next week, untill this time we were instructed to use the rocket icon
+                    // It should be available in the next week, until this time we were instructed to use the rocket icon
                     icon="rocket"
                     label={t('buttons.uploadFromTerraform')}
                 />
