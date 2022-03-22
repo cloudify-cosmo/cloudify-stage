@@ -19,7 +19,7 @@ describe('Create Deployment Button widget', () => {
         const types = ['boolean', 'dict', 'float', 'integer', 'list', 'regex', 'string', 'textarea', 'blueprint_id', 'deployment_id'];
 
         types.forEach(type =>
-            cy.uploadBlueprint(`blueprints/input_types/${resourcePrefix}${type}_type.yaml`, `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
         );
     });
 
