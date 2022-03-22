@@ -47,9 +47,9 @@ const RuleValueInput: FunctionComponent<RuleValueInputProps> = ({
         [FilterRuleRowType.Blueprint]: BlueprintValueInput,
         [FilterRuleRowType.Creator]: CreatorValueInput,
         [FilterRuleRowType.DisplayName]: DisplayNameValueInput,
+        [FilterRuleRowType.InstallationStatus]: InstallationStatusValueInput,
         [FilterRuleRowType.SiteName]: SiteNameValueInput,
-        [FilterRuleRowType.TenantName]: TenantNameValueInput,
-        [FilterRuleRowType.InstallationStatus]: InstallationStatusValueInput
+        [FilterRuleRowType.TenantName]: TenantNameValueInput
     };
     const AttributeInputComponent = attributeInputComponents[ruleType];
     return <AttributeInputComponent {...attributeInputProps} />;
