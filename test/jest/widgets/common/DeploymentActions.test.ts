@@ -1,21 +1,16 @@
 import DeploymentActions from 'common/src/deployments/DeploymentActions';
+import PollHelper from 'common/src/utils/PollHelper';
+import ExecutionActions from 'common/src/executions/ExecutionActions';
+
+jest.mock('common/src/utils/PollHelper');
+const wait = jest.fn(() => Promise.resolve());
+(<jest.Mock>PollHelper).mockImplementation(() => ({ wait }));
+
+jest.mock('common/src/executions/ExecutionActions');
+const doGetAll = jest.fn();
+(<jest.Mock>ExecutionActions).mockImplementation(() => ({ doGetAll }));
 
 describe('(Widgets common) DeploymentActions', () => {
-    const wait = jest.fn(() => Promise.resolve());
-    const doGetAll = jest.fn();
-
-    beforeEach(() => {
-        Stage.Common = {
-            PollHelper() {
-                this.wait = wait;
-            },
-            ExecutionActions() {
-                this.doGetAll = doGetAll;
-            }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any;
-    });
-
     it('waits for deployment to complete', () => {
         doGetAll.mockResolvedValueOnce({});
         doGetAll.mockResolvedValueOnce({ items: [{}] });

@@ -1,18 +1,20 @@
 // @ts-nocheck File not migrated fully to TS
-import BlueprintActions from 'common/src/blueprints/BlueprintActions';
+import BlueprintActions, {
+    InProgressBlueprintStates,
+    CompletedBlueprintStates
+} from 'common/src/blueprints/BlueprintActions';
+import PollHelper from 'common/src/utils/PollHelper';
 
-const { InProgressBlueprintStates } = BlueprintActions;
+jest.mock('common/src/utils/PollHelper');
+
+const wait = jest.fn(() => Promise.resolve());
+const resetAttempts = jest.fn();
+
+(<jest.Mock>PollHelper).mockImplementation(() => ({ wait, resetAttempts }));
 
 describe('(Widgets common) BlueprintActions', () => {
-    const wait = jest.fn(() => Promise.resolve());
-    const resetAttempts = jest.fn();
-
     beforeEach(() => {
         Stage.Common = {
-            PollHelper() {
-                this.wait = wait;
-                this.resetAttempts = resetAttempts;
-            },
             Consts: {}
         };
     });
@@ -23,7 +25,7 @@ describe('(Widgets common) BlueprintActions', () => {
         getBlueprintData.mockResolvedValueOnce({ state: InProgressBlueprintStates.Uploading });
         getBlueprintData.mockResolvedValueOnce({ state: InProgressBlueprintStates.Extracting });
         getBlueprintData.mockResolvedValueOnce({ state: InProgressBlueprintStates.Parsing });
-        getBlueprintData.mockResolvedValueOnce({ state: BlueprintActions.CompletedBlueprintStates.Uploaded });
+        getBlueprintData.mockResolvedValueOnce({ state: CompletedBlueprintStates.Uploaded });
 
         const onStateChanged = jest.fn();
 
@@ -46,7 +48,7 @@ describe('(Widgets common) BlueprintActions', () => {
         const getBlueprintData = jest.fn();
         const error = 'error message';
         getBlueprintData.mockResolvedValueOnce({
-            state: BlueprintActions.CompletedBlueprintStates.FailedUploading,
+            state: CompletedBlueprintStates.FailedUploading,
             error
         });
 
@@ -60,7 +62,7 @@ describe('(Widgets common) BlueprintActions', () => {
             .doUpload('', { onStateChanged })
             .catch(e => {
                 expect(e.message).toBe(error);
-                expect(e.state).toBe(BlueprintActions.CompletedBlueprintStates.FailedUploading);
+                expect(e.state).toBe(CompletedBlueprintStates.FailedUploading);
                 expect(onStateChanged).not.toHaveBeenCalled();
             });
     });

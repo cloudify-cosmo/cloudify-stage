@@ -6,7 +6,7 @@ import { noop } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import type { Input } from 'common/src/inputs/utils/types';
 
-jest.mock('common/src/inputs/utils/getRevertToDefaultIcon', () => () => undefined);
+jest.mock('common/src/components/RevertToDefaultIcon', () => () => null);
 
 describe('InputsUtils.getInputField', () => {
     let input: Input;

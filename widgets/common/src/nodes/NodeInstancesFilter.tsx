@@ -115,8 +115,3 @@ NodeInstancesFilter.defaultProps = {
     help: '',
     upward: false
 };
-
-Stage.defineCommon({
-    name: 'NodeInstancesFilter',
-    common: React.memo(NodeInstancesFilter, _.isEqual)
-});

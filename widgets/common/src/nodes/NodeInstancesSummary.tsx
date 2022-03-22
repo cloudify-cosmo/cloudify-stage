@@ -46,8 +46,3 @@ export default function NodeInstancesSummary({ instancesStates }) {
 NodeInstancesSummary.propTypes = {
     instancesStates: PropTypes.objectOf(PropTypes.number).isRequired
 };
-
-Stage.defineCommon({
-    name: 'NodeInstancesSummary',
-    common: NodeInstancesSummary
-});
