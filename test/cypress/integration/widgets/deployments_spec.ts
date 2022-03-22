@@ -82,7 +82,7 @@ describe('Deployments widget', () => {
 
         describe('showFirstUserJourneyButtons option and', () => {
             const getMockedResponse = (deployments: unknown[] = []) => ({
-                items: [deployments],
+                items: deployments,
                 metadata: {
                     pagination: {
                         total: 0,
@@ -94,7 +94,7 @@ describe('Deployments widget', () => {
             });
 
             const mockDeploymentsResponse = (mockedResponse: any) =>
-                cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
+                cy.interceptSp('POST', '/searches/deployments', mockedResponse);
 
             it('should display showFirstUserJourneyButtons view', () => {
                 const mockedResponse = getMockedResponse([]);
