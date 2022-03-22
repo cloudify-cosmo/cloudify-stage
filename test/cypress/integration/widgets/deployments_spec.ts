@@ -2,6 +2,7 @@ import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments widget', () => {
+    const widgetId = 'deployments';
     const blueprintName = 'deployments_test_hw';
     const deploymentId = 'deployments_test_hw_dep';
     const deploymentName = `${deploymentId}_name`;
@@ -21,8 +22,6 @@ describe('Deployments widget', () => {
         selectDeploymentActionFromMenu(id, '.workflowsMenu', workflow);
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
-
-    const clickConfigurationToggle = (fieldName: string) => cy.get(`input[name="${fieldName}"]`).parent().click();
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -51,9 +50,7 @@ describe('Deployments widget', () => {
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
-            cy.editWidgetConfiguration('deployments', () => {
-                clickConfigurationToggle('clickToDrillDown');
-            });
+            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', true);
 
             cy.get('.deploymentsWidget').contains(deploymentId).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
@@ -69,9 +66,7 @@ describe('Deployments widget', () => {
                 cy.get('.label').should('not.exist');
             });
 
-            cy.editWidgetConfiguration('deployments', () => {
-                clickConfigurationToggle('showExecutionStatusLabel');
-            });
+            cy.setBooleanConfigurationField(widgetId, 'Show execution status label', true);
 
             cy.searchInDeploymentsWidget(deploymentId);
             cy.get(lastExecutionCellSelector).within(() => {
@@ -82,9 +77,7 @@ describe('Deployments widget', () => {
 
         describe('showFirstUserJourneyButtons option and', () => {
             before(() => {
-                cy.editWidgetConfiguration('deployments', () => {
-                    clickConfigurationToggle('showFirstUserJourneyButtons');
-                });
+                cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
             });
 
             const getMockedResponse = (deployments: unknown[] = []) => ({
