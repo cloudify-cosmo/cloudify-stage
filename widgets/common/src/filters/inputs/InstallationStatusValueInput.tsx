@@ -5,17 +5,9 @@ import { getPlaceholderTranslation } from '../common';
 
 const { Dropdown } = Stage.Basic;
 
-type InstallationStatus = 'active' | 'inactive';
-const options: DropdownProps['options'] = [
-    {
-        text: 'active',
-        value: 'active'
-    },
-    {
-        text: 'inactive',
-        value: 'inactive'
-    }
-];
+const installationStatuses = ['active', 'inactive'] as const;
+type InstallationStatus = typeof installationStatuses[number];
+const options: DropdownProps['options'] = installationStatuses.map(status => ({ text: status, value: status }));
 
 type InstallationStatusValueInputProps = Pick<CommonAttributeValueInputProps, 'value' | 'onChange'>;
 
