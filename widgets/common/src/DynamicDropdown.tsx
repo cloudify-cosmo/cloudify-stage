@@ -78,7 +78,7 @@ interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     name?: string;
     prefetch?: boolean;
     refreshEvent?: string;
-    constraints?: Record<string, any>;
+    constraints?: Array<any>;
     itemsFormatter?: (items: any[]) => Option[];
 }
 
@@ -183,8 +183,8 @@ export default function DynamicDropdown({
             );
             let fetchPromise;
 
-            if (!_.isEmpty(constraints)) {
-                const constraintsObject = _.isArray(constraints) ? Object.assign({}, ...constraints) : constraints;
+            if (!_.isUndefined(constraints)) {
+                const constraintsObject = _.isArray(constraints) ? Object.assign({}, ...constraints) : {};
                 fetchPromise = toolbox.getManager().doPost(fetchUrl, {
                     params,
                     headers: {

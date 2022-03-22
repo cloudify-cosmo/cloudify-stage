@@ -1,7 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 
-import i18n from 'i18next';
-
 const HelpProperty = ({ show, name, value }) => {
     const { Header } = Stage.Basic;
     return (
@@ -247,7 +245,7 @@ class InputsUtils {
     };
 
     static getInputField(input, value, onChange, error, toolbox) {
-        const { name, default: defaultValue, type, constraints } = input;
+        const { name, default: defaultValue, type, constraints = {} } = input;
         const { Form } = Stage.Basic;
         const { DynamicDropdown } = Stage.Common;
         const getConstraintValue = InputsUtils.getConstraintValueFunction(constraints);
@@ -351,14 +349,13 @@ class InputsUtils {
             }
             case 'deployment_id': {
                 const fetchUrl = '/searches/deployments?_include=id';
-                const constraintsObject = Object.assign({}, ...constraints);
 
                 return (
                     <DynamicDropdown
                         name={name}
                         error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        placeholder={i18n.t('input.deployment_id.placeholder')}
+                        placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
                         onChange={newValue => onChange(null, { name, value: newValue })}
@@ -369,13 +366,13 @@ class InputsUtils {
             }
             case 'blueprint_id': {
                 const fetchUrl = '/searches/blueprints?_include=id&state=uploaded';
-                const constraintsObject = Object.assign({}, ...constraints);
+
                 return (
                     <DynamicDropdown
                         name={name}
                         error={!!error}
                         icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
-                        placeholder={i18n.t('input.blueprint_id.placeholder')}
+                        placeholder={Stage.i18n.t('input.blueprint_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
                         onChange={newValue => onChange(null, { name, value: newValue })}
