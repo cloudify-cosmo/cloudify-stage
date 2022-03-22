@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
-import { MARKETPLACE_TABS } from './consts';
 import { StyledIcon, StyledLabel } from './styles';
 
 const {
@@ -80,7 +79,11 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
             </RowWrapper>
 
             {isMarketplaceModalVisible && (
-                <BlueprintMarketplace.Modal open onHide={hideMarketplaceModal} tabs={MARKETPLACE_TABS} />
+                <BlueprintMarketplace.Modal
+                    open
+                    onHide={hideMarketplaceModal}
+                    tabs={BlueprintMarketplace.tabsConfig.default}
+                />
             )}
 
             {isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}

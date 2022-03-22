@@ -80,7 +80,7 @@ describe('Deployments widget', () => {
             });
         });
 
-        describe.only('showFirstUserJourneyButtons option and', () => {
+        describe('showFirstUserJourneyButtons option and', () => {
             before(() => {
                 cy.editWidgetConfiguration('deployments', () => {
                     clickConfigurationToggle('showFirstUserJourneyButtons');
