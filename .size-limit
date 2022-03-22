@@ -1,7 +1,7 @@
 [
     {
         "name": "Main JS bundle",
-        "limit": "364 KB",
+        "limit": "366 KB",
         "gzip": false,
         "path": "dist/static/js/main.bundle.js"
     },
@@ -23,7 +23,7 @@
     },
     {
         "name": "Application package",
-        "limit": "13.86 MB",
+        "limit": "13.88 MB",
         "gzip": false,
         "running": false,
         "path": [

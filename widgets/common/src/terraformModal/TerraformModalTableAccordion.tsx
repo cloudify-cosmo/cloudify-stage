@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DynamicTableProps } from '../../../app/components/shared/DynamicTable';
+import type { DynamicTableProps } from '../../../../app/components/shared/DynamicTable';
 
 const { DynamicTable } = Stage.Shared;
 type DynamicTableValue = DynamicTableProps['value'];

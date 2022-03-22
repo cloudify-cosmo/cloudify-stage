@@ -459,6 +459,7 @@ describe('Filters widget', () => {
                     display_name: 'deployments',
                     site_name: 'sites',
                     tenant_name: 'tenants',
+                    installation_status: '',
                     label: '' // NOTE: Only endpoints for attribute rules are necessary
                 };
 
