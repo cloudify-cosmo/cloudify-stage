@@ -6,9 +6,9 @@ import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from 
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
-import type { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
-import type { Variable, Output } from '../../../backend/routes/Terraform.types';
-import terraformLogo from '../images/terraform-icon.png';
+import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
+import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
+import terraformLogo from './images/terraform-icon.png';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -316,6 +316,7 @@ export default function TerraformModal({
             const file: any = new Blob([blueprintContent]);
             file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
             const image = await (await fetch(terraformLogo)).blob();
+
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
 
             toolbox.getEventBus().trigger('blueprints:refresh');
@@ -483,3 +484,14 @@ export default function TerraformModal({
         </Modal>
     );
 }
+
+declare global {
+    namespace Stage.Common {
+        export { TerraformModal };
+    }
+}
+
+Stage.defineCommon({
+    name: 'TerraformModal',
+    common: TerraformModal
+});

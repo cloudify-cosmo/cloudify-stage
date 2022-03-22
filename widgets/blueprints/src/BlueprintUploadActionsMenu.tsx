@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
-import TerraformModal from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 
@@ -27,7 +26,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 }) => {
     const {
         Basic: { Dropdown },
-        Common: { UploadBlueprintModal, BlueprintMarketplace },
+        Common: { UploadBlueprintModal, BlueprintMarketplace, TerraformModal },
         Hooks: { useBoolean }
     } = Stage;
     const { Menu, Item } = Dropdown;

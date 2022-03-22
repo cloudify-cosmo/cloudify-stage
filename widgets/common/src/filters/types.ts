@@ -31,6 +31,7 @@ export enum FilterRuleAttribute {
     Blueprint = 'blueprint_id',
     Creator = 'created_by',
     DisplayName = 'display_name',
+    InstallationStatus = 'installation_status',
     SiteName = 'site_name',
     TenantName = 'tenant_name'
 }
@@ -73,6 +74,7 @@ export enum FilterRuleRowType {
     DisplayName = 'display_name',
     SiteName = 'site_name',
     TenantName = 'tenant_name',
+    InstallationStatus = 'installation_status',
 
     Label = 'label'
 }
