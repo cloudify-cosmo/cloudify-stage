@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import BlueprintActions from 'common/src/BlueprintActions';
+import BlueprintActions from 'common/src/blueprints/BlueprintActions';
 
 const { InProgressBlueprintStates } = BlueprintActions;
 

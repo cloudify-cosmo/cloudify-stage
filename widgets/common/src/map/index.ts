@@ -1,3 +1,4 @@
+import MapsActions from './MapsActions';
 import DefaultTileLayer from './DefaultTileLayer';
 import { getMapOptions } from './options';
 import { isSiteWithPosition, Site, siteToLatLng, SiteWithPosition } from './site';
@@ -7,9 +8,11 @@ import {
     useWidgetDimensions,
     WidgetDimensions
 } from './widget-dimensions';
+import { MarkerIconColor, createMarkerIcon } from './MarkerIcon';
 
 declare global {
     namespace Stage.Common.Map {
+        export const Actions: typeof MapsActions;
         export {
             WidgetDimensions,
             getWidgetDimensions,
@@ -20,7 +23,9 @@ declare global {
             isSiteWithPosition,
             SiteWithPosition,
             siteToLatLng,
-            DefaultTileLayer
+            DefaultTileLayer,
+            MarkerIconColor,
+            createMarkerIcon
         };
     }
 }
@@ -28,12 +33,14 @@ declare global {
 Stage.defineCommon({
     name: 'Map',
     common: {
+        Actions: MapsActions,
         invalidateSizeAfterDimensionsChange,
         getWidgetDimensions,
         useWidgetDimensions,
         getMapOptions,
         isSiteWithPosition,
         siteToLatLng,
-        DefaultTileLayer
+        DefaultTileLayer,
+        createMarkerIcon
     }
 });

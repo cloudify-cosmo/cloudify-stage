@@ -16,7 +16,7 @@ export default function UserRoles({ tenant, user }) {
         return roles;
     }
 
-    const { RolesPresenter } = Stage.Common;
+    const RolesPresenter = Stage.Common.Roles.Presenter;
 
     const directRole = tenant.user_roles.direct[user];
     const groupRoles = groupGroupsByRole(tenant.user_roles.groups);

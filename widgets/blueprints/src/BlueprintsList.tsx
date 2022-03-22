@@ -53,7 +53,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
     selectBlueprint: BlueprintsViewProps['onSelectBlueprint'] = item => {
         const { toolbox, widget } = this.props;
-        const { BlueprintActions } = Stage.Common;
+        const BlueprintActions = Stage.Common.Blueprints.Actions;
 
         if (BlueprintActions.isUploaded(item)) {
             if (widget.configuration.clickToDrillDown) {
@@ -81,7 +81,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             return;
         }
 
-        const actions = new Stage.Common.BlueprintActions(toolbox);
+        const actions = new Stage.Common.Blueprints.Actions(toolbox);
         this.setState({ confirmDelete: false });
         actions
             .doDelete(blueprintId, force)
@@ -97,7 +97,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
     setBlueprintVisibility: BlueprintsViewProps['onSetVisibility'] = (blueprintId, visibility) => {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.BlueprintActions(toolbox);
+        const actions = new Stage.Common.Blueprints.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetVisibility(blueprintId, visibility)
@@ -115,7 +115,10 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         this.setState({ showDeploymentModal: false });
     };
 
-    handleForceChange: ComponentProps<typeof Stage.Common.DeleteConfirm>['onForceChange'] = (_event, field) => {
+    handleForceChange: ComponentProps<typeof Stage.Common.Components.DeleteConfirm>['onForceChange'] = (
+        _event,
+        field
+    ) => {
         // @ts-expect-error Form.fieldNameValue is not converted to TS yet
         this.setState(Stage.Basic.Form.fieldNameValue(field));
     };
@@ -135,7 +138,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
         const { ErrorMessage } = Stage.Basic;
-        const { DeleteConfirm, DeployBlueprintModal } = Stage.Common;
+        const { DeployBlueprintModal } = Stage.Common;
+        const { DeleteConfirm } = Stage.Common.Components;
 
         const shouldShowTable = widget.configuration.displayStyle === 'table';
 

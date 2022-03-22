@@ -1,4 +1,4 @@
-import DeploymentActions from 'common/src/DeploymentActions';
+import DeploymentActions from 'common/src/deployments/DeploymentActions';
 
 describe('(Widgets common) DeploymentActions', () => {
     const wait = jest.fn(() => Promise.resolve());

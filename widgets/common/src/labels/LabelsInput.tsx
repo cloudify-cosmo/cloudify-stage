@@ -1,4 +1,6 @@
 import { FunctionComponent, SyntheticEvent } from 'react';
+import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
+import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
@@ -17,7 +19,6 @@ const internalKeyPrefix = 'csys-';
 function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     const { useState, useEffect } = React;
     const {
-        Common: { DeploymentActions },
         Hooks: { useBoolean }
     } = Stage;
 
@@ -53,11 +54,6 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
     const { useEffect, useRef } = React;
     const {
         Basic: { Divider, Form, Icon, Segment },
-        Common: {
-            DeploymentActions,
-            // @ts-expect-error RevertToDefaultIcon is not converted to TS yet
-            RevertToDefaultIcon
-        },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
         Utils: { combineClassNames }
     } = Stage;

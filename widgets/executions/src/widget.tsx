@@ -73,13 +73,13 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
 
     fetchData(widget, toolbox, params) {
         const { singleExecutionView } = widget.configuration;
-        const executionActions = new Stage.Common.ExecutionActions(toolbox);
+        const executionActions = new Stage.Common.Executions.Actions(toolbox);
 
         if (singleExecutionView) {
             const deploymentIdFromParams = castArray(params.deployment_id)[0];
 
             if (deploymentIdFromParams) {
-                return new Stage.Common.DeploymentActions(toolbox)
+                return new Stage.Common.Deployments.Actions(toolbox)
                     .doGet(
                         {
                             id: deploymentIdFromParams

@@ -130,7 +130,8 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
     const NO_DATA_MESSAGE = t('noData');
     const { Button, DataTable } = Stage.Basic;
-    const { PluginIcon, FeedbackMessages } = Stage.Common;
+    const { FeedbackMessages } = Stage.Common.Components;
+    const PluginIcon = Stage.Common.Plugins.Icon;
 
     const distro = `${toolbox
         .getManager()

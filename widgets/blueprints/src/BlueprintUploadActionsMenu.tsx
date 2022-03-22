@@ -27,10 +27,11 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 }) => {
     const {
         Basic: { Dropdown },
-        Common: { UploadBlueprintModal, BlueprintMarketplace },
+        Common: { BlueprintMarketplace },
         Hooks: { useBoolean }
     } = Stage;
     const { Menu, Item } = Dropdown;
+    const UploadBlueprintModal = Stage.Common.Blueprints.UploadModal;
 
     const [marketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();

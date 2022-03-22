@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import DynamicDropdown from '../components/DynamicDropdown';
 
 const FilterIdDropdown: FunctionComponent<Stage.Types.CustomConfigurationComponentProps<string | null>> = ({
     name,
@@ -6,7 +7,7 @@ const FilterIdDropdown: FunctionComponent<Stage.Types.CustomConfigurationCompone
     onChange,
     widgetlessToolbox
 }) => (
-    <Stage.Common.DynamicDropdown
+    <DynamicDropdown
         toolbox={widgetlessToolbox}
         onChange={newValue => onChange(null, { name, value: newValue as string })}
         fetchUrl="/filters/deployments?_include=id"

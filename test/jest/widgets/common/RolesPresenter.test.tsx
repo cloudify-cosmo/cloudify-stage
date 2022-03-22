@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import { shallow } from 'enzyme';
 
-import RolesPresenter from 'common/src/RolesPresenter';
+import RolesPresenter from 'common/src/roles/RolesPresenter';
 
 describe('(Widgets common) RolesPresenter', () => {
     it('renders when direct role is the only group role', () => {

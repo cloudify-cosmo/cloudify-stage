@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import YamlFileButton from '../inputs/YamlFileButton';
 import type {
     OnDateInputChange,
     OnDropdownChange,
@@ -6,6 +7,8 @@ import type {
     BaseWorkflowInputs,
     UserWorkflowInputsState
 } from './types';
+import InputsHelpIcon from '../inputs/InputsHelpIcon';
+import getInputFields from '../inputs/utils/getInputFields';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -71,7 +74,6 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const { Message, Form, Header, Divider, DateInput } = Stage.Basic;
-    const { YamlFileButton, InputsHelpIcon, InputsUtils } = Stage.Common;
     return (
         <>
             {_.isEmpty(baseWorkflowInputs) ? (
@@ -88,7 +90,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 </>
             )}
 
-            {InputsUtils.getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
+            {getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

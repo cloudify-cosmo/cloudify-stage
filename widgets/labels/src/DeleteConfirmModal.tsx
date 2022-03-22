@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete, onHide, toolbox }) {
     const { Confirm, Label } = Stage.Basic;
-    const { DeploymentActions } = Stage.Common;
+    const DeploymentActions = Stage.Common.Deployments.Actions;
     const { i18n } = Stage;
 
     return (

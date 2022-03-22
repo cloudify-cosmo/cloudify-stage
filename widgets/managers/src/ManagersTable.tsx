@@ -90,7 +90,8 @@ function ManagersTable({ data, toolbox, widget }) {
     const workflows = !_.isEmpty(selectedManagers) ? _.get(data, 'items[0].workflows', []) : [];
 
     const { Checkbox, DataTable, ErrorMessage } = Stage.Basic;
-    const { ExecuteWorkflowModal, LastExecutionStatusIcon } = Stage.Common;
+    const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
+    const { LastExecutionStatusIcon } = Stage.Common.Executions;
 
     return (
         <div>

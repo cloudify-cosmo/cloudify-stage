@@ -278,7 +278,7 @@ export default function TerraformModal({
             return;
         }
 
-        const { BlueprintActions } = Stage.Common;
+        const BlueprintActions = Stage.Common.Blueprints.Actions;
 
         const existingBlueprintResponse = await new BlueprintActions(toolbox).doGetBlueprints({
             id: blueprintName,
@@ -358,7 +358,7 @@ export default function TerraformModal({
             .finally(unsetTemplateModulesLoading);
     }
 
-    const { AccordionSectionWithDivider } = Stage.Common;
+    const { SectionWithDivider } = Stage.Common.Components.Accordion;
 
     const { Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } = Stage.Basic;
 
@@ -388,7 +388,7 @@ export default function TerraformModal({
                         />
                     </Form.Field>
                     <Accordion>
-                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
+                        <SectionWithDivider title={t('blueprintInformation')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={errors.template}>
                                 <Form.Input
@@ -441,7 +441,7 @@ export default function TerraformModal({
                                     />
                                 </Form.Field>
                             </Form.Group>
-                        </AccordionSectionWithDivider>
+                        </SectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
                             title={t('variables')}
