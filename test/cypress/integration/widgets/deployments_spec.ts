@@ -80,7 +80,13 @@ describe('Deployments widget', () => {
             });
         });
 
-        describe('showFirstUserJourneyButtons option and', () => {
+        describe.only('showFirstUserJourneyButtons option and', () => {
+            before(() => {
+                cy.editWidgetConfiguration('deployments', () => {
+                    clickConfigurationToggle('showFirstUserJourneyButtons');
+                });
+            });
+
             const getMockedResponse = (deployments: unknown[] = []) => ({
                 items: deployments,
                 metadata: {
@@ -99,9 +105,6 @@ describe('Deployments widget', () => {
             it("should display showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
-                cy.editWidgetConfiguration('deployments', () => {
-                    clickConfigurationToggle('showFirstUserJourneyButtons');
-                });
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
@@ -131,10 +134,6 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
-
-                cy.editWidgetConfiguration('deployments', () => {
-                    clickConfigurationToggle('showFirstUserJourneyButtons');
-                });
 
                 cy.contains('No Deployments Yet').should('not.exist');
             });
