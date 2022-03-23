@@ -1,0 +1,114 @@
+{
+    "name": "Blueprint Marketplace",
+    "icon": "upload",
+    "layout": [
+        {
+            "type": "tabs",
+            "content": [
+                {
+                    "name": "AWS",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ],
+                    "isDefault": true
+                },
+                {
+                    "name": "Azure",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "GCP",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "Terraform",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "Helm",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "Other",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 24,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            },
+                            "drillDownPages": {}
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
