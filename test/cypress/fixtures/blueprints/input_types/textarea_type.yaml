@@ -9,7 +9,7 @@ inputs:
     default: en
     type: textarea
 
-  textarea_display_rows_10:
+  textarea_display_rows_5:
     type: textarea
     display:
-      rows: 10
+      rows: 5
