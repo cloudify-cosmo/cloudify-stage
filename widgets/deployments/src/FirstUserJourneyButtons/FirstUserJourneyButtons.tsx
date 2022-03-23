@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
-import terraformLogo from './images/terraform_logo.png';
+import terraformLogo from '../../../../app/images/terraform_logo.png';
 
 const {
     Hooks: { useBoolean },
