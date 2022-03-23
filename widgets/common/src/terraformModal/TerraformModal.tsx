@@ -29,8 +29,10 @@ const {
 } = Stage.Basic;
 
 const TerraformLogo = styled(Image)`
-    width: 1.8em;
-    margin-right: 0.25em;
+    &&& {
+        width: 1.8em;
+        margin-right: 0.25em;
+    }
 `;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
