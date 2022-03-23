@@ -20,7 +20,7 @@ class SiteLocationMap extends React.Component {
 
     componentDidMount() {
         const { toolbox } = this.props;
-        const MapsActions = Stage.Common.Maps.Actions;
+        const MapsActions = Stage.Common.Map.Actions;
 
         return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }

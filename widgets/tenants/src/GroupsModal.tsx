@@ -4,7 +4,7 @@ import Actions from './actions';
 import TenantPropType from './props/TenantPropType';
 
 const RolesPicker = Stage.Common.Roles.Picker;
-const { getDefaultRoleNameUtil } = Stage.Common.Roles.Utils;
+const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
 export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups }) {
     const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;

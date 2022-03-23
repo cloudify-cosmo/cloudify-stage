@@ -85,7 +85,7 @@ Stage.defineWidget({
         } = widget;
 
         if (showFirstUserJourneyButtons) {
-            const installedDeployments = await new Stage.Common.SearchActions(toolbox).doListDeployments([
+            const installedDeployments = await new Stage.Common.Actions.Search(toolbox).doListDeployments([
                 { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
             ]);
             const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
@@ -117,7 +117,7 @@ Stage.defineWidget({
             .then(ids =>
                 new Stage.Common.Executions.Actions(toolbox).doGetAll({
                     _include:
-                        'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameter,error,total_operations,finished_operations',
+                        'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
                     id: ids
                 })
             );
