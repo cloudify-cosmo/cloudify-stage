@@ -115,7 +115,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         if (widget.configuration.hideFailedBlueprints) {
             filterRules.push({
                 key: 'state',
-                values: [Stage.Common.Blueprints.Actions.CompletedBlueprintStates.Uploaded],
+                values: [Stage.Common.Blueprints.CompletedStates.Uploaded],
                 operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
                 type: Stage.Common.Filters.FilterRuleType.Attribute
             });
