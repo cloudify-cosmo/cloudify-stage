@@ -13,7 +13,14 @@ function normalizeValue(input: Input, inputsState: Record<string, any>, dataType
     return inputsState[input.name];
 }
 
-function getFormInputField(input: Input, value: any, onChange: OnChange, error: boolean, dataType: DataType) {
+function getFormInputField(
+    input: Input,
+    value: any,
+    onChange: OnChange,
+    error: boolean,
+    toolbox: Stage.Types.WidgetlessToolbox,
+    dataType: DataType
+) {
     const { name, display_label: displayLabel, default: defaultValue, description, type, constraints } = input;
     const { Form } = Stage.Basic;
     const help = getHelp(description, type, constraints, defaultValue, dataType);
@@ -23,20 +30,15 @@ function getFormInputField(input: Input, value: any, onChange: OnChange, error: 
         case 'boolean':
             return (
                 <Form.Field key={name} help={help} required={required}>
-                    {getInputField(input, value, onChange, error)}
+                    {getInputField(input, value, onChange, error, toolbox)}
                 </Form.Field>
             );
         case 'integer':
-            return (
-                <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
-                    {getInputField(input, value, onChange, error)}
-                </Form.Field>
-            );
         case 'string':
         default:
             return (
                 <Form.Field key={name} error={error} help={help} required={required} label={displayLabel ?? name}>
-                    {getInputField(input, value, onChange, error)}
+                    {getInputField(input, value, onChange, error, toolbox)}
                 </Form.Field>
             );
     }
@@ -47,6 +49,7 @@ export default function getInputFields(
     onChange: OnChange,
     inputsState: Record<string, any>,
     errorsState: Record<string, any>,
+    toolbox: Stage.Types.WidgetlessToolbox,
     dataTypes?: Record<string, any>
 ) {
     return _(inputs)
@@ -56,7 +59,7 @@ export default function getInputFields(
         .map(input => {
             const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes![input.type] : undefined;
             const value = normalizeValue(input, inputsState, dataType);
-            return getFormInputField(input, value, onChange, errorsState[input.name], dataType);
+            return getFormInputField(input, value, onChange, errorsState[input.name], toolbox, dataType);
         })
         .value();
 }

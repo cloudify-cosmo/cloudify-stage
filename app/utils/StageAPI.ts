@@ -1,7 +1,8 @@
-import type { ComponentType, ReactElement, ReactNode } from 'react';
+import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } from 'react';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react';
+import type { GenericFieldType } from 'cloudify-ui-components';
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';
@@ -83,7 +84,14 @@ export type { StageWidgetDefinition as WidgetDefinition };
 interface StageCustomConfigurationComponentProps<T> {
     name: string;
     value: T;
-    onChange: (event: unknown, field: { name: string; value: T }) => void;
+    onChange: (
+        event: SyntheticEvent<HTMLElement, Event> | undefined,
+        field: {
+            name?: string;
+            value: T;
+            checked?: boolean;
+        }
+    ) => void;
     widgetlessToolbox: StageWidgetlessToolbox;
 }
 export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
@@ -93,11 +101,11 @@ interface StageWidgetConfigurationDefinition {
     id: string;
     name?: string;
     description?: ReactNode;
-    type: string;
+    type: GenericFieldType;
     default?: any;
     placeHolder?: string;
     hidden?: boolean;
-    component?: ComponentType<StageCustomConfigurationComponentProps<any>>;
+    component?: JSXElementConstructor<StageCustomConfigurationComponentProps<any>>;
     /** Used for lists */
     items?: (string | { name: string; value: string })[];
     [key: string]: any;

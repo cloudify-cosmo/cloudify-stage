@@ -1,4 +1,5 @@
 import type { IconProps } from 'semantic-ui-react';
+import DynamicDropdown from '../../components/DynamicDropdown';
 import RevertToDefaultIcon from '../../components/RevertToDefaultIcon';
 import { DEFAULT_TEXTAREA_ROWS, STRING_VALUE_SURROUND_CHAR } from './consts';
 import getInputFieldInitialValue from './getInputFieldInitialValue';
@@ -40,8 +41,14 @@ function getConstraintValueFunction(constraints: Constraint[]) {
     };
 }
 
-export default function getInputField(input: Input, value: any, onChange: OnChange, error: boolean) {
-    const { name, default: defaultValue, type, constraints } = input;
+export default function getInputField(
+    input: Input,
+    value: any,
+    onChange: OnChange,
+    error: boolean,
+    toolbox: Stage.Types.WidgetlessToolbox
+) {
+    const { name, default: defaultValue, type, constraints = [] } = input;
     const { Form } = Stage.Basic;
     const getConstraintValue = getConstraintValueFunction(constraints);
     const validValues = getConstraintValue('valid_values');
@@ -140,6 +147,40 @@ export default function getInputField(input: Input, value: any, onChange: OnChan
                         {getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                     </div>
                 </div>
+            );
+        }
+        case 'deployment_id': {
+            const fetchUrl = '/searches/deployments?_include=id';
+
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    icon={getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                    placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
+                    value={value}
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
+            );
+        }
+        case 'blueprint_id': {
+            const fetchUrl = '/searches/blueprints?_include=id&state=uploaded';
+
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    icon={getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                    placeholder={Stage.i18n.t('input.blueprint_id.placeholder')}
+                    value={value}
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
             );
         }
         case 'string':

@@ -15,6 +15,7 @@ interface Props {
     onDeploymentInputChange: (event: React.SyntheticEvent, field: Field) => void;
     deploymentInputs: { [key: string]: unknown };
     errors: Record<string, string>;
+    toolbox: Stage.Types.Toolbox;
 }
 
 const DeploymentInputs: FunctionComponent<Props> = ({
@@ -23,7 +24,8 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     fileLoading,
     onDeploymentInputChange,
     deploymentInputs,
-    errors
+    errors,
+    toolbox
 }) => {
     const { Message } = Stage.Basic;
     const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
@@ -55,6 +57,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 onDeploymentInputChange,
                 deploymentInputs,
                 errors,
+                toolbox,
                 blueprint.plan.data_types
             )}
         </>

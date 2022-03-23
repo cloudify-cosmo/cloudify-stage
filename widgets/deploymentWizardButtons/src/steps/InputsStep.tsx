@@ -159,7 +159,7 @@ class InputsStepContent extends React.Component {
         const InputsHeader = Stage.Common.Inputs.Header;
         const { DataTypesButton } = Stage.Common.Inputs;
         const InputsUtils = Stage.Common.Inputs.Utils;
-        const { errors, loading, stepData, wizardData } = this.props;
+        const { errors, loading, stepData, wizardData, toolbox } = this.props;
         const { fileLoading } = this.state;
 
         const inputs = _.get(wizardData, InputsStepContent.inputsDataPath, {});
@@ -216,7 +216,8 @@ class InputsStepContent extends React.Component {
                                                         { name: inputName, ...inputs[inputName] },
                                                         stepData[inputName],
                                                         this.handleInputChange.bind(this),
-                                                        errors[inputName]
+                                                        errors[inputName],
+                                                        toolbox
                                                     )}
                                                 </Table.Cell>
                                             </Table.Row>

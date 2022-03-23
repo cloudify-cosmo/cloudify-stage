@@ -19,4 +19,4 @@ export interface Input {
     constraints: Constraint[];
 }
 
-export type OnChange = ((event: SyntheticEvent<HTMLElement>, field: any) => void) | undefined;
+export type OnChange = ((event: SyntheticEvent<HTMLElement> | null, field: any) => void) | undefined;

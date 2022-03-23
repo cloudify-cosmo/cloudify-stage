@@ -269,6 +269,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                         setDeploymentInputs,
                         deploymentInputs,
                         errors,
+                        toolbox,
                         blueprint.plan.data_types
                     )}
 

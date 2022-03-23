@@ -1,33 +1,37 @@
-// @ts-nocheck File not migrated fully to TS
+interface DeploymentUpdatedIconProps {
+    deployment: {
+        isUpdated: boolean;
+        // eslint-disable-next-line camelcase
+        updated_at: string | null;
+    };
+}
 
-export default function DeploymentUpdatedIcon({ className, deployment }) {
+const defaultDeployment: DeploymentUpdatedIconProps['deployment'] = {
+    isUpdated: false,
+    updated_at: null
+};
+
+const t = Stage.Utils.getT('widgets.deployments.updatedIcon');
+
+export default function DeploymentUpdatedIcon({ deployment = defaultDeployment }: DeploymentUpdatedIconProps) {
     const { Icon, Popup } = Stage.Basic;
 
     return deployment.isUpdated ? (
         <Popup wide on="hover">
             <Popup.Trigger>
-                <Icon.Group size="large" className={className} style={{ marginLeft: '6px', marginTop: '-4px' }}>
+                <Icon.Group size="large" style={{ marginLeft: '6px', marginTop: '-4px' }}>
                     <Icon name="cube" color="blue" />
                     <Icon corner name="refresh" color="blue" />
                 </Icon.Group>
             </Popup.Trigger>
-            <Popup.Header>Deployment updated</Popup.Header>
+            <Popup.Header>{t('header')}</Popup.Header>
             <Popup.Content>
-                <p>This deployment has been updated at least once since creation.</p>
+                <p>{t('content.description')}</p>
                 <p>
-                    Last update was on: <strong>{deployment.updated_at}</strong>.
+                    {t('content.lastUpdate')}
+                    <strong>{deployment.updated_at}</strong>.
                 </p>
             </Popup.Content>
         </Popup>
     ) : null;
 }
-
-DeploymentUpdatedIcon.propTypes = {
-    deployment: PropTypes.shape({ isUpdated: PropTypes.bool, updated_at: PropTypes.string }),
-    className: PropTypes.string
-};
-
-DeploymentUpdatedIcon.defaultProps = {
-    deployment: { isUpdated: false, updated_at: null },
-    className: ''
-};

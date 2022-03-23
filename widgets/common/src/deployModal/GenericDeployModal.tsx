@@ -696,6 +696,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 onClick={this.onAccordionClick}
                             >
                                 <DeploymentInputs
+                                    toolbox={toolbox}
                                     blueprint={blueprint}
                                     onYamlFileChange={this.handleYamlFileChange}
                                     fileLoading={fileLoading}
@@ -752,8 +753,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         label={t('inputs.skipPluginsValidation.label')}
                                         name="skipPluginsValidation"
                                         checked={skipPluginsValidation}
-                                        onChange={(_: undefined, { checked }: { checked: boolean }) =>
-                                            this.setState({ skipPluginsValidation: checked })
+                                        onChange={(_, { checked }) =>
+                                            this.setState({ skipPluginsValidation: !!checked })
                                         }
                                         help=""
                                     />
@@ -792,8 +793,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                         label={t('inputs.runtimeOnlyEvaluation.label')}
                                         name="runtimeOnlyEvaluation"
                                         checked={runtimeOnlyEvaluation}
-                                        onChange={(_: undefined, { checked }: { checked: boolean }) =>
-                                            this.setState({ runtimeOnlyEvaluation: checked })
+                                        onChange={(_, { checked }) =>
+                                            this.setState({ runtimeOnlyEvaluation: !!checked })
                                         }
                                         help=""
                                     />
@@ -807,6 +808,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     onClick={this.onAccordionClick}
                                 >
                                     <ExecuteWorkflowInputs
+                                        toolbox={toolbox}
                                         baseWorkflowInputs={baseInstallWorkflowParams}
                                         userWorkflowInputsState={userInstallWorkflowParams}
                                         onYamlFileChange={this.handleYamlFileChange}

@@ -11,6 +11,7 @@ export interface BlueprintsWidgetConfiguration {
     marketplaceTabs: Stage.Common.BlueprintMarketplace.Tab[];
     marketplaceDisplayStyle: Stage.Common.BlueprintMarketplace.DisplayStyle;
     marketplaceColumnsToShow: string[];
+    fieldsToShow: string;
 }
 
 interface Blueprint {

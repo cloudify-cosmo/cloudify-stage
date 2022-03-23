@@ -215,7 +215,7 @@ function getBlueprintArchiveContent(request) {
                     throw new Error('No archive file provided');
                 } else {
                     const archivePath = pathlib.join(archiveFolder, archiveFile);
-                    const archiveExtension = pathlib.parse(archiveFile).ext; // file extension
+                    const archiveExtension = pathlib.parse(archiveFile).ext.toLowerCase(); // file extension
 
                     if (archiveExtension === '.yml' || archiveExtension === '.yaml') {
                         return ArchiveHelper.storeSingleYamlFile(archivePath, archiveFile, extractedDir);
@@ -258,7 +258,7 @@ function scanYamlFiles(extractedDir) {
         items = fs.readdirSync(pathlib.join(extractedDir, items[0]));
     }
 
-    items = _.filter(items, item => item.endsWith('.yaml'));
+    items = _.filter(items, item => item.toLowerCase().endsWith('.yaml') || item.toLowerCase().endsWith('.yml'));
 
     return Promise.resolve(items);
 }

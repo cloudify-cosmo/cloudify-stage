@@ -1,11 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
 
 import DeploymentsList from './DeploymentsList';
+import FirstUserJourneyButtons from './FirstUserJourneyButtons';
+
+const t = Stage.Utils.getT('widgets.deployments');
 
 Stage.defineWidget({
     id: 'deployments',
-    name: 'Blueprint deployments',
-    description: 'Shows blueprint deployments list',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     color: 'purple',
@@ -16,26 +19,33 @@ Stage.defineWidget({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'clickToDrillDown',
-            name: 'Enable click to drill down',
+            name: t('configuration.clickToDrillDown.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showExecutionStatusLabel',
-            name: 'Show execution status label',
-            description: 'Show last execution workflow ID and status',
+            name: t('configuration.showExecutionStatusLabel.name'),
+            description: t('configuration.showExecutionStatusLabel.description'),
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'showFirstUserJourneyButtons',
+            name: t('configuration.showFirstUserJourneyButtons.name'),
+            description: t('configuration.showFirstUserJourneyButtons.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'blueprintIdFilter',
-            name: 'Blueprint ID to filter by',
+            name: t('configuration.blueprintIdFilter.name'),
             placeHolder: 'Enter the blueprint id you wish to filter by',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: 'Display style',
+            name: t('configuration.displayStyle.name'),
             items: [
                 { name: 'Table', value: 'table' },
                 { name: 'List', value: 'list' }
@@ -69,7 +79,24 @@ Stage.defineWidget({
         return obj;
     },
 
-    fetchData(widget, toolbox, params) {
+    async fetchData(widget, toolbox, params) {
+        const {
+            configuration: { showFirstUserJourneyButtons }
+        } = widget;
+
+        if (showFirstUserJourneyButtons) {
+            const installedDeployments = await new Stage.Common.SearchActions(toolbox).doListDeployments([
+                { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
+            ]);
+            const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
+
+            if (shouldDisplayFirstUserJourneyButtons) {
+                return {
+                    showFirstUserJourneyButtons: true
+                };
+            }
+        }
+
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
             _include:
                 'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -142,6 +169,10 @@ Stage.defineWidget({
 
         if (_.isEmpty(data)) {
             return <Loading />;
+        }
+
+        if (data?.showFirstUserJourneyButtons) {
+            return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');

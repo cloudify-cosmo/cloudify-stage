@@ -1,6 +1,6 @@
 import React from 'react';
-import { CustomConfigurationComponentProps } from '../../../app/utils/StageAPI';
-import type { Variable } from '../../../backend/routes/Terraform.types';
+import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
+import type { Variable } from '../../../../backend/routes/Terraform.types';
 import { inputMaxLength } from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal.variablesTable');
@@ -25,7 +25,7 @@ export default function TerraformVariableValueInput({
             selection
             value={value}
             fetchUrl="/secrets"
-            onChange={newValue => onChange(null, { name, value: newValue as string })}
+            onChange={newValue => onChange(undefined, { name, value: newValue as string })}
             clearable={false}
             toolbox={widgetlessToolbox}
             valueProp="key"

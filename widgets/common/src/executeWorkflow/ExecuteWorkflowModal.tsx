@@ -240,6 +240,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <ExecuteWorkflowInputs
+                        toolbox={toolbox}
                         baseWorkflowInputs={baseWorkflowParams}
                         userWorkflowInputsState={userWorkflowParams}
                         onYamlFileChange={handleYamlFileChange}
