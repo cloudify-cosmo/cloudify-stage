@@ -2,18 +2,38 @@ import React, { useState } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
+import styled from 'styled-components';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
-import terraformLogo from './images/terraform-icon.png';
+import terraformLogo from '../../../../app/images/terraform_logo.png';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const { Dropdown, Input } = Stage.Basic;
+const {
+    Dropdown,
+    Input,
+    Accordion,
+    ApproveButton,
+    CancelButton,
+    Confirm,
+    Header,
+    Image,
+    LoadingOverlay,
+    Modal,
+    Form
+} = Stage.Basic;
+
+const TerraformLogo = styled(Image)`
+    &&& {
+        width: 1.8em;
+        margin-right: 0.25em;
+    }
+`;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
     text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
@@ -362,14 +382,12 @@ export default function TerraformModal({
 
     const { SectionWithDivider } = Stage.Common.Components.Accordion;
 
-    const { Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } = Stage.Basic;
-
     return (
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
             <Modal.Header>
-                <Image src={terraformLogo} size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
+                <TerraformLogo src={terraformLogo} size="mini" inline /> {t('header')}
             </Modal.Header>
 
             <Modal.Content>
