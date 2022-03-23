@@ -1,10 +1,10 @@
 import type { FunctionComponent } from 'react';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import DataTypesButton from '../inputs/DataTypesButton';
-import YamlFileButton from '../inputs/YamlFileButton';
-import type { Field } from '../types';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import getInputFields from '../inputs/utils/getInputFields';
+import { OnChange } from '../inputs/utils/types';
+import YamlFileButton from '../inputs/YamlFileButton';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
@@ -12,7 +12,7 @@ interface Props {
     blueprint: FullBlueprintData;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onDeploymentInputChange: (event: React.SyntheticEvent, field: Field) => void;
+    onDeploymentInputChange: OnChange;
     deploymentInputs: { [key: string]: unknown };
     errors: Record<string, string>;
     toolbox: Stage.Types.Toolbox;

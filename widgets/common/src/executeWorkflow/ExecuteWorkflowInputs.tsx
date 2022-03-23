@@ -1,14 +1,9 @@
 import type { FunctionComponent } from 'react';
-import YamlFileButton from '../inputs/YamlFileButton';
-import type {
-    OnDateInputChange,
-    OnDropdownChange,
-    OnCheckboxChange,
-    BaseWorkflowInputs,
-    UserWorkflowInputsState
-} from './types';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import getInputFields from '../inputs/utils/getInputFields';
+import { OnChange } from '../inputs/utils/types';
+import YamlFileButton from '../inputs/YamlFileButton';
+import type { BaseWorkflowInputs, OnCheckboxChange, OnDateInputChange, UserWorkflowInputsState } from './types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -45,7 +40,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onWorkflowInputChange: OnDropdownChange;
+    onWorkflowInputChange: OnChange;
     showInstallOptions: boolean;
     onForceChange: OnCheckboxChange;
     onDryRunChange: OnCheckboxChange;

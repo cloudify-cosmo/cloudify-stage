@@ -1,21 +1,21 @@
 import type { FunctionComponent } from 'react';
 import FileActions from '../actions/FileActions';
 import DeploymentActions from '../deployments/DeploymentActions';
-import type {
-    Errors,
-    Workflow,
-    WorkflowOptions,
-    WorkflowParameters,
-    OnDateInputChange,
-    OnDropdownChange,
-    OnCheckboxChange
-} from './types';
-
-import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
+import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
+import { OnChange } from '../inputs/utils/types';
 
 import { executeWorkflow, getWorkflowName } from './common';
-import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
-import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
+
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import type {
+    Errors,
+    OnCheckboxChange,
+    OnDateInputChange,
+    Workflow,
+    WorkflowOptions,
+    WorkflowParameters
+} from './types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -170,7 +170,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             .finally(unsetFileLoading);
     }
 
-    const onWorkflowInputChange: OnDropdownChange = (_event, field) => {
+    const onWorkflowInputChange: OnChange = (_event, field) => {
         setUserWorkflowParams({
             ...userWorkflowParams,
             ...Stage.Basic.Form.fieldNameValue(

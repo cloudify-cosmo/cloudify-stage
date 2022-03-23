@@ -268,7 +268,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         }
     }
 
-    handleDeploymentInputChange(_: SyntheticEvent, field: Field) {
+    handleDeploymentInputChange(_: SyntheticEvent | null, field: Field) {
         const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
@@ -299,7 +299,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             });
     }
 
-    handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement>, field: any) {
+    handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement> | null, field: any) {
         this.setState((prevState: any) => {
             return {
                 userInstallWorkflowParams: {
