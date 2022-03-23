@@ -2,7 +2,7 @@
 
 export default function ExecuteWorkflowButton({ noManagers, onClick, workflows }) {
     const { Button, Popup } = Stage.Basic;
-    const { WorkflowsMenu } = Stage.Common;
+    const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
     return (
         <Popup on={noManagers ? 'hover' : []} open={noManagers ? undefined : false}>

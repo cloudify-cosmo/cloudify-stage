@@ -1,10 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 
 export default function ExecuteWorkflowIcon({ onClick, workflows }) {
-    const { WorkflowsMenu } = Stage.Common;
+    const { Menu } = Stage.Common.Workflows;
 
     return !_.isEmpty(workflows) ? (
-        <WorkflowsMenu
+        <Menu
             workflows={workflows}
             dropdownDirection="left"
             popupMenuProps={{ icon: 'cogs', help: 'Execute Workflow', bordered: true }}
