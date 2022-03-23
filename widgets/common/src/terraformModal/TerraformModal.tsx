@@ -27,7 +27,6 @@ const {
     Modal,
     Form
 } = Stage.Basic;
-const { AccordionSectionWithDivider } = Stage.Common;
 
 const TerraformLogo = styled(Image)`
     width: 1.8em;
@@ -378,6 +377,8 @@ export default function TerraformModal({
             })
             .finally(unsetTemplateModulesLoading);
     }
+
+    const { AccordionSectionWithDivider } = Stage.Common;
 
     return (
         <Modal open onClose={onHide}>
