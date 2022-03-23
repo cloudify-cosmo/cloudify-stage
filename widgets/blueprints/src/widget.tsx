@@ -146,8 +146,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             params.created_by = toolbox.getManager().getCurrentUsername();
 
         if (widget.configuration.hideFailedBlueprints) {
-            const BlueprintActions = Stage.Common.Blueprints.Actions;
-            params.state = BlueprintActions.CompletedBlueprintStates.Uploaded;
+            params.state = Stage.Common.Blueprints.CompletedStates.Uploaded;
         }
 
         return params;

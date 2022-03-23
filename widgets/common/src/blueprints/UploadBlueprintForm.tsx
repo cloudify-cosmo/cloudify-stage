@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from '../Consts';
 import BlueprintActions from './BlueprintActions';
+import UploadBlueprintBasicForm from './UploadBlueprintBasicForm';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.inputs');
 
@@ -146,7 +147,6 @@ export default class UploadBlueprintForm extends React.Component {
             clearErrors
         } = this.props;
         const { Form } = Stage.Basic;
-        const { UploadBlueprintBasicForm } = Stage.Common;
 
         return (
             <UploadBlueprintBasicForm

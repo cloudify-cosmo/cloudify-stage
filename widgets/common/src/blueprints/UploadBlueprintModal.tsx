@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import BlueprintActions, { InProgressBlueprintStates } from './BlueprintActions';
+import UploadBlueprintForm from './UploadBlueprintForm';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload');
 
@@ -120,8 +121,6 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
 
     const { blueprintFile, blueprintYamlFile, blueprintName, blueprintUrl, imageFile, imageUrl } = inputs;
     const { ApproveButton, CancelButton, Icon, Modal, VisibilityField } = Stage.Basic;
-    // @ts-expect-error UploadBlueprintForm is not converted to TS yet
-    const { UploadBlueprintForm } = Stage.Common;
 
     return (
         <div>
@@ -137,6 +136,7 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
 
                 <Modal.Content>
                     <UploadBlueprintForm
+                        // @ts-ignore UploadBlueprintForm not yet fully in TS
                         blueprintUrl={blueprintUrl}
                         blueprintFile={blueprintFile}
                         blueprintName={blueprintName}

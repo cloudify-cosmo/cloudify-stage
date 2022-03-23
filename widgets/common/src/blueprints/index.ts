@@ -1,9 +1,11 @@
-import Actions from './BlueprintActions';
+import Actions, { InProgressBlueprintStates, CompletedBlueprintStates } from './BlueprintActions';
 import UploadForm from './UploadBlueprintForm';
 import UploadModal from './UploadBlueprintModal';
 
 const BlueprintsCommon = {
     Actions,
+    InProgressStates: InProgressBlueprintStates,
+    CompletedStates: CompletedBlueprintStates,
     UploadForm,
     UploadModal
 };

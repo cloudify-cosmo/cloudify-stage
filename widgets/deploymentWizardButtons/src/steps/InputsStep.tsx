@@ -155,9 +155,8 @@ class InputsStepContent extends React.Component {
 
     render() {
         const { Divider, Form, Table } = Stage.Basic;
-        const { YamlFileButton } = Stage.Common;
+        const { YamlFileButton, DataTypesButton } = Stage.Common.Inputs;
         const InputsHeader = Stage.Common.Inputs.Header;
-        const { DataTypesButton } = Stage.Common.Inputs;
         const InputsUtils = Stage.Common.Inputs.Utils;
         const { errors, loading, stepData, wizardData, toolbox } = this.props;
         const { fileLoading } = this.state;
