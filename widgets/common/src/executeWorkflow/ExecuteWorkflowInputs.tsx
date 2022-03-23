@@ -92,13 +92,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 </>
             )}
 
-            {getInputFields(
-                baseWorkflowInputs,
-                onWorkflowInputChange,
-                userWorkflowInputsState,
-                errors,
-                toolbox
-            )}
+            {getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors, toolbox)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">
