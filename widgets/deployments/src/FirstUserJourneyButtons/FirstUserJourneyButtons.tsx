@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
+import terraformLogo from './images/terraform_logo.png';
 
 const {
     Hooks: { useBoolean },
@@ -71,9 +72,7 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                 />
                 <FirstUserJourneyButton
                     onClick={handleTerraformClick}
-                    // NOTE: Functionality for terraform image has been implemented, but for now we don't have this image.
-                    // It should be available in the next week, until this time we were instructed to use the rocket icon
-                    icon="rocket"
+                    image={terraformLogo}
                     label={t('buttons.uploadFromTerraform')}
                 />
             </RowWrapper>
