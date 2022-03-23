@@ -9,11 +9,30 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
+import styled from 'styled-components';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const { Dropdown, Input } = Stage.Basic;
+const {
+    Dropdown,
+    Input,
+    Accordion,
+    ApproveButton,
+    CancelButton,
+    Confirm,
+    Header,
+    Image,
+    LoadingOverlay,
+    Modal,
+    Form
+} = Stage.Basic;
+const { AccordionSectionWithDivider } = Stage.Common;
+
+const TerraformLogo = styled(Image)`
+    width: 1.8em;
+    margin-right: 0.25em;
+`;
 
 const terraformVersionOptions = terraformVersions.map(versionOption => ({
     text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
@@ -360,16 +379,12 @@ export default function TerraformModal({
             .finally(unsetTemplateModulesLoading);
     }
 
-    const { AccordionSectionWithDivider } = Stage.Common;
-
-    const { Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } = Stage.Basic;
-
     return (
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
             <Modal.Header>
-                <Image src={terraformLogo} size="mini" inline style={{ width: '2.2em' }} /> {t('header')}
+                <TerraformLogo src={terraformLogo} size="mini" inline /> {t('header')}
             </Modal.Header>
 
             <Modal.Content>
