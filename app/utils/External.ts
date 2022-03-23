@@ -30,7 +30,7 @@ interface RequestOptions {
 }
 
 function getContentType(type?: string) {
-    return { 'content-type': type || 'application/json' };
+    return { 'Content-Type': type || 'application/json' };
 }
 
 export default class External {
