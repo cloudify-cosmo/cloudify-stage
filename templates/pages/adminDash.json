@@ -119,29 +119,22 @@
           "x": 0,
           "y": 10,
           "configuration": {
+            "filterByDeployments": false,
             "filterByExecutions": false,
-            "filterByExecutionsStatus": true,
             "allowMultipleSelection": true
           }
         },
         {
-          "name": "Executions Statuses Graph",
+          "name": "Deployments",
           "width": 12,
-          "height": 24,
-          "definition": "executionsStatus",
+          "height": 42,
+          "definition": "deployments",
           "x": 0,
-          "y": 38
-        },
-        {
-          "name": "Executions",
-          "width": 12,
-          "height": 24,
-          "definition": "executions",
-          "configuration": {
-            "pageSize": 10
-          },
-          "x": 0,
-          "y": 62
+          "y": 38,
+          "configuration":{
+            "displayStyle": "list",
+            "showFirstUserJourneyButtons": true
+          }
         }
       ]
     }

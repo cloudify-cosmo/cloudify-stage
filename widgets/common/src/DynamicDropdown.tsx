@@ -1,5 +1,17 @@
 import { useCallback, useReducer } from 'react';
-import { debounce, isFunction } from 'lodash';
+import {
+    castArray,
+    chain,
+    debounce,
+    find,
+    identity,
+    includes,
+    isArray,
+    isEmpty,
+    isFunction,
+    isUndefined,
+    reject
+} from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
@@ -93,7 +105,7 @@ export default function DynamicDropdown({
     searchParams = ['_search'],
     filter = {},
     innerRef = null,
-    itemsFormatter = _.identity,
+    itemsFormatter = identity,
     multiple = false,
     name,
     onSearchChange = undefined,
@@ -130,9 +142,9 @@ export default function DynamicDropdown({
      */
     function getImplicitOptions(newOptions: Option[]) {
         const implicitOptions: Option[] = [];
-        if (!_.isEmpty(value)) {
-            _.castArray(value).forEach(singleValue => {
-                if (!_.find(newOptions, { [valueProp]: singleValue })) {
+        if (!isEmpty(value)) {
+            castArray(value).forEach(singleValue => {
+                if (!find(newOptions, { [valueProp]: singleValue })) {
                     // NOTE: no elegant way was found to have `implicit` prop in TS
                     implicitOptions.push({ [valueProp]: singleValue, implicit: true as any });
                 }
@@ -183,8 +195,8 @@ export default function DynamicDropdown({
             );
             let fetchPromise;
 
-            if (!_.isUndefined(constraints)) {
-                const constraintsObject = _.isArray(constraints) ? Object.assign({}, ...constraints) : {};
+            if (!isUndefined(constraints)) {
+                const constraintsObject = isArray(constraints) ? Object.assign({}, ...constraints) : {};
                 fetchPromise = toolbox.getManager().doPost(fetchUrl, {
                     params,
                     headers: {
@@ -230,8 +242,8 @@ export default function DynamicDropdown({
     );
 
     useEffect(() => {
-        if (_.isEmpty(value)) {
-            setOptions(latestOptions => _.reject(latestOptions, 'implicit'));
+        if (isEmpty(value)) {
+            setOptions(latestOptions => reject(latestOptions, 'implicit'));
         } else {
             const optionsToAdd = getImplicitOptions(options);
             if (optionsToAdd.length > 0) {
@@ -245,12 +257,13 @@ export default function DynamicDropdown({
         dispatchFetchAction({ type: fetchActionType.TRIGGER_FETCH });
     }, [searchQuery, fetchUrl]);
 
-    const filteredOptions = _(options)
+    const filteredOptions = chain(options)
         .filter(option =>
-            _(filter)
+            chain(filter)
                 .mapValues(v => toolbox.getContext().getValue(v))
-                .map((v, k) => _.isEmpty(v) || _.isEmpty(option[k]) || _.includes(v, option[k]))
+                .map((v, k) => isEmpty(v) || isEmpty(option[k]) || includes(v, option[k]))
                 .every(Boolean)
+                .value()
         )
         .uniqBy(valueProp)
         .value();
@@ -260,7 +273,7 @@ export default function DynamicDropdown({
             return multiple ? [] : '';
         }
 
-        const valueArray = _.castArray(value);
+        const valueArray = castArray(value);
 
         return multiple ? valueArray : valueArray[0];
     }
@@ -284,7 +297,7 @@ export default function DynamicDropdown({
                 onAddItem={(_event, data) =>
                     setOptions(latestOptions => [{ [valueProp]: data.value as string }, ...latestOptions])
                 }
-                onChange={(_event, data) => onChange(!_.isEmpty(data.value) ? (data.value as string | string[]) : null)}
+                onChange={(_event, data) => onChange(!isEmpty(data.value) ? (data.value as string | string[]) : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
@@ -324,30 +337,6 @@ export default function DynamicDropdown({
         </Ref>
     );
 }
-
-DynamicDropdown.propTypes = {
-    allowAdditions: PropTypes.bool,
-    innerRef: PropTypes.shape({ current: PropTypes.instanceOf(HTMLElement) }),
-    disabled: PropTypes.bool,
-    multiple: PropTypes.bool,
-    placeholder: PropTypes.string,
-    fetchUrl: PropTypes.string.isRequired,
-    fetchAll: PropTypes.bool,
-    searchParam: PropTypes.arrayOf(PropTypes.string),
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-    onChange: PropTypes.func.isRequired,
-    onSearchChange: PropTypes.func,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    filter: PropTypes.shape({}),
-    valueProp: PropTypes.string,
-    textFormatter: PropTypes.func,
-    pageSize: PropTypes.number,
-    name: PropTypes.string,
-    prefetch: PropTypes.bool,
-    className: PropTypes.string,
-    refreshEvent: PropTypes.string,
-    itemsFormatter: PropTypes.func
-};
 
 declare global {
     namespace Stage.Common {
