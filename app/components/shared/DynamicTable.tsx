@@ -1,4 +1,4 @@
-import React, { ComponentProps, FunctionComponent, SyntheticEvent } from 'react';
+import React, { ComponentProps, FunctionComponent } from 'react';
 
 export interface DynamicTableProps
     extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {
@@ -11,8 +11,8 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
     const t = Stage.Utils.getT('shared.dynamicTable');
 
     const handleEditRow = (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] => (
-        event: SyntheticEvent<HTMLElement>,
-        data: { value: any }
+        event,
+        data
     ) => {
         onChange(event, {
             name,
