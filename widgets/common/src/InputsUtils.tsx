@@ -348,17 +348,19 @@ class InputsUtils {
                 );
             }
             case 'deployment_id': {
-                const fetchUrl = '/searches/deployments?_include=id';
+                const fetchUrl = '/searches/deployments?_include=id,display_name';
 
                 return (
                     <DynamicDropdown
                         name={name}
                         error={!!error}
-                        icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
                         onChange={newValue => onChange(null, { name, value: newValue })}
+                        textFormatter={item =>
+                            item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
+                        }
                         toolbox={toolbox}
                         constraints={constraints}
                     />
@@ -371,7 +373,6 @@ class InputsUtils {
                     <DynamicDropdown
                         name={name}
                         error={!!error}
-                        icon={InputsUtils.getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                         placeholder={Stage.i18n.t('input.blueprint_id.placeholder')}
                         value={value}
                         fetchUrl={fetchUrl}
