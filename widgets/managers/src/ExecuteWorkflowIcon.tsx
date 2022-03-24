@@ -1,24 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
+import { ComponentProps } from 'react';
 
-export default function ExecuteWorkflowIcon({ onClick, workflows }) {
-    const { Menu } = Stage.Common.Workflows;
+const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
+export default function ExecuteWorkflowIcon({
+    onClick = _.noop,
+    workflows = []
+}: {
+    onClick?: (workflow: Parameters<ComponentProps<typeof WorkflowsMenu>['onClick']>[0]) => void;
+    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+}) {
     return !_.isEmpty(workflows) ? (
-        <Menu
-            workflows={workflows}
-            dropdownDirection="left"
-            popupMenuProps={{ icon: 'cogs', help: 'Execute Workflow', bordered: true }}
-            onClick={workflow => onClick(workflow)}
-        />
+        <WorkflowsMenu workflows={workflows} onClick={workflow => onClick(workflow)} />
     ) : null;
 }
-
-ExecuteWorkflowIcon.propTypes = {
-    onClick: PropTypes.func,
-    workflows: PropTypes.arrayOf(PropTypes.object)
-};
-
-ExecuteWorkflowIcon.defaultProps = {
-    onClick: _.noop,
-    workflows: []
-};

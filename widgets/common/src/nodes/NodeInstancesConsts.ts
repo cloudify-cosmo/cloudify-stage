@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-export {};
+import type { GroupState } from '../components/GroupState';
 
 const groupNames = {
     uninitialized: 'uninitialized',
@@ -8,7 +8,7 @@ const groupNames = {
     deleted: 'deleted'
 };
 
-const groupStates = [
+export const groupStates: (GroupState & { states: string[] })[] = [
     {
         name: groupNames.uninitialized,
         icon: 'cancel',

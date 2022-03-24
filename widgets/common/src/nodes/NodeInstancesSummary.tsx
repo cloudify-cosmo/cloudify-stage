@@ -1,7 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
 import GroupState from '../components/GroupState';
+import { groupStates } from './NodeInstancesConsts';
 
-function StateDescription({ states, value }) {
+function StateDescription({ states, value }: { states: string[]; value: number }) {
     const state = _.join(states, ', ');
     const areManyStates = _.size(_.words(state)) > 1;
 
@@ -11,19 +11,14 @@ function StateDescription({ states, value }) {
         </p>
     );
 }
-StateDescription.propTypes = {
-    states: PropTypes.arrayOf(PropTypes.string).isRequired,
-    value: PropTypes.number.isRequired
-};
 
-export default function NodeInstancesSummary({ instancesStates }) {
+export default function NodeInstancesSummary({ instancesStates }: { instancesStates: Record<string, number> }) {
     const { Grid } = Stage.Basic;
-    const { NodeInstancesConsts } = Stage.Common;
 
     return (
         <Grid columns="equal">
             <Grid.Row style={{ marginLeft: '0.5rem', marginRight: '0.5rem' }}>
-                {_.map(NodeInstancesConsts.groupStates, group => {
+                {_.map(groupStates, group => {
                     const value = _.sum(
                         _.map(group.states, state => (_.isNumber(instancesStates[state]) ? instancesStates[state] : 0))
                     );
@@ -42,7 +37,3 @@ export default function NodeInstancesSummary({ instancesStates }) {
         </Grid>
     );
 }
-
-NodeInstancesSummary.propTypes = {
-    instancesStates: PropTypes.objectOf(PropTypes.number).isRequired
-};

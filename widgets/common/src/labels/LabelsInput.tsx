@@ -1,4 +1,4 @@
-import { FunctionComponent, SyntheticEvent } from 'react';
+import type { CSSProperties, FunctionComponent, SyntheticEvent } from 'react';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
@@ -13,7 +13,7 @@ const iconStyle = {
     position: 'absolute',
     top: '.7em',
     zIndex: 1
-};
+} as CSSProperties;
 const internalKeyPrefix = 'csys-';
 
 function useReservedKeys(toolbox: Stage.Types.Toolbox) {

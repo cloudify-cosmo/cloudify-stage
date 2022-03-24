@@ -1,5 +1,34 @@
-// @ts-nocheck File not migrated fully to TS
-export default function GroupState({ state, className, description, onClick, value }) {
+import type { ReactNode } from 'react';
+import type { SegmentGroupProps, SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
+import { noop } from 'lodash';
+
+export interface GroupState {
+    name: string;
+    colorSUI: SemanticCOLORS;
+    icon: SemanticICONS;
+}
+
+interface GroupStateProps {
+    /**
+     * Details of the state including name, icon and color
+     */
+    state: GroupState;
+    className: string;
+    /**
+     * Description of the state
+     */
+    description: ReactNode;
+    /**
+     * Action to be executed on click event
+     */
+    onClick?: SegmentGroupProps['onClick'];
+    /**
+     * Number of members in the group
+     */
+    value?: number;
+}
+
+export default function GroupState({ state, className, description, onClick = noop, value = 0 }: GroupStateProps) {
     const { Segment, Icon, Popup } = Stage.Basic;
     const disabled = value === 0;
     const color = disabled ? 'grey' : state.colorSUI;
@@ -21,27 +50,3 @@ export default function GroupState({ state, className, description, onClick, val
         />
     );
 }
-
-/**
- * @property {number} value - the number of members in the group
- * @property {Function} onClick - action to be executed on click event
- * @property {object} state - the details of the state including name, icon and color
- * @property {string} className - name of the style class to be added
- * @property {object} description - the description of the state
- */
-GroupState.propTypes = {
-    value: PropTypes.number,
-    onClick: PropTypes.func,
-    state: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        colorSUI: PropTypes.string.isRequired,
-        icon: PropTypes.string.isRequired
-    }).isRequired,
-    className: PropTypes.string.isRequired,
-    description: PropTypes.element.isRequired
-};
-
-GroupState.defaultProps = {
-    value: 0,
-    onClick: () => {}
-};

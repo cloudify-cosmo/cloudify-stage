@@ -1,8 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ComponentProps } from 'react';
 
-export default function ExecuteWorkflowButton({ noManagers, onClick, workflows }) {
+const WorkflowsMenu = Stage.Common.Workflows.Menu;
+
+export default function ExecuteWorkflowButton({
+    noManagers,
+    onClick,
+    workflows
+}: {
+    noManagers: boolean;
+    onClick: (workflow: Parameters<ComponentProps<typeof WorkflowsMenu>['onClick']>[0]) => void;
+    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+}) {
     const { Button, Popup } = Stage.Basic;
-    const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
     return (
         <Popup on={noManagers ? 'hover' : []} open={noManagers ? undefined : false}>
@@ -10,7 +19,6 @@ export default function ExecuteWorkflowButton({ noManagers, onClick, workflows }
                 <div>
                     <WorkflowsMenu
                         workflows={workflows}
-                        dropdownDirection="left"
                         trigger={
                             <Button icon="cogs" content="Execute Workflow" labelPosition="left" disabled={noManagers} />
                         }
@@ -23,14 +31,3 @@ export default function ExecuteWorkflowButton({ noManagers, onClick, workflows }
         </Popup>
     );
 }
-
-ExecuteWorkflowButton.propTypes = {
-    onClick: PropTypes.func,
-    noManagers: PropTypes.bool.isRequired,
-    workflows: PropTypes.arrayOf(PropTypes.object)
-};
-
-ExecuteWorkflowButton.defaultProps = {
-    onClick: _.noop,
-    workflows: []
-};

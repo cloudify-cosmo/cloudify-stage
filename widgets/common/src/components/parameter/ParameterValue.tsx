@@ -6,7 +6,7 @@ import highlighterStyles from 'react-syntax-highlighter/dist/esm/styles/hljs/ide
  * ParameterValue is a component which shows parameter (e.g. deployment/blueprint inputs, outputs, runtime properties, ...)
  * in nice user-friendly formatted manner with copy to clipboard button.
  */
-export default class ParameterValue extends React.Component<{ value: any; showCopyButton: boolean }> {
+export default class ParameterValue extends React.Component<{ value: any; showCopyButton?: boolean }> {
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(this.props, nextProps);
     }

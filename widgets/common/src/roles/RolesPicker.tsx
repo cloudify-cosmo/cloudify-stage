@@ -1,7 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
+import { DropdownProps } from 'semantic-ui-react';
 
-export default class RolesPicker extends React.Component {
-    handleInputChange = (proxy, field) => {
+export default class RolesPicker extends React.Component<{
+    onUpdate: (name: DropdownProps['name'], value: DropdownProps['value']) => void;
+    resources: Record<string, string>;
+    resourceName: string;
+    toolbox: Stage.Types.WidgetlessToolbox;
+}> {
+    handleInputChange: DropdownProps['onChange'] = (_proxy, field) => {
         const { onUpdate } = this.props;
         onUpdate(field.name, field.value);
     };
@@ -35,10 +40,3 @@ export default class RolesPicker extends React.Component {
         );
     }
 }
-
-RolesPicker.propTypes = {
-    onUpdate: PropTypes.func.isRequired,
-    resources: PropTypes.shape({}).isRequired,
-    resourceName: PropTypes.string.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

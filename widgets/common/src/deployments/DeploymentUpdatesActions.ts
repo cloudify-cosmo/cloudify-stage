@@ -1,14 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
 export default class DeploymentUpdatesActions {
-    constructor(toolbox) {
+    constructor(private toolbox: Stage.Types.WidgetlessToolbox) {
         this.toolbox = toolbox;
     }
 
-    doGetUpdate(id) {
+    doGetUpdate(id: string) {
         return this.toolbox.getManager().doGet(`/deployment-updates/${id}`);
     }
 
-    doGetExecutionParameters(id) {
+    doGetExecutionParameters(id: string) {
         return this.toolbox.getManager().doGet(`/executions/${id}?_include=parameters`);
     }
 }

@@ -1,16 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
 export default class FileActions {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
 
-    doGetTextFileContent(file) {
+    doGetTextFileContent(file: File) {
         return this.toolbox
             .getInternal()
             .doUpload('/file/text', { files: { file }, method: 'post', parseResponse: false });
     }
 
-    doGetYamlFileContent(file) {
-        return this.toolbox.getInternal().doUpload('/file/yaml', { files: { file }, method: 'post' });
+    doGetYamlFileContent(file: File): Promise<Record<string, any>> {
+        return this.toolbox.getInternal().doUpload('/file/yaml', { files: { file }, method: 'post' }) as Promise<
+            Record<string, any>
+        >;
     }
 }

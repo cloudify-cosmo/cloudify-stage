@@ -1,8 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
-
-export default function RolesPresenter({ directRole, groupRoles }) {
+export default function RolesPresenter({
+    directRole = '',
+    groupRoles = {}
+}: {
+    directRole?: string;
+    groupRoles?: Record<string, string[]>;
+}) {
     let restOfGroupRoles = '';
-    _.forEach(_.omit(groupRoles, directRole), (groups, role) => {
+    _.forEach(_.omit(groupRoles, directRole) as Record<string, string[]>, (groups, role) => {
         restOfGroupRoles += `${role} (${groups.join(', ')}), `;
     });
     restOfGroupRoles = restOfGroupRoles.slice(0, -2);
@@ -38,13 +42,3 @@ export default function RolesPresenter({ directRole, groupRoles }) {
     // Use case 5: viewer (gp2)
     return <span>{restOfGroupRoles}</span>;
 }
-
-RolesPresenter.propTypes = {
-    groupRoles: PropTypes.shape({}),
-    directRole: PropTypes.string
-};
-
-RolesPresenter.defaultProps = {
-    groupRoles: {},
-    directRole: null
-};

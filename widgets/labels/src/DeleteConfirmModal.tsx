@@ -1,7 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 
-export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete, onHide, toolbox }) {
+interface Label {
+    key: string;
+    value: string;
+    isInSystem: boolean;
+}
+
+interface DeleteConfirmModalProps {
+    deploymentId: string;
+    labels: Label[];
+    labelToDelete?: Label | null;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function DeleteConfirmModal({
+    deploymentId,
+    labels,
+    labelToDelete = null,
+    onHide,
+    toolbox
+}: DeleteConfirmModalProps) {
     const { Confirm, Label } = Stage.Basic;
     const DeploymentActions = Stage.Common.Deployments.Actions;
     const { i18n } = Stage;
@@ -31,16 +50,3 @@ export default function DeleteConfirmModal({ deploymentId, labels, labelToDelete
         />
     );
 }
-
-const LabelPropType = PropTypes.shape({ key: PropTypes.string, value: PropTypes.string, isInSystem: PropTypes.bool });
-const LabelsPropType = PropTypes.arrayOf(LabelPropType);
-
-DeleteConfirmModal.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
-    labels: LabelsPropType.isRequired,
-    labelToDelete: LabelPropType,
-    onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-DeleteConfirmModal.defaultProps = { labelToDelete: null };
