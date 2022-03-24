@@ -150,13 +150,15 @@ export default function getInputField(
             );
         }
         case 'deployment_id': {
-            const fetchUrl = '/searches/deployments?_include=id';
+            const fetchUrl = '/searches/deployments?_include=id,display_name';
 
             return (
                 <DynamicDropdown
                     name={name}
                     error={!!error}
-                    icon={getRevertToDefaultIcon(name, value, defaultValue, onChange)}
+                    textFormatter={item =>
+                        item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
+                    }
                     placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
                     value={value}
                     fetchUrl={fetchUrl}
@@ -173,7 +175,6 @@ export default function getInputField(
                 <DynamicDropdown
                     name={name}
                     error={!!error}
-                    icon={getRevertToDefaultIcon(name, value, defaultValue, onChange)}
                     placeholder={Stage.i18n.t('input.blueprint_id.placeholder')}
                     value={value}
                     fetchUrl={fetchUrl}

@@ -199,9 +199,6 @@ export default function DynamicDropdown({
                 const constraintsObject = isArray(constraints) ? Object.assign({}, ...constraints) : {};
                 fetchPromise = toolbox.getManager().doPost(fetchUrl, {
                     params,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: { constraints: constraintsObject }
                 });
             } else {
