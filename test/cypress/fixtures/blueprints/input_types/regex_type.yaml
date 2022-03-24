@@ -1,6 +1,0 @@
-tosca_definitions_version: cloudify_dsl_1_3
-
-inputs:
-
-  regex_var:
-    type: regex
