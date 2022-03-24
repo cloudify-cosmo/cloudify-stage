@@ -3,7 +3,7 @@ import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import DataTypesButton from '../inputs/DataTypesButton';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import getInputFields from '../inputs/utils/getInputFields';
-import { OnChange } from '../inputs/utils/types';
+import type { OnChange } from '../inputs/utils/types';
 import YamlFileButton from '../inputs/YamlFileButton';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
