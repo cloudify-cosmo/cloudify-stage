@@ -4,6 +4,7 @@ import { jsonRequest } from './ManagerHandler';
 
 import { getMode, setMode, MODE_MAIN, MODE_COMMUNITY } from '../serverSettings';
 import { getLogger } from './LoggerHandler';
+import type { ConfigResponse, TokenResponse, UserResponse, VersionResponse } from '../routes/Auth.types';
 
 const logger = getLogger('AuthHandler');
 
@@ -12,41 +13,6 @@ const tokenRequestPayload = {
     expiration_date: '+10h'
 };
 let authorizationCache = {} as ConfigResponse['authorization'];
-
-/* eslint-disable camelcase */
-export interface TokenResponse {
-    username: string;
-    value: string;
-    role: string;
-    expiration_date: string;
-    last_used: string;
-}
-/* eslint-enable camelcase */
-
-export interface ConfigResponse {
-    metadata: any;
-    items: any[];
-    authorization: {
-        roles: {
-            id: number;
-            name: string;
-            type: string;
-            description: string;
-        }[];
-        permissions: Record<string, string[]>[];
-    };
-}
-
-export interface VersionResponse {
-    edition: typeof EDITION.PREMIUM | typeof EDITION.COMMUNITY;
-    version: string;
-    build: any;
-    date: any;
-    commit: any;
-    distribution: string;
-    // eslint-disable-next-line camelcase
-    distro_release: string;
-}
 
 export function getToken(basicAuth: string) {
     return jsonRequest<TokenResponse>(
@@ -65,7 +31,7 @@ export function getTenants(token: string) {
     });
 }
 
-export function getUser(token: string) {
+export function getUser(token: string): Promise<UserResponse> {
     return jsonRequest('GET', '/user?_get_data=true', {
         'Authentication-Token': token
     });
