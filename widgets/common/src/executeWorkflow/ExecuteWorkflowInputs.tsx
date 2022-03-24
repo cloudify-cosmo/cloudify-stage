@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import getInputFields from '../inputs/utils/getInputFields';
-import { OnChange } from '../inputs/utils/types';
+import type { OnChange } from '../inputs/utils/types';
 import YamlFileButton from '../inputs/YamlFileButton';
 import type { BaseWorkflowInputs, OnCheckboxChange, OnDateInputChange, UserWorkflowInputsState } from './types';
 
