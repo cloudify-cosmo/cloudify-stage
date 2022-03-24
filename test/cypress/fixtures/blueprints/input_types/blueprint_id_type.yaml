@@ -5,8 +5,8 @@ inputs:
   blueprint_id_all:
     type: blueprint_id
 
-  blueprint_id_name_starts_with_b:
+  blueprint_id_name_contains_blueprint_id_type:
     type: blueprint_id
     constraints:
       - name_pattern:
-          starts_with: b
+          contains: blueprint_id_type

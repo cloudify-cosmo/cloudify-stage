@@ -74,9 +74,12 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const verifyNumberOfOptions = ($field, number) => {
+    const verifyNumberOfOptions = number => {
         cy.get('input').click();
-        cy.get('.menu .item').should('have.length', number);
+        cy.get('.ui.loader').should('be.visible');
+        cy.get('.ui.loader').should('not.exist');
+        cy.get('.menu .item').filter(`:contains("${resourcePrefix}")`).should('have.length', number);
+        cy.get('label').click();
     };
 
     const selectBlueprintInModal = type => {
@@ -572,8 +575,14 @@ describe('Create Deployment Button widget', () => {
         it('blueprint_id', () => {
             selectBlueprintInModal('blueprint_id');
 
-            cy.contains('.field', 'blueprint_id_all').within(($field) => {
-                verifyNumberOfOptions($field, types.length);
+            cy.contains('.field', 'blueprint_id_all').within(() => {
+                const number = types.length + 3;// + default deployments (3)
+
+                verifyNumberOfOptions(number);
+            });
+
+            cy.contains('.field', 'blueprint_id_name_contains_blueprint_id_type').within(() => {
+                verifyNumberOfOptions(1);
             });
         });
 
