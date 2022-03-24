@@ -1,6 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { Strategy } from 'passport-saml';
+import type { VerifyWithoutRequest } from 'passport-saml';
 import fs from 'fs';
 import { getConfig } from '../config';
 
@@ -9,7 +8,7 @@ export default () => {
     try {
         cert = fs.readFileSync(getConfig().app.saml.certPath, 'utf-8');
     } catch (e) {
-        throw new Error('Could not read SAML certificate [saml.certPath]', e);
+        throw new Error('Could not read SAML certificate [saml.certPath]');
     }
 
     return new Strategy(
@@ -18,6 +17,6 @@ export default () => {
             entryPoint: getConfig().app.saml.ssoUrl,
             cert
         },
-        (user, done) => done(null, user)
+        ((user, done) => done(null, user!)) as VerifyWithoutRequest
     );
 };
