@@ -1,10 +1,6 @@
 import _ from 'lodash';
 
-interface Label {
-    key: string;
-    value: string;
-    isInSystem: boolean;
-}
+type Label = Stage.Common.Labels.Label;
 
 interface DeleteConfirmModalProps {
     deploymentId: string;
