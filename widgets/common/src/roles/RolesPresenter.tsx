@@ -13,7 +13,8 @@ export default function RolesPresenter({
 
     if (_.isEmpty(groupRoles)) {
         // Use case 1: user
-        return directRole && <span>{directRole}</span>;
+        if (!directRole) return null;
+        return <span>{directRole}</span>;
     }
     if (_.has(groupRoles, directRole)) {
         if (_.isEmpty(restOfGroupRoles)) {
