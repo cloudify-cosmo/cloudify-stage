@@ -1,4 +1,4 @@
-import { FilterRule } from '../filters/types';
+import type { FilterRule } from '../filters/types';
 
 type NewDeploymentsData = {
     id: string;
