@@ -124,6 +124,7 @@ See Settings section for details on how to turn on/off this feature.
 ## Settings
 
 * `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 10 seconds
+* `List of fields to show` - The fields that are presented in the blueprints list. Default: Created, Updated, Creator, State, Deployments.
 * `Enable click to drill down` - Enables redirecting to the blueprint’s drill-down page upon clicking on a specific blueprint. Default: Yes
 * `Display style` - Defines how the blueprints list should be displayed. Can be either Catalog or Table. Default: Table
 * `Hide failed blueprints` - Allows to hide blueprints not uploaded successfully. Default: Off
