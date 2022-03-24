@@ -2,9 +2,6 @@ tosca_definitions_version: cloudify_dsl_1_3
 
 inputs:
 
-  textarea_no_default:
-    type: textarea
-
   textarea_default_en:
     default: en
     type: textarea

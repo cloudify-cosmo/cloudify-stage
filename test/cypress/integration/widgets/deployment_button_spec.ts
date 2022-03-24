@@ -6,32 +6,31 @@ describe('Create Deployment Button widget', () => {
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
+    const types = [
+        // 'boolean',
+        // 'dict',
+        // 'float',
+        // 'integer',
+        // 'list',
+        // 'regex',
+        // 'string',
+        // 'textarea',
+        'blueprint_id',
+        'deployment_id'
+    ];
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
 
-        cy.deleteDeployments(resourcePrefix, true)
-            .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
-            .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
+        // cy.deleteDeployments(resourcePrefix, true)
+        //     .deleteBlueprints(resourcePrefix, true)
+        //     .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
+        //     .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
+        //     .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
-        const types = [
-            // 'boolean',
-            // 'dict',
-            // 'float',
-            // 'integer',
-            // 'list',
-            // 'regex',
-            // 'string',
-            'textarea'//,
-            // 'blueprint_id',
-            // 'deployment_id'
-        ];
-
-        types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
-        );
+        // types.forEach(type =>
+        //     cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+        // );
     });
 
     beforeEach(() => {
@@ -66,7 +65,6 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-
     const verifyNumberInput = (min = null, max = null, value = '', step = 1) => {
         cy.get('input').then($input => {
             checkAttribute($input, 'min', min);
@@ -74,6 +72,11 @@ describe('Create Deployment Button widget', () => {
             checkAttribute($input, 'step', step);
             checkAttribute($input, 'value', value);
         });
+    };
+
+    const verifyNumberOfOptions = ($field, number) => {
+        cy.get('input').click();
+        cy.get('.menu .item').should('have.length', number);
     };
 
     const selectBlueprintInModal = type => {
@@ -546,24 +549,31 @@ describe('Create Deployment Button widget', () => {
         //     });
         // });
 
-        it('textarea', () => {
-            selectBlueprintInModal('textarea');
+        // it('textarea', () => {
+        //     selectBlueprintInModal('textarea');
 
-            cy.contains('.field', 'textarea_no_default').within(() => {
-                verifyTextareaContent('');
-            });
+        //     cy.contains('.field', 'textarea_default_en').within(() => {
+        //         verifyTextareaContent('en');
+        //     });
 
-            cy.contains('.field', 'textarea_default_en').within(() => {
-                verifyTextareaContent('en');
-            });
+        //     cy.contains('.field', 'textarea_display_rows_5').within(() => {
+        //         verifyTextareaContent('');
+        //     });
 
-            cy.contains('.field', 'textarea_no_default').within(() => {
-                verifyTextareaRows();
-            });
+        //     cy.contains('.field', 'textarea_default_en').within(() => {
+        //         verifyTextareaRows();
+        //     });
 
-            cy.contains('.field', 'textarea_display_rows_5').within(() => {
-                verifyTextareaContent('en');
-                verifyTextareaRows(5);
+        //     cy.contains('.field', 'textarea_display_rows_5').within(() => {
+        //         verifyTextareaRows(5);
+        //     });
+        // });
+
+        it('blueprint_id', () => {
+            selectBlueprintInModal('blueprint_id');
+
+            cy.contains('.field', 'blueprint_id_all').within(($field) => {
+                verifyNumberOfOptions($field, types.length);
             });
         });
 
@@ -575,12 +585,5 @@ describe('Create Deployment Button widget', () => {
         //     });
         // });
 
-        // it('blueprint_id', () => {
-        //     selectBlueprintInModal('blueprint_id');
-
-        //     cy.contains('.field', 'string_no_default').within(() => {
-        //         verifyTextInput();
-        //     });
-        // });
     });
 });
