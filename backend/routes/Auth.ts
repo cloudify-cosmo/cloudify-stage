@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import _ from 'lodash';
 import type { CookieOptions, Request } from 'express';
 
-import { authenticateWithSaml, authenticateWithToken } from '../auth/AuthMiddlewares';
+import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, ROLE_COOKIE_NAME, TOKEN_COOKIE_NAME, USERNAME_COOKIE_NAME } from '../consts';
 import { getConfig } from '../config';
@@ -61,8 +61,8 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
 });
 
 // TODO(RD-3827): Check (Okta and normal login) if it is possible to add authentication to this path
-router.get('/manager', (req, res) => {
-    const token = req.headers['authentication-token'] as string;
+router.get('/manager', authenticateWithCookie, (req, res) => {
+    const token = req.cookies[TOKEN_COOKIE_NAME] as string;
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
     if (isSamlEnabled) {
         res.clearCookie(USERNAME_COOKIE_NAME);
@@ -89,7 +89,7 @@ router.get('/manager', (req, res) => {
         });
 });
 
-router.get('/user', authenticateWithToken, (req, res) => {
+router.get('/user', authenticateWithCookie, (req, res) => {
     res.send({
         username: req.user!.username,
         role: req.user!.role,
@@ -98,12 +98,12 @@ router.get('/user', authenticateWithToken, (req, res) => {
     });
 });
 
-router.post('/logout', authenticateWithToken, (_req, res) => {
+router.post('/logout', authenticateWithCookie, (_req, res) => {
     res.clearCookie(TOKEN_COOKIE_NAME);
     res.end();
 });
 
-router.get('/RBAC', authenticateWithToken, (req, res) => {
+router.get('/RBAC', authenticateWithCookie, (req, res) => {
     AuthHandler.getRBAC(req.headers['authentication-token'] as string)
         .then(res.send)
         .catch(err => {

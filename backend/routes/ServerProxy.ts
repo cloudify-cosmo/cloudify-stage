@@ -5,20 +5,26 @@ import { isRbacInCache, getAndCacheConfig } from '../handler/AuthHandler';
 import { getApiUrl, setManagerSpecificOptions } from '../handler/ManagerHandler';
 
 import { forward, requestAndForwardResponse, setUpRequestForwarding } from '../handler/RequestHandler';
+import { TOKEN_COOKIE_NAME } from '../consts';
 
 const router = express.Router();
 setUpRequestForwarding(router);
 
 async function proxyRequest(req: Request, res: Response) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
+    const token = req.cookies[TOKEN_COOKIE_NAME] as string;
+    const headers = req.headers as AxiosRequestHeaders;
+    if (token) {
+        headers['authentication-token'] = token;
+    }
 
     // if is a maintenance status fetch then update RBAC cache if empty
     if (serverUrl === `/maintenance` && req.method === 'GET' && !isRbacInCache()) {
-        await getAndCacheConfig(req.headers['authentication-token'] as string);
+        await getAndCacheConfig(token);
     }
 
     const options: AxiosRequestConfig = {
-        headers: req.headers as AxiosRequestHeaders,
+        headers,
         method: req.method as Method,
         data: req.body
     };
