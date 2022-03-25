@@ -7,7 +7,7 @@ const IconWrapper = styled.div`
 `;
 
 const StyledImage = styled.img`
-    width: 82px;
+    width: 72px;
 `;
 
 export interface ButtonIconProps {
