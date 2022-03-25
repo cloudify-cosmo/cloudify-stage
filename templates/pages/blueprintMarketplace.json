@@ -17,8 +17,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ],
                     "isDefault": true
@@ -35,8 +34,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ]
                 },
@@ -52,8 +50,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ]
                 },
@@ -69,8 +66,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ]
                 },
@@ -86,8 +82,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ]
                 },
@@ -103,8 +98,7 @@
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
-                            },
-                            "drillDownPages": {}
+                            }
                         }
                     ]
                 }
