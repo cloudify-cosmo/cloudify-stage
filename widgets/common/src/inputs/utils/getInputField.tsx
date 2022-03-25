@@ -184,6 +184,23 @@ export default function getInputField(
                 />
             );
         }
+        case 'capability_value': {
+            const fetchUrl = '/searches/capabilities?_include=id,display_name';
+
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    placeholder={Stage.i18n.t('input.capability_value.placeholder')}
+                    value={value}
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
+            );
+        }
+
         case 'string':
         case 'regex':
             return _.includes(value, '\n') ? (

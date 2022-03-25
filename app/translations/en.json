@@ -1598,6 +1598,9 @@
         "deployment_id": {
             "placeholder": "Select Deployment"
         },
+        "capability_value": {
+            "placeholder": "Select Capability"
+        },
         "blueprint_id": {
             "placeholder": "Select Blueprint"
         }
