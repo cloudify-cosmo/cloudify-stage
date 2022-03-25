@@ -6,6 +6,7 @@ import { jsonRequest } from '../ManagerHandler';
 import { ALLOWED_METHODS_OBJECT, TOKEN_COOKIE_NAME } from '../../consts';
 import { getUrlWithQueryString } from './common';
 import type { AllowedRequestMethod, QueryStringParams } from '../../types';
+import { getAuthenticationTokenHeaderFromToken } from '../../utils';
 
 type ManagerResponse = { items: any[] };
 interface RequestOptions {
@@ -16,10 +17,12 @@ interface RequestOptions {
 }
 
 export function call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions = {}) {
-    const { params, body = null, headers = {}, timeout } = requestOptions;
+    const { params, body = null, timeout } = requestOptions;
+    let { headers = {} } = requestOptions;
     if (headers.cookie) {
         const cookies = cookie.parse(headers.cookie);
-        headers['authentication-token'] = cookies[TOKEN_COOKIE_NAME];
+        const tokenHeader = getAuthenticationTokenHeaderFromToken(cookies[TOKEN_COOKIE_NAME]);
+        headers = { ...headers, ...tokenHeader };
     }
     return jsonRequest(method, getUrlWithQueryString(url, params), headers, body, timeout);
 }
