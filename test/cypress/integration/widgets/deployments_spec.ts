@@ -31,7 +31,17 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
-            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
+            .usePageMock(
+                'deployments',
+                {
+                    pollingTime: 5,
+                    clickToDrillDown: true,
+                    showExecutionStatusLabel: false
+                },
+                {
+                    additionalPageTemplates: ['blueprintMarketplace']
+                }
+            )
             .mockLogin();
     });
 
@@ -101,15 +111,16 @@ describe('Deployments widget', () => {
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
-                cy.contains('Create new Deployment').click();
-                cy.contains('Blueprint marketplace')
+                cy.contains('Upload from Terraform').click();
+                cy.contains('Create blueprint from Terraform')
                     .parent()
                     .within(() => {
-                        cy.contains('button', 'Close').click();
+                        cy.contains('button', 'Cancel').click();
                     });
+                cy.contains('button', 'Yes').click();
 
-                cy.contains('Upload from Terraform').click();
-                cy.contains('Create blueprint from Terraform').should('be.visible');
+                cy.contains('Create new Deployment').click();
+                cy.contains('Blueprint Marketplace').should('be.visible');
             });
 
             it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
