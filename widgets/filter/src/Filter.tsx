@@ -154,7 +154,7 @@ export default class Filter extends React.Component {
             filter,
             flushOnRefreshEvent
         }) => {
-            const { DynamicDropdown } = Stage.Common;
+            const { DynamicDropdown } = Stage.Common.Components;
             const { appendQueryParam } = Stage.Utils.Url;
             const { configuration, toolbox } = this.props;
 

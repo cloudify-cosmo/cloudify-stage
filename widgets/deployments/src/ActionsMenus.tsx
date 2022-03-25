@@ -1,6 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-export default function ActionsMenus({ deployment, onDeploymentAction, onWorkflowAction, toolbox, workflows }) {
-    const { DeploymentActionsMenu, WorkflowsMenu } = Stage.Common;
+import { ComponentProps } from 'react';
+
+const WorkflowsMenu = Stage.Common.Workflows.Menu;
+
+interface ActionsMenusProps<D> {
+    deployment?: D;
+    onDeploymentAction: (deployment: D | undefined, actionName: string) => void;
+    onWorkflowAction: (deployment: D | undefined, workflowName: string) => void;
+    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function ActionsMenus<D>({
+    deployment,
+    onDeploymentAction,
+    onWorkflowAction,
+    toolbox,
+    workflows
+}: ActionsMenusProps<D>) {
+    const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
 
     return (
         <>
@@ -12,11 +29,3 @@ export default function ActionsMenus({ deployment, onDeploymentAction, onWorkflo
         </>
     );
 }
-
-ActionsMenus.propTypes = {
-    deployment: PropTypes.shape(),
-    onDeploymentAction: PropTypes.func.isRequired,
-    onWorkflowAction: PropTypes.func.isRequired,
-    workflows: Stage.PropTypes.Workflows.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

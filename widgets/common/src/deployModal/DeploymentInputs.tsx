@@ -1,6 +1,10 @@
 import type { FunctionComponent } from 'react';
-import type { FullBlueprintData } from '../BlueprintActions';
-import type { Field } from '../types';
+import type { FullBlueprintData } from '../blueprints/BlueprintActions';
+import DataTypesButton from '../inputs/DataTypesButton';
+import InputsHelpIcon from '../inputs/InputsHelpIcon';
+import getInputFields from '../inputs/utils/getInputFields';
+import type { OnChange } from '../inputs/utils/types';
+import YamlFileButton from '../inputs/YamlFileButton';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 
@@ -8,7 +12,7 @@ interface Props {
     blueprint: FullBlueprintData;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onDeploymentInputChange: (event: React.ChangeEvent, field: Field) => void;
+    onDeploymentInputChange: OnChange;
     deploymentInputs: { [key: string]: unknown };
     errors: Record<string, string>;
     toolbox: Stage.Types.Toolbox;
@@ -23,7 +27,6 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     errors,
     toolbox
 }) => {
-    const { DataTypesButton, InputsHelpIcon, YamlFileButton, InputsUtils } = Stage.Common;
     const { Message } = Stage.Basic;
     const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
     return (
@@ -49,7 +52,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 </>
             )}
 
-            {InputsUtils.getInputFields(
+            {getInputFields(
                 blueprint.plan.inputs,
                 onDeploymentInputChange,
                 deploymentInputs,

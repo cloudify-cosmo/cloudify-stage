@@ -59,7 +59,7 @@ export default function CreateModal({ toolbox }) {
 
         setFileLoading();
 
-        const actions = new Stage.Common.FileActions(toolbox);
+        const actions = new Stage.Common.Actions.File(toolbox);
         actions
             .doGetTextFileContent(file)
             .then(secretValue => {

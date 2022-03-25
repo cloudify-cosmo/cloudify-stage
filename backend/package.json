@@ -7,7 +7,7 @@
   "author": "Cloudify",
   "main": "server.ts",
   "scripts": {
-    "audit": "npm audit --production",
+    "audit": "npm audit --production --omit=optional ",
     "check-types": "tsc && tsc -b test",
     "db-migrate": "ts-node -T migration up",
     "db-migrate-clear": "ts-node -T migration clear",

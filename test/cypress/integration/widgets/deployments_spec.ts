@@ -50,7 +50,7 @@ describe('Deployments widget', () => {
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
-            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', true);
+            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', false);
 
             cy.get('.deploymentsWidget').contains(deploymentId).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');

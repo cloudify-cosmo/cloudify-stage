@@ -15,8 +15,7 @@ const SiteControl: FunctionComponent<SiteControlProps> = ({ site, toolbox }) => 
     }
 
     const { Grid } = Stage.Basic;
-    // @ts-expect-error GroupState is not converted to TS yet
-    const { GroupState } = Stage.Common;
+    const { GroupState } = Stage.Common.Components;
 
     return (
         <span>

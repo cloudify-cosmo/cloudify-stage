@@ -4,10 +4,10 @@ export default function DeploymentInfo({ data, toolbox }) {
     const [visibilityError, setVisibilityError] = React.useState('');
 
     const { ErrorMessage } = Stage.Basic;
-    const { DeploymentDetails } = Stage.Common;
+    const DeploymentDetails = Stage.Common.Deployments.Details;
 
     const setVisibility = (id, visibility) => {
-        const { DeploymentActions } = Stage.Common;
+        const DeploymentActions = Stage.Common.Deployments.Actions;
         const actions = new DeploymentActions(toolbox);
 
         toolbox.loading(true);

@@ -96,7 +96,7 @@ describe('Deployment Wizard Buttons widget', () => {
         );
         cy.get('input[name=blueprintFile]').attachFile('blueprints/empty.zip');
         cy.contains('blueprint.yaml').should('be.visible');
-        cy.contains('.field', 'Blueprint package').find('.remove').click();
+        cy.getField('Blueprint package').find('.remove').click();
         cy.get('input[name=blueprintFile]').attachFile('blueprints/custom_plugin.zip');
         cy.contains('ec2-blueprint.yaml').should('be.visible');
 

@@ -160,7 +160,7 @@ export default class UsersTable extends React.Component {
 
         const actions = new Actions(toolbox);
         actions
-            .doSetRole(user.username, Stage.Common.RolesUtil.getSystemRole(isAdmin))
+            .doSetRole(user.username, Stage.Common.Roles.Utils.getSystemRole(isAdmin))
             .then(() => {
                 this.setState({ error: null, usernameDuringRoleSetting: '' });
                 toolbox.loading(false);
