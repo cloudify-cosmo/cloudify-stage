@@ -519,7 +519,7 @@
                     "uninstall": "Uninstall",
                     "delete": "Delete",
                     "forceDelete": "Force Delete",
-                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'.",
+                    "fetchError": "Cannot fetch deployment '{{ deploymentName }}'.",
                     "tooltip": "Deployment action"
                 },
                 "workflowsMenu": {
@@ -528,14 +528,14 @@
                 "execute": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
-                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
+                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentName}}",
                         "singleNamedDeployemnt": "Execute workflow {{workflowName}} on {{ deploymentName }}",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
                     "errors": {
                         "missingDeployment": "Missing deployment.",
                         "missingWorkflow": "Missing workflow.",
-                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'.",
+                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ workflowName }}'.",
                         "scheduleTimeError": "Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)",
                         "yamlFileError": "Loading values from YAML file failed: {{errorMessage}}"
                     },
