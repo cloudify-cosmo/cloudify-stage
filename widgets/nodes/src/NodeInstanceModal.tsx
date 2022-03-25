@@ -5,7 +5,8 @@ export default function NodeInstanceModal({ instance, onClose, open }) {
     const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
     const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
     const { CancelButton, CopyToClipboardButton, DataTable, Modal } = Stage.Basic;
-    const { ParameterValue, ParameterValueDescription } = Stage.Common;
+    const ParameterValue = Stage.Common.Components.Parameter.Value;
+    const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
     const { Json } = Stage.Utils;
 
     // Setting totalSize on DataTable components to:

@@ -1,21 +1,25 @@
 import type { FunctionComponent } from 'react';
-import type {
-    Errors,
-    Workflow,
-    WorkflowOptions,
-    WorkflowParameters,
-    OnDateInputChange,
-    OnDropdownChange,
-    OnCheckboxChange
-} from './types';
-
-import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import FileActions from '../actions/FileActions';
+import DeploymentActions from '../deployments/DeploymentActions';
+import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
+import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
+import type { OnChange } from '../inputs/utils/types';
 
 import { executeWorkflow, getWorkflowName } from './common';
 
+import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import type {
+    Errors,
+    OnCheckboxChange,
+    OnDateInputChange,
+    Workflow,
+    WorkflowOptions,
+    WorkflowParameters
+} from './types';
+
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
-interface ExecuteWorkflowModalProps {
+export interface ExecuteWorkflowModalProps {
     deploymentId?: string;
     deploymentName?: string;
     deployments?: string[];
@@ -65,18 +69,15 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     const workflowName = getWorkflowName(workflow);
 
     function setWorkflowParams(workflowResource: Workflow) {
-        const { InputsUtils } = Stage.Common;
         setBaseWorkflowParams(workflowResource.parameters);
         setUserWorkflowParams(
             _.mapValues(workflowResource.parameters, parameterData =>
-                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+                getInputFieldInitialValue(parameterData.default, parameterData.type)
             )
         );
     }
 
     useOpenProp(open, () => {
-        const { DeploymentActions } = Stage.Common;
-
         clearErrors();
         unsetLoading();
         clearDryRun();
@@ -154,7 +155,6 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             return;
         }
 
-        const { FileActions, InputsUtils } = Stage.Common;
         const actions = new FileActions(toolbox);
         setFileLoading();
 
@@ -162,7 +162,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             .doGetYamlFileContent(file)
             .then((yamlInputs: any) => {
                 clearErrors();
-                setUserWorkflowParams(InputsUtils.getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
+                setUserWorkflowParams(getUpdatedInputs(baseWorkflowParams, userWorkflowParams, yamlInputs));
             })
             .catch((err: string | { message: string }) =>
                 setErrors({ yamlFile: t('errors.yamlFileError', { message: _.isString(err) ? err : err.message }) })
@@ -170,7 +170,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
             .finally(unsetFileLoading);
     }
 
-    const onWorkflowInputChange: OnDropdownChange = (_event, field) => {
+    const onWorkflowInputChange: OnChange = (_event, field) => {
         setUserWorkflowParams({
             ...userWorkflowParams,
             ...Stage.Basic.Form.fieldNameValue(

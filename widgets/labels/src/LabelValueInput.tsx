@@ -18,8 +18,7 @@ const LabelValueInput: FunctionComponent<LabelValueInputProps> = ({
     valueAlreadyUsed
 }) => {
     const { Form } = Stage.Basic;
-    // @ts-expect-error RevertToDefaultIcon is not converted to TS yet
-    const { RevertToDefaultIcon } = Stage.Common;
+    const { RevertToDefaultIcon } = Stage.Common.Components;
     const { DuplicationErrorPopup, ValidationErrorPopup } = Stage.Common.Labels;
     const { useLabelInput } = Stage.Hooks;
     const { i18n } = Stage;

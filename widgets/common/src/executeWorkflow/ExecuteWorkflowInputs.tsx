@@ -1,11 +1,9 @@
 import type { FunctionComponent } from 'react';
-import type {
-    OnDateInputChange,
-    OnDropdownChange,
-    OnCheckboxChange,
-    BaseWorkflowInputs,
-    UserWorkflowInputsState
-} from './types';
+import InputsHelpIcon from '../inputs/InputsHelpIcon';
+import getInputFields from '../inputs/utils/getInputFields';
+import type { OnChange } from '../inputs/utils/types';
+import YamlFileButton from '../inputs/YamlFileButton';
+import type { BaseWorkflowInputs, OnCheckboxChange, OnDateInputChange, UserWorkflowInputsState } from './types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -42,7 +40,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     errors: Record<string, string>;
     onYamlFileChange: (file: File) => void;
     fileLoading: boolean;
-    onWorkflowInputChange: OnDropdownChange;
+    onWorkflowInputChange: OnChange;
     showInstallOptions: boolean;
     onForceChange: OnCheckboxChange;
     onDryRunChange: OnCheckboxChange;
@@ -73,7 +71,6 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const { Message, Form, Header, Divider, DateInput } = Stage.Basic;
-    const { YamlFileButton, InputsHelpIcon, InputsUtils } = Stage.Common;
     return (
         <>
             {_.isEmpty(baseWorkflowInputs) ? (
@@ -90,13 +87,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 </>
             )}
 
-            {InputsUtils.getInputFields(
-                baseWorkflowInputs,
-                onWorkflowInputChange,
-                userWorkflowInputsState,
-                errors,
-                toolbox
-            )}
+            {getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors, toolbox)}
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">

@@ -1,5 +1,6 @@
 import ExecuteWorkflowModal from './ExecuteWorkflowModal';
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
+import Menu from './WorkflowsMenu';
 import { getWorkflowName, executeWorkflow } from './common';
 import type {
     Workflow,
@@ -13,13 +14,18 @@ export type { Workflow, WorkflowParameters, WorkflowOptions, BaseWorkflowInputs,
 
 export { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow };
 
+const WorkflowsCommon = {
+    ExecuteModal: ExecuteWorkflowModal,
+    Menu
+};
+
 declare global {
     namespace Stage.Common {
-        export { ExecuteWorkflowModal };
+        const Workflows: typeof WorkflowsCommon;
     }
 }
 
 Stage.defineCommon({
-    name: 'ExecuteWorkflowModal',
-    common: ExecuteWorkflowModal
+    name: 'Workflows',
+    common: WorkflowsCommon
 });

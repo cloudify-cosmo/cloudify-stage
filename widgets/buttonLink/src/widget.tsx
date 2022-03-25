@@ -34,7 +34,7 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             name: t('configuration.color.name'),
             description: t('configuration.color.description'),
             default: t('configuration.color.default'),
-            component: Stage.Common.SemanticColorDropdown,
+            component: Stage.Common.Components.SemanticColorDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {

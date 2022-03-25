@@ -85,7 +85,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         defaultYamlFile = Stage.Common.Consts.defaultBlueprintYamlFileName
     ) => {
         const { toolbox, widget } = this.props;
-        const { BlueprintActions } = Stage.Common;
+        const BlueprintActions = Stage.Common.Blueprints.Actions;
         const { uploadingBlueprints } = this.state;
         this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
 
@@ -140,7 +140,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { Message, Icon, ReadmeModal } = Stage.Basic;
-        const { FeedbackMessages } = Stage.Common;
+        const { FeedbackMessages } = Stage.Common.Components;
 
         const notAuthenticatedWarning = (
             <Message>

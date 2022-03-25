@@ -1,8 +1,7 @@
+import type { GroupState } from '../../common/src/components/GroupState';
 import { DeploymentStatus, DeploymentStatuses } from './types';
 
-type GroupState = { name: string; icon: string; colorSUI: string; severity: number; description: string };
-
-const groupStates: Record<DeploymentStatus, GroupState> = {
+const groupStates: Record<DeploymentStatus, GroupState & { severity: number; description: string }> = {
     [DeploymentStatuses.Good]: {
         name: 'good',
         icon: 'checkmark',

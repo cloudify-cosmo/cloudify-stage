@@ -15,7 +15,7 @@ export default function BlueprintsCatalog({
     toolbox
 }: BlueprintsViewProps) {
     const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
-    const { BlueprintActions } = Stage.Common;
+    const BlueprintActions = Stage.Common.Blueprints.Actions;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
 
@@ -172,7 +172,7 @@ export default function BlueprintsCatalog({
                                         labelPosition="left"
                                         onClick={event => {
                                             event.stopPropagation();
-                                            new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                            new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
                                                 item.id,
                                                 item.main_file_name
                                             );

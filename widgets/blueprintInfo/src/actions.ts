@@ -18,7 +18,7 @@ export default class Actions {
     }
 
     doGetBlueprintDeployments(blueprintId) {
-        return new Stage.Common.SummaryActions(this.toolbox).doGetDeployments('blueprint_id', {
+        return new Stage.Common.Actions.Summary(this.toolbox).doGetDeployments('blueprint_id', {
             blueprint_id: blueprintId
         });
     }

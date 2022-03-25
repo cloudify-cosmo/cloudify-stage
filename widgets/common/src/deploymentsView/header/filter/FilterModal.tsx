@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useState } from 'react';
+import DynamicDropdown from '../../../components/DynamicDropdown';
 import { i18nMessagesPrefix, i18nPrefix } from '../../common';
 import RulesForm from '../../../filters/RulesForm';
 import { FilterRule } from '../../../filters/types';
@@ -54,7 +55,6 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 }) => {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Dimmer, Icon, Modal, Form } = Stage.Basic;
-    const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors } = Stage.Hooks;
 
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
