@@ -7,7 +7,7 @@ describe('Create Deployment Button widget', () => {
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
-    
+
     const types = [
         'boolean',
         'dict',
@@ -77,15 +77,14 @@ describe('Create Deployment Button widget', () => {
     };
 
     const verifyNumberOfOptions = (number, atLeast = false) => {
-        cy.get('input').click().type('b').clear();
+        cy.get('input').click();
 
-        cy.wait(1000);
-        if(number === 0) {
-            cy.get('.menu').contains('No results found.');
-        } else if(atLeast) {
-            cy.get('.menu .item[role="option"]').filter(`:contains("${resourcePrefix}")`).should('have.length.at.least', number);
+        if (number === 0) {
+            cy.get('.menu').contains('No results found.').should('be.visible');
+        } else if (atLeast) {
+            cy.get(`.menu .item[role="option"] :contains("${resourcePrefix}")`).should('have.length.at.least', number);
         } else {
-            cy.get('.menu .item[role="option"]').filter(`:contains("${resourcePrefix}")`).should('have.length', number);
+            cy.get(`.menu .item[role="option"] :contains("${resourcePrefix}")`).should('have.length', number);
         }
         cy.get('label').click();
     };
@@ -593,7 +592,7 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('deployment_id', () => {
-            const testDeploymentId = emptyBlueprintId+'deployment1234';
+            const testDeploymentId = `${emptyBlueprintId}deployment1234`;
 
             cy.deployBlueprint(emptyBlueprintId, testDeploymentId);
 
