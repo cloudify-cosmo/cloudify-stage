@@ -10,6 +10,7 @@ import * as ManagerHandler from '../handler/ManagerHandler';
 
 import { getLogger } from '../handler/LoggerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
+import { getAuthenticationTokenHeaderFromRequest } from '../utils';
 
 const router = express.Router();
 const upload = multer();
@@ -149,7 +150,7 @@ router.post<any, any, any, any, PostUploadQuery>(
                 );
                 ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
                     headers: {
-                        'authentication-token': req.headers['authentication-token'] as string,
+                        ...getAuthenticationTokenHeaderFromRequest(req),
                         tenant: req.headers.tenant as string,
                         'content-type': 'application/zip'
                     },

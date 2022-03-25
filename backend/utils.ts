@@ -1,6 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
 import pathlib from 'path';
+import type { Request } from 'express';
 import * as Consts from './consts';
+import { TOKEN_COOKIE_NAME } from './consts';
 
 export const isDevelopmentOrTest = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test';
 
@@ -12,11 +13,11 @@ export function getResourcePath(path: string, isUserData: boolean) {
     return pathlib.resolve(`../dist/${isUserData ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`);
 }
 
-export function getValuesWithPaths(obj, key, arr = []) {
-    let objects = [];
+export function getValuesWithPaths(obj: Record<string, any>, key: string, arr: string[] = []) {
+    let objects: any[] = [];
     Object.keys(obj).forEach(i => {
         if (typeof obj[i] === 'object') {
-            objects = objects.concat(this.getValuesWithPaths(obj[i], key, [...arr, i]));
+            objects = objects.concat(getValuesWithPaths(obj[i], key, [...arr, i]));
         } else if (i === key) {
             objects.push({ [obj[i]]: arr });
         }
@@ -24,12 +25,25 @@ export function getValuesWithPaths(obj, key, arr = []) {
     return objects;
 }
 
-export function getParams(query) {
+export function getParams(query: string) {
     return query
-        ? (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce((params, param) => {
+        ? (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce((params: Record<string, string>, param) => {
               const [key, value] = param.split('=');
               params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
               return params;
           }, {})
         : {};
+}
+
+export function getTokenFromCookies(req: Request) {
+    return req.cookies[TOKEN_COOKIE_NAME] as string;
+}
+
+export function getAuthenticationTokenHeaderFromRequest(req: Request) {
+    const token = getTokenFromCookies(req);
+    return { 'Authentication-Token': token };
+}
+
+export function getAuthenticationTokenHeaderFromToken(token: string) {
+    return { 'Authentication-Token': token };
 }

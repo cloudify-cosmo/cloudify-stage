@@ -5,6 +5,7 @@ import { jsonRequest } from './ManagerHandler';
 import { getMode, setMode, MODE_MAIN, MODE_COMMUNITY } from '../serverSettings';
 import { getLogger } from './LoggerHandler';
 import type { ConfigResponse, TokenResponse, UserResponse, VersionResponse } from '../routes/Auth.types';
+import { getAuthenticationTokenHeaderFromToken } from '../utils';
 
 const logger = getLogger('AuthHandler');
 
@@ -26,15 +27,15 @@ export function getToken(basicAuth: string) {
 }
 
 export function getTenants(token: string) {
-    return jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', {
-        'Authentication-Token': token
-    });
+    return jsonRequest(
+        'GET',
+        '/tenants?_get_all_results=true&_include=name',
+        getAuthenticationTokenHeaderFromToken(token)
+    );
 }
 
 export function getUser(token: string): Promise<UserResponse> {
-    return jsonRequest('GET', '/user?_get_data=true', {
-        'Authentication-Token': token
-    });
+    return jsonRequest('GET', '/user?_get_data=true', getAuthenticationTokenHeaderFromToken(token));
 }
 
 export function isProductLicensed(version: VersionResponse) {
@@ -42,9 +43,7 @@ export function isProductLicensed(version: VersionResponse) {
 }
 
 export function getLicense(token: string) {
-    return jsonRequest('GET', '/license', {
-        'Authentication-Token': token
-    });
+    return jsonRequest('GET', '/license', getAuthenticationTokenHeaderFromToken(token));
 }
 
 export function getTokenViaSamlResponse(samlResponse: string) {
@@ -60,9 +59,7 @@ export function getTokenViaSamlResponse(samlResponse: string) {
 }
 
 export function getAndCacheConfig(token: string) {
-    return jsonRequest<ConfigResponse>('GET', '/config', {
-        'Authentication-Token': token
-    }).then(config => {
+    return jsonRequest<ConfigResponse>('GET', '/config', getAuthenticationTokenHeaderFromToken(token)).then(config => {
         authorizationCache = config.authorization;
         logger.debug('Authorization config cached successfully.');
         return Promise.resolve(authorizationCache);
@@ -84,14 +81,16 @@ export async function getRBAC(token: string): Promise<{ roles: any }> {
 }
 
 export function getManagerVersion(token: string) {
-    return jsonRequest<VersionResponse>('GET', '/version', { 'Authentication-Token': token }).then(version => {
-        // set community mode from manager API only if mode is not set from the command line
-        if (getMode() === MODE_MAIN && version.edition === MODE_COMMUNITY) {
-            setMode(MODE_COMMUNITY);
-        }
+    return jsonRequest<VersionResponse>('GET', '/version', getAuthenticationTokenHeaderFromToken(token)).then(
+        version => {
+            // set community mode from manager API only if mode is not set from the command line
+            if (getMode() === MODE_MAIN && version.edition === MODE_COMMUNITY) {
+                setMode(MODE_COMMUNITY);
+            }
 
-        return Promise.resolve(version);
-    });
+            return Promise.resolve(version);
+        }
+    );
 }
 
 export function isAuthorized(user: Express.User, authorizedRoles: string[]) {

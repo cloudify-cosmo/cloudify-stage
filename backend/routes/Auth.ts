@@ -8,6 +8,7 @@ import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, ROLE_COOKIE_NAME, TOKEN_COOKIE_NAME, USERNAME_COOKIE_NAME } from '../consts';
 import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
+import { getTokenFromCookies } from '../utils';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -62,7 +63,7 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
 
 // TODO(RD-3827): Check (Okta and normal login) if it is possible to add authentication to this path
 router.get('/manager', authenticateWithCookie, (req, res) => {
-    const token = req.cookies[TOKEN_COOKIE_NAME] as string;
+    const token = getTokenFromCookies(req);
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
     if (isSamlEnabled) {
         res.clearCookie(USERNAME_COOKIE_NAME);
@@ -104,7 +105,7 @@ router.post('/logout', authenticateWithCookie, (_req, res) => {
 });
 
 router.get('/RBAC', authenticateWithCookie, (req, res) => {
-    AuthHandler.getRBAC(req.headers['authentication-token'] as string)
+    AuthHandler.getRBAC(getTokenFromCookies(req))
         .then(res.send)
         .catch(err => {
             logger.error(err);
