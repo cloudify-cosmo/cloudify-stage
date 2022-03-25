@@ -10,9 +10,7 @@ describe('Button link widget', () => {
 
         it('in new tab when link starts with "http" string', () => {
             const url = 'http://wp.pl';
-            cy.editWidgetConfiguration(widgetId, () =>
-                cy.contains('.field', 'URL address').find('input').clear().type(url)
-            );
+            cy.editWidgetConfiguration(widgetId, () => cy.getField('URL address').find('input').clear().type(url));
 
             clickButtonLink();
 
@@ -21,9 +19,7 @@ describe('Button link widget', () => {
 
         it('in the same tab when link does not start with "http" string', () => {
             const url = '?test=true';
-            cy.editWidgetConfiguration(widgetId, () =>
-                cy.contains('.field', 'URL address').find('input').clear().type(url)
-            );
+            cy.editWidgetConfiguration(widgetId, () => cy.getField('URL address').find('input').clear().type(url));
 
             clickButtonLink();
 
