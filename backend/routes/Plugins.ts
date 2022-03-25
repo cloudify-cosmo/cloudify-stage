@@ -68,7 +68,9 @@ function zipFiles(
 }
 
 router.get('/icons/:pluginId', (req, res) => {
-    const options = { headers: req.headers as AxiosRequestHeaders };
+    const options = {
+        headers: { ...(req.headers as AxiosRequestHeaders), ...getAuthenticationTokenHeaderFromRequest(req) }
+    };
     ManagerHandler.setManagerSpecificOptions(options, 'get');
     requestAndForwardResponse(
         `${ManagerHandler.getManagerUrl()}/resources/plugins/${req.params.pluginId}/icon.png`,
