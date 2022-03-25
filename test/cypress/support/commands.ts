@@ -146,9 +146,12 @@ const commands = {
                         xhr.open(method, `/console/sp${url}`);
                         xhr.onload = resolve;
                         xhr.onerror = reject;
-                        Object.entries({ ...getCommonHeaders(), ...headers }).forEach(([name, value]) =>
-                            xhr.setRequestHeader(name, value as string)
-                        );
+                        // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
+                        Object.entries({
+                            ...getCommonHeaders(),
+                            ...getAdminAuthorizationHeader(),
+                            ...headers
+                        }).forEach(([name, value]) => xhr.setRequestHeader(name, value as string));
                         if (isBinaryFile) {
                             xhr.setRequestHeader('Content-type', 'application/octet-stream');
                         }
