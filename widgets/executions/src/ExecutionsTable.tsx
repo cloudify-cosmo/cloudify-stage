@@ -119,7 +119,7 @@ export default class ExecutionsTable extends React.Component {
 
     actOnExecution(execution, action) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.ExecutionActions(toolbox);
+        const actions = new Stage.Common.Executions.Actions(toolbox);
         actions
             .doAct(execution, action)
             .then(() => {
@@ -157,7 +157,9 @@ export default class ExecutionsTable extends React.Component {
             Table
         } = Stage.Basic;
         const { ExecutionStatus, IdPopup } = Stage.Shared;
-        const { ParameterValue, ParameterValueDescription, UpdateDetailsModal } = Stage.Common;
+        const ParameterValue = Stage.Common.Components.Parameter.Value;
+        const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
+        const { UpdateDetailsModal } = Stage.Common.Deployments;
         const { Utils } = Stage;
 
         const { MenuAction } = ExecutionsTable;

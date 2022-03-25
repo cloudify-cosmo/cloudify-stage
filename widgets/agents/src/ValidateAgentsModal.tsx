@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import Consts from './consts';
+import NodeFilter from './NodeFilter';
 import AgentsPropType from './props/AgentsPropType';
 
 export default function ValidateAgentsModal({
@@ -80,7 +81,7 @@ export default function ValidateAgentsModal({
             install_methods: !_.isEmpty(methods) ? methods : undefined
         };
 
-        const actions = new Stage.Common.DeploymentActions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(toolbox);
         actions
             .doExecute(nodeFilter.deploymentId, 'validate_agents', params)
             .then(data => {
@@ -109,7 +110,6 @@ export default function ValidateAgentsModal({
     if (!open) return null;
 
     const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
-    const { NodeFilter } = Stage.Common;
 
     return (
         <Modal open onClose={onHide}>

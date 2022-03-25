@@ -76,7 +76,8 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     },
 
     fetchData(_widget, toolbox, params) {
-        const { DeploymentActions, SummaryActions } = Stage.Common;
+        const SummaryActions = Stage.Common.Actions.Summary;
+        const DeploymentActions = Stage.Common.Deployments.Actions;
         const sitesWithNamesAndLocations = new DeploymentActions(toolbox).doGetSitesNamesAndLocations();
 
         const sitesSummary: Promise<Stage.Types.PaginatedResponse<SiteSummary>> = new SummaryActions(

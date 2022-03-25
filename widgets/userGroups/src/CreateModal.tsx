@@ -30,7 +30,7 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
 
         const actions = new Actions(toolbox);
         actions
-            .doCreate(groupName, ldapGroup, Stage.Common.RolesUtil.getSystemRole(isAdmin))
+            .doCreate(groupName, ldapGroup, Stage.Common.Roles.Utils.getSystemRole(isAdmin))
             .then(() => {
                 clearErrors();
                 doClose();

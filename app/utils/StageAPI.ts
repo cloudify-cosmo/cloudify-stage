@@ -189,7 +189,7 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
 
 interface CommonOrPropTypeDefinition<Obj, Name extends keyof Obj> {
     name: Name;
-    common: Obj[Name];
+    common: any;
 }
 
 /** User-facing WidgetDefinition used for defining new widgets */

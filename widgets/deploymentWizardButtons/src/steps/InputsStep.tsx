@@ -49,7 +49,7 @@ function InputsStepActions({
     id
 }) {
     function handleNext(stepId) {
-        const { InputsUtils } = Stage.Common;
+        const InputsUtils = Stage.Common.Inputs.Utils;
         const inputsDataPath = 'blueprint.inputs';
 
         return onLoading()
@@ -116,7 +116,7 @@ class InputsStepContent extends React.Component {
             }
             const dataType =
                 !_.isEmpty(dataTypes) && !!inputs[inputName].type ? dataTypes[inputs[inputName].type] : undefined;
-            return Stage.Common.InputsUtils.getInputFieldInitialValue(inputData.default, inputData.type, dataType);
+            return Stage.Common.Inputs.Utils.getInputFieldInitialValue(inputData.default, inputData.type, dataType);
         });
         onChange(id, { ...stepData });
     }
@@ -127,7 +127,9 @@ class InputsStepContent extends React.Component {
             return;
         }
 
-        const { FileActions, InputsUtils } = Stage.Common;
+        const { InputsUtils } = Stage.Common;
+        const FileActions = Stage.Common.Actions.File;
+        const { getUpdatedInputs } = Stage.Common.Inputs.Utils;
         const actions = new FileActions(toolbox);
         this.setState({ fileLoading: true });
 
@@ -135,7 +137,7 @@ class InputsStepContent extends React.Component {
             .doGetYamlFileContent(file)
             .then(yamlInputs => {
                 const plan = _.get(wizardData, InputsStepContent.inputsDataPath, {});
-                const deploymentInputs = InputsUtils.getUpdatedInputs(plan, stepData, yamlInputs);
+                const deploymentInputs = getUpdatedInputs(plan, stepData, yamlInputs);
                 onChange(id, { ...deploymentInputs });
                 this.setState({ fileLoading: false });
             })
@@ -153,7 +155,9 @@ class InputsStepContent extends React.Component {
 
     render() {
         const { Divider, Form, Table } = Stage.Basic;
-        const { DataTypesButton, InputsUtils, InputsHeader, YamlFileButton } = Stage.Common;
+        const { YamlFileButton, DataTypesButton } = Stage.Common.Inputs;
+        const InputsHeader = Stage.Common.Inputs.Header;
+        const InputsUtils = Stage.Common.Inputs.Utils;
         const { errors, loading, stepData, wizardData, toolbox } = this.props;
         const { fileLoading } = this.state;
 

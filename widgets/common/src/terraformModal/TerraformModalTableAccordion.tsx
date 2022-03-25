@@ -19,9 +19,9 @@ export default function TerraformModalTableAccordion<T extends DynamicTableValue
     columns,
     toolbox
 }: TerraformModalTableAccordionProps<T>) {
-    const { AccordionSection } = Stage.Common;
+    const { Section } = Stage.Common.Components.Accordion;
     return (
-        <AccordionSection title={title}>
+        <Section title={title}>
             <DynamicTable
                 widgetlessToolbox={toolbox}
                 name=""
@@ -29,6 +29,6 @@ export default function TerraformModalTableAccordion<T extends DynamicTableValue
                 onChange={(_event, field) => onChange(field.value as T)}
                 columns={columns}
             />
-        </AccordionSection>
+        </Section>
     );
 }

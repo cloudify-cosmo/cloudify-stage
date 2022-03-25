@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 
-import DynamicDropdown from '../../DynamicDropdown';
+import DynamicDropdown from '../../components/DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
 import { getPlaceholderTranslation, isMultipleValuesOperator } from '../common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';

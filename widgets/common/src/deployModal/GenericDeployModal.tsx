@@ -1,8 +1,11 @@
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, SyntheticEvent } from 'react';
+import FileActions from '../actions/FileActions';
+import BlueprintActions from '../blueprints/BlueprintActions';
+import DynamicDropdown from '../components/DynamicDropdown';
 import Consts from '../Consts';
-import MissingSecretsError from '../MissingSecretsError';
-import AccordionSectionWithDivider from '../AccordionSectionWithDivider';
+import MissingSecretsError from '../secrets/MissingSecretsError';
+import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import DeploymentInputs from './DeploymentInputs';
 import DeployModalActions, { Buttons as ApproveButtons } from './DeployModalActions';
 import { ExecuteWorkflowInputs, executeWorkflow } from '../executeWorkflow';
@@ -14,8 +17,14 @@ import type {
     WorkflowOptions
 } from '../executeWorkflow';
 import type { DropdownValue, Field } from '../types';
-import type { BlueprintDeployParams } from '../BlueprintActions';
+import type { BlueprintDeployParams } from '../blueprints/BlueprintActions';
 import type { Label } from '../labels/types';
+import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
+import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
+import getInputsMap from '../inputs/utils/getInputsMap';
+import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
+import { addErrors } from '../inputs/utils/errors';
+import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -241,11 +250,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     componentDidMount() {
         const { installWorkflow } = this.state;
-        const { InputsUtils } = Stage.Common;
         this.setState({
             baseInstallWorkflowParams: installWorkflow.parameters,
             userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
-                InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+                getInputFieldInitialValue(parameterData.default, parameterData.type)
             )
         });
     }
@@ -260,7 +268,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         }
     }
 
-    handleDeploymentInputChange(_: ChangeEvent<Element>, field: Field) {
+    handleDeploymentInputChange(_: SyntheticEvent | null, field: Field) {
         const { deploymentInputs } = this.state;
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         this.setState({ deploymentInputs: { ...deploymentInputs, ...fieldNameValue } });
@@ -271,7 +279,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             return;
         }
 
-        const { FileActions, InputsUtils } = Stage.Common;
         const { blueprint, deploymentInputs: deploymentInputsState } = this.state;
         const { toolbox } = this.props;
         const actions = new FileActions(toolbox);
@@ -281,11 +288,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         actions
             .doGetYamlFileContent(file)
             .then((yamlInputs: Blueprint) => {
-                const deploymentInputs = InputsUtils.getUpdatedInputs(
-                    blueprint.plan.inputs,
-                    deploymentInputsState,
-                    yamlInputs
-                );
+                const deploymentInputs = getUpdatedInputs(blueprint.plan.inputs, deploymentInputsState, yamlInputs);
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });
             })
             .catch((err: string | { message: string }) => {
@@ -296,7 +299,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             });
     }
 
-    handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement>, field: any) {
+    handleExecuteInputChange(_event: React.SyntheticEvent<HTMLElement> | null, field: any) {
         this.setState((prevState: any) => {
             return {
                 userInstallWorkflowParams: {
@@ -477,7 +480,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     getDeploymentParams() {
-        const { InputsUtils } = Stage.Common;
         const {
             blueprint,
             deploymentName,
@@ -494,7 +496,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             blueprintId: blueprint.id,
             deploymentId,
             deploymentName,
-            inputs: InputsUtils.getInputsMap(blueprint.plan.inputs, deploymentInputs),
+            inputs: getInputsMap(blueprint.plan.inputs, deploymentInputs),
             visibility,
             labels,
             skipPluginsValidation,
@@ -516,13 +518,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         if (!_.isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
             const { toolbox } = this.props;
-            const { BlueprintActions, InputsUtils } = Stage.Common;
 
             const actions = new BlueprintActions(toolbox);
             actions
                 .doGetFullBlueprintData(id)
                 .then(blueprint => {
-                    const deploymentInputs = InputsUtils.getInputsInitialValuesFrom(blueprint.plan);
+                    const deploymentInputs = getInputsInitialValues(blueprint.plan);
                     const installWorkflow = {
                         ...(blueprint.plan.workflows.install as Record<string, unknown>),
                         name: 'install'
@@ -533,7 +534,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         installWorkflow,
                         baseInstallWorkflowParams: installWorkflow.parameters,
                         userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
-                            InputsUtils.getInputFieldInitialValue(parameterData.default, parameterData.type)
+                            getInputFieldInitialValue(parameterData.default, parameterData.type)
                         ),
                         errors: {},
                         loading: false
@@ -553,7 +554,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     validateInputs() {
         return new Promise<void>((resolve, reject) => {
-            const { InputsUtils } = Stage.Common;
             const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
             const errors: Errors = {};
@@ -569,8 +569,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 errors.blueprintName = t('errors.noBlueprintName');
             }
 
-            const inputsWithoutValue = InputsUtils.getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
-            InputsUtils.addErrors(inputsWithoutValue, errors);
+            const inputsWithoutValue = getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
+            addErrors(inputsWithoutValue, errors);
 
             if (!_.isEmpty(errors)) {
                 reject(errors);
@@ -583,7 +583,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     render() {
         const { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } = Stage.Basic;
         const {
-            DynamicDropdown,
             Labels: { Input: LabelsInput }
         } = Stage.Common;
         const {

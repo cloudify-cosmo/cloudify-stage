@@ -6,7 +6,9 @@ interface WidgetParams {
     id: string | null | undefined;
 }
 type UnwrapPromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
-type WidgetData = UnwrapPromise<ReturnType<Stage.Common.DeploymentActions['doGetWorkflows']>> | Error;
+type WidgetData =
+    | UnwrapPromise<ReturnType<InstanceType<typeof Stage.Common.Deployments.Actions>['doGetWorkflows']>>
+    | Error;
 interface WidgetConfiguration {
     preventRedirectToParentPageAfterDelete?: boolean;
 }
@@ -39,7 +41,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
             return Promise.resolve(new Error('No deployment selected, cannot determine deployment ID'));
         }
 
-        const { DeploymentActions } = Stage.Common;
+        const DeploymentActions = Stage.Common.Deployments.Actions;
         const actions = new DeploymentActions(toolbox);
 
         return actions.doGetWorkflows(id);

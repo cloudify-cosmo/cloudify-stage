@@ -8,7 +8,7 @@ export default class Actions {
         this.username = username;
         this.filter = filter;
         this.jsonPath = jsonPath;
-        this.blueprintActions = new Stage.Common.BlueprintActions(this.toolbox);
+        this.blueprintActions = new Stage.Common.Blueprints.Actions(this.toolbox);
     }
 
     getUsername() {

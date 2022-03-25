@@ -53,7 +53,7 @@ export default class UserDetails extends React.Component {
         const { processItem, processing: processingState } = this.state;
         const { data } = this.props;
         const { Segment, List, Icon, Message, Divider, Popup } = Stage.Basic;
-        const { RolesPresenter } = Stage.Common;
+        const RolesPresenter = Stage.Common.Roles.Presenter;
 
         return (
             <Segment.Group horizontal>

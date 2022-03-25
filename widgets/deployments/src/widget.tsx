@@ -85,7 +85,7 @@ Stage.defineWidget({
         } = widget;
 
         if (showFirstUserJourneyButtons) {
-            const installedDeployments = await new Stage.Common.SearchActions(toolbox).doListDeployments([
+            const installedDeployments = await new Stage.Common.Actions.Search(toolbox).doListDeployments([
                 { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
             ]);
             const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
@@ -97,7 +97,7 @@ Stage.defineWidget({
             }
         }
 
-        const deploymentDataPromise = new Stage.Common.DeploymentActions(toolbox).doGetDeployments({
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
             _include:
                 'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
             ...params
@@ -106,7 +106,7 @@ Stage.defineWidget({
         const nodeInstanceDataPromise = deploymentDataPromise
             .then(data => _.map(data.items, item => item.id))
             .then(ids =>
-                new Stage.Common.SummaryActions(toolbox).doGetNodeInstances('deployment_id', {
+                new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
                     _sub_field: 'state',
                     deployment_id: ids
                 })
@@ -115,7 +115,7 @@ Stage.defineWidget({
         const latestExecutionsDataPromise = deploymentDataPromise
             .then(data => _.map(data.items, item => item.latest_execution))
             .then(ids =>
-                new Stage.Common.ExecutionActions(toolbox).doGetAll({
+                new Stage.Common.Executions.Actions(toolbox).doGetAll({
                     _include:
                         'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
                     id: ids
