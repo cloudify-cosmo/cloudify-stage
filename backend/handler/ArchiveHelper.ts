@@ -9,6 +9,7 @@ import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as ManagerHandler from './ManagerHandler';
 import * as RequestHandler from './RequestHandler';
 import { getLogger } from './LoggerHandler';
+import { getAuthenticationTokenHeaderFromRequest } from '../utils';
 
 const logger = getLogger('ArchiveHelper');
 
@@ -127,7 +128,11 @@ export function saveDataFromUrl(url, targetDir, req?: Request) {
             getRequest = RequestHandler.request('GET', archiveUrl, options);
         } else {
             if (req) {
-                options.headers = { ...req.headers, ...userAgentHeader };
+                options.headers = {
+                    ...req.headers,
+                    ...userAgentHeader,
+                    ...getAuthenticationTokenHeaderFromRequest(req)
+                };
             }
             getRequest = ManagerHandler.request('GET', archiveUrl, options);
         }
