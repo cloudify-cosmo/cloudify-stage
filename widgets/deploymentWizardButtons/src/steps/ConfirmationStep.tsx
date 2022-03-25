@@ -43,7 +43,7 @@ function ConfirmationStepActions({
     id
 }) {
     async function isUsed(deploymentId) {
-        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        const deploymentActions = new Stage.Common.Deployments.Actions(toolbox);
         const deploymentPromise = () => deploymentActions.doGetDeployments({ _include: 'id', _search: deploymentId });
 
         return !_.isEqual(deploymentId, await chooseId(deploymentId, deploymentPromise, 'deployment'));
@@ -157,7 +157,7 @@ class ConfirmationStepContent extends React.Component {
 
     addPluginsTasks(plugins, tasks) {
         const { toolbox } = this.props;
-        const pluginActions = new Stage.Common.PluginActions(toolbox);
+        const pluginActions = new Stage.Common.Plugins.Actions(toolbox);
 
         _.forEach(_.keys(plugins), pluginName => {
             const plugin = plugins[pluginName];
@@ -200,7 +200,7 @@ class ConfirmationStepContent extends React.Component {
 
     chooseBlueprintId(initialBlueprintId) {
         const { toolbox } = this.props;
-        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
         return chooseId(
             initialBlueprintId,
             () => blueprintActions.doGetBlueprints({ _search: initialBlueprintId }),
@@ -210,7 +210,7 @@ class ConfirmationStepContent extends React.Component {
 
     addBlueprintUploadTask(blueprint, tasks) {
         const { toolbox } = this.props;
-        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
         const blueprintUrl = blueprint.blueprintFile ? '' : blueprint.blueprintUrl;
         const imageUrl = blueprint.imageFile ? '' : blueprint.imageUrl;
 
@@ -232,7 +232,7 @@ class ConfirmationStepContent extends React.Component {
 
     chooseDeploymentId(initialDeploymentId) {
         const { toolbox } = this.props;
-        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        const deploymentActions = new Stage.Common.Deployments.Actions(toolbox);
         return chooseId(
             initialDeploymentId,
             () => deploymentActions.doGetDeployments({ _search: initialDeploymentId }),
@@ -242,8 +242,8 @@ class ConfirmationStepContent extends React.Component {
 
     addDeployBlueprintTask(deploymentId, blueprintId, inputs, visibility, tasks) {
         const { toolbox } = this.props;
-        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
-        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
+        const deploymentActions = new Stage.Common.Deployments.Actions(toolbox);
 
         tasks.push(
             new Task(`Create ${deploymentId} deployment from ${blueprintId} blueprint`, () =>
@@ -258,7 +258,7 @@ class ConfirmationStepContent extends React.Component {
 
     addRunInstallWorkflowTask(deploymentId, tasks) {
         const { toolbox } = this.props;
-        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        const deploymentActions = new Stage.Common.Deployments.Actions(toolbox);
 
         tasks.push(
             new Task(`Execute install workflow on ${deploymentId} deployment`, () =>

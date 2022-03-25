@@ -21,7 +21,7 @@ export default class UploadButton extends React.Component {
         const { toolbox } = this.props;
         const { loading, open } = this.state;
         const { Button } = Stage.Basic;
-        const { UploadPluginModal } = Stage.Common;
+        const { UploadModal } = Stage.Common.Plugins;
 
         return (
             <div>
@@ -35,7 +35,7 @@ export default class UploadButton extends React.Component {
                     onClick={this.showModal}
                 />
 
-                <UploadPluginModal open={open} onHide={this.hideModal} toolbox={toolbox} />
+                <UploadModal open={open} onHide={this.hideModal} toolbox={toolbox} />
             </div>
         );
     }

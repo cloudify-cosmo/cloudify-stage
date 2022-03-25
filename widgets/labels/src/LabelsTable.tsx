@@ -7,7 +7,8 @@ import AddLabelsModal from './AddLabelsModal';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
-    const { DeploymentActions, Labels } = Stage.Common;
+    const { Labels } = Stage.Common;
+    const DeploymentActions = Stage.Common.Deployments.Actions;
     const { useBoolean, useRefreshEvent, useInput, useResettableState } = Stage.Hooks;
     const { i18n } = Stage;
 

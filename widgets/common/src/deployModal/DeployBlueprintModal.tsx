@@ -1,10 +1,11 @@
 import type { ComponentProps, FunctionComponent } from 'react';
-import type { BlueprintDeployParams } from '../BlueprintActions';
-import type { WorkflowOptions } from '../DeploymentActions';
+import type { BlueprintDeployParams } from '../blueprints/BlueprintActions';
+import type { WorkflowOptions } from '../deployments/DeploymentActions';
 import type { WorkflowParameters } from '../executeWorkflow';
 import GenericDeployModal from './GenericDeployModal';
-import BlueprintActions from '../BlueprintActions';
-import DeploymentActions from '../DeploymentActions';
+import BlueprintActions from '../blueprints/BlueprintActions';
+import DeploymentActions from '../deployments/DeploymentActions';
+import { getErrorObject } from '../inputs/utils/errors';
 
 const t = (key: string, options?: Record<string, any>) =>
     Stage.i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
@@ -16,13 +17,11 @@ type DeployBlueprintModalProps = Pick<
 
 const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
-        const { InputsUtils } = Stage.Common;
-
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
             .doDeploy(params)
             .then(deployment => deployment.id)
-            .catch((err: { message: string }) => Promise.reject(InputsUtils.getErrorObject(err.message)));
+            .catch((err: { message: string }) => Promise.reject(getErrorObject(err.message)));
     }
 
     function waitForDeploymentIsCreated(deploymentId: string, { deploymentName }: BlueprintDeployParams) {

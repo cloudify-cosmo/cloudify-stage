@@ -109,13 +109,13 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     fetchData(widget, toolbox, params) {
         const result = {};
         const filterRules = [...(widget.configuration.filterRules || [])];
-        const { SearchActions } = Stage.Common;
+        const SearchActions = Stage.Common.Actions.Search;
         const searchActions = new SearchActions(toolbox);
 
         if (widget.configuration.hideFailedBlueprints) {
             filterRules.push({
                 key: 'state',
-                values: [Stage.Common.BlueprintActions.CompletedBlueprintStates.Uploaded],
+                values: [Stage.Common.Blueprints.CompletedStates.Uploaded],
                 operator: Stage.Common.Filters.FilterRuleOperators.AnyOf,
                 type: Stage.Common.Filters.FilterRuleType.Attribute
             });
@@ -146,8 +146,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             params.created_by = toolbox.getManager().getCurrentUsername();
 
         if (widget.configuration.hideFailedBlueprints) {
-            const { BlueprintActions } = Stage.Common;
-            params.state = BlueprintActions.CompletedBlueprintStates.Uploaded;
+            params.state = Stage.Common.Blueprints.CompletedStates.Uploaded;
         }
 
         return params;

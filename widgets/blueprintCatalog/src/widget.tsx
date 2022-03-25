@@ -93,7 +93,7 @@ Stage.defineWidget<
     },
 
     fetchData(widget, toolbox, params) {
-        const blueprintActions = new Stage.Common.BlueprintActions(toolbox);
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
 
         const actions = new Actions(
             toolbox,
@@ -145,7 +145,7 @@ Stage.defineWidget<
         const { Common, Basic } = Stage;
 
         if (data instanceof Error) {
-            return <Common.NoDataMessage error={data} repositoryName="blueprints" />;
+            return <Common.Components.NoDataMessage error={data} repositoryName="blueprints" />;
         }
 
         if (_.isEmpty(data)) {

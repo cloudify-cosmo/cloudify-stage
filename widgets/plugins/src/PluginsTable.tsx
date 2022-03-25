@@ -55,7 +55,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     }
 
     function setPluginVisibility(pluginId: string, visibility: string) {
-        const actions = new Stage.Common.PluginActions(toolbox);
+        const actions = new Stage.Common.Plugins.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetVisibility(pluginId, visibility)
@@ -66,7 +66,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
 
     function downloadPlugin(item: PluginItem, event: Event) {
         event.stopPropagation();
-        const actions = new Stage.Common.PluginActions(toolbox);
+        const actions = new Stage.Common.Plugins.Actions(toolbox);
         actions
             .doDownload(item)
             .then(clearError)
@@ -87,7 +87,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
             return;
         }
 
-        const actions = new Stage.Common.PluginActions(toolbox);
+        const actions = new Stage.Common.Plugins.Actions(toolbox);
         actions
             .doDelete(selectedPlugin, force)
             .then(() => {
@@ -102,8 +102,8 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
 
     const { DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
     const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
-    // @ts-ignore Property 'UploadPluginModal' does not exist on type 'typeof Common'
-    const { DeleteConfirm, UploadPluginModal, PluginIcon } = Stage.Common;
+    const { DeleteConfirm } = Stage.Common.Components;
+    const { UploadModal, Icon: PluginIcon } = Stage.Common.Plugins;
     const { Item, Menu } = Dropdown;
 
     return (
@@ -196,7 +196,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                 </DataTable.Action>
             </DataTable>
 
-            <UploadPluginModal open={packageUploadModalShown} toolbox={toolbox} onHide={hidePackageUploadModal} />
+            <UploadModal open={packageUploadModalShown} toolbox={toolbox} onHide={hidePackageUploadModal} />
 
             <MarketplaceModal open={marketplaceUploadModalShown} onHide={hideMarketplaceUploadModal} />
 

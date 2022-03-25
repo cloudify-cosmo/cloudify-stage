@@ -1,5 +1,6 @@
 import type { ComponentProps, FunctionComponent, RefObject } from 'react';
 import { Dropdown } from 'semantic-ui-react';
+import DynamicDropdown from '../components/DynamicDropdown';
 import ValidationErrorPopup from './ValidationErrorPopup';
 import type { LabelInputType } from './types';
 
@@ -34,24 +35,19 @@ const CommonDropdownWithAdditions: FunctionComponent<CommonDropdownProps> = ({
     value = null,
     type,
     ...rest
-}) => {
-    const { DynamicDropdown } = Stage.Common;
-
-    return (
-        <DynamicDropdown
-            allowAdditions
-            clearable
-            innerRef={innerRef}
-            itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
-            // NOTE: no knowledge whether this handles multiple elements or not, so need to assert `as any`
-            onChange={v => onChange(v as any)}
-            selectOnNavigation
-            value={value}
-            {...rest}
-        />
-    );
-};
-
+}) => (
+    <DynamicDropdown
+        allowAdditions
+        clearable
+        innerRef={innerRef}
+        itemsFormatter={(items: string[]) => _.map(items, item => ({ id: item }))}
+        // NOTE: no knowledge whether this handles multiple elements or not, so need to assert `as any`
+        onChange={v => onChange(v as any)}
+        selectOnNavigation
+        value={value}
+        {...rest}
+    />
+);
 const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = ({
     innerRef,
     onChange,
@@ -61,7 +57,6 @@ const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = (
 }) => {
     const { useEffect } = React;
     const {
-        Common: { DynamicDropdown },
         Hooks: { useLabelInput }
     } = Stage;
 

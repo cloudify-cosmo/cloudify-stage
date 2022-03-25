@@ -38,7 +38,7 @@ export default class DeploymentsList extends React.Component {
 
     setDeploymentVisibility = (deploymentId, visibility) => {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.DeploymentActions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetVisibility(deploymentId, visibility)
@@ -95,7 +95,8 @@ export default class DeploymentsList extends React.Component {
         const { activeAction, deployment, error, executeModalOpen, workflowName } = this.state;
         const { data, toolbox, widget } = this.props;
         const { ErrorMessage } = Stage.Basic;
-        const { DeploymentActionsModals, ExecuteWorkflowModal } = Stage.Common;
+        const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
+        const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
 
         const { displayStyle, showExecutionStatusLabel } = widget.configuration;
         const showTableComponent = displayStyle === 'table';

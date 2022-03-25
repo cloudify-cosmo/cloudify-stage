@@ -47,7 +47,8 @@ export default class OutputsTable extends React.Component {
         const NO_DATA_MESSAGE =
             "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
         const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
-        const { ParameterValue, ParameterValueDescription } = Stage.Common;
+        const ParameterValue = Stage.Common.Components.Parameter.Value;
+        const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
 
         return (
             <div>

@@ -18,7 +18,8 @@ export default function DeploymentsSegment({
     widget
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
-    const { DeploymentDetails, LastExecutionStatusIcon } = Stage.Common;
+    const DeploymentDetails = Stage.Common.Deployments.Details;
+    const { LastExecutionStatusIcon } = Stage.Common.Executions;
 
     return (
         <DataSegment
