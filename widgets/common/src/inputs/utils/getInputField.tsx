@@ -185,7 +185,7 @@ export default function getInputField(
             );
         }
         case 'capability_value': {
-            const fetchUrl = '/searches/capabilities?_include=id,display_name';
+            const fetchUrl = '/searches/capabilities?_include=capabilities';
 
             return (
                 <DynamicDropdown
@@ -193,6 +193,10 @@ export default function getInputField(
                     error={!!error}
                     placeholder={Stage.i18n.t('input.capability_value.placeholder')}
                     value={value}
+                    valueProp="capabilities"
+                    textFormatter={item =>
+                        item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
+                    }
                     fetchUrl={fetchUrl}
                     onChange={newValue => onChange?.(null, { name, value: newValue })}
                     toolbox={toolbox}
@@ -200,7 +204,23 @@ export default function getInputField(
                 />
             );
         }
+        case 'secret_key': {
+            const fetchUrl = '/searches/secrets?_include=key';
 
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    placeholder={Stage.i18n.t('input.secret_key.placeholder')}
+                    value={value}
+                    valueProp="key"
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
+            );
+        }
         case 'string':
         case 'regex':
             return _.includes(value, '\n') ? (

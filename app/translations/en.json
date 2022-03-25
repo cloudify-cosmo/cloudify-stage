@@ -1598,11 +1598,14 @@
         "deployment_id": {
             "placeholder": "Select Deployment"
         },
+        "blueprint_id": {
+            "placeholder": "Select Blueprint"
+        },
         "capability_value": {
             "placeholder": "Select Capability"
         },
-        "blueprint_id": {
-            "placeholder": "Select Blueprint"
+        "secret_key": {
+            "placeholder": "Select Secret Key"
         }
     }
 }
