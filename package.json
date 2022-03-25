@@ -15,7 +15,7 @@
     "conf/userConfig.json"
   ],
   "scripts": {
-    "audit": "npm audit --production && cd backend && npm run audit",
+    "audit": "npm audit --production --omit=optional && cd backend && npm run audit",
     "beforebuild": "npm run ci:frontend && npm run ci:backend",
     "beforebuild:no-tests": "npm run ci:frontend -- --no-optional && npm run ci:backend -- --production",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode=production --bail",
@@ -58,7 +58,7 @@
     "blueimp-md5": "^2.7.0",
     "cloudify-blueprint-topology": "^2.5.5",
     "cloudify-ui-common": "^7.0.1",
-    "cloudify-ui-components": "^2.13.0",
+    "cloudify-ui-components": "^2.13.1",
     "connected-react-router": "^6.5.2",
     "d3": "^3.5.17",
     "d3-format": "^1.3.2",
