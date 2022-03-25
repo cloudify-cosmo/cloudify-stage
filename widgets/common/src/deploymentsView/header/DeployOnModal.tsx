@@ -3,13 +3,13 @@ import type { WorkflowParameters } from '../../executeWorkflow';
 import GenericDeployModal from '../../deployModal/GenericDeployModal';
 import { FilterRule } from '../../filters/types';
 import { DeploymentsResponse } from '../types';
-import { BlueprintDeployParams } from '../../BlueprintActions';
+import { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
 import { i18nPrefix, parentDeploymentLabelKey } from '../common';
 import { getGroupIdForBatchAction } from './common';
-import ExecutionGroupsActions from '../../ExecutionGroupsActions';
-import DeploymentGroupsActions from '../../DeploymentGroupsActions';
-import SearchActions from '../../SearchActions';
-import DeploymentActions from '../../DeploymentActions';
+import ExecutionGroupsActions from './ExecutionGroupsActions';
+import DeploymentGroupsActions from '../../deployments/DeploymentGroupsActions';
+import SearchActions from '../../actions/SearchActions';
+import DeploymentActions from '../../deployments/DeploymentActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 
 interface DeployOnModalProps {

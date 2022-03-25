@@ -2,7 +2,7 @@ import { FunctionComponent, useEffect } from 'react';
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase
-    | { status: 'success'; data: { display_name: string; workflows: unknown[] } }
+    | { status: 'success'; data: { display_name: string; workflows: any[] } }
     | { status: 'loading' }
     | { status: 'error'; error: Error };
 
@@ -24,10 +24,12 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
 }) => {
     const {
         Basic: { Button },
-        // @ts-expect-error Some commons are not migrated to TS yet
-        Common: { DeploymentActionsMenu, DeploymentActionsModals, ExecuteWorkflowModal, WorkflowsMenu },
         Hooks: { useResettableState }
     } = Stage;
+    const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
+    const WorkflowsMenu = Stage.Common.Workflows.Menu;
+    const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
+    const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
 
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
     const [workflow, setWorkflow, resetWorkflow] = useResettableState('');
@@ -44,7 +46,6 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
         <div>
             <WorkflowsMenu
                 workflows={isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.workflows : []}
-                dropdownDirection="right"
                 trigger={
                     <Button
                         className="executeWorkflowButton labeled icon"

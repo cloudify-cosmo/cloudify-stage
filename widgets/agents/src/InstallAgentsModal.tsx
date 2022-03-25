@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import Consts from './consts';
+import NodeFilter from './NodeFilter';
 import AgentsPropType from './props/AgentsPropType';
 
 export default function InstallAgentsModal({
@@ -86,7 +87,7 @@ export default function InstallAgentsModal({
             manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
         };
 
-        const actions = new Stage.Common.DeploymentActions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(toolbox);
         actions
             .doExecute(nodeFilter.deploymentId, 'install_new_agents', params)
             .then(data => {
@@ -115,7 +116,6 @@ export default function InstallAgentsModal({
     if (!open) return null;
 
     const { ApproveButton, Button, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
-    const { NodeFilter } = Stage.Common;
 
     return (
         <Modal open onClose={onHide}>

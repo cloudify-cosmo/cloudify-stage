@@ -17,7 +17,7 @@ export default function TerraformVariableValueInput({
     widgetlessToolbox
 }: TerraformVariableValueInputProps) {
     const { Input } = Stage.Basic;
-    const { DynamicDropdown } = Stage.Common;
+    const { DynamicDropdown } = Stage.Common.Components;
 
     return rowValues?.source === 'secret' ? (
         <DynamicDropdown

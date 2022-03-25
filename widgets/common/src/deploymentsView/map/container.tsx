@@ -1,5 +1,8 @@
 import { ComponentProps, FunctionComponent, useMemo } from 'react';
 import { useQuery } from 'react-query';
+import NoDataMessage from '../../components/NoDataMessage';
+import DeploymentActions from '../../deployments/DeploymentActions';
+import MapsActions from '../../map/MapsActions';
 
 import type { Deployment } from '../types';
 import { mapT } from './common';
@@ -23,11 +26,11 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     const sitesResult = useQuery(
         'all-sites',
         (): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> =>
-            new Stage.Common.DeploymentActions(toolbox).doGetSitesNamesAndLocations()
+            new DeploymentActions(toolbox).doGetSitesNamesAndLocations()
     );
     const mapAvailableResult = useQuery(
         'map-available',
-        (): Promise<boolean> => new Stage.Common.MapsActions(toolbox).isAvailable()
+        (): Promise<boolean> => new MapsActions(toolbox).isAvailable()
     );
 
     const deploymentsWithSites = useMemo(() => deployments.filter(deployment => deployment.site_name), [deployments]);
@@ -50,7 +53,7 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
 
     const mapAvailable = mapAvailableResult.data;
     if (!mapAvailable) {
-        return <Stage.Common.NoDataMessage repositoryName="maps" />;
+        return <NoDataMessage repositoryName="maps" />;
     }
 
     return (

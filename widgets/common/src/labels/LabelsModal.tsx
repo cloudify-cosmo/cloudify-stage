@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import DeploymentActions from '../deployments/DeploymentActions';
 import LabelsInput from './LabelsInput';
 import type { Label } from './types';
 import ResourceTypeContext from '../filters/resourceTypeContext';
@@ -26,7 +27,6 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
 }) => {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Icon, Modal, Form } = Stage.Basic;
-    const { DeploymentActions } = Stage.Common;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
     const actions = new DeploymentActions(toolbox);
 

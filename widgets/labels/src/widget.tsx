@@ -28,7 +28,7 @@ Stage.defineWidget({
     fetchData(widget, toolbox, params) {
         const { deploymentId } = params;
         if (deploymentId) {
-            const { DeploymentActions } = Stage.Common;
+            const DeploymentActions = Stage.Common.Deployments.Actions;
             return new DeploymentActions(toolbox).doGetLabels(deploymentId);
         }
         return Promise.resolve([]);

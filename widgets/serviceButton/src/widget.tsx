@@ -24,7 +24,7 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
             name: t('configuration.color.name'),
             description: t('configuration.color.description'),
             default: undefined,
-            component: Stage.Common.SemanticColorDropdown,
+            component: Stage.Common.Components.SemanticColorDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {

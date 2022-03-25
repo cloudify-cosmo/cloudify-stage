@@ -21,7 +21,7 @@ export default function DeploymentsTable({
     widget
 }) {
     const { DataTable, ResourceVisibility } = Stage.Basic;
-    const { LastExecutionStatusIcon } = Stage.Common;
+    const { LastExecutionStatusIcon } = Stage.Common.Executions;
     const tableName = 'deploymentsTable';
 
     return (

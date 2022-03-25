@@ -3,7 +3,8 @@
 import Actions from './actions';
 import GroupPropType from './props/GroupPropType';
 
-const { RolesPicker, RolesUtil } = Stage.Common;
+const RolesPicker = Stage.Common.Roles.Picker;
+const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.tenants');
 
@@ -63,7 +64,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
     function handleInputChange(proxy, field) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
-            newTenants[tenant] = editedTenants[tenant] || RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
+            newTenants[tenant] = editedTenants[tenant] || getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setEditedTenants(newTenants);
     }

@@ -13,7 +13,7 @@ function openPopup(marker: any) {
 }
 
 function getMarkerColor(statusesSummary: DeploymentStatusesSummary) {
-    let color: Stage.Common.MarkerIconColor = 'grey';
+    let color: Stage.Common.Map.MarkerIconColor = 'grey';
 
     if (statusesSummary[DeploymentStatuses.RequiresAttention] > 0) {
         color = 'red';
@@ -49,7 +49,7 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
 
     componentDidMount() {
         const { toolbox } = this.props;
-        const { MapsActions } = Stage.Common;
+        const MapsActions = Stage.Common.Map.Actions;
 
         return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }
@@ -77,7 +77,7 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
     createMarkers() {
         const { data, showAllLabels, toolbox } = this.props;
         const showLabels = showAllLabels ? openPopup : undefined;
-        const { createMarkerIcon } = Stage.Common;
+        const { createMarkerIcon } = Stage.Common.Map;
         const { Marker, Popup } = Stage.Basic.Leaflet;
 
         return _.map(data, (site, name) => {
@@ -113,7 +113,7 @@ class SitesMap extends React.Component<SitesMapProps, SitesMapState> {
         }
 
         if (isMapAvailable === false) {
-            const { NoDataMessage } = Stage.Common;
+            const { NoDataMessage } = Stage.Common.Components;
             return <NoDataMessage repositoryName="maps" />;
         }
 
@@ -148,7 +148,7 @@ interface NoSitesDataMessageProps {
     sitesAreDefined: boolean;
 }
 const NoSitesDataMessage: FunctionComponent<NoSitesDataMessageProps> = ({ sitesAreDefined }) => {
-    const { NoDataMessage } = Stage.Common;
+    const { NoDataMessage } = Stage.Common.Components;
     const { Link } = Stage.Shared;
     const REASON = sitesAreDefined ? 'the defined sites have no location' : 'no sites are defined';
     const NO_DATA_MESSAGE = `This widget shares site location and status info.

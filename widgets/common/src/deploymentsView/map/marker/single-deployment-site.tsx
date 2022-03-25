@@ -1,10 +1,11 @@
 import { FunctionComponent, RefObject, useEffect, useRef } from 'react';
+import { createMarkerIcon, MarkerIconColor } from '../../../map/MarkerIcon';
 
 import { DeploymentStatus } from '../../types';
 import type { DeploymentSitePair } from '../common';
 import DeploymentSiteTooltip from './tooltip';
 
-const deploymentStatusToIconColorMapping: Record<DeploymentStatus, Stage.Common.MarkerIconColor> = {
+const deploymentStatusToIconColorMapping: Record<DeploymentStatus, MarkerIconColor> = {
     [DeploymentStatus.Good]: 'blue',
     [DeploymentStatus.InProgress]: 'yellow',
     [DeploymentStatus.RequiresAttention]: 'red'
@@ -70,7 +71,7 @@ const BareDeploymentSiteMarker: FunctionComponent<{
     onClick?: () => void;
 }> = ({ status, position, children, onClick }) => {
     const { Marker } = Stage.Basic.Leaflet;
-    const icon = Stage.Common.createMarkerIcon(deploymentStatusToIconColorMapping[status]);
+    const icon = createMarkerIcon(deploymentStatusToIconColorMapping[status]);
     const markerRef = useRef<
         import('react-leaflet').Marker<import('react-leaflet').MarkerProps, DeploymentMarkerWithStatus>
     >();
