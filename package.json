@@ -15,7 +15,7 @@
     "conf/userConfig.json"
   ],
   "scripts": {
-    "audit": "npm audit --production && cd backend && npm run audit",
+    "audit": "npm audit --production --omit=optional && cd backend && npm run audit",
     "beforebuild": "npm run ci:frontend && npm run ci:backend",
     "beforebuild:no-tests": "npm run ci:frontend -- --no-optional && npm run ci:backend -- --production",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode=production --bail",
