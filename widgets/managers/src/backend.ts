@@ -42,7 +42,7 @@ export default r => {
         const managerRequestOptions = {
             headers: {
                 tenant: headers.tenant,
-                'Authentication-Token': headers['authentication-token']
+                cookie: headers.cookie
             }
         };
         const capabilitiesPromise = helper.Manager.doGet(
@@ -77,7 +77,7 @@ export default r => {
         const commonManagerRequestOptions = {
             headers: {
                 tenant: headers.tenant,
-                'Authentication-Token': headers['authentication-token']
+                cookie: headers.cookie
             }
         };
         let spireDeployments = [];
