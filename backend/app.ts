@@ -115,7 +115,6 @@ const authenticatedApiRoutes: Record<string, Router> = {
     maps: Maps,
     plugins: Plugins,
     source: SourceBrowser,
-    sp: ServerProxy,
     templates: Templates,
     terraform: Terraform,
     ua: UserApp,
@@ -133,6 +132,7 @@ const Config = (req, res) => {
 };
 app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
+app.use(`${contextPath}/sp`, ServerProxy); // used to proxy requests to Cloudify REST API, some without the token
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
