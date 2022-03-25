@@ -13,7 +13,10 @@ setUpRequestForwarding(router);
 async function proxyRequest(req: Request, res: Response) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
     const token = getTokenFromCookies(req);
-    const headers = { ...(req.headers as AxiosRequestHeaders), ...getAuthenticationTokenHeaderFromRequest(req) };
+    let headers = req.headers as AxiosRequestHeaders;
+    if (token) {
+        headers = { ...headers, ...getAuthenticationTokenHeaderFromRequest(req) };
+    }
 
     // if is a maintenance status fetch then update RBAC cache if empty
     if (serverUrl === `/maintenance` && req.method === 'GET' && !isRbacInCache()) {
