@@ -594,7 +594,8 @@ describe('Create Deployment Button widget', () => {
         it('deployment_id', () => {
             const testDeploymentId = `${emptyBlueprintId}deployment1234`;
 
-            cy.deployBlueprint(emptyBlueprintId, testDeploymentId);
+            cy.uploadBlueprint('blueprints/empty.zip', emptyBlueprintId)
+              .deployBlueprint(emptyBlueprintId, testDeploymentId);
 
             selectBlueprintInModal('deployment_id');
 
