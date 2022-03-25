@@ -348,7 +348,7 @@ describe('Deployments View widget', () => {
                     expect(requestRules[0]).to.deep.equal(newFilterRule);
                 });
 
-                cy.contains('.field', 'Filter ID').contains(newFilterId);
+                cy.getField('Filter ID').contains(newFilterId);
 
                 cy.interceptSp('POST', '/searches/deployments').as('deploymentsSearchRequest');
                 cy.contains('Apply').click();
@@ -402,7 +402,7 @@ describe('Deployments View widget', () => {
 
             cy.log('Invalid filter id');
             cy.editWidgetConfiguration(widgetId, () => {
-                cy.contains('.field', filterFieldLabel)
+                cy.getField(filterFieldLabel)
                     .click()
                     .within(() => {
                         cy.get('input').type('some-very-gibberish-filter-id');
@@ -1207,10 +1207,10 @@ describe('Deployments View widget', () => {
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Blueprint', blueprintName);
 
-                cy.contains('.field', 'Name suffix').find('input').type(`${name}`);
+                cy.getField('Name suffix').find('input').type(`${name}`);
 
                 cy.openAccordionSection('Deployment Metadata');
-                cy.contains('.field', 'Labels').find('.selection').click();
+                cy.getField('Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
                 cy.get('div[name=labelValue] > input').type(labelValue);
                 cy.get('[aria-label=Add]').click();
