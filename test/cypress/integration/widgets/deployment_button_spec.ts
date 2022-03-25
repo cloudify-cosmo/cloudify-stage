@@ -26,7 +26,6 @@ describe('Create Deployment Button widget', () => {
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
-            .uploadBlueprint('blueprints/empty.zip', emptyBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
@@ -282,7 +281,7 @@ describe('Create Deployment Button widget', () => {
             cy.openAccordionSection('Deployment Inputs');
             cy.get('input[name=string_no_default]').clear().type('Something');
 
-            cy.contains('.field', 'string_constraint_pattern')
+            cy.getfield('string_constraint_pattern')
                 .as('string_constraint_pattern')
                 .within(() => {
                     cy.get('input').clear().type('CentOS 7.6').blur();
@@ -354,7 +353,7 @@ describe('Create Deployment Button widget', () => {
         it('boolean', () => {
             selectBlueprintInModal('boolean');
 
-            cy.contains('.field', 'bool_no_default').within(() => {
+            cy.getfield('bool_no_default').within(() => {
                 cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
                 cy.get('@toggle').should('have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
@@ -366,7 +365,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('@toggle').should('not.have.class', 'checked');
             });
 
-            cy.contains('.field', 'bool_default_false').within(() => {
+            cy.getfield('bool_default_false').within(() => {
                 cy.get('div.toggle.checkbox').as('toggle').should('not.have.class', 'checked');
                 cy.get('@toggle').should('not.have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('not.have.attr', 'checked');
@@ -378,7 +377,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('@toggle').should('not.have.class', 'checked');
             });
 
-            cy.contains('.field', 'bool_default_true').within(() => {
+            cy.getfield('bool_default_true').within(() => {
                 cy.get('div.toggle.checkbox').as('toggle').should('have.class', 'checked');
                 cy.get('@toggle').should('not.have.class', 'indeterminate');
                 cy.get('input[type="checkbox"]').should('have.attr', 'checked');
@@ -394,21 +393,21 @@ describe('Create Deployment Button widget', () => {
         it('integer', () => {
             selectBlueprintInModal('integer');
 
-            cy.contains('.field', 'integer_constraint_max_1').within(() => verifyNumberInput(null, 50));
-            cy.contains('.field', 'integer_constraint_max_2').within(() => verifyNumberInput(null, 60));
-            cy.contains('.field', 'integer_constraint_max_3').within(() => verifyNumberInput(null, 50));
-            cy.contains('.field', 'integer_constraint_max_4').within(() => verifyNumberInput(5, 15));
+            cy.getfield('integer_constraint_max_1').within(() => verifyNumberInput(null, 50));
+            cy.getfield('integer_constraint_max_2').within(() => verifyNumberInput(null, 60));
+            cy.getfield('integer_constraint_max_3').within(() => verifyNumberInput(null, 50));
+            cy.getfield('integer_constraint_max_4').within(() => verifyNumberInput(5, 15));
 
-            cy.contains('.field', 'integer_constraint_min_1').within(() => verifyNumberInput(2));
-            cy.contains('.field', 'integer_constraint_min_2').within(() => verifyNumberInput(4));
-            cy.contains('.field', 'integer_constraint_min_3').within(() => verifyNumberInput(4));
-            cy.contains('.field', 'integer_constraint_min_4').within(() => verifyNumberInput(5, 8));
+            cy.getfield('integer_constraint_min_1').within(() => verifyNumberInput(2));
+            cy.getfield('integer_constraint_min_2').within(() => verifyNumberInput(4));
+            cy.getfield('integer_constraint_min_3').within(() => verifyNumberInput(4));
+            cy.getfield('integer_constraint_min_4').within(() => verifyNumberInput(5, 8));
 
-            cy.contains('.field', 'integer_constraint_min_max').within(() => verifyNumberInput(5, 15, 10));
+            cy.getfield('integer_constraint_min_max').within(() => verifyNumberInput(5, 15, 10));
 
-            cy.contains('.field', 'integer_no_default').within(() => verifyNumberInput());
+            cy.getfield('integer_no_default').within(() => verifyNumberInput());
 
-            cy.contains('.field', 'integer_default').within(() => {
+            cy.getfield('integer_default').within(() => {
                 verifyNumberInput(null, null, 50);
 
                 cy.get('input').as('inputField').clear().type('123').blur();
@@ -423,9 +422,9 @@ describe('Create Deployment Button widget', () => {
         it('float', () => {
             selectBlueprintInModal('float');
 
-            cy.contains('.field', 'float_no_default').within(() => verifyNumberInput(null, null, '', 'any'));
+            cy.getfield('float_no_default').within(() => verifyNumberInput(null, null, '', 'any'));
 
-            cy.contains('.field', 'float_default').within(() => {
+            cy.getfield('float_default').within(() => {
                 verifyNumberInput(null, null, 3.14, 'any');
 
                 cy.get('input').as('inputField').clear().type('2.71').blur();
@@ -440,7 +439,7 @@ describe('Create Deployment Button widget', () => {
         it('dict', () => {
             selectBlueprintInModal('dict');
 
-            cy.contains('.field', 'dict_no_default').within(() => {
+            cy.getfield('dict_no_default').within(() => {
                 cy.get('div.react-json-view').as('reactJsonView');
 
                 cy.get('@reactJsonView').should('have.text', '{}0 items');
@@ -457,7 +456,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('textarea').should('have.text', '{}');
             });
 
-            cy.contains('.field', 'dict_default').within(() => {
+            cy.getfield('dict_default').within(() => {
                 cy.get('div.react-json-view').as('reactJsonView');
 
                 cy.get('@reactJsonView').trigger('mouseover');
@@ -487,7 +486,7 @@ describe('Create Deployment Button widget', () => {
         it('list', () => {
             selectBlueprintInModal('list');
 
-            cy.contains('.field', 'list_no_default').within(() => {
+            cy.getfield('list_no_default').within(() => {
                 cy.get('div.react-json-view').as('reactJsonView');
 
                 cy.get('@reactJsonView').should('have.text', '[]0 items');
@@ -496,7 +495,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('.icon.info').should('be.visible');
             });
 
-            cy.contains('.field', 'list_default').within(() => {
+            cy.getfield('list_default').within(() => {
                 cy.get('div.react-json-view').as('reactJsonView');
 
                 cy.get('@reactJsonView').should(
@@ -515,11 +514,11 @@ describe('Create Deployment Button widget', () => {
         it('string', () => {
             selectBlueprintInModal('string');
 
-            cy.contains('.field', 'string_no_default').within(() => {
+            cy.getfield('string_no_default').within(() => {
                 verifyTextInput();
             });
 
-            cy.contains('.field', 'string_constraint_pattern').within(() => {
+            cy.getfield('string_constraint_pattern').within(() => {
                 verifyTextInput('Ubuntu 18.04');
                 cy.get('input').clear().type('Something').blur();
                 verifyTextInput('Something');
@@ -527,7 +526,7 @@ describe('Create Deployment Button widget', () => {
                 verifyTextInput('Ubuntu 18.04');
             });
 
-            cy.contains('.field', 'string_constraint_valid_values').within(() => {
+            cy.getfield('string_constraint_valid_values').within(() => {
                 cy.get('div.text').as('text').should('have.text', 'en');
                 cy.get('div.dropdown').click();
 
@@ -550,11 +549,11 @@ describe('Create Deployment Button widget', () => {
                 cy.get('@text').should('have.text', 'en');
             });
 
-            cy.contains('.field', 'string_default').within(() => {
+            cy.getfield('string_default').within(() => {
                 verifyTextInput('Some default string');
             });
 
-            cy.contains('.field', 'string_default_null').within(() => {
+            cy.getfield('string_default_null').within(() => {
                 verifyTextInput('null');
             });
         });
@@ -562,19 +561,19 @@ describe('Create Deployment Button widget', () => {
         it('textarea', () => {
             selectBlueprintInModal('textarea');
 
-            cy.contains('.field', 'textarea_default_en').within(() => {
+            cy.getfield('textarea_default_en').within(() => {
                 verifyTextareaContent('en');
             });
 
-            cy.contains('.field', 'textarea_display_rows_5').within(() => {
+            cy.getfield('textarea_display_rows_5').within(() => {
                 verifyTextareaContent('');
             });
 
-            cy.contains('.field', 'textarea_default_en').within(() => {
+            cy.getfield('textarea_default_en').within(() => {
                 verifyTextareaRows();
             });
 
-            cy.contains('.field', 'textarea_display_rows_5').within(() => {
+            cy.getfield('textarea_display_rows_5').within(() => {
                 verifyTextareaRows(5);
             });
         });
@@ -582,11 +581,11 @@ describe('Create Deployment Button widget', () => {
         it('blueprint_id', () => {
             selectBlueprintInModal('blueprint_id');
 
-            cy.contains('.field', 'blueprint_id_all').within(() => {
+            cy.getfield('blueprint_id_all').within(() => {
                 verifyNumberOfOptions(5, true);
             });
 
-            cy.contains('.field', 'blueprint_id_name_contains_blueprint_id_type').within(() => {
+            cy.getfield('blueprint_id_name_contains_blueprint_id_type').within(() => {
                 verifyNumberOfOptions(1);
             });
         });
@@ -599,15 +598,15 @@ describe('Create Deployment Button widget', () => {
 
             selectBlueprintInModal('deployment_id');
 
-            cy.contains('.field', 'deployment_id_all').within(() => {
+            cy.getField('deployment_id_all').within(() => {
                 verifyNumberOfOptions(1, true);
             });
 
-            cy.contains('.field', 'deployment_id_name_contains_deployment1234').within(() => {
+            cy.getfield('deployment_id_name_contains_deployment1234').within(() => {
                 verifyNumberOfOptions(1);
             });
 
-            cy.contains('.field', 'deployment_id_name_contains_not_existing').within(() => {
+            cy.getfield('deployment_id_name_contains_not_existing').within(() => {
                 verifyNumberOfOptions(0);
             });
         });
