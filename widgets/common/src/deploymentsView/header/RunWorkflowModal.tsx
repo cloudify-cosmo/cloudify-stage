@@ -1,8 +1,11 @@
 import type { FunctionComponent } from 'react';
 import { useEffect, useMemo } from 'react';
+import SearchActions from '../../actions/SearchActions';
+import DeploymentGroupsActions from '../../deployments/DeploymentGroupsActions';
 import { i18nPrefix } from '../common';
 import { FilterRule } from '../../filters/types';
 import { getGroupIdForBatchAction } from './common';
+import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 import type { Workflow } from '../../executeWorkflow';
 
@@ -29,8 +32,6 @@ const getWorkflowsOptions = (workflows: Workflow[]) => {
 
 const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRules, onHide, toolbox }) => {
     const { ApproveButton, CancelButton, Dropdown, Icon, LoadingOverlay, Message, Modal, Form } = Stage.Basic;
-    // @ts-expect-error DynamicDropdown is not converted to TS yet
-    const { DynamicDropdown } = Stage.Common;
     const { useBoolean, useErrors, useResettableState } = Stage.Hooks;
 
     const [executionGroupStarted, setExecutionGroupStarted, unsetExecutionGroupStarted] = useBoolean();
@@ -40,7 +41,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     const [loadingMessage, setLoadingMessage, turnOffLoading] = useResettableState('');
     const workflowsOptions = useMemo(() => getWorkflowsOptions(workflows), [workflows]);
 
-    const searchActions = new Stage.Common.SearchActions(toolbox);
+    const searchActions = new SearchActions(toolbox);
 
     useEffect(() => {
         clearErrors();
@@ -65,11 +66,11 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         try {
             setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
             const groupId = getGroupIdForBatchAction();
-            const deploymentGroupsActions = new Stage.Common.DeploymentGroupsActions(toolbox);
+            const deploymentGroupsActions = new DeploymentGroupsActions(toolbox);
             await deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules });
 
             setLoadingMessage(modalT('messages.startingExecutionGroup'));
-            const executionGroupsActions = new Stage.Common.ExecutionGroupsActions(toolbox);
+            const executionGroupsActions = new ExecutionGroupsActions(toolbox);
             await executionGroupsActions.doStart(groupId, workflowId);
 
             toolbox.getEventBus().trigger('deployments:refresh').trigger('executions:refresh');

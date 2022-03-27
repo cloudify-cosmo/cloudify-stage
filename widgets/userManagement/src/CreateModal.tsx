@@ -82,7 +82,7 @@ export default function CreateModal({ toolbox }) {
 
         const actions = new Actions(toolbox);
         actions
-            .doCreate(inputs.username, inputs.password, Stage.Common.RolesUtil.getSystemRole(inputs.isAdmin))
+            .doCreate(inputs.username, inputs.password, Stage.Common.Roles.Utils.getSystemRole(inputs.isAdmin))
             .then(() => actions.doHandleTenants(inputs.username, tenants, [], []))
             .then(() => {
                 clearErrors();
@@ -103,7 +103,7 @@ export default function CreateModal({ toolbox }) {
         const newTenants = {};
         _.forEach(field.value, tenant => {
             newTenants[tenant] =
-                tenants[tenant] || Stage.Common.RolesUtil.getDefaultRoleName(toolbox.getManagerState().roles);
+                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setTenants(newTenants);
     }
@@ -115,7 +115,7 @@ export default function CreateModal({ toolbox }) {
     }
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
-    const { RolesPicker } = Stage.Common;
+    const RolesPicker = Stage.Common.Roles.Picker;
 
     const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
 

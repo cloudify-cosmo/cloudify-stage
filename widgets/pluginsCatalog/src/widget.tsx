@@ -38,10 +38,8 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
     },
 
     render(widget, data, _error, toolbox) {
-        const {
-            Basic: { Loading },
-            Common: { NoDataMessage }
-        } = Stage;
+        const { Loading } = Stage.Basic;
+        const { NoDataMessage } = Stage.Common.Components;
 
         if (data instanceof Error) {
             return <NoDataMessage error={data} repositoryName="plugins" />;

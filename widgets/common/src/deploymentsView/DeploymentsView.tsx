@@ -23,7 +23,7 @@ import {
 } from './layout';
 import DeploymentsViewHeader from './header';
 import DeploymentsMapContainer from './map';
-import SearchActions from '../SearchActions';
+import SearchActions from '../actions/SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
 import type { Deployment } from './types';

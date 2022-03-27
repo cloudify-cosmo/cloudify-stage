@@ -13,7 +13,7 @@ export default function BlueprintsTable({
     widget
 }: BlueprintsViewProps) {
     const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
-    const { BlueprintActions } = Stage.Common;
+    const BlueprintActions = Stage.Common.Blueprints.Actions;
     const tableName = 'blueprintsTable';
     const { fieldsToShow } = widget.configuration;
 
@@ -81,7 +81,7 @@ export default function BlueprintsTable({
                                                     title="Edit a copy in Composer"
                                                     onClick={(event: Event) => {
                                                         event.stopPropagation();
-                                                        new Stage.Common.BlueprintActions(toolbox).doEditInComposer(
+                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
                                                             item.id,
                                                             item.main_file_name
                                                         );

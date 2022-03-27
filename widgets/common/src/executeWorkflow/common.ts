@@ -1,5 +1,9 @@
+import DeploymentActions from '../deployments/DeploymentActions';
 import type { CommonExecuteWorflowProps } from './ExecuteWorkflowInputs';
 import type { Workflow, Errors } from './types';
+import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
+import { addErrors } from '../inputs/utils/errors';
+import getInputsMap from '../inputs/utils/getInputsMap';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -52,7 +56,6 @@ export const executeWorkflow = ({
     onExecute,
     onHide = () => {}
 }: ExecuteWorkflowParams): Promise<void | boolean[] | Errors> => {
-    const { InputsUtils, DeploymentActions } = Stage.Common;
     const validationErrors: Errors = {};
 
     const name = getWorkflowName(workflow);
@@ -60,8 +63,8 @@ export const executeWorkflow = ({
         return Promise.reject(t('errors.missingWorkflow'));
     }
 
-    const inputsWithoutValue = InputsUtils.getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
-    InputsUtils.addErrors(inputsWithoutValue, validationErrors);
+    const inputsWithoutValue = getInputsWithoutValues(baseWorkflowInputs, userWorkflowInputsState);
+    addErrors(inputsWithoutValue, validationErrors);
 
     if (schedule && !isValidScheduledTime(scheduledTime)) {
         validationErrors.scheduledTime = t('errors.scheduleTimeError');
@@ -71,7 +74,7 @@ export const executeWorkflow = ({
         return Promise.reject(validationErrors);
     }
 
-    const workflowParameters = InputsUtils.getInputsMap(baseWorkflowInputs, userWorkflowInputsState);
+    const workflowParameters = getInputsMap(baseWorkflowInputs, userWorkflowInputsState);
 
     if (_.isFunction(onExecute) && onExecute !== _.noop) {
         onExecute(workflowParameters, {

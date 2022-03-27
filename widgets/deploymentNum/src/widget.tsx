@@ -83,7 +83,7 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
             _size: 1
         };
 
-        const deploymentActions = new Stage.Common.DeploymentActions(toolbox);
+        const deploymentActions = new Stage.Common.Deployments.Actions(toolbox);
         return deploymentActions.doGetDeployments(params);
     },
 

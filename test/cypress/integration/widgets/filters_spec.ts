@@ -64,7 +64,7 @@ describe('Filters widget', () => {
     }
 
     function getFilterIdInput() {
-        return cy.contains('.field', 'Filter ID').find('input');
+        return cy.getField('Filter ID').find('input');
     }
 
     function withinLastRuleRow(fn: (currentSubject: JQuery<HTMLElement>) => void) {
@@ -542,7 +542,7 @@ describe('Filters widget', () => {
 
         function populateFilterRuleRows(filterId: string, rules: ExtendedFilterRule[]) {
             cy.get('.modal').within(() => {
-                cy.contains('.field', 'Filter ID').find('input').type(filterId);
+                cy.getField('Filter ID').find('input').type(filterId);
                 rules.forEach((rule, index) => {
                     if (index > 0) addNewRule();
                     populateFilterRuleRow(rule);

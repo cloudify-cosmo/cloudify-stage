@@ -318,7 +318,7 @@ class PluginsStepContent extends React.Component {
     getPluginAction(pluginName) {
         const { errors, stepData, toolbox } = this.props;
         const status = _.get(stepData[pluginName], 'status');
-        const { UploadPluginForm } = Stage.Common;
+        const { UploadForm } = Stage.Common.Plugins;
         const { Container } = Stage.Basic;
 
         switch (status) {
@@ -330,7 +330,7 @@ class PluginsStepContent extends React.Component {
                 return (
                     <ResourceAction>
                         <Container fluid>
-                            <UploadPluginForm
+                            <UploadForm
                                 wagonUrl={stepData[pluginName].wagonUrl}
                                 yamlUrl={stepData[pluginName].yamlUrl}
                                 iconUrl={stepData[pluginName].iconUrl}

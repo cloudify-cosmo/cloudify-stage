@@ -20,14 +20,15 @@ class SiteLocationMap extends React.Component {
 
     componentDidMount() {
         const { toolbox } = this.props;
-        const { MapsActions } = Stage.Common;
+        const MapsActions = Stage.Common.Map.Actions;
 
         return new MapsActions(toolbox).isAvailable().then(isMapAvailable => this.setState({ isMapAvailable }));
     }
 
     render() {
         const { Leaflet, Loading, Message } = Stage.Basic;
-        const { Consts, createMarkerIcon } = Stage.Common;
+        const { Consts } = Stage.Common;
+        const { createMarkerIcon } = Stage.Common.Map;
         const { mapOptions: defaultMapOptions, initialZoom, urlTemplate } = Consts.leaflet;
 
         const { attribution, location, mapOptions } = this.props;

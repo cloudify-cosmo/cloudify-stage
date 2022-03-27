@@ -120,7 +120,7 @@ class BlueprintStepContent extends React.Component {
     render() {
         const { errors, loading, stepData, toolbox } = this.props;
         const { Container, VisibilityField } = Stage.Basic;
-        const { UploadBlueprintForm } = Stage.Common;
+        const { UploadForm } = Stage.Common.Blueprints;
 
         return !_.isEmpty(stepData) ? (
             <>
@@ -131,7 +131,7 @@ class BlueprintStepContent extends React.Component {
                         onVisibilityChange={visibility => this.handleBlueprintChange({ visibility })}
                     />
                 </Container>
-                <UploadBlueprintForm
+                <UploadForm
                     blueprintUrl={stepData.blueprintUrl}
                     blueprintFile={stepData.blueprintFile}
                     blueprintName={stepData.blueprintName}
