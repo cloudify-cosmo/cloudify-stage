@@ -1,5 +1,6 @@
 import pathlib from 'path';
 import type { Request } from 'express';
+import type { AxiosRequestHeaders } from 'axios';
 import * as Consts from './consts';
 import { TOKEN_COOKIE_NAME } from './consts';
 
@@ -39,11 +40,15 @@ export function getTokenFromCookies(req: Request) {
     return req.cookies[TOKEN_COOKIE_NAME] as string;
 }
 
-export function getAuthenticationTokenHeaderFromRequest(req: Request) {
-    const token = getTokenFromCookies(req);
+function getAuthenticationTokenHeader(token: string) {
     return { 'Authentication-Token': token };
 }
 
-export function getAuthenticationTokenHeaderFromToken(token: string) {
-    return { 'Authentication-Token': token };
+export function getHeadersWithAuthenticationTokenFromRequest(req: Request, headers: AxiosRequestHeaders = {}) {
+    const token = getTokenFromCookies(req);
+    return { ...headers, ...getAuthenticationTokenHeader(token) };
+}
+
+export function getHeadersWithAuthenticationToken(token: string, headers: AxiosRequestHeaders = {}) {
+    return { ...headers, ...getAuthenticationTokenHeader(token) };
 }

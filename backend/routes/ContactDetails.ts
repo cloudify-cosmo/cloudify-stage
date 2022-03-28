@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import fs from 'fs';
 import { getLogger } from '../handler/LoggerHandler';
-import { getAuthenticationTokenHeaderFromToken, getResourcePath, getTokenFromCookies } from '../utils';
+import { getHeadersWithAuthenticationToken, getResourcePath, getTokenFromCookies } from '../utils';
 import { jsonRequest } from '../handler/ManagerHandler';
 
 const logger = getLogger('ContactDetails');
@@ -42,10 +42,10 @@ const submitContactDetails = async (contactDetails: ContactDetails, token: strin
         const hubspotResponse = (await jsonRequest(
             'post',
             '/contacts',
-            getAuthenticationTokenHeaderFromToken(token),
+            getHeadersWithAuthenticationToken(token),
             contactDetails
         )) as HubspotResponse;
-        await jsonRequest('post', '/license', getAuthenticationTokenHeaderFromToken(token), hubspotResponse);
+        await jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotResponse);
     } catch (error) {
         logger.error(error);
     }
@@ -66,7 +66,7 @@ router.get('/', async (req, res) => {
     if (!contactDetailsReceived) return;
 
     try {
-        await jsonRequest('get', '/license-check', getAuthenticationTokenHeaderFromToken(token));
+        await jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
     } catch (error) {
         // Customer ID not found
         logger.debug(error);

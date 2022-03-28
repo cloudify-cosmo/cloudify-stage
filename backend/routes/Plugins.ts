@@ -10,7 +10,7 @@ import * as ManagerHandler from '../handler/ManagerHandler';
 
 import { getLogger } from '../handler/LoggerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
-import { getAuthenticationTokenHeaderFromRequest } from '../utils';
+import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 
 const router = express.Router();
 const upload = multer();
@@ -69,7 +69,7 @@ function zipFiles(
 
 router.get('/icons/:pluginId', (req, res) => {
     const options = {
-        headers: { ...(req.headers as AxiosRequestHeaders), ...getAuthenticationTokenHeaderFromRequest(req) }
+        headers: getHeadersWithAuthenticationTokenFromRequest(req, req.headers as AxiosRequestHeaders)
     };
     ManagerHandler.setManagerSpecificOptions(options, 'get');
     requestAndForwardResponse(
@@ -151,11 +151,10 @@ router.post<any, any, any, any, PostUploadQuery>(
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
                 );
                 ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
-                    headers: {
-                        ...getAuthenticationTokenHeaderFromRequest(req),
+                    headers: getHeadersWithAuthenticationTokenFromRequest(req, {
                         tenant: req.headers.tenant as string,
                         'content-type': 'application/zip'
-                    },
+                    }),
                     responseType: 'stream',
                     data: zipStream,
                     maxBodyLength: Infinity
