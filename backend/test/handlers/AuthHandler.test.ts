@@ -1,6 +1,6 @@
 import { getRBAC } from 'handler/AuthHandler';
 import { jsonRequest } from 'handler/ManagerHandler';
-import { getAuthenticationTokenHeaderFromToken } from '../../utils';
+import { getHeadersWithAuthenticationToken } from '../../utils';
 
 jest.mock('handler/ManagerHandler');
 const config = { authorization: {} };
@@ -11,6 +11,6 @@ describe('AuthHandler', () => {
         const token = 'token';
         const result = await getRBAC(token);
         expect(result).toBe(config.authorization);
-        expect(jsonRequest).toHaveBeenCalledWith('GET', '/config', getAuthenticationTokenHeaderFromToken(token));
+        expect(jsonRequest).toHaveBeenCalledWith('GET', '/config', getHeadersWithAuthenticationToken(token));
     });
 });
