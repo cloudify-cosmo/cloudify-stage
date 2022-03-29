@@ -126,7 +126,7 @@ Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
 );
 
 // API Routes without authentication
-app.use(`${contextPath}/auth`, Auth); // all routes requires authentication except `/auth/login`
+app.use(`${contextPath}/auth`, Auth); // all routes require authentication except `/auth/login`
 const Config = (req, res) => {
     res.send(getClientConfig(getMode()));
 };
