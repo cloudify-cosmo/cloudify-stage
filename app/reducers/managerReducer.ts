@@ -1,10 +1,9 @@
-import type { Reducer } from 'redux';
+import { Reducer } from 'redux';
 
 import * as types from '../actions/types';
 import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
-import type { LicenseObject } from './licenseReducer';
 
 export interface ManagerData {
     auth: {
@@ -17,7 +16,7 @@ export interface ManagerData {
     isLdapEnabled: boolean;
     isLoggingIn: boolean;
     lastUpdated: any;
-    license: LicenseObject;
+    license: Record<string, any>;
     maintenance: string;
     permissions: Record<string, any>;
     roles: any[];

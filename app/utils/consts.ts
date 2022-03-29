@@ -32,7 +32,7 @@ export default {
         EMPTY: 'no_license',
         EXPIRED: 'expired_license',
         ACTIVE: 'active_license'
-    } as const,
+    },
     NO_LICENSE_ERROR_CODE: 'missing_cloudify_license',
     EXPIRED_LICENSE_ERROR_CODE: 'expired_cloudify_license',
 
