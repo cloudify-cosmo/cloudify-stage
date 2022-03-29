@@ -55,7 +55,6 @@
     "passport": "^0.3.2",
     "passport-cookie": "^1.0.9",
     "passport-saml": "^3.2.1",
-    "passport-unique-token": "^0.1.4",
     "patch-package": "^6.4.7",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.3",
