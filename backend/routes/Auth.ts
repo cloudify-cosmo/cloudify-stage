@@ -61,7 +61,6 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
     }
 });
 
-// TODO(RD-3827): Check (Okta and normal login) if it is possible to add authentication to this path
 router.get('/manager', authenticateWithCookie, (req, res) => {
     const token = getTokenFromCookies(req);
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
