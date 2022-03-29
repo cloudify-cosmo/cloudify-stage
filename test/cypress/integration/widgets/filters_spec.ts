@@ -1,6 +1,5 @@
 import { without } from 'lodash';
 import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import Consts from 'app/utils/consts';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
