@@ -90,6 +90,10 @@ describe('Deployments widget', () => {
                 cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
             });
 
+            beforeEach(() => {
+                cy.visitTestPage();
+            });
+
             const getMockedResponse = (deployments: unknown[] = []) => ({
                 items: deployments,
                 metadata: {
@@ -121,9 +125,6 @@ describe('Deployments widget', () => {
 
                 cy.contains('Create new Deployment').click();
                 cy.contains('Blueprint Marketplace').should('be.visible');
-
-                // NOTE: Just so other test scenarios wouldn't be executed on the Blueprint Marketplace page
-                cy.go('back');
             });
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
