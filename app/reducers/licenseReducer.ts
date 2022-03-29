@@ -1,9 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Reducer } from 'redux';
 import * as types from '../actions/types';
 import Auth from '../utils/auth';
+import Consts from '../utils/consts';
 
-const license = (state = {}, action) => {
+type ValueOf<T> = T[keyof T];
+export type LicenseStatus = ValueOf<typeof Consts.LICENSE>;
+export type LicenseData = Record<string, any>;
+export interface LicenseObject {
+    data?: LicenseData;
+    isRequired?: boolean;
+    status?: LicenseStatus;
+}
+
+const license: Reducer<LicenseObject> = (state = {}, action) => {
     switch (action.type) {
         case types.SET_LICENSE_REQUIRED:
             return { ...state, isRequired: action.isRequired };
