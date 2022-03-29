@@ -121,6 +121,9 @@ describe('Deployments widget', () => {
 
                 cy.contains('Create new Deployment').click();
                 cy.contains('Blueprint Marketplace').should('be.visible');
+
+                // NOTE: Just so other test scenarios wouldn't be executed on the Blueprint Marketplace page
+                cy.go('back');
             });
 
             it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
