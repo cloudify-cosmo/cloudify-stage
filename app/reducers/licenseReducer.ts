@@ -5,7 +5,17 @@ import Consts from '../utils/consts';
 
 type ValueOf<T> = T[keyof T];
 export type LicenseStatus = ValueOf<typeof Consts.LICENSE>;
-export type LicenseData = Record<string, any>;
+/* eslint-disable camelcase */
+export interface LicenseData {
+    capabilities: string[] | null;
+    cloudify_version: string | null;
+    customer_id: string;
+    expiration_date: string;
+    expired: boolean;
+    license_edition: string;
+    trial: boolean;
+}
+/* eslint-enable camelcase */
 export interface LicenseObject {
     data?: LicenseData;
     isRequired?: boolean;

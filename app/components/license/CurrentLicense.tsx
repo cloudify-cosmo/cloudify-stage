@@ -1,27 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
+import type { FunctionComponent } from 'react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../utils/stageUtils';
-
 import { Icon, Header, Segment, Table } from '../basic';
+import type { LicenseData } from '../../reducers/licenseReducer';
 
-export default function CurrentLicense({ license }) {
+interface CurrentLicenseProps {
+    license: LicenseData;
+}
+
+const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => {
     if (_.isEmpty(license)) {
         return null;
     }
 
-    const formatExpirationDate = stringDate =>
+    const formatExpirationDate = (stringDate: string) =>
         _.isEmpty(stringDate)
             ? i18n.t('licenseManagement.expirationDateNever', 'Never')
             : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
-    const formatVersion = version =>
+    const formatVersion = (version: string) =>
         _.isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
-    const formatCapabilities = capabilities => _.join(capabilities, ', ');
-    const isFalse = boolValue => !boolValue;
+    const formatCapabilities = (capabilities: string[]) => _.join(capabilities, ', ');
+    const isFalse = (boolValue: boolean) => !boolValue;
 
-    const fields = [
+    type Field = {
+        name: keyof LicenseData;
+        header: string;
+        icon: SemanticICONS;
+        format: (value: any) => string;
+        hide?: (value: any) => boolean;
+    };
+    const fields: Field[] = [
         {
             name: 'expiration_date',
             header: i18n.t('licenseManagement.expirationDate', 'Expiration Date'),
@@ -90,15 +101,5 @@ export default function CurrentLicense({ license }) {
             </Table>
         </Segment>
     );
-}
-
-CurrentLicense.propTypes = {
-    license: PropTypes.shape({
-        capabilities: PropTypes.arrayOf(PropTypes.string),
-        cloudify_version: PropTypes.string,
-        customer_id: PropTypes.string,
-        exiration_date: PropTypes.string,
-        license_edition: PropTypes.string,
-        trial: PropTypes.bool
-    }).isRequired
 };
+export default CurrentLicense;
