@@ -1,7 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-import * as types from '../actions/types';
+import type { Reducer } from 'redux';
+import * as types from '../../actions/types';
 
-const clusterStatus = (state = {}, action) => {
+export interface ClusterStatusObject {
+    isFetching?: boolean;
+    error?: string;
+    status?: string;
+    services?: Record<string, any>; // TODO: Add proper typing
+}
+
+const clusterStatus: Reducer<ClusterStatusObject> = (state = {}, action) => {
     switch (action.type) {
         case types.REQ_CLUSTER_STATUS:
             return { ...state, isFetching: true };

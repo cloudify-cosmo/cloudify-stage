@@ -1,7 +1,7 @@
 import type { Reducer } from 'redux';
-import * as types from '../actions/types';
-import Auth from '../utils/auth';
-import Consts from '../utils/consts';
+import * as types from '../../actions/types';
+import Auth from '../../utils/auth';
+import Consts from '../../utils/consts';
 
 type ValueOf<T> = T[keyof T];
 export type LicenseStatus = ValueOf<typeof Consts.LICENSE>;

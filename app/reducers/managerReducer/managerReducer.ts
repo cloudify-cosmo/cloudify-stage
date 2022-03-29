@@ -1,6 +1,6 @@
 import type { Reducer } from 'redux';
 
-import * as types from '../actions/types';
+import * as types from '../../actions/types';
 import tenants from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
 import license from './licenseReducer';
