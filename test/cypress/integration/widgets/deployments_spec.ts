@@ -105,7 +105,7 @@ describe('Deployments widget', () => {
             const mockDeploymentsResponse = (mockedResponse: any) =>
                 cy.interceptSp('POST', '/searches/deployments', mockedResponse);
 
-            it("should display showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
+            it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
 
@@ -126,7 +126,7 @@ describe('Deployments widget', () => {
                 cy.go('back');
             });
 
-            it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
