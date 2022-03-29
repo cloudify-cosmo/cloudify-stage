@@ -12,7 +12,7 @@ export default () => {
         getUser(token)
             .then(user => done(null, user))
             .catch(err => {
-                logger.error(`User authentication failed with token "${token}". Error:`, err);
+                logger.error(`User authentication failed. Error:`, err);
                 return done(null, false, err + token);
             })
     );
