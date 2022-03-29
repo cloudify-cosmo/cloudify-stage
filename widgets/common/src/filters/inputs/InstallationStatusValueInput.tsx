@@ -14,10 +14,11 @@ type InstallationStatusValueInputProps = Pick<CommonAttributeValueInputProps, 'v
 const InstallationStatusValueInput: FunctionComponent<InstallationStatusValueInputProps> = ({ onChange, value }) => {
     return (
         <Dropdown
-            name="installationStatus"
+            name="ruleValue"
             value={value[0]}
             options={options}
             selection
+            search
             selectOnNavigation
             onChange={(_event, data) => onChange([data.value as InstallationStatus])}
             placeholder={getPlaceholderTranslation('installationStatus')}

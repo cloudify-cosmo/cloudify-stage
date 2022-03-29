@@ -449,7 +449,8 @@ describe('Filters widget', () => {
         function selectRuleAttributeValues(
             ruleRowType: FilterRuleRowType,
             values: RuleValueObject[],
-            withAutocomplete = false
+            withAutocomplete = false,
+            multipleValues = true
         ) {
             if (values.length === 0) return;
             withinLastRuleRow(() => {
@@ -468,7 +469,7 @@ describe('Filters widget', () => {
                         searchAndSetDropdownValue(
                             ruleValue,
                             'Add',
-                            true,
+                            multipleValues,
                             withAutocomplete
                                 ? { pathname: `/${searchEndpoint[ruleRowType]}`, query: { _search: ruleValue.value } }
                                 : undefined
@@ -536,7 +537,9 @@ describe('Filters widget', () => {
                     selectRuleLabelValues(valuesObjectList);
                 }
             } else {
-                selectRuleAttributeValues(ruleRowType, valuesObjectList, !isFreeTextValueOperator(rule.operator));
+                const useSearch = rule.useNonDynamicDropdown ? false : !isFreeTextValueOperator(rule.operator);
+
+                selectRuleAttributeValues(ruleRowType, valuesObjectList, useSearch, !rule.useNonDynamicDropdown);
             }
         }
 
@@ -550,16 +553,29 @@ describe('Filters widget', () => {
             });
         }
 
+        function getRulesWithoutNonDynamicDropdownFlags(
+            testRules: ExtendedFilterRule[]
+        ): Omit<ExtendedFilterRule, keyof NonDynamicDropdownFilterRules>[] {
+            return testRules.map(testRule => {
+                const { useNonDynamicDropdown, ...mappedTestRule } = testRule;
+                return mappedTestRule;
+            });
+        }
+
         function verifyRequestRules(request: CyHttpMessages.IncomingRequest, testRules: ExtendedFilterRule[]) {
             const requestRules = request.body.filter_rules;
             expect(requestRules).to.have.length(testRules.length);
-            testRules.forEach((_rule, index: number) => {
-                expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
+
+            const mappedTestRules = getRulesWithoutNonDynamicDropdownFlags(testRules);
+
+            mappedTestRules.forEach((_rule, index: number) => {
+                expect(requestRules[index]).to.deep.equal(_.omit(mappedTestRules[index], ['newKey', 'newValues']));
             });
         }
         function verifyRulesForm(testRules: ExtendedFilterRule[]) {
             const verifySingleValueDropdown = (name: string, value: string) =>
                 cy.get(`div[name="${name}"] [option-value="${value}"][aria-selected="true"]`).should('exist');
+
             const verifyMultipleValuesDropdown = (name: string, values: string[]) =>
                 values.forEach(value => {
                     cy.get(`div[name="${name}"] .label[value="${value}"]`).should('exist');
@@ -575,7 +591,13 @@ describe('Filters widget', () => {
                     if (rule.type === FilterRuleType.Label) verifySingleValueDropdown('labelKey', rule.key);
 
                     const ruleValuesDropdownName = rule.type === FilterRuleType.Label ? 'labelValue' : 'ruleValue';
-                    verifyMultipleValuesDropdown(ruleValuesDropdownName, rule.values);
+
+                    if (rule.useNonDynamicDropdown) {
+                        const lastDropdownValue = rule.values[rule.values.length - 1];
+                        verifySingleValueDropdown(ruleValuesDropdownName, lastDropdownValue);
+                    } else {
+                        verifyMultipleValuesDropdown(ruleValuesDropdownName, rule.values);
+                    }
                 });
             });
         }
@@ -593,10 +615,15 @@ describe('Filters widget', () => {
             cy.get('.modal').within(() => verifyRulesForm(testRules));
         }
 
-        interface ExtendedFilterRule extends FilterRule {
+        interface NonDynamicDropdownFilterRules {
+            useNonDynamicDropdown?: boolean;
+        }
+
+        interface ExtendedFilterRule extends FilterRule, NonDynamicDropdownFilterRules {
             newKey?: boolean;
             newValues?: string[];
         }
+
         type RuleRowTest = {
             name: string;
             testFilterName: string;
@@ -705,9 +732,17 @@ describe('Filters widget', () => {
                     },
                     {
                         type: FilterRuleType.Attribute,
-                        key: 'tenant_name',
-                        values: [Consts.DEFAULT_TENANT],
-                        operator: FilterRuleOperators.NotAnyOf
+                        key: 'installation_status',
+                        values: ['active'],
+                        operator: FilterRuleOperators.AnyOf,
+                        useNonDynamicDropdown: true
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'installation_status',
+                        values: ['inactive'],
+                        operator: FilterRuleOperators.NotAnyOf,
+                        useNonDynamicDropdown: true
                     }
                 ]
             },
