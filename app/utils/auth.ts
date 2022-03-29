@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import Cookies from 'js-cookie';
 
@@ -8,24 +6,26 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
+import type { ManagerData } from '../reducers/managerReducer';
+import type { LicenseObject, LicenseData, LicenseStatus } from '../reducers/licenseReducer';
 
 export default class Auth {
-    static login(username, password) {
+    static login(username: string, password: string) {
         const external = new External({ basicAuth: encodeTextToBase64(`${username}:${password}`) });
         return external.doPost(StageUtils.Url.url('/auth/login'), { withCredentials: true });
     }
 
-    static getManagerData(managerData) {
+    static getManagerData(managerData: ManagerData) {
         const internal = new Internal(managerData);
         return internal.doGet('/auth/manager');
     }
 
-    static getUserData(managerData) {
+    static getUserData(managerData: ManagerData) {
         const internal = new Internal(managerData);
         return internal.doGet('/auth/user');
     }
 
-    static logout(managerData) {
+    static logout(managerData: ManagerData) {
         const internal = new Internal(managerData);
         return internal.doPost('/auth/logout', { withCredentials: true });
     }
@@ -34,7 +34,7 @@ export default class Auth {
         return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
-    static isProductOperational(license) {
+    static isProductOperational(license: LicenseObject) {
         const isLicenseRequired = _.get(license, 'isRequired', false);
         const isTrialLicense = _.get(license, 'data.trial', false);
         const licenseStatus = _.get(license, 'status', Consts.LICENSE.EMPTY);
@@ -48,7 +48,7 @@ export default class Auth {
         return true;
     }
 
-    static getLicenseStatus(licenseData) {
+    static getLicenseStatus(licenseData: LicenseData): LicenseStatus {
         if (_.isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
         }
