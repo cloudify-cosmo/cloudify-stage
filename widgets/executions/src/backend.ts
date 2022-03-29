@@ -408,7 +408,7 @@ export default r => {
         };
         const runGraphCreation = () => {
             const params = { ...req.query };
-            const headers = _.pick(req.headers, 'authentication-token', 'tenant');
+            const headers = _.pick(req.headers, 'cookie', 'tenant');
 
             const operationsList = [];
             helper.Manager.doGet(tasksGraphsFetchUrl, { params, headers })

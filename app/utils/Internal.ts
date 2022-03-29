@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import Cookies from 'js-cookie';
 import External from './External';
 import Consts from './consts';
 import StageUtils from './stageUtils';
@@ -11,8 +10,7 @@ export default class Internal extends External {
         }
 
         const headers = {
-            tenant: _.get(this.managerData, 'tenants.selected', Consts.DEFAULT_TENANT),
-            'Authentication-Token': Cookies.get(Consts.TOKEN_COOKIE_NAME) || undefined
+            tenant: _.get(this.managerData, 'tenants.selected', Consts.DEFAULT_TENANT)
         };
 
         return headers;
