@@ -1,5 +1,6 @@
 import { without } from 'lodash';
 import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import Consts from 'app/utils/consts';
 import {
     AttributesFilterRuleOperators,
     FilterRule,
@@ -728,6 +729,12 @@ describe('Filters widget', () => {
                         values: [`${testPrefix}_tenant`],
                         operator: FilterRuleOperators.AnyOf,
                         newValues: [`${testPrefix}_tenant`]
+                    },
+                    {
+                        type: FilterRuleType.Attribute,
+                        key: 'tenant_name',
+                        values: [Consts.DEFAULT_TENANT],
+                        operator: FilterRuleOperators.NotAnyOf
                     },
                     {
                         type: FilterRuleType.Attribute,
