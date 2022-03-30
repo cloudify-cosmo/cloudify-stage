@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
 import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
+import { getTokenFromCookies } from '../utils';
 
 const router = express.Router();
 
@@ -88,7 +89,7 @@ router.get('/select', (req, res, next) => {
         req.user!.group_system_roles,
         req.user!.tenants,
         req.query.tenant as string,
-        req.headers['authentication-token'] as string
+        getTokenFromCookies(req)
     )
         .then(template => res.send(template))
         .catch(next);
