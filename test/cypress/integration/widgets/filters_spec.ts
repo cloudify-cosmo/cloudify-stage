@@ -446,11 +446,18 @@ describe('Filters widget', () => {
             withinLastRuleRow(() => openDropdownAndSetValue('ruleOperator', operator));
         }
 
+        interface SelectRuleAttributeValuesOptions {
+            withAutocomplete?: boolean;
+            multipleValues?: boolean;
+        }
+
         function selectRuleAttributeValues(
             ruleRowType: FilterRuleRowType,
             values: RuleValueObject[],
-            withAutocomplete = false,
-            multipleValues = true
+            options: SelectRuleAttributeValuesOptions = {
+                withAutocomplete: false,
+                multipleValues: true
+            }
         ) {
             if (values.length === 0) return;
             withinLastRuleRow(() => {
@@ -469,8 +476,8 @@ describe('Filters widget', () => {
                         searchAndSetDropdownValue(
                             ruleValue,
                             'Add',
-                            multipleValues,
-                            withAutocomplete
+                            !!options.multipleValues,
+                            options.withAutocomplete
                                 ? { pathname: `/${searchEndpoint[ruleRowType]}`, query: { _search: ruleValue.value } }
                                 : undefined
                         );
@@ -537,9 +544,12 @@ describe('Filters widget', () => {
                     selectRuleLabelValues(valuesObjectList);
                 }
             } else {
-                const useSearch = rule.useNonDynamicDropdown ? false : !isFreeTextValueOperator(rule.operator);
+                const useAutocomplete = rule.useNonDynamicDropdown ? false : !isFreeTextValueOperator(rule.operator);
 
-                selectRuleAttributeValues(ruleRowType, valuesObjectList, useSearch, !rule.useNonDynamicDropdown);
+                selectRuleAttributeValues(ruleRowType, valuesObjectList, {
+                    withAutocomplete: useAutocomplete,
+                    multipleValues: !rule.useNonDynamicDropdown
+                });
             }
         }
 
