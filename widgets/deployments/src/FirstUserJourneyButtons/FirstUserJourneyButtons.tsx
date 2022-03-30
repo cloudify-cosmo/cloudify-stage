@@ -5,7 +5,7 @@ import terraformLogo from '../../../../app/images/terraform_logo.png';
 
 const {
     Hooks: { useBoolean },
-    Common: { BlueprintMarketplace, TerraformModal },
+    Common: { TerraformModal },
     Utils: { getT },
     Basic: { Grid }
 } = Stage;
@@ -40,14 +40,14 @@ const t = getT('widgets.deployments.firstJourney');
 
 interface FirstUserJourneyButtonsProps {
     toolbox: Stage.Types.WidgetlessToolbox;
+    widget: Stage.Types.Widget;
 }
 
-const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
-    const [isMarketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
+const FirstUserJourneyButtons = ({ toolbox, widget }: FirstUserJourneyButtonsProps) => {
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
-        showMarketplaceModal();
+        toolbox.drillDown(widget, 'blueprintMarketplace', {});
     };
 
     const handleTerraformClick = () => {
@@ -76,14 +76,6 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
                     label={t('buttons.uploadFromTerraform')}
                 />
             </RowWrapper>
-
-            {isMarketplaceModalVisible && (
-                <BlueprintMarketplace.Modal
-                    open
-                    onHide={hideMarketplaceModal}
-                    tabs={BlueprintMarketplace.tabsConfig.default}
-                />
-            )}
 
             {isTerraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
         </Wrapper>
