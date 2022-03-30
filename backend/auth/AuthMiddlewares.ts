@@ -7,15 +7,11 @@ type AuthenticateMiddleware = (
     next: NextFunction
 ) => ReturnType<ReturnType<typeof authenticateWith>>;
 
-function authenticateWith(strategy: 'cookie' | 'token' | 'saml') {
+function authenticateWith(strategy: 'cookie' | 'saml') {
     return passport.authenticate(strategy, { session: false });
 }
 export const authenticateWithCookie: AuthenticateMiddleware = (req, res, next) => {
     return authenticateWith('cookie')(req, res, next);
-};
-
-export const authenticateWithToken: AuthenticateMiddleware = (req, res, next) => {
-    return authenticateWith('token')(req, res, next);
 };
 
 export const authenticateWithSaml: AuthenticateMiddleware = (req, res, next) => {

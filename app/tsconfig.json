@@ -4,6 +4,6 @@
         "types": [],
         "plugins": [{ "name": "typescript-styled-plugin" }]
     },
-    "include": ["**/*", "**/*.json", "../backend/routes/*.types.ts"],
+    "include": ["**/*", "**/*.json", "../backend/consts.ts", "../backend/types.ts", "../backend/routes/*.types.ts"],
     "files": ["../package.json"]
 }

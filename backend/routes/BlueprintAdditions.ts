@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import _ from 'lodash';
 import { db } from '../db/Connection';
-import { authenticateWithToken } from '../auth/AuthMiddlewares';
 import type { BlueprintAdditionsInstance } from '../db/models/BlueprintAdditionsModel';
 
 const router = express.Router();
@@ -37,7 +36,7 @@ router.get('/image/:blueprint', (req, res, next) => {
         .catch(next);
 });
 
-router.post<any, any, any, any, { imageUrl?: string }>('/image/:blueprint', authenticateWithToken, (req, res, next) => {
+router.post<any, any, any, any, { imageUrl?: string }>('/image/:blueprint', (req, res, next) => {
     db.BlueprintAdditions.findOrCreate<BlueprintAdditionsInstance>({ where: { blueprintId: req.params.blueprint } })
         .then(([blueprintAdditions]) => {
             blueprintAdditions
@@ -52,7 +51,7 @@ router.post<any, any, any, any, { imageUrl?: string }>('/image/:blueprint', auth
         .catch(next);
 });
 
-router.delete('/image/:blueprint', authenticateWithToken, (req, res, next) => {
+router.delete('/image/:blueprint', (req, res, next) => {
     db.BlueprintAdditions.destroy<BlueprintAdditionsInstance>({ where: { blueprintId: req.params.blueprint } })
         .then(() => {
             res.end(JSON.stringify({ status: 'ok' }));
