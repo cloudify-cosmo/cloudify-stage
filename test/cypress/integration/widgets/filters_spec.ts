@@ -544,11 +544,11 @@ describe('Filters widget', () => {
                     selectRuleLabelValues(valuesObjectList);
                 }
             } else {
-                const useAutocomplete = rule.useNonDynamicDropdown ? false : !isFreeTextValueOperator(rule.operator);
+                const useAutocomplete = rule.useStaticDropdown ? false : !isFreeTextValueOperator(rule.operator);
 
                 selectRuleAttributeValues(ruleRowType, valuesObjectList, {
                     withAutocomplete: useAutocomplete,
-                    multipleValues: !rule.useNonDynamicDropdown
+                    multipleValues: !rule.useStaticDropdown
                 });
             }
         }
@@ -565,9 +565,9 @@ describe('Filters widget', () => {
 
         function getRulesWithoutNonDynamicDropdownFlags(
             testRules: ExtendedFilterRule[]
-        ): Omit<ExtendedFilterRule, keyof NonDynamicDropdownFilterRules>[] {
+        ): Omit<ExtendedFilterRule, keyof FilterRuleValueInputOptions>[] {
             return testRules.map(testRule => {
-                const { useNonDynamicDropdown, ...mappedTestRule } = testRule;
+                const { useStaticDropdown, ...mappedTestRule } = testRule;
                 return mappedTestRule;
             });
         }
@@ -601,7 +601,7 @@ describe('Filters widget', () => {
 
                     const ruleValuesDropdownName = rule.type === FilterRuleType.Label ? 'labelValue' : 'ruleValue';
 
-                    if (rule.useNonDynamicDropdown) {
+                    if (rule.useStaticDropdown) {
                         const lastDropdownValue = rule.values[rule.values.length - 1];
                         verifySingleValueDropdown(ruleValuesDropdownName, lastDropdownValue);
                     } else {
@@ -626,11 +626,11 @@ describe('Filters widget', () => {
             cy.get('.modal').within(() => verifyRulesForm(mappedTestRules));
         }
 
-        interface NonDynamicDropdownFilterRules {
-            useNonDynamicDropdown?: boolean;
+        interface FilterRuleValueInputOptions {
+            useStaticDropdown?: boolean;
         }
 
-        interface ExtendedFilterRule extends FilterRule, NonDynamicDropdownFilterRules {
+        interface ExtendedFilterRule extends FilterRule, FilterRuleValueInputOptions {
             newKey?: boolean;
             newValues?: string[];
         }
@@ -752,14 +752,14 @@ describe('Filters widget', () => {
                         key: 'installation_status',
                         values: ['active'],
                         operator: FilterRuleOperators.AnyOf,
-                        useNonDynamicDropdown: true
+                        useStaticDropdown: true
                     },
                     {
                         type: FilterRuleType.Attribute,
                         key: 'installation_status',
                         values: ['inactive'],
                         operator: FilterRuleOperators.NotAnyOf,
-                        useNonDynamicDropdown: true
+                        useStaticDropdown: true
                     }
                 ]
             },
