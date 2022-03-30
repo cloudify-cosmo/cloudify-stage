@@ -37,7 +37,7 @@ export default class SnapshotsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     deleteSnapshot = () => {
@@ -53,7 +53,7 @@ export default class SnapshotsTable extends React.Component {
             .doDelete(item)
             .then(() => {
                 this.setState({ confirmDelete: false, error: null });
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 this.setState({ confirmDelete: false, error: err.message });
@@ -101,7 +101,7 @@ export default class SnapshotsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     render() {

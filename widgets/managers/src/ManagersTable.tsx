@@ -69,7 +69,7 @@ function ManagersTable({ data, toolbox, widget }) {
         setDeployment({ id: '' });
         setWorkflow({ name: '', parameters: {} });
         hideExecuteWorkflowModal();
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     function actOnExecution(execution, action, executionError) {

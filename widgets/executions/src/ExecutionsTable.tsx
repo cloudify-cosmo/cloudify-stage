@@ -86,12 +86,12 @@ export default class ExecutionsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     selectExecution(item) {

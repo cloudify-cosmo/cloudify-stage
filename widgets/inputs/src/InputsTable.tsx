@@ -36,7 +36,7 @@ export default class InputsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     render() {

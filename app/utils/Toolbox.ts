@@ -112,6 +112,8 @@ class Toolbox implements Stage.Types.Toolbox {
     // the Toolbox instance is created
     refresh() {}
 
+    refreshWithDebounce() {}
+
     loading() {}
 
     getWidget() {

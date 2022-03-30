@@ -146,7 +146,7 @@ export default class SecretsTable extends React.Component {
             .doSetIsHiddenValue(secretKey, isHiddenValue)
             .then(() => {
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 toolbox.loading(false);
@@ -162,7 +162,7 @@ export default class SecretsTable extends React.Component {
             .doSetVisibility(secretKey, visibility)
             .then(() => {
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 toolbox.loading(false);
@@ -172,7 +172,7 @@ export default class SecretsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     deleteSecret = () => {
@@ -201,7 +201,7 @@ export default class SecretsTable extends React.Component {
         const { toolbox } = this.props;
         this.setState({ error: null });
 
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     render() {

@@ -167,7 +167,7 @@ export default class UsersTable extends React.Component {
                 if (this.isCurrentUser(user) && !isAdmin) {
                     toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    toolbox.refresh();
+                    toolbox.refreshWithDebounce();
                 }
             })
             .catch(err => {
@@ -185,7 +185,7 @@ export default class UsersTable extends React.Component {
             .doSetGettingStartedModalEnabled(user.username, modalEnabled)
             .then(() => {
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 this.setState({ error: err.message });
@@ -195,7 +195,7 @@ export default class UsersTable extends React.Component {
 
     fetchData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     invokeAction = (value, user) => {
@@ -240,7 +240,7 @@ export default class UsersTable extends React.Component {
                 this.hideModal();
                 this.setState({ error: null });
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 this.hideModal();
@@ -269,7 +269,7 @@ export default class UsersTable extends React.Component {
                 if (this.isCurrentUser(user)) {
                     toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    toolbox.refresh();
+                    toolbox.refreshWithDebounce();
                     toolbox.getEventBus().trigger('userGroups:refresh');
                 }
             })
@@ -281,7 +281,7 @@ export default class UsersTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     isCurrentUser(user) {
@@ -305,7 +305,7 @@ export default class UsersTable extends React.Component {
             .then(() => {
                 this.setState({ error: null, usernameDuringActivation: '' });
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 this.setState({ error: err.message, usernameDuringActivation: '' });

@@ -56,7 +56,7 @@ export default class SitesTable extends React.Component {
             .doUpdate(siteName, visibility)
             .then(() => {
                 toolbox.loading(false);
-                toolbox.refresh();
+                toolbox.refreshWithDebounce();
             })
             .catch(err => {
                 toolbox.loading(false);
@@ -66,7 +66,7 @@ export default class SitesTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     deleteSite = () => {
@@ -94,7 +94,7 @@ export default class SitesTable extends React.Component {
         const { toolbox } = this.props;
         this.setState({ error: null });
 
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     render() {

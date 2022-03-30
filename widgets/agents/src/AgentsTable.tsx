@@ -41,7 +41,7 @@ export default class AgentsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refresh(fetchParams);
+        return toolbox.refreshWithDebounce(fetchParams);
     };
 
     hideModal = () => {
@@ -56,7 +56,7 @@ export default class AgentsTable extends React.Component {
         const { toolbox } = this.props;
         this.setState({ error: null });
 
-        toolbox.refresh();
+        toolbox.refreshWithDebounce();
     }
 
     render() {
