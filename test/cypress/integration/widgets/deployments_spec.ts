@@ -31,7 +31,17 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
-            .usePageMock('deployments', { pollingTime: 5, clickToDrillDown: true, showExecutionStatusLabel: false })
+            .usePageMock(
+                'deployments',
+                {
+                    pollingTime: 5,
+                    clickToDrillDown: true,
+                    showExecutionStatusLabel: false
+                },
+                {
+                    additionalPageTemplates: ['blueprintMarketplace']
+                }
+            )
             .mockLogin();
     });
 
@@ -80,6 +90,10 @@ describe('Deployments widget', () => {
                 cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
             });
 
+            beforeEach(() => {
+                cy.visitTestPage();
+            });
+
             const getMockedResponse = (deployments: unknown[] = []) => ({
                 items: deployments,
                 metadata: {
@@ -95,24 +109,25 @@ describe('Deployments widget', () => {
             const mockDeploymentsResponse = (mockedResponse: any) =>
                 cy.interceptSp('POST', '/searches/deployments', mockedResponse);
 
-            it("should display showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
+            it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
-                cy.contains('Create new Deployment').click();
-                cy.contains('Blueprint marketplace')
+                cy.contains('Upload from Terraform').click();
+                cy.contains('Create blueprint from Terraform')
                     .parent()
                     .within(() => {
-                        cy.contains('button', 'Close').click();
+                        cy.contains('button', 'Cancel').click();
                     });
+                cy.contains('button', 'Yes').click();
 
-                cy.contains('Upload from Terraform').click();
-                cy.contains('Create blueprint from Terraform').should('be.visible');
+                cy.contains('Create new Deployment').click();
+                cy.contains('Blueprint Marketplace').should('be.visible');
             });
 
-            it('should hide showFirstUserJourneyButtons view when there are installed deployments', () => {
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',

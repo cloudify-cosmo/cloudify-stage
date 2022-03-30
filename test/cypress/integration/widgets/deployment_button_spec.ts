@@ -76,7 +76,7 @@ describe('Create Deployment Button widget', () => {
     };
 
     const verifyNumberOfOptions = (number, atLeast = false) => {
-        cy.get('input').click();
+        cy.get('input').click().type(resourcePrefix);
 
         if (number === 0) {
             cy.get('.menu').contains('No results found.').should('be.visible');
