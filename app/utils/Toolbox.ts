@@ -135,6 +135,9 @@ const getToolbox = (
     return new Proxy(toolbox!, {
         get: (target, name) => {
             if (name === 'refresh') {
+                return onRefresh;
+            }
+            if (name === 'refreshWithDebounce') {
                 return _.debounce(onRefresh, 250);
             }
             if (name === 'loading') {
