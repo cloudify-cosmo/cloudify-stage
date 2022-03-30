@@ -15,9 +15,8 @@ import { getMode } from './serverSettings';
 import { getResourcePath } from './utils';
 
 import getCookieStrategy from './auth/CookieStrategy';
-import getTokenStrategy from './auth/TokenStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
-import { authenticateWithCookie, authenticateWithToken } from './auth/AuthMiddlewares';
+import { authenticateWithCookie } from './auth/AuthMiddlewares';
 import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
@@ -77,7 +76,6 @@ if (samlConfig.enabled) {
     passport.use(getSamlStrategy());
 }
 
-passport.use(getTokenStrategy());
 passport.use(getCookieStrategy());
 app.use(cookieParser());
 app.use(passport.initialize());
@@ -106,12 +104,15 @@ app.use(
 // API Routes with authentication
 const authenticatedApiRoutes: Record<string, Router> = {
     applications: Applications,
+    ba: BlueprintAdditions,
     bud: BlueprintUserData,
     clientConfig: ClientConfig,
     contactDetails: ContactDetails,
+    external: External,
     file: File,
     filters: Filters,
     github: GitHub,
+    maps: Maps,
     plugins: Plugins,
     source: SourceBrowser,
     templates: Templates,
@@ -121,23 +122,17 @@ const authenticatedApiRoutes: Record<string, Router> = {
     widgets: Widgets
 };
 Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
-    app.use(`${contextPath}/${routePath}`, authenticateWithToken, router)
+    app.use(`${contextPath}/${routePath}`, authenticateWithCookie, router)
 );
 
-// TODO(RD-3827): All API routes should be authenticated
-// API Routes with authentication only for some endpoints (see routers for details)
-app.use(`${contextPath}/auth`, Auth);
-app.use(`${contextPath}/ba`, BlueprintAdditions);
-
 // API Routes without authentication
+app.use(`${contextPath}/auth`, Auth); // all routes require authentication except `/auth/login`
 const Config = (req, res) => {
     res.send(getClientConfig(getMode()));
 };
 app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
-app.use(`${contextPath}/external`, External); // used to get images for blueprints and plugins
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
-app.use(`${contextPath}/sp`, ServerProxy); // at least /sp/tokens should not require authentication, maybe more
-app.use(`${contextPath}/maps`, Maps);
+app.use(`${contextPath}/sp`, ServerProxy); // used to proxy requests to Cloudify REST API, some without the token
 
 // Redirect URLs with old context path (/stage)
 app.use([oldContextPath, `${oldContextPath}/*`], (request, response) => {
