@@ -576,12 +576,11 @@ describe('Filters widget', () => {
             const requestRules = request.body.filter_rules;
             expect(requestRules).to.have.length(testRules.length);
 
-            const mappedTestRules = getRulesWithoutNonDynamicDropdownFlags(testRules);
-
-            mappedTestRules.forEach((_rule, index: number) => {
-                expect(requestRules[index]).to.deep.equal(_.omit(mappedTestRules[index], ['newKey', 'newValues']));
+            testRules.forEach((_rule, index: number) => {
+                expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
             });
         }
+
         function verifyRulesForm(testRules: ExtendedFilterRule[]) {
             const verifySingleValueDropdown = (name: string, value: string) =>
                 cy.get(`div[name="${name}"] [option-value="${value}"][aria-selected="true"]`).should('exist');
@@ -612,17 +611,19 @@ describe('Filters widget', () => {
             });
         }
         function saveAndVerifyFilter(filterId: string, testRules: ExtendedFilterRule[]) {
+            const mappedTestRules = getRulesWithoutNonDynamicDropdownFlags(testRules);
             cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
             saveFilter();
 
             cy.log('Filter creation request verification');
-            cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
+            cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, mappedTestRules));
 
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear().type(filterId);
             cy.get('.loading').should('not.exist');
             openEditFilterModal();
-            cy.get('.modal').within(() => verifyRulesForm(testRules));
+
+            cy.get('.modal').within(() => verifyRulesForm(mappedTestRules));
         }
 
         interface NonDynamicDropdownFilterRules {
