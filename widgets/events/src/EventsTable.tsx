@@ -67,7 +67,7 @@ export default class EventsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refreshWithDebounce(fetchParams);
+        return toolbox.refresh(fetchParams);
     };
 
     isOneElementLike = (collection: unknown): boolean => {
