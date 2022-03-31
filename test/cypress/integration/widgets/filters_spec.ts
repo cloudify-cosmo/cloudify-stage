@@ -563,21 +563,14 @@ describe('Filters widget', () => {
             });
         }
 
-        function getRulesWithoutNonDynamicDropdownFlags(
-            testRules: ExtendedFilterRule[]
-        ): Omit<ExtendedFilterRule, keyof FilterRuleValueInputOptions>[] {
-            return testRules.map(testRule => {
-                const { useStaticDropdown, ...mappedTestRule } = testRule;
-                return mappedTestRule;
-            });
-        }
-
         function verifyRequestRules(request: CyHttpMessages.IncomingRequest, testRules: ExtendedFilterRule[]) {
             const requestRules = request.body.filter_rules;
             expect(requestRules).to.have.length(testRules.length);
 
             testRules.forEach((_rule, index: number) => {
-                expect(requestRules[index]).to.deep.equal(_.omit(testRules[index], ['newKey', 'newValues']));
+                expect(requestRules[index]).to.deep.equal(
+                    _.omit(testRules[index], ['newKey', 'newValues', 'useStaticDropdown'])
+                );
             });
         }
 
@@ -611,28 +604,24 @@ describe('Filters widget', () => {
             });
         }
         function saveAndVerifyFilter(filterId: string, testRules: ExtendedFilterRule[]) {
-            const mappedTestRules = getRulesWithoutNonDynamicDropdownFlags(testRules);
             cy.interceptSp('PUT', `/filters/deployments/${filterId}`).as('createRequest');
             saveFilter();
 
             cy.log('Filter creation request verification');
-            cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, mappedTestRules));
+            cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
 
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear().type(filterId);
             cy.get('.loading').should('not.exist');
             openEditFilterModal();
 
-            cy.get('.modal').within(() => verifyRulesForm(mappedTestRules));
+            cy.get('.modal').within(() => verifyRulesForm(testRules));
         }
 
-        interface FilterRuleValueInputOptions {
-            useStaticDropdown?: boolean;
-        }
-
-        interface ExtendedFilterRule extends FilterRule, FilterRuleValueInputOptions {
+        interface ExtendedFilterRule extends FilterRule {
             newKey?: boolean;
             newValues?: string[];
+            useStaticDropdown?: boolean;
         }
 
         type RuleRowTest = {
