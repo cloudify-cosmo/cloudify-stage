@@ -255,7 +255,7 @@ describe('Edit mode', () => {
             const verifyRequest = (service: string) =>
                 cy.wait(service).then(({ request, response }) => {
                     expect(request.headers).contain({ 'widget-id': widgetId });
-                    expect(response!.statusCode).equals(200);
+                    expect(response?.statusCode).equals(200);
                 });
             const verifyResponse = (text: string) =>
                 cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
