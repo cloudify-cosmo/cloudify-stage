@@ -17,16 +17,15 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 
 router.use(bodyParser.json());
 
-router.post('/resources', (req, res) => {
+router.post('/resources', async (req, res) => {
     const { zipUrl } = req.query;
-
     const authHeader = req.get('Authorization');
 
-    axios(zipUrl as string, {
-        responseType: 'arraybuffer',
-        headers: authHeader ? { Authorization: authHeader } : {}
-    })
-        .then(response =>
+    try {
+        await axios(zipUrl as string, {
+            responseType: 'arraybuffer',
+            headers: authHeader ? { Authorization: authHeader } : {}
+        }).then(response =>
             decompress(response.data)
                 .then((files: File[]) => {
                     const modules = _(files)
@@ -49,22 +48,20 @@ router.post('/resources', (req, res) => {
                     logger.error(`Error while decompressing zip file:`, decompressErr);
                     res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
                 })
-        )
-        .catch(err => {
-            logger.error(`Error while fetching zip file: ${err.message}`);
-            if (err.response) {
-                const statusCode = err.response.status >= 400 && err.response.status < 500 ? err.response.status : 400;
-                res.status(statusCode).send({
-                    message: `The URL is not accessible - Error ${err.response.status} ${
-                        STATUS_CODES[err.response.status]
-                    }`
-                });
-            } else {
-                res.status(400).send({
-                    message: 'The URL is not accessible'
-                });
-            }
-        });
+        );
+    } catch (err: any) {
+        logger.error(`Error while fetching zip file: ${err.message}`);
+        if (err.response) {
+            const statusCode = err.response.status >= 400 && err.response.status < 500 ? err.response.status : 400;
+            res.status(statusCode).send({
+                message: `The URL is not accessible - Error ${err.response.status} ${STATUS_CODES[err.response.status]}`
+            });
+        } else {
+            res.status(400).send({
+                message: 'The URL is not accessible'
+            });
+        }
+    }
 });
 
 router.post('/blueprint', (req, res) => {
