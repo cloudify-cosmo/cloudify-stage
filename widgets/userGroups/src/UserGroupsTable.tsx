@@ -62,7 +62,7 @@ class UserGroupsTable extends React.Component {
                 if (modalType === menuActions.setDefaultGroupRole && showModal) {
                     toolbox.getEventBus().trigger('menu.users:logout');
                 } else {
-                    toolbox.refreshWithDebounce();
+                    toolbox.refresh();
                     toolbox.getEventBus().trigger('users:refresh');
                 }
             })
@@ -108,7 +108,7 @@ class UserGroupsTable extends React.Component {
 
     fetchData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refreshWithDebounce(fetchParams);
+        return toolbox.refresh(fetchParams);
     };
 
     showModal = (value, group) => {
@@ -166,7 +166,7 @@ class UserGroupsTable extends React.Component {
                 } else {
                     this.hideModal({ error: null });
                     toolbox.loading(false);
-                    toolbox.refreshWithDebounce();
+                    toolbox.refresh();
                     toolbox.getEventBus().trigger('users:refresh');
                     toolbox.getEventBus().trigger('tenants:refresh');
                 }
@@ -179,7 +179,7 @@ class UserGroupsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refreshWithDebounce();
+        toolbox.refresh();
     }
 
     selectUserGroup(userGroup) {

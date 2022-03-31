@@ -34,12 +34,12 @@ export default class NodesTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refreshWithDebounce(fetchParams);
+        return toolbox.refresh(fetchParams);
     };
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refreshWithDebounce();
+        toolbox.refresh();
     }
 
     selectNode(item) {

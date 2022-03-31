@@ -79,7 +79,7 @@ export default class TenantsTable extends React.Component {
 
     fetchGridData = fetchParams => {
         const { toolbox } = this.props;
-        return toolbox.refreshWithDebounce(fetchParams);
+        return toolbox.refresh(fetchParams);
     };
 
     selectAction = (value, tenant) => {
@@ -118,7 +118,7 @@ export default class TenantsTable extends React.Component {
     refreshData() {
         const { toolbox } = this.props;
         this.setState({ error: null });
-        toolbox.refreshWithDebounce();
+        toolbox.refresh();
     }
 
     selectTenant(tenantName) {

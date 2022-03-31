@@ -80,7 +80,7 @@ export default class EventsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refreshWithDebounce();
+        toolbox.refresh();
     }
 
     selectEvent(eventId) {

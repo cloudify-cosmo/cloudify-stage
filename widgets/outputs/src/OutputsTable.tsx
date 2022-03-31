@@ -37,7 +37,7 @@ export default class OutputsTable extends React.Component {
 
     refreshData() {
         const { toolbox } = this.props;
-        toolbox.refreshWithDebounce();
+        toolbox.refresh();
     }
 
     render() {
