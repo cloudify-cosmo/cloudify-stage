@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Edit mode', () => {
     before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
@@ -12,7 +11,7 @@ describe('Edit mode', () => {
     it('should allow to edit widget settings', () => {
         cy.get('.blueprintsWidget .setting').click({ force: true });
 
-        cy.get('.pollingTime input').type(0);
+        cy.get('.pollingTime input').type('0');
 
         cy.contains('Save').click();
         cy.wait('@updateUserApps');
@@ -66,7 +65,7 @@ describe('Edit mode', () => {
         cy.wait('@updateUserApps');
 
         cy.get('.editModeButton .edit:eq(0)').click();
-        cy.get('.modal input[type=text]').type(2);
+        cy.get('.modal input[type=text]').type('2');
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
@@ -142,7 +141,12 @@ describe('Edit mode', () => {
             }
         }
 
-        function submitInvalidWidget(widgetName, expectedError, expectedStatus, expectedDelete = false) {
+        function submitInvalidWidget(
+            widgetName: string,
+            expectedError: string,
+            expectedStatus: number,
+            expectedDelete = false
+        ) {
             submitWidget(widgetName);
 
             cy.wait('@installWidget').its('response.statusCode').should('equal', expectedStatus);
@@ -248,12 +252,13 @@ describe('Edit mode', () => {
             const widgetName = 'Backend';
             const widgetId = `testWidget${widgetName}`;
             const url = 'https://this-page-intentionally-left-blank.org/';
-            const verifyRequest = service =>
+            const verifyRequest = (service: string) =>
                 cy.wait(service).then(({ request, response }) => {
                     expect(request.headers).contain({ 'widget-id': widgetId });
-                    expect(response.statusCode).equals(200);
+                    expect(response!.statusCode).equals(200);
                 });
-            const verifyResponse = text => cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
+            const verifyResponse = (text: string) =>
+                cy.get('.widgetContent .ui.segment pre code').should('contain.text', text);
 
             cy.intercept({ method: 'GET', pathname: '/console/wb/manager', query: { endpoint: 'version' } }).as(
                 'managerService'
