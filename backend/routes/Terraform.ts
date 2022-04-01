@@ -3,14 +3,15 @@ import decompress, { File } from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
+import type { Request } from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
-import type { Repository } from 'nodegit';
 import Git from 'nodegit';
 import uniqueDirectoryName from 'short-uuid';
+import directoryTree from 'directory-tree';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
 
@@ -21,18 +22,27 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 
 router.use(bodyParser.json());
 
-router.post('/resources', async (req, res) => {
+type ResourcesRequest = Request<
+    unknown,
+    unknown,
+    unknown,
+    {
+        templateUrl: string;
+    }
+>;
+router.post('/resources', async (req: ResourcesRequest, res) => {
     const { templateUrl } = req.query;
     const authHeader = req.get('Authorization');
-    const isGitFile = true;
+    const isGitFile = templateUrl.endsWith('.git');
 
     const scanZipFile = async () => {
-        return axios(templateUrl as string, {
+        return axios(templateUrl, {
             responseType: 'arraybuffer',
             headers: authHeader ? { Authorization: authHeader } : {}
         }).then(response =>
             decompress(response.data)
                 .then((files: File[]) => {
+                    console.log(JSON.stringify(files));
                     const modules = _(files)
                         .filter({ type: 'directory' })
                         .map('path')
@@ -69,20 +79,46 @@ router.post('/resources', async (req, res) => {
 
     const scanGitFile = async () => {
         // TODO: Provide error handling
-        const temporaryDirectoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+        const terraformModuleDirectories: string[] = [];
 
-        const repo = await Git.Clone.clone(templateUrl as string, temporaryDirectoryPath, {
+        await Git.Clone.clone(templateUrl, repositoryPath, {
             fetchOpts: {
                 callbacks: {
                     certificateCheck: () => 0,
                     credentials: getGitCredentials
                 }
             }
-        }).finally(() => {
-            fs.rmdirSync(temporaryDirectoryPath, { recursive: true });
         });
 
-        res.send(['Test']);
+        directoryTree(
+            repositoryPath,
+            {
+                extensions: /.tf$/,
+                exclude: /.git/
+            },
+            (_file, filePath) => {
+                const relativeFilePath = path.relative(repositoryPath, filePath);
+
+                const isInRootDirectory = !relativeFilePath.includes('/');
+
+                if (!isInRootDirectory) {
+                    const fileDirectory = path.dirname(relativeFilePath);
+
+                    if (!terraformModuleDirectories.includes(fileDirectory)) {
+                        terraformModuleDirectories.push(fileDirectory);
+                    }
+                }
+            }
+        );
+
+        fs.rmdirSync(repositoryPath, { recursive: true });
+
+        if (terraformModuleDirectories.length) {
+            res.send(terraformModuleDirectories.sort());
+        } else {
+            res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
+        }
     };
 
     try {
