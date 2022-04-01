@@ -7,7 +7,7 @@ import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
 import type { ManagerData, LicenseData, LicenseStatus } from '../reducers/managerReducer';
-import { LicenseResponse } from '../../backend/routes/Auth.types';
+import type { LicenseResponse } from '../../backend/routes/Auth.types';
 
 export default class Auth {
     static login(username: string, password: string) {

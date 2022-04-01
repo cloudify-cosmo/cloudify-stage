@@ -52,9 +52,7 @@ export interface UserResponse {
     is_locked: boolean;
     show_getting_started: boolean;
 }
-/* eslint-enable camelcase */
 
-/* eslint-disable camelcase */
 export interface LicenseResponse {
     capabilities: string[] | null;
     cloudify_version: string | null;
