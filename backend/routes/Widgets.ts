@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import passport from 'passport';
 import * as WidgetsHandler from '../handler/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
+import { getTokenFromCookies } from '../utils';
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get('/list', (req, res, next) => {
 
 async function validateInstallWidgetsPermission(req, res, next) {
     const permissionId = 'stage_install_widgets';
-    const rbac = await getRBAC(req.headers['authentication-token']);
+    const rbac = await getRBAC(getTokenFromCookies(req));
     const permission = rbac.permissions[permissionId];
     if (!isAuthorized(req.user, permission)) {
         res.sendStatus(403);

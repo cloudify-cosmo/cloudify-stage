@@ -82,7 +82,7 @@ describe('Templates segment', () => {
         );
     });
 
-    it('allows users to create and modify templates', () => {
+    it('allows users to create and modify templates', { retries: { runMode: 2 } }, () => {
         const clickOnHeader = () => cy.get('.header').click();
         cy.removeUserTemplates().mockLogin();
 
