@@ -10,7 +10,7 @@ import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
 import Git from 'nodegit';
-import type { Error } from 'nodegit';
+import type { Error as GitError } from 'nodegit';
 import uniqueDirectoryName from 'short-uuid';
 import directoryTree from 'directory-tree';
 import { getLogger } from '../handler/LoggerHandler';
@@ -23,6 +23,10 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 
 router.use(bodyParser.json());
 
+type CloneGitRepoError = {
+    message: string;
+};
+
 type ResourcesRequest = Request<
     unknown,
     unknown,
@@ -31,10 +35,17 @@ type ResourcesRequest = Request<
         templateUrl: string;
     }
 >;
+
 router.post('/resources', async (req: ResourcesRequest, res) => {
+    // TODO: Unified functionalities across scanZipFile and scanGitFile
     const { templateUrl } = req.query;
     const authHeader = req.get('Authorization');
     const isGitFile = templateUrl.endsWith('.git');
+
+    const sendTerraformModules = (modules: string[]) => {
+        if (modules.length) res.send(modules);
+        else res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
+    };
 
     const scanZipFile = async () => {
         return axios(templateUrl, {
@@ -56,8 +67,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
                         .sort()
                         .value();
 
-                    if (modules.length) res.send(modules);
-                    else res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
+                    sendTerraformModules(modules);
                 })
                 .catch((decompressErr: any) => {
                     logger.error(`Error while decompressing zip file:`, decompressErr);
@@ -77,10 +87,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         return undefined;
     };
 
-    const scanGitFile = async () => {
-        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
-        const terraformModuleDirectories: string[] = [];
-
+    const cloneGitRepo = async (repositoryPath: string) => {
         try {
             await Git.Clone.clone(templateUrl, repositoryPath, {
                 fetchOpts: {
@@ -90,14 +97,28 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
                     }
                 }
             });
-        } catch (error: unknown) {
-            const isAuthenticationIssue = (error as Error).message.includes('authentication');
-            const responseMessage = isAuthenticationIssue
+            // @ts-ignore-next-line nodegit library ensures that the occured error would be in a shape of the Error type
+        } catch (error: GitError) {
+            const isAuthenticationIssue = error.message.includes('authentication');
+            const errorMessage = isAuthenticationIssue
                 ? 'GIT Authentication failed - Please note that some git providers require a token to be passed instead of a password'
                 : 'The URL is not accessible';
 
+            logger.error(`Error while cloning git repository: ${error.message}`);
+            throw new Error(errorMessage);
+        }
+    };
+
+    const scanGitFile = async () => {
+        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+        const terraformModuleDirectories: string[] = [];
+
+        try {
+            cloneGitRepo(repositoryPath);
+            // @ts-ignore cloneGitRepo function is returning an error with a specified shape
+        } catch (error: CloneGitRepoError) {
             res.status(400).send({
-                message: responseMessage
+                message: error.message
             });
 
             return;
@@ -111,7 +132,6 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
             },
             (_file, filePath) => {
                 const relativeFilePath = path.relative(repositoryPath, filePath);
-
                 const isInRootDirectory = !relativeFilePath.includes('/');
 
                 if (!isInRootDirectory) {
@@ -125,12 +145,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         );
 
         fs.rmdirSync(repositoryPath, { recursive: true });
-
-        if (terraformModuleDirectories.length) {
-            res.send(terraformModuleDirectories.sort());
-        } else {
-            res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
-        }
+        sendTerraformModules(terraformModuleDirectories.sort());
     };
 
     try {
