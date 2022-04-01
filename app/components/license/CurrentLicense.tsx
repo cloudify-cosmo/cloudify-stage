@@ -5,7 +5,7 @@ import type { FunctionComponent } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../utils/stageUtils';
 import { Icon, Header, Segment, Table } from '../basic';
-import type { LicenseData } from '../../reducers/licenseReducer';
+import type { LicenseData } from '../../reducers/managerReducer';
 
 interface CurrentLicenseProps {
     license: LicenseData;

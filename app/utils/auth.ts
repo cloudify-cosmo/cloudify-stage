@@ -6,8 +6,7 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
-import type { ManagerData } from '../reducers/managerReducer';
-import type { LicenseObject, LicenseData, LicenseStatus } from '../reducers/licenseReducer';
+import type { ManagerData, LicenseObject, LicenseData, LicenseStatus } from '../reducers/managerReducer';
 
 export default class Auth {
     static login(username: string, password: string) {
