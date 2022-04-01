@@ -4,11 +4,13 @@ import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
 import type { Repository } from 'nodegit';
 import Git from 'nodegit';
+import uniqueDirectoryName from 'short-uuid';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
 
@@ -67,23 +69,25 @@ router.post('/resources', async (req, res) => {
 
     const scanGitFile = async () => {
         // TODO: Provide error handling
-        // TODO: Provide an ability to save the repo under the universal name
-        const repo = await Git.Clone.clone(templateUrl as string, './repos/fetcher-test', {
+        const temporaryDirectoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+
+        const repo = await Git.Clone.clone(templateUrl as string, temporaryDirectoryPath, {
             fetchOpts: {
                 callbacks: {
                     certificateCheck: () => 0,
                     credentials: getGitCredentials
                 }
             }
-        }).catch(err => {
-            console.error(err);
+        }).finally(() => {
+            fs.rmdirSync(temporaryDirectoryPath, { recursive: true });
         });
+
         res.send(['Test']);
     };
 
     try {
         if (isGitFile) {
-            scanGitFile();
+            await scanGitFile();
         } else {
             await scanZipFile();
         }
