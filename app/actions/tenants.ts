@@ -1,12 +1,14 @@
 // @ts-nocheck File not migrated fully to TS
 
 import log from 'loglevel';
+import type { ThunkAction, AnyAction } from 'redux';
 import * as types from './types';
 import Manager from '../utils/Manager';
 import { setAppLoading } from './appState';
 import { setEditMode } from './config';
 import { clearContext } from './context';
 import { reloadUserAppData } from './userApp';
+import { ReduxState } from '../reducers';
 
 function requestTenants() {
     return {
@@ -30,7 +32,7 @@ function errorTenants(err) {
     };
 }
 
-export function getTenants() {
+export function getTenants(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         dispatch(requestTenants());
         const managerAccessor = new Manager(getState().manager);

@@ -1,5 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
 import configureMockStore from 'redux-mock-store';
+import type { MockStore } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import timeKeeper from 'timekeeper';
@@ -21,7 +21,7 @@ describe('(Reducer) Manager', () => {
     const password = 'admin';
     const sysAdminRole = 'sys_admin';
 
-    let store = null;
+    let store: MockStore;
 
     beforeAll(() => {
         timeKeeper.freeze(mockDate);
@@ -64,7 +64,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('initializes state', () => {
-                store = createStore(managerReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(managerReducer, {}, applyMiddleware(thunk));
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
@@ -112,7 +112,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('sets error state', () => {
-                store = createStore(managerReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(managerReducer, {}, applyMiddleware(thunk));
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
@@ -153,7 +153,7 @@ describe('(Reducer) Manager', () => {
         });
 
         it('resets state', () => {
-            store = createStore(managerReducer, {}, applyMiddleware(thunk));
+            store = <MockStore>createStore(managerReducer, {}, applyMiddleware(thunk));
 
             return store.dispatch(logout('License expired')).then(() => {
                 expect(store.getState()).toEqual({
@@ -201,7 +201,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStore(licenseReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(licenseReducer, {}, applyMiddleware(thunk));
 
                 const expectedLicenseState = {
                     data: {},
@@ -257,7 +257,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStore(licenseReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(licenseReducer, {}, applyMiddleware(thunk));
 
                 const expectedLicenseState = {
                     data: { ...licenses.activePayingLicense },
@@ -313,7 +313,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStore(licenseReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(licenseReducer, {}, applyMiddleware(thunk));
 
                 const expectedLicenseState = {
                     data: licenses.expiredPayingLicense,
@@ -363,7 +363,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('non-licensed version changes license state', () => {
-                store = createStore(licenseReducer, {}, applyMiddleware(thunk));
+                store = <MockStore>createStore(licenseReducer, {}, applyMiddleware(thunk));
 
                 const expectedLicenseState = {
                     data: null,

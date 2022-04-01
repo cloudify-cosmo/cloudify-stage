@@ -1,30 +1,21 @@
-// @ts-nocheck File not migrated fully to TS
-
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
+import type { Reducer } from 'redux';
 import timeKeeper from 'timekeeper';
 
-import TenantReducer from 'reducers/managerReducer/tenantsReducer';
+import tenantsReducer from 'reducers/managerReducer/tenantsReducer';
 import { getTenants, selectTenant } from 'actions/tenants';
 import * as types from 'actions/types';
 
 import fetchMock from 'fetch-mock';
+import log from 'loglevel';
 
 const mockStore = configureMockStore([thunk]);
 
 const time = new Date(1);
 
 describe('(Reducer) Tenants', () => {
-    const managerData = {
-        version: 'v3',
-        ip: '10.10.10.10',
-        auth: {
-            isSecured: true,
-            token: 'aaa'
-        }
-    };
-
     afterEach(() => {
         fetchMock.restore();
     });
@@ -58,7 +49,7 @@ describe('(Reducer) Tenants', () => {
 
         const store = mockStore({});
 
-        return store.dispatch(getTenants(managerData)).then(() => {
+        return store.dispatch(getTenants()).then(() => {
             // return of async actions
             expect(store.getActions()).toEqual(expectedActions);
         });
@@ -83,9 +74,9 @@ describe('(Reducer) Tenants', () => {
         ];
 
         const store = mockStore({});
-        store.replaceReducer(TenantReducer);
+        store.replaceReducer(tenantsReducer as Reducer<unknown>);
 
-        return store.dispatch(getTenants(managerData)).catch(() => {
+        return store.dispatch(getTenants()).catch(() => {
             // return of async actions
             expect(store.getActions()).toEqual(expectedActions);
             expect(log.error).toHaveBeenCalled();
@@ -101,9 +92,9 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(TenantReducer, {}, applyMiddleware(thunk));
+        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
 
-        return store.dispatch(getTenants(managerData)).catch(() => {
+        return store.dispatch(getTenants()).catch(() => {
             // return of async actions
             expect(store.getState()).toEqual({
                 isFetching: false,
@@ -123,9 +114,9 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(TenantReducer, {}, applyMiddleware(thunk));
+        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
 
-        return store.dispatch(getTenants(managerData)).then(() => {
+        return store.dispatch(getTenants()).then(() => {
             // return of async actions
             expect(store.getState()).toEqual({
                 isFetching: false,
@@ -137,7 +128,7 @@ describe('(Reducer) Tenants', () => {
     });
 
     it('should handle selectTenant', () => {
-        expect(TenantReducer({}, selectTenant('abc'))).toEqual({
+        expect(tenantsReducer({}, selectTenant('abc'))).toEqual({
             selected: 'abc'
         });
     });
