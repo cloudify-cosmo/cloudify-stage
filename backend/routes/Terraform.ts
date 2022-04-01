@@ -7,6 +7,8 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
+import type { Repository } from 'nodegit';
+import Git from 'nodegit';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
 
@@ -18,11 +20,12 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 router.use(bodyParser.json());
 
 router.post('/resources', async (req, res) => {
-    const { zipUrl } = req.query;
+    const { templateUrl } = req.query;
     const authHeader = req.get('Authorization');
+    const isGitFile = true;
 
-    try {
-        await axios(zipUrl as string, {
+    const scanZipFile = async () => {
+        return axios(templateUrl as string, {
             responseType: 'arraybuffer',
             headers: authHeader ? { Authorization: authHeader } : {}
         }).then(response =>
@@ -49,8 +52,44 @@ router.post('/resources', async (req, res) => {
                     res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
                 })
         );
+    };
+
+    const getGitCredentials = () => {
+        if (authHeader) {
+            const encodedCredentials = authHeader.split(' ')[1];
+            const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
+            const [username, personalToken] = gitCredentials.split(':');
+            return Git.Cred.userpassPlaintextNew(username, personalToken);
+        }
+
+        return undefined;
+    };
+
+    const scanGitFile = async () => {
+        // const repo: Repository = await Git.Clone.clone(moduleUrl as string, './repos');
+        // TODO: Provide error handling
+        // TODO: Provide an ability to save the repo under the universal name
+        const repo = await Git.Clone.clone(templateUrl as string, './repos/fetcher-test', {
+            fetchOpts: {
+                callbacks: {
+                    certificateCheck: () => 0,
+                    credentials: getGitCredentials
+                }
+            }
+        }).catch(err => {
+            console.error(err);
+        });
+        res.send(['Test']);
+    };
+
+    try {
+        if (isGitFile) {
+            scanGitFile();
+        } else {
+            await scanZipFile();
+        }
     } catch (err: any) {
-        logger.error(`Error while fetching zip file: ${err.message}`);
+        logger.error(`Error while fetching ${isGitFile ? 'git' : 'zip'} file: ${err.message}`);
         if (err.response) {
             const statusCode = err.response.status >= 400 && err.response.status < 500 ? err.response.status : 400;
             res.status(statusCode).send({
