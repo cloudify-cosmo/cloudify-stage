@@ -9,9 +9,9 @@ import { getManagerData, login, logout } from 'actions/managers';
 import * as types from 'actions/types';
 import managerReducer, { emptyState } from 'reducers/managerReducer';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
-import rbac from '../resources/rbac';
-import versions from '../resources/versions';
-import licenses from '../resources/licenses';
+import rbac from '../../resources/rbac';
+import versions from '../../resources/versions';
+import licenses from '../../resources/licenses';
 
 describe('(Reducer) Manager', () => {
     const mockStore = configureMockStore([thunk]);

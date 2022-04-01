@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import { setLicense } from 'actions/license';
 import * as types from 'actions/types';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
-import licenses from '../resources/licenses';
+import licenses from '../../resources/licenses';
 
 describe('(Reducer) License', () => {
     const mockStore = configureMockStore([thunk]);
