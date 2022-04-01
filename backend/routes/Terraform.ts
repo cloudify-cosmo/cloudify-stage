@@ -114,13 +114,25 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         const terraformModuleDirectories: string[] = [];
 
         try {
-            cloneGitRepo(repositoryPath);
-            // @ts-ignore cloneGitRepo function is returning an error with a specified shape
-        } catch (error: CloneGitRepoError) {
-            res.status(400).send({
-                message: error.message
+            await Git.Clone.clone(templateUrl, repositoryPath, {
+                fetchOpts: {
+                    callbacks: {
+                        certificateCheck: () => 0,
+                        credentials: getGitCredentials
+                    }
+                }
             });
+            // @ts-ignore-next-line nodegit library ensures that the occured error would be in a shape of the Error type
+        } catch (error: GitError) {
+            const isAuthenticationIssue = error.message.includes('authentication');
+            const errorMessage = isAuthenticationIssue
+                ? 'GIT Authentication failed - Please note that some git providers require a token to be passed instead of a password'
+                : 'The URL is not accessible';
 
+            logger.error(`Error while cloning git repository: ${error.message}`);
+            res.status(400).send({
+                message: errorMessage
+            });
             return;
         }
 
