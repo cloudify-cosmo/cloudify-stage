@@ -6,7 +6,8 @@ import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
-import type { ManagerData, LicenseObject, LicenseData, LicenseStatus } from '../reducers/managerReducer';
+import type { ManagerData, LicenseData, LicenseStatus } from '../reducers/managerReducer';
+import { LicenseResponse } from '../../backend/routes/Auth.types';
 
 export default class Auth {
     static login(username: string, password: string) {
@@ -33,7 +34,7 @@ export default class Auth {
         return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
-    static isProductOperational(license: LicenseObject) {
+    static isProductOperational(license: LicenseData) {
         const isLicenseRequired = _.get(license, 'isRequired', false);
         const isTrialLicense = _.get(license, 'data.trial', false);
         const licenseStatus = _.get(license, 'status', Consts.LICENSE.EMPTY);
@@ -47,7 +48,7 @@ export default class Auth {
         return true;
     }
 
-    static getLicenseStatus(licenseData: LicenseData): LicenseStatus {
+    static getLicenseStatus(licenseData: LicenseResponse): LicenseStatus {
         if (_.isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
         }

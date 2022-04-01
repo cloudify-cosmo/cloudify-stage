@@ -2,27 +2,18 @@ import type { Reducer } from 'redux';
 import * as types from '../../actions/types';
 import Auth from '../../utils/auth';
 import Consts from '../../utils/consts';
+import type { LicenseResponse } from '../../../backend/routes/Auth.types';
 
 type ValueOf<T> = T[keyof T];
 export type LicenseStatus = ValueOf<typeof Consts.LICENSE>;
-/* eslint-disable camelcase */
+
 export interface LicenseData {
-    capabilities: string[] | null;
-    cloudify_version: string | null;
-    customer_id: string;
-    expiration_date: string;
-    expired: boolean;
-    license_edition: string;
-    trial: boolean;
-}
-/* eslint-enable camelcase */
-export interface LicenseObject {
-    data?: LicenseData;
+    data?: LicenseResponse;
     isRequired?: boolean;
     status?: LicenseStatus;
 }
 
-const license: Reducer<LicenseObject> = (state = {}, action) => {
+const license: Reducer<LicenseData> = (state = {}, action) => {
     switch (action.type) {
         case types.SET_LICENSE_REQUIRED:
             return { ...state, isRequired: action.isRequired };

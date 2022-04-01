@@ -2,7 +2,7 @@ import type { Reducer } from 'redux';
 import _ from 'lodash';
 import * as types from '../../actions/types';
 
-export interface TenantsObject {
+export interface TenantsData {
     isFetching?: boolean;
     items?: string[];
     selected?: string;
@@ -10,7 +10,7 @@ export interface TenantsObject {
     error?: string;
 }
 
-const tenants: Reducer<TenantsObject> = (state = {}, action) => {
+const tenants: Reducer<TenantsData> = (state = {}, action) => {
     let selectedTenant;
     switch (action.type) {
         case types.REQ_TENANTS:

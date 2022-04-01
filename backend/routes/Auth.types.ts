@@ -53,3 +53,15 @@ export interface UserResponse {
     show_getting_started: boolean;
 }
 /* eslint-enable camelcase */
+
+/* eslint-disable camelcase */
+export interface LicenseResponse {
+    capabilities: string[] | null;
+    cloudify_version: string | null;
+    customer_id: string;
+    expiration_date: string;
+    expired: boolean;
+    license_edition: string;
+    trial: boolean;
+}
+/* eslint-enable camelcase */

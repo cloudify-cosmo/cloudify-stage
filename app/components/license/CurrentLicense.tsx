@@ -5,10 +5,10 @@ import type { FunctionComponent } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../utils/stageUtils';
 import { Icon, Header, Segment, Table } from '../basic';
-import type { LicenseData } from '../../reducers/managerReducer';
+import type { LicenseResponse } from '../../../backend/routes/Auth.types';
 
 interface CurrentLicenseProps {
-    license: LicenseData;
+    license: LicenseResponse;
 }
 
 const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => {
@@ -16,17 +16,17 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
         return null;
     }
 
-    const formatExpirationDate = (stringDate: string) =>
-        _.isEmpty(stringDate)
+    const formatExpirationDate = (date: string) =>
+        _.isEmpty(date)
             ? i18n.t('licenseManagement.expirationDateNever', 'Never')
-            : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
+            : StageUtils.formatLocalTimestamp(date, 'DD-MM-YYYY');
     const formatVersion = (version: string) =>
         _.isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
     const formatCapabilities = (capabilities: string[]) => _.join(capabilities, ', ');
-    const isFalse = (boolValue: boolean) => !boolValue;
+    const isFalse = (value: boolean) => !value;
 
     type Field = {
-        name: keyof LicenseData;
+        name: keyof LicenseResponse;
         header: string;
         icon: SemanticICONS;
         format: (value: any) => string;
