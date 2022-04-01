@@ -4,7 +4,9 @@ import * as types from '../../actions/types';
 
 export interface TenantsData {
     isFetching?: boolean;
-    items?: string[];
+    items?: {
+        name: string;
+    }[];
     selected?: string;
     lastUpdated?: string;
     error?: string;
