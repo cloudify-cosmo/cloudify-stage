@@ -13,15 +13,15 @@ export interface LicenseData {
     status?: LicenseStatus;
 }
 
-const license: Reducer<LicenseData> = (state = {}, action) => {
-    switch (action.type) {
+const license: Reducer<LicenseData> = (state = {}, { type, license: licenseData, isRequired }) => {
+    switch (type) {
         case types.SET_LICENSE_REQUIRED:
-            return { ...state, isRequired: action.isRequired };
+            return { ...state, isRequired };
         case types.SET_MANAGER_LICENSE:
             return {
                 ...state,
-                data: action.license,
-                status: Auth.getLicenseStatus(action.license)
+                data: licenseData,
+                status: Auth.getLicenseStatus(licenseData)
             };
         default: {
             return {
