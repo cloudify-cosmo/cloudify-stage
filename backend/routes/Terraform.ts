@@ -56,7 +56,7 @@ router.post('/resources', async (req, res) => {
 
     const getGitCredentials = () => {
         if (authHeader) {
-            const encodedCredentials = authHeader.split(' ')[1];
+            const encodedCredentials = authHeader.replace('Basic ', '');
             const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
             const [username, personalToken] = gitCredentials.split(':');
             return Git.Cred.userpassPlaintextNew(username, personalToken);
@@ -66,7 +66,6 @@ router.post('/resources', async (req, res) => {
     };
 
     const scanGitFile = async () => {
-        // const repo: Repository = await Git.Clone.clone(moduleUrl as string, './repos');
         // TODO: Provide error handling
         // TODO: Provide an ability to save the repo under the universal name
         const repo = await Git.Clone.clone(templateUrl as string, './repos/fetcher-test', {
