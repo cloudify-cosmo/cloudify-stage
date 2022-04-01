@@ -77,7 +77,7 @@ router.get('/icons/:pluginId', (req, res) => {
         res,
         options
     ).catch(err => {
-        if (err.response?.status === 404) {
+        if (err.response?.status === 404 || err.response?.status === 304) {
             res.status(200).end();
         } else {
             logger.error(err.message);
