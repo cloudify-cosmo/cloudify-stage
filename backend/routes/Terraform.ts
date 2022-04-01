@@ -10,6 +10,7 @@ import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
 import Git from 'nodegit';
+import type { Error } from 'nodegit';
 import uniqueDirectoryName from 'short-uuid';
 import directoryTree from 'directory-tree';
 import { getLogger } from '../handler/LoggerHandler';
@@ -42,7 +43,6 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         }).then(response =>
             decompress(response.data)
                 .then((files: File[]) => {
-                    console.log(JSON.stringify(files));
                     const modules = _(files)
                         .filter({ type: 'directory' })
                         .map('path')
@@ -78,18 +78,30 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     };
 
     const scanGitFile = async () => {
-        // TODO: Provide error handling
         const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
         const terraformModuleDirectories: string[] = [];
 
-        await Git.Clone.clone(templateUrl, repositoryPath, {
-            fetchOpts: {
-                callbacks: {
-                    certificateCheck: () => 0,
-                    credentials: getGitCredentials
+        try {
+            await Git.Clone.clone(templateUrl, repositoryPath, {
+                fetchOpts: {
+                    callbacks: {
+                        certificateCheck: () => 0,
+                        credentials: getGitCredentials
+                    }
                 }
-            }
-        });
+            });
+        } catch (error: unknown) {
+            const isAuthenticationIssue = (error as Error).message.includes('authentication');
+            const responseMessage = isAuthenticationIssue
+                ? 'GIT Authentication failed - Please note that some git providers require a token to be passed instead of a password'
+                : 'The URL is not accessible';
+
+            res.status(400).send({
+                message: responseMessage
+            });
+
+            return;
+        }
 
         directoryTree(
             repositoryPath,
