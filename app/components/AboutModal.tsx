@@ -46,7 +46,7 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
 
                 <Header>{i18n.t('help.aboutModal.licenseDetails', 'License Details')}</Header>
                 <Divider />
-                <CurrentLicense license={license!} />
+                <CurrentLicense license={license} />
 
                 <EulaLink />
             </Modal.Content>

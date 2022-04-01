@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import _ from 'lodash';
+import { constant, isEmpty, join, map } from 'lodash';
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
@@ -8,21 +8,21 @@ import { Icon, Header, Segment, Table } from '../basic';
 import type { LicenseResponse } from '../../../backend/routes/Auth.types';
 
 interface CurrentLicenseProps {
-    license: LicenseResponse;
+    license?: LicenseResponse;
 }
 
 const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => {
-    if (_.isEmpty(license)) {
+    if (!license || isEmpty(license)) {
         return null;
     }
 
     const formatExpirationDate = (date: string) =>
-        _.isEmpty(date)
+        isEmpty(date)
             ? i18n.t('licenseManagement.expirationDateNever', 'Never')
             : StageUtils.formatLocalTimestamp(date, 'DD-MM-YYYY');
     const formatVersion = (version: string) =>
-        _.isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
-    const formatCapabilities = (capabilities: string[]) => _.join(capabilities, ', ');
+        isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
+    const formatCapabilities = (capabilities: string[]) => join(capabilities, ', ');
     const isFalse = (value: boolean) => !value;
 
     type Field = {
@@ -56,13 +56,13 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
             header: i18n.t('licenseManagement.capabilities', 'Capabilities'),
             icon: 'wrench',
             format: formatCapabilities,
-            hide: _.isEmpty
+            hide: isEmpty
         },
         {
             name: 'trial',
             header: i18n.t('licenseManagement.trial', 'Trial'),
             icon: 'lab',
-            format: _.constant(i18n.t('licenseManagement.trialYes', 'Yes')),
+            format: constant(i18n.t('licenseManagement.trialYes', 'Yes')),
             hide: isFalse
         },
         {
@@ -70,7 +70,7 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
             header: i18n.t('licenseManagement.licensedTo', 'Licensed To'),
             icon: 'handshake',
             format: String,
-            hide: _.isEmpty
+            hide: isEmpty
         }
     ];
 
@@ -78,7 +78,7 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
         <Segment>
             <Table basic="very" size="large" celled>
                 <Table.Body>
-                    {_.map(fields, field => {
+                    {map(fields, field => {
                         const value = license[field.name];
 
                         return !!field.hide && field.hide(value) ? null : (
