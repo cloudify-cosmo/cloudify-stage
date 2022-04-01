@@ -30,10 +30,6 @@ export default class Auth {
         return internal.doPost('/auth/logout', { withCredentials: true });
     }
 
-    static isLoggedIn() {
-        return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
-    }
-
     static isProductOperational(license) {
         const isLicenseRequired = _.get(license, 'isRequired', false);
         const isTrialLicense = _.get(license, 'data.trial', false);

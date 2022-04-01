@@ -1,14 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import Routes from '../components/Routes';
+import type { ReduxState } from '../reducers';
 
-import Auth from '../utils/auth';
-
-const mapStateToProps = state => {
+const mapStateToProps = (state: ReduxState) => {
     return {
-        isLoggedIn: Auth.isLoggedIn(),
+        isLoggedIn: state.manager.isLoggedIn,
         isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),
         samlPortalUrl: _.get(state, 'config.app.saml.portalUrl', ''),
         theme: _.get(state, 'config.app.whiteLabel', {})

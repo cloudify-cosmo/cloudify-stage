@@ -15,6 +15,7 @@ export interface ManagerData {
     err: any;
     isLdapEnabled: boolean;
     isLoggingIn: boolean;
+    isLoggedIn: boolean;
     lastUpdated: any;
     license: Record<string, any>;
     maintenance: string;
@@ -35,6 +36,7 @@ export const emptyState: ManagerData = {
     err: null,
     isLdapEnabled: false,
     isLoggingIn: false,
+    isLoggedIn: false,
     lastUpdated: null,
     license: {},
     maintenance: '',
@@ -58,11 +60,13 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
                     groupSystemRoles: {},
                     tenantsRoles: {}
                 },
+                isLoggedIn: true,
                 lastUpdated: action.receivedAt
             };
         case types.LOGOUT:
             return {
                 ...emptyState,
+                isLoggedIn: false,
                 lastUpdated: action.receivedAt
             };
         case types.ERR_LOGIN:
