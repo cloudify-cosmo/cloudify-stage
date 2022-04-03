@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 
 import { setLicense } from 'actions/license';
 import * as types from 'actions/types';
-import licenseReducer from 'reducers/licenseReducer';
+import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import licenses from '../resources/licenses';
 
 describe('(Reducer) License', () => {

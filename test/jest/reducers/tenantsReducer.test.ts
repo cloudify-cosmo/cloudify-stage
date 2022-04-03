@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import timeKeeper from 'timekeeper';
 
-import TenantReducer from 'reducers/tenantsReducer';
+import TenantReducer from 'reducers/managerReducer/tenantsReducer';
 import { getTenants, selectTenant } from 'actions/tenants';
 import * as types from 'actions/types';
 
