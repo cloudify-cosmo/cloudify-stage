@@ -66,9 +66,7 @@ const commands = {
             .then(() => waitUntilEmpty('deployments', { search })),
     searchInDeploymentsWidget: (deploymentId: string) =>
         cy.get('.deploymentsWidget').within(() => {
-            cy.intercept(`/console/sp/events/`).as('fetchDeployments');
             cy.getSearchInput().clear().type(deploymentId);
-            cy.wait('@fetchDeployments', { requestTimeout: secondsToMs(2) });
             cy.get('.input.loading').should('not.exist');
             cy.get('.widgetLoader').should('be.not.visible');
         }),
