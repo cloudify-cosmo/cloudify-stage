@@ -1,7 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
-import Cookies from 'js-cookie';
 
 import Consts from './consts';
 import StageUtils from './stageUtils';
