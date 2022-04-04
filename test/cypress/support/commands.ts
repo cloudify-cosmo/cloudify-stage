@@ -462,5 +462,5 @@ function setContext(field: string, value: string) {
 }
 
 function clearContext(field: string) {
-    cy.get(`.${field}FilterField .dropdown.icon`).click();
+    return cy.get(`.${field}FilterField .dropdown.icon`).click();
 }
