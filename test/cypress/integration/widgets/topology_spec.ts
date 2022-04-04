@@ -63,7 +63,7 @@ describe('Topology', () => {
 
             cy.log('Check terraform module details');
             waitForDeploymentToBeInstalled(deploymentId);
-            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
+            cy.clearBlueprintContext().clearDeploymentContext().setDeploymentContext(deploymentId);
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
             cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
             getTerraformDetailsButton().should('not.have.css', 'visibility', 'hidden').click({ force: true });
