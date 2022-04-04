@@ -42,6 +42,8 @@ describe('/terraform/blueprint endpoint', () => {
 });
 
 describe('/terraform/resources endpoint', () => {
+    const endpointUrl = '/console/terraform/resources';
+
     it('provides modules list', async () => {
         const authorizationHeaderValue = 'auth';
 
@@ -50,11 +52,18 @@ describe('/terraform/resources endpoint', () => {
             .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template.zip'), null));
 
         const response = await request(app)
-            .post('/console/terraform/resources?zipUrl=http://test/test.zip')
+            .post(`${endpointUrl}?templateUrl=http://test/test.zip`)
             .set('Authorization', authorizationHeaderValue)
             .send();
 
         expect(response.status).toBe(200);
         expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
+    });
+
+    it('handles error from accessing the private repository without passing credentials', async () => {
+        const privateGitFileUrl = 'https://github.com/cloudify-cosmo/cloudify-blueprint-composer.git';
+        const response = await request(app).post(`${endpointUrl}?templateUrl=${privateGitFileUrl}`).send();
+
+        expect(response.status).toBe(400);
     });
 });

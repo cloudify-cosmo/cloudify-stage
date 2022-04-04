@@ -637,7 +637,7 @@ describe('Blueprints widget', () => {
                 {
                     method: 'POST',
                     pathname: '/console/terraform/resources',
-                    query: { zipUrl: singleModuleTerraformTemplateUrl }
+                    query: { templateUrl: singleModuleTerraformTemplateUrl }
                 },
                 { statusCode: 401 }
             );
@@ -666,7 +666,7 @@ describe('Blueprints widget', () => {
                 cy.intercept({
                     method: 'POST',
                     pathname: '/console/terraform/resources',
-                    query: { zipUrl: singleModuleTerraformTemplateUrl },
+                    query: { templateUrl: singleModuleTerraformTemplateUrl },
                     headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
                 }).as('resources');
 
