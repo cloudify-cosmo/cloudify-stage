@@ -141,7 +141,7 @@ describe('Getting started modal', () => {
 
     // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
     describe('', () => {
-        before(() => cy.usePageMock().mockLogin('admin', 'admin', false));
+        before(() => cy.usePageMock().mockLogin({ disableGettingStarted: false }));
         beforeEach(() => cy.visit(`/console?cloudSetup=true`));
 
         it('should install selected environment', () => {

@@ -171,12 +171,23 @@ const commands = {
             },
             ...options
         }),
-    // TODO(RD-2314): object instead of multiple optional parameters
-    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
+    login: ({
+        username = 'admin',
+        password = 'admin',
+        expectSuccessfulLogin = true,
+        forceVisitLoginPage = false,
+        disableGettingStarted = true
+    }: {
+        username?: string;
+        password?: string;
+        expectSuccessfulLogin?: boolean;
+        forceVisitLoginPage?: boolean;
+        disableGettingStarted?: boolean;
+    } = {}) => {
         mockGettingStarted(!disableGettingStarted);
 
         cy.location('pathname').then(pathname => {
-            if (pathname !== '/console/login') {
+            if (forceVisitLoginPage || pathname !== '/console/login') {
                 cy.visit('/console/login');
             }
         });
@@ -194,13 +205,19 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+            cy.waitUntilLoaded();
         }
         return cy;
     },
-    // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) =>
-        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
+    mockLogin: ({
+        username = 'admin',
+        password = 'admin',
+        disableGettingStarted = true
+    }: {
+        username?: string;
+        password?: string;
+        disableGettingStarted?: boolean;
+    } = {}) => cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
