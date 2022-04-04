@@ -32,8 +32,8 @@ pipeline {
   environment {
     PROJECT = "cloudify-stage"
     BRANCH = "${env.BRANCH_NAME}"
-    VERSION = getVersion("cloudify-premium","${env.BRANCH_NAME}").trim()
-    PRERELEASE = getPreRelease("cloudify-premium","${env.BRANCH_NAME}").trim()
+    VERSION = getVersion(PROJECT,"${env.BRANCH_NAME}").trim()
+    PRERELEASE = getPreRelease(PROJECT,"${env.BRANCH_NAME}").trim()
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
