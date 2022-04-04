@@ -15,7 +15,7 @@ export interface ManagerData {
     auth: AuthData;
     clusterStatus: ClusterStatusData;
     isLdapEnabled: boolean;
-    lastUpdated: any;
+    lastUpdated: number | null;
     license: LicenseData;
     maintenance: string;
     permissions: Record<string, any>;

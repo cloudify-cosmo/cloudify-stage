@@ -29,7 +29,7 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl(url, data) {
+    getManagerUrl(url, data?) {
         return this.buildActualUrl(url, data);
     }
 
@@ -43,7 +43,7 @@ export default class Manager extends Internal {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data) {
+    buildActualUrl(url, data?) {
         const queryString = data
             ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
             : '';
