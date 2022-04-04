@@ -140,13 +140,13 @@ pipeline {
             }
           }
           post {
-            uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_BUILD_PATH}")
-            uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_LATEST_BUILD_PATH}")
+            uploadToReleaseS3("${env.WORKSPACE}/stage-rpm/","${env.S3_BUILD_PATH}")
+            uploadToReleaseS3("${env.WORKSPACE}/stage-rpm/","${env.S3_LATEST_BUILD_PATH}")
             archiveArtifacts '**/rpm/*.rpm'
           }
         }
       }
-    }
+    
     stage('Run second tests group') {
       parallel {
         stage('Test frontend unit'){
