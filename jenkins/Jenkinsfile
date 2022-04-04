@@ -133,20 +133,20 @@ pipeline {
 
               echo 'Save Artifacts'
               sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
-              // dir("${WORKSPACE}/rpm") {
-              //   archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
-
+              dir("${WORKSPACE}/rpm") {
+                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
               }
             }
           }
           post {
-            uploadToReleaseS3("${env.WORKSPACE}/stage-rpm/","${env.S3_BUILD_PATH}")
-            uploadToReleaseS3("${env.WORKSPACE}/stage-rpm/","${env.S3_LATEST_BUILD_PATH}")
-            archiveArtifacts '**/rpm/*.rpm'
+            success {
+              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_BUILD_PATH}")
+              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_LATEST_BUILD_PATH}")
+            }
           }
         }
       }
-    
+    }
     stage('Run second tests group') {
       parallel {
         stage('Test frontend unit'){
