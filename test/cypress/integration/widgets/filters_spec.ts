@@ -114,7 +114,10 @@ describe('Filters widget', () => {
     }
 
     function searchFilter(name: string) {
+        cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
+        cy.get('.loading').should('exist'); // LEON TODO: here
+        cy.wait('@filterDeployments');
         cy.get('.loading').should('not.exist');
     }
 
@@ -124,12 +127,12 @@ describe('Filters widget', () => {
             searchFilter(filterName);
         });
 
-        it('list existing filters', () => {
+        it.only('list existing filters', () => {
             cy.getWidget(widgetId).within(() => {
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
-                        expect(tableData).to.have.length(1);
+                        expect(tableData).to.have.length(1); // The test is failing here
                         expect(tableData[0]['Filter name']).to.eq(filterName);
                         expect(tableData[0].Creator).to.eq('admin');
                         expect(tableData[0].Created).not.to.be.null;
