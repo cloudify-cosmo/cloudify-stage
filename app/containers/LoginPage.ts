@@ -1,18 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import type { Dispatch } from 'redux';
 import LoginPage from '../components/LoginPage';
 import { login } from '../actions/managers';
+import { ReduxState } from '../reducers';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
-        username: _.get(manager, 'username', ''),
-        isLoggingIn: _.get(manager, 'isLoggingIn', false),
-        loginError: _.get(manager, 'err', ''),
+        username: manager.auth.username,
+        isLoggingIn: manager.auth.state === 'loggingIn',
+        loginError: manager.auth.error,
         mode: _.get(config, 'mode'),
         whiteLabel: _.get(config, 'app.whiteLabel'),
         isSamlEnabled: _.get(config, 'app.saml.enabled', false),
@@ -20,9 +20,9 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        onLogin: (username, password, redirect) => {
+        onLogin: (username: string, password: string, redirect: string) => {
             dispatch(login(username, password, redirect));
         }
     };

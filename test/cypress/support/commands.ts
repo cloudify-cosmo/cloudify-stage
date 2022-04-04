@@ -15,6 +15,8 @@ import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import Consts from 'app/utils/consts';
+import emptyState from 'app/reducers/managerReducer/emptyState';
+import type { ManagerData } from 'app/reducers/managerReducer';
 
 import { secondsToMs } from './resource_commons';
 import './asserts';
@@ -231,17 +233,19 @@ const commands = {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
             const { role } = response.body;
-            cy.setLocalStorage(
-                `manager-state-main`,
-                JSON.stringify({
-                    auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
-                    username
-                })
-            );
+            cy.initLocalStorage(username, role);
             if (disableGettingStarted) mockGettingStarted(false);
         });
         return cy.visit('/console');
     },
+    initLocalStorage: (username: string, role: string) =>
+        cy.setLocalStorage(
+            `manager-state-main`,
+            JSON.stringify({
+                ...emptyState,
+                auth: { ...emptyState.auth, role, username, state: 'loggedIn' }
+            } as ManagerData)
+        ),
     clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
         cy.log(`Clicking '${name}' page menu item`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });

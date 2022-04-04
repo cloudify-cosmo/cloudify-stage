@@ -2,6 +2,7 @@
 
 import log from 'loglevel';
 import { push } from 'connected-react-router';
+import type { ThunkAction, AnyAction } from 'redux';
 
 import * as types from './types';
 import Auth from '../utils/auth';
@@ -11,6 +12,7 @@ import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
+import type { ReduxState } from '../reducers';
 
 function requestLogin() {
     return {
@@ -44,7 +46,7 @@ export function storeRBAC(RBAC) {
     };
 }
 
-export function login(username, password, redirect) {
+export function login(username, password, redirect): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
