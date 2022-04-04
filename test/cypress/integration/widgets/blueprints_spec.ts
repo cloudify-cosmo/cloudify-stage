@@ -4,6 +4,7 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const errorBoxSelector = '.error.message';
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
@@ -346,8 +347,6 @@ describe('Blueprints widget', () => {
         });
 
         it('should successfully dismiss error messages', () => {
-            const errorBoxSelector = '.error.message';
-
             cy.get('.modal').within(() => {
                 cy.contains('button', 'Upload').click();
 
@@ -650,6 +649,56 @@ describe('Blueprints widget', () => {
                     singleModuleTerraformTemplateUrl
                 ).blur();
                 cy.contains('The URL requires authentication');
+            });
+        });
+
+        describe('handle getting Terraform module from git when', () => {
+            const terraformModuleDropdownHasOptions = (hasOptions: boolean) => {
+                const optionsAssertion = hasOptions ? 'not.exist' : 'exist';
+
+                cy.contains('Terraform folder in the archive')
+                    .parent()
+                    .get(`.dropdown.disabled`)
+                    .should(optionsAssertion);
+            };
+
+            const typeTerraformModuleUrl = (url: string) => {
+                cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', url).blur();
+            };
+
+            beforeEach(() => {
+                openTerraformModal();
+            });
+
+            it('providing a correct public git file url', () => {
+                const publicGitFileUrl = 'https://github.com/cloudify-community/tf-source.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(publicGitFileUrl);
+                    terraformModuleDropdownHasOptions(true);
+                });
+            });
+
+            it('providing an incorrect public git file url', () => {
+                const incorrectPublicGitFileUrl = 'https://test.test/test.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(incorrectPublicGitFileUrl);
+                    terraformModuleDropdownHasOptions(false);
+
+                    cy.get(errorBoxSelector).contains('The URL is not accessible').should('exist');
+                });
+            });
+
+            it('providing a private git file url without typing corresponding credentials', () => {
+                const privateGitFileUrl = 'https://github.com/cloudify-cosmo/cloudify-blueprint-composer.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(privateGitFileUrl);
+                    terraformModuleDropdownHasOptions(false);
+
+                    cy.get(errorBoxSelector).contains('GIT Authentication failed').should('exist');
+                });
             });
         });
 
