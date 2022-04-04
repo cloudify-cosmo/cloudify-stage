@@ -5,7 +5,7 @@ import type { ReduxState } from '../reducers';
 
 const mapStateToProps = (state: ReduxState) => {
     return {
-        isLoggedIn: state.manager.isLoggedIn,
+        isLoggedIn: state.manager.auth.state === 'loggedIn',
         isSamlEnabled: _.get(state, 'config.app.saml.enabled', false),
         samlPortalUrl: _.get(state, 'config.app.saml.portalUrl', ''),
         theme: _.get(state, 'config.app.whiteLabel', {})

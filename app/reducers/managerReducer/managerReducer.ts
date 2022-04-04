@@ -9,45 +9,49 @@ import license from './licenseReducer';
 import type { LicenseData } from './licenseReducer';
 import type { VersionResponse } from '../../../backend/routes/Auth.types';
 
+const AuthStates = {
+    loggedOut: 'loggedOut',
+    loggingIn: 'loggingIn',
+    loggedIn: 'loggedIn'
+} as const;
+
 export interface ManagerData {
     auth: {
+        username: string;
         role: any;
         groupSystemRoles: Record<string, any>;
         tenantsRoles: Record<string, any>;
+        state: keyof typeof AuthStates;
+        error: any;
     };
     clusterStatus: ClusterStatusData;
-    err: any;
     isLdapEnabled: boolean;
-    isLoggingIn: boolean;
-    isLoggedIn: boolean;
     lastUpdated: any;
     license: LicenseData;
     maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
     tenants: TenantsData;
-    username: string;
     version: Partial<VersionResponse>;
 }
 
 export const emptyState: ManagerData = {
     auth: {
-        role: null,
+        username: '',
+        role: '',
         groupSystemRoles: {},
-        tenantsRoles: {}
+        tenantsRoles: {},
+        state: AuthStates.loggedOut,
+        error: null
     },
     clusterStatus: {},
-    err: null,
     isLdapEnabled: false,
-    isLoggingIn: false,
-    isLoggedIn: false,
     lastUpdated: null,
     license: {},
     maintenance: '',
     permissions: {},
     roles: [],
     tenants: {},
-    username: '',
     version: {}
 };
 
@@ -58,26 +62,28 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
         case types.RES_LOGIN:
             return {
                 ...emptyState,
-                username: action.username,
                 auth: {
+                    ...emptyState.auth,
+                    username: action.username,
                     role: action.role,
-                    groupSystemRoles: {},
-                    tenantsRoles: {}
+                    state: 'loggedIn'
                 },
-                isLoggedIn: true,
                 lastUpdated: action.receivedAt
             };
         case types.LOGOUT:
             return {
                 ...emptyState,
-                isLoggedIn: false,
                 lastUpdated: action.receivedAt
             };
         case types.ERR_LOGIN:
             return {
                 ...emptyState,
-                username: action.username,
-                err: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error,
+                auth: {
+                    ...emptyState.auth,
+                    username: action.username,
+                    error:
+                        action.error !== null && typeof action.error === 'object' ? action.error.message : action.error
+                },
                 lastUpdated: action.receivedAt
             };
         case types.SET_LDAP_ENABLED:
@@ -88,8 +94,9 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
         case types.SET_USER_DATA:
             return {
                 ...state,
-                username: action.username,
                 auth: {
+                    ...state.auth,
+                    username: action.username,
                     role: action.role,
                     groupSystemRoles: action.groupSystemRoles,
                     tenantsRoles: action.tenantsRoles

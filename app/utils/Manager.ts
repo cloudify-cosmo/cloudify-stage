@@ -10,7 +10,7 @@ import Consts from './consts';
 
 export default class Manager extends Internal {
     getCurrentUsername() {
-        return this.managerData?.username ?? null;
+        return this.managerData?.auth?.username ?? null;
     }
 
     getCurrentUserRole() {

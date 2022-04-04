@@ -28,19 +28,19 @@ export default class UserAppDataAutoSaver {
     initFromStore() {
         const state = this.store.getState();
         this.pages = state.pages;
-        this.username = get(state, 'manager.username');
+        this.username = get(state, 'manager.auth.username');
         this.role = get(state, 'manager.auth.role');
     }
 
     validData() {
         const state = this.store.getState();
-        return get(state, 'manager.username') && get(state, 'manager.auth.role');
+        return get(state, 'manager.auth.username') && get(state, 'manager.auth.role');
     }
 
     hasDataChanged() {
         const state = this.store.getState();
         return (
-            this.username !== state.manager.username ||
+            this.username !== state.manager.auth.username ||
             this.role !== state.manager.auth.role ||
             !isEqual(this.pages, state.pages)
         );

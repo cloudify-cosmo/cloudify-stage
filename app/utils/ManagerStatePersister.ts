@@ -19,8 +19,11 @@ export default class ManagerStatePersister {
                 this.loadManagerStateDirectly(mode) ?? this.loadWrappedManagerState(mode) ?? emptyState;
 
             // Clear login error if has any
-            managerState.err = null;
-            managerState.isLoggingIn = false;
+            managerState.auth = {
+                ...managerState.auth,
+                state: 'loggedOut',
+                error: null
+            };
 
             return managerState;
         } catch (e) {

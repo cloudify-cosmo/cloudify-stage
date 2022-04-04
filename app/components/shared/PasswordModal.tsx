@@ -20,7 +20,7 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
     const [confirmPassword, setConfirmPassword, resetConfirmPassword] = useResettableState('');
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const manager = useSelector((state: ReduxState) => new Manager(state.manager));
-    const loggedInUsername = useSelector((state: ReduxState) => state.manager.username);
+    const loggedInUsername = useSelector((state: ReduxState) => state.manager.auth.username);
 
     useEffect(() => {
         if (open) {

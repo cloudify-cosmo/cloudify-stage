@@ -70,12 +70,14 @@ describe('(Reducer) Manager', () => {
                     expect(store.getState()).toEqual({
                         ...emptyState,
                         auth: {
-                            groupSystemRoles: {},
+                            username,
                             role,
-                            tenantsRoles: {}
+                            groupSystemRoles: {},
+                            tenantsRoles: {},
+                            state: 'loggedIn',
+                            error: null
                         },
-                        lastUpdated: Date.now(),
-                        username
+                        lastUpdated: Date.now()
                     });
                 });
             });
@@ -117,9 +119,12 @@ describe('(Reducer) Manager', () => {
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
                         ...emptyState,
-                        err: 'User unauthorized',
-                        lastUpdated: Date.now(),
-                        username
+                        auth: {
+                            ...emptyState.auth,
+                            username,
+                            error: 'User unauthorized'
+                        },
+                        lastUpdated: Date.now()
                     });
                 });
             });
