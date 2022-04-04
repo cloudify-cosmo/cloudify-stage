@@ -1,5 +1,5 @@
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { secondsToMs, waitUntilEmpty } from './resource_commons';
+import { waitUntilEmpty } from './resource_commons';
 
 declare global {
     namespace Cypress {

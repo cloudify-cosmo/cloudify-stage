@@ -129,7 +129,7 @@ describe('Filters widget', () => {
 
         it.only('list existing filters', () => {
             cy.getWidget(widgetId).within(() => {
-                cy.get('table', { timeout: 1000 }).should('have.length', 1);
+                cy.get('table tr', { timeout: 1000 }).should('have.length', 2);
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
@@ -143,6 +143,7 @@ describe('Filters widget', () => {
                 const systemFilterName = 'csys-environment-filter';
                 searchFilter(systemFilterName);
 
+                cy.get('table tr td:first-child', { timeout: 1000 }).contains(systemFilterName);
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
