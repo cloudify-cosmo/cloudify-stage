@@ -37,7 +37,6 @@ type ResourcesRequest = Request<
 >;
 
 router.post('/resources', async (req: ResourcesRequest, res) => {
-    // TODO: Unified functionalities across scanZipFile and scanGitFile
     const { templateUrl } = req.query;
     const authHeader = req.get('Authorization');
     const isGitFile = templateUrl.endsWith('.git');
