@@ -30,12 +30,18 @@ pipeline {
   }
 
   environment {
+    PROJECT = "cloudify-stage"
     BRANCH = "${env.BRANCH_NAME}"
+    VERSION = getVersion("cloudify-premium","${env.BRANCH_NAME}").trim()
+    PRERELEASE = getPreRelease("cloudify-premium","${env.BRANCH_NAME}").trim()
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
+    S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.PROJECT}/${env.BRANCH}"
+    S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
+    S3_LATEST_BUILD_PATH = "${env.S3_BASE_URL}/latest"
   }
 
   stages {
@@ -127,10 +133,16 @@ pipeline {
 
               echo 'Save Artifacts'
               sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
-              dir("${WORKSPACE}/rpm") {
-                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+              // dir("${WORKSPACE}/rpm") {
+              //   archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+
               }
             }
+          }
+          post {
+            uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_BUILD_PATH}")
+            uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_LATEST_BUILD_PATH}")
+            archiveArtifacts '**/rpm/*.rpm'
           }
         }
       }
