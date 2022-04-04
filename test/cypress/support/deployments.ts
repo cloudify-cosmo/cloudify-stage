@@ -66,9 +66,12 @@ const commands = {
             .then(() => waitUntilEmpty('deployments', { search })),
     searchInDeploymentsWidget: (deploymentId: string) =>
         cy.get('.deploymentsWidget').within(() => {
+            cy.interceptSp('GET', '/summary/deployments').as('fetchDeployments');
             cy.getSearchInput().clear().type(deploymentId);
-            cy.get('.input.loading').should('not.exist');
-            cy.get('.widgetLoader').should('be.not.visible');
+            cy.wait('@fetchDeployments').then(() => {
+                cy.get('.input.loading').should('not.exist');
+                cy.get('.widgetLoader').should('be.not.visible');
+            });
         }),
     selectAndClickDeploy: () => {
         cy.get('[aria-label="Deploy or Install"]').click().contains('Deploy').click();

@@ -109,20 +109,17 @@ describe('Filter', () => {
 
             cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));
 
-            cy.interceptSp('/summary/deployments').as('fetchDeployments');
             cy.searchInDeploymentsWidget(deploymentName);
-            cy.wait('@fetchDeployments').then(() => {
-                // Triggering mouseout event just after the click to hide the tooltip
-                cy.get('.deploymentActionsMenu').click().trigger('mouseout');
-                cy.contains('Force Delete').click();
-                cy.contains('Yes').click();
+            // Triggering mouseout event just after the click to hide the tooltip
+            cy.get('.deploymentActionsMenu').click().trigger('mouseout');
+            cy.contains('Force Delete').click();
+            cy.contains('Yes').click();
 
-                cy.contains('.deploymentsWidget .row', deploymentName).should('not.exist');
+            cy.contains('.deploymentsWidget .row', deploymentName).should('not.exist');
 
-                cy.get('.deploymentFilterField > .text.default');
-                cy.get('.deploymentFilterField input').type(deploymentName, { force: true });
-                cy.contains('.deploymentFilterField .message', 'No results found.');
-            });
+            cy.get('.deploymentFilterField > .text.default');
+            cy.get('.deploymentFilterField input').type(deploymentName, { force: true });
+            cy.contains('.deploymentFilterField .message', 'No results found.');
         });
 
         it('blueprint upload and removal', () => {
