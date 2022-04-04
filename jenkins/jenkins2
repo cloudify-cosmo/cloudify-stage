@@ -1,0 +1,133 @@
+@Library('pipeline-shared-library') _
+
+def rpmBuild(String specFile){
+  sh script:"""
+    cd ~/rpmbuild/SOURCES
+
+    rpmspec \
+      -D "CLOUDIFY_VERSION ${env.VERSION}" \
+      -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+      -P packaging/${specFile} > rendered.spec
+  
+    yum-builddep -y rendered.spec
+  
+    spectool \
+      -d "CLOUDIFY_VERSION ${env.VERSION}" \
+      -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+      -P packaging/${specFile} \
+      -S -g
+  
+    rpmbuild \
+      -D "CLOUDIFY_VERSION ${env.VERSION}" \
+      -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+      -D "dist .el7" \
+      -bb packaging/${specFile}
+  """, label:"Building RPM from ${specFile}"
+}
+
+pipeline{
+  agent{
+    kubernetes{
+      defaultContainer 'jnlp'
+      yamlFile 'jenkins/build-pod.yaml'
+    }
+  }
+  options{
+    checkoutToSubdirectory('cloudify-premium')
+    buildDiscarder(logRotator(numToKeepStr:'10'))
+    timeout(time: 60, unit: 'MINUTES')
+    timestamps()
+  }
+  environment{
+    PROJECT = 'cloudify-premium'
+    BRANCH = "${env.BRANCH_NAME}"
+    VERSION = getVersion("cloudify-premium","${env.BRANCH_NAME}").trim()
+    PRERELEASE = getPreRelease("cloudify-premium","${env.BRANCH_NAME}").trim()
+    S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.PROJECT}/${env.BRANCH}"
+    S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
+    S3_LATEST_BUILD_PATH = "${env.S3_BASE_URL}/latest"
+  }
+  stages{
+    stage('test, fetch RPMs and build Patroni RPM'){
+      parallel{
+        stage('test'){
+          steps{
+            sh script:"mkdir -p ${env.WORKSPACE}/test && cp -rf ${env.WORKSPACE}/${env.PROJECT}/. ${env.WORKSPACE}/test", label: "copying repo to seperate workspace"
+            container('py36'){
+              dir("${env.WORKSPACE}/test"){
+                echo 'install dependencies'
+                sh 'sudo apt-get install -y libldap2-dev libsasl2-dev'
+                echo 'install virtual env'
+                sh 'python3 -m venv ~/venv'
+                echo 'install test requirements'
+                sh '''
+                  ~/venv/bin/pip install -Ur dev-requirements.txt
+                  ~/venv/bin/pip install -Ur test-requirements.txt
+                  ~/venv/bin/pip install -e .
+                '''
+                echo 'run static analysis'
+                sh '~/venv/bin/flake8'
+                echo 'run test cases'
+                sh '~/venv/bin/pytest -sv --cov-report term-missing --cov=cloudify_premium tests/unittests/ --junitxml=test-results/cloudify_premium.xml'
+              }
+            }
+          }
+          post {
+            always {
+              junit '**/test-results/*.xml'
+            }
+          }
+        }
+        stage('fetch_rpms'){
+          steps{
+            sh script:"mkdir -p ${env.WORKSPACE}/rpms", label: "creating RPMs folder"
+            container('py36'){
+              dir("${env.WORKSPACE}/rpms"){
+                echo 'prep'
+                sh 'pip install requests'
+                sh script:"""
+                  curl https://cloudify-release-eu.s3.amazonaws.com/cloudify/${env.VERSION}/${env.PRERELEASE}-release/cloudify-rest-service-${env.VERSION}-${env.PRERELEASE}.el7.x86_64.rpm -o cloudify-rest-service.rpm
+                  curl https://cloudify-release-eu.s3.amazonaws.com/cloudify/${env.VERSION}/${env.PRERELEASE}-release/cloudify-management-worker-${env.VERSION}-${env.PRERELEASE}.el7.x86_64.rpm -o cloudify-management-worker.rpm
+                """, label: 'fetch RPMs'
+              }
+            }
+          }
+        }
+        stage('build-RPMs'){
+          steps{
+            container('rpmbuild'){
+              sh script: """
+                  cd ~/rpmbuild
+                  cp -rf ${env.WORKSPACE}/${env.PROJECT}/. ~/rpmbuild/SOURCES && cd SOURCES
+                """, label: 'copying repo to seperate workspace'
+              echo 'build patroni RPM'
+              rpmBuild('patroni.spec')
+              sh script:("mkdir -p ${env.WORKSPACE}/patroni-rpm && cp -rf /root/rpmbuild/RPMS/x86_64/patroni-*.x86_64.rpm ${env.WORKSPACE}/patroni-rpm"), label:'Copy RPM to rpm folder'
+              dir("~/rpmbuild/SOURCES"){
+              sh script:"""
+                cp -rf ${env.WORKSPACE}/rpms/cloudify*.rpm ~/rpmbuild/SOURCES
+                yum install ~/rpmbuild/SOURCES/cloudify-rest-service.rpm -y
+                yum install ~/rpmbuild/SOURCES/cloudify-management-worker.rpm -y
+                chmod a+wx /opt -R
+              """, label:'prepare and install RPMs'
+              echo 'build premium RPM'
+              rpmBuild('cloudify-premium.spec')
+              sh script:("mkdir -p ${env.WORKSPACE}/premium-rpm && cp -rf /root/rpmbuild/RPMS/x86_64/cloudify-premium-*.x86_64.rpm ${env.WORKSPACE}/premium-rpm"), label:'Copy RPM to rpm folder'
+              }
+            }
+          }
+          post {
+            success {
+              uploadToReleaseS3("${env.WORKSPACE}/patroni-rpm/","${env.S3_BUILD_PATH}")
+              uploadToReleaseS3("${env.WORKSPACE}/patroni-rpm/","${env.S3_LATEST_BUILD_PATH}")
+              archiveArtifacts '**/patroni-rpm/*.rpm'
+              uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_BUILD_PATH}")
+              uploadToReleaseS3("${env.WORKSPACE}/premium-rpm/","${env.S3_LATEST_BUILD_PATH}")
+              archiveArtifacts '**/premium-rpm/*.rpm'
+            }
+          }
+        }
+      }
+    }
+  }
+}
