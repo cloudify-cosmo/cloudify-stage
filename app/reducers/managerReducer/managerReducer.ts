@@ -1,9 +1,13 @@
-import { Reducer } from 'redux';
+import type { Reducer } from 'redux';
 
-import * as types from '../actions/types';
+import * as types from '../../actions/types';
 import tenants from './tenantsReducer';
+import type { TenantsData } from './tenantsReducer';
 import clusterStatus from './clusterStatusReducer';
+import type { ClusterStatusData } from './clusterStatusReducer';
 import license from './licenseReducer';
+import type { LicenseData } from './licenseReducer';
+import type { VersionResponse } from '../../../backend/routes/Auth.types';
 
 export interface ManagerData {
     auth: {
@@ -11,19 +15,19 @@ export interface ManagerData {
         groupSystemRoles: Record<string, any>;
         tenantsRoles: Record<string, any>;
     };
-    clusterStatus: Record<string, any>;
+    clusterStatus: ClusterStatusData;
     err: any;
     isLdapEnabled: boolean;
     isLoggingIn: boolean;
     isLoggedIn: boolean;
     lastUpdated: any;
-    license: Record<string, any>;
+    license: LicenseData;
     maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
-    tenants: Record<string, any>;
+    tenants: TenantsData;
     username: string;
-    version: Record<string, any>;
+    version: Partial<VersionResponse>;
 }
 
 export const emptyState: ManagerData = {

@@ -184,7 +184,7 @@ export default class StageUtils {
 
         const systemRole = managerData.auth.role;
         const groupSystemRoles = _.keys(managerData.auth.groupSystemRoles);
-        const currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected];
+        const currentTenantRoles = managerData.auth.tenantsRoles[managerData.tenants.selected!];
         const tenantRoles = currentTenantRoles ? currentTenantRoles.roles : [];
         const userRoles = _.uniq(tenantRoles.concat(systemRole, groupSystemRoles));
         return _.intersection(authorizedRoles, userRoles).length > 0;
