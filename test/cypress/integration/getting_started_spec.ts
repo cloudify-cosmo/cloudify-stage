@@ -365,7 +365,7 @@ describe('Getting started modal', () => {
     });
 
     it('should redirect to the blueprints page upon closing the modal', () => {
-        cy.enableGettingStarted().mockLogin('admin', 'admin', false);
+        cy.enableGettingStarted().mockLogin({ disableGettingStarted: false });
 
         cy.get('.modal').within(() => {
             goToNextStep();
