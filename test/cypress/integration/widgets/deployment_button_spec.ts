@@ -7,9 +7,7 @@ describe('Create Deployment Button widget', () => {
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
-    const types = [
-        'string'
-    ];
+    const types = ['string'];
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();

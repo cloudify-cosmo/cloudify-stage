@@ -1,6 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 describe('handles deployment inputs of type', () => {
-
     const resourcePrefix = 'deployment_inputs_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
 
@@ -69,7 +68,7 @@ describe('handles deployment inputs of type', () => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
+            .uploadBlueprint('blueprints/simple.zip', testBlueprintId);
 
         types.forEach(type =>
             cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
