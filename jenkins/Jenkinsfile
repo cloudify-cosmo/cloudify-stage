@@ -141,6 +141,9 @@ pipeline {
           }
           post {
             success {
+              echo 'Uploading Artifacts'
+              echo "${env.S3_BUILD_PATH}"
+              echo "${env.S3_LATEST_BUILD_PATH}"
               uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_BUILD_PATH}")
               uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_LATEST_BUILD_PATH}")
             }
