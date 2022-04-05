@@ -99,7 +99,7 @@ pipeline {
               sh """
                 cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/master/packaging/version_info"
+                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info"
               """
 
               echo 'Check for cache'
