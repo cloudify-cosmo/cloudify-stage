@@ -41,7 +41,7 @@ pipeline {
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     //S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.PROJECT}/${env.BRANCH}"
     //S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
-    S3_BASE_URL = "$-build/${env.PROJECT}/${env.BRANCH}"
+    S3_BASE_URL = "-build/${env.PROJECT}/${env.BRANCH}"
     S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
     S3_LATEST_BUILD_PATH = "${env.S3_BASE_URL}/latest"
   }
