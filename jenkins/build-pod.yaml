@@ -69,3 +69,16 @@ spec:
     - name: dockerhub
   nodeSelector:
     instance-type: spot-xlarge
+  - name: awscli
+    image: amazon/aws-cli
+    command:
+    - cat
+    tty: true
+    resources:
+      limits:
+        cpu: 0.1
+        memory: 256Mi
+  imagePullSecrets:
+    - name: dockerhub
+  nodeSelector:
+    instance-type: spot
