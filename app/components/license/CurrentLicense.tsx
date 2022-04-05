@@ -1,27 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { constant, isEmpty, join, map } from 'lodash';
 import React from 'react';
+import type { FunctionComponent } from 'react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../utils/stageUtils';
-
 import { Icon, Header, Segment, Table } from '../basic';
+import type { LicenseResponse } from '../../../backend/routes/Auth.types';
 
-export default function CurrentLicense({ license }) {
-    if (_.isEmpty(license)) {
+interface CurrentLicenseProps {
+    license?: LicenseResponse;
+}
+
+const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => {
+    if (!license || isEmpty(license)) {
         return null;
     }
 
-    const formatExpirationDate = stringDate =>
-        _.isEmpty(stringDate)
+    const formatExpirationDate = (date: string) =>
+        isEmpty(date)
             ? i18n.t('licenseManagement.expirationDateNever', 'Never')
-            : StageUtils.formatLocalTimestamp(stringDate, 'DD-MM-YYYY');
-    const formatVersion = version =>
-        _.isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
-    const formatCapabilities = capabilities => _.join(capabilities, ', ');
-    const isFalse = boolValue => !boolValue;
+            : StageUtils.formatLocalTimestamp(date, 'DD-MM-YYYY');
+    const formatVersion = (version: string) =>
+        isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
+    const formatCapabilities = (capabilities: string[]) => join(capabilities, ', ');
+    const isFalse = (value: boolean) => !value;
 
-    const fields = [
+    type Field = {
+        name: keyof LicenseResponse;
+        header: string;
+        icon: SemanticICONS;
+        format: (value: any) => string;
+        hide?: (value: any) => boolean;
+    };
+    const fields: Field[] = [
         {
             name: 'expiration_date',
             header: i18n.t('licenseManagement.expirationDate', 'Expiration Date'),
@@ -45,13 +56,13 @@ export default function CurrentLicense({ license }) {
             header: i18n.t('licenseManagement.capabilities', 'Capabilities'),
             icon: 'wrench',
             format: formatCapabilities,
-            hide: _.isEmpty
+            hide: isEmpty
         },
         {
             name: 'trial',
             header: i18n.t('licenseManagement.trial', 'Trial'),
             icon: 'lab',
-            format: _.constant(i18n.t('licenseManagement.trialYes', 'Yes')),
+            format: constant(i18n.t('licenseManagement.trialYes', 'Yes')),
             hide: isFalse
         },
         {
@@ -59,7 +70,7 @@ export default function CurrentLicense({ license }) {
             header: i18n.t('licenseManagement.licensedTo', 'Licensed To'),
             icon: 'handshake',
             format: String,
-            hide: _.isEmpty
+            hide: isEmpty
         }
     ];
 
@@ -67,7 +78,7 @@ export default function CurrentLicense({ license }) {
         <Segment>
             <Table basic="very" size="large" celled>
                 <Table.Body>
-                    {_.map(fields, field => {
+                    {map(fields, field => {
                         const value = license[field.name];
 
                         return !!field.hide && field.hide(value) ? null : (
@@ -90,15 +101,5 @@ export default function CurrentLicense({ license }) {
             </Table>
         </Segment>
     );
-}
-
-CurrentLicense.propTypes = {
-    license: PropTypes.shape({
-        capabilities: PropTypes.arrayOf(PropTypes.string),
-        cloudify_version: PropTypes.string,
-        customer_id: PropTypes.string,
-        exiration_date: PropTypes.string,
-        license_edition: PropTypes.string,
-        trial: PropTypes.bool
-    }).isRequired
 };
+export default CurrentLicense;

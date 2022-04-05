@@ -1,6 +1,7 @@
 import log from 'loglevel';
 
-import { emptyState, ManagerData } from 'reducers/managerReducer';
+import { emptyState } from 'reducers/managerReducer';
+import type { ManagerData } from 'reducers/managerReducer';
 import ManagerStatePersister from 'utils/ManagerStatePersister';
 
 describe('(Utils) ManagerStatePersister', () => {
