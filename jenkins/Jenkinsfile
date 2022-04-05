@@ -212,6 +212,7 @@ pipeline {
           }
           steps {
             echo 'Trigger Stage-UI System-tests'
+            sh 'apt-get -y install libstdc++-4.9-dev'
             build(job: 'Stage-UI-System-Test', parameters: [
               string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
               string(name: 'STAGE_BRANCH', value: "${BRANCH}")
