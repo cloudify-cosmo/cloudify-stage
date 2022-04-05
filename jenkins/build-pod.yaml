@@ -6,7 +6,7 @@ spec:
       persistentVolumeClaim:
         claimName: pipelines-efs
   containers:
-   - name: awscli
+  - name: awscli
     image: amazon/aws-cli
     command:
     - cat
