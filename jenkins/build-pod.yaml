@@ -15,8 +15,6 @@ spec:
       limits:
         cpu: 0.1
         memory: 256Mi
-  nodeSelector:
-    instance-type: spot
   - name: jnlp
     image: jenkins/inbound-agent:4.3-4
     resources:
