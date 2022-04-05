@@ -375,7 +375,6 @@ export default function TerraformModal({
             })
             .catch(err => {
                 setErrors({
-                    ...errors,
                     template: err.status === 401 ? tError('terraformTemplateUnauthorized') : err.message
                 });
                 clearTemplateModules();
