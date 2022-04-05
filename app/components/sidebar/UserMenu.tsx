@@ -45,7 +45,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
     );
     const canChangePassword = useSelector((state: ReduxState) => !state.manager.isLdapEnabled);
     const tenantNames = useSelector((state: ReduxState) =>
-        state.manager.tenants.items.map((tenant: { name: string }) => tenant.name)
+        state.manager.tenants.items!.map((tenant: { name: string }) => tenant.name)
     );
 
     function handleEditModeClick() {

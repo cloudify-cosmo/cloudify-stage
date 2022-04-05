@@ -1,9 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Reducer } from 'redux';
 import _ from 'lodash';
-import * as types from '../actions/types';
+import * as types from '../../actions/types';
 
-const tenants = (state = {}, action) => {
+export interface TenantsData {
+    isFetching?: boolean;
+    items?: {
+        name: string;
+    }[];
+    selected?: string;
+    lastUpdated?: string;
+    error?: string;
+}
+
+const tenants: Reducer<TenantsData> = (state = {}, action) => {
     let selectedTenant;
     switch (action.type) {
         case types.REQ_TENANTS:
