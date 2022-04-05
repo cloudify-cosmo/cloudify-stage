@@ -194,9 +194,6 @@ export default function getInputField(
                     placeholder={Stage.i18n.t('input.capability_value.placeholder')}
                     value={value}
                     valueProp="capabilities"
-                    textFormatter={item =>
-                        item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
-                    }
                     fetchUrl={fetchUrl}
                     onChange={newValue => onChange?.(null, { name, value: newValue })}
                     toolbox={toolbox}
