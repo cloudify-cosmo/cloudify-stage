@@ -439,7 +439,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from Terraform module modal and', () => {
+    describe.only('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
@@ -453,8 +453,11 @@ describe('Blueprints widget', () => {
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', templateUrl).blur();
-            cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
+            cy.typeToFieldInput(
+                'Terraform module source - URL to a zip archive or a GIT repository',
+                templateUrl
+            ).blur();
+            cy.setSingleDropdownValue('Terraform module folder', modulePath);
         }
 
         function selectVariableSource(source: string) {
@@ -645,7 +648,7 @@ describe('Blueprints widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.typeToFieldInput(
-                    'URL to a zip archive that contains the Terraform module',
+                    'Terraform module source - URL to a zip archive or a GIT repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
                 cy.contains('The URL requires authentication');
@@ -656,14 +659,11 @@ describe('Blueprints widget', () => {
             const terraformModuleDropdownHasOptions = (hasOptions: boolean) => {
                 const optionsAssertion = hasOptions ? 'not.exist' : 'exist';
 
-                cy.contains('Terraform folder in the archive')
-                    .parent()
-                    .get(`.dropdown.disabled`)
-                    .should(optionsAssertion);
+                cy.contains('Terraform module folder').parent().get(`.dropdown.disabled`).should(optionsAssertion);
             };
 
             const typeTerraformModuleUrl = (url: string) => {
-                cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', url).blur();
+                cy.typeToFieldInput('Terraform module source - URL to a zip archive or a GIT repository', url).blur();
             };
 
             beforeEach(() => {
@@ -726,13 +726,13 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Password', password);
 
                 cy.typeToFieldInput(
-                    'URL to a zip archive that contains the Terraform module',
+                    'Terraform module source - URL to a zip archive or a GIT repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
 
                 cy.wait('@resources');
 
-                cy.setSingleDropdownValue('Terraform folder in the archive', 'local');
+                cy.setSingleDropdownValue('Terraform module folder', 'local');
                 cy.clickButton('Create');
                 cy.contains('Generating Terraform blueprint').should('be.visible');
                 cy.contains('Uploading Terraform blueprint').should('be.visible');
