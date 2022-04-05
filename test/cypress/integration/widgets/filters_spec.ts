@@ -127,7 +127,7 @@ describe('Filters widget', () => {
             searchFilter(filterName);
         });
 
-        it.only('list existing filters', () => {
+        it('list existing filters', () => {
             cy.getWidget(widgetId).within(() => {
                 cy.get('table tr', { timeout: 1000 }).should('have.length', 2);
                 cy.get('table')
@@ -139,11 +139,12 @@ describe('Filters widget', () => {
                         expect(tableData[0].Created).not.to.be.null;
                     });
                 cy.get('.checkbox:not(.checked)');
+                cy.getSearchInput().clear();
 
                 const systemFilterName = 'csys-environment-filter';
                 searchFilter(systemFilterName);
 
-                cy.get('table tr td:first-child', { timeout: 1000 }).contains(systemFilterName);
+                cy.get('table tr', { timeout: 1000 }).should('have.length', 2);
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
