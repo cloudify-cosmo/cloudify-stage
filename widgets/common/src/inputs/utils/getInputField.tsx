@@ -188,16 +188,10 @@ export default function getInputField(
         case 'capability_value': {
             const fetchUrl = '/searches/capabilities';
 
-            // To format returned deployments to capabilities.
-            // We need to fetch capabilities.
+            // Formatting returned deployments to capabilities.
             const itemsFormatter = (deployments: any) =>
                 deployments?.[0]?.capabilities?.map((capability: any) => ({ ...valuesFn(capability)[0] })) ?? [];
-            // const formatter = (item: any) => {
-            //     for(const propKey in item.capabilities) {
-            //         console.log("item", propKey, item);
-            //         return item.capabilities[propKey].value;
-            //     }
-            // }
+
             return (
                 <DynamicDropdown
                     name={name}
