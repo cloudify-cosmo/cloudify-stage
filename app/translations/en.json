@@ -879,7 +879,7 @@
                 "blueprintName": "Blueprint name",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "Terraform module source - URL to a zip archive or a GIT repository",
+                "template": "Terraform module source - URL to a zip archive or a Git repository",
                 "resourceLocation": "Terraform module folder",
                 "urlAuthentication": "URL authentication",
                 "username": "Username",
