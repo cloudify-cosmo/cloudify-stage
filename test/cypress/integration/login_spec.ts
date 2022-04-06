@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
     function forceLogin(options?: Parameters<typeof cy.login>[0]) {
@@ -13,13 +14,12 @@ describe('Login', () => {
     });
 
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
-        cy.activate();
+        cy.activate().usePageMock();
 
         const redirectUrl = '/console/page/test_page';
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
-        cy.usePageMock();
-        forceLogin();
+        cy.login();
 
         cy.location('pathname').should('be.equal', redirectUrl);
     });
@@ -29,7 +29,7 @@ describe('Login', () => {
         { retries: { runMode: 2 } },
         () => {
             const currentAppDataVersion = Consts.APP_VERSION;
-            const fetchUserAppsTimeout = 20000;
+            const fetchUserAppsTimeout = secondsToMs(20);
 
             cy.intercept('GET', '/console/ua', req => {
                 req.reply(res => {
