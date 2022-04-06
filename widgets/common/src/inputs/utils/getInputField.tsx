@@ -1,4 +1,5 @@
 import type { IconProps } from 'semantic-ui-react';
+import { values as valuesFn } from 'lodash';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import RevertToDefaultIcon from '../../components/RevertToDefaultIcon';
 import { DEFAULT_TEXTAREA_ROWS, STRING_VALUE_SURROUND_CHAR } from './consts';
@@ -185,15 +186,26 @@ export default function getInputField(
             );
         }
         case 'capability_value': {
-            const fetchUrl = '/searches/capabilities?_include=capabilities';
+            const fetchUrl = '/searches/capabilities';
 
+            // To format returned deployments to capabilities.
+            // We need to fetch capabilities.
+            const itemsFormatter = (deployments: any) =>
+                deployments?.[0]?.capabilities?.map((capability: any) => ({ ...valuesFn(capability)[0] })) ?? [];
+            // const formatter = (item: any) => {
+            //     for(const propKey in item.capabilities) {
+            //         console.log("item", propKey, item);
+            //         return item.capabilities[propKey].value;
+            //     }
+            // }
             return (
                 <DynamicDropdown
                     name={name}
                     error={!!error}
                     placeholder={Stage.i18n.t('input.capability_value.placeholder')}
+                    itemsFormatter={itemsFormatter}
                     value={value}
-                    valueProp="capabilities"
+                    valueProp="value"
                     fetchUrl={fetchUrl}
                     onChange={newValue => onChange?.(null, { name, value: newValue })}
                     toolbox={toolbox}

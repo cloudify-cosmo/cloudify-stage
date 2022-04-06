@@ -13,7 +13,9 @@ describe('handles deployment inputs of type', () => {
         'string',
         'textarea',
         'blueprint_id',
-        'deployment_id'
+        'deployment_id',
+        'capability_value',
+        'secret_key'
     ];
 
     const checkAttribute = (input, attrName, attrValue) => {
@@ -51,15 +53,20 @@ describe('handles deployment inputs of type', () => {
         });
     };
 
-    const verifyNumberOfOptions = (number, atLeast = false) => {
-        cy.get('input').click().type(resourcePrefix);
+    const verifyNumberOfOptions = (number, atLeast = false, typedPrefix = resourcePrefix) => {
+        if (typedPrefix) {
+            cy.get('input').click().type(typedPrefix);
+        } else {
+            cy.get('input').click();
+        }
 
+        const contains = typedPrefix ? ` :contains("${typedPrefix}")` : '';
         if (number === 0) {
             cy.get('.menu').contains('No results found.').should('be.visible');
         } else if (atLeast) {
-            cy.get(`.menu .item[role="option"] :contains("${resourcePrefix}")`).should('have.length.at.least', number);
+            cy.get(`.menu .item[role="option"]${contains}`).should('have.length.at.least', number);
         } else {
-            cy.get(`.menu .item[role="option"] :contains("${resourcePrefix}")`).should('have.length', number);
+            cy.get(`.menu .item[role="option"]${contains}`).should('have.length', number);
         }
         cy.get('label').click();
     };
@@ -355,6 +362,26 @@ describe('handles deployment inputs of type', () => {
 
         cy.getField('deployment_id_name_contains_not_existing').within(() => {
             verifyNumberOfOptions(0);
+        });
+    });
+
+    it('capability_value', () => {
+        const capabilitiesBlueprintId = `${resourcePrefix}capabilities`;
+        const testDeploymentId = `${capabilitiesBlueprintId}_dep`;
+
+        cy.uploadBlueprint('blueprints/capabilities.zip', capabilitiesBlueprintId).deployBlueprint(
+            capabilitiesBlueprintId,
+            testDeploymentId
+        );
+
+        selectBlueprintInModal('capability_value');
+
+        cy.getField('capability_value_all').within(() => {
+            verifyNumberOfOptions(3, true, '');
+        });
+
+        cy.getField('capability_value_contains_y').within(() => {
+            verifyNumberOfOptions(2, true, '');
         });
     });
 });
