@@ -52,7 +52,8 @@ describe('/terraform/resources endpoint', () => {
             .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template.zip'), null));
 
         const response = await request(app)
-            .post(`${endpointUrl}?templateUrl=http://test/test.zip`)
+            .post(endpointUrl)
+            .query({ templateUrl: 'http://test/test.zip' })
             .set('Authorization', authorizationHeaderValue)
             .send();
 
@@ -62,7 +63,7 @@ describe('/terraform/resources endpoint', () => {
 
     it('handles error from accessing the private repository without passing credentials', async () => {
         const privateGitFileUrl = 'https://github.com/cloudify-cosmo/cloudify-blueprint-composer.git';
-        const response = await request(app).post(`${endpointUrl}?templateUrl=${privateGitFileUrl}`).send();
+        const response = await request(app).post(endpointUrl).query({ templateUrl: privateGitFileUrl }).send();
 
         expect(response.status).toBe(400);
     });
