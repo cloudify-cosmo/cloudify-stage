@@ -1,4 +1,23 @@
-Stage.defineWidget<any, any, any>({
+interface WidgetConfiguration {
+    showExpiredTokens: boolean;
+    pollingTime: number;
+}
+
+interface Token {
+    id: string;
+    description: string | null;
+    expiration_date: Date | null;
+    last_used: Date | null;
+    username: string;
+    value: string;
+    role: string;
+}
+
+interface WidgetData {
+    data: Token[];
+}
+
+Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
     id: 'tokens',
     name: 'Tokens',
     initialWidth: 12,
@@ -20,6 +39,8 @@ Stage.defineWidget<any, any, any>({
     ],
 
     render(_widget, _data, _error, _toolbox) {
+        // eslint-disable-next-line
+        console.log(_data);
         return <div>I'm alive!</div>;
     }
 });
