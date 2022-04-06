@@ -10,7 +10,7 @@ describe('Community version', () => {
             cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
             cy.intercept('/console/config', { fixture: 'community/config.json' });
             cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: true });
-            cy.usePageMock().login();
+            cy.usePageMock().mockLogin();
         });
     });
 
