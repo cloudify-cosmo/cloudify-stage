@@ -1,3 +1,5 @@
+import { secondsToMs } from '../../support/resource_commons';
+
 // @ts-nocheck File not migrated fully to TS
 describe('Filter', () => {
     before(() => {
@@ -110,7 +112,7 @@ describe('Filter', () => {
             cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));
 
             cy.searchInDeploymentsWidget(deploymentName);
-            cy.get('.deploymentActionsMenu', { timeout: 1000 }).should('have.length', 1);
+            cy.get('.deploymentActionsMenu', { timeout: secondsToMs(2) }).should('have.length', 1);
             // Triggering mouseout event just after the click to hide the tooltip
             cy.get('.deploymentActionsMenu').click().trigger('mouseout');
             cy.contains('Force Delete').click();
