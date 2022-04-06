@@ -49,6 +49,7 @@
     {"widget": "snapshots", "link": "/content/working_with/console/widgets/snapshots.md"},
     {"widget": "tenants", "link": "/content/working_with/console/widgets/tenants.md"},
     {"widget": "text", "link": "/content/working_with/console/widgets/text.md"},
+    {"widget": "tokens", "link": "/content/working_with/console/widgets/tokens.md"},
     {"widget": "topology", "link": "/content/working_with/console/widgets/topology.md"},
     {"widget": "userGroups", "link": "/content/working_with/console/widgets/userGroups.md"},
     {"widget": "userManagement", "link": "/content/working_with/console/widgets/userManagement.md"}
