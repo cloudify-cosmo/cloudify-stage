@@ -214,20 +214,24 @@ const commands = {
     mockLogin: ({
         username = 'admin',
         password = 'admin',
-        disableGettingStarted = true
+        disableGettingStarted = true,
+        visitPage = '/console'
     }: {
         username?: string;
         password?: string;
         disableGettingStarted?: boolean;
-    } = {}) => cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
+        visitPage?: string;
+    } = {}) => cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted, visitPage }).waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
-        disableGettingStarted = true
+        disableGettingStarted = true,
+        visitPage = '/console'
     }: {
         username?: string;
         password?: string;
         disableGettingStarted?: boolean;
+        visitPage?: string;
     } = {}) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
@@ -236,9 +240,9 @@ const commands = {
             cy.initLocalStorage(username, role);
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        return cy.visit('/console');
+        return cy.visit(visitPage);
     },
-    initLocalStorage: (username: string, role: string) =>
+    initLocalStorage: (username = 'admin', role = 'sys_admin') =>
         cy.setLocalStorage(
             `manager-state-main`,
             JSON.stringify({

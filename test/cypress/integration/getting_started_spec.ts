@@ -141,8 +141,9 @@ describe('Getting started modal', () => {
 
     // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
     describe('', () => {
-        before(() => cy.usePageMock().mockLogin({ disableGettingStarted: false }));
-        beforeEach(() => cy.visit(`/console?cloudSetup=true`));
+        beforeEach(() =>
+            cy.usePageMock().mockLogin({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
+        );
 
         it('should install selected environment', () => {
             cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
@@ -251,6 +252,7 @@ describe('Getting started modal', () => {
 
         it('should display information about not available plugins', () => {
             mockPluginsCatalog([]);
+            cy.reload();
             cy.deletePlugins();
 
             cy.get('.modal').within(() => {
