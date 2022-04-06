@@ -439,7 +439,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe.only('should open upload from Terraform module modal and', () => {
+    describe('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
