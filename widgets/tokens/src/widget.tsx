@@ -6,6 +6,7 @@ Stage.defineWidget<any, any, any>({
     isReact: true,
     hasReadme: true,
     fetchUrl: '[manager]/tokens[params]',
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
 
