@@ -46,7 +46,11 @@ export function storeRBAC(RBAC) {
     };
 }
 
-export function login(username, password, redirect): ThunkAction<void, ReduxState, never, AnyAction> {
+export function login(
+    username: string,
+    password: string,
+    redirect?: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
@@ -80,7 +84,7 @@ function isLicenseRequired(versionEdition) {
     return versionEdition !== Consts.EDITION.COMMUNITY;
 }
 
-export function getManagerData() {
+export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
@@ -120,7 +124,7 @@ function doLogout(err) {
     };
 }
 
-export function logout(err?, path?) {
+export function logout(err?, path?): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());
