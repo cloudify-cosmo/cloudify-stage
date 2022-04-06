@@ -73,6 +73,7 @@ describe('handles deployment inputs of type', () => {
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
+        cy.deleteSecrets(resourcePrefix);
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId);
@@ -382,6 +383,22 @@ describe('handles deployment inputs of type', () => {
 
         cy.getField('capability_value_contains_y').within(() => {
             verifyNumberOfOptions(2, true, '');
+        });
+    });
+
+    it('secret_key', () => {
+        selectBlueprintInModal('secret_key');
+
+        cy.createSecret(`${resourcePrefix}key`, 'value');
+        cy.createSecret(`${resourcePrefix}key2`, 'value2');
+        cy.createSecret(`${resourcePrefix}some_name`, 'value2');
+
+        cy.getField('secret_key_all').within(() => {
+            verifyNumberOfOptions(3, false);
+        });
+
+        cy.getField('secret_key_contains_key').within(() => {
+            verifyNumberOfOptions(2, false);
         });
     });
 });
