@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore } from 'redux';
@@ -7,7 +5,7 @@ import { createStore } from 'redux';
 import { setLicense } from 'actions/license';
 import * as types from 'actions/types';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
-import licenses from '../resources/licenses';
+import licenses from '../../resources/licenses';
 
 describe('(Reducer) License', () => {
     const mockStore = configureMockStore([thunk]);

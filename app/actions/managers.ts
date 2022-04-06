@@ -2,6 +2,7 @@
 
 import log from 'loglevel';
 import { push } from 'connected-react-router';
+import type { ThunkAction, AnyAction } from 'redux';
 
 import * as types from './types';
 import Auth from '../utils/auth';
@@ -11,6 +12,7 @@ import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
+import type { ReduxState } from '../reducers';
 
 function requestLogin() {
     return {
@@ -44,7 +46,11 @@ export function storeRBAC(RBAC) {
     };
 }
 
-export function login(username, password, redirect) {
+export function login(
+    username: string,
+    password: string,
+    redirect?: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
@@ -78,7 +84,7 @@ function isLicenseRequired(versionEdition) {
     return versionEdition !== Consts.EDITION.COMMUNITY;
 }
 
-export function getManagerData() {
+export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
@@ -118,7 +124,7 @@ function doLogout(err) {
     };
 }
 
-export function logout(err?, path?) {
+export function logout(err?, path?): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());
