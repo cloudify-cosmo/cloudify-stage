@@ -1,6 +1,6 @@
 describe('Authentication', () => {
     function setTokenAndLocalStorage(token: string) {
-        return cy.setCookie('XSRF-TOKEN', token).initLocalStorage('admin', 'sys_admin');
+        return cy.setCookie('XSRF-TOKEN', token).initLocalStorage();
     }
     beforeEach(() => cy.clearCookie('XSRF-TOKEN'));
 
