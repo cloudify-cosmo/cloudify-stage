@@ -8,6 +8,7 @@ import type * as SharedComponents from '../components/shared';
 import type * as StagePropTypes from './props';
 import type * as StageHooks from './hooks';
 import type { WidgetDefinition } from '../../backend/routes/Templates.types';
+import type { PaginatedResponse as CloudifyPaginatedResponse } from '../../backend/types';
 import type GenericConfigType from './GenericConfig';
 import type StageUtils from './stageUtils';
 import type WidgetContext from './Context';
@@ -289,16 +290,7 @@ declare global {
                 Data,
                 Configuration
             >;
-            interface PaginatedResponse<ResponseItem> {
-                items: ResponseItem[];
-                metadata: {
-                    pagination: {
-                        offset: number;
-                        size: number;
-                        total: number;
-                    };
-                };
-            }
+            type PaginatedResponse<ResponseItem> = CloudifyPaginatedResponse<ResponseItem>;
             type ReduxState = import('../reducers').ReduxState;
 
             type ObjectKeys<T extends Record<string, any>> = T[keyof T];
