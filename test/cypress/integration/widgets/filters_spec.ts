@@ -11,6 +11,7 @@ import {
     FilterRuleType,
     LabelsFilterRuleOperators
 } from '../../../../widgets/common/src/filters/types';
+import { secondsToMs } from '../../support/resource_commons';
 
 describe('Filters widget', () => {
     const widgetId = 'filters';
@@ -617,8 +618,12 @@ describe('Filters widget', () => {
             cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
 
             cy.log('Filter rules form population verification');
+            cy.getSearchInput().clear();
+            cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
             cy.getSearchInput().clear().type(filterId);
+            cy.wait('@filterDeployments');
             cy.get('.loading').should('not.exist');
+            cy.get('[title="Edit filter"]', { timeout: secondsToMs(2) }).should('have.length', 1);
             openEditFilterModal();
 
             cy.get('.modal').within(() => verifyRulesForm(testRules));
