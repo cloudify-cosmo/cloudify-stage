@@ -94,6 +94,13 @@ const variablesColumns: Columns<Variable> = [
         style: dynamicTableFieldStyle
     },
     {
+        id: 'name',
+        label: t('variablesTable.name'),
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: TerraformVariableValueInput,
+        style: dynamicTableFieldStyle
+    },
+    {
         id: 'value',
         label: t('variablesTable.value'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,

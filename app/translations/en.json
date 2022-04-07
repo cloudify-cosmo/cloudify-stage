@@ -891,7 +891,8 @@
                 "variablesTable": {
                     "name": "Variable",
                     "source": "Source",
-                    "value": "Value / Secret key / Input name",
+                    "name": "Name",
+                    "value": "Value",
                     "sources": {
                         "secret": "Secret",
                         "input": "Input",
