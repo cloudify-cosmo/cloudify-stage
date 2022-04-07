@@ -114,23 +114,23 @@ describe('Filters widget', () => {
         });
     }
 
-    function searchFilter(name: string) {
+    function searchFilter(name: string, expectedNumberOfFilters: number) {
         cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('be.visible');
         cy.wait('@filterDeployments');
         cy.get('.loading').should('not.exist');
+        cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
     }
 
     describe('should provide basic functionality:', () => {
         beforeEach(() => {
             cy.deleteDeploymentsFilters(filterName).createDeploymentsFilter(filterName, filterRules).refreshPage();
-            searchFilter(filterName);
+            searchFilter(filterName, 1);
         });
 
         it('list existing filters', () => {
             cy.getWidget(widgetId).within(() => {
-                cy.get('table tr', { timeout: 1000 }).should('have.length', 2);
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
@@ -143,9 +143,8 @@ describe('Filters widget', () => {
                 cy.getSearchInput().clear();
 
                 const systemFilterName = 'csys-environment-filter';
-                searchFilter(systemFilterName);
+                searchFilter(systemFilterName, 1);
 
-                cy.get('table tr', { timeout: 1000 }).should('have.length', 2);
                 cy.get('table')
                     .getTable()
                     .should(tableData => {
