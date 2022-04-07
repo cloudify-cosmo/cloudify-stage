@@ -121,7 +121,9 @@ describe('Filters widget', () => {
         cy.wait('@filterDeployments');
         cy.get('.loading').should('not.exist');
         if (expectedNumberOfFilters) {
-            cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
+            cy.getWidget(widgetId).within(() => {
+                cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
+            });
         }
     }
 
