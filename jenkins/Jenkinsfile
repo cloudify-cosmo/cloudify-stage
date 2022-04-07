@@ -35,6 +35,7 @@ pipeline {
     STAGE_DIR = "cloudify-stage"
     VERSION = getVersion(STAGE_DIR,"${env.BRANCH_NAME}").trim()
     PRERELEASE = getPreRelease(STAGE_DIR,"${env.BRANCH_NAME}").trim()
+    MASTER_VER = getVersion(STAGE_DIR,"master").trim()
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
@@ -51,184 +52,187 @@ pipeline {
             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE'){
               container('node'){
                 dir("${STAGE_DIR}") {
-                  echo 'Run npm production dependencies security audit'
-                  sh 'npm run audit'
+                  //echo 'Run npm production dependencies security audit'
+                  sh "echo ${env.BRANCH_NAME}"
+                  sh "echo ${BRANCH}"
+                  sh "echo ${env.MASTER_VER}"
+                  sh "echo ${env.PRERELEASE}"
                 }
               }
             }
           }
         }
-        stage('Prepare & Run first test group'){
-          steps {
-            container('node'){
-              echo "Install required packages"
-              sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client && apt-get -y install jq'
-              dir("${STAGE_DIR}/conf") {
-                withVault([configuration: configuration, vaultSecrets: secrets]) {
-                  sh '''
-                    jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
-                  '''
-                }
-                dir("${STAGE_DIR}") {
-                  restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Install dependencies"
-                  sh 'npm run beforebuild'
-                  archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Build application"
-                  sh 'npm run build'
-                }
-              }
-              echo 'Prepare test folder'
-              sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
-              dir("${WORKSPACE}/test"){
-                echo 'Run static code analysis and code style check'
-                sh 'npm run lint'
-                echo 'Validate JSON files'
-                sh 'npm run test:json'
-              }
-            }
-          }
-        }
-        stage('Build RPM'){
-          when {
-            branch pattern: ".+-build|master", comparator: "REGEXP"
-          }
-          steps {
-            container('rpmbuild'){
-              echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
-              sh """
-                cd ~/rpmbuild
-                mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-              """
+    //     stage('Prepare & Run first test group'){
+    //       steps {
+    //         container('node'){
+    //           echo "Install required packages"
+    //           sh 'rm -rf /var/lib/apt/lists/* && apt update && apt-get -y install postgresql-client && apt-get -y install jq'
+    //           dir("${STAGE_DIR}/conf") {
+    //             withVault([configuration: configuration, vaultSecrets: secrets]) {
+    //               sh '''
+    //                 jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
+    //               '''
+    //             }
+    //             dir("${STAGE_DIR}") {
+    //               restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+    //               echo "Install dependencies"
+    //               sh 'npm run beforebuild'
+    //               archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+    //               echo "Build application"
+    //               sh 'npm run build'
+    //             }
+    //           }
+    //           echo 'Prepare test folder'
+    //           sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
+    //           dir("${WORKSPACE}/test"){
+    //             echo 'Run static code analysis and code style check'
+    //             sh 'npm run lint'
+    //             echo 'Validate JSON files'
+    //             sh 'npm run test:json'
+    //           }
+    //         }
+    //       }
+    //     }
+    //     stage('Build RPM'){
+    //       when {
+    //         branch pattern: ".+-build|master", comparator: "REGEXP"
+    //       }
+    //       steps {
+    //         container('rpmbuild'){
+    //           echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
+    //           sh """
+    //             cd ~/rpmbuild
+    //             mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
+    //           """
 
-              echo 'Check for cache'
-              restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+    //           echo 'Check for cache'
+    //           restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
 
-              echo 'Install NodeJS'
-              sh "yum install -y ${CFY_NODE_RPM}"
+    //           echo 'Install NodeJS'
+    //           sh "yum install -y ${CFY_NODE_RPM}"
 
-              echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
-              sh '''
-                cd ~/rpmbuild/BUILD
-                rpmlint --info packaging/cloudify-stage.spec
-                for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
-              '''
+    //           echo 'Lint RPM spec file & Install build dependencies for RPM spec file'
+    //           sh '''
+    //             cd ~/rpmbuild/BUILD
+    //             rpmlint --info packaging/cloudify-stage.spec
+    //             for i in {1..10}; do yum-builddep -y packaging/cloudify-stage.spec && break || sleep 5; done
+    //           '''
 
-              echo 'Download sources for RPM spec file & Build RPM'
-              sh """
-                cd ~/rpmbuild/BUILD
-                spectool \
-                  -d "CLOUDIFY_VERSION ${env.VERSION}" \
-                  -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
-                  -P packaging/cloudify-stage.spec \
-                  -S -g
+    //           echo 'Download sources for RPM spec file & Build RPM'
+    //           sh """
+    //             cd ~/rpmbuild/BUILD
+    //             spectool \
+    //               -d "CLOUDIFY_VERSION ${env.VERSION}" \
+    //               -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+    //               -P packaging/cloudify-stage.spec \
+    //               -S -g
 
-                rpmbuild \
-                  -D "CLOUDIFY_VERSION ${env.VERSION}" \
-                  -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
-                  -bb packaging/cloudify-stage.spec
-              """
+    //             rpmbuild \
+    //               -D "CLOUDIFY_VERSION ${env.VERSION}" \
+    //               -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
+    //               -bb packaging/cloudify-stage.spec
+    //           """
 
-              echo 'Save Artifacts'
-              sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
-              dir("${WORKSPACE}/rpm") {
-                archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
-              }
-            }
-          }
-          post {
-            success {
-              echo 'Uploading Artifacts'
-              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_BUILD_PATH}")
-              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_LATEST_BUILD_PATH}")
-            }
-          }
-        }
-      }
-    }
-    stage('Run second tests group') {
-      parallel {
-        stage('Test frontend unit'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run frontend unit tests'
-                sh 'npm run test:frontend:unit'
-              }
-            }
-          }
-        }
-        stage('Test frontend components'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run frontend component tests'
-                sh 'npm run test:frontend:components'
-              }
-            }
-          }
-        }
-        stage('Test backend'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run backend tests'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
-                sh 'npm run test:backend'
-                echo 'Verify backend start'
-                sh '''
-                  cd backend
-                  npm run db-migrate
-                  npm run start &
-                  npm run wait-on-server
-                '''
-              }
-            }
-          }
-        }
-        stage('Size & check-types') {
-          steps {
-            container('node'){
-              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
-              dir("size") {
-                echo 'Check bundle size'
-                sh 'npm run size'
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
-              }
-              sh "rm -rf ${WORKSPACE}/size"
-            }
-          }
-        }
-        stage('Docs'){
-          steps {
-            container('node'){
-              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
-              dir("docs") {
-                echo 'Generate widgets documentation'
-                sh 'npm run docWidgets'
+    //           echo 'Save Artifacts'
+    //           sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
+    //           dir("${WORKSPACE}/rpm") {
+    //             archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
+    //           }
+    //         }
+    //       }
+    //       post {
+    //         success {
+    //           echo 'Uploading Artifacts'
+    //           uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_BUILD_PATH}")
+    //           uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_LATEST_BUILD_PATH}")
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    // stage('Run second tests group') {
+    //   parallel {
+    //     stage('Test frontend unit'){
+    //       steps{
+    //         container('node'){
+    //           dir("${WORKSPACE}/test"){
+    //             echo 'Run frontend unit tests'
+    //             sh 'npm run test:frontend:unit'
+    //           }
+    //         }
+    //       }
+    //     }
+    //     stage('Test frontend components'){
+    //       steps{
+    //         container('node'){
+    //           dir("${WORKSPACE}/test"){
+    //             echo 'Run frontend component tests'
+    //             sh 'npm run test:frontend:components'
+    //           }
+    //         }
+    //       }
+    //     }
+    //     stage('Test backend'){
+    //       steps{
+    //         container('node'){
+    //           dir("${WORKSPACE}/test"){
+    //             echo 'Run backend tests'
+    //             sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
+    //             sh 'npm run test:backend'
+    //             echo 'Verify backend start'
+    //             sh '''
+    //               cd backend
+    //               npm run db-migrate
+    //               npm run start &
+    //               npm run wait-on-server
+    //             '''
+    //           }
+    //         }
+    //       }
+    //     }
+    //     stage('Size & check-types') {
+    //       steps {
+    //         container('node'){
+    //           sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
+    //           dir("size") {
+    //             echo 'Check bundle size'
+    //             sh 'npm run size'
+    //             echo 'Check TypeScript types'
+    //             sh 'npm run check-types'
+    //           }
+    //           sh "rm -rf ${WORKSPACE}/size"
+    //         }
+    //       }
+    //     }
+    //     stage('Docs'){
+    //       steps {
+    //         container('node'){
+    //           sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
+    //           dir("docs") {
+    //             echo 'Generate widgets documentation'
+    //             sh 'npm run docWidgets'
 
-                echo 'Check if widgets documentation is up to date'
-                sh 'git diff --exit-code ./widgets'
+    //             echo 'Check if widgets documentation is up to date'
+    //             sh 'git diff --exit-code ./widgets'
 
-                echo 'Check if cloudify-ui-components version is the same as in official documentation'
-                sh 'npm run docCheck'
-              }
-            }
-          }
-        }
-        stage('Run Stage-UI System-tests') {
-          when {
-            branch pattern: ".+-build|master|dependabot/.+", comparator: "REGEXP"
-          }
-          steps {
-            echo 'Trigger Stage-UI System-tests'
-            build(job: 'Stage-UI-System-Test', parameters: [
-              string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
-              string(name: 'STAGE_BRANCH', value: "${BRANCH}")
-            ])
-          }
-        }
+    //             echo 'Check if cloudify-ui-components version is the same as in official documentation'
+    //             sh 'npm run docCheck'
+    //           }
+    //         }
+    //       }
+    //     }
+    //     stage('Run Stage-UI System-tests') {
+    //       when {
+    //         branch pattern: ".+-build|master|dependabot/.+", comparator: "REGEXP"
+    //       }
+    //       steps {
+    //         echo 'Trigger Stage-UI System-tests'
+    //         build(job: 'Stage-UI-System-Test', parameters: [
+    //           string(name: 'BRANCH', value: "${env.MAIN_BRANCH}"),
+    //           string(name: 'STAGE_BRANCH', value: "${BRANCH}")
+    //         ])
+    //       }
+    //     }
       }
     }
   }
