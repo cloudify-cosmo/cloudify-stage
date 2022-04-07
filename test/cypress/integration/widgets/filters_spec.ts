@@ -114,13 +114,15 @@ describe('Filters widget', () => {
         });
     }
 
-    function searchFilter(name: string, expectedNumberOfFilters: number) {
+    function searchFilter(name: string, expectedNumberOfFilters?: number) {
         cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('be.visible');
         cy.wait('@filterDeployments');
         cy.get('.loading').should('not.exist');
-        cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
+        if (expectedNumberOfFilters) {
+            cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
+        }
     }
 
     describe('should provide basic functionality:', () => {
