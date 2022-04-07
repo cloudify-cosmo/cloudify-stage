@@ -1,23 +1,8 @@
-interface WidgetConfiguration {
-    showExpiredTokens: boolean;
-    pollingTime: number;
-}
+import TokensTable from './TokensTable';
+import type { TokensWidget } from './types';
+import _ from 'lodash';
 
-interface Token {
-    id: string;
-    description: string | null;
-    expiration_date: Date | null;
-    last_used: Date | null;
-    username: string;
-    value: string;
-    role: string;
-}
-
-interface WidgetData {
-    data: Token[];
-}
-
-Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
+Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     id: 'tokens',
     name: 'Tokens',
     initialWidth: 12,
@@ -38,10 +23,14 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
         }
     ],
 
-    render(_widget, _data, _error, _toolbox) {
-        // eslint-disable-next-line
-        console.log(_data);
-        return <div>I'm alive!</div>;
+    render(_widget, data, _error, toolbox) {
+        const { Loading } = Stage.Basic;
+
+        if (_.isEmpty(data)) {
+            return <Loading />;
+        }
+
+        return <TokensTable data={data} toolbox={toolbox} />;
     }
 });
 
