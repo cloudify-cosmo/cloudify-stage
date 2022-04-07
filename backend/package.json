@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@tsconfig/node14": "^1.0.1",
-    "archiver": "^2.1.1",
+    "archiver": "^4.0.2",
     "axios": "^0.26.0",
     "body": "^5.1.0",
     "body-parser": "^1.16.1",
