@@ -17,6 +17,7 @@ import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common
 import Consts from 'app/utils/consts';
 import emptyState from 'app/reducers/managerReducer/emptyState';
 import type { ManagerData } from 'app/reducers/managerReducer';
+import type { Mode } from 'backend/serverSettings';
 
 import { secondsToMs } from './resource_commons';
 import './asserts';
@@ -51,6 +52,14 @@ const mockGettingStarted = (modalEnabled: boolean) =>
 const collapseSidebar = () => cy.get('.breadcrumb').click();
 
 export const testPageName = 'Test Page';
+
+interface LoginOptions {
+    username?: string;
+    password?: string;
+    disableGettingStarted?: boolean;
+    visitPage?: string;
+    isCommunity?: boolean;
+}
 
 declare global {
     namespace Cypress {
@@ -215,36 +224,39 @@ const commands = {
         username = 'admin',
         password = 'admin',
         disableGettingStarted = true,
-        visitPage = '/console'
-    }: {
-        username?: string;
-        password?: string;
-        disableGettingStarted?: boolean;
-        visitPage?: string;
-    } = {}) => cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted, visitPage }).waitUntilLoaded(),
+        visitPage = '/console',
+        isCommunity = false
+    }: LoginOptions = {}) =>
+        cy
+            .mockLoginWithoutWaiting({ username, password, disableGettingStarted, visitPage, isCommunity })
+            .waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
         disableGettingStarted = true,
-        visitPage = '/console'
-    }: {
-        username?: string;
-        password?: string;
-        disableGettingStarted?: boolean;
-        visitPage?: string;
-    } = {}) => {
+        visitPage = '/console',
+        isCommunity = false
+    }: LoginOptions = {}) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
             const { role } = response.body;
-            cy.initLocalStorage(username, role);
+            cy.initLocalStorage({ username, role, mode: isCommunity ? 'community' : 'main' });
             if (disableGettingStarted) mockGettingStarted(false);
         });
         return cy.visit(visitPage);
     },
-    initLocalStorage: (username = 'admin', role = 'sys_admin') =>
+    initLocalStorage: ({
+        username = 'admin',
+        role = 'sys_admin',
+        mode = 'main'
+    }: {
+        username?: string;
+        role?: string;
+        mode?: Mode;
+    } = {}) =>
         cy.setLocalStorage(
-            `manager-state-main`,
+            `manager-state-${mode}`,
             JSON.stringify({
                 ...emptyState,
                 auth: { ...emptyState.auth, role, username, state: 'loggedIn' }
