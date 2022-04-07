@@ -1,17 +1,9 @@
 describe('Community version', () => {
     before(() => {
-        cy.getAdminToken().then(token => {
-            cy.intercept('POST', '/console/auth/login', {
-                fixture: 'community/login.json',
-                headers: {
-                    'Set-Cookie': `XSRF-TOKEN=${token}; Path=/`
-                }
-            });
-            cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
-            cy.intercept('/console/config', { fixture: 'community/config.json' });
-            cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: true });
-            cy.usePageMock().mockLogin();
-        });
+        cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
+        cy.intercept('/console/config', { fixture: 'community/config.json' });
+        cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: true });
+        cy.usePageMock().mockLogin();
     });
 
     it('should have Community tag in the banner', () => {
