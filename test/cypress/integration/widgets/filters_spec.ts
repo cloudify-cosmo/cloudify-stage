@@ -116,6 +116,7 @@ describe('Filters widget', () => {
     }
 
     function searchFilter(name: string, expectedNumberOfFilters: number) {
+        cy.getSearchInput().clear();
         cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('be.visible');
@@ -143,7 +144,6 @@ describe('Filters widget', () => {
                         expect(tableData[0].Created).not.to.be.null;
                     });
                 cy.get('.checkbox:not(.checked)');
-                cy.getSearchInput().clear();
 
                 const systemFilterName = 'csys-environment-filter';
                 searchFilter(systemFilterName, 1);
@@ -620,7 +620,7 @@ describe('Filters widget', () => {
             cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
 
             cy.log('Filter rules form population verification');
-            cy.getSearchInput().clear();
+
             searchFilter(filterId, 1);
             cy.get('[title="Edit filter"]', { timeout: searchResultTimeout }).should('have.length', 1);
             openEditFilterModal();
