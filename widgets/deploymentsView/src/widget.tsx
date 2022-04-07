@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect } from 'react';
+import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
 
-export interface DeploymentsViewWidgetConfiguration
-    extends Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration {
+export interface DeploymentsViewWidgetConfiguration extends SharedDeploymentsViewWidgetConfiguration {
     filterId?: string | null;
     filterByParentDeployment: boolean;
     mapOpenByDefault?: boolean;

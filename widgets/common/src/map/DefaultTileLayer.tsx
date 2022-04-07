@@ -1,7 +1,8 @@
 import { FunctionComponent, useMemo } from 'react';
+import Consts from '../Consts';
 
 const DefaultTileLayer: FunctionComponent = () => {
-    const { urlTemplate } = Stage.Common.Consts.leaflet;
+    const { urlTemplate } = Consts.leaflet;
     const url = useMemo(() => Stage.Utils.Url.url(urlTemplate), [urlTemplate]);
 
     const attribution = ReactRedux.useSelector(

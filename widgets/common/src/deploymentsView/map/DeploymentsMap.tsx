@@ -1,6 +1,10 @@
 import { Dictionary, keyBy, partition } from 'lodash';
 import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
 import type { Map } from 'react-leaflet';
+import DefaultTileLayer from '../../map/DefaultTileLayer';
+import { getMapOptions } from '../../map/options';
+import { isSiteWithPosition, Site, SiteWithPosition } from '../../map/site';
+import { invalidateSizeAfterDimensionsChange, WidgetDimensions } from '../../map/widget-dimensions';
 
 import { Deployment } from '../types';
 import { DeploymentSitePair } from './common';
@@ -10,8 +14,8 @@ import { selectDeployment } from '../common';
 interface DeploymentsMapProps {
     deployments: Deployment[];
     selectedDeployment: Deployment | undefined;
-    sites: Stage.Common.Map.Site[];
-    widgetDimensions: Stage.Common.Map.WidgetDimensions;
+    sites: Site[];
+    widgetDimensions: WidgetDimensions;
     toolbox: Stage.Types.Toolbox;
     environmentTypeVisible: boolean;
 }
@@ -24,7 +28,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     toolbox,
     environmentTypeVisible
 }) => {
-    const sitesWithPositions = useMemo(() => sites.filter(Stage.Common.Map.isSiteWithPosition), [sites]);
+    const sitesWithPositions = useMemo(() => sites.filter(isSiteWithPosition), [sites]);
     const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
     const deploymentSitePairs = useMemo(() => getDeploymentSitePairs(sitesLookupTable, deployments), [
         sitesLookupTable,
@@ -39,7 +43,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
 
     const mapRef = useRef<Map>(null);
 
-    useEffect(() => Stage.Common.Map.invalidateSizeAfterDimensionsChange(mapRef), [
+    useEffect(() => invalidateSizeAfterDimensionsChange(mapRef), [
         widgetDimensions.height,
         widgetDimensions.width,
         widgetDimensions.maximized
@@ -52,9 +56,8 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
     // NOTE: those options are only relevant during the initial render, since the MapComponent
     // does not declare them as mutable. Thus, no need to recalculate them.
     // See https://react-leaflet.js.org/docs/api-map
-    const { options, bounds } = useMemo(() => Stage.Common.Map.getMapOptions(sitesDisplayed), []);
+    const { options, bounds } = useMemo(() => getMapOptions(sitesDisplayed), []);
     const { Map: MapComponent } = Stage.Basic.Leaflet;
-    const { DefaultTileLayer } = Stage.Common.Map;
 
     function renderDeploymentSiteMarker({ deployment, site }: DeploymentSitePair) {
         return (
@@ -89,7 +92,7 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
 export default DeploymentsMap;
 
 const getDeploymentSitePairs = (
-    sitesLookupTable: Dictionary<Stage.Common.Map.SiteWithPosition>,
+    sitesLookupTable: Dictionary<SiteWithPosition>,
     deployments: Deployment[]
 ): DeploymentSitePair[] =>
     deployments

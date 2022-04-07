@@ -3,6 +3,7 @@ import { useQuery } from 'react-query';
 import NoDataMessage from '../../components/NoDataMessage';
 import DeploymentActions from '../../deployments/DeploymentActions';
 import MapsActions from '../../map/MapsActions';
+import { Site } from '../../map/site';
 
 import type { Deployment } from '../types';
 import { mapT } from './common';
@@ -25,8 +26,7 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
 }) => {
     const sitesResult = useQuery(
         'all-sites',
-        (): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> =>
-            new DeploymentActions(toolbox).doGetSitesNamesAndLocations()
+        (): Promise<Stage.Types.PaginatedResponse<Site>> => new DeploymentActions(toolbox).doGetSitesNamesAndLocations()
     );
     const mapAvailableResult = useQuery(
         'map-available',

@@ -1,5 +1,7 @@
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
+import { Label } from '../labels/types';
+import { Site } from '../map/site';
 import PollHelper from '../utils/PollHelper';
 
 export interface WorkflowOptions {
@@ -12,7 +14,7 @@ export interface WorkflowOptions {
 export default class DeploymentActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
 
-    static toManagerLabels(labels: Stage.Common.Labels.Label[]) {
+    static toManagerLabels(labels: Label[]) {
         return _.map(labels, ({ key, value }) => ({ [key]: value }));
     }
 
@@ -130,15 +132,15 @@ export default class DeploymentActions {
         });
     }
 
-    doGetSitesNames(): Promise<Stage.Types.PaginatedResponse<Pick<Stage.Common.Map.Site, 'name'>>> {
+    doGetSitesNames(): Promise<Stage.Types.PaginatedResponse<Pick<Site, 'name'>>> {
         return this.doGetSites('name', { _sort: 'name' });
     }
 
-    doGetSitesNamesAndLocations(): Promise<Stage.Types.PaginatedResponse<Stage.Common.Map.Site>> {
+    doGetSitesNamesAndLocations(): Promise<Stage.Types.PaginatedResponse<Site>> {
         return this.doGetSites('name,latitude,longitude');
     }
 
-    doSetLabels(deploymentId: string, deploymentLabels: Stage.Common.Labels.Label[]) {
+    doSetLabels(deploymentId: string, deploymentLabels: Label[]) {
         const labels = DeploymentActions.toManagerLabels(deploymentLabels);
         return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, { body: { labels } });
     }

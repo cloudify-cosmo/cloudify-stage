@@ -1,4 +1,5 @@
 import { FunctionComponent, RefObject, useEffect, useRef } from 'react';
+import { siteToLatLng } from '../../../map/site';
 import { createMarkerIcon, MarkerIconColor } from '../../../map/MarkerIcon';
 
 import { DeploymentStatus } from '../../types';
@@ -33,7 +34,7 @@ const DeploymentSiteMarker: FunctionComponent<DeploymentSiteMarkerProps> = ({
      * @see https://github.com/Leaflet/Leaflet.markercluster/blob/499f71caa1fe8a4efcf91b85e42553f9a90306f1/src/MarkerClusterGroup.js#L715-L721
      * @see https://github.com/PaulLeCam/react-leaflet/blob/d9f18e527495105bab1df65a8829422514daefd7/src/Marker.js#L27-L29
      */
-    const position = Stage.Common.Map.siteToLatLng(site);
+    const position = siteToLatLng(site);
     const tooltip = <DeploymentSiteTooltip deployment={deployment} environmentTypeVisible={environmentTypeVisible} />;
 
     if (selected) {

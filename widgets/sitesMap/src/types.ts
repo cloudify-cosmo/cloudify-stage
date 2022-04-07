@@ -1,4 +1,6 @@
-export type DeploymentStatus = Stage.Common.DeploymentsView.Types.DeploymentStatus;
+export const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
+
+export type DeploymentStatus = typeof DeploymentStatus[keyof typeof DeploymentStatus];
 
 export type DeploymentStatusesSummary = Record<DeploymentStatus, number>;
 
@@ -12,5 +14,4 @@ export type SitesData = Record<
     }
 >;
 
-const { DeploymentStatus } = Stage.Common.DeploymentsView.Types;
 export const DeploymentStatuses = DeploymentStatus;

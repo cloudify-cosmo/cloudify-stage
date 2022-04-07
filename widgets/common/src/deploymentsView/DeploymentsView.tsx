@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import SplitPane from 'react-split-pane';
+import { useWidgetDimensions } from '../map/widget-dimensions';
 
 import {
     getParentPageContext,
@@ -26,7 +27,7 @@ import DeploymentsMapContainer from './map';
 import SearchActions from '../actions/SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
-import type { Deployment } from './types';
+import type { Deployment, DeploymentsResponse } from './types';
 
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
@@ -37,7 +38,7 @@ export interface DeploymentsViewProps {
     /**
      * Rules that will be always appended to the rules from `defaultFilterId` or from the filter chosen by the user
      */
-    additionalFilterRules?: Stage.Common.Filters.Rule[];
+    additionalFilterRules?: FilterRule[];
 }
 
 // NOTE: added to the actual min pane width by `react-split-pane` for an unknown reason
@@ -100,7 +101,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     const deploymentsUrl = '/searches/deployments';
     const deploymentsResult = useQuery(
         [deploymentsUrl, gridParams, finalFilterRules],
-        (): Promise<Stage.Common.DeploymentsView.Types.DeploymentsResponse> =>
+        (): Promise<DeploymentsResponse> =>
             searchActions.doListDeployments(finalFilterRules, {
                 ...gridParams,
                 _include: deploymentPropertiesToInclude.join(',')
@@ -114,7 +115,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
-    const widgetDimensions = Stage.Common.Map.useWidgetDimensions(widget);
+    const widgetDimensions = useWidgetDimensions(widget);
 
     const { Loading, ErrorMessage } = Stage.Basic;
     const { i18n } = Stage;
@@ -257,7 +258,7 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
             key: parentDeploymentLabelKey,
             operator: FilterRuleOperators.AnyOf,
             values: [parentDeploymentId]
-        } as Stage.Common.Filters.Rule
+        } as FilterRule
     } as const;
 };
 
