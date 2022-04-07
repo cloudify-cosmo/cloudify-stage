@@ -115,17 +115,15 @@ describe('Filters widget', () => {
         });
     }
 
-    function searchFilter(name: string, expectedNumberOfFilters?: number) {
+    function searchFilter(name: string, expectedNumberOfFilters: number) {
         cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('be.visible');
         cy.wait('@filterDeployments');
         cy.get('.loading').should('not.exist');
-        if (expectedNumberOfFilters) {
-            cy.getWidget(widgetId).within(() => {
-                cy.get('table tr', { timeout: searchResultTimeout }).should('have.length', expectedNumberOfFilters + 1);
-            });
-        }
+        cy.getWidget(widgetId).within(() => {
+            cy.get('table tr', { timeout: searchResultTimeout }).should('have.length', expectedNumberOfFilters + 1);
+        });
     }
 
     describe('should provide basic functionality:', () => {
@@ -350,7 +348,7 @@ describe('Filters widget', () => {
         });
 
         describe('when editing existing filter', () => {
-            before(() => searchFilter(filterName));
+            before(() => searchFilter(filterName, 1));
 
             beforeEach(openEditFilterModal);
             afterEach(closeFilterModal);
@@ -364,7 +362,7 @@ describe('Filters widget', () => {
         });
 
         describe('when cloning existing filter', () => {
-            before(() => searchFilter(filterName));
+            before(() => searchFilter(filterName, 1));
 
             beforeEach(openCloneFilterModal);
             afterEach(closeFilterModal);
@@ -623,7 +621,7 @@ describe('Filters widget', () => {
 
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear();
-            searchFilter(filterId);
+            searchFilter(filterId, 1);
             cy.get('[title="Edit filter"]', { timeout: searchResultTimeout }).should('have.length', 1);
             openEditFilterModal();
 
