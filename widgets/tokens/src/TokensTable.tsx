@@ -22,6 +22,9 @@ interface TokensTableProps {
 
 const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) => {
     const { showExpiredTokens } = widgetConfiguration;
+    const shouldDisplayUsers = ReactRedux.useSelector(
+        (state: Stage.Types.ReduxState) => state.manager.auth.role === Stage.Common.Consts.sysAdminRole
+    );
     const fetchTableData = (fetchParams: any) => {
         toolbox.refresh(fetchParams);
     };
@@ -31,7 +34,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
             <DataTable fetchData={fetchTableData}>
                 <DataTable.Column label="Token" name={dataSortingKeys.value} />
                 <DataTable.Column label="Description" name={dataSortingKeys.description} />
-                <DataTable.Column label="Username" />
+                {shouldDisplayUsers && <DataTable.Column label="Username" />}
                 {showExpiredTokens && (
                     <DataTable.Column label="Expiration date" name={dataSortingKeys.expirationDate} />
                 )}
@@ -42,7 +45,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                         <DataTable.Row key={dataItem.id}>
                             <DataTable.Data>{dataItem.value}</DataTable.Data>
                             <DataTable.Data>{dataItem.description}</DataTable.Data>
-                            <DataTable.Data>{dataItem.username}</DataTable.Data>
+                            {shouldDisplayUsers && <DataTable.Data>{dataItem.username}</DataTable.Data>}
                             {showExpiredTokens && (
                                 <DataTable.Data>{formatTimestamp(dataItem.expiration_date)}</DataTable.Data>
                             )}
