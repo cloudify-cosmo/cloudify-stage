@@ -1,5 +1,4 @@
 import type { IconProps } from 'semantic-ui-react';
-import { values as valuesFn } from 'lodash';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import RevertToDefaultIcon from '../../components/RevertToDefaultIcon';
 import { DEFAULT_TEXTAREA_ROWS, STRING_VALUE_SURROUND_CHAR } from './consts';
@@ -190,7 +189,9 @@ export default function getInputField(
 
             // Formatting returned deployments to capabilities.
             const itemsFormatter = (deployments: any) =>
-                deployments?.[0]?.capabilities?.map((capability: any) => ({ ...valuesFn(capability)[0] })) ?? [];
+                deployments?.[0]?.capabilities?.map((capability: Record<string, any>) => ({
+                    ...Object.values(capability)[0]
+                })) ?? [];
 
             return (
                 <DynamicDropdown
