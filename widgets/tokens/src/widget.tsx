@@ -23,14 +23,14 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
         }
     ],
 
-    render(_widget, data, _error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        return <TokensTable data={data} toolbox={toolbox} />;
+        return <TokensTable data={data} toolbox={toolbox} widgetConfiguration={widget.configuration} />;
     }
 });
 
