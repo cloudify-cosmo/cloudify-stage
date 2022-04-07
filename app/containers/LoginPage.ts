@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import type { Dispatch } from 'redux';
 import LoginPage from '../components/LoginPage';
 import { login } from '../actions/managers';
-import { ReduxState } from '../reducers';
+import type { ReduxState } from '../reducers';
 
 const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
