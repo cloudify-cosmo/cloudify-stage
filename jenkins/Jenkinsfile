@@ -33,9 +33,14 @@ pipeline {
     BRANCH = "${env.BRANCH_NAME}"
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
+    VERSION = getVersion(STAGE_DIR,"${env.BRANCH_NAME}").trim()
+    PRERELEASE = getPreRelease(STAGE_DIR,"${env.BRANCH_NAME}").trim()
     CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
     CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
+    S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.STAGE_DIR}/${env.BRANCH}"
+    S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
+    S3_LATEST_BUILD_PATH = "${env.S3_BASE_URL}/latest"
   }
 
   stages {
@@ -94,7 +99,6 @@ pipeline {
               sh """
                 cd ~/rpmbuild
                 mkdir -p BUILD && cp -rf ${WORKSPACE}/${STAGE_DIR}/. BUILD && cd BUILD
-                curl -fO "${CFY_MANAGER_URL}/${BRANCH}/packaging/version_info"
               """
 
               echo 'Check for cache'
@@ -111,25 +115,32 @@ pipeline {
               '''
 
               echo 'Download sources for RPM spec file & Build RPM'
-              sh '''
-                cd ~/rpmbuild/BUILD && source ./version_info
+              sh """
+                cd ~/rpmbuild/BUILD
                 spectool \
-                  -d "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
-                  -d "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+                  -d "CLOUDIFY_VERSION ${env.VERSION}" \
+                  -d "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
                   -P packaging/cloudify-stage.spec \
                   -S -g
 
                 rpmbuild \
-                  -D "CLOUDIFY_VERSION $CLOUDIFY_VERSION" \
-                  -D "CLOUDIFY_PACKAGE_RELEASE $CLOUDIFY_PACKAGE_RELEASE" \
+                  -D "CLOUDIFY_VERSION ${env.VERSION}" \
+                  -D "CLOUDIFY_PACKAGE_RELEASE ${env.PRERELEASE}" \
                   -bb packaging/cloudify-stage.spec
-              '''
+              """
 
               echo 'Save Artifacts'
               sh("mkdir -p ${WORKSPACE}/rpm && cp -rf /root/rpmbuild/RPMS/x86_64/. ${WORKSPACE}/rpm")
               dir("${WORKSPACE}/rpm") {
                 archiveArtifacts artifacts: '*.rpm', onlyIfSuccessful: true
               }
+            }
+          }
+          post {
+            success {
+              echo 'Uploading Artifacts'
+              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_BUILD_PATH}")
+              uploadToReleaseS3("${env.WORKSPACE}/rpm/","${env.S3_LATEST_BUILD_PATH}")
             }
           }
         }
