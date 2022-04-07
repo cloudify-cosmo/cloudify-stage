@@ -1600,6 +1600,12 @@
         },
         "blueprint_id": {
             "placeholder": "Select Blueprint"
+        },
+        "capability_value": {
+            "placeholder": "Select Capability"
+        },
+        "secret_key": {
+            "placeholder": "Select Secret Key"
         }
     }
 }
