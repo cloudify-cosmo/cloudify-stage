@@ -100,7 +100,7 @@ export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction
         });
 }
 
-export function getUserData() {
+export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
             dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));
