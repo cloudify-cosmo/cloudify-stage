@@ -20,6 +20,7 @@ describe('Filters widget', () => {
         cy.usePageMock([widgetId, 'onlyMyResources']).activate().mockLogin();
     });
 
+    const searchResultTimeout = secondsToMs(4);
     const filterName = 'filters_test_filter';
     const filterRules: Stage.Common.Filters.Rule[] = [
         { type: FilterRuleType.Attribute, key: 'blueprint_id', values: ['bpid'], operator: FilterRuleOperators.AnyOf },
@@ -122,7 +123,7 @@ describe('Filters widget', () => {
         cy.get('.loading').should('not.exist');
         if (expectedNumberOfFilters) {
             cy.getWidget(widgetId).within(() => {
-                cy.get('table tr', { timeout: 1000 }).should('have.length', expectedNumberOfFilters + 1);
+                cy.get('table tr', { timeout: searchResultTimeout }).should('have.length', expectedNumberOfFilters + 1);
             });
         }
     }
@@ -626,7 +627,7 @@ describe('Filters widget', () => {
             cy.getSearchInput().clear().type(filterId);
             cy.wait('@filterDeployments');
             cy.get('.loading').should('not.exist');
-            cy.get('[title="Edit filter"]', { timeout: secondsToMs(2) }).should('have.length', 1);
+            cy.get('[title="Edit filter"]', { timeout: searchResultTimeout }).should('have.length', 1);
             openEditFilterModal();
 
             cy.get('.modal').within(() => verifyRulesForm(testRules));
