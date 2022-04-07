@@ -623,10 +623,7 @@ describe('Filters widget', () => {
 
             cy.log('Filter rules form population verification');
             cy.getSearchInput().clear();
-            cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
-            cy.getSearchInput().clear().type(filterId);
-            cy.wait('@filterDeployments');
-            cy.get('.loading').should('not.exist');
+            searchFilter(filterId);
             cy.get('[title="Edit filter"]', { timeout: searchResultTimeout }).should('have.length', 1);
             openEditFilterModal();
 
