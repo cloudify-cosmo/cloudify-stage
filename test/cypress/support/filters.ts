@@ -1,4 +1,5 @@
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import type { FilterRule } from 'widgets/common/src/filters/types';
 import { waitUntilEmpty } from './resource_commons';
 import type {} from '../../../widgets/common/src/filters';
 
@@ -11,7 +12,7 @@ declare global {
 }
 
 const commands = {
-    createDeploymentsFilter: (id: string, rules: Stage.Common.Filters.Rule[]) =>
+    createDeploymentsFilter: (id: string, rules: FilterRule[]) =>
         cy.cfyRequest(`/filters/deployments/${id}`, 'PUT', null, { filter_rules: rules }),
 
     deleteDeploymentsFilter: (filterId: string, { ignoreFailure }: { ignoreFailure?: boolean } = {}) =>
