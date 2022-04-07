@@ -55,7 +55,7 @@ pipeline {
                   //echo 'Run npm production dependencies security audit'
                   sh "echo ${env.BRANCH_NAME}"
                   sh "echo ${BRANCH}"
-                  sh "echo ${env.MASTER_VER}"
+                  sh "echo ${MASTER_VER}"
                   sh "echo ${env.PRERELEASE}"
                 }
               }
