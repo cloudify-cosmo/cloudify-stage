@@ -187,8 +187,7 @@ export default function getInputField(
         case 'capability_value': {
             const fetchUrl = '/searches/capabilities';
 
-            // Formatting returned deployments to capabilities.
-            const itemsFormatter = (deployments: any) =>
+            const formatDeploymentsToCapabilities = (deployments: any[]) =>
                 deployments?.[0]?.capabilities?.map((capability: Record<string, any>) => ({
                     ...Object.values(capability)[0]
                 })) ?? [];
@@ -198,7 +197,7 @@ export default function getInputField(
                     name={name}
                     error={!!error}
                     placeholder={Stage.i18n.t('input.capability_value.placeholder')}
-                    itemsFormatter={itemsFormatter}
+                    itemsFormatter={formatDeploymentsToCapabilities}
                     value={value}
                     valueProp="value"
                     fetchUrl={fetchUrl}
