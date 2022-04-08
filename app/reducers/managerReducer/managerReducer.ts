@@ -1,96 +1,44 @@
 import type { Reducer } from 'redux';
-
 import * as types from '../../actions/types';
-import tenants from './tenantsReducer';
-import type { TenantsData } from './tenantsReducer';
+import auth from './authReducer';
 import clusterStatus from './clusterStatusReducer';
-import type { ClusterStatusData } from './clusterStatusReducer';
+import tenants from './tenantsReducer';
 import license from './licenseReducer';
+import emptyState from './emptyState';
+import type { ClusterStatusData } from './clusterStatusReducer';
 import type { LicenseData } from './licenseReducer';
+import type { TenantsData } from './tenantsReducer';
 import type { VersionResponse } from '../../../backend/routes/Auth.types';
+import type { AuthData } from './authReducer';
 
 export interface ManagerData {
-    auth: {
-        role: any;
-        groupSystemRoles: Record<string, any>;
-        tenantsRoles: Record<string, any>;
-    };
+    auth: AuthData;
     clusterStatus: ClusterStatusData;
-    err: any;
     isLdapEnabled: boolean;
-    isLoggingIn: boolean;
-    lastUpdated: any;
+    lastUpdated: number | null;
     license: LicenseData;
     maintenance: string;
     permissions: Record<string, any>;
     roles: any[];
     tenants: TenantsData;
-    username: string;
     version: Partial<VersionResponse>;
 }
-
-export const emptyState: ManagerData = {
-    auth: {
-        role: null,
-        groupSystemRoles: {},
-        tenantsRoles: {}
-    },
-    clusterStatus: {},
-    err: null,
-    isLdapEnabled: false,
-    isLoggingIn: false,
-    lastUpdated: null,
-    license: {},
-    maintenance: '',
-    permissions: {},
-    roles: [],
-    tenants: {},
-    username: '',
-    version: {}
-};
 
 const manager: Reducer<ManagerData> = (state = emptyState, action) => {
     switch (action.type) {
         case types.REQ_LOGIN:
-            return { ...state, isLoggingIn: true };
         case types.RES_LOGIN:
-            return {
-                ...emptyState,
-                username: action.username,
-                auth: {
-                    role: action.role,
-                    groupSystemRoles: {},
-                    tenantsRoles: {}
-                },
-                lastUpdated: action.receivedAt
-            };
         case types.LOGOUT:
-            return {
-                ...emptyState,
-                lastUpdated: action.receivedAt
-            };
         case types.ERR_LOGIN:
             return {
                 ...emptyState,
-                username: action.username,
-                err: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error,
+                auth: auth(state.auth, action),
                 lastUpdated: action.receivedAt
             };
         case types.SET_LDAP_ENABLED:
-            return {
-                ...state,
-                isLdapEnabled: action.isLdapEnabled
-            };
+            return { ...state, isLdapEnabled: action.isLdapEnabled };
         case types.SET_USER_DATA:
-            return {
-                ...state,
-                username: action.username,
-                auth: {
-                    role: action.role,
-                    groupSystemRoles: action.groupSystemRoles,
-                    tenantsRoles: action.tenantsRoles
-                }
-            };
+            return { ...state, auth: auth(state.auth, action) };
         case types.REQ_CLUSTER_STATUS:
         case types.SET_CLUSTER_STATUS:
         case types.ERR_CLUSTER_STATUS:

@@ -1,7 +1,8 @@
 import log from 'loglevel';
 
+import { emptyState } from '../reducers/managerReducer';
 import type { ReduxState } from '../reducers';
-import { emptyState, ManagerData } from '../reducers/managerReducer';
+import type { ManagerData } from '../reducers/managerReducer';
 
 export default class ManagerStatePersister {
     public static save(managerState: ManagerData, mode: string) {
@@ -19,8 +20,8 @@ export default class ManagerStatePersister {
                 this.loadManagerStateDirectly(mode) ?? this.loadWrappedManagerState(mode) ?? emptyState;
 
             // Clear login error if has any
-            managerState.err = null;
-            managerState.isLoggingIn = false;
+            if (managerState.auth.error) managerState.auth.error = null;
+            if (managerState.auth.state === 'loggingIn') managerState.auth.state = 'loggedOut';
 
             return managerState;
         } catch (e) {
