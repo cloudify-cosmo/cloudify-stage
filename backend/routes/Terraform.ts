@@ -104,7 +104,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     };
 
     const scanGitFile = async () => {
-        const repositoryPath = path.join(os.tmpdir(), 'repos', uniqueDirectoryName.generate());
+        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
         const terraformModuleDirectories: string[] = [];
 
         try {
