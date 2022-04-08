@@ -184,6 +184,46 @@ export default function getInputField(
                 />
             );
         }
+        case 'capability_value': {
+            const fetchUrl = '/searches/capabilities';
+
+            const formatDeploymentsToCapabilities = (deployments: any[]) =>
+                deployments?.[0]?.capabilities?.map((capability: Record<string, any>) => ({
+                    ...Object.values(capability)[0]
+                })) ?? [];
+
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    placeholder={Stage.i18n.t('input.capability_value.placeholder')}
+                    itemsFormatter={formatDeploymentsToCapabilities}
+                    value={value}
+                    valueProp="value"
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
+            );
+        }
+        case 'secret_key': {
+            const fetchUrl = '/searches/secrets?_include=key';
+
+            return (
+                <DynamicDropdown
+                    name={name}
+                    error={!!error}
+                    placeholder={Stage.i18n.t('input.secret_key.placeholder')}
+                    value={value}
+                    valueProp="key"
+                    fetchUrl={fetchUrl}
+                    onChange={newValue => onChange?.(null, { name, value: newValue })}
+                    toolbox={toolbox}
+                    constraints={constraints}
+                />
+            );
+        }
         case 'string':
         case 'regex':
             return _.includes(value, '\n') ? (
