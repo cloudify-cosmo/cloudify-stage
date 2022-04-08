@@ -1,7 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
-import { Label } from '../labels/types';
+import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
 
 class BlueprintUploadError extends Error {

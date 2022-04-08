@@ -1,4 +1,4 @@
-import { SiteWithPosition } from '../../map/site';
+import type { SiteWithPosition } from '../../map/site';
 import { i18nPrefix } from '../common';
 import type { Deployment } from '../types';
 

@@ -1,6 +1,8 @@
-import { FunctionComponent, RefObject, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import type { FunctionComponent, RefObject } from 'react';
 import { siteToLatLng } from '../../../map/site';
-import { createMarkerIcon, MarkerIconColor } from '../../../map/MarkerIcon';
+import { createMarkerIcon } from '../../../map/MarkerIcon';
+import type { MarkerIconColor } from '../../../map/MarkerIcon';
 
 import { DeploymentStatus } from '../../types';
 import type { DeploymentSitePair } from '../common';

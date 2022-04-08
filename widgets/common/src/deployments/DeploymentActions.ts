@@ -1,7 +1,7 @@
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
-import { Label } from '../labels/types';
-import { Site } from '../map/site';
+import type { Label } from '../labels/types';
+import type { Site } from '../map/site';
 import PollHelper from '../utils/PollHelper';
 
 export interface WorkflowOptions {

@@ -3,7 +3,7 @@ import { useQuery } from 'react-query';
 import NoDataMessage from '../../components/NoDataMessage';
 import DeploymentActions from '../../deployments/DeploymentActions';
 import MapsActions from '../../map/MapsActions';
-import { Site } from '../../map/site';
+import type { Site } from '../../map/site';
 
 import type { Deployment } from '../types';
 import { mapT } from './common';

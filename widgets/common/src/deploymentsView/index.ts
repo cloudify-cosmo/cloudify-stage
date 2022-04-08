@@ -2,7 +2,7 @@ import * as DCommon from './common';
 import { sharedConfiguration, sharedDefinition } from './configuration';
 import { DeploymentsView as DDeploymentsView } from './DeploymentsView';
 import './styles.scss';
-import { DeploymentStatus } from './types';
+import type { DeploymentStatus } from './types';
 
 export default {
     sharedDefinition,

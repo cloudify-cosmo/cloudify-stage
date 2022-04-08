@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useMemo } from 'react';
-import { FilterRule, FilterRuleOperators, FilterRuleType } from '../../../filters/types';
+import type { FilterRule, FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
     i18nDrillDownPrefix,

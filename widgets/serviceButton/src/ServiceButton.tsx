@@ -1,5 +1,5 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 
 export interface ServiceButtonProps {

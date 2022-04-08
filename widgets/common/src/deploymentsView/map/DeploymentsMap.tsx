@@ -1,10 +1,14 @@
-import { Dictionary, keyBy, partition } from 'lodash';
-import { FunctionComponent, useEffect, useMemo, useRef } from 'react';
+import { keyBy, partition } from 'lodash';
+import type { Dictionary } from 'lodash';
+import { useEffect, useMemo, useRef } from 'react';
+import type { FunctionComponent } from 'react';
 import type { Map } from 'react-leaflet';
 import DefaultTileLayer from '../../map/DefaultTileLayer';
 import { getMapOptions } from '../../map/options';
-import { isSiteWithPosition, Site, SiteWithPosition } from '../../map/site';
-import { invalidateSizeAfterDimensionsChange, WidgetDimensions } from '../../map/widget-dimensions';
+import { isSiteWithPosition } from '../../map/site';
+import type { Site, SiteWithPosition } from '../../map/site';
+import { invalidateSizeAfterDimensionsChange } from '../../map/widget-dimensions';
+import type { WidgetDimensions } from '../../map/widget-dimensions';
 
 import { Deployment } from '../types';
 import { DeploymentSitePair } from './common';
