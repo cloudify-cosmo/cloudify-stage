@@ -20,7 +20,6 @@ describe('Filters widget', () => {
         cy.usePageMock([widgetId, 'onlyMyResources']).activate().mockLogin();
     });
 
-    const searchResultTimeout = secondsToMs(4);
     const filterName = 'filters_test_filter';
     const filterRules: Stage.Common.Filters.Rule[] = [
         { type: FilterRuleType.Attribute, key: 'blueprint_id', values: ['bpid'], operator: FilterRuleOperators.AnyOf },
@@ -115,7 +114,8 @@ describe('Filters widget', () => {
         });
     }
 
-    function searchFilter(name: string, expectedNumberOfFilters: number) {
+    function searchFilter(name: string, expectedNumberOfFilters: number = 1) {
+        const searchResultTimeout = secondsToMs(4);
         cy.getSearchInput().clear();
         cy.interceptSp('GET', '/filters/deployments').as('filterDeployments');
         cy.getSearchInput().clear().type(name);
@@ -130,10 +130,10 @@ describe('Filters widget', () => {
     describe('should provide basic functionality:', () => {
         beforeEach(() => {
             cy.deleteDeploymentsFilters(filterName).createDeploymentsFilter(filterName, filterRules).refreshPage();
-            searchFilter(filterName, 1);
+            searchFilter(filterName);
         });
 
-        it('list existing filters', () => {
+        it.only('list existing filters', () => {
             cy.getWidget(widgetId).within(() => {
                 cy.get('table')
                     .getTable()
