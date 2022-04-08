@@ -454,7 +454,7 @@ describe('Blueprints widget', () => {
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
             cy.typeToFieldInput(
-                'Terraform module source - URL to a zip archive or a GIT repository',
+                'Terraform module source - URL to a zip archive or a Git repository',
                 templateUrl
             ).blur();
             cy.setSingleDropdownValue('Terraform module folder', modulePath);
@@ -648,7 +648,7 @@ describe('Blueprints widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.typeToFieldInput(
-                    'Terraform module source - URL to a zip archive or a GIT repository',
+                    'Terraform module source - URL to a zip archive or a Git repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
                 cy.contains('The URL requires authentication');
@@ -663,7 +663,7 @@ describe('Blueprints widget', () => {
             };
 
             const typeTerraformModuleUrl = (url: string) => {
-                cy.typeToFieldInput('Terraform module source - URL to a zip archive or a GIT repository', url).blur();
+                cy.typeToFieldInput('Terraform module source - URL to a zip archive or a Git repository', url).blur();
             };
 
             beforeEach(() => {
@@ -697,7 +697,7 @@ describe('Blueprints widget', () => {
                     typeTerraformModuleUrl(privateGitFileUrl);
                     terraformModuleDropdownHasOptions(false);
 
-                    cy.get(errorBoxSelector).contains('GIT Authentication failed').should('exist');
+                    cy.get(errorBoxSelector).contains('Git Authentication failed').should('exist');
                 });
             });
         });
@@ -726,7 +726,7 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Password', password);
 
                 cy.typeToFieldInput(
-                    'Terraform module source - URL to a zip archive or a GIT repository',
+                    'Terraform module source - URL to a zip archive or a Git repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
 

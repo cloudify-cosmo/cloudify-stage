@@ -95,7 +95,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         } catch (error: GitError) {
             const isAuthenticationIssue = error.message.includes('Authentication failed');
             const errorMessage = isAuthenticationIssue
-                ? 'GIT Authentication failed - Please note that some git providers require a token to be passed instead of a password'
+                ? 'Git Authentication failed - Please note that some git providers require a token to be passed instead of a password'
                 : 'The URL is not accessible';
 
             logger.error(`Error while cloning git repository: ${error.message}`);
