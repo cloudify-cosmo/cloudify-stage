@@ -33,9 +33,8 @@ pipeline {
     BRANCH = "${env.BRANCH_NAME}"
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
-    VERSION = getVersion(STAGE_DIR,"${env.BRANCH_NAME}").trim()
-    PRERELEASE = getPreRelease(STAGE_DIR,"${env.BRANCH_NAME}").trim()
-    CFY_MANAGER_URL = 'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-manager'
+    VERSION = getVersion("cloudify-manager","${env.BRANCH}").trim()
+    PRERELEASE = getPreRelease("cloudify-manager","${env.BRANCH}").trim()
     CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.STAGE_DIR}/${env.BRANCH}"
