@@ -4,21 +4,10 @@ import ActionsModals from './DeploymentActionsModals';
 import Details from './DeploymentDetails';
 import UpdateDetailsModal from './UpdateDetailsModal';
 
-const DeploymentsCommon = {
+export default {
     Actions,
     ActionsMenu,
     ActionsModals,
     Details,
     UpdateDetailsModal
 };
-
-declare global {
-    namespace Stage.Common {
-        const Deployments: typeof DeploymentsCommon;
-    }
-}
-
-Stage.defineCommon({
-    name: 'Deployments',
-    common: DeploymentsCommon
-});

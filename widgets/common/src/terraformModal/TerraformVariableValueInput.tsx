@@ -1,6 +1,7 @@
 import React from 'react';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable } from '../../../../backend/routes/Terraform.types';
+import DynamicDropdown from '../components/DynamicDropdown';
 import { inputMaxLength } from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal.variablesTable');
@@ -17,7 +18,6 @@ export default function TerraformVariableValueInput({
     widgetlessToolbox
 }: TerraformVariableValueInputProps) {
     const { Input } = Stage.Basic;
-    const { DynamicDropdown } = Stage.Common.Components;
 
     return rowValues?.source === 'secret' ? (
         <DynamicDropdown

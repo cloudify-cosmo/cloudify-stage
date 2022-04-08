@@ -25,15 +25,4 @@ const consts = {
     }
 } as const;
 
-declare global {
-    namespace Stage.Common {
-        const Consts: typeof consts;
-    }
-}
-
 export default consts;
-
-Stage.defineCommon({
-    name: 'Consts',
-    common: consts
-});

@@ -1,11 +1,10 @@
 import _ from 'lodash';
-
-type Label = Stage.Common.Labels.Label;
+import type { Label as LabelType } from '../../common/src/labels/types';
 
 interface DeleteConfirmModalProps {
     deploymentId: string;
-    labels: Label[];
-    labelToDelete?: Label | null;
+    labels: LabelType[];
+    labelToDelete?: LabelType | null;
     onHide: () => void;
     toolbox: Stage.Types.Toolbox;
 }

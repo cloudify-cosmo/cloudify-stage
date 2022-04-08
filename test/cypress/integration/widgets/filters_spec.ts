@@ -20,7 +20,7 @@ describe('Filters widget', () => {
     });
 
     const filterName = 'filters_test_filter';
-    const filterRules: Stage.Common.Filters.Rule[] = [
+    const filterRules: FilterRule[] = [
         { type: FilterRuleType.Attribute, key: 'blueprint_id', values: ['bpid'], operator: FilterRuleOperators.AnyOf },
         { type: FilterRuleType.Label, key: 'precious', values: ['yes'], operator: FilterRuleOperators.AnyOf }
     ];

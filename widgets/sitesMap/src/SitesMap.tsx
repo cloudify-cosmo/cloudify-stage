@@ -1,5 +1,7 @@
 import type { FunctionComponent, RefObject } from 'react';
 import type { Map as LeafletMap } from 'react-leaflet';
+import type { MarkerIconColor } from '../../common/src/map/MarkerIcon';
+import type { WidgetDimensions } from '../../common/src/map/widget-dimensions';
 import SiteControl from './SiteControl';
 import type { DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';
@@ -13,7 +15,7 @@ function openPopup(marker: any) {
 }
 
 function getMarkerColor(statusesSummary: DeploymentStatusesSummary) {
-    let color: Stage.Common.Map.MarkerIconColor = 'grey';
+    let color: MarkerIconColor = 'grey';
 
     if (statusesSummary[DeploymentStatuses.RequiresAttention] > 0) {
         color = 'red';
@@ -31,7 +33,7 @@ type SitesMapState = {
 };
 interface SitesMapProps {
     data: SitesData;
-    dimensions: Stage.Common.Map.WidgetDimensions;
+    dimensions: WidgetDimensions;
     showAllLabels: boolean;
     sitesAreDefined: boolean;
     toolbox: Stage.Types.Toolbox;

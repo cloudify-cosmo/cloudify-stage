@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import Consts from '../Consts';
 import PluginActions from './PluginActions';
 import UploadPluginForm from './UploadPluginForm';
 
@@ -7,7 +8,7 @@ function UploadPluginModal({ open, onHide, toolbox }) {
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [visibility, setVisibility, clearVisibility] = useResettableState(Stage.Common.Consts.defaultVisibility);
+    const [visibility, setVisibility, clearVisibility] = useResettableState(Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
         wagonUrl: '',
         wagonFile: null,
