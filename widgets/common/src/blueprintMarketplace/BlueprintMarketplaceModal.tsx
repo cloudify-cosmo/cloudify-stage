@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import type { MarketplaceDisplayStyle, MarketplaceTab } from './types';
 
-interface BlueprintMarketplaceModalProps {
+export interface BlueprintMarketplaceModalProps {
     open: boolean;
     tabs?: MarketplaceTab[];
     displayStyle?: MarketplaceDisplayStyle;

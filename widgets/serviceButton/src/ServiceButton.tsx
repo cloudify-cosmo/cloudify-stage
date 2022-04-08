@@ -1,12 +1,13 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 
 export interface ServiceButtonProps {
     basic: boolean;
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
-    marketplaceTabs: Stage.Common.BlueprintMarketplace.Tab[];
+    marketplaceTabs: MarketplaceTab[];
 }
 
 const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, icon, label, marketplaceTabs = [] }) => {

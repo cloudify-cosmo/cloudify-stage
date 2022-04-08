@@ -59,11 +59,9 @@ export default class WidgetDefinitionsLoader {
             GenericConfig,
             Utils: StageUtils,
 
-            // @ts-ignore Surpress error related to missing items when compiling the widgets project
             Common: {},
             defineCommon: def => {
-                // @ts-ignore Surpress error related to missing items when compiling the widgets project
-                window.Stage.Common[def.name] = def.common;
+                window.Stage.Common = def;
             },
 
             // @ts-ignore Surpress error related to missing items when compiling the widgets project
