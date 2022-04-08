@@ -18,8 +18,8 @@ import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessag
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 const AuthRoutes: FunctionComponent = () => {
-    const [isManagerDataFetched, setManagerDataFetched /* , unsetManagerDataFetched */] = useBoolean();
-    const [isUserDataFetched, setUserDataFetched /* , unsetUserDataFetched */] = useBoolean();
+    const [isManagerDataFetched, setManagerDataFetched] = useBoolean();
+    const [isUserDataFetched, setUserDataFetched] = useBoolean();
     const isInMaintenanceMode = useSelector(
         state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
@@ -42,8 +42,7 @@ const AuthRoutes: FunctionComponent = () => {
     useEffect(() => {
         if (isProductOperational && isManagerDataFetched) {
             dispatch(getUserData())
-                // @ts-ignore Type of tenantsRoles is not relevant here
-                .then(({ tenantsRoles }) => {
+                .then(({ tenantsRoles }: any) => {
                     if (_.isEmpty(tenantsRoles)) {
                         return Promise.reject(NO_TENANTS_ERR);
                     }
