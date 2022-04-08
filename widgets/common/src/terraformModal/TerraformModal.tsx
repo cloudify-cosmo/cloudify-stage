@@ -46,6 +46,7 @@ function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfi
     return (
         <Input
             name={name}
+            fluid
             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
             {...rest}
         >
@@ -59,6 +60,7 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
         return (
             <Dropdown
                 clearable={false}
+                fluid
                 selection
                 options={options}
                 onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
@@ -78,9 +80,10 @@ type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
 const variablesColumns: Columns<Variable> = [
     {
         id: 'name',
-        label: t('variablesTable.name'),
+        label: t('variablesTable.variable'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
-        component: LengthLimitedDynamicTableInput
+        component: LengthLimitedDynamicTableInput,
+        width: 3
     },
     {
         id: 'source',
@@ -91,20 +94,22 @@ const variablesColumns: Columns<Variable> = [
             { text: t('variablesTable.sources.input'), value: 'input' },
             { text: t('variablesTable.sources.static'), value: 'static' }
         ]),
-        style: dynamicTableFieldStyle
-    },
-    {
-        id: 'name',
-        label: t('variablesTable.name'),
-        type: Stage.Basic.GenericField.CUSTOM_TYPE,
-        component: TerraformVariableValueInput,
-        style: dynamicTableFieldStyle
+        style: dynamicTableFieldStyle,
+        width: 3
     },
     {
         id: 'value',
-        label: t('variablesTable.value'),
+        label: t('variablesTable.name'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: TerraformVariableValueInput,
+        style: dynamicTableFieldStyle,
+        width: 3
+    },
+    {
+        id: 'default',
+        label: t('variablesTable.value'),
+        type: Stage.Basic.GenericField.CUSTOM_TYPE,
+        component: LengthLimitedDynamicTableInput,
         style: dynamicTableFieldStyle
     }
 ];

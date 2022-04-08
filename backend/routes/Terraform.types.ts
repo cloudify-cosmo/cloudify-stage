@@ -2,6 +2,7 @@ export interface Variable {
     name: string;
     source: 'input' | 'secret' | 'static';
     value: string;
+    default: string;
 }
 
 export interface Output {

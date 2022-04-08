@@ -889,7 +889,7 @@
                 "environment": "Environment variables",
                 "outputs": "Outputs",
                 "variablesTable": {
-                    "name": "Variable",
+                    "variable": "Variable",
                     "source": "Source",
                     "name": "Name",
                     "value": "Value",
