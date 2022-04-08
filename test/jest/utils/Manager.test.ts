@@ -1,14 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
 import configureMockStore from 'redux-mock-store';
 import Manager from 'utils/Manager';
+import { emptyState } from 'reducers/managerReducer';
+import type { ReduxState } from 'reducers';
+import type { ManagerData } from 'reducers/managerReducer';
 
 const mockStore = configureMockStore();
 
 describe('(Utils) Manager', () => {
     const initialState = {
         manager: {
-            username: 'admin',
+            ...emptyState,
             auth: {
+                username: 'admin',
                 role: 'sys_admin',
                 groupSystemRoles: {},
                 tenantsRoles: {
@@ -16,7 +19,9 @@ describe('(Utils) Manager', () => {
                         'tenant-role': 'user',
                         roles: ['user']
                     }
-                }
+                },
+                state: 'loggedIn',
+                error: null
             },
             tenants: {
                 isFetching: false,
@@ -69,11 +74,11 @@ describe('(Utils) Manager', () => {
                     description: 'User exists, but have no permissions'
                 }
             ]
-        }
+        } as ManagerData
     };
 
     const store = mockStore(initialState);
-    const manager = new Manager(store.getState().manager);
+    const manager = new Manager((store.getState() as ReduxState).manager);
 
     it('allows to get current user username', () => {
         expect(manager.getCurrentUsername()).toEqual('admin');

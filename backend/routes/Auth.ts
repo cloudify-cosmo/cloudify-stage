@@ -16,17 +16,17 @@ const logger = getLogger('Auth');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-function getCookieOptions(req: Request) {
+function getCookieOptions(req: Request, httpOnly = true) {
     const httpsUsed = req.header('X-Scheme') === 'https' || req.header('X-Force-Secure') === 'true';
-    return { sameSite: 'strict', secure: httpsUsed } as CookieOptions;
+    return { sameSite: 'strict', secure: httpsUsed, httpOnly } as CookieOptions;
 }
 
 // This path is used during logging in, so it should not require authentication
 router.post('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
-            const cookieOptions = getCookieOptions(req);
-            res.cookie(TOKEN_COOKIE_NAME, token.value, cookieOptions);
+            const tokenCookieOptions = getCookieOptions(req);
+            res.cookie(TOKEN_COOKIE_NAME, token.value, tokenCookieOptions);
             res.send({ role: token.role });
         })
         .catch(err => {
@@ -48,10 +48,11 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
         logger.debug('Received SAML Response for user', req.user);
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
-                const cookieOptions = getCookieOptions(req);
-                res.cookie(TOKEN_COOKIE_NAME, token.value, cookieOptions);
-                res.cookie(USERNAME_COOKIE_NAME, req.user!.username, cookieOptions);
-                res.cookie(ROLE_COOKIE_NAME, token.role, cookieOptions);
+                const samlCookiesOptions = getCookieOptions(req, false);
+                const tokenCookieOptions = getCookieOptions(req);
+                res.cookie(TOKEN_COOKIE_NAME, token.value, tokenCookieOptions);
+                res.cookie(USERNAME_COOKIE_NAME, req.user!.username, samlCookiesOptions);
+                res.cookie(ROLE_COOKIE_NAME, token.role, samlCookiesOptions);
                 res.redirect(CONTEXT_PATH);
             })
             .catch(err => {
