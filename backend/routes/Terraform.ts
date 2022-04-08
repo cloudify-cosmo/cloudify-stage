@@ -9,10 +9,10 @@ import os from 'os';
 import path from 'path';
 import axios from 'axios';
 import { STATUS_CODES } from 'http';
-import Git from 'nodegit';
-import type { Error as GitError } from 'nodegit';
 import uniqueDirectoryName from 'short-uuid';
 import directoryTree from 'directory-tree';
+import simpleGit from 'simple-git';
+import type { GitError } from 'simple-git';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
 
@@ -75,30 +75,25 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
         );
     };
 
-    const getGitCredentials = () => {
+    const getGitUrl = () => {
         if (authHeader) {
             const encodedCredentials = authHeader.replace('Basic ', '');
             const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
             const [username, personalToken] = gitCredentials.split(':');
-            return Git.Cred.userpassPlaintextNew(username, personalToken);
+            const credentialsString = `${username}:${personalToken}@`;
+            return templateUrl.replace('//', `//${credentialsString}`);
         }
 
-        return undefined;
+        return templateUrl;
     };
 
     const cloneGitRepo = async (repositoryPath: string) => {
         try {
-            await Git.Clone.clone(templateUrl, repositoryPath, {
-                fetchOpts: {
-                    callbacks: {
-                        certificateCheck: () => 0,
-                        credentials: getGitCredentials
-                    }
-                }
-            });
-            // @ts-ignore-next-line nodegit library ensures that the occured error would be in a shape of the GitError type
+            const gitUrl = getGitUrl();
+            await simpleGit().clone(gitUrl, repositoryPath);
+            // @ts-ignore-next-line simple-git library ensures that the occured error would be in a shape of the GitError type
         } catch (error: GitError) {
-            const isAuthenticationIssue = error.message.includes('authentication');
+            const isAuthenticationIssue = error.message.includes('Authentication failed');
             const errorMessage = isAuthenticationIssue
                 ? 'GIT Authentication failed - Please note that some git providers require a token to be passed instead of a password'
                 : 'The URL is not accessible';
@@ -109,12 +104,12 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     };
 
     const scanGitFile = async () => {
-        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+        const repositoryPath = path.join(os.tmpdir(), 'repos', uniqueDirectoryName.generate());
         const terraformModuleDirectories: string[] = [];
 
         try {
             await cloneGitRepo(repositoryPath);
-            // @ts-ignore-next-line cloneGitRepo ensures the shape of the throwned error
+            // @ts-ignore-next-line cloneGitRepo function ensures the error shape
         } catch (error: CloneGitRepoError) {
             res.status(400).send({
                 message: error.message
