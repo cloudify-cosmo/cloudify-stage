@@ -61,6 +61,7 @@ describe('Login', () => {
         cy.activate();
 
         const ssoUrl = '/sso-redirect';
+        cy.intercept(ssoUrl).as('ssoRedirect');
         cy.intercept('/console/config', {
             app: {
                 saml: {
@@ -77,7 +78,7 @@ describe('Login', () => {
         cy.get('input').should('not.exist');
 
         cy.get('@loginButton').click();
-        cy.url().should('include', ssoUrl);
+        cy.wait('@ssoRedirect');
     });
 
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
