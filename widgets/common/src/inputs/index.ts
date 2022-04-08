@@ -5,7 +5,7 @@ import Utils from './utils';
 import DataTypesButton from './DataTypesButton';
 import YamlFileButton from './YamlFileButton';
 
-const InputsCommon = {
+export default {
     DataTypesButton,
     Header,
     HelpDescription,
@@ -13,14 +13,3 @@ const InputsCommon = {
     Utils,
     YamlFileButton
 };
-
-declare global {
-    namespace Stage.Common {
-        const Inputs: typeof InputsCommon;
-    }
-}
-
-Stage.defineCommon({
-    name: 'Inputs',
-    common: InputsCommon
-});

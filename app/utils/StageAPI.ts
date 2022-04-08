@@ -233,10 +233,7 @@ declare global {
         /** Common widget utilities */
         namespace Common {}
         // @ts-ignore Common contents are defined in widgets
-        const defineCommon: <Name extends keyof typeof Stage.Common>(
-            // @ts-ignore Common contents are defined in widgets
-            definition: CommonOrPropTypeDefinition<typeof Stage.Common, Name>
-        ) => void;
+        const defineCommon: <Name extends keyof typeof Stage.Common>(definition: any) => void;
 
         // NOTE: Additional PropTypes are defined in widgets
         // eslint-disable-next-line @typescript-eslint/no-empty-interface

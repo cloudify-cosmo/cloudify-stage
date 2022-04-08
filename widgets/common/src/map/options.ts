@@ -1,8 +1,9 @@
 import type { LatLngBounds, MapOptions } from 'leaflet';
+import Consts from '../Consts';
 import { siteToLatLng, SiteWithPosition } from './site';
 
 export function getMapOptions(sites: SiteWithPosition[]): { options: MapOptions; bounds?: LatLngBounds } {
-    const { initialZoom, mapOptions: defaultMapOptions } = Stage.Common.Consts.leaflet;
+    const { initialZoom, mapOptions: defaultMapOptions } = Consts.leaflet;
     const mapOptions: MapOptions = { ...defaultMapOptions };
     let bounds: LatLngBounds | undefined;
 
