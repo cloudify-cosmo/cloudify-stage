@@ -15,7 +15,7 @@ const StyledLabel = styled(Label)`
 `;
 
 const UserInitialsIcon: React.FunctionComponent = () => {
-    const username = useSelector((state: ReduxState) => state.manager.username);
+    const username = useSelector((state: ReduxState) => state.manager.auth.username);
     const userInitials = useMemo(() => {
         return username.substr(0, 2).toUpperCase();
     }, [username]);

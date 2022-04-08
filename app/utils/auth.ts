@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import Cookies from 'js-cookie';
 
 import Consts from './consts';
 import StageUtils from './stageUtils';
@@ -28,10 +27,6 @@ export default class Auth {
     static logout(managerData: ManagerData) {
         const internal = new Internal(managerData);
         return internal.doPost('/auth/logout', { withCredentials: true });
-    }
-
-    static isLoggedIn() {
-        return !!Cookies.get(Consts.TOKEN_COOKIE_NAME);
     }
 
     static isProductOperational(license: LicenseData) {

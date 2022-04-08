@@ -57,8 +57,14 @@ export function login(
             .then(({ role }) => {
                 dispatch(receiveLogin(username, role));
                 if (redirect) {
-                    // eslint-disable-next-line scanjs-rules/assign_to_location
-                    window.location = redirect;
+                    // NOTE: Using react router for internal paths to keep logged in state
+                    if (redirect.startsWith(Consts.CONTEXT_PATH)) {
+                        const routePath = redirect.replace(Consts.CONTEXT_PATH, '');
+                        dispatch(push(routePath));
+                    } else {
+                        // eslint-disable-next-line scanjs-rules/assign_to_location
+                        window.location = redirect;
+                    }
                 } else {
                     dispatch(push(Consts.HOME_PAGE_PATH));
                 }
@@ -94,7 +100,7 @@ export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction
         });
 }
 
-export function getUserData() {
+export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
             dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));

@@ -1,20 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
 import Consts from 'app/utils/consts';
+import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
+    function forceLogin(options?: Parameters<typeof cy.login>[0]) {
+        cy.login({ ...options, forceVisitLoginPage: true });
+    }
+
     it('succeeds when provided credentials are valid and license is active', () => {
-        cy.activate().usePageMock().login();
+        cy.activate().usePageMock();
+        forceLogin();
 
         cy.location('pathname').should('be.equal', '/console/');
     });
 
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
-        cy.activate();
+        cy.activate().usePageMock();
 
         const redirectUrl = '/console/page/test_page';
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
-        cy.usePageMock().login();
+        cy.login();
 
         cy.location('pathname').should('be.equal', redirectUrl);
     });
@@ -24,7 +29,7 @@ describe('Login', () => {
         { retries: { runMode: 2 } },
         () => {
             const currentAppDataVersion = Consts.APP_VERSION;
-            const fetchUserAppsTimeout = 20000;
+            const fetchUserAppsTimeout = secondsToMs(20);
 
             cy.intercept('GET', '/console/ua', req => {
                 req.reply(res => {
@@ -35,7 +40,8 @@ describe('Login', () => {
             cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
             cy.intercept('POST', '/console/ua').as('updateUserApps');
 
-            cy.activate().login('admin', 'admin', false);
+            cy.activate();
+            forceLogin({ expectSuccessfulLogin: false });
 
             cy.wait('@fetchUserApps', { timeout: fetchUserAppsTimeout });
             cy.wait('@fetchTemplateId').its('response.body').should('equal', 'main-sys_admin');
@@ -44,7 +50,8 @@ describe('Login', () => {
     );
 
     it('succeeds when provided credentials are valid and license is not active', () => {
-        cy.uploadLicense('expired_trial_license').login();
+        cy.uploadLicense('expired_trial_license');
+        forceLogin();
 
         cy.get('.container h2').should('contain.text', 'License Management');
         cy.location('pathname').should('be.equal', '/console/license');
@@ -54,6 +61,7 @@ describe('Login', () => {
         cy.activate();
 
         const ssoUrl = '/sso-redirect';
+        cy.intercept(ssoUrl).as('ssoRedirect');
         cy.intercept('/console/config', {
             app: {
                 saml: {
@@ -70,9 +78,7 @@ describe('Login', () => {
         cy.get('input').should('not.exist');
 
         cy.get('@loginButton').click();
-        cy.url().should('include', ssoUrl);
-
-        cy.reload();
+        cy.wait('@ssoRedirect');
     });
 
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
@@ -81,14 +87,15 @@ describe('Login', () => {
             body: { username: 'test', role: 'default', groupSystemRoles: {}, tenantsRoles: {} }
         });
 
-        cy.activate().login();
+        cy.activate();
+        forceLogin();
 
         cy.location('pathname').should('be.equal', '/console/noTenants');
         cy.contains('User is not associated with any tenants');
     });
 
     it('fails when provided credentials are invalid', () => {
-        cy.login('admin', 'invalid-password', false);
+        cy.login({ password: 'invalid-password', expectSuccessfulLogin: false });
 
         cy.get('.error.message').should(
             'have.text',
@@ -103,7 +110,8 @@ describe('Login', () => {
             body: {}
         });
 
-        cy.activate().login('admin', 'admin');
+        cy.activate();
+        forceLogin();
 
         cy.location('pathname').should('be.equal', '/console/error');
         cy.get('.error.message').should('have.text', 'Error getting data from the manager, cannot load page');
@@ -115,7 +123,8 @@ describe('Login', () => {
             body: {}
         });
 
-        cy.activate().login('admin', 'admin');
+        cy.activate();
+        forceLogin();
 
         cy.location('pathname').should('be.equal', '/console/error');
         cy.get('.error.message').should('have.text', 'Error initializing user data, cannot load page');
