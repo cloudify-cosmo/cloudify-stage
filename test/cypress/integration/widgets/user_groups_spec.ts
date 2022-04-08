@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import Consts from 'app/utils/consts';
 
 describe('User group management widget', () => {
@@ -9,12 +8,13 @@ describe('User group management widget', () => {
         const ldapResponse = isEnabled ? 'enabled' : 'disabled';
         cy.intercept('GET', '/console/sp/ldap', ldapResponse);
     };
-    const reloadPage = () => {
-        cy.usePageMock(widgetId).reload();
+    const mockPageAndLogin = () => {
+        cy.usePageMock(widgetId).mockLogin();
     };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock(widgetId).mockLogin().deleteUserGroup(groupName);
+        cy.activate('valid_trial_license').deleteUserGroup(groupName);
+        return mockPageAndLogin();
     });
 
     it('should allow to manage a group', () => {
@@ -69,13 +69,13 @@ describe('User group management widget', () => {
 
     it('should display LDAP group column when LDAP is enabled', () => {
         setLdapAvailability(true);
-        reloadPage();
+        mockPageAndLogin();
         cy.getWidget(widgetId).contains(ldapGroupColumnName);
     });
 
     it('should hide LDAP group column when LDAP is disabled', () => {
         setLdapAvailability(false);
-        reloadPage();
+        mockPageAndLogin();
         cy.getWidget(widgetId).contains(ldapGroupColumnName).should('not.exist');
     });
 });

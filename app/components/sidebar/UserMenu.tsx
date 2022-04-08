@@ -25,7 +25,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
     const [passwordModalVisible, showPasswordModal, closePasswordModal] = useBoolean();
     const dispatch = useDispatch();
 
-    const username = useSelector((state: ReduxState) => state.manager.username);
+    const username = useSelector((state: ReduxState) => state.manager.auth.username);
     const { isUserAuthorized } = StageUtils;
     const canEnterEditMode = useSelector(
         (state: ReduxState) =>

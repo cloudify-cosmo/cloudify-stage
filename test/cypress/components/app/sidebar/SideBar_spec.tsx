@@ -18,7 +18,7 @@ describe('SideBar', () => {
                 </ThemeContext.Provider>,
                 {
                     pages,
-                    manager: { username, tenants: { items: [] }, version: { version }, license: {} },
+                    manager: { auth: { username }, tenants: { items: [] }, version: { version }, license: {} },
                     config: { mode: Consts.MODE_CUSTOMER }
                 }
             );

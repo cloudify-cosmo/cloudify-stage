@@ -58,7 +58,7 @@ describe('Tenants menu', () => {
         installTemplate('templateForViewer', user.tenants[0]);
         installTemplate('templateForManager', user.tenants[1]);
 
-        cy.mockLogin(user.username, user.password);
+        cy.mockLogin({ username: user.username, password: user.password });
 
         function verifyTemplate(tenant) {
             cy.contains('.dropdown', Consts.DEFAULT_TENANT).click();

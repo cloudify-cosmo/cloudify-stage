@@ -1,7 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { mount } from 'enzyme';
-import sinon from 'sinon';
+import React from 'react';
 
 import GridItem from 'components/layout/GridItem';
 
@@ -58,19 +56,19 @@ describe('(Component) GridItem', () => {
 
     describe('Test lifecycle - calling add/remove of item', () => {
         it('Calling itemAdded callback', () => {
-            const onItemAdded = sinon.spy();
+            const onItemAdded = jest.fn();
             mount(
                 <GridItem id="1a" onItemAdded={onItemAdded}>
                     {[]}
                 </GridItem>
             );
 
-            expect(onItemAdded.calledOnce).toBe(true);
-            expect(onItemAdded.calledWithExactly('1a')).toBe(true);
+            expect(onItemAdded).toHaveBeenCalled();
+            expect(onItemAdded).toHaveBeenCalledWith('1a');
         });
 
         it('Calling itemRemoved callback', () => {
-            const onItemRemoved = sinon.spy();
+            const onItemRemoved = jest.fn();
             const m = mount(
                 <GridItem id="1b" onItemRemoved={onItemRemoved}>
                     {[]}
@@ -78,8 +76,8 @@ describe('(Component) GridItem', () => {
             );
 
             m.unmount();
-            expect(onItemRemoved.calledOnce).toBe(true);
-            expect(onItemRemoved.calledWithExactly('1b')).toBe(true);
+            expect(onItemRemoved).toHaveBeenCalled();
+            expect(onItemRemoved).toHaveBeenCalledWith('1b');
         });
     });
 });

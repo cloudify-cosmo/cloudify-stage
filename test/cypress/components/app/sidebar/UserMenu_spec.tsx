@@ -6,16 +6,26 @@ import UserMenu from 'app/components/sidebar/UserMenu';
 import StageUtils from 'app/utils/stageUtils';
 import Consts from 'app/utils/consts';
 import Auth from 'app/utils/auth';
+import { emptyState } from 'app/reducers/managerReducer';
+import type { ManagerData } from 'app/reducers/managerReducer';
 import { mountWithProvider } from '../../utils';
 
 describe('UserMenu', () => {
-    const username = 'admin';
+    function getManagerData(overrides?: Partial<ManagerData>): ManagerData {
+        return {
+            ...emptyState,
+            auth: { ...emptyState.auth, username: 'admin' },
+            license: {},
+            tenants: { items: [] },
+            ...overrides
+        };
+    }
 
     it('renders all options', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, license: { isRequired: true }, tenants: { items: [] } },
+            manager: getManagerData({ license: { isRequired: true } }),
             config: { mode: Consts.MODE_MAIN }
         });
 
@@ -29,7 +39,7 @@ describe('UserMenu', () => {
 
     it('renders limited set of options', () => {
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
@@ -45,7 +55,7 @@ describe('UserMenu', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         const { store } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, license: {}, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_MAIN }
         });
 
@@ -57,7 +67,7 @@ describe('UserMenu', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         const { history } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, license: {}, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_MAIN }
         });
 
@@ -70,7 +80,7 @@ describe('UserMenu', () => {
 
     it('handles template reset', () => {
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
@@ -82,7 +92,7 @@ describe('UserMenu', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         const { history } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, license: { isRequired: true }, tenants: { items: [] } },
+            manager: getManagerData({ license: { isRequired: true } }),
             config: { mode: Consts.MODE_MAIN }
         });
 
@@ -95,7 +105,7 @@ describe('UserMenu', () => {
 
     it('handles password change', () => {
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
@@ -107,7 +117,7 @@ describe('UserMenu', () => {
         const logout = cy.stub(Auth, 'logout');
 
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: { username, tenants: { items: [] } },
+            manager: getManagerData(),
             config: { mode: Consts.MODE_CUSTOMER }
         });
 
