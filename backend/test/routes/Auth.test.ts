@@ -39,7 +39,7 @@ describe('/auth endpoint', () => {
                 .then(response => {
                     expect(response.body).toStrictEqual({ role: 'default' });
                     const { 'set-cookie': setCookie } = response.headers;
-                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; Secure; SameSite=Strict']);
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; HttpOnly; Secure; SameSite=Strict']);
                 });
         });
 
@@ -52,7 +52,7 @@ describe('/auth endpoint', () => {
                 .then(response => {
                     expect(response.body).toStrictEqual({ role: 'default' });
                     const { 'set-cookie': setCookie } = response.headers;
-                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; Secure; SameSite=Strict']);
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; HttpOnly; Secure; SameSite=Strict']);
                 });
         });
 
@@ -64,7 +64,7 @@ describe('/auth endpoint', () => {
                 .then(response => {
                     expect(response.body).toStrictEqual({ role: 'default' });
                     const { 'set-cookie': setCookie } = response.headers;
-                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; SameSite=Strict']);
+                    expect(setCookie).toEqual(['XSRF-TOKEN=xyz; Path=/; HttpOnly; SameSite=Strict']);
                 });
         });
 
@@ -179,7 +179,7 @@ describe('/auth endpoint', () => {
                     const { location, 'set-cookie': setCookie } = response.headers;
                     expect(location).toEqual('/console');
                     expect(setCookie).toEqual([
-                        'XSRF-TOKEN=token-content; Path=/; SameSite=Strict',
+                        'XSRF-TOKEN=token-content; Path=/; HttpOnly; SameSite=Strict',
                         'USERNAME=testuser; Path=/; SameSite=Strict',
                         'ROLE=sys_admin; Path=/; SameSite=Strict'
                     ]);
