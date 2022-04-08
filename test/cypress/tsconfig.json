@@ -18,8 +18,8 @@
             "*": ["../../*"]
         }
     },
-    "include": ["**/*", "**/*.json", "../../conf/*.json"],
+    "include": ["**/*", "**/*.json", "../../conf/*.json", "../../backend/serverSettings.ts"],
     "files": ["../../app/typings/stage-api.d.ts"],
     // Some Stage.Common types used in tests are defined in widgets/common
-    "references": [{ "path": "../../app" }, { "path": "../../widgets" }, { "path": "../../backend" }]
+    "references": [{ "path": "../../app" }, { "path": "../../widgets" }]
 }
