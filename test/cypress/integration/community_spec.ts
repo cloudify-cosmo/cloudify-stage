@@ -3,7 +3,7 @@ describe('Community version', () => {
         cy.intercept('/console/auth/manager', { fixture: 'community/manager.json' });
         cy.intercept('/console/config', { fixture: 'community/config.json' });
         cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: true });
-        cy.usePageMock().mockLogin({ disableGettingStarted: true, isCommunity: true });
+        cy.usePageMock().mockLogin({ isCommunity: true });
     });
 
     it('should have Community tag in the banner', () => {
