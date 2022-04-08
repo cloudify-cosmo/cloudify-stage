@@ -1,7 +1,6 @@
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import type { FilterRule } from 'widgets/common/src/filters/types';
 import { waitUntilEmpty } from './resource_commons';
-import type {} from '../../../widgets/common/src/filters';
 
 declare global {
     namespace Cypress {
