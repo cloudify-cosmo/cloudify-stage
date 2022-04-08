@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import ToolboxPropType from '../props/Toolbox';
+
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
  * Data is dynamically fetched from manager.
@@ -100,7 +102,7 @@ NodeInstancesFilter.propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     value: PropTypes.arrayOf(PropTypes.string).isRequired,
     onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     deploymentId: PropTypes.string,
     label: PropTypes.string,
     placeholder: PropTypes.string,

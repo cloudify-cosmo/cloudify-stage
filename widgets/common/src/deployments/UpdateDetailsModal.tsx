@@ -3,6 +3,7 @@
 import { diffChars } from 'diff';
 import ParameterValue from '../components/parameter/ParameterValue';
 import ParameterValueDescription from '../components/parameter/ParameterValueDescription';
+import ToolboxPropType from '../props/Toolbox';
 import DeploymentUpdatesActions from './DeploymentUpdatesActions';
 
 function BlueprintSection({ newBlueprint, oldBlueprint }) {
@@ -505,7 +506,7 @@ function UpdateDetailsModal({
 }
 
 UpdateDetailsModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     open: PropTypes.bool.isRequired,
     isPreview: PropTypes.bool,
     deploymentUpdateId: PropTypes.string,

@@ -15,6 +15,8 @@ import {
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
 import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } from 'semantic-ui-react';
+import useEventListener from '../hooks/useEventListener';
+import useUpdateEffect from '../hooks/useUpdateEffect';
 import type { DropdownValue } from '../types';
 
 let instanceCount = 0;
@@ -26,7 +28,6 @@ let instanceCount = 0;
  * @param fetchDeps list of dependencies for delayed `fetchTrigger` call
  */
 function useFetchTrigger(fetchTrigger: () => void, fetchDeps: React.DependencyList) {
-    const { useUpdateEffect } = Stage.Hooks;
     const delayMs = 500;
     const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
 
@@ -120,7 +121,6 @@ export default function DynamicDropdown({
     ...rest
 }: DynamicDropdownProps) {
     const { useState, useEffect } = React;
-    const { useEventListener } = Stage.Hooks;
 
     const [id] = useState(() => {
         instanceCount += 1;

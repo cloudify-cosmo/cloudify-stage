@@ -321,11 +321,7 @@ module.exports = (env, argv) => {
             resolve: {
                 extensions: resolveExtensions
             },
-            entry: glob
-                .sync(`./widgets/common/src/props/*.${globExtensions}`)
-                .concat(glob.sync(`./widgets/common/src/hooks/*.${globExtensions}`))
-                .concat(glob.sync(`./widgets/common/src/!(props|hooks)/*.${globExtensions}`))
-                .concat(glob.sync(`./widgets/common/src/*.${globExtensions}`)),
+            entry: glob.sync(`./widgets/common/src/index.ts`),
             output: {
                 path: path.join(outputPath, 'appData/widgets'),
                 filename: 'common/common.js',
