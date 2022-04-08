@@ -930,18 +930,16 @@
                         "nameInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                         "nameDuplicated": "Variables must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide variable source",
-                        "valueMissing": "Please provide variable value",
-                        "valueInvalid": "Please provide valid variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
-                        "staticValueInvalid": "Please provide valid variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\". If special characters or complex structures are needed please provide this value inside a secret"
+                        "valueMissing": "Please provide variable name",
+                        "valueInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     },
                     "environmentVariable": {
                         "nameMissing": "Please provide environment variable name",
                         "nameInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
                         "nameDuplicated": "Environment variables must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide environment variable source",
-                        "valueMissing": "Please provide environment variable value",
-                        "valueInvalid": "Please provide valid environment variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
-                        "staticValueInvalid": "Please provide valid environment variable value - allowed only letters, digits and the characters \"-\", \".\" and \"_\". If special characters or complex structures are needed please provide this value inside a secret"
+                        "valueMissing": "Please provide environment variable name",
+                        "valueInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     },
                     "output": {
                         "nameMissing": "Please provide output name",

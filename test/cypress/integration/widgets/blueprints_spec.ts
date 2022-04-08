@@ -501,20 +501,20 @@ describe('Blueprints widget', () => {
                 });
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
-                cy.contains('Please provide variable value').should('be.visible');
-                cy.contains('Please provide environment variable value').should('be.visible');
+                cy.contains('Please provide variable name').should('be.visible');
+                cy.contains('Please provide environment variable name').should('be.visible');
                 cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
                 getSegment('Variables').within(() => {
                     cy.get('input[name=name]').type('$');
                     selectVariableSource('Static');
-                    cy.get('td:eq(2) input').type('$');
+                    cy.get('td:eq(3) input').type('$');
                 });
                 getSegment('Environment variables').within(() => {
                     cy.get('input[name=name]').type('$');
                     selectVariableSource('Static');
-                    cy.get('td:eq(2) input').type('$');
+                    cy.get('td:eq(3) input').type('$');
                 });
                 getSegment('Outputs').within(() => {
                     cy.get('input[name=name]').type('$');
@@ -523,47 +523,10 @@ describe('Blueprints widget', () => {
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide valid variable name').should('be.visible');
-                cy.contains('Please provide valid variable value').should('be.visible');
                 cy.contains('Please provide valid environment variable name').should('be.visible');
-                cy.contains('Please provide valid environment variable value').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
                 cy.get('.error.message li').should('have.length', 10);
-            });
-        });
-
-        it('validate static variable values', () => {
-            const invalidVariableValues = ['123$', '~123_', 'abc+123', '    abc'];
-            const validVariableValue = '321.test-test_test';
-            const validVariableName = 'abc';
-            const validationMessage =
-                'Please provide valid variable value - allowed only letters, digits and the characters "-", "." and "_". If special characters or complex structures are needed please provide this value inside a secret';
-
-            const setVariableValue = (value: string) => {
-                getSegment('Variables').within(() => {
-                    cy.get('td:eq(2) input').clear().type(value);
-                });
-            };
-
-            openTerraformModal();
-
-            cy.get('.modal').within(() => {
-                addFirstSegmentRow('Variables');
-
-                getSegment('Variables').within(() => {
-                    cy.get('input[name=name]').type(validVariableName);
-                    selectVariableSource('Static');
-                });
-
-                invalidVariableValues.forEach(invalidVariableValue => {
-                    setVariableValue(invalidVariableValue);
-                    cy.clickButton('Create');
-                    cy.contains(validationMessage).should('exist');
-                });
-
-                setVariableValue(validVariableValue);
-                cy.clickButton('Create');
-                cy.contains(validationMessage).should('not.exist');
             });
         });
 
