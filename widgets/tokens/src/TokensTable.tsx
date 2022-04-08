@@ -1,4 +1,5 @@
 import type { TokensWidget } from './types';
+import TextEllipsis from './TextEllipsis';
 
 const {
     Basic: { DataTable },
@@ -32,7 +33,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     return (
         <>
             <DataTable fetchData={fetchTableData}>
-                <DataTable.Column label="Token" name={dataSortingKeys.value} />
+                <DataTable.Column label="Token" name={dataSortingKeys.value} width="20%" />
                 <DataTable.Column label="Description" name={dataSortingKeys.description} />
                 {shouldDisplayUsers && <DataTable.Column label="Username" />}
                 {showExpiredTokens && (
@@ -43,13 +44,25 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                 {data?.items?.map(dataItem => {
                     return (
                         <DataTable.Row key={dataItem.id}>
-                            <DataTable.Data>{dataItem.value}</DataTable.Data>
-                            <DataTable.Data>{dataItem.description}</DataTable.Data>
-                            {shouldDisplayUsers && <DataTable.Data>{dataItem.username}</DataTable.Data>}
-                            {showExpiredTokens && (
-                                <DataTable.Data>{formatTimestamp(dataItem.expiration_date)}</DataTable.Data>
+                            <DataTable.Data>
+                                <TextEllipsis content={dataItem.value} />
+                            </DataTable.Data>
+                            <DataTable.Data>
+                                <TextEllipsis content={dataItem.description} />
+                            </DataTable.Data>
+                            {shouldDisplayUsers && (
+                                <DataTable.Data>
+                                    <TextEllipsis content={dataItem.username} />
+                                </DataTable.Data>
                             )}
-                            <DataTable.Data>{formatTimestamp(dataItem.last_used)}</DataTable.Data>
+                            {showExpiredTokens && (
+                                <DataTable.Data>
+                                    <TextEllipsis content={formatTimestamp(dataItem.expiration_date)} />
+                                </DataTable.Data>
+                            )}
+                            <DataTable.Data>
+                                <TextEllipsis content={formatTimestamp(dataItem.last_used)} />
+                            </DataTable.Data>
                             <DataTable.Data>Remove button</DataTable.Data>
                         </DataTable.Row>
                     );
