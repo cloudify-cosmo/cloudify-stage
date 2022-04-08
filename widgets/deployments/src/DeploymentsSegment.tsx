@@ -51,7 +51,9 @@ export default function DeploymentsSegment({
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <span className="breakWord">{item.id}</span>
+                                    <span className="breakWord">
+                                        {Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })}
+                                    </span>
                                 </Header>
                             </div>
                         }
