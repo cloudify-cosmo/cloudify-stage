@@ -51,7 +51,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for non-admin users', () => {
-        cy.mockLogin(nonAdminUsername, nonAdminPassword);
+        cy.mockLogin({ username: nonAdminUsername, password: nonAdminPassword });
 
         cy.contains(nonAdminUsername).click({ force: true });
         verifyOptionIsNotVisible('Edit Mode');

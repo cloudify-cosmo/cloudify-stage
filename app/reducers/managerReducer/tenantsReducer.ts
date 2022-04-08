@@ -8,7 +8,7 @@ export interface TenantsData {
         name: string;
     }[];
     selected?: string;
-    lastUpdated?: string;
+    lastUpdated?: number;
     error?: string;
 }
 
