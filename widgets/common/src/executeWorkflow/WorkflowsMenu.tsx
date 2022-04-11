@@ -1,6 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 
-const WorkflowsPropType = Stage.PropTypes.Workflows;
+const WorkflowsPropType = PropTypes.arrayOf(
+    PropTypes.shape({ name: PropTypes.string.isRequired, plugin: PropTypes.string.isRequired })
+);
 
 function filterWorkflows(workflows) {
     const updateWorkflow = 'update';

@@ -4,6 +4,7 @@ import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
 import YamlFileButton from '../inputs/YamlFileButton';
+import ToolboxPropType from '../props/Toolbox';
 import DeploymentActions from './DeploymentActions';
 import GenericDeployModal from '../deployModal/GenericDeployModal';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
@@ -388,7 +389,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 }
 
 UpdateDeploymentModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     open: PropTypes.bool.isRequired,
     deploymentId: PropTypes.string.isRequired,
     deploymentName: PropTypes.string.isRequired,

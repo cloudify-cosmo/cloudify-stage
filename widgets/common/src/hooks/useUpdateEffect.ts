@@ -5,7 +5,7 @@
  * @param onUpdate function to be triggered after each component's update
  * @param dependencies dependencies list passed to React.useEffect
  */
-function useUpdateEffect(onUpdate: () => void, dependencies: React.DependencyList) {
+export default function useUpdateEffect(onUpdate: () => void, dependencies: React.DependencyList) {
     const { useEffect, useRef } = React;
     const isInitialMount = useRef(true);
 
@@ -17,15 +17,3 @@ function useUpdateEffect(onUpdate: () => void, dependencies: React.DependencyLis
         }
     }, dependencies);
 }
-
-declare global {
-    namespace Stage {
-        interface Hooks {
-            useUpdateEffect: typeof useUpdateEffect;
-        }
-    }
-}
-// NOTE: prevents leaking variables as global in TS
-export {};
-
-Stage.defineHook({ useUpdateEffect });

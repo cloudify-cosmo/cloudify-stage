@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
+import ToolboxPropType from '../props/Toolbox';
 import { actions } from './DeploymentActionsMenu';
 import RemoveDeploymentModal from './RemoveDeploymentModal';
 import SetSiteModal from './SetSiteModal';
@@ -54,7 +55,7 @@ DeploymentActionsModals.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     onHide: PropTypes.func.isRequired,
     // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
-    toolbox: Stage.PropTypes.Toolbox.isRequired as any,
+    toolbox: ToolboxPropType.isRequired as any,
     redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
 

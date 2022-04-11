@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import ToolboxPropType from '../props/Toolbox';
 import DeploymentActions from './DeploymentActions';
 
 interface RemoveDeploymentModalProps {
@@ -84,7 +85,7 @@ RemoveDeploymentModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
     // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
-    toolbox: Stage.PropTypes.Toolbox.isRequired as any,
+    toolbox: ToolboxPropType.isRequired as any,
     redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
 
