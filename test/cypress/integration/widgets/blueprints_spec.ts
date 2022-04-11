@@ -4,6 +4,7 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    const errorBoxSelector = '.error.message';
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
@@ -346,8 +347,6 @@ describe('Blueprints widget', () => {
         });
 
         it('should successfully dismiss error messages', () => {
-            const errorBoxSelector = '.error.message';
-
             cy.get('.modal').within(() => {
                 cy.contains('button', 'Upload').click();
 
@@ -454,8 +453,11 @@ describe('Blueprints widget', () => {
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.typeToFieldInput('URL to a zip archive that contains the Terraform module', templateUrl).blur();
-            cy.setSingleDropdownValue('Terraform folder in the archive', modulePath);
+            cy.typeToFieldInput(
+                'Terraform module source - URL to a zip archive or a Git repository',
+                templateUrl
+            ).blur();
+            cy.setSingleDropdownValue('Terraform module folder', modulePath);
         }
 
         function selectVariableSource(source: string) {
@@ -637,7 +639,7 @@ describe('Blueprints widget', () => {
                 {
                     method: 'POST',
                     pathname: '/console/terraform/resources',
-                    query: { zipUrl: singleModuleTerraformTemplateUrl }
+                    query: { templateUrl: singleModuleTerraformTemplateUrl }
                 },
                 { statusCode: 401 }
             );
@@ -646,10 +648,57 @@ describe('Blueprints widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.typeToFieldInput(
-                    'URL to a zip archive that contains the Terraform module',
+                    'Terraform module source - URL to a zip archive or a Git repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
                 cy.contains('The URL requires authentication');
+            });
+        });
+
+        describe('handle getting Terraform module from git when', () => {
+            const terraformModuleDropdownHasOptions = (hasOptions: boolean) => {
+                const optionsAssertion = hasOptions ? 'not.exist' : 'exist';
+
+                cy.contains('Terraform module folder').parent().get(`.dropdown.disabled`).should(optionsAssertion);
+            };
+
+            const typeTerraformModuleUrl = (url: string) => {
+                cy.typeToFieldInput('Terraform module source - URL to a zip archive or a Git repository', url).blur();
+            };
+
+            beforeEach(() => {
+                openTerraformModal();
+            });
+
+            it('providing a correct public git file url', () => {
+                const publicGitFileUrl = 'https://github.com/cloudify-community/tf-source.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(publicGitFileUrl);
+                    terraformModuleDropdownHasOptions(true);
+                });
+            });
+
+            it('providing an incorrect public git file url', () => {
+                const incorrectPublicGitFileUrl = 'https://test.test/test.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(incorrectPublicGitFileUrl);
+                    terraformModuleDropdownHasOptions(false);
+
+                    cy.get(errorBoxSelector).contains('The URL is not accessible').should('exist');
+                });
+            });
+
+            it('providing a private git file url without typing corresponding credentials', () => {
+                const privateGitFileUrl = 'https://github.com/cloudify-cosmo/cloudify-blueprint-composer.git';
+
+                cy.get('.modal').within(() => {
+                    typeTerraformModuleUrl(privateGitFileUrl);
+                    terraformModuleDropdownHasOptions(false);
+
+                    cy.get(errorBoxSelector).contains('Git Authentication failed').should('exist');
+                });
             });
         });
 
@@ -666,7 +715,7 @@ describe('Blueprints widget', () => {
                 cy.intercept({
                     method: 'POST',
                     pathname: '/console/terraform/resources',
-                    query: { zipUrl: singleModuleTerraformTemplateUrl },
+                    query: { templateUrl: singleModuleTerraformTemplateUrl },
                     headers: { Authorization: `Basic dXNlcm5hbWU6cGFzc3dvcmQ=` }
                 }).as('resources');
 
@@ -677,13 +726,13 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Password', password);
 
                 cy.typeToFieldInput(
-                    'URL to a zip archive that contains the Terraform module',
+                    'Terraform module source - URL to a zip archive or a Git repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
 
                 cy.wait('@resources');
 
-                cy.setSingleDropdownValue('Terraform folder in the archive', 'local');
+                cy.setSingleDropdownValue('Terraform module folder', 'local');
                 cy.clickButton('Create');
                 cy.contains('Generating Terraform blueprint').should('be.visible');
                 cy.contains('Uploading Terraform blueprint').should('be.visible');

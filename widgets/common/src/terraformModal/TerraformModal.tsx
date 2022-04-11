@@ -371,6 +371,9 @@ export default function TerraformModal({
                 setResourceLocation(
                     find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
                 );
+
+                const { template, ...modalErrors } = errors;
+                setErrors(modalErrors);
             })
             .catch(err => {
                 setErrors({
