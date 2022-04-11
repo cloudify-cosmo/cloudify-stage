@@ -20,6 +20,8 @@ const logger = getLogger('Terraform');
 const router = express.Router();
 const templatePath = path.resolve(__dirname, '../templates/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
+// NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
+const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
 router.use(bodyParser.json());
 
@@ -90,7 +92,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     const cloneGitRepo = async (repositoryPath: string) => {
         try {
             const gitUrl = getGitUrl();
-            await simpleGit().clone(gitUrl, repositoryPath);
+            await simpleGit().clone(gitUrl, repositoryPath, [disableGitAuthenticationPromptOption]);
             // @ts-ignore-next-line simple-git library ensures that the occured error would be in a shape of the GitError type
         } catch (error: GitError) {
             const isAuthenticationIssue = error.message.includes('Authentication failed');
