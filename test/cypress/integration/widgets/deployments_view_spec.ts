@@ -4,6 +4,7 @@ import { without } from 'lodash';
 import type { SystemLabel } from '../../support/deployments';
 
 import { exampleBlueprintUrl } from '../../support/resource_urls';
+import type { FilterRule } from '../../../../widgets/common/src/filters/types';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
 import type {} from '../../../../widgets/common/src/deploymentsView';
 import { secondsToMs } from '../../support/resource_commons';
@@ -249,7 +250,7 @@ describe('Deployments View widget', () => {
     describe('with filters', () => {
         const deploymentNameThatMatchesFilter = `${specPrefix}precious_deployment`;
         const filterId = 'only-precious';
-        const filterRules: Stage.Common.Filters.Rule[] = [
+        const filterRules: FilterRule[] = [
             {
                 type: FilterRuleType.Label,
                 key: 'precious',

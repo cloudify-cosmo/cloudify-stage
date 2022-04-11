@@ -90,7 +90,4 @@ function extractCountFrom(instancesSummaryItem) {
     return _.get(instancesSummaryItem, 'node_instances', 0);
 }
 
-Stage.defineCommon({
-    name: 'NodeInstancesConsts',
-    common: { extractCountFrom, extractStatesFrom, groupNames, groupStates }
-});
+export default { extractCountFrom, extractStatesFrom, groupNames, groupStates };

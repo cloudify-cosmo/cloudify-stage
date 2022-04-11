@@ -8,7 +8,7 @@ import SemanticColorDropdown from './SemanticColorDropdown';
 import Accordion from './accordion';
 import Parameter from './parameter';
 
-const ComponentsCommon = {
+export default {
     Accordion,
     DeleteConfirm,
     DynamicDropdown,
@@ -19,14 +19,3 @@ const ComponentsCommon = {
     RevertToDefaultIcon,
     SemanticColorDropdown
 };
-
-declare global {
-    namespace Stage.Common {
-        const Components: typeof ComponentsCommon;
-    }
-}
-
-Stage.defineCommon({
-    name: 'Components',
-    common: ComponentsCommon
-});

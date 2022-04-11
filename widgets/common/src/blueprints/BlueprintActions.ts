@@ -1,5 +1,7 @@
 // eslint-disable-next-line max-classes-per-file
+import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
+import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
 
 class BlueprintUploadError extends Error {
@@ -106,7 +108,7 @@ export interface BlueprintDeployParams {
     deploymentName: string;
     inputs: Record<string, any>;
     visibility: string;
-    labels: Stage.Common.Labels.Label[];
+    labels: Label[];
     skipPluginsValidation?: boolean;
     siteName?: string;
     runtimeOnlyEvaluation?: boolean;
@@ -220,7 +222,7 @@ export default class BlueprintActions {
             file,
             imageUrl,
             image,
-            visibility = Stage.Common.Consts.defaultVisibility,
+            visibility = Consts.defaultVisibility,
             onStateChanged = _.noop
         }: {
             blueprintYamlFile?: string;

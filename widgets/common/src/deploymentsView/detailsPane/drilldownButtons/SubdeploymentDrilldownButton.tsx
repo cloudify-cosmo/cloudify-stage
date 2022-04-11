@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useMemo } from 'react';
+import type { FilterRule } from '../../../filters/types';
 import { FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
@@ -60,7 +61,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
 };
 export default SubdeploymentDrilldownButton;
 
-const deploymentTypeRule: Record<SubdeploymentDrilldownButtonProps['type'], Stage.Common.Filters.Rule> = {
+const deploymentTypeRule: Record<SubdeploymentDrilldownButtonProps['type'], FilterRule> = {
     environments: {
         type: FilterRuleType.Label,
         key: 'csys-obj-type',

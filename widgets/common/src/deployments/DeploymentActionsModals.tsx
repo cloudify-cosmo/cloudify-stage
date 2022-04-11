@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
+import ManageLabelsModal from '../labels/ManageLabelsModal';
 import { actions } from './DeploymentActionsMenu';
 import RemoveDeploymentModal from './RemoveDeploymentModal';
 import SetSiteModal from './SetSiteModal';
@@ -22,13 +23,6 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     toolbox,
     redirectToParentPageAfterDelete
 }) => {
-    const {
-        Common: {
-            Labels: { ManageModal: ManageLabelsModal }
-        }
-        // NOTE: `as any` since the commons are not migrated to TS yet
-    } = Stage;
-
     const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
 
     switch (activeAction) {

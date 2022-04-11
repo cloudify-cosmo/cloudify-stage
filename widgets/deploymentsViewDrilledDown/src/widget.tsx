@@ -1,4 +1,6 @@
 import type { FunctionComponent } from 'react';
+import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
+import type { FilterRule } from '../../common/src/filters/types';
 
 const {
     Common: { i18nDrillDownPrefix },
@@ -6,7 +8,7 @@ const {
     sharedDefinition
 } = Stage.Common.DeploymentsView;
 
-type DrilledDownWidgetConfiguration = Stage.Common.DeploymentsView.Configuration.SharedDeploymentsViewWidgetConfiguration;
+type DrilledDownWidgetConfiguration = SharedDeploymentsViewWidgetConfiguration;
 
 Stage.defineWidget<never, never, DrilledDownWidgetConfiguration>({
     ...sharedDefinition,
@@ -35,7 +37,7 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
         DeploymentsView,
         Common: { i18nMessagesPrefix, filterRulesContextKey, isTopLevelPage }
     } = Stage.Common.DeploymentsView;
-    const filterRules: Stage.Common.Filters.Rule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
+    const filterRules: FilterRule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
     const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
