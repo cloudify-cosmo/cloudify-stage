@@ -56,10 +56,10 @@ The default visibility is "Tenant", and according to the logged-in user's permis
    `Blueprint name` is the name with which you want to identify this blueprint once uploaded.
 5. Select `Terraform version` (by default, one of the Terraform versions will be selected).
 6. Provide `Blueprint main information`, which consists of:
-   - `URL to a zip archive that contains the Terraform module`.
-   - `Terraform folder in the archive` - selectable field from which you can select Terraform module contained in the zip file.<br />
-   By default this field is disabled, until the `URL to a zip archive that contains the Terraform module` is provided.
-   - (Optional) Credentials required for accessing `URL to a zip archive that contains the Terraform module`.
+   - `Terraform module source` - URL to a zip archive or a Git repository.
+   - `Terraform module folder` - selectable field from which you can select Terraform module contained in the zip file or Git repository.<br />
+   By default this field is disabled, until the `Terraform module source` is provided.
+   - (Optional) Credentials required for accessing `Terraform module source`.
 7. (Optional) To add `Variables` or `Environment variables`:   
    1. Click the `Variables` or `Environment variables` section.
    2. Click the **Add** button.

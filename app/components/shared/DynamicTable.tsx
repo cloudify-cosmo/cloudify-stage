@@ -51,9 +51,9 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                         {columns
                             .filter(column => !column.hidden)
                             .map(column => {
-                                const { id, label, ...columnRest } = column;
+                                const { id, label, width, ...columnRest } = column;
                                 return (
-                                    <Table.Cell key={id}>
+                                    <Table.Cell key={id} width={width}>
                                         <GenericField
                                             label=""
                                             key={id}
