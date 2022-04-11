@@ -1,5 +1,6 @@
 import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
+import { formatDisplayName } from '../../support/deployments';
 
 describe('Deployments widget', () => {
     const widgetId = 'deployments';
@@ -47,7 +48,10 @@ describe('Deployments widget', () => {
 
     it('should be present in Deployments page', () => {
         cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3').should('have.text', deploymentId);
+        cy.get('.deploymentSegment h3').should(
+            'have.text',
+            formatDisplayName({ id: deploymentId, displayName: deploymentName })
+        );
     });
 
     describe('should provide display configuration for', () => {
