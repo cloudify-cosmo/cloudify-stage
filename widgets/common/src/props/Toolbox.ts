@@ -11,19 +11,4 @@ const ToolboxPropType = PropTypes.shape({
     loading: PropTypes.func,
     refresh: PropTypes.func
 });
-
-declare global {
-    namespace Stage {
-        interface PropTypes {
-            Toolbox: typeof ToolboxPropType;
-        }
-    }
-}
-
-// NOTE: makes this file an ES module which prevent name collisions
-export {};
-
-Stage.definePropType({
-    name: 'Toolbox',
-    common: ToolboxPropType
-});
+export default ToolboxPropType;

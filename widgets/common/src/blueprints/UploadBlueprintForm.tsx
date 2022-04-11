@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from '../Consts';
+import ToolboxPropType from '../props/Toolbox';
 import BlueprintActions from './BlueprintActions';
 import UploadBlueprintBasicForm from './UploadBlueprintBasicForm';
 
@@ -207,7 +208,7 @@ UploadBlueprintForm.propTypes = {
     loading: PropTypes.bool,
     showErrorsSummary: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     uploadState: PropTypes.string,
     clearErrors: PropTypes.func
 };

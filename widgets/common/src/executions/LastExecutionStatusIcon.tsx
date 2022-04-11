@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import UpdateDetailsModal from '../deployments/UpdateDetailsModal';
+import ToolboxPropType from '../props/Toolbox';
 import ExecutionActions from './ExecutionActions';
 
 const t = Stage.Utils.getT('widgets.common.executions');
@@ -238,7 +239,7 @@ export default class LastExecutionStatusIcon extends React.Component {
 }
 
 LastExecutionStatusIcon.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     execution: PropTypes.shape({
         created_at: PropTypes.string,
         deployment_id: PropTypes.string,

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-function useEventListener(
+export default function useEventListener(
     toolbox: Stage.Types.WidgetlessToolbox,
     event: string | undefined,
     handler: (...args: any[]) => void
@@ -14,12 +14,3 @@ function useEventListener(
         return undefined;
     }, [event, handler]);
 }
-
-declare global {
-    namespace Stage {
-        interface Hooks {
-            useEventListener: typeof useEventListener;
-        }
-    }
-}
-Stage.defineHook({ useEventListener });

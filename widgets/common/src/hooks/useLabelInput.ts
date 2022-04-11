@@ -14,7 +14,11 @@ function formatNewValue(type: LabelInputType, newValue: string) {
     return type === 'key' ? truncatedNewValue.toLowerCase() : removeControlCharacters(truncatedNewValue);
 }
 
-function useLabelInput(onChange: (value: string) => void, type: LabelInputType, { initialValue = '' } = {}) {
+export default function useLabelInput(
+    onChange: (value: string) => void,
+    type: LabelInputType,
+    { initialValue = '' } = {}
+) {
     const { useBoolean, useResettableState } = Stage.Hooks;
     const [inputValue, setInputValue, resetInputValue] = useResettableState(initialValue);
     const [invalidCharacterTyped, setInvalidCharacterTyped, unsetInvalidCharacterTyped] = useBoolean();
@@ -44,13 +48,3 @@ function useLabelInput(onChange: (value: string) => void, type: LabelInputType, 
         unsetInvalidCharacterTyped
     };
 }
-
-declare global {
-    namespace Stage {
-        interface Hooks {
-            useLabelInput: typeof useLabelInput;
-        }
-    }
-}
-
-Stage.defineHook({ useLabelInput });
