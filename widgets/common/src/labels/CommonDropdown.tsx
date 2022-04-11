@@ -1,6 +1,7 @@
 import type { ComponentProps, FunctionComponent, RefObject } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import DynamicDropdown from '../components/DynamicDropdown';
+import useLabelInput from '../hooks/useLabelInput';
 import ValidationErrorPopup from './ValidationErrorPopup';
 import type { LabelInputType } from './types';
 
@@ -56,9 +57,6 @@ const CommonDropdownWithoutAdditions: FunctionComponent<CommonDropdownProps> = (
     ...rest
 }) => {
     const { useEffect } = React;
-    const {
-        Hooks: { useLabelInput }
-    } = Stage;
 
     const { inputValue, invalidCharacterTyped, submitChange, resetInput, unsetInvalidCharacterTyped } = useLabelInput(
         onChange as (value: string) => void,

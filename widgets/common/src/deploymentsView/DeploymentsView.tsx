@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import SplitPane from 'react-split-pane';
+import useEventListener from '../hooks/useEventListener';
 import { useWidgetDimensions } from '../map/widget-dimensions';
 
 import {
@@ -113,7 +114,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
         }
     );
 
-    Stage.Hooks.useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
+    useEventListener(toolbox, 'deployments:refresh', deploymentsResult.refetch);
 
     const widgetDimensions = useWidgetDimensions(widget);
 
