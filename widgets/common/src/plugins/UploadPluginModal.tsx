@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import Consts from '../Consts';
+import ToolboxPropType from '../props/Toolbox';
 import PluginActions from './PluginActions';
 import UploadPluginForm from './UploadPluginForm';
 
@@ -129,7 +130,7 @@ function UploadPluginModal({ open, onHide, toolbox }) {
 UploadPluginModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: ToolboxPropType.isRequired
 };
 
 export default UploadPluginModal;

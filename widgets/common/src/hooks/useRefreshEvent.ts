@@ -1,19 +1,7 @@
 import { useCallback } from 'react';
+import useEventListener from './useEventListener';
 
-function useRefreshEvent(toolbox: Stage.Types.Toolbox, event: string) {
-    const { useEventListener } = Stage.Hooks;
+export default function useRefreshEvent(toolbox: Stage.Types.Toolbox, event: string) {
     const refresh = useCallback(toolbox.refresh, []);
     useEventListener(toolbox, event, refresh);
 }
-
-declare global {
-    namespace Stage {
-        interface Hooks {
-            useRefreshEvent: typeof useRefreshEvent;
-        }
-    }
-}
-
-export {};
-
-Stage.defineHook({ useRefreshEvent });

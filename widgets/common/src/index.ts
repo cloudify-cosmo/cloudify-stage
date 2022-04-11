@@ -18,6 +18,8 @@ import SecretActions from './secrets/SecretActions';
 import TerraformModal from './terraformModal';
 import EventUtils from './utils/EventUtils';
 import Consts from './Consts';
+import StagePropTypes from './props';
+import StageHooks from './hooks';
 
 const StageCommon = {
     Actions,
@@ -42,10 +44,19 @@ const StageCommon = {
     Consts
 };
 
+type StagePropTypes = typeof StagePropTypes;
+type StageHooks = typeof StageHooks;
+
 declare global {
     namespace Stage {
         const Common: typeof StageCommon;
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface PropTypes extends StagePropTypes {}
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Hooks extends StageHooks {}
     }
 }
 
 Stage.defineCommon(StageCommon);
+Stage.definePropTypes(StagePropTypes);
+Stage.defineHooks(StageHooks);
