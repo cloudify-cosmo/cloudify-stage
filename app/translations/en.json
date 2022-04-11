@@ -535,7 +535,7 @@
                     "errors": {
                         "missingDeployment": "Missing deployment.",
                         "missingWorkflow": "Missing workflow.",
-                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ workflowName }}'.",
+                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentNameAndId }}'.",
                         "scheduleTimeError": "Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)",
                         "yamlFileError": "Loading values from YAML file failed: {{errorMessage}}"
                     },
