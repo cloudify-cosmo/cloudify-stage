@@ -4,6 +4,7 @@ import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import Consts from '../Consts';
+import LabelsInput from '../labels/LabelsInput';
 import MissingSecretsError from '../secrets/MissingSecretsError';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import DeploymentInputs from './DeploymentInputs';
@@ -582,9 +583,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     render() {
         const { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } = Stage.Basic;
-        const {
-            Labels: { Input: LabelsInput }
-        } = Stage.Common;
         const {
             onHide,
             open,

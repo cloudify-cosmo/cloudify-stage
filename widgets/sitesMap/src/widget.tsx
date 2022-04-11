@@ -1,3 +1,4 @@
+import type { SiteWithPosition } from '../../common/src/map/site';
 import SitesMap from './SitesMap';
 import type { DeploymentStatusesSummary, DeploymentStatus, SitesData } from './types';
 import { DeploymentStatuses } from './types';
@@ -99,7 +100,7 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
 
             const sitesWithLocation = sites.items.filter(
                 site => Number.isFinite(site.latitude) && Number.isFinite(site.longitude)
-            ) as Stage.Common.Map.SiteWithPosition[];
+            ) as SiteWithPosition[];
             sitesWithLocation.forEach(site => {
                 sitesData[site.name] = {
                     ...site,

@@ -1,4 +1,5 @@
 import type { ReactNode, ComponentProps } from 'react';
+import ToolboxPropType from '../props/Toolbox';
 
 export const actions = Object.freeze({
     delete: 'delete',
@@ -59,7 +60,7 @@ export default function DeploymentActionsMenu({ onActionClick, toolbox, trigger 
 
 DeploymentActionsMenu.propTypes = {
     onActionClick: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     trigger: PropTypes.node
 };
 

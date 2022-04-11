@@ -14,18 +14,7 @@ export type { Workflow, WorkflowParameters, WorkflowOptions, BaseWorkflowInputs,
 
 export { ExecuteWorkflowInputs, getWorkflowName, executeWorkflow };
 
-const WorkflowsCommon = {
+export default {
     ExecuteModal: ExecuteWorkflowModal,
     Menu
 };
-
-declare global {
-    namespace Stage.Common {
-        const Workflows: typeof WorkflowsCommon;
-    }
-}
-
-Stage.defineCommon({
-    name: 'Workflows',
-    common: WorkflowsCommon
-});

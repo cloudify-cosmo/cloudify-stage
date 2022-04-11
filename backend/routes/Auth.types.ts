@@ -52,4 +52,14 @@ export interface UserResponse {
     is_locked: boolean;
     show_getting_started: boolean;
 }
+
+export interface LicenseResponse {
+    capabilities: string[] | null;
+    cloudify_version: string | null;
+    customer_id: string;
+    expiration_date: string;
+    expired: boolean;
+    license_edition: string;
+    trial: boolean;
+}
 /* eslint-enable camelcase */

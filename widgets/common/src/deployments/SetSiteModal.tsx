@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import ToolboxPropType from '../props/Toolbox';
 import DeploymentActions from './DeploymentActions';
 
 export default function SetSiteModal({ deploymentId, deploymentName, onHide, open, toolbox }) {
@@ -109,7 +110,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
 SetSiteModal.propTypes = {
     deploymentId: PropTypes.string.isRequired,
     deploymentName: PropTypes.string.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    toolbox: ToolboxPropType.isRequired,
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired
 };

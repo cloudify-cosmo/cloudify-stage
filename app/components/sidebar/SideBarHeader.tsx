@@ -19,7 +19,7 @@ const StyledLink = styled(Link)`
 `;
 
 const SideBarHeader: FunctionComponent = () => {
-    const productVersion = useSelector((state: ReduxState) => state.manager.version.version);
+    const productVersion = useSelector((state: ReduxState) => state.manager.version.version)!;
     const theme = useContext(ThemeContext) || {};
 
     return (

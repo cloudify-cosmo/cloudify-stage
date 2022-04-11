@@ -4,8 +4,15 @@ import { jsonRequest } from './ManagerHandler';
 
 import { getMode, setMode, MODE_MAIN, MODE_COMMUNITY } from '../serverSettings';
 import { getLogger } from './LoggerHandler';
-import type { ConfigResponse, TokenResponse, UserResponse, VersionResponse } from '../routes/Auth.types';
 import { getHeadersWithAuthenticationToken } from '../utils';
+import type {
+    ConfigResponse,
+    LicenseResponse,
+    TokenResponse,
+    UserResponse,
+    VersionResponse
+} from '../routes/Auth.types';
+import type { PaginatedResponse } from '../types';
 
 const logger = getLogger('AuthHandler');
 
@@ -38,7 +45,7 @@ export function isProductLicensed(version: VersionResponse) {
     return !_.isEqual(version.edition, EDITION.COMMUNITY);
 }
 
-export function getLicense(token: string) {
+export function getLicense(token: string): Promise<PaginatedResponse<LicenseResponse>> {
     return jsonRequest('GET', '/license', getHeadersWithAuthenticationToken(token));
 }
 

@@ -2,6 +2,7 @@
 
 import log from 'loglevel';
 import { push } from 'connected-react-router';
+import type { ThunkAction, AnyAction } from 'redux';
 
 import * as types from './types';
 import Auth from '../utils/auth';
@@ -11,6 +12,7 @@ import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
+import type { ReduxState } from '../reducers';
 
 function requestLogin() {
     return {
@@ -44,15 +46,25 @@ export function storeRBAC(RBAC) {
     };
 }
 
-export function login(username, password, redirect) {
+export function login(
+    username: string,
+    password: string,
+    redirect?: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
             .then(({ role }) => {
                 dispatch(receiveLogin(username, role));
                 if (redirect) {
-                    // eslint-disable-next-line scanjs-rules/assign_to_location
-                    window.location = redirect;
+                    // NOTE: Using react router for internal paths to keep logged in state
+                    if (redirect.startsWith(Consts.CONTEXT_PATH)) {
+                        const routePath = redirect.replace(Consts.CONTEXT_PATH, '');
+                        dispatch(push(routePath));
+                    } else {
+                        // eslint-disable-next-line scanjs-rules/assign_to_location
+                        window.location = redirect;
+                    }
                 } else {
                     dispatch(push(Consts.HOME_PAGE_PATH));
                 }
@@ -78,7 +90,7 @@ function isLicenseRequired(versionEdition) {
     return versionEdition !== Consts.EDITION.COMMUNITY;
 }
 
-export function getManagerData() {
+export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
@@ -88,7 +100,7 @@ export function getManagerData() {
         });
 }
 
-export function getUserData() {
+export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
             dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));
@@ -118,7 +130,7 @@ function doLogout(err) {
     };
 }
 
-export function logout(err?, path?) {
+export function logout(err?, path?): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());

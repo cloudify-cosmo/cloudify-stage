@@ -3,6 +3,10 @@ import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
 import styled from 'styled-components';
+import BlueprintActions from '../blueprints/BlueprintActions';
+import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
+import Consts from '../Consts';
+import SecretActions from '../secrets/SecretActions';
 import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
@@ -299,8 +303,6 @@ export default function TerraformModal({
             return;
         }
 
-        const BlueprintActions = Stage.Common.Blueprints.Actions;
-
         const existingBlueprintResponse = await new BlueprintActions(toolbox).doGetBlueprints({
             id: blueprintName,
             _include: 'id'
@@ -327,14 +329,14 @@ export default function TerraformModal({
             setProcessPhase('upload');
 
             if (urlAuthentication) {
-                const secretActions = new Stage.Common.SecretActions(toolbox);
-                const { defaultVisibility } = Stage.Common.Consts;
+                const secretActions = new SecretActions(toolbox);
+                const { defaultVisibility } = Consts;
                 await secretActions.doCreate(`${blueprintName}.username`, username, defaultVisibility, false);
                 await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
             }
 
             const file: any = new Blob([blueprintContent]);
-            file.name = Stage.Common.Consts.defaultBlueprintYamlFileName;
+            file.name = Consts.defaultBlueprintYamlFileName;
             const image = await (await fetch(terraformLogo)).blob();
 
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
@@ -369,6 +371,9 @@ export default function TerraformModal({
                 setResourceLocation(
                     find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
                 );
+
+                const { template, ...modalErrors } = errors;
+                setErrors(modalErrors);
             })
             .catch(err => {
                 setErrors({
@@ -379,8 +384,6 @@ export default function TerraformModal({
             })
             .finally(unsetTemplateModulesLoading);
     }
-
-    const { SectionWithDivider } = Stage.Common.Components.Accordion;
 
     return (
         <Modal open onClose={onHide}>
@@ -408,7 +411,7 @@ export default function TerraformModal({
                         />
                     </Form.Field>
                     <Accordion>
-                        <SectionWithDivider title={t('blueprintInformation')} initialActive>
+                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={errors.template}>
                                 <Form.Input
@@ -461,7 +464,7 @@ export default function TerraformModal({
                                     />
                                 </Form.Field>
                             </Form.Group>
-                        </SectionWithDivider>
+                        </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion
                             title={t('variables')}
@@ -502,14 +505,3 @@ export default function TerraformModal({
         </Modal>
     );
 }
-
-declare global {
-    namespace Stage.Common {
-        export { TerraformModal };
-    }
-}
-
-Stage.defineCommon({
-    name: 'TerraformModal',
-    common: TerraformModal
-});

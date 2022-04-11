@@ -15,6 +15,9 @@ import _, { isString, noop } from 'lodash';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import Consts from 'app/utils/consts';
+import emptyState from 'app/reducers/managerReducer/emptyState';
+import type { ManagerData } from 'app/reducers/managerReducer';
+import type { Mode } from 'backend/serverSettings';
 
 import { secondsToMs } from './resource_commons';
 import './asserts';
@@ -49,6 +52,14 @@ const mockGettingStarted = (modalEnabled: boolean) =>
 const collapseSidebar = () => cy.get('.breadcrumb').click();
 
 export const testPageName = 'Test Page';
+
+interface LoginOptions {
+    username?: string;
+    password?: string;
+    disableGettingStarted?: boolean;
+    visitPage?: string;
+    isCommunity?: boolean;
+}
 
 declare global {
     namespace Cypress {
@@ -171,12 +182,23 @@ const commands = {
             },
             ...options
         }),
-    // TODO(RD-2314): object instead of multiple optional parameters
-    login: (username = 'admin', password = 'admin', expectSuccessfulLogin = true, disableGettingStarted = true) => {
+    login: ({
+        username = 'admin',
+        password = 'admin',
+        expectSuccessfulLogin = true,
+        forceVisitLoginPage = false,
+        disableGettingStarted = true
+    }: {
+        username?: string;
+        password?: string;
+        expectSuccessfulLogin?: boolean;
+        forceVisitLoginPage?: boolean;
+        disableGettingStarted?: boolean;
+    } = {}) => {
         mockGettingStarted(!disableGettingStarted);
 
         cy.location('pathname').then(pathname => {
-            if (pathname !== '/console/login') {
+            if (forceVisitLoginPage || pathname !== '/console/login') {
                 cy.visit('/console/login');
             }
         });
@@ -194,37 +216,52 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded().then(() => cy.saveLocalStorage());
+            cy.waitUntilLoaded();
         }
         return cy;
     },
-    // TODO(RD-2314): object instead of multiple optional parameters
-    mockLogin: (username?: string, password?: string, disableGettingStarted?: boolean) =>
-        cy.mockLoginWithoutWaiting({ username, password, disableGettingStarted }).waitUntilLoaded(),
+    mockLogin: ({
+        username = 'admin',
+        password = 'admin',
+        disableGettingStarted = true,
+        visitPage = '/console',
+        isCommunity = false
+    }: LoginOptions = {}) =>
+        cy
+            .mockLoginWithoutWaiting({ username, password, disableGettingStarted, visitPage, isCommunity })
+            .waitUntilLoaded(),
     mockLoginWithoutWaiting: ({
         username = 'admin',
         password = 'admin',
-        disableGettingStarted = true
-    }: {
-        username?: string;
-        password?: string;
-        disableGettingStarted?: boolean;
-    } = {}) => {
+        disableGettingStarted = true,
+        visitPage = '/console',
+        isCommunity = false
+    }: LoginOptions = {}) => {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
             const { role } = response.body;
-            cy.setLocalStorage(
-                `manager-state-main`,
-                JSON.stringify({
-                    auth: { role, groupSystemRoles: {}, tenantsRoles: {} },
-                    username
-                })
-            );
+            cy.initLocalStorage({ username, role, mode: isCommunity ? 'community' : 'main' });
             if (disableGettingStarted) mockGettingStarted(false);
         });
-        return cy.visit('/console');
+        return cy.visit(visitPage);
     },
+    initLocalStorage: ({
+        username = 'admin',
+        role = 'sys_admin',
+        mode = 'main'
+    }: {
+        username?: string;
+        role?: string;
+        mode?: Mode;
+    } = {}) =>
+        cy.setLocalStorage(
+            `manager-state-${mode}`,
+            JSON.stringify({
+                ...emptyState,
+                auth: { ...emptyState.auth, role, username, state: 'loggedIn' }
+            } as ManagerData)
+        ),
     clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
         cy.log(`Clicking '${name}' page menu item`);
         cy.get('.sidebar.menu .pages').contains(name).click({ force: true });
@@ -462,5 +499,5 @@ function setContext(field: string, value: string) {
 }
 
 function clearContext(field: string) {
-    cy.get(`.${field}FilterField .dropdown.icon`).click();
+    return cy.get(`.${field}FilterField .dropdown.icon`).click();
 }
