@@ -1,5 +1,5 @@
 <% variables.forEach(variable => { if (variable.source ==="input") { _%>
   <%= variable.value %>:
     type: string
-    default: ""
+    default: '<%= String(variable.default).replace("'", "''") %>'
 <% }}) _%>
