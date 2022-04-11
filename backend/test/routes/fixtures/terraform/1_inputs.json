@@ -8,24 +8,28 @@
     {
       "name": "variableA",
       "source": "secret",
-      "value": "secretA"
+      "value": "secretA",
+      "default": "defaultA"
     },
     {
       "name": "variableB",
       "source": "input",
-      "value": "inputA"
+      "value": "inputA",
+      "default": "defaultB"
     },
     {
       "name": "variableD",
       "source": "static",
-      "value": "test-value"
+      "value": "",
+      "default": "defaultD"
     }
   ],
   "environmentVariables": [
     {
       "name": "variableC",
       "source": "input",
-      "value": "inputC"
+      "value": "inputC",
+      "default": "defaultC"
     }
   ],
   "outputs": [
