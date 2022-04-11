@@ -84,7 +84,10 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
             <Modal.Header>
                 <Icon name="tags" />{' '}
                 {i18n.t(i18nHeaderKey, {
-                    deploymentName: Stage.Utils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
+                    deploymentNameAndId: Stage.Utils.formatDisplayName({
+                        id: deploymentId,
+                        displayName: deploymentName
+                    })
                 })}
             </Modal.Header>
 

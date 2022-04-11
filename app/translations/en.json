@@ -1420,7 +1420,7 @@
             "noLabels": "There are no Labels defined",
             "add": "Add",
             "export": "Export",
-            "addHeader": "Add labels for deployment '{{deploymentId}}'",
+            "addHeader": "Add labels for deployment '{{deploymentNameAndId}}'",
             "revert": "Revert to initial value",
             "deleteConfirm": "Are you sure you want to remove label"
         },
