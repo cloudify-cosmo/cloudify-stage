@@ -10,10 +10,10 @@ imports:
 inputs:
   inputA:
     type: string
-    default: defaultB
+    default: 'defaultB'
   inputC:
     type: string
-    default: defaultC
+    default: 'defaultC'
 
 node_templates:
   terraform:
@@ -34,7 +34,7 @@ node_templates:
         variables:
           variableA: { get_secret: secretA }
           variableB: { get_input: inputA }
-          variableD: "defaultD"
+          variableD: 'defaultD'
         environment_variables:
           variableC: { get_input: inputC }
     relationships:
