@@ -1,5 +1,6 @@
 import type { TokensWidget } from './types';
 import TextEllipsis from './TextEllipsis';
+import TokensTableHeader from './TokensTableHeader';
 
 const {
     Basic: { DataTable },
@@ -32,6 +33,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
 
     return (
         <>
+            <TokensTableHeader />
             <DataTable fetchData={fetchTableData}>
                 <DataTable.Column label="Token" name={dataSortingKeys.value} width="20%" />
                 <DataTable.Column label="Description" name={dataSortingKeys.description} />
