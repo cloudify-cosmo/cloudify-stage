@@ -1,4 +1,4 @@
-import StageUtils from 'app/utils/stageUtils';
+// import StageUtils from 'app/utils/stageUtils';
 import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
 
@@ -48,10 +48,7 @@ describe('Deployments widget', () => {
 
     it('should be present in Deployments page', () => {
         cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3').should(
-            'have.text',
-            StageUtils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
-        );
+        cy.get('.deploymentSegment h3').should('have.text', `${deploymentName} (${deploymentId})`);
     });
 
     describe('should provide display configuration for', () => {
