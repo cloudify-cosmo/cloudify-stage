@@ -2,7 +2,7 @@
 
 import { icons } from 'cloudify-ui-common';
 
-class EventUtils {
+export default class EventUtils {
     static eventType = 'cloudify_event';
 
     static logType = 'cloudify_log';
@@ -143,8 +143,3 @@ class EventUtils {
         return { ...{ icon: 'question', color: 'orange' }, ...EventUtils.logLevelOptions[log] };
     }
 }
-
-Stage.defineCommon({
-    name: 'EventUtils',
-    common: EventUtils
-});

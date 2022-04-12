@@ -7,10 +7,10 @@ export default class TerraformActions {
         return this.toolbox.getInternal().doPost('/terraform/blueprint', { body });
     }
 
-    doGetTemplateModules(templateZipUrl: string, username?: string, password?: string) {
+    doGetTemplateModules(templateUrl: string, username?: string, password?: string) {
         const headers = username ? { Authorization: `Basic ${btoa(`${username}:${password}`)}` } : undefined;
         return this.toolbox.getInternal().doPost('/terraform/resources', {
-            params: { zipUrl: templateZipUrl },
+            params: { templateUrl },
             headers,
             validateAuthentication: false
         });

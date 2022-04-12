@@ -1,3 +1,5 @@
+import Consts from '../Consts';
+
 interface Role {
     name: string;
     type: string;
@@ -12,5 +14,5 @@ export function getDefaultRoleName(roles: Role[]) {
 }
 
 export function getSystemRole(isAdmin: boolean) {
-    return isAdmin ? Stage.Common.Consts.sysAdminRole : Stage.Common.Consts.defaultUserRole;
+    return isAdmin ? Consts.sysAdminRole : Consts.defaultUserRole;
 }

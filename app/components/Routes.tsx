@@ -1,7 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-
-import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 import React from 'react';
+import type { FunctionComponent } from 'react';
+import { useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -10,8 +10,16 @@ import LogoPage from './LogoPage';
 import LoginPage from '../containers/LoginPage';
 import ExternalRedirect from './ExternalRedirect';
 import AuthRoutes from './AuthRoutes';
+import type { ReduxState } from '../reducers';
+import SamlLogin from './SamlLogin';
 
-export default function Routes({ isLoggedIn, isSamlEnabled, samlPortalUrl, theme }) {
+const Routes: FunctionComponent = () => {
+    const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
+    const isSamlEnabled = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.enabled', false));
+    const isSamlLogin = isSamlEnabled && !!Cookies.get(Consts.ROLE_COOKIE_NAME);
+    const samlPortalUrl = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.portalUrl', ''));
+    const theme = useSelector((state: ReduxState) => _.get(state, 'config.app.whiteLabel', {}));
+
     return (
         <ThemeProvider theme={theme}>
             <Switch>
@@ -31,25 +39,15 @@ export default function Routes({ isLoggedIn, isSamlEnabled, samlPortalUrl, theme
                 <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
                 <Route exact path={Consts.ERROR_404_PAGE_PATH} component={LogoPage} />
                 <Route
-                    render={() =>
-                        isLoggedIn ? (
-                            <AuthRoutes isSamlEnabled={isSamlEnabled} />
-                        ) : (
-                            <Redirect to={Consts.LOGIN_PAGE_PATH} />
-                        )
-                    }
+                    render={() => {
+                        if (isLoggedIn) return <AuthRoutes />;
+                        if (isSamlLogin) return <SamlLogin />;
+                        return <Redirect to={Consts.LOGIN_PAGE_PATH} />;
+                    }}
                 />
             </Switch>
         </ThemeProvider>
     );
-}
-
-Routes.propTypes = {
-    isLoggedIn: PropTypes.bool.isRequired,
-    isSamlEnabled: PropTypes.bool.isRequired,
-    samlPortalUrl: PropTypes.string.isRequired,
-    theme: PropTypes.shape({
-        mainColor: PropTypes.string,
-        headerTextColor: PropTypes.string
-    }).isRequired
 };
+
+export default Routes;

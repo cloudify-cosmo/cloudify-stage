@@ -188,11 +188,6 @@ interface HTMLWidgetDefinitionPart<Data, Configuration> {
     ) => void;
 }
 
-interface CommonOrPropTypeDefinition<Obj, Name extends keyof Obj> {
-    name: Name;
-    common: any;
-}
-
 /** User-facing WidgetDefinition used for defining new widgets */
 type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.WithOptionalProperties<
     /**
@@ -229,29 +224,23 @@ declare global {
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
 
-        // NOTE: Common items are defined in widgets
+        // NOTE: Common items are defined in widgets/common
         /** Common widget utilities */
         namespace Common {}
-        // @ts-ignore Common contents are defined in widgets
-        const defineCommon: <Name extends keyof typeof Stage.Common>(
-            // @ts-ignore Common contents are defined in widgets
-            definition: CommonOrPropTypeDefinition<typeof Stage.Common, Name>
-        ) => void;
+        const defineCommon: (definition: any) => void;
 
         // NOTE: Additional PropTypes are defined in widgets
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         interface PropTypes extends StagePropTypes {}
         const PropTypes: PropTypes;
-        const definePropType: <Name extends keyof PropTypes>(
-            definition: CommonOrPropTypeDefinition<PropTypes, Name>
-        ) => void;
+        const definePropTypes: (definition: Record<string, any>) => void;
 
         // NOTE: Additional hooks are defined in widgets
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         interface Hooks extends StageHooks {}
         /** Reusable utility hooks */
         const Hooks: Hooks;
-        const defineHook: (definition: Partial<Hooks>) => void;
+        const defineHooks: (definition: Record<string, any>) => void;
 
         /**
          * Well-known entries that can be stored in the widgets' context.

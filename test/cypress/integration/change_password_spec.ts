@@ -12,7 +12,7 @@ describe('Change Password modal', () => {
                 .addUser(username, password, true)
                 .addUserToTenant(username, Consts.DEFAULT_TENANT, 'manager')
                 .usePageMock()
-                .mockLogin(username, password);
+                .mockLogin({ username, password });
             cy.contains(username).click({ force: true });
         });
 
@@ -74,7 +74,7 @@ describe('Change Password modal', () => {
             cy.contains('Logout').click({ force: true });
 
             cy.log('Login with new password');
-            cy.usePageMock().mockLogin(username, 'new-pass');
+            cy.usePageMock().mockLogin({ username, password: 'new-pass' });
 
             cy.get('.error.message').should('not.exist');
             cy.waitUntilLoaded();
