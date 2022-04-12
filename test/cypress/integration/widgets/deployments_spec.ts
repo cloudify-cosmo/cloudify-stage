@@ -1,6 +1,6 @@
+import StageUtils from 'app/utils/stageUtils';
 import ExecutionUtils from 'app/utils/shared/ExecutionUtils';
 import { exampleBlueprintUrl } from '../../support/resource_urls';
-import { formatDisplayName } from '../../support/deployments';
 
 describe('Deployments widget', () => {
     const widgetId = 'deployments';
@@ -50,7 +50,7 @@ describe('Deployments widget', () => {
         cy.searchInDeploymentsWidget(deploymentId);
         cy.get('.deploymentSegment h3').should(
             'have.text',
-            formatDisplayName({ id: deploymentId, displayName: deploymentName })
+            StageUtils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
         );
     });
 

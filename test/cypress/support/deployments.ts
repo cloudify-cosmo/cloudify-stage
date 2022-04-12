@@ -30,24 +30,6 @@ export type Label = SystemLabel & {
     [key: string]: string | string[];
 };
 
-export function formatDisplayName(data: Partial<{ id: string; displayName: string }>): string {
-    if (data.id === undefined) {
-        log.error('id is undefined');
-
-        return '';
-    }
-
-    if (data.id === data.displayName) {
-        return data.id;
-    }
-
-    if (data.displayName) {
-        return `${data.displayName} (${data.id})`;
-    }
-
-    return data.id;
-}
-
 const commands = {
     getDeployment: (deploymentId: string) => cy.cfyRequest(`/deployments/${deploymentId}`, 'GET'),
     deployBlueprint: (
