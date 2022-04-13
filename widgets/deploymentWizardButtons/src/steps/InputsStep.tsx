@@ -215,7 +215,7 @@ class InputsStepContent extends React.Component {
                                                     <InputField
                                                         input={{ name: inputName, ...inputs[inputName] }}
                                                         value={stepData[inputName]}
-                                                        onChange={handleInputChange}
+                                                        onChange={this.handleInputChange}
                                                         error={errors[inputName]}
                                                         toolbox={toolbox}
                                                     />
