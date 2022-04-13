@@ -1,32 +1,172 @@
 {
-    "rules": {
-        "@typescript-eslint/no-namespace": [
-            "error",
-            {
-                "allowDeclarations": true
-            }
-        ]
-    },
     "overrides": [
         {
+            "files": ["./*.{js,ts}", "backend/*.js", "scripts/*.js"],
             "extends": [
                 "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
                 "./.eslintrc.temp-overrides.json"
             ],
-            "files": ["./*.{js,ts}", "scripts/*.js"],
             "rules": {
-                "import/no-extraneous-dependencies": [
-                    "error",
-                    {
-                        "devDependencies": true
-                    }
-                ],
+                "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
                 "no-console": "off",
                 "security/detect-child-process": "off",
                 "no-process-exit": "off"
+            }
+        },
+        {
+            "files": "./app/**/*.{ts,tsx}",
+            "extends": [
+                "plugin:react/recommended",
+                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "@typescript-eslint/no-namespace": ["error", { "allowDeclarations": true }],
+                "no-console": "error",
+                "prefer-promise-reject-errors": "off"
+            }
+        },
+        {
+            "files": "./app/**/*.ts",
+            "rules": {
+                // NOTE: results in false-positives in regular classes for `context` properties
+                "react/static-property-placement": "off"
+            }
+        },
+        {
+            "files": ["./widgets/**/*.{ts,tsx}", "./test/cypress/fixtures/widgets/*.ts"],
+            "extends": [
+                "plugin:react/recommended",
+                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "no-console": "error",
+                "prefer-promise-reject-errors": "off",
+                "@typescript-eslint/no-namespace": "off"
             },
+            "globals": {
+                "_": true,
+                "$": true,
+                "connectToStore": true,
+                "d3": true,
+                "log": true,
+                "L": true,
+                "moment": true,
+                "PropTypes": true,
+                "React": true,
+                "Stage": true
+            }
+        },
+        // NOTE: Turning off react/destructuring-assignment rule for some files as it
+        // reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
+        {
+            "files": ["./widgets/*/src/widget.tsx"],
+            "rules": {
+                "react/destructuring-assignment": "off"
+            }
+        },
+        {
+            "files": "./widgets/*/src/backend.ts",
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "plugin:node/recommended-module",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "node/no-missing-require": ["error", {"allowModules": ["lodash", "body", "elkjs"]}],
+                "global-require": "off",
+                "import/no-unresolved": "off",
+                "@typescript-eslint/no-var-requires": "off"
+            }
+        },
+        {
+            "files": "./test/jest/**/*.{ts,tsx}",
+            "extends": [
+                "plugin:jest/recommended",
+                "plugin:react/recommended",
+                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "react/react-in-jsx-scope": "off",
+                "import/no-extraneous-dependencies": ["error", {
+                    "devDependencies": true,
+                    "optionalDependencies": true
+                }],
+                "no-console": "off"
+            },
+            "settings": {
+                "import/resolver": {
+                    "jest": {
+                        "jestConfigFile": "jest.config.js"
+                    }
+                }
+            },
+            // TODO(RD-2856): Use common Jest configuration
+            "plugins": [
+                "jest"
+            ],
             "env": {
-                "node": true
+                "jest": true
+            },
+            "globals": {
+                "_": true,
+                "$": true,
+                "d3": true,
+                "log": true,
+                "moment": true,
+                "Stage": true
+            }
+        },
+        {
+            "files": "./test/cypress/**/*.{js,ts,tsx}",
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-cypress.json",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+                "no-console": "off"
+            },
+            "settings": {
+                "import/resolver": {"node": {"moduleDirectory": ["./node_modules", "."]}}
+            }
+        },
+        {
+            "files": "./backend/**/*.ts",
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "plugin:node/recommended-module",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "prefer-promise-reject-errors": "off",
+                "node/no-missing-require": ["error", {"tryExtensions": [".js", ".ts", ".json"]}],
+                "node/no-missing-import": ["error", {"tryExtensions": [".js", ".ts", ".json"]}]
+            }
+        },
+        {
+            "files": "./backend/test/**/*.ts",
+            "extends": [
+                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "plugin:node/recommended-module",
+                "plugin:jest/recommended",
+                "./.eslintrc.temp-overrides.json"
+            ],
+            "rules": {
+                "global-require": "off",
+                "no-console": "off",
+                "node/no-missing-import": ["error", {"tryExtensions": [".js", ".json", ".ts"], "resolvePaths":  ["backend", ".."]}],
+                "import/no-unresolved": "off",
+                "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+            },
+            // TODO(RD-2856): Use common Jest configuration
+            "plugins": [
+                "jest"
+            ],
+            "env": {
+                "jest": true
             }
         }
     ]
