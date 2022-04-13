@@ -39,7 +39,7 @@ export default function DeploymentsTable({
             className={tableName}
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label="" width="43px" />
+            <DataTable.Column name="id" />
             <DataTable.Column label={t('columns.name')} name="name" width="20%" />
             <DataTable.Column label={t('columns.lastExecution')} width="5%" />
             <DataTable.Column label={t('columns.blueprint')} name="blueprint_id" width="15%" show={!data.blueprintId} />
