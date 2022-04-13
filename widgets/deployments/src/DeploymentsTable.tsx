@@ -20,8 +20,11 @@ export default function DeploymentsTable({
     toolbox,
     widget
 }) {
+    const { useResettableState } = Stage.Hooks;
+    const { IdPopup } = Stage.Shared;
     const { DataTable, ResourceVisibility } = Stage.Basic;
     const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
     const tableName = 'deploymentsTable';
 
     return (
@@ -36,7 +39,8 @@ export default function DeploymentsTable({
             className={tableName}
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label={t('columns.name')} name="id" width="20%" />
+            <DataTable.Column label="" width="43px" />
+            <DataTable.Column label={t('columns.name')} name="name" width="20%" />
             <DataTable.Column label={t('columns.lastExecution')} width="5%" />
             <DataTable.Column label={t('columns.blueprint')} name="blueprint_id" width="15%" show={!data.blueprintId} />
             <DataTable.Column label={t('columns.siteName')} name="site_name" width="15%" />
@@ -52,10 +56,15 @@ export default function DeploymentsTable({
                         key={item.id}
                         selected={item.isSelected}
                         onClick={() => onSelectDeployment(item)}
+                        onMouseOver={setHoveredDeployment}
+                        onMouseOut={clearHoveredDeployment}
                     >
                         <DataTable.Data>
+                            <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
+                        </DataTable.Data>
+                        <DataTable.Data>
                             <a className="deploymentName" href="#!">
-                                {item.id}
+                                {item.display_name}
                             </a>
                             <ResourceVisibility
                                 visibility={item.visibility}
