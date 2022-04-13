@@ -19,10 +19,10 @@ Run `npm run test:frontend:coverage` to run all frontend unit tests and generate
 
 ## System tests
 
-All system tests are written using [Cypress](https://www.cypress.io/) front end testing tool.
+All system tests are written using [Cypress](https://www.cypress.io/) front-end testing tool.
 They are stored in [test/cypress/integration](./test/cypress/integration) directory.
 Cypress is configured to gather test coverage, but it will only work if application build is instrumented prior running the tests.
-To create application build instrumented for coverate run `npm run build:coverage`.  
+To create application build instrumented for coverage run `npm run build:coverage`.  
  
 ### Running tests using test runner
 Run `npm run cy:open`.
