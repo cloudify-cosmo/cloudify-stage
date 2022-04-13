@@ -16,9 +16,7 @@ export default function DeploymentIdInputField({
             name={name}
             error={error}
             textFormatter={item =>
-                item.display_name && item.display_name !== item.id
-                    ? `${item.display_name} (${item.id})`
-                    : item.id
+                item.display_name && item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
             }
             placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
             value={value}
