@@ -33,7 +33,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
 
     return (
         <>
-            <TokensTableHeader />
+            <TokensTableHeader toolbox={toolbox} />
             <DataTable fetchData={fetchTableData}>
                 <DataTable.Column label="Token" name={dataSortingKeys.value} width="20%" />
                 <DataTable.Column label="Description" name={dataSortingKeys.description} />

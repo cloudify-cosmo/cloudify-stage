@@ -1,14 +1,16 @@
 import CreateTokenModal from './CreateTokenModal';
 import { Wrapper } from './TokensTableHeader.styles';
 
-interface TokensTableHeaderProps {}
+interface TokensTableHeaderProps {
+    toolbox: Stage.Types.Toolbox;
+}
 
 const {
     Basic: { Button },
     Hooks: { useBoolean }
 } = Stage;
 
-const TokensTableHeader = ({}: TokensTableHeaderProps) => {
+const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
 
     return (
@@ -16,7 +18,7 @@ const TokensTableHeader = ({}: TokensTableHeaderProps) => {
             <Wrapper>
                 <Button labelPosition="left" icon="add" content="Create" onClick={showCreateModal} />
             </Wrapper>
-            <CreateTokenModal open={isCreateModalVisible} onClose={hideCreateModal} />
+            {isCreateModalVisible && <CreateTokenModal onClose={hideCreateModal} toolbox={toolbox} />}
         </>
     );
 };
