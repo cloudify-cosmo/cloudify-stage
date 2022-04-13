@@ -57,7 +57,9 @@ export default function DeploymentsTable({
                         selected={item.isSelected}
                         onClick={() => onSelectDeployment(item)}
                         onMouseOver={setHoveredDeployment}
+                        onFocus={setHoveredDeployment}
                         onMouseOut={clearHoveredDeployment}
+                        onBlur={clearHoveredDeployment}
                     >
                         <DataTable.Data>
                             <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
