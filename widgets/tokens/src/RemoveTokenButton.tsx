@@ -1,4 +1,5 @@
-import { TokensWidget } from './types';
+import { useEffect, useState } from 'react';
+import { RequestStatus, TokensWidget } from './types';
 
 const {
     Basic: { Icon, Confirm: DeleteModal },
@@ -7,14 +8,33 @@ const {
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];
+    toolbox: Stage.Types.Toolbox;
 }
 
-const RemoveTokenButton = ({ tokenId }: RemoveTokenButtonProps) => {
+const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
     const [isModalVisible, showModal, hideModal] = useBoolean();
+    const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
 
     const removeToken = () => {
-        hideModal();
+        setDeletingStatus(RequestStatus.SUBMITTING);
+
+        toolbox
+            .getManager()
+            .doDelete(`/tokens/${tokenId}`)
+            .then(() => {
+                setDeletingStatus(RequestStatus.SUBMITTED);
+                toolbox.getEventBus().trigger('tokens:refresh');
+            })
+            .catch(() => {
+                setDeletingStatus(RequestStatus.ERROR);
+            });
     };
+
+    useEffect(() => {
+        if (deletingStatus === RequestStatus.SUBMITTED) {
+            hideModal();
+        }
+    }, [deletingStatus]);
 
     return (
         <>

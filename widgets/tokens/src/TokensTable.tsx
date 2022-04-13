@@ -2,9 +2,10 @@ import type { TokensWidget } from './types';
 import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
+import { useEffect } from 'react';
 
 const {
-    Basic: { DataTable, Icon, Confirm: DeleteModal },
+    Basic: { DataTable },
     Utils: {
         Time: { formatTimestamp }
     }
@@ -32,6 +33,11 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     const fetchTableData = (fetchParams: any) => {
         toolbox.refresh(fetchParams);
     };
+
+    useEffect(() => {
+        toolbox.getEventBus().on('tokens:refresh', fetchTableData);
+        return () => toolbox.getEventBus().off('tokens:refresh', fetchTableData);
+    }, []);
 
     return (
         <>
@@ -68,7 +74,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                                 <TextEllipsis content={formatTimestamp(dataItem.last_used)} />
                             </DataTable.Data>
                             <DataTable.Data>
-                                <RemoveTokenButton tokenId={dataItem.id} />
+                                <RemoveTokenButton tokenId={dataItem.id} toolbox={toolbox} />
                             </DataTable.Data>
                         </DataTable.Row>
                     );
