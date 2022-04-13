@@ -17,7 +17,7 @@ interface CreateTokenModalProps {
 //     expiration_date: null;
 // }
 
-interface ReceivedToken {
+export interface ReceivedToken {
     id: string;
     description: string;
     expiration_date: null;
@@ -31,7 +31,15 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
     // TODO: Provide error handling
     const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
-    const [tokenValue, setTokenValue] = useState<ReceivedToken['value']>();
+    const [receivedToken, setReceivedToken] = useState<ReceivedToken>({
+        description: 'test',
+        expiration_date: null,
+        id: '321fdsafadsf243',
+        last_used: null,
+        role: 'admin',
+        username: 'Woooah',
+        value: 'some_big_token_value_which_should_be_displayed'
+    });
     const manager = toolbox.getManager();
 
     const handleSubmit = () => {
@@ -45,7 +53,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             })
             .then((token: ReceivedToken) => {
                 setSubmittingStatus(RequestStatus.SUBMITTED);
-                setTokenValue(token.value);
+                setReceivedToken(token);
             })
             .catch(() => {
                 setSubmittingStatus(RequestStatus.ERROR);
@@ -59,8 +67,8 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 Create token
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === RequestStatus.SUBMITTED ? (
-                    <CreatedToken value={tokenValue!} />
+                {submittingStatus === RequestStatus.SUBMITTED || true ? (
+                    <CreatedToken token={receivedToken!} />
                 ) : (
                     <Form>
                         <Form.Field label="Description">
