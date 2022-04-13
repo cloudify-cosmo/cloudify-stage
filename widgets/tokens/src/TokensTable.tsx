@@ -1,9 +1,10 @@
 import type { TokensWidget } from './types';
 import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
+import RemoveTokenButton from './RemoveTokenButton';
 
 const {
-    Basic: { DataTable },
+    Basic: { DataTable, Icon, Confirm: DeleteModal },
     Utils: {
         Time: { formatTimestamp }
     }
@@ -27,6 +28,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     const shouldDisplayUsers = ReactRedux.useSelector(
         (state: Stage.Types.ReduxState) => state.manager.auth.role === Stage.Common.Consts.sysAdminRole
     );
+
     const fetchTableData = (fetchParams: any) => {
         toolbox.refresh(fetchParams);
     };
@@ -35,7 +37,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
         <>
             <TokensTableHeader toolbox={toolbox} />
             <DataTable fetchData={fetchTableData}>
-                <DataTable.Column label="Token" name={dataSortingKeys.value} width="20%" />
+                <DataTable.Column label="Token" name={dataSortingKeys.value} />
                 <DataTable.Column label="Description" name={dataSortingKeys.description} />
                 {shouldDisplayUsers && <DataTable.Column label="Username" />}
                 {showExpiredTokens && (
@@ -65,7 +67,9 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                             <DataTable.Data>
                                 <TextEllipsis content={formatTimestamp(dataItem.last_used)} />
                             </DataTable.Data>
-                            <DataTable.Data>Remove button</DataTable.Data>
+                            <DataTable.Data>
+                                <RemoveTokenButton tokenId={dataItem.id} />
+                            </DataTable.Data>
                         </DataTable.Row>
                     );
                 })}
