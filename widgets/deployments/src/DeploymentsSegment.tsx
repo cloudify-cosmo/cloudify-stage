@@ -59,9 +59,8 @@ export default function DeploymentsSegment({
                                     as="h3"
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
-                                    tooltip={formatName}
                                 >
-                                    <DeploymentName>{formatName(item)}</DeploymentName>
+                                    <DeploymentName title={formatName(item)}>{formatName(item)}</DeploymentName>
                                 </Header>
                             </div>
                         }
