@@ -18,3 +18,10 @@ export declare namespace TokensWidget {
 
     export type Data = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;
 }
+
+export enum RequestStatus {
+    INITIAL,
+    SUBMITTING,
+    SUBMITTED,
+    ERROR
+}

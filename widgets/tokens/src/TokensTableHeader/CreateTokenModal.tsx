@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
 
 const {
@@ -16,13 +17,6 @@ interface CreateTokenModalProps {
 //     expiration_date: null;
 // }
 
-enum SubmittingStatus {
-    INITIAL,
-    SUBMITTING,
-    SUBMITTED,
-    ERROR
-}
-
 interface ReceivedToken {
     id: string;
     description: string;
@@ -36,12 +30,12 @@ interface ReceivedToken {
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
     // TODO: Provide error handling
-    const [submittingStatus, setSubmittingStatus] = useState<SubmittingStatus>(SubmittingStatus.INITIAL);
+    const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const [tokenValue, setTokenValue] = useState<ReceivedToken['value']>();
     const manager = toolbox.getManager();
 
     const handleSubmit = () => {
-        setSubmittingStatus(SubmittingStatus.SUBMITTING);
+        setSubmittingStatus(RequestStatus.SUBMITTING);
         manager
             .doPost('/tokens', {
                 body: {
@@ -50,11 +44,11 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 }
             })
             .then((token: ReceivedToken) => {
-                setSubmittingStatus(SubmittingStatus.SUBMITTED);
+                setSubmittingStatus(RequestStatus.SUBMITTED);
                 setTokenValue(token.value);
             })
             .catch(() => {
-                setSubmittingStatus(SubmittingStatus.ERROR);
+                setSubmittingStatus(RequestStatus.ERROR);
             });
     };
 
@@ -65,7 +59,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 Create token
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === SubmittingStatus.SUBMITTED ? (
+                {submittingStatus === RequestStatus.SUBMITTED ? (
                     <CreatedToken value={tokenValue!} />
                 ) : (
                     <Form>
@@ -74,10 +68,10 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                         </Form.Field>
                     </Form>
                 )}
-                {submittingStatus === SubmittingStatus.SUBMITTING && <LoadingOverlay />}
+                {submittingStatus === RequestStatus.SUBMITTING && <LoadingOverlay />}
             </Modal.Content>
             <Modal.Actions>
-                {submittingStatus !== SubmittingStatus.SUBMITTED ? (
+                {submittingStatus !== RequestStatus.SUBMITTED ? (
                     <>
                         <CancelButton content="Cancel" onClick={onClose} />
                         <ApproveButton content="Create" color="green" icon="plus" onClick={handleSubmit} />
