@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import getTemplateForDataType from './getTemplateForDataType';
-import ParameterValue from '../../components/parameter/ParameterValue';
+import getTemplateForDataType from './utils/getTemplateForDataType';
+import ParameterValue from '../components/parameter/ParameterValue';
 import type { DataType } from './types';
 
 const HelpProperty = ({ show, name, value }: { show: boolean; name: string; value: ReactNode }) => {
@@ -13,13 +13,19 @@ const HelpProperty = ({ show, name, value }: { show: boolean; name: string; valu
     ) : null;
 };
 
-export default function getHelp(
-    description: string | undefined,
-    type: string,
-    constraints: Record<string, any>[],
-    defaultValue: string,
-    dataType: DataType
-) {
+export default function InputHelp({
+    description,
+    type,
+    constraints,
+    defaultValue,
+    dataType
+}: {
+    description: string | undefined;
+    type: string;
+    constraints: Record<string, any>[];
+    defaultValue: string;
+    dataType: DataType;
+}) {
     const { List } = Stage.Basic;
 
     let example = null;

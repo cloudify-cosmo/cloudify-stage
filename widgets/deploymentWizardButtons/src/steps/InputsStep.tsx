@@ -148,16 +148,15 @@ class InputsStepContent extends React.Component {
             });
     };
 
-    handleInputChange(event, field) {
+    handleInputChange = (event, field) => {
         const { id, onChange, stepData } = this.props;
         onChange(id, { ...stepData, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
+    };
 
     render() {
         const { Divider, Form, Table } = Stage.Basic;
-        const { YamlFileButton, DataTypesButton } = Stage.Common.Inputs;
+        const { YamlFileButton, DataTypesButton, Help, InputField } = Stage.Common.Inputs;
         const InputsHeader = Stage.Common.Inputs.Header;
-        const InputsUtils = Stage.Common.Inputs.Utils;
         const { errors, loading, stepData, wizardData, toolbox } = this.props;
         const { fileLoading } = this.state;
 
@@ -195,12 +194,14 @@ class InputsStepContent extends React.Component {
                                             !_.isEmpty(dataTypes) && !!inputs[inputName].type
                                                 ? dataTypes[inputs[inputName].type]
                                                 : undefined;
-                                        const help = InputsUtils.getHelp(
-                                            inputs[inputName].description,
-                                            inputs[inputName].type,
-                                            inputs[inputName].constraints,
-                                            inputs[inputName].default,
-                                            dataType
+                                        const help = (
+                                            <Help
+                                                description={inputs[inputName].description}
+                                                type={inputs[inputName].type}
+                                                constraints={inputs[inputName].constraints}
+                                                defaultValue={inputs[inputName].default}
+                                                dataType={dataType}
+                                            />
                                         );
                                         return (
                                             <Table.Row key={inputName} name={inputName}>
@@ -211,13 +212,13 @@ class InputsStepContent extends React.Component {
                                                     <InputStatus defaultValue={inputs[inputName].default} />
                                                 </Table.Cell>
                                                 <Table.Cell>
-                                                    {InputsUtils.getInputField(
-                                                        { name: inputName, ...inputs[inputName] },
-                                                        stepData[inputName],
-                                                        this.handleInputChange.bind(this),
-                                                        errors[inputName],
-                                                        toolbox
-                                                    )}
+                                                    <InputField
+                                                        input={{ name: inputName, ...inputs[inputName] }}
+                                                        value={stepData[inputName]}
+                                                        onChange={handleInputChange}
+                                                        error={errors[inputName]}
+                                                        toolbox={toolbox}
+                                                    />
                                                 </Table.Cell>
                                             </Table.Row>
                                         );
