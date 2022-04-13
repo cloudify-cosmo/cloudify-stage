@@ -45,7 +45,8 @@ export default function InputField({
         onChange,
         error,
         defaultValue,
-        toolbox
+        toolbox,
+        constraints
     };
 
     // Show only valid values in dropdown if 'valid_values' constraint is set
