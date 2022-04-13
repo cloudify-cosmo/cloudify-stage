@@ -1,8 +1,16 @@
 // @ts-nocheck File not migrated fully to TS
+import styled from 'styled-components';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
+
+const DeploymentName = styled.span`
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+`;
 
 export default function DeploymentsSegment({
     data,
@@ -20,6 +28,7 @@ export default function DeploymentsSegment({
     const { DataSegment, Divider, Header } = Stage.Basic;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
 
     return (
         <DataSegment
@@ -50,10 +59,9 @@ export default function DeploymentsSegment({
                                     as="h3"
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
+                                    tooltip={formatName}
                                 >
-                                    <span className="breakWord">
-                                        {Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })}
-                                    </span>
+                                    <DeploymentName>{formatName(item)}</DeploymentName>
                                 </Header>
                             </div>
                         }
