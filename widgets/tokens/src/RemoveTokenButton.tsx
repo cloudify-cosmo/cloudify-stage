@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { TokensTableConsts } from './TokensTable.consts';
 import { RequestStatus, TokensWidget } from './types';
 
 const {
@@ -23,7 +24,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
             .doDelete(`/tokens/${tokenId}`)
             .then(() => {
                 setDeletingStatus(RequestStatus.SUBMITTED);
-                toolbox.getEventBus().trigger('tokens:refresh');
+                toolbox.getEventBus().trigger(TokensTableConsts.tableRefreshEvent);
             })
             .catch(() => {
                 setDeletingStatus(RequestStatus.ERROR);

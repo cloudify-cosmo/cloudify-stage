@@ -3,6 +3,7 @@ import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
 import { useEffect } from 'react';
+import { TokensTableConsts } from './TokensTable.consts';
 
 const {
     Basic: { DataTable },
@@ -35,8 +36,8 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     };
 
     useEffect(() => {
-        toolbox.getEventBus().on('tokens:refresh', fetchTableData);
-        return () => toolbox.getEventBus().off('tokens:refresh', fetchTableData);
+        toolbox.getEventBus().on(TokensTableConsts.tableRefreshEvent, fetchTableData);
+        return () => toolbox.getEventBus().off(TokensTableConsts.tableRefreshEvent, fetchTableData);
     }, []);
 
     return (
