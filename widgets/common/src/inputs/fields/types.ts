@@ -1,6 +1,6 @@
 import type { InputProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
-import { OnChange } from '../types';
+import type { OnChange } from '../types';
 
 export interface InputFieldProps {
     name: string;
