@@ -6,10 +6,10 @@ export default function StringInputField(props: ErrorAwareInputFieldProps & Reve
     const { name, value, onChange, error } = props;
 
     return _.includes(value, '\n') ? (
-        <div style={{ position: 'relative' }}>
+        <>
             <Form.TextArea name={name} value={value} onChange={onChange} />
             <PositionedRevertToDefaultIcon {...props} />
-        </div>
+        </>
     ) : (
         <Form.Input
             name={name}

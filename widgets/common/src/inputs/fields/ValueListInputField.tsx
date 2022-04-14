@@ -17,7 +17,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
     }));
 
     return (
-        <div style={{ position: 'relative' }}>
+        <>
             <Form.Dropdown
                 name={name}
                 value={value}
@@ -28,6 +28,6 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
                 onChange={onChange}
             />
             <PositionedRevertToDefaultIcon {...props} right={30} />
-        </div>
+        </>
     );
 }

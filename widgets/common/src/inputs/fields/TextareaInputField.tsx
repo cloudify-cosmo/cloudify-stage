@@ -11,9 +11,9 @@ export default function TextareaInputField(props: TextareaInputFieldProps) {
     const { name, value, onChange, rows } = props;
 
     return (
-        <div style={{ position: 'relative' }}>
+        <>
             <Form.TextArea name={name} value={value} onChange={onChange} rows={rows ?? DEFAULT_TEXTAREA_ROWS} />
             <PositionedRevertToDefaultIcon {...props} />
-        </div>
+        </>
     );
 }
