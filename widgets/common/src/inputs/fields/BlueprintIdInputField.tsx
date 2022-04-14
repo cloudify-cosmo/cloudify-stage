@@ -1,5 +1,5 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
-import { DynamicDropdownInputFieldProps } from './types';
+import type { DynamicDropdownInputFieldProps } from './types';
 
 export default function BlueprintIdInputField({
     name,
