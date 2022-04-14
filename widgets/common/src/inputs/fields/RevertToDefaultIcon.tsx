@@ -1,7 +1,7 @@
 import GenericRevertToDefaultIcon from '../../components/RevertToDefaultIcon';
 import { STRING_VALUE_SURROUND_CHAR } from '../consts';
 import getInputFieldInitialValue from '../utils/getInputFieldInitialValue';
-import { RevertableInputFieldProps } from './types';
+import type { RevertableInputFieldProps } from './types';
 
 interface PositionedRevertToDefaultIconProps extends RevertableInputFieldProps {
     right?: number;
