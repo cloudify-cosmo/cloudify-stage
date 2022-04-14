@@ -1,5 +1,5 @@
 import RevertToDefaultIcon from './RevertToDefaultIcon';
-import { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
+import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
 
 type NumberInputField = ErrorAwareInputFieldProps &
     RevertableInputFieldProps & {
