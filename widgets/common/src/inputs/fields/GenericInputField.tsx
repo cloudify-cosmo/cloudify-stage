@@ -1,5 +1,5 @@
 import { PositionedRevertToDefaultIcon } from './RevertToDefaultIcon';
-import { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
+import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
 
 export default function GenericInputField(props: ErrorAwareInputFieldProps & RevertableInputFieldProps) {
     const { Form } = Stage.Basic;
