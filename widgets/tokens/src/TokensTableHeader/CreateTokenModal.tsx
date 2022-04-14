@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TokensTableConsts } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
 
@@ -52,6 +53,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 }
             })
             .then((token: ReceivedToken) => {
+                toolbox.getEventBus().trigger(TokensTableConsts.tableRefreshEvent);
                 setSubmittingStatus(RequestStatus.SUBMITTED);
                 setReceivedToken(token);
             })
@@ -67,12 +69,12 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 Create token
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === RequestStatus.SUBMITTED || true ? (
+                {submittingStatus === RequestStatus.SUBMITTED ? (
                     <CreatedToken token={receivedToken!} />
                 ) : (
                     <Form>
                         <Form.Field label="Description">
-                            <Input value={description} onChange={setDescription} />
+                            <Input value={description} onChange={setDescription} name="description" />
                         </Form.Field>
                     </Form>
                 )}

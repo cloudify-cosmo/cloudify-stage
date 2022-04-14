@@ -39,7 +39,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
 
     return (
         <>
-            <Icon bordered link name="trash" title="Delete secret" onClick={showModal} />
+            <Icon bordered link name="trash" title="Delete token" onClick={showModal} />
             {isModalVisible && (
                 <DeleteModal
                     open
