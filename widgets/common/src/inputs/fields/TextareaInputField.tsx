@@ -1,6 +1,6 @@
 import { DEFAULT_TEXTAREA_ROWS } from '../consts';
 import { PositionedRevertToDefaultIcon } from './RevertToDefaultIcon';
-import { RevertableInputFieldProps } from './types';
+import type { RevertableInputFieldProps } from './types';
 
 interface TextareaInputFieldProps extends RevertableInputFieldProps {
     rows: number;
