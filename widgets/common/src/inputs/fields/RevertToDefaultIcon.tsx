@@ -3,11 +3,11 @@ import { STRING_VALUE_SURROUND_CHAR } from '../consts';
 import getInputFieldInitialValue from '../utils/getInputFieldInitialValue';
 import { RevertableInputFieldProps } from './types';
 
-interface PositionedRevertToDefaultIcon extends RevertableInputFieldProps {
+interface PositionedRevertToDefaultIconProps extends RevertableInputFieldProps {
     right?: number;
 }
 
-export function PositionedRevertToDefaultIcon(props: PositionedRevertToDefaultIcon) {
+export function PositionedRevertToDefaultIcon(props: PositionedRevertToDefaultIconProps) {
     const { right = 10 } = props;
     return (
         <div style={{ position: 'absolute', top: 10, right }}>
