@@ -52,7 +52,6 @@ Run `npm run test:frontend:components`.
 
 Once unit and system tests are completed it is possible to generate combined coverage report and check it against predefined threshold levels.
 To generate the report and check coverage against predefined thresholds run `npm run coverageCheck`.
-The command will generate combined report in `coverage-overall` directory.
 
 To update threshold levels edit `.nycrc` file. 
 
