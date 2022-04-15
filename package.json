@@ -31,7 +31,7 @@
     "check-types:backend": "npm run --prefix backend check-types",
     "cy:open": "cypress open -C node_modules/cloudify-ui-common/cypress/cypress.json",
     "cy:open-ct": "cypress open-ct -C node_modules/cloudify-ui-common/cypress/cypress.json",
-    "coverageCheck": "cp coverage-jest/coverage-final.json .nyc_output && nyc report --reporter lcov --report-dir coverage-overall && nyc check-coverage",
+    "coverageCheck": "nyc check-coverage",
     "devServer": "cross-env NODE_ENV=development ts-node devServer.ts",
     "docCheck": "scripts/checkDocs.sh",
     "docWidgets": "node scripts/updateReadmes.js",
