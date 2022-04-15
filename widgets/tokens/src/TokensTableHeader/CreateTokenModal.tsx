@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { flushSync } from 'react-dom';
 import { translationPath } from '../widget.consts';
 import { tableRefreshEvent } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
@@ -22,15 +23,8 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
     // TODO: Provide error handling
     const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
-    const [receivedToken, setReceivedToken] = useState<ReceivedToken>({
-        description: 'test',
-        expiration_date: null,
-        id: '321fdsafadsf243',
-        last_used: null,
-        role: 'admin',
-        username: 'Woooah',
-        value: 'some_big_token_value_which_should_be_displayed'
-    });
+    const [receivedToken, setReceivedToken] = useState<ReceivedToken>();
+    const showCreateForm = submittingStatus !== RequestStatus.SUBMITTED;
     const manager = toolbox.getManager();
 
     const handleSubmit = () => {
@@ -44,8 +38,10 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             })
             .then((token: ReceivedToken) => {
                 toolbox.getEventBus().trigger(tableRefreshEvent);
-                setSubmittingStatus(RequestStatus.SUBMITTED);
-                setReceivedToken(token);
+                flushSync(() => {
+                    setSubmittingStatus(RequestStatus.SUBMITTED);
+                    setReceivedToken(token);
+                });
             })
             .catch(() => {
                 setSubmittingStatus(RequestStatus.ERROR);
@@ -59,19 +55,19 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {t('header')}
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === RequestStatus.SUBMITTED ? (
-                    <CreatedToken token={receivedToken!} />
-                ) : (
+                {showCreateForm ? (
                     <Form>
                         <Form.Field label={t('inputs.description')}>
                             <Input value={description} onChange={setDescription} name="description" />
                         </Form.Field>
                     </Form>
+                ) : (
+                    <CreatedToken token={receivedToken!} />
                 )}
                 {submittingStatus === RequestStatus.SUBMITTING && <LoadingOverlay />}
             </Modal.Content>
             <Modal.Actions>
-                {submittingStatus !== RequestStatus.SUBMITTED ? (
+                {showCreateForm ? (
                     <>
                         <CancelButton content={t('buttons.cancel')} onClick={onClose} />
                         <ApproveButton content={t('buttons.create')} color="green" icon="plus" onClick={handleSubmit} />
