@@ -10,7 +10,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT(`${translationPath}.table`);
+const t = getT(translationPath);
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];
@@ -44,7 +44,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
 
     return (
         <>
-            <Icon bordered link name="trash" title={t('buttons.removeToken')} onClick={showModal} />
+            <Icon bordered link name="trash" title={t('table.buttons.removeToken')} onClick={showModal} />
             {isModalVisible && (
                 <DeleteModal
                     open
