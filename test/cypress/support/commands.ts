@@ -240,7 +240,7 @@ const commands = {
         cy.stageRequest('/console/auth/login', 'POST', undefined, {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
-            const role = 'user';
+            const { role } = response.body;
             cy.initLocalStorage({ username, role, mode: isCommunity ? 'community' : 'main' });
             if (disableGettingStarted) mockGettingStarted(false);
         });

@@ -1,6 +1,19 @@
 describe('Tokens widget', () => {
     const widgetId = 'tokens';
     const widgetSelector = `.${widgetId}Widget`;
+    const mockUserRole = (role: string) => {
+        cy.intercept('GET', '/console/auth/user', {
+            username: 'admin',
+            role,
+            groupSystemRoles: {},
+            tenantsRoles: {
+                default_tenant: {
+                    'tenant-role': 'user',
+                    roles: ['user']
+                }
+            }
+        });
+    };
 
     before(() => cy.activate('valid_trial_license').usePageMock(widgetId).mockLogin());
 
@@ -63,17 +76,9 @@ describe('Tokens widget', () => {
             });
     });
 
-    it.only('should hide Username column when user has a different role than sys_admin', () => {
-        // cy.intercept('GET', '/console/sp/users/admin', request => {
-        //     request.on('response', response => {
-        //         response.send({
-        //             role: 'manager'
-        //         });
-        //     });
-        // });
-
-        // cy.mockLogin();
-
+    it('should hide Username column when the user role is different than "sys_admin"', () => {
+        mockUserRole('manager');
+        cy.mockLogin();
         cy.contains('Username').should('not.exist');
     });
 });
