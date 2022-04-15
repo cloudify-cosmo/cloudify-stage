@@ -1,4 +1,4 @@
-import type { ReceivedToken } from './CreateTokenModal';
+import type { ReceivedToken } from './CreateTokenModal.types';
 import { ButtonsWrapper } from './CreatedToken.styles';
 import { widgetTranslationPath } from '../consts';
 
@@ -14,9 +14,14 @@ interface CreatedTokenProps {
     token: ReceivedToken;
 }
 
+const getMaskedToken = (tokenId: string) => {
+    const maskPrefix = 'ctok';
+    return `${maskPrefix}-${tokenId}-${'*'.repeat(8)}`;
+};
+
 const CreatedToken = ({ token }: CreatedTokenProps) => {
     const [isTokenValueVisible, showTokenValue, hideTokenValue] = useBoolean();
-    const maskedTokenValue = `ctok-${token.id}-${'*'.repeat(8)}`;
+    const maskedTokenValue = getMaskedToken(token.id);
     const displayedToken = isTokenValueVisible ? token.value : maskedTokenValue;
 
     return (

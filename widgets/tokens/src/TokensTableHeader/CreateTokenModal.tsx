@@ -3,6 +3,7 @@ import { widgetTranslationPath } from '../consts';
 import { TokensTableConsts } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
+import type { ReceivedToken } from './CreateTokenModal.types';
 
 const {
     Basic: { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay },
@@ -21,16 +22,6 @@ interface CreateTokenModalProps {
 //     description: string;
 //     expiration_date: null;
 // }
-
-export interface ReceivedToken {
-    id: string;
-    description: string;
-    expiration_date: null;
-    last_used: null;
-    username: string;
-    value: string;
-    role: string;
-}
 
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
