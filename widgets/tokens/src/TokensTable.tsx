@@ -3,7 +3,7 @@ import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
 import { useEffect } from 'react';
-import { TokensTableConsts } from './TokensTable.consts';
+import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
 import { widgetTranslationPath } from './consts';
 
 const {
@@ -15,13 +15,6 @@ const {
 } = Stage;
 
 const t = getT(`${widgetTranslationPath}.table`);
-
-export const dataSortingKeys: Record<string, TokensWidget.DataSortingKeys> = {
-    value: 'secret_hash',
-    description: 'description',
-    expirationDate: 'expiration_date',
-    lastUsed: 'last_used'
-} as const;
 
 interface TokensTableProps {
     data: TokensWidget.Data;
@@ -40,8 +33,8 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     };
 
     useEffect(() => {
-        toolbox.getEventBus().on(TokensTableConsts.tableRefreshEvent, fetchTableData);
-        return () => toolbox.getEventBus().off(TokensTableConsts.tableRefreshEvent, fetchTableData);
+        toolbox.getEventBus().on(tableRefreshEvent, fetchTableData);
+        return () => toolbox.getEventBus().off(tableRefreshEvent, fetchTableData);
     }, []);
 
     return (

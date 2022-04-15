@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { widgetTranslationPath } from '../consts';
-import { TokensTableConsts } from '../TokensTable.consts';
+import { tableRefreshEvent } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
 import type { ReceivedToken } from './CreateTokenModal.types';
@@ -17,11 +17,6 @@ interface CreateTokenModalProps {
     onClose: () => void;
     toolbox: Stage.Types.Toolbox;
 }
-
-// interface CreateTokensDto {
-//     description: string;
-//     expiration_date: null;
-// }
 
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
@@ -48,7 +43,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 }
             })
             .then((token: ReceivedToken) => {
-                toolbox.getEventBus().trigger(TokensTableConsts.tableRefreshEvent);
+                toolbox.getEventBus().trigger(tableRefreshEvent);
                 setSubmittingStatus(RequestStatus.SUBMITTED);
                 setReceivedToken(token);
             })
