@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
-import getInputFields from '../inputs/utils/getInputFields';
-import type { OnChange } from '../inputs/utils/types';
+import InputFields from '../inputs/InputFields';
+import type { OnChange } from '../inputs/types';
 import YamlFileButton from '../inputs/YamlFileButton';
 import type { BaseWorkflowInputs, OnCheckboxChange, OnDateInputChange, UserWorkflowInputsState } from './types';
 
@@ -87,7 +87,13 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 </>
             )}
 
-            {getInputFields(baseWorkflowInputs, onWorkflowInputChange, userWorkflowInputsState, errors, toolbox)}
+            <InputFields
+                inputs={baseWorkflowInputs}
+                onChange={onWorkflowInputChange}
+                inputsState={userWorkflowInputsState}
+                errorsState={errors}
+                toolbox={toolbox}
+            />
             {showInstallOptions && (
                 <>
                     <Form.Divider className="">
