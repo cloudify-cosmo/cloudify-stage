@@ -1630,7 +1630,8 @@
                 "newToken": {
                     "content": "New token has been created: {{token}}",
                     "warning": "You won't be able to show or copy the token value after closing this modal"
-                }
+                },
+                "error": "Couldn't create a Token, please try to submit the Token data again."
             }
         }
     },

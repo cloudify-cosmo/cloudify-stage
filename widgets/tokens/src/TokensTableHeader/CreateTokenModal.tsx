@@ -7,7 +7,7 @@ import CreatedToken from './CreatedToken';
 import type { ReceivedToken } from './CreateTokenModal.types';
 
 const {
-    Basic: { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay },
+    Basic: { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay, Message },
     Utils: { getT },
     Hooks: { useInput }
 } = Stage;
@@ -21,8 +21,7 @@ interface CreateTokenModalProps {
 
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
-    // TODO: Provide error handling
-    const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
+    const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.ERROR);
     const [receivedToken, setReceivedToken] = useState<ReceivedToken>();
     const showCreateForm = submittingStatus !== RequestStatus.SUBMITTED;
     const manager = toolbox.getManager();
@@ -55,6 +54,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {t('header')}
             </Modal.Header>
             <Modal.Content>
+                {submittingStatus === RequestStatus.ERROR && <Message error content={t('error')} />}
                 {showCreateForm ? (
                     <Form>
                         <Form.Field label={t('inputs.description')}>
