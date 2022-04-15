@@ -21,7 +21,7 @@ interface CreateTokenModalProps {
 
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
     const [description, setDescription] = useInput('');
-    const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.ERROR);
+    const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const [receivedToken, setReceivedToken] = useState<ReceivedToken>();
     const showCreateForm = submittingStatus !== RequestStatus.SUBMITTED;
     const manager = toolbox.getManager();
