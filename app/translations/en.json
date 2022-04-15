@@ -1591,6 +1591,47 @@
                     "name": "Display style"
                 }
             }
+        },
+        "tokens": {
+            "name": "Tokens",
+            "configuration": {
+                "showExpiredTokens": {
+                    "name": "Show expired tokens",
+                    "description": "Defines if expired tokens should be listed"
+                }
+            },
+            "table": {
+                "columns": {
+                    "token": "Token",
+                    "description": "Description",
+                    "username": "Username",
+                    "expirationDate": "Expiration date",
+                    "lastUsed": "Last used"
+                },
+                "noTokens": "TODO - FILL",
+                "buttons": {
+                    "removeToken": "Delete token",
+                    "create": "Create"
+                }
+            },
+            "deleteModal": {
+                "content": "Are you sure you want to delete the token with ID {{tokenId}}"
+            },
+            "createModal": {
+                "header": "Create token",
+                "inputs": {
+                    "description": "Description"
+                },
+                "buttons": {
+                    "cancel": "Cancel",
+                    "approve": "Approve",
+                    "close": "Close"
+                },
+                "newToken": {
+                    "content": "New token has been created: {{token}}",
+                    "warning": "You won't be able to show or copy the token value after closing this modal"
+                }
+            }
         }
     },
     "input": {

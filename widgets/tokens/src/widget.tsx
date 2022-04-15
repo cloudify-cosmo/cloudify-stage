@@ -2,9 +2,11 @@ import TokensTable from './TokensTable';
 import type { TokensWidget } from './types';
 import _ from 'lodash';
 
+const t = Stage.Utils.getT('widget.tokens');
+
 Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     id: 'tokens',
-    name: 'Tokens',
+    name: t('name'),
     initialWidth: 12,
     initialHeight: 16,
     isReact: true,
@@ -16,10 +18,10 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'showExpiredTokens',
-            name: 'Show expired tokens',
+            name: t('configuration.showExpiredTokens.name'),
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             default: false,
-            description: 'Defines if expired tokens should be listed'
+            description: t('configuration.showExpiredTokens.description')
         }
     ],
 

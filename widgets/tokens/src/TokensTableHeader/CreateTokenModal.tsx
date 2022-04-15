@@ -5,8 +5,11 @@ import CreatedToken from './CreatedToken';
 
 const {
     Basic: { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay },
+    Utils: { getT },
     Hooks: { useInput }
 } = Stage;
+
+const t = getT('widget.tokens.createModal');
 
 interface CreateTokenModalProps {
     onClose: () => void;
@@ -66,14 +69,14 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
         <Modal open onClose={onClose}>
             <Modal.Header>
                 <Icon name="add" />
-                Create token
+                {t('header')}
             </Modal.Header>
             <Modal.Content>
                 {submittingStatus === RequestStatus.SUBMITTED ? (
                     <CreatedToken token={receivedToken!} />
                 ) : (
                     <Form>
-                        <Form.Field label="Description">
+                        <Form.Field label={'inputs.description'}>
                             <Input value={description} onChange={setDescription} name="description" />
                         </Form.Field>
                     </Form>
@@ -83,11 +86,16 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             <Modal.Actions>
                 {submittingStatus !== RequestStatus.SUBMITTED ? (
                     <>
-                        <CancelButton content="Cancel" onClick={onClose} />
-                        <ApproveButton content="Create" color="green" icon="plus" onClick={handleSubmit} />
+                        <CancelButton content={t('buttons.cancel')} onClick={onClose} />
+                        <ApproveButton
+                            content={t('buttons.approve')}
+                            color="green"
+                            icon="plus"
+                            onClick={handleSubmit}
+                        />
                     </>
                 ) : (
-                    <CancelButton content="Close" onClick={onClose} />
+                    <CancelButton content={t('buttons.close')} onClick={onClose} />
                 )}
             </Modal.Actions>
         </Modal>

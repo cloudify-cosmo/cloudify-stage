@@ -3,8 +3,12 @@ import { ButtonsWrapper } from './CreatedToken.styles';
 
 const {
     Basic: { Message, Button, CopyToClipboardButton },
+    Utils: { getT },
     Hooks: { useBoolean }
 } = Stage;
+
+// TODO: Extract as an getTokensTranslation util
+const t = getT('widget.tokens.createModal.newToken');
 
 interface CreatedTokenProps {
     token: ReceivedToken;
@@ -18,7 +22,9 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
     return (
         <>
             <Message success>
-                {`New token has been created: ${displayedToken}`}
+                {t('content', {
+                    token: displayedToken
+                })}
                 <ButtonsWrapper>
                     <Button
                         basic
@@ -29,7 +35,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
                     <CopyToClipboardButton text={displayedToken} />
                 </ButtonsWrapper>
             </Message>
-            <Message warning>You won't be able to show or copy the token value after closing this modal</Message>
+            <Message warning>{t('warning')}</Message>
         </>
     );
 };

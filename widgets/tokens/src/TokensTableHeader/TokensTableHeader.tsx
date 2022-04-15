@@ -7,8 +7,11 @@ interface TokensTableHeaderProps {
 
 const {
     Basic: { Button },
+    Utils: { getT },
     Hooks: { useBoolean }
 } = Stage;
+
+const t = getT('widget.tokens');
 
 const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
@@ -16,7 +19,7 @@ const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     return (
         <>
             <Wrapper>
-                <Button labelPosition="left" icon="add" content="Create" onClick={showCreateModal} />
+                <Button labelPosition="left" icon="add" content={t('buttons.create')} onClick={showCreateModal} />
             </Wrapper>
             {isCreateModalVisible && <CreateTokenModal onClose={hideCreateModal} toolbox={toolbox} />}
         </>

@@ -8,9 +8,12 @@ import { TokensTableConsts } from './TokensTable.consts';
 const {
     Basic: { DataTable },
     Utils: {
-        Time: { formatTimestamp }
+        Time: { formatTimestamp },
+        getT
     }
 } = Stage;
+
+const t = getT('widget.tokens.table');
 
 export const dataSortingKeys: Record<string, TokensWidget.DataSortingKeys> = {
     value: 'secret_hash',
@@ -43,14 +46,14 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
     return (
         <>
             <TokensTableHeader toolbox={toolbox} />
-            <DataTable fetchData={fetchTableData}>
-                <DataTable.Column label="Token" name={dataSortingKeys.value} />
-                <DataTable.Column label="Description" name={dataSortingKeys.description} />
-                {shouldDisplayUsers && <DataTable.Column label="Username" />}
+            <DataTable fetchData={fetchTableData} noDataMessage={t('noTokens')}>
+                <DataTable.Column label={t('columns.token')} name={dataSortingKeys.value} />
+                <DataTable.Column label={t('columns.description')} name={dataSortingKeys.description} />
+                {shouldDisplayUsers && <DataTable.Column label={t('columns.username')} />}
                 {showExpiredTokens && (
-                    <DataTable.Column label="Expiration date" name={dataSortingKeys.expirationDate} />
+                    <DataTable.Column label={t('columns.expirationDate')} name={dataSortingKeys.expirationDate} />
                 )}
-                <DataTable.Column label="Last used" name={dataSortingKeys.lastUsed} />
+                <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} />
                 <DataTable.Column label="" />
                 {data?.items?.map(dataItem => {
                     return (

@@ -4,8 +4,11 @@ import { RequestStatus, TokensWidget } from './types';
 
 const {
     Basic: { Icon, Confirm: DeleteModal },
+    Utils: { getT },
     Hooks: { useBoolean }
 } = Stage;
+
+const t = getT('widget.tokens');
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];
@@ -39,11 +42,13 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
 
     return (
         <>
-            <Icon bordered link name="trash" title="Delete token" onClick={showModal} />
+            <Icon bordered link name="trash" title={t('buttons.removeToken')} onClick={showModal} />
             {isModalVisible && (
                 <DeleteModal
                     open
-                    content={`Are you sure you want to delete the token with ID ${tokenId}`}
+                    content={t('deleteModal', {
+                        tokenId
+                    })}
                     onCancel={hideModal}
                     onConfirm={removeToken}
                 />
