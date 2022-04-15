@@ -21,7 +21,7 @@ function getConstraintValueFunction(constraints: Constraint[]) {
     };
 }
 
-export default function InputField({
+function InputField({
     input,
     value,
     onChange,
@@ -96,3 +96,5 @@ export default function InputField({
             return <GenericInputField {...commonProps} />;
     }
 }
+
+export default React.memo(InputField);
