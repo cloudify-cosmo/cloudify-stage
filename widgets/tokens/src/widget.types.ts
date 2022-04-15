@@ -2,7 +2,9 @@ export declare namespace TokensWidget {
     export interface DataItem {
         id: string;
         description: string | null;
+        // eslint-disable-next-line camelcase
         expiration_date: Date | null;
+        // eslint-disable-next-line camelcase
         last_used: Date | null;
         username: string;
         value: string;

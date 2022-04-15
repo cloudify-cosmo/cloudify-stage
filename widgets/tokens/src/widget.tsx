@@ -1,5 +1,5 @@
-import TokensTable from './TokensTable';
 import _ from 'lodash';
+import TokensTable from './TokensTable';
 import type { TokensWidget } from './widget.types';
 import { translationPath } from './widget.consts';
 
