@@ -1608,7 +1608,7 @@
                     "expirationDate": "Expiration date",
                     "lastUsed": "Last used"
                 },
-                "noTokens": "TODO - FILL",
+                "noTokens": "There are no Tokens available. Click \"Create\" to add tokens.",
                 "buttons": {
                     "removeToken": "Delete token",
                     "create": "Create"
@@ -1624,7 +1624,7 @@
                 },
                 "buttons": {
                     "cancel": "Cancel",
-                    "approve": "Approve",
+                    "create": "Create",
                     "close": "Close"
                 },
                 "newToken": {

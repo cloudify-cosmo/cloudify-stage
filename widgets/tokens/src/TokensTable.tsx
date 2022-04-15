@@ -1,9 +1,10 @@
-import type { TokensWidget } from './types';
+import type { TokensWidget } from './widget.types';
 import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
 import { useEffect } from 'react';
 import { TokensTableConsts } from './TokensTable.consts';
+import { widgetTranslationPath } from './consts';
 
 const {
     Basic: { DataTable },
@@ -13,7 +14,7 @@ const {
     }
 } = Stage;
 
-const t = getT('widget.tokens.table');
+const t = getT(`${widgetTranslationPath}.table`);
 
 export const dataSortingKeys: Record<string, TokensWidget.DataSortingKeys> = {
     value: 'secret_hash',

@@ -1,8 +1,9 @@
 import TokensTable from './TokensTable';
-import type { TokensWidget } from './types';
+import type { TokensWidget } from './widget.types';
 import _ from 'lodash';
+import { widgetTranslationPath } from './consts';
 
-const t = Stage.Utils.getT('widget.tokens');
+const t = Stage.Utils.getT(widgetTranslationPath);
 
 Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     id: 'tokens',

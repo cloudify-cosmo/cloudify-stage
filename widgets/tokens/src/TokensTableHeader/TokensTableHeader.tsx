@@ -1,3 +1,4 @@
+import { widgetTranslationPath } from '../consts';
 import CreateTokenModal from './CreateTokenModal';
 import { Wrapper } from './TokensTableHeader.styles';
 
@@ -11,7 +12,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT('widget.tokens');
+const t = getT(`${widgetTranslationPath}.table`);
 
 const TokensTableHeader = ({ toolbox }: TokensTableHeaderProps) => {
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();

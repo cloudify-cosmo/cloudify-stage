@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { widgetTranslationPath } from '../consts';
 import { TokensTableConsts } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
@@ -9,7 +10,7 @@ const {
     Hooks: { useInput }
 } = Stage;
 
-const t = getT('widget.tokens.createModal');
+const t = getT(`${widgetTranslationPath}.createModal`);
 
 interface CreateTokenModalProps {
     onClose: () => void;
@@ -76,7 +77,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                     <CreatedToken token={receivedToken!} />
                 ) : (
                     <Form>
-                        <Form.Field label={'inputs.description'}>
+                        <Form.Field label={t('inputs.description')}>
                             <Input value={description} onChange={setDescription} name="description" />
                         </Form.Field>
                     </Form>
@@ -87,12 +88,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {submittingStatus !== RequestStatus.SUBMITTED ? (
                     <>
                         <CancelButton content={t('buttons.cancel')} onClick={onClose} />
-                        <ApproveButton
-                            content={t('buttons.approve')}
-                            color="green"
-                            icon="plus"
-                            onClick={handleSubmit}
-                        />
+                        <ApproveButton content={t('buttons.create')} color="green" icon="plus" onClick={handleSubmit} />
                     </>
                 ) : (
                     <CancelButton content={t('buttons.close')} onClick={onClose} />

@@ -1,5 +1,6 @@
 import type { ReceivedToken } from './CreateTokenModal';
 import { ButtonsWrapper } from './CreatedToken.styles';
+import { widgetTranslationPath } from '../consts';
 
 const {
     Basic: { Message, Button, CopyToClipboardButton },
@@ -7,8 +8,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-// TODO: Extract as an getTokensTranslation util
-const t = getT('widget.tokens.createModal.newToken');
+const t = getT(`${widgetTranslationPath}.createModal.newToken`);
 
 interface CreatedTokenProps {
     token: ReceivedToken;

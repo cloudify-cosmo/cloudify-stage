@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { widgetTranslationPath } from './consts';
 import { TokensTableConsts } from './TokensTable.consts';
-import { RequestStatus, TokensWidget } from './types';
+import { RequestStatus } from './types';
+import type { TokensWidget } from './widget.types';
 
 const {
     Basic: { Icon, Confirm: DeleteModal },
@@ -8,7 +10,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT('widget.tokens');
+const t = getT(widgetTranslationPath);
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];
