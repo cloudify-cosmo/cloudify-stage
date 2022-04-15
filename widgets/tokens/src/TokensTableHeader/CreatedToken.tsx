@@ -1,5 +1,5 @@
+import styled from 'styled-components';
 import type { ReceivedToken } from './CreateTokenModal.types';
-import { ButtonsWrapper } from './CreatedToken.styles';
 import { translationPath } from '../widget.consts';
 
 const {
@@ -9,6 +9,10 @@ const {
 } = Stage;
 
 const t = getT(`${translationPath}.createModal.newToken`);
+
+export const ButtonsWrapper = styled.span`
+    margin-left: 12px;
+`;
 
 interface CreatedTokenProps {
     token: ReceivedToken;

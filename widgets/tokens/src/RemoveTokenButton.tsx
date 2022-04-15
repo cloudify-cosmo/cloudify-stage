@@ -4,11 +4,9 @@ import { tableRefreshEvent } from './TokensTable.consts';
 import { RequestStatus } from './types';
 import type { TokensWidget } from './widget.types';
 
-const {
-    Basic: { Icon, Confirm: DeleteModal },
-    Utils: { getT },
-    Hooks: { useBoolean }
-} = Stage;
+const { Icon, Confirm: DeleteModal } = Stage.Basic;
+const { getT } = Stage.Utils;
+const { useBoolean } = Stage.Hooks;
 
 const t = getT(translationPath);
 

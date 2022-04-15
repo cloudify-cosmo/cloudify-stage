@@ -6,13 +6,8 @@ import RemoveTokenButton from './RemoveTokenButton';
 import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
 import { translationPath } from './widget.consts';
 
-const {
-    Basic: { DataTable },
-    Utils: {
-        Time: { formatTimestamp },
-        getT
-    }
-} = Stage;
+const { DataTable } = Stage.Basic;
+const { Time, getT } = Stage.Utils;
 
 const t = getT(`${translationPath}.table`);
 
@@ -65,11 +60,11 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                             )}
                             {showExpiredTokens && (
                                 <DataTable.Data>
-                                    <TextEllipsis content={formatTimestamp(dataItem.expiration_date)} />
+                                    <TextEllipsis content={Time.formatTimestamp(dataItem.expiration_date)} />
                                 </DataTable.Data>
                             )}
                             <DataTable.Data>
-                                <TextEllipsis content={formatTimestamp(dataItem.last_used)} />
+                                <TextEllipsis content={Time.formatTimestamp(dataItem.last_used)} />
                             </DataTable.Data>
                             <DataTable.Data>
                                 <RemoveTokenButton tokenId={dataItem.id} toolbox={toolbox} />

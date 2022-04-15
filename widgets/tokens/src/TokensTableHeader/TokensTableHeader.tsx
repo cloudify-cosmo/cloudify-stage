@@ -1,16 +1,20 @@
+import styled from 'styled-components';
 import { translationPath } from '../widget.consts';
 import CreateTokenModal from './CreateTokenModal';
-import { Wrapper } from './TokensTableHeader.styles';
+
+const { useBoolean } = Stage.Hooks;
+const { getT } = Stage.Utils;
+const { Button } = Stage.Basic;
+
+export const Wrapper = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+`;
 
 interface TokensTableHeaderProps {
     toolbox: Stage.Types.Toolbox;
 }
-
-const {
-    Basic: { Button },
-    Utils: { getT },
-    Hooks: { useBoolean }
-} = Stage;
 
 const t = getT(`${translationPath}.table`);
 

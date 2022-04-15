@@ -1615,7 +1615,7 @@
                 }
             },
             "deleteModal": {
-                "content": "Are you sure you want to delete the token with ID {{tokenId}}"
+                "content": "Are you sure you want to delete the token with ID {{tokenId}}?"
             },
             "createModal": {
                 "header": "Create token",

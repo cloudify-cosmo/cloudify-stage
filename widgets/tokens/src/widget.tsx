@@ -13,7 +13,7 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     isReact: true,
     hasReadme: true,
     fetchUrl: '[manager]/tokens[params]',
-    // permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),

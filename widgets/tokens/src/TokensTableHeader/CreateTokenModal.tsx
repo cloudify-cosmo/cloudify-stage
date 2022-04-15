@@ -6,11 +6,9 @@ import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
 import type { ReceivedToken } from './CreateTokenModal.types';
 
-const {
-    Basic: { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay, Message },
-    Utils: { getT },
-    Hooks: { useInput }
-} = Stage;
+const { useInput } = Stage.Hooks;
+const { getT } = Stage.Utils;
+const { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay, Message } = Stage.Basic;
 
 const t = getT(`${translationPath}.createModal`);
 
