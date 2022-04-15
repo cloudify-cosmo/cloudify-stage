@@ -44,7 +44,11 @@ export default function InputField({
         value,
         onChange,
         error,
-        defaultValue,
+        defaultValue
+    };
+
+    const commonDynamicDropdownFieldProps = {
+        ...commonProps,
         toolbox,
         constraints
     };
@@ -78,13 +82,13 @@ export default function InputField({
             return <TextareaInputField rows={rows} {...commonProps} />;
         }
         case 'deployment_id':
-            return <DeploymentIdInputField {...commonProps} />;
+            return <DeploymentIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'blueprint_id':
-            return <BlueprintIdInputField {...commonProps} />;
+            return <BlueprintIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'capability_value':
-            return <CapabilityValueInputField {...commonProps} constraints={constraints} />;
+            return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
-            return <SecretKeyInputField {...commonProps} />;
+            return <SecretKeyInputField {...commonDynamicDropdownFieldProps} />;
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
