@@ -10,7 +10,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT(translationPath);
+const t = getT(`${translationPath}.table`);
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];
