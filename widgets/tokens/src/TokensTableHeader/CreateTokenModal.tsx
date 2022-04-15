@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { widgetTranslationPath } from '../consts';
+import { translationPath } from '../widget.consts';
 import { tableRefreshEvent } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
@@ -11,7 +11,7 @@ const {
     Hooks: { useInput }
 } = Stage;
 
-const t = getT(`${widgetTranslationPath}.createModal`);
+const t = getT(`${translationPath}.createModal`);
 
 interface CreateTokenModalProps {
     onClose: () => void;

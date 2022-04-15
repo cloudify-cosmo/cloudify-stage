@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { widgetTranslationPath } from './consts';
+import { translationPath } from './widget.consts';
 import { tableRefreshEvent } from './TokensTable.consts';
 import { RequestStatus } from './types';
 import type { TokensWidget } from './widget.types';
@@ -10,7 +10,7 @@ const {
     Hooks: { useBoolean }
 } = Stage;
 
-const t = getT(widgetTranslationPath);
+const t = getT(translationPath);
 
 interface RemoveTokenButtonProps {
     tokenId: TokensWidget.DataItem['id'];

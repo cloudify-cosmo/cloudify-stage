@@ -1,10 +1,10 @@
+import { useEffect } from 'react';
 import type { TokensWidget } from './widget.types';
 import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
-import { useEffect } from 'react';
 import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
-import { widgetTranslationPath } from './consts';
+import { translationPath } from './widget.consts';
 
 const {
     Basic: { DataTable },
@@ -14,7 +14,7 @@ const {
     }
 } = Stage;
 
-const t = getT(`${widgetTranslationPath}.table`);
+const t = getT(`${translationPath}.table`);
 
 interface TokensTableProps {
     data: TokensWidget.Data;
