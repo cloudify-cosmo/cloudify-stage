@@ -48,7 +48,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
             {isModalVisible && (
                 <DeleteModal
                     open
-                    content={t('deleteModal', {
+                    content={t('deleteModal.content', {
                         tokenId
                     })}
                     onCancel={hideModal}
