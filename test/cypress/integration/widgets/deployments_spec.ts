@@ -70,7 +70,7 @@ describe('Deployments widget', () => {
         it('showExecutionStatusLabel option', () => {
             cy.searchInDeploymentsWidget(deploymentId);
 
-            const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
+            const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(3)';
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('not.exist');
