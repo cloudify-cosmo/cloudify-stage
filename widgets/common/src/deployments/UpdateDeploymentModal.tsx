@@ -13,7 +13,7 @@ import getInputsMap from '../inputs/utils/getInputsMap';
 import { getErrorObject } from '../inputs/utils/errors';
 import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
 import InputsHeader from '../inputs/InputsHeader';
-import getInputFields from '../inputs/utils/getInputFields';
+import InputFields from '../inputs/InputFields';
 import NodeInstancesFilter from '../nodes/NodeInstancesFilter';
 import UpdateDetailsModal from './UpdateDetailsModal';
 
@@ -265,14 +265,14 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                         </>
                     )}
 
-                    {getInputFields(
-                        blueprint.plan.inputs,
-                        setDeploymentInputs,
-                        deploymentInputs,
-                        errors,
-                        toolbox,
-                        blueprint.plan.data_types
-                    )}
+                    <InputFields
+                        inputs={blueprint.plan.inputs}
+                        onChange={setDeploymentInputs}
+                        inputsState={deploymentInputs}
+                        errorsState={errors}
+                        toolbox={toolbox}
+                        dataTypes={blueprint.plan.data_types}
+                    />
 
                     <Form.Divider>
                         <Header size="tiny">Actions</Header>

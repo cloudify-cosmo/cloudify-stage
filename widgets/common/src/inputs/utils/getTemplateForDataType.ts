@@ -1,4 +1,4 @@
-import type { DataType } from './types';
+import type { DataType } from '../types';
 
 export default function getTemplateForDataType(dataType: DataType, stringTemplate?: boolean) {
     const getStringInitialValue = (type: string) => {
