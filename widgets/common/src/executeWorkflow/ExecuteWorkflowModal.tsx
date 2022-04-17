@@ -101,7 +101,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                         setWorkflowParams(selectedWorkflow);
                     } else {
                         const deploymentNameAndId = Stage.Utils.formatDisplayName({
-                            id: _.head(deploymentsList),
+                            id: deploymentId,
                             displayName: deploymentName
                         });
                         setErrors(t('errors.workflowError', deploymentNameAndId, workflowName));
