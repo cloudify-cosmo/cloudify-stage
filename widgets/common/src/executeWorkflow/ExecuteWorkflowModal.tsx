@@ -3,7 +3,7 @@ import FileActions from '../actions/FileActions';
 import DeploymentActions from '../deployments/DeploymentActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
 import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
-import type { OnChange } from '../inputs/utils/types';
+import type { OnChange } from '../inputs/types';
 
 import { executeWorkflow, getWorkflowName } from './common';
 
