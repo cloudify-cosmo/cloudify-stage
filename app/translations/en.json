@@ -528,7 +528,7 @@
                 "execute": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
-                        "singleDeployment": "Execute workflow {{workflowName}} on {{deploymentName}}",
+                        "singleDeployment": "Execute workflow {{workflowName}} on {{deploymentId}}",
                         "singleNamedDeployment": "Execute workflow {{workflowName}} on {{ deploymentName }}",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
