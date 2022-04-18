@@ -1,5 +1,5 @@
 import getTemplateForDataType from './getTemplateForDataType';
-import type { DataType } from './types';
+import type { DataType } from '../types';
 
 const EMPTY_STRING = '""';
 const DEFAULT_INITIAL_VALUE_FOR_LIST = '[]';

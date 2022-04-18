@@ -71,7 +71,7 @@ function fetchReducer(state: typeof defaultFetchState, action: FetchReducerActio
 /** May also contain an `implicit` property, but it's hard to model in TypeScript */
 type Option = { [valueProp: string]: string };
 
-interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
+export interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     allowAdditions?: boolean;
     innerRef?: React.Ref<HTMLElement>;
     disabled?: boolean;
