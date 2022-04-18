@@ -1,4 +1,4 @@
-import { STRING_VALUE_SURROUND_CHAR } from './consts';
+import { STRING_VALUE_SURROUND_CHAR } from '../consts';
 
 export default function getInputsMap(inputs: Record<string, any>, inputsValues: Record<string, any>) {
     const { Json } = Stage.Utils;
