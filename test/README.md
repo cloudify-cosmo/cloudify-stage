@@ -50,7 +50,7 @@ Run `npm run test:frontend:components`.
 
 ## Coverage check
 
-To generate the report and check coverage against predefined thresholds run `npm run coverageCheck`.
+To check coverage against predefined thresholds run `npm run coverageCheck`.
 
 To update threshold levels edit `.nycrc` file. 
 
