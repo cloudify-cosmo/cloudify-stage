@@ -168,8 +168,6 @@ export default function TerraformModal({
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
-    const usernameInputRef = useRef<HTMLInputElement>(null);
-
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
     const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
@@ -185,6 +183,8 @@ export default function TerraformModal({
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
+
+    const usernameInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(
         function setFocusOnUsernameInput() {
