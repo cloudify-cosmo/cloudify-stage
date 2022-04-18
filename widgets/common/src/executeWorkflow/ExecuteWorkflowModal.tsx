@@ -229,7 +229,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                 <Icon name="cogs" />{' '}
                 {t(headerKey, {
                     workflowName,
-                    deploymentName: Stage.Utils.formatDisplayName({
+                    deploymentId: Stage.Utils.formatDisplayName({
                         id: _.head(deploymentsList),
                         displayName: deploymentName
                     })
