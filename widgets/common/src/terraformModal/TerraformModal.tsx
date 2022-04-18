@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { CheckboxProps, DropdownProps, Ref } from 'semantic-ui-react';
+import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
+import { Ref } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
