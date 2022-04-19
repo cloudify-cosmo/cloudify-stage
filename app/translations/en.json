@@ -1357,6 +1357,29 @@
                 }
             }
         },
+        "deploymentButton": {
+            "name": "Deployment button",
+            "description": "Displays button allowing to create a new service",
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Create deployment"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button"
+                }
+            }
+        },
         "userManagement": {
             "columns": {
                 "username": "Username",

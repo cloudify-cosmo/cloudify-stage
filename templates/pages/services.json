@@ -1,34 +1,34 @@
 {
-  "name": "Services",
-  "icon": "wrench",
-  "layout": [
-    {
-      "type": "widgets",
-      "content": [
+    "name": "Services",
+    "icon": "wrench",
+    "layout": [
         {
-          "name": "Deployment Button",
-          "x": 0,
-          "y": 0,
-          "width": 3,
-          "height": 3,
-          "definition": "deploymentButton",
-          "configuration": {
-            "buttonContent": "Create Service"
-          }
-        },
-        {
-          "name": "Services",
-          "width": 12,
-          "height": 150,
-          "definition": "deploymentsView",
-          "configuration": {
-            "filterId": "csys-service-filter",
-            "fieldsToShow": ["status", "id", "name", "blueprintName", "location"]
-          },
-          "x": 0,
-          "y": 3
+            "type": "widgets",
+            "content": [
+                {
+                    "name": "Deployment Button",
+                    "x": 0,
+                    "y": 0,
+                    "width": 3,
+                    "height": 3,
+                    "definition": "deploymentButton",
+                    "configuration": {
+                        "label": "Create Service"
+                    }
+                },
+                {
+                    "name": "Services",
+                    "width": 12,
+                    "height": 150,
+                    "definition": "deploymentsView",
+                    "configuration": {
+                        "filterId": "csys-service-filter",
+                        "fieldsToShow": ["status", "id", "name", "blueprintName", "location"]
+                    },
+                    "x": 0,
+                    "y": 3
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

@@ -1,6 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 import DeploymentButton from './DeploymentButton';
 
+const widgetId = 'deploymentButton';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
 Stage.defineWidget({
     id: 'deploymentButton',
     name: 'Create deployment button',
@@ -13,9 +16,33 @@ Stage.defineWidget({
     hasReadme: true,
     initialConfiguration: [
         {
-            id: 'buttonContent',
-            name: 'Button Content',
-            default: 'Create Deployment',
+            id: 'basic',
+            name: t('configuration.basic.name'),
+            description: t('configuration.basic.description'),
+            default: false,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'color',
+            name: t('configuration.color.name'),
+            description: t('configuration.color.description'),
+            default: 'green',
+            component: Stage.Common.Components.SemanticColorDropdown,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE
+        },
+        {
+            id: 'icon',
+            name: t('configuration.icon.name'),
+            description: t('configuration.icon.description'),
+            default: 'rocket',
+            component: Stage.Shared.SemanticIconDropdown,
+            type: Stage.Basic.GenericField.CUSTOM_TYPE
+        },
+        {
+            id: 'label',
+            name: t('configuration.label.name'),
+            description: t('configuration.label.description'),
+            default: t('configuration.label.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
@@ -23,7 +50,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget, data, error, toolbox) {
-        const { buttonContent } = widget.configuration;
-        return <DeploymentButton toolbox={toolbox} buttonContent={buttonContent} />;
+        const { basic, color, icon, label, buttonContent } = widget.configuration;
+        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} />;
     }
 });
