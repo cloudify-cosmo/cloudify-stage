@@ -528,14 +528,13 @@
                 "execute": {
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
-                        "singleDeployemnt": "Execute workflow {{workflowName}} on {{deploymentId}}",
-                        "singleNamedDeployemnt": "Execute workflow {{workflowName}} on {{ deploymentName }}",
+                        "singleDeployment": "Execute workflow {{workflowName}} on {{deploymentId}}",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
                     "errors": {
                         "missingDeployment": "Missing deployment.",
                         "missingWorkflow": "Missing workflow.",
-                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentId }}'.",
+                        "workflowError": "Workflow '{{ workflowName }}' does not exist for deployment '{{ deploymentNameAndId }}'.",
                         "scheduleTimeError": "Please provide valid scheduled time (in the future, using format: YYYY-MM-DD HH:mm)",
                         "yamlFileError": "Loading values from YAML file failed: {{errorMessage}}"
                     },
@@ -669,7 +668,7 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
-                "modalHeader": "Manage labels for deployment {{ deploymentName }}",
+                "modalHeader": "Manage labels for deployment {{ deploymentNameAndId }}",
                 "modalApplyButton": "Apply"
             },
             "filters": {
@@ -1419,7 +1418,7 @@
             "noLabels": "There are no Labels defined",
             "add": "Add",
             "export": "Export",
-            "addHeader": "Add labels for deployment '{{deploymentId}}'",
+            "addHeader": "Add labels for deployment '{{deploymentNameAndId}}'",
             "revert": "Revert to initial value",
             "deleteConfirm": "Are you sure you want to remove label"
         },
