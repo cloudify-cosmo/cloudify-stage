@@ -529,7 +529,6 @@
                     "header": {
                         "noDeployment": "Execute workflow {{workflowName}}",
                         "singleDeployment": "Execute workflow {{workflowName}} on {{deploymentId}}",
-                        "singleNamedDeployment": "Execute workflow {{workflowName}} on {{ deploymentId }}",
                         "multipleDeployments": "Execute workflow {{workflowName}} on multiple deployments"
                     },
                     "errors": {

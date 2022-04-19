@@ -184,8 +184,6 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     if (!_.isEmpty(deploymentsList)) {
         if (_.size(deploymentsList) > 1) {
             headerKey += 'multipleDeployments';
-        } else if (deploymentName) {
-            headerKey += 'singleNamedDeployment';
         } else {
             headerKey += 'singleDeployment';
         }
