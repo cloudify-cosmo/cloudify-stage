@@ -28,7 +28,7 @@ export default class DeploymentButton extends React.Component {
                 <Button
                     color="green"
                     icon="rocket"
-                    content="Create Deployment"
+                    content="Create Enviroment"
                     labelPosition="left"
                     className="widgetButton"
                     loading={loading}

@@ -3,7 +3,7 @@ import DeploymentButton from './DeploymentButton';
 
 Stage.defineWidget({
     id: 'deploymentButton',
-    name: 'Create deployment button',
+    name: 'Create enviroment button',
     description: 'Adds button to create new deployment',
     initialWidth: 3,
     initialHeight: 3,
