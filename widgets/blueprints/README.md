@@ -23,7 +23,7 @@ The following information is displayed:
 
 ### Blueprint actions
 
-There are also action buttons to upload a blueprint, create deployment, delete blueprint or edit blueprint copy in [{{< param cfy_composer_name >}}]({{< param cfy_composer_link >}}).
+There are also action buttons to upload a blueprint, create enviroment, delete blueprint or edit blueprint copy in [{{< param cfy_composer_name >}}]({{< param cfy_composer_link >}}).
 
 
 #### Uploading a Blueprint

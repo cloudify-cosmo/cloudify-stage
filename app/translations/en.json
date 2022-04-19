@@ -798,7 +798,7 @@
                 "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
             },
             "buttons": {
-                "createDeployment": "Create deployment",
+                "createDeployment": "Create Environment",
                 "deleteBlueprint": "Delete blueprint",
                 "downloadBlueprint": "Download blueprint",
                 "editCopy": "Edit a copy in Composer"
@@ -1555,7 +1555,7 @@
                 }
             },
             "list": {
-                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+                "noDeployments": "There are no Deployments available. Click \"Create Environment\" to add deployments."
             },
             "updatedIcon": {
                 "header": "Deployment updated",
