@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
+import { Ref } from 'semantic-ui-react';
 import _, { find, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
@@ -182,6 +183,17 @@ export default function TerraformModal({
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
+
+    const usernameInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(
+        function setFocusOnUsernameInput() {
+            if (urlAuthentication && !username) {
+                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
+            }
+        },
+        [urlAuthentication, username]
+    );
 
     async function handleSubmit() {
         clearErrors();
@@ -376,9 +388,17 @@ export default function TerraformModal({
                 setErrors(modalErrors);
             })
             .catch(err => {
-                setErrors({
-                    template: err.status === 401 ? tError('terraformTemplateUnauthorized') : err.message
-                });
+                if (err.status === 401) {
+                    if (!urlAuthentication) {
+                        setUrlAuthentication(true);
+                    } else {
+                        setErrors({
+                            template: tError('terraformTemplateUnauthorized')
+                        });
+                    }
+                } else {
+                    setErrors({ template: err.message });
+                }
                 clearTemplateModules();
                 clearResourceLocation();
             })
@@ -420,6 +440,39 @@ export default function TerraformModal({
                                     onBlur={handleTemplateUrlBlur}
                                 />
                             </Form.Field>
+                            <Form.Group widths="equal">
+                                <Form.Field>
+                                    <Form.Checkbox
+                                        toggle
+                                        label={t(`urlAuthentication`)}
+                                        help={undefined}
+                                        checked={urlAuthentication}
+                                        onChange={handleUrlAuthenticationChange}
+                                    />
+                                </Form.Field>
+                                <Form.Field error={errors.username}>
+                                    <Ref innerRef={usernameInputRef}>
+                                        <Form.Input
+                                            disabled={!urlAuthentication}
+                                            value={username}
+                                            onChange={setUsername}
+                                            label={t(`username`)}
+                                            onBlur={handleTemplateUrlBlur}
+                                            required={urlAuthentication}
+                                        />
+                                    </Ref>
+                                </Form.Field>
+                                <Form.Field error={errors.password}>
+                                    <Form.Input
+                                        disabled={!urlAuthentication}
+                                        value={password}
+                                        onChange={setPassword}
+                                        label={t(`password`)}
+                                        onBlur={handleTemplateUrlBlur}
+                                        required={urlAuthentication}
+                                    />
+                                </Form.Field>
+                            </Form.Group>
                             <Form.Field label={t(`resourceLocation`)} required error={errors.resource}>
                                 <Form.Dropdown
                                     selection
@@ -433,37 +486,6 @@ export default function TerraformModal({
                                     disabled={isEmpty(templateModules)}
                                 />
                             </Form.Field>
-                            <Form.Group widths="equal">
-                                <Form.Field>
-                                    <Form.Checkbox
-                                        toggle
-                                        label={t(`urlAuthentication`)}
-                                        help={undefined}
-                                        checked={urlAuthentication}
-                                        onChange={handleUrlAuthenticationChange}
-                                    />
-                                </Form.Field>
-                                <Form.Field error={errors.username}>
-                                    <Form.Input
-                                        disabled={!urlAuthentication}
-                                        value={username}
-                                        onChange={setUsername}
-                                        label={t(`username`)}
-                                        onBlur={handleTemplateUrlBlur}
-                                        required={urlAuthentication}
-                                    />
-                                </Form.Field>
-                                <Form.Field error={errors.password}>
-                                    <Form.Input
-                                        disabled={!urlAuthentication}
-                                        value={password}
-                                        onChange={setPassword}
-                                        label={t(`password`)}
-                                        onBlur={handleTemplateUrlBlur}
-                                        required={urlAuthentication}
-                                    />
-                                </Form.Field>
-                            </Form.Group>
                         </AccordionSectionWithDivider>
                         <Header size="tiny">{t('mapping')}</Header>
                         <TerraformModalTableAccordion

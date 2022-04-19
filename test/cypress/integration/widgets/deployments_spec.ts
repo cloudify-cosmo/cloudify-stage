@@ -47,7 +47,7 @@ describe('Deployments widget', () => {
 
     it('should be present in Deployments page', () => {
         cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3').should('have.text', deploymentId);
+        cy.get('.deploymentSegment h3').should('have.text', `${deploymentName} (${deploymentId})`);
     });
 
     describe('should provide display configuration for', () => {
@@ -70,7 +70,7 @@ describe('Deployments widget', () => {
         it('showExecutionStatusLabel option', () => {
             cy.searchInDeploymentsWidget(deploymentId);
 
-            const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(2)';
+            const lastExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(3)';
             cy.get(lastExecutionCellSelector).within(() => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('not.exist');
