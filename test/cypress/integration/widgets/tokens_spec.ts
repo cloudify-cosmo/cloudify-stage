@@ -1,6 +1,10 @@
 describe('Tokens widget', () => {
     const widgetId = 'tokens';
     const widgetSelector = `.${widgetId}Widget`;
+    const widgetConfiguration = {
+        pollingTime: 3
+    };
+
     const mockUserRole = (role: string) => {
         cy.intercept('GET', '/console/auth/user', {
             username: 'admin',
@@ -15,7 +19,7 @@ describe('Tokens widget', () => {
         });
     };
 
-    before(() => cy.activate('valid_trial_license').usePageMock(widgetId).mockLogin());
+    before(() => cy.activate('valid_trial_license').usePageMock(widgetId, widgetConfiguration).mockLogin());
 
     it('should allow to create and remove token', () => {
         const tokenDescription = 'tokens-widget-test';
@@ -80,5 +84,28 @@ describe('Tokens widget', () => {
         mockUserRole('manager');
         cy.mockLogin();
         cy.contains('Username').should('not.exist');
+    });
+
+    it('should not show expired tokens by default', () => {
+        const expiredToken = {
+            id: 'Yaf4oOgF5j',
+            username: 'admin',
+            value: 'ctok-Yaf4oOgF5j-********',
+            role: 'sys_admin',
+            expiration_date: '2022-02-10T16:15:00.000Z',
+            last_used: '2022-02-10T11:27:04.544Z',
+            description: 'Mocked token'
+        };
+        cy.interceptSp('GET', '/tokens*', {
+            items: [expiredToken]
+        });
+
+        cy.contains(expiredToken.value).should('not.exist');
+
+        cy.editWidgetConfiguration(widgetId, () => {
+            cy.get('input[name=showExpiredTokens]').parent().click();
+        });
+
+        cy.contains(expiredToken.value).should('exist');
     });
 });
