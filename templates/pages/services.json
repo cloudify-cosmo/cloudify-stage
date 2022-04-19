@@ -11,7 +11,10 @@
           "y": 0,
           "width": 3,
           "height": 3,
-          "definition": "deploymentButton"
+          "definition": "deploymentButton",
+          "configuration": {
+            "buttonContent": "Create Service"
+          }
         },
         {
           "name": "Services",

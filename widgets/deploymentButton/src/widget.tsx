@@ -23,6 +23,8 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget, data, error, toolbox) {
-        return <DeploymentButton toolbox={toolbox} />;
+        console.log(widget);
+        const { buttonContent } = widget.configuration;
+        return <DeploymentButton toolbox={toolbox} buttonContent={buttonContent} />;
     }
 });

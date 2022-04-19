@@ -18,7 +18,7 @@ export default class DeploymentButton extends React.Component {
     };
 
     render() {
-        const { toolbox } = this.props;
+        const { toolbox, buttonContent } = this.props;
         const { loading, open } = this.state;
         const { Button } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
@@ -28,7 +28,7 @@ export default class DeploymentButton extends React.Component {
                 <Button
                     color="green"
                     icon="rocket"
-                    content="Create Enviroment"
+                    content={buttonContent}
                     labelPosition="left"
                     className="widgetButton"
                     loading={loading}
@@ -42,5 +42,6 @@ export default class DeploymentButton extends React.Component {
 }
 
 DeploymentButton.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    buttonContent: PropTypes.string
 };
