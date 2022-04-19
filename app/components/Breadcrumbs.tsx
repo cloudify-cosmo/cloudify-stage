@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { Label, Breadcrumb, EditableLabel } from './basic';
@@ -19,6 +20,7 @@ const StyledLabel = styled(Label)`
 `;
 
 export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }) {
+    const tenantName = useSelector(state => state.manager.tenants.selected);
     const breadcrumbElements = [];
     // TODO(RD-1982): use the regular, unreversed list
     const reversedPagesList = _([...pagesList])
@@ -49,7 +51,7 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
 
     return (
         <BreadCrumbsWrapper>
-            <StyledLabel color="black">Andrew</StyledLabel>
+            <StyledLabel color="black">{tenantName}</StyledLabel>
             <Breadcrumb>{breadcrumbElements}</Breadcrumb>
         </BreadCrumbsWrapper>
     );
