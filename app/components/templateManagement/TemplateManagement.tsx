@@ -252,7 +252,7 @@ export default function TemplateManagement() {
         <div className="main">
             <Segment basic loading={isLoading}>
                 <div style={{ position: 'relative' }}>
-                    <Breadcrumb className="breadcrumbLineHeight">
+                    <Breadcrumb>
                         <Breadcrumb.Section active>
                             {i18n.t('templates.breadcrumb', 'Template management')}
                         </Breadcrumb.Section>

@@ -34,7 +34,7 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
             );
         }
     });
-    return <Breadcrumb className="breadcrumbLineHeight">{breadcrumbElements}</Breadcrumb>;
+    return <Breadcrumb>{breadcrumbElements}</Breadcrumb>;
 }
 
 Breadcrumbs.propTypes = {
