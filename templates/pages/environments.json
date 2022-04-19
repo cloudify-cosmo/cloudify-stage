@@ -1,33 +1,33 @@
 {
-    "name": "Environments",
-    "icon": "bullseye",
-    "layout": [
+  "name": "Environments",
+  "icon": "bullseye",
+  "layout": [
+    {
+      "type": "widgets",
+      "content": [
         {
-            "type": "widgets",
-            "content": [
-                {
-                    "name": "Deployment Button",
-                    "x": 0,
-                    "y": 0,
-                    "width": 3,
-                    "height": 3,
-                    "definition": "deploymentButton",
-                    "configuration": {
-                        "label": "Create Environment"
-                    }
-                },
-                {
-                    "name": "Environments",
-                    "width": 12,
-                    "height": 150,
-                    "definition": "deploymentsView",
-                    "configuration": {
-                        "filterId": "csys-environment-filter"
-                    },
-                    "x": 0,
-                    "y": 3
-                }
-            ]
+          "name": "Deployment Button",
+          "x": 0,
+          "y": 0,
+          "width": 3,
+          "height": 3,
+          "definition": "deploymentButton",
+          "configuration": {
+            "label": "Create Environment"
+          }
+        },
+        {
+          "name": "Environments",
+          "width": 12,
+          "height": 150,
+          "definition": "deploymentsView",
+          "configuration": {
+            "filterId": "csys-environment-filter"
+          },
+          "x": 0,
+          "y": 3
         }
-    ]
+      ]
+    }
+  ]
 }
