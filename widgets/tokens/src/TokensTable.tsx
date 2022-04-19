@@ -37,9 +37,13 @@ const TokensTable = ({ data, toolbox }: TokensTableProps) => {
                 <DataTable.Column label={t('columns.token')} name={dataSortingKeys.value} />
                 <DataTable.Column label={t('columns.description')} name={dataSortingKeys.description} />
                 {shouldDisplayUsers && <DataTable.Column label={t('columns.username')} />}
-                <DataTable.Column label={t('columns.expirationDate')} name={dataSortingKeys.expirationDate} />
-                <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} />
-                <DataTable.Column label="" />
+                <DataTable.Column
+                    label={t('columns.expirationDate')}
+                    name={dataSortingKeys.expirationDate}
+                    width="156px"
+                />
+                <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} width="156px" />
+                <DataTable.Column label="" width="48px" />
                 {data?.items?.map(dataItem => {
                     return (
                         <DataTable.Row key={dataItem.id}>
