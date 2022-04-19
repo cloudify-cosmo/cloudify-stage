@@ -519,7 +519,7 @@
                     "uninstall": "Uninstall",
                     "delete": "Delete",
                     "forceDelete": "Force Delete",
-                    "fetchError": "Cannot fetch deployment '{{ deploymentName }}'.",
+                    "fetchError": "Cannot fetch deployment '{{ deploymentId }}'.",
                     "tooltip": "Deployment action"
                 },
                 "workflowsMenu": {
