@@ -5,6 +5,23 @@ import { translationPath } from './widget.consts';
 
 const t = Stage.Utils.getT(translationPath);
 
+const isTokenExpired = (token: TokensWidget.DataItem): boolean => {
+    return moment(token.expiration_date).isBefore();
+};
+
+const omitExpiredTokens = (tokens?: TokensWidget.DataItem[]) => {
+    return tokens?.filter(token => !isTokenExpired(token));
+};
+
+const mapFetchedData = (data: TokensWidget.Data, showExpiredTokens: boolean): TokensWidget.Data => {
+    return showExpiredTokens
+        ? data
+        : ({
+              ...data,
+              items: omitExpiredTokens(data?.items)
+          } as TokensWidget.Data);
+};
+
 Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     id: 'tokens',
     name: t('name'),
@@ -13,7 +30,6 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     isReact: true,
     hasReadme: true,
     fetchUrl: '[manager]/tokens[params]',
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
@@ -26,14 +42,16 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
         }
     ],
 
-    render(widget, data, _error, toolbox) {
+    render(widget, fetchedData, _error, toolbox) {
         const { Loading } = Stage.Basic;
+        const { showExpiredTokens } = widget.configuration;
+        const data = mapFetchedData(fetchedData, showExpiredTokens);
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        return <TokensTable data={data} toolbox={toolbox} widgetConfiguration={widget.configuration} />;
+        return <TokensTable data={data} toolbox={toolbox} />;
     }
 });
 

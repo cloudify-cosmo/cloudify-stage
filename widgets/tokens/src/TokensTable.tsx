@@ -14,11 +14,9 @@ const t = getT(`${translationPath}.table`);
 interface TokensTableProps {
     data: TokensWidget.Data;
     toolbox: Stage.Types.Toolbox;
-    widgetConfiguration: TokensWidget.Configuration;
 }
 
-const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) => {
-    const { showExpiredTokens } = widgetConfiguration;
+const TokensTable = ({ data, toolbox }: TokensTableProps) => {
     const shouldDisplayUsers = ReactRedux.useSelector(
         (state: Stage.Types.ReduxState) => state.manager.auth.role === Stage.Common.Consts.sysAdminRole
     );
@@ -39,9 +37,7 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                 <DataTable.Column label={t('columns.token')} name={dataSortingKeys.value} />
                 <DataTable.Column label={t('columns.description')} name={dataSortingKeys.description} />
                 {shouldDisplayUsers && <DataTable.Column label={t('columns.username')} />}
-                {showExpiredTokens && (
-                    <DataTable.Column label={t('columns.expirationDate')} name={dataSortingKeys.expirationDate} />
-                )}
+                <DataTable.Column label={t('columns.expirationDate')} name={dataSortingKeys.expirationDate} />
                 <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} />
                 <DataTable.Column label="" />
                 {data?.items?.map(dataItem => {
@@ -58,11 +54,9 @@ const TokensTable = ({ data, toolbox, widgetConfiguration }: TokensTableProps) =
                                     <TextEllipsis content={dataItem.username} />
                                 </DataTable.Data>
                             )}
-                            {showExpiredTokens && (
-                                <DataTable.Data>
-                                    <TextEllipsis content={Time.formatTimestamp(dataItem.expiration_date)} />
-                                </DataTable.Data>
-                            )}
+                            <DataTable.Data>
+                                <TextEllipsis content={Time.formatTimestamp(dataItem.expiration_date)} />
+                            </DataTable.Data>
                             <DataTable.Data>
                                 <TextEllipsis content={Time.formatTimestamp(dataItem.last_used)} />
                             </DataTable.Data>
