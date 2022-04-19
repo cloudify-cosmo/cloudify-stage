@@ -669,7 +669,7 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
-                "modalHeader": "Manage labels for deployment {{ deploymentName }}",
+                "modalHeader": "Manage labels for deployment {{ deploymentNameAndId }}",
                 "modalApplyButton": "Apply"
             },
             "filters": {
