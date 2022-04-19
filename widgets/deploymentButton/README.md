@@ -6,4 +6,4 @@ Allows creating a deployment of a chosen blueprint. After choosing a name for th
 
 ## Settings
 
-None
+* `buttonContent` - allows to change the button content. The default is "Create deployment".
