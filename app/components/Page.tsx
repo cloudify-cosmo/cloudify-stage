@@ -125,7 +125,7 @@ class Page extends Component<PageProps, never> {
     }
 }
 
-interface PageDefinitionWithContext extends PageDefinition {
+export interface PageDefinitionWithContext extends PageDefinition {
     context: any;
 }
 
