@@ -3,7 +3,7 @@ import DeploymentButton from './DeploymentButton';
 
 Stage.defineWidget({
     id: 'deploymentButton',
-    name: 'Create enviroment button',
+    name: 'Create deployment button',
     description: 'Adds button to create new deployment',
     initialWidth: 3,
     initialHeight: 3,
@@ -11,6 +11,14 @@ Stage.defineWidget({
     showBorder: false,
     isReact: true,
     hasReadme: true,
+    initialConfiguration: [
+        {
+            id: 'buttonContent',
+            name: 'Button Content',
+            default: 'Create Deployment',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        }
+    ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentButton'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
