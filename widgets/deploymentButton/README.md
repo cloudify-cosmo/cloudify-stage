@@ -11,4 +11,3 @@ Allows creating a deployment of a chosen blueprint. After choosing a name for th
   at: [Theming - Semantic UI React](https://react.semantic-ui.com/layouts/theming). Default: 'green'
 * `icon` -  Name of the icon displayed in the button. Available icons list can be found
 * `Basic button` - Allows to change button appearence, basic button is less pronounced. Default: No
-
