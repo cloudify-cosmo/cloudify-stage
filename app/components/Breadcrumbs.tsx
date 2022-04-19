@@ -3,8 +3,20 @@ import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React from 'react';
+import styled from 'styled-components';
 
-import { Breadcrumb, EditableLabel } from './basic';
+import { Label, Breadcrumb, EditableLabel } from './basic';
+
+const BreadCrumbsWrapper = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const StyledLabel = styled(Label)`
+    && {
+        margin-right: 8px;
+    }
+`;
 
 export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }) {
     const breadcrumbElements = [];
@@ -12,29 +24,35 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
     const reversedPagesList = _([...pagesList])
         .reverse()
         .value();
-    _.each(reversedPagesList, (p, index) => {
+    _.each(reversedPagesList, (page, index) => {
         if (index !== reversedPagesList.length - 1) {
             breadcrumbElements.push(
-                <Breadcrumb.Section link key={p.id} onClick={() => onPageSelected(p, reversedPagesList, index)}>
-                    {p.name}
+                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
+                    {page.name}
                 </Breadcrumb.Section>
             );
-            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${p.id}`} icon="right angle" />);
+            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
         } else {
             breadcrumbElements.push(
                 <EditableLabel
-                    key={p.id}
-                    value={p.name}
+                    key={page.id}
+                    value={page.name}
                     placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
                     className="section active pageTitle"
                     enabled={isEditMode}
-                    onChange={newName => onPageNameChange(p, newName)}
+                    onChange={newName => onPageNameChange(page, newName)}
                     inputSize="mini"
                 />
             );
         }
     });
-    return <Breadcrumb>{breadcrumbElements}</Breadcrumb>;
+
+    return (
+        <BreadCrumbsWrapper>
+            <StyledLabel color="black">Andrew</StyledLabel>
+            <Breadcrumb>{breadcrumbElements}</Breadcrumb>
+        </BreadCrumbsWrapper>
+    );
 }
 
 Breadcrumbs.propTypes = {
