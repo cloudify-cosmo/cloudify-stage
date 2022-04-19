@@ -1605,6 +1605,9 @@
         },
         "secret_key": {
             "placeholder": "Select Secret Key"
+        },
+        "node_id": {
+            "placeholder": "Select Node Id"
         }
     }
 }
