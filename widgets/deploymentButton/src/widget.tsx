@@ -3,6 +3,7 @@ import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const tConfiguration = (suffix: string) => t(`configuration.basic.${suffix}`);
 
 type DeploymentButtonConfiguration = {
     toolbox: Stage.Types.Toolbox;
@@ -25,32 +26,32 @@ Stage.defineWidget({
     initialConfiguration: [
         {
             id: 'basic',
-            name: t('configuration.basic.name'),
-            description: t('configuration.basic.description'),
+            name: tConfiguration('basic.name'),
+            description: tConfiguration('basic.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'color',
-            name: t('configuration.color.name'),
-            description: t('configuration.color.description'),
+            name: tConfiguration('color.name'),
+            description: tConfiguration('color.description'),
             default: 'green',
             component: Stage.Common.Components.SemanticColorDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'icon',
-            name: t('configuration.icon.name'),
-            description: t('configuration.icon.description'),
+            name: tConfiguration('icon.name'),
+            description: tConfiguration('icon.description'),
             default: 'rocket',
             component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
             id: 'label',
-            name: t('configuration.label.name'),
-            description: t('configuration.label.description'),
-            default: t('configuration.label.default'),
+            name: tConfiguration('label.name'),
+            description: tConfiguration('label.description'),
+            default: tConfiguration('label.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
