@@ -1,5 +1,6 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import DeploymentButton from './DeploymentButton';
+import BlueprintsLabelFilter from '../../common/src/blueprints/BlueprintsLabelFilter';
 
 const widgetId = 'deploymentButton';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
@@ -53,6 +54,13 @@ Stage.defineWidget({
             description: tConfiguration('label.description'),
             default: tConfiguration('label.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'filterRules',
+            name: tConfiguration('labelFilterRules.name'),
+            default: [],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: BlueprintsLabelFilter
         }
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),

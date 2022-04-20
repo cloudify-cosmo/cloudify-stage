@@ -1,5 +1,5 @@
 import React, { FunctionComponent, ComponentProps } from 'react';
-import { FilterRuleType } from '../../common/src/filters/types';
+import { FilterRuleType } from '../filters/types';
 
 type BlueprintsLabelFilterProps = Pick<
     Stage.Types.CustomConfigurationComponentProps<any[]>,
