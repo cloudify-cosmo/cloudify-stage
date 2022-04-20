@@ -100,12 +100,11 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                     if (selectedWorkflow) {
                         setWorkflowParams(selectedWorkflow);
                     } else {
-                        setErrors(
-                            t('errors.workflowError', {
-                                deploymentId,
-                                workflowName
-                            })
-                        );
+                        const deploymentNameAndId = Stage.Utils.formatDisplayName({
+                            id: deploymentId,
+                            displayName: deploymentName
+                        });
+                        setErrors(t('errors.workflowError', deploymentNameAndId, workflowName));
                     }
                 })
                 .catch(setMessageAsError)
@@ -185,10 +184,8 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     if (!_.isEmpty(deploymentsList)) {
         if (_.size(deploymentsList) > 1) {
             headerKey += 'multipleDeployments';
-        } else if (deploymentName) {
-            headerKey += 'singleNamedDeployemnt';
         } else {
-            headerKey += 'singleDeployemnt';
+            headerKey += 'singleDeployment';
         }
     } else {
         headerKey += 'noDeployment';
@@ -230,7 +227,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                 <Icon name="cogs" />{' '}
                 {t(headerKey, {
                     workflowName,
-                    deploymentName: Stage.Utils.formatDisplayName({
+                    deploymentId: Stage.Utils.formatDisplayName({
                         id: _.head(deploymentsList),
                         displayName: deploymentName
                     })
