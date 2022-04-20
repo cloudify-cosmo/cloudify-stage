@@ -10,5 +10,5 @@ Allows creating a deployment of a chosen blueprint. After choosing a name for th
 * `Color` - The color of the button. Available colors list can be found
   at: [Theming - Semantic UI React](https://react.semantic-ui.com/layouts/theming). Default: 'green'
 * `Icon` - Name of the icon displayed in the button. Available icons list can be found
-  at: [Icon - Semantic UI React](https://react.semantic-ui.com/elements/icon). Default: 'external'
+  at: [Icon - Semantic UI React](https://react.semantic-ui.com/elements/icon). Default: 'rocket'
 * `Basic button` - Allows to change button appearence, basic button is less pronounced. Default: No
