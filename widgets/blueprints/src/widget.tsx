@@ -2,7 +2,6 @@
 import { join } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
-import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
@@ -68,7 +67,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: BlueprintsLabelFilter
+            component: Stage.Common.Blueprints.BlueprintsLabelFilter
         },
         Stage.Common.BlueprintMarketplace.tabsConfig,
         {
