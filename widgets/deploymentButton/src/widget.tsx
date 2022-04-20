@@ -14,8 +14,8 @@ type DeploymentButtonConfiguration = {
 
 Stage.defineWidget({
     id: 'deploymentButton',
-    name: 'Create deployment button',
-    description: 'Adds button to create new deployment',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 3,
     initialHeight: 3,
     showHeader: false,

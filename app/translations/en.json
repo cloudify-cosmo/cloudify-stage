@@ -1357,8 +1357,8 @@
             }
         },
         "deploymentButton": {
-            "name": "Deployment button",
-            "description": "Displays button allowing to create a new service",
+            "name": "Create deployment button",
+            "description": "Adds button to create new deployment",
             "configuration": {
                 "basic": {
                     "name": "Basic button",
