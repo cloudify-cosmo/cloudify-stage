@@ -25,7 +25,7 @@ const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon,
                 className="widgetButton"
                 onClick={showModal}
             />
-            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} blueprintId={''} />
+            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} />
         </div>
     );
 };

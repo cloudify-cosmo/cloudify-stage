@@ -10,12 +10,14 @@ import { getErrorObject } from '../inputs/utils/errors';
 const t = (key: string, options?: Record<string, any>) =>
     Stage.i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
-type DeployBlueprintModalProps = Pick<
+interface DeployBlueprintModalProps extends Pick<
     ComponentProps<typeof GenericDeployModal>,
-    'open' | 'onHide' | 'blueprintId' | 'toolbox'
->;
+    'open' | 'onHide' | 'toolbox'
+> {
+    blueprintId?: string;
+};
 
-const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
+const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, blueprintId = '', ...rest }) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
