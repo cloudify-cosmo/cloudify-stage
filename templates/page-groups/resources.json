@@ -1,5 +1,5 @@
 {
   "name": "Resources",
   "icon": "server",
-  "pages": ["secrets", "plugins", "sites", "agents", "tokens", "filters"]
+  "pages": ["secrets", "plugins", "sites", "agents", "filters", "tokens"]
 }
