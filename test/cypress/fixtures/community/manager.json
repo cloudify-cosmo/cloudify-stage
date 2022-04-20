@@ -218,6 +218,7 @@
       "widget_snapshots": ["sys_admin"],
       "widget_tenants": ["sys_admin"],
       "widget_text": ["sys_admin", "manager", "user", "operations", "viewer"],
+      "widget_tokens": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_topology": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_userGroups": ["sys_admin"],
       "widget_userManagement": ["sys_admin"],
