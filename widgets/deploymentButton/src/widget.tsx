@@ -13,7 +13,7 @@ type DeploymentButtonConfiguration = {
 };
 
 Stage.defineWidget({
-    id: 'deploymentButton',
+    id: widgetId,
     name: t('name'),
     description: t('description'),
     initialWidth: 3,
