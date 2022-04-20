@@ -74,6 +74,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
     return (
         <GenericDeployModal
             {...rest}
+            blueprintId={blueprintId}
             toolbox={toolbox}
             onHide={onHide}
             i18nHeaderKey="widgets.common.deployments.deployModal.header"
