@@ -3,7 +3,7 @@ import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
-const tConfiguration = (suffix: string) => t(`configuration.basic.${suffix}`);
+const tConfiguration = (suffix: string) => t(`configuration.${suffix}`);
 
 type DeploymentButtonConfiguration = {
     toolbox: Stage.Types.Toolbox;
