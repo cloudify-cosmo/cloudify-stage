@@ -614,6 +614,8 @@ describe('Blueprints widget', () => {
                     'Terraform module source - URL to a zip archive or a Git repository',
                     singleModuleTerraformTemplateUrl
                 ).blur();
+                cy.typeToFieldInput('Username', 'username');
+                cy.typeToFieldInput('Password', 'password').blur();
                 cy.contains('The URL requires authentication');
             });
         });
