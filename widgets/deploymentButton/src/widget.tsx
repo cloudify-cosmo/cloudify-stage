@@ -54,7 +54,7 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentButton'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
