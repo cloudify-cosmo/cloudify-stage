@@ -58,6 +58,7 @@ describe('WidgetHandler', () => {
             { id: 'snapshots', isCustom: false },
             { id: 'tenants', isCustom: false },
             { id: 'text', isCustom: false },
+            { id: 'tokens', isCustom: false },
             { id: 'topology', isCustom: false },
             { id: 'userGroups', isCustom: false },
             { id: 'userManagement', isCustom: false }
