@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
 
@@ -26,7 +25,7 @@ const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon,
                 className="widgetButton"
                 onClick={showModal}
             />
-            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} />
+            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} blueprintId={''} />
         </div>
     );
 };

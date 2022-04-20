@@ -1,8 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
+import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
+type DeploymentButtonConfiguration = {
+    toolbox: Stage.Types.Toolbox;
+    basic: boolean;
+    color: SemanticCOLORS;
+    icon: SemanticICONS;
+    label: string;
+};
 
 Stage.defineWidget({
     id: 'deploymentButton',
@@ -49,8 +57,8 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentButton'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
-        const { basic, color, icon, label, buttonContent } = widget.configuration;
+    render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
+        const { basic, color, icon, label } = widget.configuration;
         return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} />;
     }
 });
