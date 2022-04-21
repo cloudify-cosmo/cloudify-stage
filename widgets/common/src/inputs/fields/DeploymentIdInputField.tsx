@@ -15,9 +15,7 @@ export default function DeploymentIdInputField({
         <DynamicDropdown
             name={name}
             error={error}
-            textFormatter={item =>
-                item.display_name && item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
-            }
+            textFormatter={item => Stage.Utils.formatDisplayName(item)}
             placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
             value={value}
             fetchUrl={fetchUrl}
