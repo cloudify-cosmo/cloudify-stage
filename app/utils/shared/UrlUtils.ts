@@ -7,7 +7,7 @@ export default class UrlUtils {
     }
 
     static url(path: string) {
-        if (path === Const.HOME_PAGE_PATH) {
+        if (path === Const.PAGE_PATH.HOME) {
             return Const.CONTEXT_PATH;
         }
 

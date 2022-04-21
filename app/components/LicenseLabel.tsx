@@ -52,5 +52,5 @@ export default function LicenseLabel({ style, ...rest }: LabelProps) {
         return labelComponent;
     }
 
-    return <Link to={Consts.LICENSE_PAGE_PATH}>{labelComponent}</Link>;
+    return <Link to={Consts.PAGE_PATH.LICENSE}>{labelComponent}</Link>;
 }
