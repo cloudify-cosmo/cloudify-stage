@@ -68,7 +68,7 @@ type GenericDeployModalProps = {
     /**
      * blueprintId, if set then Blueprint selection dropdown is not displayed
      */
-    blueprintId: string;
+    blueprintId?: string;
 
     /**
      * function to be called when the modal is closed
@@ -261,7 +261,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
         const { blueprintId, open } = this.props;
-        if (!prevProps.open && open) {
+        if (!prevProps.open && open && typeof blueprintId === 'string') {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({ ...GenericDeployModal.initialState, deploymentId: Stage.Utils.uuid() }, () =>
                 this.selectBlueprint(blueprintId)
