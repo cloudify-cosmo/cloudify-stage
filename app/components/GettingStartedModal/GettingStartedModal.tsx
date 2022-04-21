@@ -26,6 +26,7 @@ import ModalActions from './ModalActions';
 
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
+import consts from '../../utils/consts';
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -86,7 +87,10 @@ const GettingStartedModal = () => {
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
 
-    const navigateToBlueprintsPage = () => dispatch(push('/page/blueprints'));
+    const redirectUponModalClosing = (completedProcess?: boolean) => {
+        const redirectPath = completedProcess ? consts.PAGE_PATH.BLUEPRINTS : consts.PAGE_PATH.DASHBOARD;
+        dispatch(push(redirectPath));
+    };
 
     const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
@@ -105,15 +109,19 @@ const GettingStartedModal = () => {
         setInstallationProcessing(false);
     };
 
-    const handleModalClose = () => {
-        if (stepName !== StepName.Status) openCancelConfirm();
-        else closeModal();
+    const closeModal = (completedProcess?: boolean) => {
+        modalOpenState.closeModal(modalDisabledChecked);
+        redirectUponModalClosing(completedProcess);
+        closeCancelConfirm();
     };
 
-    const closeModal = () => {
-        modalOpenState.closeModal(modalDisabledChecked);
-        navigateToBlueprintsPage();
-        closeCancelConfirm();
+    const handleModalClose = () => {
+        if (stepName !== StepName.Status) openCancelConfirm();
+        else closeModal(true);
+    };
+
+    const cancelModal = () => {
+        closeModal();
     };
 
     const handleBackClick = () => {
@@ -150,6 +158,7 @@ const GettingStartedModal = () => {
                 break;
         }
     };
+
     const handleNextClick = () => {
         function goToNextStep() {
             setStepName(stepName + 1);
@@ -228,7 +237,7 @@ const GettingStartedModal = () => {
             <Confirm
                 open={cancelConfirmOpen}
                 content={i18n.t('gettingStartedModal.cancelConfirm')}
-                onConfirm={closeModal}
+                onConfirm={cancelModal}
                 onCancel={closeCancelConfirm}
             />
         </Modal>

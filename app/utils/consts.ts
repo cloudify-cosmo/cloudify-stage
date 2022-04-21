@@ -68,5 +68,10 @@ export default {
     LAYOUT_TYPE: {
         WIDGETS: 'widgets',
         TABS: 'tabs'
+    },
+
+    PAGE_PATH: {
+        DASHBOARD: '/page/dashboard',
+        BLUEPRINTS: '/page/blueprints'
     }
 } as const;
