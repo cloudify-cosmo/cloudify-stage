@@ -1,7 +1,7 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
 
-export default function ScaleGroupInputField({
+export default function ScalingGroupInputField({
     name,
     onChange,
     toolbox,

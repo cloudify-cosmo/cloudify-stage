@@ -7,7 +7,7 @@ import GenericInputField from './fields/GenericInputField';
 import NodeInstanceInputField from './fields/NodeInstanceInputField';
 import NodeTypeInputField from './fields/NodeTypeInputField';
 import NumberInputField from './fields/NumberInputField';
-import ScaleGroupInputField from './fields/ScaleGroupInputField';
+import ScalingGroupInputField from './fields/ScalingGroupInputField';
 import SecretKeyInputField from './fields/SecretKeyInputField';
 import StringInputField from './fields/StringInputField';
 import TextareaInputField from './fields/TextareaInputField';
@@ -89,7 +89,7 @@ function InputField({
         case 'blueprint_id':
             return <BlueprintIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'scaling_group':
-            return <ScaleGroupInputField {...commonDynamicDropdownFieldProps} />;
+            return <ScalingGroupInputField {...commonDynamicDropdownFieldProps} />;
         case 'node_type':
             return <NodeTypeInputField {...commonDynamicDropdownFieldProps} />;
         case 'node_instance':
