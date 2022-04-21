@@ -4,7 +4,10 @@ import BooleanInputField from './fields/BooleanInputField';
 import CapabilityValueInputField from './fields/CapabilityValueInputField';
 import DeploymentIdInputField from './fields/DeploymentIdInputField';
 import GenericInputField from './fields/GenericInputField';
+import NodeInstanceInputField from './fields/NodeInstanceInputField';
+import NodeTypeInputField from './fields/NodeTypeInputField';
 import NumberInputField from './fields/NumberInputField';
+import ScaleGroupInputField from './fields/ScaleGroupInputField';
 import SecretKeyInputField from './fields/SecretKeyInputField';
 import StringInputField from './fields/StringInputField';
 import TextareaInputField from './fields/TextareaInputField';
@@ -85,6 +88,12 @@ function InputField({
             return <DeploymentIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'blueprint_id':
             return <BlueprintIdInputField {...commonDynamicDropdownFieldProps} />;
+        case 'scaling_group':
+            return <ScaleGroupInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_type':
+            return <NodeTypeInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_instance':
+            return <NodeInstanceInputField {...commonDynamicDropdownFieldProps} />;
         case 'capability_value':
             return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
