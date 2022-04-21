@@ -1,6 +1,5 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
-import StageUtils from '../../../../../app/utils/stageUtils';
 
 export default function DeploymentIdInputField({
     name,
@@ -16,7 +15,9 @@ export default function DeploymentIdInputField({
         <DynamicDropdown
             name={name}
             error={error}
-            textFormatter={item => StageUtils.formatDisplayName(item)}
+            textFormatter={item =>
+                item.display_name && item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
+            }
             placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
             value={value}
             fetchUrl={fetchUrl}
