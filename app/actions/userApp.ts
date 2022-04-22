@@ -28,12 +28,12 @@ export function resetPages() {
             .then(() => {
                 dispatch(saveUserAppData()).then(() => {
                     dispatch(setAppLoading(false));
-                    dispatch(push(Consts.HOME_PAGE_PATH));
+                    dispatch(push(Consts.PAGE_PATH.HOME));
                 });
             })
             .catch(err => {
                 dispatch(setAppError(err.message));
-                dispatch(push(Consts.ERROR_PAGE_PATH));
+                dispatch(push(Consts.PAGE_PATH.ERROR));
                 throw err;
             })
             .finally(() => {
@@ -87,11 +87,11 @@ export function reloadUserAppData() {
             const { pages } = state;
             const page = getPageById(pages, currentPageId);
             if (!page) {
-                dispatch(push(Consts.HOME_PAGE_PATH));
+                dispatch(push(Consts.PAGE_PATH.HOME));
             } else if (page.isDrillDown) {
                 const parent = getPageById(pages, page.parent);
                 if (!parent) {
-                    dispatch(push(Consts.HOME_PAGE_PATH));
+                    dispatch(push(Consts.PAGE_PATH.HOME));
                 } else {
                     dispatch(push(`/page/${parent.id}`));
                 }

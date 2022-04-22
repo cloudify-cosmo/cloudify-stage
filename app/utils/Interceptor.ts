@@ -14,7 +14,7 @@ export default class Interceptor {
 
     handle401() {
         this.store.dispatch(clearContext());
-        this.store.dispatch(push(Consts.LOGIN_PAGE_PATH));
+        this.store.dispatch(push(Consts.PAGE_PATH.LOGIN));
     }
 
     handleLicenseError(errorCode) {

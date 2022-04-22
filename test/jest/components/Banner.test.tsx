@@ -40,7 +40,7 @@ describe('(Component) Banner', () => {
                 const linkComponent = tagComponent.find('Link');
                 expect(linkComponent).toHaveLength(isLinked ? 1 : 0);
                 if (isLinked) {
-                    expect(linkComponent.props().to).toBe(Consts.LICENSE_PAGE_PATH);
+                    expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.LICENSE);
                 }
             }
         }
@@ -52,7 +52,7 @@ describe('(Component) Banner', () => {
 
         const linkComponent = bannerComponent.find('Link').first();
         expect(linkComponent).toHaveLength(1);
-        expect(linkComponent.props().to).toBe(Consts.HOME_PAGE_PATH);
+        expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
     const getLicenseEdition = license => {

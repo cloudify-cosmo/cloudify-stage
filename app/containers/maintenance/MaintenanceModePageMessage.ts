@@ -20,7 +20,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         navigateToHome: () => {
-            return dispatch(push(Consts.HOME_PAGE_PATH));
+            return dispatch(push(Consts.PAGE_PATH.HOME));
         },
         onGetClusterStatus: () => {
             dispatch(getClusterStatus());

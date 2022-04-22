@@ -9,6 +9,6 @@ export function showAppError(err) {
     return dispatch => {
         dispatch(clearContext());
         dispatch(setAppError(err));
-        dispatch(push(Consts.ERROR_PAGE_PATH));
+        dispatch(push(Consts.PAGE_PATH.ERROR));
     };
 }
