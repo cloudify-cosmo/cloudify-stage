@@ -139,7 +139,43 @@ function verifyHeader(headerContent: string) {
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
-    describe('with mocked page templates', () => {
+    describe('without mocked pages', () => {
+        beforeEach(() => {
+            cy.mockLogin({ disableGettingStarted: false });
+        });
+
+        it('should redirect to the dashboard page upon canceling the modal process', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'Close').click();
+            });
+
+            cy.get('.modal').within(() => {
+                cy.contains('div.content', 'Are you sure you want to cancel the setup process?').should('be.visible');
+                cy.contains('button', 'Yes').click();
+            });
+
+            cy.url().should('include', Consts.PAGE_PATH.DASHBOARD);
+        });
+
+        it('should redirect to the blueprints page upon completing the modal process', () => {
+            const clickFirstEnvironment = () => cy.get('.field:first-child .button').click();
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+
+                clickFirstEnvironment();
+                goToNextStep();
+
+                goToFinishStep();
+                closeModal();
+            });
+
+            cy.url().should('include', Consts.PAGE_PATH.BLUEPRINTS);
+        });
+    });
+
+    describe('with mocked pages', () => {
         beforeEach(() =>
             cy.usePageMock().mockLogin({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
         );
@@ -362,41 +398,6 @@ describe('Getting started modal', () => {
             cy.contains('button', 'Yes').click();
 
             cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
-        });
-    });
-    describe('without mocked page templates', () => {
-        beforeEach(() => {
-            cy.enableGettingStarted().mockLogin({ disableGettingStarted: false });
-        });
-
-        it('should redirect to the dashboard page upon canceling the modal process', () => {
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('button', 'Close').click();
-            });
-
-            cy.get('.modal').within(() => {
-                cy.contains('div.content', 'Are you sure you want to cancel the setup process?').should('be.visible');
-                cy.contains('button', 'Yes').click();
-            });
-
-            cy.url().should('include', Consts.PAGE_PATH.DASHBOARD);
-        });
-
-        it('should redirect to the blueprints page upon completing the modal process', () => {
-            const clickFirstEnvironment = () => cy.get('.field:first-child .button').click();
-
-            cy.get('.modal').within(() => {
-                goToNextStep();
-
-                clickFirstEnvironment();
-                goToNextStep();
-
-                goToFinishStep();
-                closeModal();
-            });
-
-            cy.url().should('include', Consts.PAGE_PATH.BLUEPRINTS);
         });
     });
 });
