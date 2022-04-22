@@ -26,7 +26,7 @@ import ModalActions from './ModalActions';
 
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
-import consts from '../../utils/consts';
+import Consts from '../../utils/consts';
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -88,7 +88,7 @@ const GettingStartedModal = () => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
 
     const redirectUponModalClosing = (completedProcess?: boolean) => {
-        const redirectPath = completedProcess ? consts.PAGE_PATH.BLUEPRINTS : consts.PAGE_PATH.DASHBOARD;
+        const redirectPath = completedProcess ? Consts.PAGE_PATH.BLUEPRINTS : Consts.PAGE_PATH.DASHBOARD;
         dispatch(push(redirectPath));
     };
 
