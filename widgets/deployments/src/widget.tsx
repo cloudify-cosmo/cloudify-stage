@@ -80,23 +80,6 @@ Stage.defineWidget({
     },
 
     async fetchData(widget, toolbox, params) {
-        const {
-            configuration: { showFirstUserJourneyButtons }
-        } = widget;
-
-        if (showFirstUserJourneyButtons) {
-            const installedDeployments = await new Stage.Common.Actions.Search(toolbox).doListDeployments([
-                { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
-            ]);
-            const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
-
-            if (shouldDisplayFirstUserJourneyButtons) {
-                return {
-                    showFirstUserJourneyButtons: true
-                };
-            }
-        }
-
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
             _include:
                 'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -166,12 +149,16 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
+        const {
+            configuration: { showFirstUserJourneyButtons }
+        } = widget;
+        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && _.isEmpty(data?.items);
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        if (data?.showFirstUserJourneyButtons) {
+        if (shouldShowFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} widget={widget} />;
         }
 
