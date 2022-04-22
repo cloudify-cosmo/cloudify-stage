@@ -12,6 +12,8 @@ import SecretKeyInputField from './fields/SecretKeyInputField';
 import StringInputField from './fields/StringInputField';
 import TextareaInputField from './fields/TextareaInputField';
 import ValueListInputField from './fields/ValueListInputField';
+import NodeIdInputField from './fields/NodeIdInputField';
+
 import type { Constraint, Input, OnChange } from './types';
 
 function getConstraintValueFunction(constraints: Constraint[]) {
@@ -98,6 +100,8 @@ function InputField({
             return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
             return <SecretKeyInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_id':
+            return <NodeIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
