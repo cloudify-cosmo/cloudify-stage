@@ -14,9 +14,9 @@ export default function LogoPage() {
         <FullScreenSegment>
             <Logo />
             <Switch>
-                <Route exact path={Consts.ERROR_PAGE_PATH} component={ErrorPage} />
-                <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={NoTenants} />
-                <Route exact path={Consts.ERROR_404_PAGE_PATH} component={NotFound} />
+                <Route exact path={Consts.PAGE_PATH.ERROR} component={ErrorPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={NoTenants} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={NotFound} />
             </Switch>
         </FullScreenSegment>
     );

@@ -13,7 +13,7 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 export default function ErrorPage({ error }) {
     return _.isEmpty(error) ? (
-        <Redirect to={Consts.LOGOUT_PAGE_PATH} />
+        <Redirect to={Consts.PAGE_PATH.LOGOUT} />
     ) : (
         <MessageContainer onRender={SplashLoadingScreen.turnOff}>
             <Header as="h2">{i18n.t('unexpectedError', 'Unexpected Error Occurred')}</Header>

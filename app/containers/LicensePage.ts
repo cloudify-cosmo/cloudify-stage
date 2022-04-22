@@ -30,7 +30,7 @@ const mapDispatchToProps = dispatch => {
             dispatch(setLicense(license));
         },
         onGoToApp: () => {
-            dispatch(push(Consts.HOME_PAGE_PATH));
+            dispatch(push(Consts.PAGE_PATH.HOME));
         }
     };
 };

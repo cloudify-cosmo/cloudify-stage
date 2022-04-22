@@ -66,7 +66,7 @@ export function login(
                         window.location = redirect;
                     }
                 } else {
-                    dispatch(push(Consts.HOME_PAGE_PATH));
+                    dispatch(push(Consts.PAGE_PATH.HOME));
                 }
             })
             .catch(err => {
@@ -135,7 +135,7 @@ export function logout(err?, path?): ThunkAction<void, ReduxState, never, AnyAct
         const localLogout = () => {
             dispatch(clearContext());
             dispatch(doLogout(err));
-            dispatch(push(path || (err ? Consts.ERROR_PAGE_PATH : Consts.LOGOUT_PAGE_PATH)));
+            dispatch(push(path || (err ? Consts.PAGE_PATH.ERROR : Consts.PAGE_PATH.LOGOUT)));
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
@@ -168,7 +168,7 @@ export function switchMaintenance(manager, activate) {
     return dispatch =>
         managerAccessor.doPost(`/maintenance/${activate ? 'activate' : 'deactivate'}`).then(data => {
             dispatch(setMaintenanceStatus(data.status));
-            dispatch(push(activate ? Consts.MAINTENANCE_PAGE_PATH : Consts.HOME_PAGE_PATH));
+            dispatch(push(activate ? Consts.PAGE_PATH.MAINTENANCE : Consts.PAGE_PATH.HOME));
         });
 }
 

@@ -52,7 +52,7 @@ const AuthRoutes: FunctionComponent = () => {
                 .catch((error: any) => {
                     switch (error) {
                         case NO_TENANTS_ERR:
-                            dispatch(logout(null, Consts.ERROR_NO_TENANTS_PAGE_PATH));
+                            dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
                             break;
                         default:
                             log.error(i18n.t('pageLoadError'), error);
@@ -64,12 +64,12 @@ const AuthRoutes: FunctionComponent = () => {
 
     return isManagerDataFetched ? (
         <Switch>
-            {isLicenseRequired && <Route exact path={Consts.LICENSE_PAGE_PATH} component={LicensePage} />}
-            <Route exact path={Consts.MAINTENANCE_PAGE_PATH} component={MaintenanceMode} />
-            {isInMaintenanceMode && <Redirect to={Consts.MAINTENANCE_PAGE_PATH} />}
+            {isLicenseRequired && <Route exact path={Consts.PAGE_PATH.LICENSE} component={LicensePage} />}
+            <Route exact path={Consts.PAGE_PATH.MAINTENANCE} component={MaintenanceMode} />
+            {isInMaintenanceMode && <Redirect to={Consts.PAGE_PATH.MAINTENANCE} />}
             <Route
                 render={() =>
-                    isProductOperational ? isUserDataFetched && <Layout /> : <Redirect to={Consts.LICENSE_PAGE_PATH} />
+                    isProductOperational ? isUserDataFetched && <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />
                 }
             />
         </Switch>

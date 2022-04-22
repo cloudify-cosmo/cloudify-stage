@@ -23,26 +23,26 @@ const Routes: FunctionComponent = () => {
     return (
         <ThemeProvider theme={theme}>
             <Switch>
-                <Route exact path={Consts.LOGIN_PAGE_PATH} component={LoginPage} />
+                <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
                 <Route
                     exact
-                    path={Consts.LOGOUT_PAGE_PATH}
+                    path={Consts.PAGE_PATH.LOGOUT}
                     render={() =>
                         isSamlEnabled ? (
                             <ExternalRedirect url={samlPortalUrl} />
                         ) : (
-                            <Redirect to={Consts.LOGIN_PAGE_PATH} />
+                            <Redirect to={Consts.PAGE_PATH.LOGIN} />
                         )
                     }
                 />
-                <Route exact path={Consts.ERROR_PAGE_PATH} component={LogoPage} />
-                <Route exact path={Consts.ERROR_NO_TENANTS_PAGE_PATH} component={LogoPage} />
-                <Route exact path={Consts.ERROR_404_PAGE_PATH} component={LogoPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR} component={LogoPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={LogoPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={LogoPage} />
                 <Route
                     render={() => {
                         if (isLoggedIn) return <AuthRoutes />;
                         if (isSamlLogin) return <SamlLogin />;
-                        return <Redirect to={Consts.LOGIN_PAGE_PATH} />;
+                        return <Redirect to={Consts.PAGE_PATH.LOGIN} />;
                     }}
                 />
             </Switch>

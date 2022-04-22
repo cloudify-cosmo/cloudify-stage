@@ -156,14 +156,14 @@ const mapDispatchToProps = dispatch => {
             dispatch(setDrilldownContext(drilldownContext));
         },
         navigateTo404: () => {
-            dispatch(push(Consts.ERROR_404_PAGE_PATH));
+            dispatch(push(Consts.PAGE_PATH.ERROR_404));
         },
         navigateToError: message => {
             dispatch(setAppError(message));
-            dispatch(push(Consts.ERROR_PAGE_PATH));
+            dispatch(push(Consts.PAGE_PATH.ERROR));
         },
         navigateToMaintenancePage: () => {
-            dispatch(push(Consts.MAINTENANCE_PAGE_PATH));
+            dispatch(push(Consts.PAGE_PATH.MAINTENANCE));
         },
         onStorePageId: pageId => {
             dispatch(storeCurrentPageId(pageId));
