@@ -4,11 +4,16 @@ import BooleanInputField from './fields/BooleanInputField';
 import CapabilityValueInputField from './fields/CapabilityValueInputField';
 import DeploymentIdInputField from './fields/DeploymentIdInputField';
 import GenericInputField from './fields/GenericInputField';
+import NodeInstanceInputField from './fields/NodeInstanceInputField';
+import NodeTypeInputField from './fields/NodeTypeInputField';
 import NumberInputField from './fields/NumberInputField';
+import ScalingGroupInputField from './fields/ScalingGroupInputField';
 import SecretKeyInputField from './fields/SecretKeyInputField';
 import StringInputField from './fields/StringInputField';
 import TextareaInputField from './fields/TextareaInputField';
 import ValueListInputField from './fields/ValueListInputField';
+import NodeIdInputField from './fields/NodeIdInputField';
+
 import type { Constraint, Input, OnChange } from './types';
 
 function getConstraintValueFunction(constraints: Constraint[]) {
@@ -85,10 +90,18 @@ function InputField({
             return <DeploymentIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'blueprint_id':
             return <BlueprintIdInputField {...commonDynamicDropdownFieldProps} />;
+        case 'scaling_group':
+            return <ScalingGroupInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_type':
+            return <NodeTypeInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_instance':
+            return <NodeInstanceInputField {...commonDynamicDropdownFieldProps} />;
         case 'capability_value':
             return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
             return <SecretKeyInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_id':
+            return <NodeIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
