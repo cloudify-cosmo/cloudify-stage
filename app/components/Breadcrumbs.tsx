@@ -1,50 +1,67 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { ReactElement } from 'react';
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import type { PageDefinition } from '../actions/page';
+import type { ReduxState } from '../reducers';
 
-import { Breadcrumb, EditableLabel } from './basic';
+import { Label, Breadcrumb, EditableLabel } from './basic';
+import { PageDefinitionWithContext } from './Page';
 
-export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }) {
-    const breadcrumbElements = [];
+const BreadCrumbsWrapper = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
+const StyledLabel = styled(Label)`
+    && {
+        margin-right: 8px;
+    }
+`;
+
+interface BreadcrumbsProps {
+    isEditMode: boolean;
+    pagesList: PageDefinitionWithContext[];
+    onPageNameChange: (page: PageDefinition, newName: string) => void;
+    onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => void;
+}
+
+export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }: BreadcrumbsProps) {
+    const tenantName = useSelector((state: ReduxState) => state.manager.tenants.selected);
+    const breadcrumbElements: ReactElement[] = [];
+
     // TODO(RD-1982): use the regular, unreversed list
     const reversedPagesList = _([...pagesList])
         .reverse()
         .value();
-    _.each(reversedPagesList, (p, index) => {
+    _.each(reversedPagesList, (page, index) => {
         if (index !== reversedPagesList.length - 1) {
             breadcrumbElements.push(
-                <Breadcrumb.Section link key={p.id} onClick={() => onPageSelected(p, reversedPagesList, index)}>
-                    {p.name}
+                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
+                    {page.name}
                 </Breadcrumb.Section>
             );
-            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${p.id}`} icon="right angle" />);
+            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
         } else {
             breadcrumbElements.push(
                 <EditableLabel
-                    key={p.id}
-                    value={p.name}
+                    key={page.id}
+                    value={page.name}
                     placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
                     className="section active pageTitle"
                     enabled={isEditMode}
-                    onChange={newName => onPageNameChange(p, newName)}
+                    onChange={newName => onPageNameChange(page, newName)}
                     inputSize="mini"
                 />
             );
         }
     });
-    return <Breadcrumb className="breadcrumbLineHeight">{breadcrumbElements}</Breadcrumb>;
-}
 
-Breadcrumbs.propTypes = {
-    isEditMode: PropTypes.bool.isRequired,
-    onPageNameChange: PropTypes.func.isRequired,
-    onPageSelected: PropTypes.func.isRequired,
-    pagesList: PropTypes.arrayOf(
-        PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired
-        })
-    ).isRequired
-};
+    return (
+        <BreadCrumbsWrapper>
+            <StyledLabel color="black">{tenantName}</StyledLabel>
+            <Breadcrumb>{breadcrumbElements}</Breadcrumb>
+        </BreadCrumbsWrapper>
+    );
+}

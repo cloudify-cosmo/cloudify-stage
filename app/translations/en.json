@@ -1661,6 +1661,15 @@
         }
     },
     "input": {
+        "node_type": {
+            "placeholder": "Select Node Type"
+        },
+        "node_instance": {
+            "placeholder": "Select Node Instance"
+        },
+        "scaling_group": {
+            "placeholder": "Select Node Scaling Group"
+        },
         "deployment_id": {
             "placeholder": "Select Deployment"
         },
@@ -1672,6 +1681,9 @@
         },
         "secret_key": {
             "placeholder": "Select Secret Key"
+        },
+        "node_id": {
+            "placeholder": "Select Node Id"
         }
     }
 }

@@ -1,3 +1,4 @@
+import Consts from 'app/utils/consts';
 import { escapeRegExp, find } from 'lodash';
 import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
@@ -6,7 +7,6 @@ const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
-const blueprintsPageUrlSuffix = '/page/blueprints';
 
 const gcpSecrets = [
     'gcp_client_x509_cert_url',
@@ -139,8 +139,43 @@ function verifyHeader(headerContent: string) {
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
-    // NOTE: Most of the tests are wrapped inside another describe, so that we wouldn't have to resign from using the usePageMock. Because of that we can be granted performance boost, which is making test scenarios faster by approximately 5s.
-    describe('', () => {
+    describe('without mocked pages', () => {
+        beforeEach(() => {
+            cy.mockLogin({ disableGettingStarted: false });
+        });
+
+        it('should redirect to the dashboard page upon canceling the modal process', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'Close').click();
+            });
+
+            cy.get('.modal').within(() => {
+                cy.contains('div.content', 'Are you sure you want to cancel the setup process?').should('be.visible');
+                cy.contains('button', 'Yes').click();
+            });
+
+            cy.url().should('include', Consts.PAGE_PATH.DASHBOARD);
+        });
+
+        it('should redirect to the blueprints page upon completing the modal process', () => {
+            const clickFirstEnvironment = () => cy.get('.field:first-child .button').click();
+
+            cy.get('.modal').within(() => {
+                goToNextStep();
+
+                clickFirstEnvironment();
+                goToNextStep();
+
+                goToFinishStep();
+                closeModal();
+            });
+
+            cy.url().should('include', Consts.PAGE_PATH.BLUEPRINTS);
+        });
+    });
+
+    describe('with mocked pages', () => {
         beforeEach(() =>
             cy.usePageMock().mockLogin({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
         );
@@ -364,21 +399,5 @@ describe('Getting started modal', () => {
 
             cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
         });
-    });
-
-    it('should redirect to the blueprints page upon closing the modal', () => {
-        cy.enableGettingStarted().mockLogin({ disableGettingStarted: false });
-
-        cy.get('.modal').within(() => {
-            goToNextStep();
-            cy.contains('button', 'Close').click();
-        });
-
-        cy.get('.modal').within(() => {
-            cy.contains('div.content', 'Are you sure you want to cancel the setup process?').should('be.visible');
-            cy.contains('button', 'Yes').click();
-        });
-
-        cy.url().should('include', blueprintsPageUrlSuffix);
     });
 });

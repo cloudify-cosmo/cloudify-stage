@@ -23,7 +23,7 @@ function Banner({ className }) {
 
     return (
         <>
-            <Link to={Consts.HOME_PAGE_PATH} className={className}>
+            <Link to={Consts.PAGE_PATH.HOME} className={className}>
                 <HeaderBanner
                     isCommunity={isCommunity}
                     licenseEdition={licenseEdition}

@@ -57,7 +57,7 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
                         content={i18n.t('help.aboutModal.licenseManagement', 'License Management')}
                         icon="key"
                         color="yellow"
-                        onClick={() => dispatch(push(Consts.LICENSE_PAGE_PATH))}
+                        onClick={() => dispatch(push(Consts.PAGE_PATH.LICENSE))}
                     />
                 )}
                 <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={onHide} />
