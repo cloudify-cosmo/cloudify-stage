@@ -98,7 +98,7 @@ describe('Deployments widget', () => {
                 items: deployments,
                 metadata: {
                     pagination: {
-                        total: 0,
+                        total: deployments.length,
                         size: 1000,
                         offset: 0
                     },
@@ -107,7 +107,7 @@ describe('Deployments widget', () => {
             });
 
             const mockDeploymentsResponse = (mockedResponse: any) =>
-                cy.interceptSp('POST', '/searches/deployments', mockedResponse);
+                cy.interceptSp('GET', '/deployments*', mockedResponse);
 
             it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
                 const mockedResponse = getMockedResponse([]);
@@ -141,7 +141,7 @@ describe('Deployments widget', () => {
                     visibility: 'tenant'
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
-                cy.interceptSp('GET', '/searches/deployments', mockedResponse).as('deployments');
+                mockDeploymentsResponse(mockedResponse);
 
                 cy.contains('No Deployments Yet').should('not.exist');
             });
