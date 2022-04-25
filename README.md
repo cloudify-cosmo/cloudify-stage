@@ -44,7 +44,7 @@ Run `make -j2 up-public` to fire the backend and frontend and the latest public 
 
 Run `make -j2 up-dev` to fire the backend and frontend and development latest downloaded docker image and postgres database.
 
-Run `make -j2 up-remote` to fire the backend and frontend and postgres database (useful it the case when you want to use AWS as a cloudify manager instance provider).
+Run `make -j2 up-remote` to fire the backend and frontend and postgres database (useful in case of using AWS as a Cloudify Manager instance provider).
 
 Run `make down` to stop the docker containers.
 
