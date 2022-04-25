@@ -32,6 +32,11 @@ describe('Page', () => {
         cy.get('.blueprintNumWidget').should('be.visible');
     }
 
+    it('should display tenant name in breadcrumbs', () => {
+        const breadcrumbsSelector = '.ui.breadcrumb';
+        cy.get(breadcrumbsSelector).parent().contains(Consts.DEFAULT_TENANT);
+    });
+
     it('should allow to switch tabs and maximize widgets', () => {
         cy.intercept('POST', '/console/ua').as('updateUserApps');
 

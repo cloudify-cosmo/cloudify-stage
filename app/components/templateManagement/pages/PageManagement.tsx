@@ -235,7 +235,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
             <StyledPageContainer className="page">
                 <Segment basic className={`fullHeight ${isWidgetMaximized ? 'maximizeWidget' : ''}`}>
                     <div>
-                        <Breadcrumb className="breadcrumbLineHeight">
+                        <Breadcrumb>
                             <Breadcrumb.Section onClick={onTemplateNavigate}>
                                 {i18n.t('templates.pageManagement.breadcrumb', 'Template management')}
                             </Breadcrumb.Section>

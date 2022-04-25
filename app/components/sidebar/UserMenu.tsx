@@ -100,7 +100,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
                             icon="key"
                             label={t('licenseManagement')}
                             subItem
-                            onClick={() => dispatch(push(Consts.LICENSE_PAGE_PATH))}
+                            onClick={() => dispatch(push(Consts.PAGE_PATH.LICENSE))}
                         />
                     )}
                     {canChangePassword && (

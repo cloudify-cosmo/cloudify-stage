@@ -19,7 +19,7 @@ export default function NotFound() {
             <Message>
                 {i18n.t('notFound.message', "We are sorry, but the page you are looking for doesn't exist.")}
             </Message>
-            <Link to={Consts.HOME_PAGE_PATH}>{i18n.t('notFound.homepageLink', 'Go to the Homepage')}</Link>
+            <Link to={Consts.PAGE_PATH.HOME}>{i18n.t('notFound.homepageLink', 'Go to the Homepage')}</Link>
         </MessageContainer>
     );
 }

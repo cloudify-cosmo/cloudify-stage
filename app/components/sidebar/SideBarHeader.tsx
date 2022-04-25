@@ -41,7 +41,7 @@ const SideBarHeader: FunctionComponent = () => {
                     }}
                 />
             </div>
-            <StyledLink color={theme.sidebarTextColor} to={Consts.HOME_PAGE_PATH}>
+            <StyledLink color={theme.sidebarTextColor} to={Consts.PAGE_PATH.HOME}>
                 <Logo url={theme.logoUrl || builtInLogo} style={{ position: null, height: 33, margin: '11px 8px' }} />
                 <div style={{ display: 'inline', fontSize: '1.5em', verticalAlign: 'middle' }}>
                     <span

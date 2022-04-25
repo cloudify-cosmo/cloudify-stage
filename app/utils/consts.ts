@@ -7,15 +7,6 @@ export default {
 
     CONTEXT_PATH: '/console',
 
-    ERROR_404_PAGE_PATH: '/404',
-    ERROR_NO_TENANTS_PAGE_PATH: '/noTenants',
-    ERROR_PAGE_PATH: '/error',
-    HOME_PAGE_PATH: '/',
-    LOGIN_PAGE_PATH: '/login',
-    LOGOUT_PAGE_PATH: '/logout',
-    MAINTENANCE_PAGE_PATH: '/maintenance',
-    LICENSE_PAGE_PATH: '/license',
-
     USER_DATA_PATH: '/userData',
     APP_DATA_PATH: '/appData',
 
@@ -68,5 +59,18 @@ export default {
     LAYOUT_TYPE: {
         WIDGETS: 'widgets',
         TABS: 'tabs'
+    },
+
+    PAGE_PATH: {
+        DASHBOARD: '/page/dashboard',
+        BLUEPRINTS: '/page/blueprints',
+        ERROR_404: '/404',
+        ERROR_NO_TENANTS: '/noTenants',
+        ERROR: '/error',
+        HOME: '/',
+        LOGIN: '/login',
+        LOGOUT: '/logout',
+        MAINTENANCE: '/maintenance',
+        LICENSE: '/license'
     }
 } as const;
