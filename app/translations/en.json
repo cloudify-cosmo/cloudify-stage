@@ -1378,7 +1378,7 @@
                     "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
-                    "name": "labelFilterRules"
+                    "name": "Label filter rules"
                 }
             }
         },
