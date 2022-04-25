@@ -41,7 +41,7 @@ const CreatedToken = ({ token }: CreatedTokenProps) => {
                         icon={isTokenValueVisible ? 'eye slash' : 'eye'}
                         onClick={isTokenValueVisible ? hideTokenValue : showTokenValue}
                     />
-                    <CopyToClipboardButton text={displayedToken} />
+                    <CopyToClipboardButton text={token.value} />
                 </ButtonsWrapper>
             </Message>
             <Message warning>{t('warning')}</Message>
