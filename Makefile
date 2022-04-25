@@ -23,7 +23,7 @@ up-public: docker-up-public backend-up frontend-up
 up-dev: docker-up-dev backend-up frontend-up
 
 # Run it with command:
-# $ make -j2 up-db
+# $ make -j2 up-remote
 up-remote: docker-up-db backend-up frontend-up
 
 docker-up-public: 
