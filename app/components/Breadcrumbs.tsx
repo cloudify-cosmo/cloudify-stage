@@ -37,14 +37,16 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
 
     const lastReversedPage = reversedPagesList.pop();
 
-    const breadcrumbElements: ReactElement[] = reversedPagesList.map((page, index) => (<>
-        <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
-            {page.name}
-        </Breadcrumb.Section>
-        <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
-    </>));
+    const breadcrumbElements: ReactElement[] = reversedPagesList.map((page, index) => (
+        <>
+            <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
+                {page.name}
+            </Breadcrumb.Section>
+            <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
+        </>
+    ));
 
-    if(lastReversedPage) {
+    if (lastReversedPage) {
         breadcrumbElements.push(
             <EditableLabel
                 key={lastReversedPage.id}
@@ -61,9 +63,7 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
     return (
         <BreadCrumbsWrapper>
             <StyledLabel color="black">{tenantName}</StyledLabel>
-            <Breadcrumb>
-                {breadcrumbElements}
-            </Breadcrumb>
+            <Breadcrumb>{breadcrumbElements}</Breadcrumb>
         </BreadCrumbsWrapper>
     );
 }
