@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
+import { get, isEmpty, isEqual } from 'lodash';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 
@@ -63,7 +64,7 @@ Stage.defineWidget({
 
     fetchParams(widget, toolbox) {
         let blueprintId = toolbox.getContext().getValue('blueprintId');
-        blueprintId = _.isEmpty(widget.configuration.blueprintIdFilter)
+        blueprintId = isEmpty(widget.configuration.blueprintIdFilter)
             ? blueprintId
             : widget.configuration.blueprintIdFilter;
         const obj = { blueprint_id: blueprintId };
@@ -80,23 +81,6 @@ Stage.defineWidget({
     },
 
     async fetchData(widget, toolbox, params) {
-        const {
-            configuration: { showFirstUserJourneyButtons }
-        } = widget;
-
-        if (showFirstUserJourneyButtons) {
-            const installedDeployments = await new Stage.Common.Actions.Search(toolbox).doListDeployments([
-                { key: 'installation_status', values: ['active'], operator: 'any_of', type: 'attribute' }
-            ]);
-            const shouldDisplayFirstUserJourneyButtons = installedDeployments.items.length === 0;
-
-            if (shouldDisplayFirstUserJourneyButtons) {
-                return {
-                    showFirstUserJourneyButtons: true
-                };
-            }
-        }
-
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
             _include:
                 'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -104,7 +88,7 @@ Stage.defineWidget({
         });
 
         const nodeInstanceDataPromise = deploymentDataPromise
-            .then(data => _.map(data.items, item => item.id))
+            .then(data => data.items.map(item => item.id))
             .then(ids =>
                 new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
                     _sub_field: 'state',
@@ -113,7 +97,7 @@ Stage.defineWidget({
             );
 
         const latestExecutionsDataPromise = deploymentDataPromise
-            .then(data => _.map(data.items, item => item.latest_execution))
+            .then(data => data.items.map(item => item.latest_execution))
             .then(ids =>
                 new Stage.Common.Executions.Actions(toolbox).doGetAll({
                     _include:
@@ -125,40 +109,32 @@ Stage.defineWidget({
         return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, latestExecutionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
-            const nodeInstanceData = _.reduce(
-                data[1].items,
-                (result, item) => {
-                    result[item.deployment_id] = {
-                        states: NodeInstancesConsts.extractStatesFrom(item),
-                        count: item.node_instances
-                    };
-                    return result;
-                },
-                {}
-            );
-            const latestExecutionData = _.reduce(
-                data[2].items,
-                (result, latestExecution) => {
-                    result[latestExecution.deployment_id] = latestExecution;
-                    return result;
-                },
-                {}
-            );
+            const nodeInstanceData = data[1].items.reduce((result, item) => {
+                result[item.deployment_id] = {
+                    states: NodeInstancesConsts.extractStatesFrom(item),
+                    count: item.node_instances
+                };
+                return result;
+            }, {});
+            const latestExecutionData = data[2].items.reduce((result, latestExecution) => {
+                result[latestExecution.deployment_id] = latestExecution;
+                return result;
+            }, {});
 
             return {
                 ...deploymentData,
-                items: _.map(deploymentData.items, item => {
+                items: deploymentData.items.map(item => {
                     return {
                         ...item,
                         nodeInstancesCount: nodeInstanceData[item.id] ? nodeInstanceData[item.id].count : 0,
                         nodeInstancesStates: nodeInstanceData[item.id] ? nodeInstanceData[item.id].states : {},
                         created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
                         updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
-                        isUpdated: !_.isEqual(item.created_at, item.updated_at),
+                        isUpdated: !isEqual(item.created_at, item.updated_at),
                         lastExecution: latestExecutionData[item.id]
                     };
                 }),
-                total: _.get(deploymentData, 'metadata.pagination.total', 0),
+                total: get(deploymentData, 'metadata.pagination.total', 0),
                 blueprintId: params.blueprint_id
             };
         });
@@ -166,19 +142,23 @@ Stage.defineWidget({
 
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
+        const {
+            configuration: { showFirstUserJourneyButtons }
+        } = widget;
+        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && isEmpty(data?.items);
 
-        if (_.isEmpty(data)) {
+        if (isEmpty(data)) {
             return <Loading />;
         }
 
-        if (data?.showFirstUserJourneyButtons) {
+        if (shouldShowFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} widget={widget} />;
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
         const formattedData = {
             ...data,
-            items: _.map(data.items, item => {
+            items: data.items.map(item => {
                 return {
                     ...item,
                     isSelected: selectedDeployment === item.id
