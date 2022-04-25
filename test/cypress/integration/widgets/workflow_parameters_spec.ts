@@ -3,12 +3,7 @@ import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/dep
 describe('handles deployment inputs of type', () => {
     const resourcePrefix = 'workflow_input_test_';
 
-    const types = [
-        'node_id',
-        'node_type',
-        'node_instance',
-        'scaling_group'
-    ];
+    const types = ['node_id', 'node_type', 'node_instance', 'scaling_group'];
 
     const openWorkflowParametersModal = (type: string) => {
         cy.get('.Pane1').within(() => {
@@ -46,9 +41,17 @@ describe('handles deployment inputs of type', () => {
     };
 
     before(() => {
-        const widgetConfiguration : DeploymentsViewWidgetConfiguration = {
+        const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
             filterByParentDeployment: false,
-            fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+            fieldsToShow: [
+                'status',
+                'id',
+                'name',
+                'blueprintName',
+                'location',
+                'subenvironmentsCount',
+                'subservicesCount'
+            ],
             pageSize: 100,
             customPollingTime: 10,
             sortColumn: 'created_at',
@@ -56,26 +59,26 @@ describe('handles deployment inputs of type', () => {
             mapHeight: 300,
             mapOpenByDefault: false
         };
-        const additionalWidgetIdsToLoad: string[] = [
-            'deploymentActionButtons',
-            'deploymentsViewDrilledDown'
-        ];
+        const additionalWidgetIdsToLoad: string[] = ['deploymentActionButtons', 'deploymentsViewDrilledDown'];
 
-        cy.activate('valid_trial_license').usePageMock(
-            'deploymentsView',
-            widgetConfiguration,
-            {
+        cy.activate('valid_trial_license')
+            .usePageMock('deploymentsView', widgetConfiguration, {
                 additionalWidgetIdsToLoad,
                 widgetsWidth: 12,
                 additionalPageTemplates: ['drilldownDeployments']
-            }
-        ).mockLogin();
+            })
+            .mockLogin();
 
-        cy.deleteDeployments(resourcePrefix, true)
-            .deleteBlueprints(resourcePrefix, true);
+        cy.deleteDeployments(resourcePrefix, true).deleteBlueprints(resourcePrefix, true);
 
         types.forEach(type =>
-            cy.uploadBlueprint('blueprints/workflow_parameters.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`).deployBlueprint(`${resourcePrefix}${type}_type`, `${resourcePrefix}${type}_type_deployment`)
+            cy
+                .uploadBlueprint(
+                    'blueprints/workflow_parameters.zip',
+                    `${resourcePrefix}${type}_type`,
+                    `${type}_type.yaml`
+                )
+                .deployBlueprint(`${resourcePrefix}${type}_type`, `${resourcePrefix}${type}_type_deployment`)
         );
     });
 
