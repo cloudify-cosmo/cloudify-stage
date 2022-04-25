@@ -98,7 +98,7 @@ describe('Deployments widget', () => {
                 items: deployments,
                 metadata: {
                     pagination: {
-                        total: 0,
+                        total: deployments.length,
                         size: 1000,
                         offset: 0
                     },
