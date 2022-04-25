@@ -29,39 +29,41 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }: BreadcrumbsProps) {
     const tenantName = useSelector((state: ReduxState) => state.manager.tenants.selected);
-    const breadcrumbElements: ReactElement[] = [];
 
     // TODO(RD-1982): use the regular, unreversed list
     const reversedPagesList = _([...pagesList])
         .reverse()
         .value();
-    _.each(reversedPagesList, (page, index) => {
-        if (index !== reversedPagesList.length - 1) {
-            breadcrumbElements.push(
-                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
-                    {page.name}
-                </Breadcrumb.Section>
-            );
-            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
-        } else {
-            breadcrumbElements.push(
-                <EditableLabel
-                    key={page.id}
-                    value={page.name}
-                    placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
-                    className="section active pageTitle"
-                    enabled={isEditMode}
-                    onChange={newName => onPageNameChange(page, newName)}
-                    inputSize="mini"
-                />
-            );
-        }
-    });
+
+    const lastReversedPage = reversedPagesList.pop();
+
+    const breadcrumbElements: ReactElement[] = reversedPagesList.map((page, index) => (<>
+        <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
+            {page.name}
+        </Breadcrumb.Section>
+        <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
+    </>));
+
+    if(lastReversedPage) {
+        breadcrumbElements.push(
+            <EditableLabel
+                key={lastReversedPage.id}
+                value={lastReversedPage.name}
+                placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
+                className="section active pageTitle"
+                enabled={isEditMode}
+                onChange={newName => onPageNameChange(lastReversedPage, newName)}
+                inputSize="mini"
+            />
+        );
+    }
 
     return (
         <BreadCrumbsWrapper>
             <StyledLabel color="black">{tenantName}</StyledLabel>
-            <Breadcrumb>{breadcrumbElements}</Breadcrumb>
+            <Breadcrumb>
+                {breadcrumbElements}
+            </Breadcrumb>
         </BreadCrumbsWrapper>
     );
 }

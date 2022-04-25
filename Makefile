@@ -22,11 +22,18 @@ up-public: docker-up-public backend-up frontend-up
 # $ make -j2 up-dev
 up-dev: docker-up-dev backend-up frontend-up
 
+# Run it with command:
+# $ make -j2 up-db
+up-remote: docker-up-db backend-up frontend-up
+
 docker-up-public: 
 	docker-compose --profile prod --profile dev stop && docker-compose --profile prod up -d
 
 docker-up-dev:
 	docker-compose --profile prod --profile dev stop && docker-compose --profile dev up -d
+
+docker-up-db:
+	docker-compose up -d postgres-cfy
 
 backend-up:
 	cd backend && npm run devStart
