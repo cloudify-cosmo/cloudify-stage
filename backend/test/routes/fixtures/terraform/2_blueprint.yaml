@@ -21,8 +21,8 @@ node_templates:
     properties:
       resource_config:
         source:
-          location: "http://host/path/template.zip"
-        source_path: "/ft_folder/template"
+          location: 'http://host/path/template.zip'
+        source_path: '/ft_folder/template'
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host

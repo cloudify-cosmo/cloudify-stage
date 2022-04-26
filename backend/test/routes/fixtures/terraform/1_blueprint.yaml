@@ -27,10 +27,10 @@ node_templates:
     properties:
       resource_config:
         source:
-          location: "http://host/path/template.zip"
+          location: 'http://host/path/template.zip'
           username: { get_secret: "bpName.username" }
           password: { get_secret: "bpName.password" }
-        source_path: "/ft_folder/template"
+        source_path: '/ft_folder/template'
         variables:
           variableA: { get_secret: secretA }
           variableB: { get_input: inputA }
