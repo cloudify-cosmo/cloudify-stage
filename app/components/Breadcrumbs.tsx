@@ -2,11 +2,13 @@ import i18n from 'i18next';
 import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { isEqual } from 'lodash';
 import type { PageDefinition } from '../actions/page';
 import type { ReduxState } from '../reducers';
 
 import { Label, Breadcrumb, EditableLabel } from './basic';
 import { PageDefinitionWithContext } from './Page';
+import { deploymentsPageListSnapshot } from './Breadcrumbs.const';
 
 const BreadCrumbsWrapper = styled.div`
     display: flex;
@@ -59,6 +61,11 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
             );
         }
     });
+
+    // eslint-disable-next-line
+    console.log('='.repeat(35));
+    // eslint-disable-next-line
+    console.log(isEqual(deploymentsPageListSnapshot, reversedPagesList));
 
     return (
         <BreadCrumbsWrapper>
