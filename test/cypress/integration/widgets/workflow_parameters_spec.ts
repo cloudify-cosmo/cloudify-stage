@@ -1,7 +1,7 @@
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 
-describe('handles deployment inputs of type', () => {
-    const resourcePrefix = 'workflow_input_test_';
+describe('Execute Workflow modal handles parameters of type', () => {
+    const resourcePrefix = 'workflow_parameters_test_';
 
     const types = ['node_id', 'node_type', 'node_instance', 'scaling_group'];
 
@@ -16,20 +16,13 @@ describe('handles deployment inputs of type', () => {
         cy.contains('Test parameters').click();
     };
 
-    const verifyNumberOfOptions = (number: number, atLeast = false, typedPrefix = '') => {
-        if (typedPrefix) {
-            cy.get('input').click().type(typedPrefix);
-        } else {
-            cy.get('input').click();
-        }
+    const verifyNumberOfOptions = (number: number) => {
+        cy.get('input').click();
 
-        const contains = typedPrefix ? ` :contains("${typedPrefix}")` : '';
         if (number === 0) {
             cy.get('.menu').contains('No results found.').should('be.visible');
-        } else if (atLeast) {
-            cy.get(`.menu .item[role="option"]${contains}`).should('have.length.at.least', number);
         } else {
-            cy.get(`.menu .item[role="option"]${contains}`).should('have.length', number);
+            cy.get(`.menu .item[role="option"]`).should('have.length', number);
         }
         cy.get('label').click();
     };
