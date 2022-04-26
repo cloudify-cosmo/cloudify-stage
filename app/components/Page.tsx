@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 import { connect, ConnectedProps } from 'react-redux';
@@ -47,7 +47,7 @@ const StyledContainer = styled.div`
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
         const { isEditMode, page } = this.props;
-        return !_.isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
+        return !isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
     }
 
     render() {
@@ -167,22 +167,21 @@ const buildPagesList = (
 
 const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const { pages } = state;
-
     const pagesMap = createPagesMap(pages);
-    const page = pagesMap[ownProps.pageId];
+    const selectedPage = pagesMap[ownProps.pageId];
     const homePageId = pages[0].id;
-    const pageId = page ? page.id : homePageId;
-
-    const pageData: PageDefinition = _.cloneDeep(pagesMap[pageId]);
+    const selectedPageId = selectedPage ? selectedPage.id : homePageId;
+    const pageData: PageDefinition = cloneDeep(pagesMap[selectedPageId]);
 
     pageData.name = ownProps.pageName || pageData.name;
 
     const pagesList = buildPagesList(
         pagesMap,
-        _.find(pages, { type: 'page' }) as PageDefinition,
+        pages.find(page => page.type === 'page') as PageDefinition,
         state.drilldownContext,
-        pageId
+        selectedPageId
     );
+
     return {
         page: pageData,
         pagesList,
