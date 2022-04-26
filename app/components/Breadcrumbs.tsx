@@ -1,5 +1,4 @@
 import i18n from 'i18next';
-import _ from 'lodash';
 import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -32,13 +31,16 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
     const breadcrumbElements: ReactElement[] = [];
 
     // TODO(RD-1982): use the regular, unreversed list
-    const reversedPagesList = _([...pagesList])
-        .reverse()
-        .value();
-    _.each(reversedPagesList, (page, index) => {
-        if (index !== reversedPagesList.length - 1) {
+    const reversedPagesList = [...pagesList].reverse();
+
+    reversedPagesList.forEach((page, pageIndex) => {
+        if (pageIndex !== reversedPagesList.length - 1) {
             breadcrumbElements.push(
-                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
+                <Breadcrumb.Section
+                    link
+                    key={page.id}
+                    onClick={() => onPageSelected(page, reversedPagesList, pageIndex)}
+                >
                     {page.name}
                 </Breadcrumb.Section>
             );
