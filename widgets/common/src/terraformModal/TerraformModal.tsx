@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import _, { find, isEmpty } from 'lodash';
+import { chain, find, some, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -147,10 +147,11 @@ const outputsColumns: Columns<Output> = [
 
 export function getResourceLocation(templateModules: string[], resourceLocation: string) {
     if (
-        _(templateModules)
+        chain(templateModules)
             .map(modulePath => modulePath.split('/')[0])
             .uniq()
-            .size() > 1
+            .size()
+            .value() > 1
     ) {
         return resourceLocation;
     }
@@ -237,18 +238,18 @@ export default function TerraformModal({
         function validateNames(namedEntities: { name: string }[], errorPrefix: string) {
             const tNameError = Stage.Utils.composeT(tError, errorPrefix);
             let nameError = false;
-            if (find(namedEntities, variable => isEmpty(variable.name))) {
+            if (some(namedEntities, variable => isEmpty(variable.name))) {
                 formErrors[`${errorPrefix}NameMissing`] = tNameError('nameMissing');
                 nameError = true;
             }
             if (
-                find(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
+                some(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
             ) {
                 formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
                 nameError = true;
             }
 
-            if (!nameError && _(namedEntities).keyBy('name').size() !== namedEntities.length) {
+            if (!nameError && chain(namedEntities).keyBy('name').size().value() !== namedEntities.length) {
                 formErrors[`${errorPrefix}NameDuplicated`] = tNameError('nameDuplicated');
             }
         }
@@ -258,11 +259,11 @@ export default function TerraformModal({
 
             const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
 
-            if (find(variablesList, variable => isEmpty(variable.source))) {
+            if (some(variablesList, variable => isEmpty(variable.source))) {
                 formErrors[`${errorPrefix}SourceMissing`] = tVariableError('sourceMissing');
             }
             if (
-                find(
+                some(
                     variablesList,
                     variable => isEmpty(variable.value) && (variable.source === 'secret' || variable.source === 'input')
                 )
@@ -270,7 +271,7 @@ export default function TerraformModal({
                 formErrors[`${errorPrefix}ValueMissing`] = tVariableError('valueMissing');
             }
             if (
-                find(
+                some(
                     variablesList,
                     variable =>
                         !isEmpty(variable.value) &&
@@ -287,14 +288,14 @@ export default function TerraformModal({
 
             const tOutputError = Stage.Utils.composeT(tError, 'output');
 
-            if (find(outputs, output => isEmpty(output.type))) {
+            if (some(outputs, output => isEmpty(output.type))) {
                 formErrors.outputTypeMissing = tOutputError('typeMissing');
             }
-            if (find(outputs, output => isEmpty(output.terraformOutput))) {
+            if (some(outputs, output => isEmpty(output.terraformOutput))) {
                 formErrors.outputMissing = tOutputError('outputMissing');
             }
             if (
-                find(
+                some(
                     outputs,
                     output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(cloudifyResourceRegexp)
                 )
