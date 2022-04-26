@@ -547,4 +547,4 @@ export const deploymentsPageListSnapshot = [
         parent: 'dashboard',
         context: { deploymentId: 'deployments_test_hw_dep' }
     }
-];
+].reverse();

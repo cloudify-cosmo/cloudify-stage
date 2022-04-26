@@ -136,7 +136,6 @@ const buildPagesList = (
     selectedPageId: string
 ) => {
     const pagesList: PageDefinitionWithContext[] = [];
-    let index = drilldownContextArray.length - 1;
     /**
      * NOTE: drilldownContextArray is from outermost to innermost pages
      * pagesList should be from innermost to outermost pages.
@@ -144,23 +143,22 @@ const buildPagesList = (
      */
     // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
 
-    const updatePagesListWith = (page: PageDefinition) => {
+    const updatePagesListWith = (page: PageDefinition, drilldownContextIndex: number) => {
         const basePage = !page ? startingPage : page;
-        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : null;
-        index -= 1;
+        const pageDrilldownContext = drilldownContextIndex >= 0 ? drilldownContextArray[drilldownContextIndex] : null;
 
-        pagesList.push({
+        pagesList.unshift({
             ...basePage,
             name: pageDrilldownContext?.pageName || basePage.name,
             context: pageDrilldownContext?.context
         });
 
         if (basePage.parent) {
-            updatePagesListWith(pagesMap[basePage.parent]);
+            updatePagesListWith(pagesMap[basePage.parent], drilldownContextIndex - 1);
         }
     };
 
-    updatePagesListWith(pagesMap[selectedPageId]);
+    updatePagesListWith(pagesMap[selectedPageId], drilldownContextArray.length - 1);
 
     return pagesList;
 };
@@ -182,6 +180,9 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
         selectedPageId
     );
 
+    // eslint-disable-next-line
+    console.log(pagesList);
+
     return {
         page: pageData,
         pagesList,
@@ -198,6 +199,7 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
             dispatch(changePageDescription(pageId, newDescription));
         },
         onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
+            // TODO: Adjust that functionality
             // NOTE: the pagesList are from outermost to innermost
             const drilldownContext = pagesList.slice(0, index).map(
                 (pageInList): DrilldownContext => ({
