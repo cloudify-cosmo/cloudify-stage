@@ -75,7 +75,8 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
     };
 }
 
-const cloudifyResourceRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+const cloudifyBlueprintNameRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+const cloudifyResourceRegexp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -203,7 +204,7 @@ export default function TerraformModal({
         function validateBlueprintName() {
             if (!blueprintName) {
                 formErrors.blueprint = tError('noBlueprintName');
-            } else if (!blueprintName.match(cloudifyResourceRegexp)) {
+            } else if (!blueprintName.match(cloudifyBlueprintNameRegexp)) {
                 formErrors.blueprint = tError('invalidBlueprintName');
             }
         }
