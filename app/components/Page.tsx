@@ -136,13 +136,6 @@ const buildPagesList = (
     selectedPageId: string
 ) => {
     const pagesList: PageDefinitionWithContext[] = [];
-    /**
-     * NOTE: drilldownContextArray is from outermost to innermost pages
-     * pagesList should be from innermost to outermost pages.
-     * Thus, the order is reversed.
-     */
-    // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
-
     const updatePagesListWith = (page: PageDefinition, drilldownContextIndex: number) => {
         const basePage = !page ? startingPage : page;
         const pageDrilldownContext = drilldownContextIndex >= 0 ? drilldownContextArray[drilldownContextIndex] : null;
@@ -180,9 +173,6 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
         selectedPageId
     );
 
-    // eslint-disable-next-line
-    console.log(pagesList);
-
     return {
         page: pageData,
         pagesList,
@@ -198,10 +188,13 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
         onPageDescriptionChange: (pageId: string, newDescription: string) => {
             dispatch(changePageDescription(pageId, newDescription));
         },
-        onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
-            // TODO: Adjust that functionality
+        onPageSelected: (
+            page: PageDefinitionWithContext,
+            pagesList: PageDefinitionWithContext[],
+            pageIndex: number
+        ) => {
             // NOTE: the pagesList are from outermost to innermost
-            const drilldownContext = pagesList.slice(0, index).map(
+            const drilldownContext = pagesList.slice(0, pageIndex).map(
                 (pageInList): DrilldownContext => ({
                     pageName: pageInList.name,
                     context: pageInList.context
