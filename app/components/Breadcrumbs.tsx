@@ -32,22 +32,8 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
     const tenantName = useSelector((state: ReduxState) => state.manager.tenants.selected);
     const breadcrumbElements: ReactElement[] = [];
 
-    // TODO(RD-1982): use the regular, unreversed list
-    const reversedPagesList = [...pagesList].reverse();
-
-    reversedPagesList.forEach((page, pageIndex) => {
-        if (pageIndex !== reversedPagesList.length - 1) {
-            breadcrumbElements.push(
-                <Breadcrumb.Section
-                    link
-                    key={page.id}
-                    onClick={() => onPageSelected(page, reversedPagesList, pageIndex)}
-                >
-                    {page.name}
-                </Breadcrumb.Section>
-            );
-            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
-        } else {
+    pagesList.forEach((page, pageIndex) => {
+        if (pageIndex === 0) {
             breadcrumbElements.push(
                 <EditableLabel
                     key={page.id}
@@ -59,13 +45,20 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
                     inputSize="mini"
                 />
             );
+        } else {
+            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
+            breadcrumbElements.push(
+                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, pagesList, pageIndex)}>
+                    {page.name}
+                </Breadcrumb.Section>
+            );
         }
     });
 
     // eslint-disable-next-line
     console.log('='.repeat(35));
     // eslint-disable-next-line
-    console.log(isEqual(deploymentsPageListSnapshot, reversedPagesList));
+    console.log(isEqual(deploymentsPageListSnapshot, pagesList));
 
     return (
         <BreadCrumbsWrapper>
