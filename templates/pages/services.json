@@ -14,12 +14,12 @@
           "definition": "deploymentButton",
           "configuration": {
             "label": "Create Service",
-            "filterRules": {
+            "filterRules": [{
               "key": "csys-obj-type",
               "values": ["environment"],
               "operator": "is_not",
               "type": "label"
-            }
+            }]
           }
         },
         {

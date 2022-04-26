@@ -14,12 +14,12 @@
           "definition": "deploymentButton",
           "configuration": {
             "label": "Create Environment",
-            "filterRules": {
+            "filterRules": [{
               "key": "csys-obj-type",
               "values": ["environment"],
               "operator": "any_of",
               "type": "label"
-            }
+            }]
           }
         },
         {
