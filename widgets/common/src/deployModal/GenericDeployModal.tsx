@@ -26,7 +26,7 @@ import getInputsMap from '../inputs/utils/getInputsMap';
 import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
-import { FilterRule } from '../filters/types';
+import type { FilterRule } from '../filters/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
