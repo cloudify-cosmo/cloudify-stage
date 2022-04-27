@@ -75,8 +75,8 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
     };
 }
 
-const cloudifyBlueprintNameRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
-const cloudifyResourceRegexp = /^[a-zA-Z0-9._-]*$/;
+const blueprintNameValidationRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+const resourceKeyValidationRegExp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -205,7 +205,7 @@ export default function TerraformModal({
         function validateBlueprintName() {
             if (!blueprintName) {
                 formErrors.blueprint = tError('noBlueprintName');
-            } else if (!blueprintName.match(cloudifyBlueprintNameRegexp)) {
+            } else if (!blueprintName.match(blueprintNameValidationRegExp)) {
                 formErrors.blueprint = tError('invalidBlueprintName');
             }
         }
@@ -243,7 +243,10 @@ export default function TerraformModal({
                 nameError = true;
             }
             if (
-                some(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
+                some(
+                    namedEntities,
+                    variable => !isEmpty(variable.name) && !variable.name.match(resourceKeyValidationRegExp)
+                )
             ) {
                 formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
                 nameError = true;
@@ -276,7 +279,7 @@ export default function TerraformModal({
                     variable =>
                         !isEmpty(variable.value) &&
                         variable.source !== 'static' &&
-                        !variable.value.match(cloudifyResourceRegexp)
+                        !variable.value.match(resourceKeyValidationRegExp)
                 )
             ) {
                 formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
@@ -297,7 +300,8 @@ export default function TerraformModal({
             if (
                 some(
                     outputs,
-                    output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(cloudifyResourceRegexp)
+                    output =>
+                        !isEmpty(output.terraformOutput) && !output.terraformOutput.match(resourceKeyValidationRegExp)
                 )
             ) {
                 formErrors.outputValueInvalid = tOutputError('outputInvalid');
