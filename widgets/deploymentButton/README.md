@@ -12,3 +12,4 @@ Allows creating a deployment of a chosen blueprint. After choosing a name for th
 * `Icon` - Name of the icon displayed in the button. Available icons list can be found
   at: [Icon - Semantic UI React](https://react.semantic-ui.com/elements/icon). Default: 'rocket'
 * `Basic button` - Allows to change button appearence, basic button is less pronounced. Default: No
+* `Label filter rules` - Allows to define blueprint labels' filter rules. See [blueprint filters]({{< relref "cli/orch_cli/blueprints#blueprint-filters" >}}) for more details. Default: empty
