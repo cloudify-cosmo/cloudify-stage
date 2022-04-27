@@ -1,6 +1,5 @@
 import i18n from 'i18next';
-import _ from 'lodash';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import type { PageDefinition } from '../actions/page';
@@ -20,6 +19,16 @@ const StyledLabel = styled(Label)`
     }
 `;
 
+type GetBreadcrumbPages = (
+    pageList: PageDefinitionWithContext[]
+) => [editablePage: PageDefinitionWithContext | undefined, historyPageList: PageDefinitionWithContext[]];
+
+const getBreadcrumbPages: GetBreadcrumbPages = pageList => {
+    const pageListCopy = [...pageList];
+    const editablePage = pageListCopy.pop();
+    return [editablePage, pageListCopy];
+};
+
 interface BreadcrumbsProps {
     isEditMode: boolean;
     pagesList: PageDefinitionWithContext[];
@@ -29,39 +38,32 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelected, pagesList }: BreadcrumbsProps) {
     const tenantName = useSelector((state: ReduxState) => state.manager.tenants.selected);
-    const breadcrumbElements: ReactElement[] = [];
-
-    // TODO(RD-1982): use the regular, unreversed list
-    const reversedPagesList = _([...pagesList])
-        .reverse()
-        .value();
-    _.each(reversedPagesList, (page, index) => {
-        if (index !== reversedPagesList.length - 1) {
-            breadcrumbElements.push(
-                <Breadcrumb.Section link key={page.id} onClick={() => onPageSelected(page, reversedPagesList, index)}>
-                    {page.name}
-                </Breadcrumb.Section>
-            );
-            breadcrumbElements.push(<Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />);
-        } else {
-            breadcrumbElements.push(
-                <EditableLabel
-                    key={page.id}
-                    value={page.name}
-                    placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
-                    className="section active pageTitle"
-                    enabled={isEditMode}
-                    onChange={newName => onPageNameChange(page, newName)}
-                    inputSize="mini"
-                />
-            );
-        }
-    });
+    const [editablePage, historyPageList] = getBreadcrumbPages(pagesList);
 
     return (
         <BreadCrumbsWrapper>
             <StyledLabel color="black">{tenantName}</StyledLabel>
-            <Breadcrumb>{breadcrumbElements}</Breadcrumb>
+            <Breadcrumb>
+                {historyPageList.map((page, pageIndex) => (
+                    <React.Fragment key={page.id}>
+                        <Breadcrumb.Section link onClick={() => onPageSelected(page, pagesList, pageIndex)}>
+                            {page.name}
+                        </Breadcrumb.Section>
+                        <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
+                    </React.Fragment>
+                ))}
+                {editablePage && (
+                    <EditableLabel
+                        key={editablePage.id}
+                        value={editablePage.name}
+                        placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
+                        className="section active pageTitle"
+                        enabled={isEditMode}
+                        onChange={newName => onPageNameChange(editablePage, newName)}
+                        inputSize="mini"
+                    />
+                )}
+            </Breadcrumb>
         </BreadCrumbsWrapper>
     );
 }

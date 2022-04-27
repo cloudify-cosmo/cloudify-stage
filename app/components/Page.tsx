@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import i18n from 'i18next';
 import { connect, ConnectedProps } from 'react-redux';
@@ -47,7 +47,7 @@ const StyledContainer = styled.div`
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
         const { isEditMode, page } = this.props;
-        return !_.isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
+        return !isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
     }
 
     render() {
@@ -134,55 +134,45 @@ const buildPagesList = (
     startingPage: PageDefinition,
     drilldownContextArray: DrilldownContext[],
     selectedPageId: string
-) => {
-    const pagesList: PageDefinitionWithContext[] = [];
-    let index = drilldownContextArray.length - 1;
-    /**
-     * NOTE: drilldownContextArray is from outermost to innermost pages
-     * pagesList should be from innermost to outermost pages.
-     * Thus, the order is reversed.
-     */
-    // TODO(RD-1982): build the pages list in the same order as drilldownContextArray
+): PageDefinitionWithContext[] => {
+    const pageList: PageDefinitionWithContext[] = [];
 
-    const updatePagesListWith = (page: PageDefinition) => {
-        const basePage = !page ? startingPage : page;
-        const pageDrilldownContext = index >= 0 ? drilldownContextArray[index] : null;
-        index -= 1;
+    const fillPageList = (page: PageDefinition, drilldownContextIndex: number) => {
+        const basePage = page || startingPage;
+        const pageDrilldownContext = drilldownContextIndex >= 0 ? drilldownContextArray[drilldownContextIndex] : null;
 
-        pagesList.push({
+        pageList.unshift({
             ...basePage,
             name: pageDrilldownContext?.pageName || basePage.name,
             context: pageDrilldownContext?.context
         });
 
         if (basePage.parent) {
-            updatePagesListWith(pagesMap[basePage.parent]);
+            fillPageList(pagesMap[basePage.parent], drilldownContextIndex - 1);
         }
     };
 
-    updatePagesListWith(pagesMap[selectedPageId]);
-
-    return pagesList;
+    fillPageList(pagesMap[selectedPageId], drilldownContextArray.length - 1);
+    return pageList;
 };
 
 const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     const { pages } = state;
-
     const pagesMap = createPagesMap(pages);
-    const page = pagesMap[ownProps.pageId];
+    const selectedPage = pagesMap[ownProps.pageId];
     const homePageId = pages[0].id;
-    const pageId = page ? page.id : homePageId;
-
-    const pageData: PageDefinition = _.cloneDeep(pagesMap[pageId]);
+    const selectedPageId = selectedPage ? selectedPage.id : homePageId;
+    const pageData: PageDefinition = cloneDeep(pagesMap[selectedPageId]);
 
     pageData.name = ownProps.pageName || pageData.name;
 
     const pagesList = buildPagesList(
         pagesMap,
-        _.find(pages, { type: 'page' }) as PageDefinition,
+        pages.find(page => page.type === 'page') as PageDefinition,
         state.drilldownContext,
-        pageId
+        selectedPageId
     );
+
     return {
         page: pageData,
         pagesList,
@@ -198,9 +188,13 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction
         onPageDescriptionChange: (pageId: string, newDescription: string) => {
             dispatch(changePageDescription(pageId, newDescription));
         },
-        onPageSelected: (page: PageDefinitionWithContext, pagesList: PageDefinitionWithContext[], index: number) => {
+        onPageSelected: (
+            page: PageDefinitionWithContext,
+            pagesList: PageDefinitionWithContext[],
+            pageIndex: number
+        ) => {
             // NOTE: the pagesList are from outermost to innermost
-            const drilldownContext = pagesList.slice(0, index).map(
+            const drilldownContext = pagesList.slice(0, pageIndex).map(
                 (pageInList): DrilldownContext => ({
                     pageName: pageInList.name,
                     context: pageInList.context
