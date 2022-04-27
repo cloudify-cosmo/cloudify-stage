@@ -1,6 +1,6 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
-import { FilterRule } from '../../common/src/filters/types';
+import type { FilterRule } from '../../common/src/filters/types';
 
 interface Props {
     toolbox: Stage.Types.Toolbox;
