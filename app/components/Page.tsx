@@ -135,11 +135,9 @@ const buildPagesList = (
     drilldownContextArray: DrilldownContext[],
     selectedPageId: string
 ): PageDefinitionWithContext[] => {
-    const getPageList = (
-        page: PageDefinition,
-        drilldownContextIndex: number,
-        pageList: PageDefinitionWithContext[] = []
-    ): PageDefinitionWithContext[] => {
+    const pageList: PageDefinitionWithContext[] = [];
+
+    const fillPageList = (page: PageDefinition, drilldownContextIndex: number) => {
         const basePage = page || startingPage;
         const pageDrilldownContext = drilldownContextIndex >= 0 ? drilldownContextArray[drilldownContextIndex] : null;
 
@@ -150,13 +148,12 @@ const buildPagesList = (
         });
 
         if (basePage.parent) {
-            getPageList(pagesMap[basePage.parent], drilldownContextIndex - 1, pageList);
+            fillPageList(pagesMap[basePage.parent], drilldownContextIndex - 1);
         }
-
-        return pageList;
     };
 
-    return getPageList(pagesMap[selectedPageId], drilldownContextArray.length - 1);
+    fillPageList(pagesMap[selectedPageId], drilldownContextArray.length - 1);
+    return pageList;
 };
 
 const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
