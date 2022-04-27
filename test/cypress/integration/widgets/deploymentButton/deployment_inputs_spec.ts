@@ -1,6 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
-
-describe('handles deployment inputs of type', () => {
+describe('Create Deployment modal handles deployment inputs of type', () => {
     const resourcePrefix = 'deployment_inputs_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
 
@@ -19,7 +17,7 @@ describe('handles deployment inputs of type', () => {
         'secret_key'
     ];
 
-    const checkAttribute = (input, attrName, attrValue) => {
+    const checkAttribute = (input: JQuery<any>, attrName: string, attrValue: string | number | null) => {
         if (attrValue !== null) {
             expect(input).to.have.attr(attrName, String(attrValue));
         } else {
@@ -45,16 +43,21 @@ describe('handles deployment inputs of type', () => {
         });
     };
 
-    const verifyNumberInput = (min = null, max = null, value = '', step = 1) => {
+    const verifyNumberInput = (
+        min: number | null = null,
+        max: number | null = null,
+        value: number | null = null,
+        step = '1'
+    ) => {
         cy.get('input').then($input => {
             checkAttribute($input, 'min', min);
             checkAttribute($input, 'max', max);
             checkAttribute($input, 'step', step);
-            checkAttribute($input, 'value', value);
+            checkAttribute($input, 'value', value || '');
         });
     };
 
-    const verifyNumberOfOptions = (number, atLeast = false, typedPrefix = resourcePrefix) => {
+    const verifyNumberOfOptions = (number: number, atLeast = false, typedPrefix = resourcePrefix) => {
         if (typedPrefix) {
             cy.get('input').click().type(typedPrefix);
         } else {
@@ -84,7 +87,7 @@ describe('handles deployment inputs of type', () => {
         );
     });
 
-    const selectBlueprintInModal = type => {
+    const selectBlueprintInModal = (type: string) => {
         cy.get('.modal').within(() => {
             const blueprintName = `${resourcePrefix}${type}_type`;
             cy.log(`Selecting blueprint: ${blueprintName}.`);
@@ -175,7 +178,7 @@ describe('handles deployment inputs of type', () => {
     it('float', () => {
         selectBlueprintInModal('float');
 
-        cy.getField('float_no_default').within(() => verifyNumberInput(null, null, '', 'any'));
+        cy.getField('float_no_default').within(() => verifyNumberInput(null, null, null, 'any'));
 
         cy.getField('float_default').within(() => {
             verifyNumberInput(null, null, 3.14, 'any');
