@@ -135,7 +135,7 @@ type GenericDeployModalProps = {
     deploymentNameHelp?: string;
 
     /**
-     * Filter listing blueprints rules
+     * Filter rules for blueprints listing
      */
     filterRules?: FilterRule[];
 };
