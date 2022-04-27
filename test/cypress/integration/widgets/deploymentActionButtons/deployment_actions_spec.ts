@@ -1,4 +1,4 @@
-import { LabelInputType } from '../../../../widgets/common/src/labels/types';
+import { LabelInputType } from '../../../../../widgets/common/src/labels/types';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';

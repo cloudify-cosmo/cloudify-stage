@@ -1,4 +1,4 @@
-import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
+import type { DeploymentsViewWidgetConfiguration } from '../../../../../widgets/deploymentsView/src/widget';
 
 describe('Execute Workflow modal handles parameters of type', () => {
     const resourcePrefix = 'workflow_parameters_test_';

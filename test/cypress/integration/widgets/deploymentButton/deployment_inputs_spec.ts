@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+
 describe('handles deployment inputs of type', () => {
     const resourcePrefix = 'deployment_inputs_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
