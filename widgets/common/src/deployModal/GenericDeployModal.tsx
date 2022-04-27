@@ -26,6 +26,7 @@ import getInputsMap from '../inputs/utils/getInputsMap';
 import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
+import { FilterRule } from '../filters/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -132,6 +133,11 @@ type GenericDeployModalProps = {
      * Deployment Name input help description
      */
     deploymentNameHelp?: string;
+
+    /**
+     * Filter listing blueprints rules
+     */
+    filterRules?: FilterRule[];
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -594,7 +600,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             showDeployButton,
             showSitesInput,
             deploymentNameLabel,
-            deploymentNameHelp
+            deploymentNameHelp,
+            filterRules
         } = this.props;
         const {
             activeSection,
@@ -665,6 +672,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     fetchUrl="/blueprints?_include=id&state=uploaded"
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
+                                    filterRules={filterRules}
                                     prefetch
                                 />
                             </Form.Field>

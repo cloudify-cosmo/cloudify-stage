@@ -1,4 +1,5 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
+import { FilterRule } from '../../common/src/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
@@ -11,6 +12,7 @@ type DeploymentButtonConfiguration = {
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
+    filterRules: FilterRule[];
 };
 
 Stage.defineWidget({
@@ -66,7 +68,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
-        const { basic, color, icon, label } = widget.configuration;
-        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} />;
+        const { basic, color, icon, label, filterRules } = widget.configuration;
+        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} filterRules={filterRules} />;
     }
 });
