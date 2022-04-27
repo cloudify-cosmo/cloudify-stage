@@ -16,4 +16,4 @@ test/cypress/results
 test/cypress/downloads
 widgets/*/backend.ts
 stage.tar.gz
-test/cypress/fixtures/blueprints/input_types/
+test/cypress/fixtures/blueprints/*/*
