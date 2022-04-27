@@ -17,8 +17,8 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
         'secret_key'
     ];
 
-    const checkAttribute = (input: JQuery<any>, attrName: string, attrValue: string | number | null) => {
-        if (attrValue !== null) {
+    const checkAttribute = (input: JQuery<any>, attrName: string, attrValue?: string | number) => {
+        if (attrValue !== undefined) {
             expect(input).to.have.attr(attrName, String(attrValue));
         } else {
             expect(input).to.not.have.attr(attrName);
@@ -43,17 +43,17 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
         });
     };
 
-    const verifyNumberInput = (
-        min: number | null = null,
-        max: number | null = null,
-        value: number | null = null,
-        step = '1'
-    ) => {
+    const verifyNumberInput = ({
+        min,
+        max,
+        value = '',
+        step = 1
+    }: { min?: number; max?: number; value?: number | string; step?: number | 'any' } = {}) => {
         cy.get('input').then($input => {
             checkAttribute($input, 'min', min);
             checkAttribute($input, 'max', max);
             checkAttribute($input, 'step', step);
-            checkAttribute($input, 'value', value || '');
+            checkAttribute($input, 'value', value);
         });
     };
 
@@ -149,46 +149,46 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
     it('integer', () => {
         selectBlueprintInModal('integer');
 
-        cy.getField('integer_constraint_max_1').within(() => verifyNumberInput(null, 50));
-        cy.getField('integer_constraint_max_2').within(() => verifyNumberInput(null, 60));
-        cy.getField('integer_constraint_max_3').within(() => verifyNumberInput(null, 50));
-        cy.getField('integer_constraint_max_4').within(() => verifyNumberInput(5, 15));
+        cy.getField('integer_constraint_max_1').within(() => verifyNumberInput({ max: 50 }));
+        cy.getField('integer_constraint_max_2').within(() => verifyNumberInput({ max: 60 }));
+        cy.getField('integer_constraint_max_3').within(() => verifyNumberInput({ max: 50 }));
+        cy.getField('integer_constraint_max_4').within(() => verifyNumberInput({ min: 5, max: 15 }));
 
-        cy.getField('integer_constraint_min_1').within(() => verifyNumberInput(2));
-        cy.getField('integer_constraint_min_2').within(() => verifyNumberInput(4));
-        cy.getField('integer_constraint_min_3').within(() => verifyNumberInput(4));
-        cy.getField('integer_constraint_min_4').within(() => verifyNumberInput(5, 8));
+        cy.getField('integer_constraint_min_1').within(() => verifyNumberInput({ min: 2 }));
+        cy.getField('integer_constraint_min_2').within(() => verifyNumberInput({ min: 4 }));
+        cy.getField('integer_constraint_min_3').within(() => verifyNumberInput({ min: 4 }));
+        cy.getField('integer_constraint_min_4').within(() => verifyNumberInput({ min: 5, max: 8 }));
 
-        cy.getField('integer_constraint_min_max').within(() => verifyNumberInput(5, 15, 10));
+        cy.getField('integer_constraint_min_max').within(() => verifyNumberInput({ min: 5, max: 15, value: 10 }));
 
         cy.getField('integer_no_default').within(() => verifyNumberInput());
 
         cy.getField('integer_default').within(() => {
-            verifyNumberInput(null, null, 50);
+            verifyNumberInput({ value: 50 });
 
             cy.get('input').as('inputField').clear().type('123').blur();
 
-            verifyNumberInput(null, null, 123);
+            verifyNumberInput({ value: 123 });
 
             cy.revertToDefaultValue();
-            verifyNumberInput(null, null, 50);
+            verifyNumberInput({ value: 50 });
         });
     });
 
     it('float', () => {
         selectBlueprintInModal('float');
 
-        cy.getField('float_no_default').within(() => verifyNumberInput(null, null, null, 'any'));
+        cy.getField('float_no_default').within(() => verifyNumberInput({ step: 'any' }));
 
         cy.getField('float_default').within(() => {
-            verifyNumberInput(null, null, 3.14, 'any');
+            verifyNumberInput({ value: 3.14, step: 'any' });
 
             cy.get('input').as('inputField').clear().type('2.71').blur();
 
-            verifyNumberInput(null, null, 2.71, 'any');
+            verifyNumberInput({ value: 2.71, step: 'any' });
 
             cy.revertToDefaultValue();
-            verifyNumberInput(null, null, 3.14, 'any');
+            verifyNumberInput({ value: 3.14, step: 'any' });
         });
     });
 
