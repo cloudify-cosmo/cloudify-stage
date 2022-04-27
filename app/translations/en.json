@@ -1378,7 +1378,7 @@
                     "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
-                    "name": "Label filter rules"
+                    "name": "Blueprint label filter rules"
                 }
             }
         },
