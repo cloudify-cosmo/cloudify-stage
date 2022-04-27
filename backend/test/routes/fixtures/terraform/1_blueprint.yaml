@@ -28,23 +28,23 @@ node_templates:
       resource_config:
         source:
           location: 'http://host/path/template.zip'
-          username: { get_secret: "bpName.username" }
-          password: { get_secret: "bpName.password" }
+          username: { get_secret: 'bpName.username' }
+          password: { get_secret: 'bpName.password' }
         source_path: '/ft_folder/template'
         variables:
-          variableA: { get_secret: secretA }
-          variableB: { get_input: inputA }
+          variableA: { get_secret: 'secretA' }
+          variableB: { get_input: 'inputA' }
           variableD: 'defaultD'
         environment_variables:
-          variableC: { get_input: inputC }
+          variableC: { get_input: 'inputC' }
     relationships:
       - target: terraform
         type: cloudify.terraform.relationships.run_on_host
 
 outputs:
   outputA:
-    value: { get_attribute: [ cloud_resources, outputs, outA, value ] }
+    value: { get_attribute: [ cloud_resources, outputs, 'outA', value ] }
 
 capabilities:
   outputB:
-    value: { get_attribute: [ cloud_resources, outputs, outB, value ] }
+    value: { get_attribute: [ cloud_resources, outputs, 'outB', value ] }
