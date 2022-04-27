@@ -1,16 +1,11 @@
-import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
-
 describe('Execute Workflow modal handles parameters of type', () => {
     const resourcePrefix = 'workflow_parameters_test_';
 
     const types = ['node_id', 'node_type', 'node_instance', 'scaling_group'];
 
     const openWorkflowParametersModal = (type: string) => {
-        cy.get('.Pane1').within(() => {
-            const deploymentName = `${resourcePrefix}${type}_type_deployment`;
-            cy.log(`Selecting deployment: ${deploymentName}.`);
-            cy.contains('tr', deploymentName).click();
-        });
+        const deploymentName = `${resourcePrefix}${type}_type_deployment`;
+        cy.clearDeploymentContext().setDeploymentContext(deploymentName);
         cy.contains('Execute workflow').click();
         cy.contains('Script').click();
         cy.contains('Test parameters').click();
@@ -34,33 +29,7 @@ describe('Execute Workflow modal handles parameters of type', () => {
     };
 
     before(() => {
-        const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
-            filterByParentDeployment: false,
-            fieldsToShow: [
-                'status',
-                'id',
-                'name',
-                'blueprintName',
-                'location',
-                'subenvironmentsCount',
-                'subservicesCount'
-            ],
-            pageSize: 100,
-            customPollingTime: 10,
-            sortColumn: 'created_at',
-            sortAscending: false,
-            mapHeight: 300,
-            mapOpenByDefault: false
-        };
-        const additionalWidgetIdsToLoad: string[] = ['deploymentActionButtons', 'deploymentsViewDrilledDown'];
-
-        cy.activate('valid_trial_license')
-            .usePageMock('deploymentsView', widgetConfiguration, {
-                additionalWidgetIdsToLoad,
-                widgetsWidth: 12,
-                additionalPageTemplates: ['drilldownDeployments']
-            })
-            .mockLogin();
+        cy.activate('valid_trial_license').usePageMock('deploymentActionButtons').mockLogin();
 
         cy.deleteDeployments(resourcePrefix, true).deleteBlueprints(resourcePrefix, true);
 
