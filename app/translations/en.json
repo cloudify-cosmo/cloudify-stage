@@ -921,20 +921,22 @@
                     "noUsername": "Please provide username",
                     "noPassword": "Please provide password",
                     "noResourceLocation": "Please provide resource location",
-                    "invalidBlueprintName": "Please provide valid blueprint name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                    "invalidBlueprintName": "Please provide valid blueprint name. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
                         "nameMissing": "Please provide variable name",
-                        "nameInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameStaticInvalid": "Please provide valid variable name. Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameNonStaticInvalid": "Please provide valid variable name. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "nameDuplicated": "Variables must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide variable source",
                         "valueMissing": "Please provide variable name",
-                        "valueInvalid": "Please provide valid variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                        "valueInvalid": "Please provide valid variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     },
                     "environmentVariable": {
                         "nameMissing": "Please provide environment variable name",
-                        "nameInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameStaticInvalid": "Please provide valid environment variable name. Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameNonStaticInvalid": "Please provide valid environment variable name. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "nameDuplicated": "Environment variables must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide environment variable source",
                         "valueMissing": "Please provide environment variable name",
@@ -942,7 +944,9 @@
                     },
                     "output": {
                         "nameMissing": "Please provide output name",
-                        "nameInvalid": "Please provide valid output name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed",
+                        "nameInvalid": "Please provide valid output name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed.",
+                        "nameStaticInvalid": "Please provide valid output name. Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed.",
+                        "nameNonStaticInvalid": "Please provide valid output name. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "nameDuplicated": "Outputs must be unique, duplicates are not allowed",
                         "typeMissing": "Please provide output type",
                         "outputMissing": "Please provide Terraform output",

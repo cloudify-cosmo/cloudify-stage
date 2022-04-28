@@ -75,8 +75,9 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
     };
 }
 
-const blueprintNameValidationRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
-const resourceKeyValidationRegExp = /^[a-zA-Z0-9._-]*$/;
+const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+
+const validationRegExp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -205,7 +206,7 @@ export default function TerraformModal({
         function validateBlueprintName() {
             if (!blueprintName) {
                 formErrors.blueprint = tError('noBlueprintName');
-            } else if (!blueprintName.match(blueprintNameValidationRegExp)) {
+            } else if (!blueprintName.match(validationStrictRegExp)) {
                 formErrors.blueprint = tError('invalidBlueprintName');
             }
         }
@@ -243,10 +244,7 @@ export default function TerraformModal({
                 nameError = true;
             }
             if (
-                some(
-                    namedEntities,
-                    variable => !isEmpty(variable.name) && !variable.name.match(resourceKeyValidationRegExp)
-                )
+                some(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(validationStrictRegExp))
             ) {
                 formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
                 nameError = true;
@@ -279,7 +277,7 @@ export default function TerraformModal({
                     variable =>
                         !isEmpty(variable.value) &&
                         variable.source !== 'static' &&
-                        !variable.value.match(resourceKeyValidationRegExp)
+                        !variable.value.match(validationRegExp)
                 )
             ) {
                 formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
@@ -300,8 +298,7 @@ export default function TerraformModal({
             if (
                 some(
                     outputs,
-                    output =>
-                        !isEmpty(output.terraformOutput) && !output.terraformOutput.match(resourceKeyValidationRegExp)
+                    output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(validationStrictRegExp)
                 )
             ) {
                 formErrors.outputValueInvalid = tOutputError('outputInvalid');
