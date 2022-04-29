@@ -89,7 +89,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const { uploadingBlueprints } = this.state;
         this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
 
-        new BlueprintActions(toolbox)
+        return new BlueprintActions(toolbox)
             .doUpload(repositoryName, {
                 blueprintYamlFile: defaultYamlFile,
                 blueprintUrl: zipUrl,

@@ -1,15 +1,16 @@
 import { noop } from 'lodash';
-import type { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 
 const t = Stage.Utils.getT('widgets.blueprintCatalog');
+const { DataTable, Image, Icon } = Stage.Basic;
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
-    onUpload = noop,
+    onUpload = Promise.resolve,
     readmeLoading = null,
     uploadingInProgress = [],
     data,
@@ -17,12 +18,11 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const { DataTable, Image, Icon } = Stage.Basic;
-
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
     const { fieldsToShow } = widget.configuration;
+    const [isUploadingAnyBlueprint, setIsUploadingAnyBlueprint] = useState(false);
 
     return (
         <DataTable
@@ -60,6 +60,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                 const isReadmeLoading = readmeLoading === item.name;
                 const isBlueprintUploading = uploadingInProgress.includes(item.name);
                 const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
+                const downloadIconIsDisabled = isBlueprintUploaded || isBlueprintUploading || isUploadingAnyBlueprint;
 
                 return (
                     <DataTable.Row
@@ -91,14 +92,19 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                             />
                             <Icon
                                 name={isBlueprintUploading ? 'spinner' : 'upload'}
-                                disabled={isBlueprintUploaded}
+                                disabled={downloadIconIsDisabled}
                                 link={!isBlueprintUploading && !isBlueprintUploaded}
                                 title={t('actions.uploadBlueprint')}
                                 loading={isBlueprintUploading}
                                 bordered={!isBlueprintUploading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
-                                    onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
+                                    setIsUploadingAnyBlueprint(true);
+                                    onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint).finally(
+                                        () => {
+                                            setIsUploadingAnyBlueprint(false);
+                                        }
+                                    );
                                 }}
                             />
                         </DataTable.Data>
