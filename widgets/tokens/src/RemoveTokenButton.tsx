@@ -20,7 +20,7 @@ const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
     const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const deleteModalContent = useMemo(() => {
         const translationSuffix = token.description ? 'withDescription' : 'withoutDescription';
-        return t(`deleteModal.content.${translationSufix}`, {
+        return t(`deleteModal.content.${translationSuffix}`, {
             tokenId: token.id,
             tokenDescription: token.description
         });
