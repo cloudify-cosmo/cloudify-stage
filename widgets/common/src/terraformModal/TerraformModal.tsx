@@ -247,9 +247,7 @@ export default function TerraformModal({
                 formErrors[`${errorPrefix}KeyMissing`] = tNameError('keyMissing');
                 keyError = true;
             }
-            if (
-                some(entities, variable => !isEmpty(variable[IDkey]) && !variable[IDkey].match(validationStrictRegExp))
-            ) {
+            if (some(entities, variable => !isEmpty(variable[IDkey]) && !variable[IDkey].match(validationRegExp))) {
                 formErrors[`${errorPrefix}KeyInvalid`] = tNameError('keyInvalid');
                 keyError = true;
             }
@@ -281,7 +279,7 @@ export default function TerraformModal({
                     variable =>
                         !isEmpty(variable.name) &&
                         variable.source !== 'static' &&
-                        !variable.name.match(validationRegExp)
+                        !variable.name.match(validationStrictRegExp)
                 )
             ) {
                 formErrors[`${errorPrefix}NameInvalid`] = tVariableError('nameInvalid');

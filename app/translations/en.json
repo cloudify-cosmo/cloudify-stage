@@ -926,23 +926,23 @@
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
                         "keyMissing": "Please provide variable key",
-                        "keyInvalid": "Please provide valid variable key. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                        "keyInvalid": "Please provide valid variable key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Variable keys must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide variable source",
                         "nameMissing": "Please provide variable name",
-                        "nameInvalid": "Please provide valid variable value - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                        "nameInvalid": "Please provide valid variable name. It should start with a letter and contain only letters, digits and the characters \"-\", \".\" and \"_\"."
                     },
                     "environmentVariable": {
                         "keyMissing": "Please provide environment variable key",
-                        "keyInvalid": "Please provide valid environment variable key. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                        "keyInvalid": "Please provide valid environment variable key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Environment variable keys must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide environment variable source",
                         "nameMissing": "Please provide environment variable name",
-                        "nameInvalid": "Please provide valid environment variable name - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
+                        "nameInvalid": "Please provide valid environment variable name. It should start with a letter and contain only letters, digits and the characters \"-\", \".\" and \"_\"."
                     },
                     "output": {
                         "keyMissing": "Please provide output name",
-                        "keyInvalid": "Please provide valid output key. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                        "keyInvalid": "Please provide valid output key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Outputs must be unique, duplicates are not allowed",
                         "typeMissing": "Please provide output type",
                         "outputMissing": "Please provide Terraform output",
