@@ -4,11 +4,12 @@ import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './typ
 type ValueListInputFieldProps = ErrorAwareInputFieldProps &
     RevertableInputFieldProps & {
         validValues: any[];
+        multiple: boolean;
     };
 
 export default function ValueListInputField(props: ValueListInputFieldProps) {
     const { Form } = Stage.Basic;
-    const { name, value, onChange, error, validValues } = props;
+    const { name, value, onChange, error, validValues, multiple = false } = props;
 
     const options = _.map(validValues, validValue => ({
         name: validValue,
@@ -26,6 +27,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
                 error={error}
                 options={options}
                 onChange={onChange}
+                multiple={multiple}
             />
             <PositionedRevertToDefaultIcon {...props} right={30} />
         </>
