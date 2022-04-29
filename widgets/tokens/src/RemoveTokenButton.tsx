@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { translationPath } from './widget.consts';
 import { tableRefreshEvent } from './TokensTable.consts';
 import { RequestStatus } from './types';
@@ -18,6 +18,13 @@ interface RemoveTokenButtonProps {
 const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
     const [isModalVisible, showModal, hideModal] = useBoolean();
     const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
+    const deleteModalContent = useMemo(() => {
+        const translationSufix = token.description ? 'withDescription' : 'withoutDescription';
+        return t(`deleteModal.content.${translationSufix}`, {
+            tokenId: token.id,
+            tokenDescription: token.description
+        });
+    }, [token.description]);
 
     const removeToken = () => {
         setDeletingStatus(RequestStatus.SUBMITTING);
@@ -44,14 +51,7 @@ const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
         <>
             <Icon bordered link name="trash" title={t('table.buttons.removeToken')} onClick={showModal} />
             {isModalVisible && (
-                <DeleteModal
-                    open
-                    content={t('deleteModal.content', {
-                        tokenId: token.id
-                    })}
-                    onCancel={hideModal}
-                    onConfirm={removeToken}
-                />
+                <DeleteModal open content={deleteModalContent} onCancel={hideModal} onConfirm={removeToken} />
             )}
         </>
     );
