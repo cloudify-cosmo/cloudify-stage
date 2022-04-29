@@ -11,11 +11,11 @@ const { useBoolean } = Stage.Hooks;
 const t = getT(translationPath);
 
 interface RemoveTokenButtonProps {
-    tokenId: TokensWidget.DataItem['id'];
+    token: TokensWidget.DataItem;
     toolbox: Stage.Types.Toolbox;
 }
 
-const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
+const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
     const [isModalVisible, showModal, hideModal] = useBoolean();
     const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
 
@@ -24,7 +24,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
 
         toolbox
             .getManager()
-            .doDelete(`/tokens/${tokenId}`)
+            .doDelete(`/tokens/${token.id}`)
             .then(() => {
                 setDeletingStatus(RequestStatus.SUBMITTED);
                 toolbox.getEventBus().trigger(tableRefreshEvent);
@@ -47,7 +47,7 @@ const RemoveTokenButton = ({ tokenId, toolbox }: RemoveTokenButtonProps) => {
                 <DeleteModal
                     open
                     content={t('deleteModal.content', {
-                        tokenId
+                        tokenId: token.id
                     })}
                     onCancel={hideModal}
                     onConfirm={removeToken}
