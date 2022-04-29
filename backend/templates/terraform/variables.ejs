@@ -2,6 +2,6 @@
         <%= name %>:
 <% } _%>
 <% variables.forEach(variable => { _%>
-          <%= variable.name %>: <% if (variable.source === "input" || variable.source === "secret") { _%>{ get_<%=
-              variable.source %>: '<%= String(variable.value).replace("'", "''") %>' }<% } else { _%>'<%= String(variable.default).replace("'", "''") %>'<% } %>
+          <%= variable.variable %>: <% if (variable.source === "input" || variable.source === "secret") { _%>{ get_<%=
+              variable.source %>: '<%= String(variable.name).replace("'", "''") %>' }<% } else { _%>'<%= String(variable.value).replace("'", "''") %>'<% } %>
 <% }) _%>

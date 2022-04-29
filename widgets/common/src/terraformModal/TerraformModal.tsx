@@ -85,7 +85,7 @@ type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
 
 const variablesColumns: Columns<Variable> = [
     {
-        id: 'name',
+        id: 'variable',
         label: t('variablesTable.variable'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: LengthLimitedDynamicTableInput,
@@ -104,7 +104,7 @@ const variablesColumns: Columns<Variable> = [
         width: 3
     },
     {
-        id: 'value',
+        id: 'name',
         label: t('variablesTable.name'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: TerraformVariableValueInput,
@@ -112,7 +112,7 @@ const variablesColumns: Columns<Variable> = [
         width: 3
     },
     {
-        id: 'default',
+        id: 'value',
         label: t('variablesTable.value'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: LengthLimitedDynamicTableInput,
@@ -236,27 +236,31 @@ export default function TerraformModal({
             }
         }
 
-        function validateNames(namedEntities: { name: string }[], errorPrefix: string) {
+        function validateIDs(
+            entities: Record<string, any>[],
+            errorPrefix: string,
+            IDkey: 'variable' | 'name' = 'variable'
+        ): void {
             const tNameError = Stage.Utils.composeT(tError, errorPrefix);
-            let nameError = false;
-            if (some(namedEntities, variable => isEmpty(variable.name))) {
-                formErrors[`${errorPrefix}NameMissing`] = tNameError('nameMissing');
-                nameError = true;
+            let keyError = false;
+            if (some(entities, variable => isEmpty(variable[IDkey]))) {
+                formErrors[`${errorPrefix}KeyMissing`] = tNameError('keyMissing');
+                keyError = true;
             }
             if (
-                some(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(validationStrictRegExp))
+                some(entities, variable => !isEmpty(variable[IDkey]) && !variable[IDkey].match(validationStrictRegExp))
             ) {
-                formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
-                nameError = true;
+                formErrors[`${errorPrefix}KeyInvalid`] = tNameError('keyInvalid');
+                keyError = true;
             }
 
-            if (!nameError && chain(namedEntities).keyBy('name').size().value() !== namedEntities.length) {
-                formErrors[`${errorPrefix}NameDuplicated`] = tNameError('nameDuplicated');
+            if (!keyError && chain(entities).keyBy(IDkey).size().value() !== entities.length) {
+                formErrors[`${errorPrefix}KeyDuplicated`] = tNameError('keyDuplicated');
             }
         }
 
         function validateVariables(variablesList: Variable[], errorPrefix: string) {
-            validateNames(variablesList, errorPrefix);
+            validateIDs(variablesList, errorPrefix);
 
             const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
 
@@ -266,26 +270,26 @@ export default function TerraformModal({
             if (
                 some(
                     variablesList,
-                    variable => isEmpty(variable.value) && (variable.source === 'secret' || variable.source === 'input')
+                    variable => isEmpty(variable.name) && (variable.source === 'secret' || variable.source === 'input')
                 )
             ) {
-                formErrors[`${errorPrefix}ValueMissing`] = tVariableError('valueMissing');
+                formErrors[`${errorPrefix}NameMissing`] = tVariableError('nameMissing');
             }
             if (
                 some(
                     variablesList,
                     variable =>
-                        !isEmpty(variable.value) &&
+                        !isEmpty(variable.name) &&
                         variable.source !== 'static' &&
-                        !variable.value.match(validationRegExp)
+                        !variable.name.match(validationRegExp)
                 )
             ) {
-                formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
+                formErrors[`${errorPrefix}NameInvalid`] = tVariableError('nameInvalid');
             }
         }
 
         function validateOutputs() {
-            validateNames(outputs, 'output');
+            validateIDs(outputs, 'output', 'name');
 
             const tOutputError = Stage.Utils.composeT(tError, 'output');
 
