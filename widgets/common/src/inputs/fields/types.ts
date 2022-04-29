@@ -17,4 +17,4 @@ export interface ErrorAwareInputFieldProps extends InputFieldProps {
 }
 
 export type DynamicDropdownInputFieldProps = ErrorAwareInputFieldProps &
-    Pick<DynamicDropdownProps, 'toolbox' | 'constraints'>;
+    Pick<DynamicDropdownProps, 'toolbox' | 'constraints' | 'multiple'>;
