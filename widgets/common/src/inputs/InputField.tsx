@@ -48,7 +48,7 @@ function InputField({
 
     const commonProps = {
         name,
-        value,
+        value: type === 'list' && typeof value === 'string' ? JSON.parse(value) : value,
         onChange,
         error,
         defaultValue
