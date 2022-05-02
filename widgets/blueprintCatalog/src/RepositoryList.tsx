@@ -4,12 +4,12 @@ import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
 import AuthenticatedWarning from './AuthenticatedWarning';
+import UploadingMessage from './UploadingMessage';
 
 import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 import type Actions from './actions';
 
 import { RepositoryViewProps } from './types';
-import { LoadingOverlay } from 'cloudify-ui-components';
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
@@ -157,18 +157,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const RepositoryView = widget.configuration.displayStyle === 'table' ? RepositoryTable : RepositoryCatalog;
 
         if (isDownloadingBlueprint) {
-            return (
-                <LoadingOverlay
-                    message={
-                        (
-                            <>
-                                Uploading {uploadingBlueprint} blueprint <br />
-                                After completing the upload, you'll be redirected to the blueprint page
-                            </>
-                        ) as any
-                    }
-                />
-            );
+            return <UploadingMessage blueprintName={uploadingBlueprint!} />;
         }
 
         return (
