@@ -11,6 +11,8 @@ import type Actions from './actions';
 
 import { RepositoryViewProps } from './types';
 
+const t = Stage.Utils.getT('widgets.blueprintCatalog');
+
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
     widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;
@@ -147,7 +149,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
             successMessages
         } = this.state;
         const { data, widget } = this.props;
-        const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
         const isUploadingBlueprint = !!uploadingBlueprint;
@@ -181,7 +182,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     onUpload={this.handleUpload}
                     onReadme={this.showReadmeModal}
                     readmeLoading={readmeLoading}
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noDataMessage')}
                 />
 
                 <ReadmeModal open={showReadmeModal} content={readmeContent} onHide={this.hideReadmeModal} />

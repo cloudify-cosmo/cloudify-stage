@@ -21,8 +21,8 @@ Stage.defineWidget<
 >({
     hasTemplate: false,
     id: widgetId,
-    name: 'Blueprints Catalog',
-    description: 'Shows blueprints catalog',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 20,
     color: 'teal',

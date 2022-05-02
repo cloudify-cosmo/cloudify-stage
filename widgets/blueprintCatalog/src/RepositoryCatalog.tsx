@@ -4,6 +4,9 @@ import type { FunctionComponent } from 'react';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 
+const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
+const t = Stage.Utils.getT('widgets.blueprintCatalog.catalog');
+
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -14,8 +17,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
-
     const catalogItems = data.items.map(item => {
         return (
             <Grid.Column key={item.id}>
@@ -43,14 +44,14 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">Created</h5>
+                                <h5 className="ui icon header">{t('properties.created')}</h5>
                             </Grid.Column>
                             <Grid.Column width="12">{item.created_at}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">Updated</h5>
+                                <h5 className="ui icon header">{t('properties.updated')}</h5>
                             </Grid.Column>
                             <Grid.Column width="12">{item.updated_at}</Grid.Column>
                         </Grid.Row>
