@@ -99,12 +99,20 @@ export default class BlueprintActionButtons extends React.Component<
         return modalType === type && showModal;
     }
 
+    showDeployModal = () => {
+        this.showModal(MODAL_TYPE.DEPLOY);
+    };
+
+    showDeleteModal = () => {
+        this.showModal(MODAL_TYPE.DELETE);
+    };
+
     componentDidMount() {
         const { toolbox } = this.props;
         const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
 
         if (openDeploymentModal) {
-            this.showModal(MODAL_TYPE.DEPLOY);
+            this.showDeployModal();
         }
     }
 
@@ -127,7 +135,7 @@ export default class BlueprintActionButtons extends React.Component<
                     color="teal"
                     icon="rocket"
                     disabled={disableButtons}
-                    onClick={() => this.showModal(MODAL_TYPE.DEPLOY)}
+                    onClick={this.showDeployModal}
                     content={t('createDeployment')}
                     id="createDeploymentButton"
                 />
@@ -137,7 +145,7 @@ export default class BlueprintActionButtons extends React.Component<
                     color="teal"
                     icon="trash"
                     disabled={disableButtons}
-                    onClick={() => this.showModal(MODAL_TYPE.DELETE)}
+                    onClick={this.showDeleteModal}
                     content={t('deleteBlueprint')}
                     id="deleteBlueprintButton"
                 />
