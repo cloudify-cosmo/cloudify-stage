@@ -9,7 +9,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onSelect = noop,
     onUpload = noop,
     readmeLoading = null,
-    uploadingInProgress = [],
     data,
     noDataMessage,
     onReadme,
@@ -68,7 +67,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                             }}
                         />
                         <Button
-                            loading={uploadingInProgress.includes(item.name)}
                             disabled={data.uploadedBlueprints.includes(item.name)}
                             icon="upload"
                             content="Upload"

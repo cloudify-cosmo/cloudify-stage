@@ -8,6 +8,7 @@ import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blue
 import type Actions from './actions';
 
 import { RepositoryViewProps } from './types';
+import { LoadingOverlay } from 'cloudify-ui-components';
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
@@ -16,7 +17,7 @@ interface RepositoryListProps {
     actions: Actions;
 }
 interface RepositoryListState {
-    uploadingBlueprints: string[];
+    uploadingBlueprint?: string;
     successMessages: string[];
     errorMessages: string[] | null;
     showReadmeModal: boolean;
@@ -34,7 +35,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         super(props);
 
         this.state = {
-            uploadingBlueprints: [],
             successMessages: [],
             errorMessages: null,
             showReadmeModal: false,
@@ -86,8 +86,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     ) => {
         const { toolbox, widget } = this.props;
         const BlueprintActions = Stage.Common.Blueprints.Actions;
-        const { uploadingBlueprints } = this.state;
-        this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
+        this.setState({ uploadingBlueprint: repositoryName });
 
         return new BlueprintActions(toolbox)
             .doUpload(repositoryName, {
@@ -100,9 +99,13 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
             })
             .catch(err => {
                 this.setState(prevState => ({
-                    errorMessages: [...(prevState.errorMessages ?? []), err.message],
-                    uploadingBlueprints: prevState.uploadingBlueprints.filter(item => item !== repositoryName)
+                    errorMessages: [...(prevState.errorMessages ?? []), err.message]
                 }));
+            })
+            .finally(() => {
+                this.setState({
+                    uploadingBlueprint: undefined
+                });
             });
     };
 
@@ -134,28 +137,33 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
             readmeContent,
             readmeLoading,
             showReadmeModal,
-            uploadingBlueprints,
+            uploadingBlueprint,
             successMessages
         } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { Message, Icon, ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
-
-        const notAuthenticatedWarning = (
-            <Message>
-                <Icon name="ban" />
-                <span>
-                    No GitHub credentials provided! Widget may stop working after reaching unrestricted query limit
-                    (~50). Fix this by adding &amp;github-username&amp; and &amp;github-password&amp; entries to your
-                    secrets store (Secrets widget).
-                </span>
-            </Message>
-        );
+        const isDownloadingBlueprint = !!uploadingBlueprint;
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
         const RepositoryView = widget.configuration.displayStyle === 'table' ? RepositoryTable : RepositoryCatalog;
+
+        if (isDownloadingBlueprint) {
+            return (
+                <LoadingOverlay
+                    message={
+                        (
+                            <>
+                                Uploading {uploadingBlueprint} blueprint <br />
+                                After completing the upload, you'll be redirected to the separate page
+                            </>
+                        ) as any
+                    }
+                />
+            );
+        }
 
         return (
             <div>
@@ -169,11 +177,19 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     errorMessages={errorMessages}
                     onDismissErrors={() => this.setState({ errorMessages: null })}
                 />
-                {showNotAuthenticatedWarning && notAuthenticatedWarning}
+                {showNotAuthenticatedWarning && (
+                    <Message>
+                        <Icon name="ban" />
+                        <span>
+                            No GitHub credentials provided! Widget may stop working after reaching unrestricted query
+                            limit (~50). Fix this by adding &amp;github-username&amp; and &amp;github-password&amp;
+                            entries to your secrets store (Secrets widget).
+                        </span>
+                    </Message>
+                )}
                 <RepositoryView
                     widget={widget}
                     data={data}
-                    uploadingInProgress={uploadingBlueprints}
                     fetchData={this.fetchData}
                     onSelect={this.selectItem}
                     onUpload={this.handleUpload}
