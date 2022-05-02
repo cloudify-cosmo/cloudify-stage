@@ -178,6 +178,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     onDismissErrors={() => this.setState({ errorMessages: null })}
                 />
                 {showNotAuthenticatedWarning && (
+                    // TODO: Extract as a separate component
                     <Message>
                         <Icon name="ban" />
                         <span>
