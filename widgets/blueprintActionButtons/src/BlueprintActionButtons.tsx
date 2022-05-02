@@ -107,6 +107,10 @@ export default class BlueprintActionButtons extends React.Component<
         this.showModal(MODAL_TYPE.DELETE);
     };
 
+    clearErrors = () => {
+        this.setState({ error: null });
+    };
+
     componentDidMount() {
         const { toolbox } = this.props;
         const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
@@ -128,7 +132,7 @@ export default class BlueprintActionButtons extends React.Component<
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
+                <ErrorMessage error={error} onDismiss={this.clearErrors} autoHide />
 
                 <Button
                     className="labeled icon"
