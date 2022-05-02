@@ -1,6 +1,6 @@
 const { Message, Icon } = Stage.Basic;
 
-const AuthenticatedWarning = () => {
+const AuthenticationWarning = () => {
     return (
         <Message>
             <Icon name="ban" />
@@ -13,4 +13,4 @@ const AuthenticatedWarning = () => {
     );
 };
 
-export default AuthenticatedWarning;
+export default AuthenticationWarning;

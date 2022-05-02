@@ -3,7 +3,7 @@ import { without } from 'lodash';
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
-import AuthenticatedWarning from './AuthenticatedWarning';
+import AuthenticationWarning from './AuthenticationWarning';
 import UploadingMessage from './UploadingMessage';
 
 import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
@@ -172,7 +172,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     errorMessages={errorMessages}
                     onDismissErrors={() => this.setState({ errorMessages: null })}
                 />
-                {showNotAuthenticatedWarning && <AuthenticatedWarning />}
+                {showNotAuthenticatedWarning && <AuthenticationWarning />}
                 <RepositoryView
                     widget={widget}
                     data={data}
