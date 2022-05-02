@@ -3,6 +3,7 @@ import { without } from 'lodash';
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
+import AuthenticatedWarning from './AuthenticatedWarning';
 
 import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 import type Actions from './actions';
@@ -147,7 +148,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         } = this.state;
         const { data, widget } = this.props;
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
-        const { Message, Icon, ReadmeModal } = Stage.Basic;
+        const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
         const isDownloadingBlueprint = !!uploadingBlueprint;
 
@@ -182,17 +183,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     errorMessages={errorMessages}
                     onDismissErrors={() => this.setState({ errorMessages: null })}
                 />
-                {showNotAuthenticatedWarning && (
-                    // TODO: Extract as a separate component
-                    <Message>
-                        <Icon name="ban" />
-                        <span>
-                            No GitHub credentials provided! Widget may stop working after reaching unrestricted query
-                            limit (~50). Fix this by adding &amp;github-username&amp; and &amp;github-password&amp;
-                            entries to your secrets store (Secrets widget).
-                        </span>
-                    </Message>
-                )}
+                {showNotAuthenticatedWarning && <AuthenticatedWarning />}
                 <RepositoryView
                     widget={widget}
                     data={data}
