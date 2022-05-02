@@ -150,13 +150,13 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
         const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
-        const isDownloadingBlueprint = !!uploadingBlueprint;
+        const isUploadingBlueprint = !!uploadingBlueprint;
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
         const RepositoryView = widget.configuration.displayStyle === 'table' ? RepositoryTable : RepositoryCatalog;
 
-        if (isDownloadingBlueprint) {
+        if (isUploadingBlueprint) {
             return <UploadingMessage blueprintName={uploadingBlueprint!} />;
         }
 
