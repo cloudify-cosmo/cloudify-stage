@@ -125,7 +125,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const { actions } = this.props;
 
         this.setState({ readmeLoading: repositoryName });
-        actions.doGetReadme(repositoryName, readmeUrl).then(content => {
+        actions.doGetReadme(readmeUrl).then(content => {
             this.setState({
                 readmeContent: Stage.Utils.parseMarkdown(content) || '',
                 showReadmeModal: true,

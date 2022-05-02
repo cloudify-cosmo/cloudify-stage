@@ -52,3 +52,5 @@ export interface RepositoryViewProps {
     readmeLoading: string | null;
     widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;
 }
+
+export type WidgetParameters = Record<string, string | number>;

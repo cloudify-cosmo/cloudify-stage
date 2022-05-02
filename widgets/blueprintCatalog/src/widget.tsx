@@ -3,7 +3,12 @@ import Actions from './actions';
 import Consts from './consts';
 import Utils from './utils';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
+import type {
+    BlueprintCatalogPayload,
+    BlueprintCatalogWidgetConfiguration,
+    Blueprint,
+    WidgetParameters
+} from './types';
 
 const t = Utils.getWidgetTranslation('');
 
@@ -14,11 +19,7 @@ const fieldsToShowItems = [
     t('configuration.fieldsToShow.items.updated')
 ];
 
-Stage.defineWidget<
-    Record<string, string | number>,
-    BlueprintCatalogPayload | Error,
-    BlueprintCatalogWidgetConfiguration
->({
+Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
     hasTemplate: false,
     id: Consts.WIDGET_ID,
     name: t('name'),
