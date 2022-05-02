@@ -1,6 +1,7 @@
-const { LoadingOverlay } = Stage.Basic;
+import Utils from './utils';
 
-const t = Stage.Utils.getT('widgets.blueprintCatalog.uploadingMessage');
+const { LoadingOverlay } = Stage.Basic;
+const t = Utils.getWidgetTranslation('uploadingMessage');
 
 interface UploadingMessageProps {
     blueprintName: string;

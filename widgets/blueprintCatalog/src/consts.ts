@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 export default {
+    WIDGET_ID: 'blueprintCatalog',
     GITHUB_DATA_SOURCE: 'github',
     JSON_DATA_SOURCE: 'json',
     DEFAULT_IMAGE: '/images/logo.png',

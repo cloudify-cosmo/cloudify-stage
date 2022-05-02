@@ -1,6 +1,7 @@
-const { Message, Icon } = Stage.Basic;
+import Utils from './utils';
 
-const t = Stage.Utils.getT('widgets.blueprintCatalog');
+const { Message, Icon } = Stage.Basic;
+const t = Utils.getWidgetTranslation();
 
 const AuthenticationWarning = () => {
     return (

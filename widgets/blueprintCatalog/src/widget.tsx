@@ -1,11 +1,11 @@
 import RepositoryList from './RepositoryList';
 import Actions from './actions';
 import Consts from './consts';
+import Utils from './utils';
 
 import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
 
-const widgetId = 'blueprintCatalog';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const t = Utils.getWidgetTranslation('');
 
 const fieldsToShowItems = [
     t('configuration.fieldsToShow.items.name'),
@@ -20,7 +20,7 @@ Stage.defineWidget<
     BlueprintCatalogWidgetConfiguration
 >({
     hasTemplate: false,
-    id: widgetId,
+    id: Consts.WIDGET_ID,
     name: t('name'),
     description: t('description'),
     initialWidth: 8,

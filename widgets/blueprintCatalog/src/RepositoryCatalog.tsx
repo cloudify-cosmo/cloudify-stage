@@ -2,10 +2,11 @@ import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 
 import Consts from './consts';
+import Utils from './utils';
 import type { RepositoryViewProps } from './types';
 
 const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
-const t = Stage.Utils.getT('widgets.blueprintCatalog.catalog');
+const t = Utils.getWidgetTranslation('catalog');
 
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,

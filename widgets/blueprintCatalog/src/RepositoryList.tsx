@@ -6,12 +6,16 @@ import RepositoryTable from './RepositoryTable';
 import AuthenticationWarning from './AuthenticationWarning';
 import UploadingMessage from './UploadingMessage';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
+import type {
+    RepositoryViewProps,
+    BlueprintCatalogPayload,
+    BlueprintCatalogWidgetConfiguration,
+    Blueprint
+} from './types';
+import Utils from './utils';
 import type Actions from './actions';
 
-import { RepositoryViewProps } from './types';
-
-const t = Stage.Utils.getT('widgets.blueprintCatalog');
+const t = Utils.getWidgetTranslation();
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
