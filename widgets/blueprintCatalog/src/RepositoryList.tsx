@@ -95,7 +95,12 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 imageUrl: Stage.Utils.Url.url(imageUrl)
             })
             .then(() => {
-                toolbox.drillDown(widget, 'blueprint', { blueprintId: repositoryName }, repositoryName);
+                toolbox.drillDown(
+                    widget,
+                    'blueprint',
+                    { blueprintId: repositoryName, openDeploymentModal: true },
+                    repositoryName
+                );
             })
             .catch(err => {
                 this.setState(prevState => ({
@@ -157,7 +162,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                         (
                             <>
                                 Uploading {uploadingBlueprint} blueprint <br />
-                                After completing the upload, you'll be redirected to the separate page
+                                After completing the upload, you'll be redirected to the blueprint page
                             </>
                         ) as any
                     }

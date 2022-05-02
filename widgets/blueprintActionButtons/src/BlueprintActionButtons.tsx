@@ -97,6 +97,15 @@ export default class BlueprintActionButtons extends React.Component<
         return modalType === type && showModal;
     }
 
+    componentDidMount() {
+        const { toolbox } = this.props;
+        const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
+
+        if (openDeploymentModal) {
+            this.showModal(BlueprintActionButtons.DEPLOY_ACTION);
+        }
+    }
+
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
         const { error, force, loading } = this.state;
