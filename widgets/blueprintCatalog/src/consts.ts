@@ -6,6 +6,7 @@ export default {
     BLUEPRINT_IMAGE_FILENAME: 'blueprint.png',
     GITHUB_BLUEPRINT_IMAGE_URL: (user: string, repo: string) => `/github/content/${user}/${repo}/master/blueprint.png`,
     CONTEXT_KEY: {
-        UPLOADING_BLUEPRINT: 'uploadingBlueprint'
+        UPLOADING_BLUEPRINT: 'uploadingBlueprint',
+        BLUEPRINT_CATALOG_ID: 'blueprintCatalogId'
     }
 };
