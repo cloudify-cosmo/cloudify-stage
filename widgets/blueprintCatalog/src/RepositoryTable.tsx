@@ -1,5 +1,5 @@
 import { noop } from 'lodash';
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 import Utils from './utils';
 import Consts from './consts';
