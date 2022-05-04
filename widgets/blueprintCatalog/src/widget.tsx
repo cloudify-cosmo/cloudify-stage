@@ -1,4 +1,5 @@
 import RepositoryList from './RepositoryList';
+import UploadingMessage from './UploadingMessage';
 import Actions from './actions';
 import Consts from './consts';
 import Utils from './utils';
@@ -144,6 +145,12 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
 
     render(widget, data, _error, toolbox) {
         const { Common, Basic } = Stage;
+        const isUploadingBlueprintFromAnotherTab = Utils.isUploadingBlueprintOnAnotherCatalogTab(toolbox);
+
+        if (isUploadingBlueprintFromAnotherTab) {
+            const uploadingBlueprintName = Utils.getUploadingBlueprintFromCatalogTabs(toolbox);
+            return <UploadingMessage blueprintName={uploadingBlueprintName} />;
+        }
 
         if (data instanceof Error) {
             return <Common.Components.NoDataMessage error={data} repositoryName="blueprints" />;

@@ -5,16 +5,21 @@ const widgetTranslation = Stage.Utils.getT(`widgets.${Consts.WIDGET_ID}`);
 
 const getWidgetTranslation = (translationPath = '') => Stage.Utils.composeT(widgetTranslation, translationPath);
 
-const setUploadingBlueprintInContext = (toolbox: WidgetlessToolbox, blueprintName: string) => {
+const setUploadingBlueprintAcrossCatalogTabs = (toolbox: WidgetlessToolbox, blueprintName: string) => {
     toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT, blueprintName);
 };
 
-const getUploadingBlueprintFromContext = (toolbox: WidgetlessToolbox) => {
+const getUploadingBlueprintFromCatalogTabs = (toolbox: WidgetlessToolbox) => {
     return toolbox.getContext().getValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT);
+};
+
+const isUploadingBlueprintOnAnotherCatalogTab = (toolbox: WidgetlessToolbox): boolean => {
+    return !!getUploadingBlueprintFromCatalogTabs(toolbox);
 };
 
 export default {
     getWidgetTranslation,
-    setUploadingBlueprintInContext,
-    getUploadingBlueprintFromContext
+    setUploadingBlueprintAcrossCatalogTabs,
+    getUploadingBlueprintFromCatalogTabs,
+    isUploadingBlueprintOnAnotherCatalogTab
 };
