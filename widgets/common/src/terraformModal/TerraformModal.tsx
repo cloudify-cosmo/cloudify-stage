@@ -475,6 +475,7 @@ export default function TerraformModal({
                                         label={t(`password`)}
                                         onBlur={handleTemplateUrlBlur}
                                         required={urlAuthentication}
+                                        type="password"
                                     />
                                 </Form.Field>
                             </Form.Group>

@@ -65,7 +65,7 @@ const TokensTable = ({ data, toolbox }: TokensTableProps) => {
                                 <TextEllipsis content={Time.formatTimestamp(dataItem.last_used)} />
                             </DataTable.Data>
                             <DataTable.Data>
-                                <RemoveTokenButton tokenId={dataItem.id} toolbox={toolbox} />
+                                <RemoveTokenButton token={dataItem} toolbox={toolbox} />
                             </DataTable.Data>
                         </DataTable.Row>
                     );

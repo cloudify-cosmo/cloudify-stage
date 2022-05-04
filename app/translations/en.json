@@ -1637,7 +1637,10 @@
                 }
             },
             "deleteModal": {
-                "content": "Are you sure you want to delete the token with ID {{tokenId}}?"
+                "content": {
+                    "withoutDescription": "Are you sure you want to delete the token with ID '{{tokenId}}'?",
+                    "withDescription": "Are you sure you want to delete the token with ID '{{tokenId}}' and description '{{tokenDescription}}'?"
+                }
             },
             "createModal": {
                 "header": "Create token",

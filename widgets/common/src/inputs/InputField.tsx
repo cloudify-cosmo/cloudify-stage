@@ -43,10 +43,12 @@ function InputField({
 
     const getConstraintValue = getConstraintValueFunction(constraints);
     const validValues = getConstraintValue('valid_values');
+    const componentType = type === 'list' && input.item_type ? input.item_type : type;
+    const multiple = type === 'list';
 
     const commonProps = {
         name,
-        value,
+        value: type === 'list' && input.item_type && typeof value === 'string' ? JSON.parse(value) : value,
         onChange,
         error,
         defaultValue
@@ -55,15 +57,16 @@ function InputField({
     const commonDynamicDropdownFieldProps = {
         ...commonProps,
         toolbox,
-        constraints
+        constraints,
+        multiple
     };
 
     // Show only valid values in dropdown if 'valid_values' constraint is set
-    if (!_.isUndefined(validValues) && !_.isNull(validValues)) {
-        return <ValueListInputField {...commonProps} validValues={validValues} />;
+    if (!_.isNil(validValues)) {
+        return <ValueListInputField {...commonProps} multiple={multiple} validValues={validValues} />;
     }
 
-    switch (type) {
+    switch (componentType) {
         case 'boolean':
             return <BooleanInputField {...commonProps} />;
         case 'integer':
@@ -78,7 +81,7 @@ function InputField({
                 <NumberInputField
                     {...commonProps}
                     constraints={{ inRange, greaterThan, greaterOrEqual, lessThan, lessOrEqual }}
-                    type={type}
+                    type={componentType}
                 />
             );
         }
@@ -90,21 +93,22 @@ function InputField({
             return <DeploymentIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'blueprint_id':
             return <BlueprintIdInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_id':
+            return <NodeIdInputField {...commonDynamicDropdownFieldProps} />;
+        case 'node_instance':
+            return <NodeInstanceInputField {...commonDynamicDropdownFieldProps} />;
         case 'scaling_group':
             return <ScalingGroupInputField {...commonDynamicDropdownFieldProps} />;
         case 'node_type':
             return <NodeTypeInputField {...commonDynamicDropdownFieldProps} />;
-        case 'node_instance':
-            return <NodeInstanceInputField {...commonDynamicDropdownFieldProps} />;
         case 'capability_value':
             return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
             return <SecretKeyInputField {...commonDynamicDropdownFieldProps} />;
-        case 'node_id':
-            return <NodeIdInputField {...commonDynamicDropdownFieldProps} />;
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
+        case 'list':
         default:
             return <GenericInputField {...commonProps} />;
     }
