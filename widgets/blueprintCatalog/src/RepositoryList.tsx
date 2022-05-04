@@ -42,7 +42,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         super(props);
 
         this.state = {
-            uploadingBlueprint: props.toolbox.getContext().getValue('uploadingBlueprint'),
+            uploadingBlueprint: Utils.getUploadingBlueprintFromContext(props.toolbox),
             successMessages: [],
             errorMessages: null,
             showReadmeModal: false,
@@ -86,11 +86,11 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         return toolbox.refresh(fetchParams);
     };
 
-    setUploadingBlueprint = (repositoryName: string) => {
+    setUploadingBlueprint = (uploadingBlueprint: string) => {
         const { toolbox } = this.props;
 
-        this.setState({ uploadingBlueprint: repositoryName });
-        toolbox.getContext().setValue('uploadingBlueprint', repositoryName);
+        this.setState({ uploadingBlueprint: uploadingBlueprint });
+        Utils.setUploadingBlueprintInContext(toolbox, uploadingBlueprint);
     };
 
     handleUpload: RepositoryViewProps['onUpload'] = (
