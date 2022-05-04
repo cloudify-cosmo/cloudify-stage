@@ -44,7 +44,7 @@ function InputField({
     const getConstraintValue = getConstraintValueFunction(constraints);
     const validValues = getConstraintValue('valid_values');
     const componentType = type === 'list' && input.item_type ? input.item_type : type;
-    const multiple = type === 'list';
+    const multiple = !!(type === 'list' && input.item_type);
 
     const commonProps = {
         name,
