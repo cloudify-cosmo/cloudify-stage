@@ -43,12 +43,12 @@ function InputField({
 
     const getConstraintValue = getConstraintValueFunction(constraints);
     const validValues = getConstraintValue('valid_values');
-    const componentType = type === 'list' ? input.item_type : type;
+    const componentType = type === 'list' && input.item_type ? input.item_type : type;
     const multiple = type === 'list';
 
     const commonProps = {
         name,
-        value: type === 'list' && typeof value === 'string' ? JSON.parse(value) : value,
+        value: type === 'list' && input.item_type && typeof value === 'string' ? JSON.parse(value) : value,
         onChange,
         error,
         defaultValue
@@ -62,7 +62,7 @@ function InputField({
     };
 
     // Show only valid values in dropdown if 'valid_values' constraint is set
-    if (!_.isUndefined(validValues) && !_.isNull(validValues)) {
+    if (!_.isNil(validValues)) {
         return <ValueListInputField {...commonProps} multiple={multiple} validValues={validValues} />;
     }
 
@@ -108,6 +108,7 @@ function InputField({
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
+        case 'list':
         default:
             return <GenericInputField {...commonProps} />;
     }
