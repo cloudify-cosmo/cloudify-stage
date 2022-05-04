@@ -48,7 +48,7 @@ export interface RepositoryViewProps {
     noDataMessage: string;
     onReadme: (name: string, url: string) => void;
     onSelect: (item: Blueprint) => void;
-    onUpload: (name: string, zipUrl: string, imageUrl: string, mainBlueprint: string) => Promise<unknown>;
+    onUpload: (name: string, zipUrl: string, imageUrl: string, mainBlueprint: string) => void;
     readmeLoading: string | null;
     widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;
 }
