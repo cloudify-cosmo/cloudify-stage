@@ -1,4 +1,5 @@
-import React, { ComponentProps, FunctionComponent, useMemo } from 'react';
+import type { ComponentProps, FunctionComponent } from 'react';
+import React, { useMemo } from 'react';
 import type { SemanticCOLORS } from 'semantic-ui-react';
 
 type SemanticColorDropdownProps = Pick<

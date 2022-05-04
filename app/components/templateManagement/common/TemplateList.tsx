@@ -1,5 +1,7 @@
-import React, { FunctionComponent } from 'react';
-import ItemsList, { ItemsListProps } from './ItemsList';
+import type { FunctionComponent } from 'react';
+import React from 'react';
+import type { ItemsListProps } from './ItemsList';
+import ItemsList from './ItemsList';
 
 interface TemplateListProps {
     templates: string[];

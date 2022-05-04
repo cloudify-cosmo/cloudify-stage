@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo } from 'react';
+import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import Consts from '../Consts';
 
 const DefaultTileLayer: FunctionComponent = () => {

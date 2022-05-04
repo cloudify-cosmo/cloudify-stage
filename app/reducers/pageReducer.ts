@@ -6,19 +6,10 @@ import type { AnyAction, Reducer } from 'redux';
 
 import * as types from '../actions/types';
 import widgets from './widgetsReducer';
-import {
-    addTab,
-    forAllWidgets,
-    forEachWidget,
-    isWidgetsSection,
-    LayoutSection,
-    moveTab,
-    PageDefinition,
-    removeTab,
-    TabContent,
-    updateTab
-} from '../actions/page';
-import { createPagesMap, InsertPosition, PageGroup, PageMenuItem } from '../actions/pageMenu';
+import type { addTab, LayoutSection, moveTab, PageDefinition, removeTab, TabContent, updateTab } from '../actions/page';
+import { forAllWidgets, forEachWidget, isWidgetsSection } from '../actions/page';
+import type { PageGroup, PageMenuItem } from '../actions/pageMenu';
+import { createPagesMap, InsertPosition } from '../actions/pageMenu';
 import Consts from '../utils/consts';
 
 type TabsAction =

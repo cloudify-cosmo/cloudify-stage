@@ -1,7 +1,8 @@
 import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import i18n from 'i18next';
-import { connect, ConnectedProps } from 'react-redux';
+import type { ConnectedProps } from 'react-redux';
+import { connect } from 'react-redux';
 import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
@@ -10,13 +11,12 @@ import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { Button, EditableLabel } from './basic';
 import { PageContent } from './shared/widgets';
+import type { LayoutSection, PageDefinition } from '../actions/page';
 import {
     addLayoutSectionToPage,
     addTab,
     changePageDescription,
-    LayoutSection,
     moveTab,
-    PageDefinition,
     removeLayoutSectionFromPage,
     removeTab,
     updateTab

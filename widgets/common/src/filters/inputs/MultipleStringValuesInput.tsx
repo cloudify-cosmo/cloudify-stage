@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo } from 'react';
+import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react';
 
 interface MultipleStringValuesInputProps {

@@ -1,4 +1,4 @@
-import { SemanticICONS } from 'semantic-ui-react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import * as types from '../types';
 
 export function deletePageGroup(pageGroupId: string) {

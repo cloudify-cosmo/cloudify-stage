@@ -4,7 +4,8 @@ import log from 'loglevel';
 import { saveAs } from 'file-saver';
 import { marked } from 'marked';
 import { v4 } from 'uuid';
-import i18n, { TFunction } from 'i18next';
+import type { TFunction } from 'i18next';
+import i18n from 'i18next';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
@@ -14,7 +15,8 @@ import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
 import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
-import { isEmptyWidgetData, WidgetDefinition } from './StageAPI';
+import type { WidgetDefinition } from './StageAPI';
+import { isEmptyWidgetData } from './StageAPI';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;

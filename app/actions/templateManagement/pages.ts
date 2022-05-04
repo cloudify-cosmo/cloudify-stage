@@ -1,12 +1,13 @@
 // @ts-nocheck File not migrated fully to TS
 import { push } from 'connected-react-router';
 import _ from 'lodash';
-import { ThunkAction } from 'redux-thunk';
-import { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
+import type { AnyAction } from 'redux';
 import * as types from '../types';
-import { forEachWidget, SimpleWidgetObj } from '../page';
+import type { SimpleWidgetObj } from '../page';
+import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 
 type Page = ReduxState['templates']['pagesDef'][string] & { id: string; oldId?: string };
 

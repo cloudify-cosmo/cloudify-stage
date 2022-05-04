@@ -1,4 +1,4 @@
-import { EDITION } from '../consts';
+import type { EDITION } from '../consts';
 import type { GroupSystemRoles, TenantsRoles } from '../types';
 
 /* eslint-disable camelcase */

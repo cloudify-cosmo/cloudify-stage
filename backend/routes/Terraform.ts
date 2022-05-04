@@ -1,5 +1,6 @@
 import _, { escapeRegExp, trimEnd } from 'lodash';
-import decompress, { File } from 'decompress';
+import type { File } from 'decompress';
+import decompress from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';

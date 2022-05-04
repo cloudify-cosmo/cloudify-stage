@@ -1,5 +1,5 @@
 import RevertToDefaultIcon from './RevertToDefaultIcon';
-import { RevertableInputFieldProps } from './types';
+import type { RevertableInputFieldProps } from './types';
 
 export default function BooleanInputField(props: RevertableInputFieldProps) {
     const { Form } = Stage.Basic;

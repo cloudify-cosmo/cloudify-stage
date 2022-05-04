@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 
 interface DetailsModalProps {
     // eslint-disable-next-line camelcase

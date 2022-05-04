@@ -1,5 +1,6 @@
-import React, { CSSProperties, FunctionComponent } from 'react';
-import { SemanticICONS } from 'semantic-ui-react';
+import type { CSSProperties, FunctionComponent } from 'react';
+import React from 'react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import { ApproveButton, CancelButton, Divider, Popup } from '../basic';
 import { SemanticIconDropdown } from '../shared';
 import { useInput, useOpen } from '../../utils/hooks';

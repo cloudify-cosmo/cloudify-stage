@@ -8,7 +8,7 @@ import { setAppLoading } from './appState';
 import { setEditMode } from './config';
 import { clearContext } from './context';
 import { reloadUserAppData } from './userApp';
-import { ReduxState } from '../reducers';
+import type { ReduxState } from '../reducers';
 
 function requestTenants() {
     return {
