@@ -1,7 +1,7 @@
 describe('Execute Workflow modal handles parameters of type', () => {
     const resourcePrefix = 'workflow_parameters_test_';
 
-    const types = ['node_id', 'node_type', 'node_instance', 'scaling_group'];
+    const types = ['node_id', 'node_type', 'node_instance', 'scaling_group', 'node_id_list', 'node_instance_list'];
 
     const openWorkflowParametersModal = (type: string) => {
         const deploymentName = `${resourcePrefix}${type}_type_deployment`;
@@ -11,8 +11,12 @@ describe('Execute Workflow modal handles parameters of type', () => {
         cy.contains('Test parameters').click();
     };
 
+    const verifyMultipleDropdown = () => {
+        cy.get(`.multiple`).should('exist');
+    };
+
     const verifyNumberOfOptions = (number: number) => {
-        cy.get('input').click();
+        cy.get('div.dropdown').click();
 
         if (number === 0) {
             cy.get('.menu').contains('No results found.').should('be.visible');
@@ -85,6 +89,30 @@ describe('Execute Workflow modal handles parameters of type', () => {
         });
         cy.getField('scaling_group_contains_node1').within(() => {
             verifyNumberOfOptions(2);
+        });
+    });
+
+    it('node_id list', () => {
+        openWorkflowParametersModal('node_id_list');
+        cy.getField('node1').within(() => {
+            verifyNumberOfOptions(2);
+            verifyMultipleDropdown();
+        });
+        cy.getField('node2').within(() => {
+            verifyDropdownNumberOfOptions(2);
+            verifyMultipleDropdown();
+        });
+    });
+
+    it('node_instance list', () => {
+        openWorkflowParametersModal('node_instance_list');
+        cy.getField('node_instance_all').within(() => {
+            verifyNumberOfOptions(3);
+            verifyMultipleDropdown();
+        });
+        cy.getField('node_instance_starts_With_node1').within(() => {
+            verifyNumberOfOptions(2);
+            verifyMultipleDropdown();
         });
     });
 });

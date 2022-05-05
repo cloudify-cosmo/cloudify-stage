@@ -16,6 +16,10 @@ import NodeIdInputField from './fields/NodeIdInputField';
 
 import type { Constraint, Input, OnChange } from './types';
 
+function isListComponentInputType(input: Input): boolean {
+    return !!(input.item_type && input.type === 'list');
+}
+
 function getConstraintValueFunction(constraints: Constraint[]) {
     return (constraintName: string) => {
         if (_.isEmpty(constraints)) {
@@ -43,12 +47,12 @@ function InputField({
 
     const getConstraintValue = getConstraintValueFunction(constraints);
     const validValues = getConstraintValue('valid_values');
-    const componentType = type === 'list' && input.item_type ? input.item_type : type;
-    const multiple = type === 'list';
+    const componentType = isListComponentInputType(input) ? input.item_type : type;
+    const multiple = isListComponentInputType(input);
 
     const commonProps = {
         name,
-        value: type === 'list' && input.item_type && typeof value === 'string' ? JSON.parse(value) : value,
+        value: isListComponentInputType(input) && typeof value === 'string' ? JSON.parse(value) : value,
         onChange,
         error,
         defaultValue
