@@ -64,8 +64,8 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
             {width && (
                 <ReactGridLayout
                     className={['layout', isEditMode && 'isEditMode'].join(' ')}
-                    breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
-                    cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
+                    breakpoints={{ lg: 642, md: 641, sm: 640, xs: 320, xxs: 0 }}
+                    cols={{ lg: 12, md: 12, sm: 8, xs: 6, xxs: 2 }}
                     rowHeight={10}
                     onLayoutChange={saveChangedItems}
                     isDraggable={isEditMode}
