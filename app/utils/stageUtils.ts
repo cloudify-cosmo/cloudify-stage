@@ -61,17 +61,13 @@ export default class StageUtils {
     static formatLocalTimestamp = TimeUtils.formatLocalTimestamp.bind(TimeUtils);
 
     static formatDisplayName(data: Partial<{ id: string; displayName: string }>): string {
-        if (data.id === undefined) {
-            log.error('id is undefined');
+        if (!data.id) {
+            log.error('id is falsy');
 
             return '';
         }
 
-        if (data.id === data.displayName) {
-            return data.id;
-        }
-
-        if (data.displayName) {
+        if (data.displayName && data.id !== data.displayName) {
             return `${data.displayName} (${data.id})`;
         }
 
