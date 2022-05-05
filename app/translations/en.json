@@ -942,7 +942,7 @@
                     },
                     "output": {
                         "keyMissing": "Please provide output name",
-                        "keyInvalid": "Please provide valid output key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                        "keyInvalid": "Please provide valid output name. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Outputs must be unique, duplicates are not allowed",
                         "typeMissing": "Please provide output type",
                         "outputMissing": "Please provide Terraform output",
