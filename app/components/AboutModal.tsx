@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useContext } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import { HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
@@ -12,7 +13,7 @@ import CurrentVersion from './license/CurrentVersion';
 import EulaLink from './license/EulaLink';
 import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
-import { ReduxState } from '../reducers';
+import type { ReduxState } from '../reducers';
 
 interface AboutModalProps {
     open: boolean;

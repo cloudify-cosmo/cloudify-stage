@@ -10,8 +10,8 @@ import type { Site, SiteWithPosition } from '../../map/site';
 import { invalidateSizeAfterDimensionsChange } from '../../map/widget-dimensions';
 import type { WidgetDimensions } from '../../map/widget-dimensions';
 
-import { Deployment } from '../types';
-import { DeploymentSitePair } from './common';
+import type { Deployment } from '../types';
+import type { DeploymentSitePair } from './common';
 import { DeploymentSiteMarker, DeploymentMarkerClusterGroup } from './marker';
 import { selectDeployment } from '../common';
 

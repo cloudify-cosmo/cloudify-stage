@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';
-import { UserAppsInstance } from '../db/models/UserAppsModel';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
 
 const router = express.Router();
 

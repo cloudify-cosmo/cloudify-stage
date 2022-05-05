@@ -1,5 +1,5 @@
 import type { ComponentProps, FunctionComponent, RefObject } from 'react';
-import { Dropdown } from 'semantic-ui-react';
+import type { Dropdown } from 'semantic-ui-react';
 import DynamicDropdown from '../components/DynamicDropdown';
 import useLabelInput from '../hooks/useLabelInput';
 import ValidationErrorPopup from './ValidationErrorPopup';

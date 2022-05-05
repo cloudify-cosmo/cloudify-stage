@@ -1,10 +1,11 @@
-import React, { FunctionComponent, useContext } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useContext } from 'react';
 import i18n from 'i18next';
 import { useSelector } from 'react-redux';
 import builtInLogo from 'cloudify-ui-common/images/logo_color_dark_background.svg';
 import styled, { ThemeContext } from 'styled-components';
 import { Logo, ProductVersion } from '../basic';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import LicenseLabel from '../LicenseLabel';
 import { Link } from '../shared';
 import Consts from '../../utils/consts';

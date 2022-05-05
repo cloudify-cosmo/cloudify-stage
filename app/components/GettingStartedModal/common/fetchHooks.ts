@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import Internal from '../../../utils/Internal';
-import Manager from '../../../utils/Manager';
+import type Internal from '../../../utils/Internal';
+import type Manager from '../../../utils/Manager';
 import { useInternal } from './managerHooks';
 import useManager from '../../../utils/hooks/useManager';
 

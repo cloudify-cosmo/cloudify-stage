@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 import RuleRow from './RuleRow';
 import AddRuleButton from './AddRuleButton';
-import type { FilterRule, FilterRuleRow } from './types';
-import { FilterResourceType, FilterRuleOperators, FilterRuleRowType, FilterRuleType } from './types';
+import type { FilterRule, FilterRuleRow, FilterResourceType } from './types';
+import { FilterRuleOperators, FilterRuleRowType, FilterRuleType } from './types';
 import { isMultipleValuesOperator } from './common';
 import ResourceTypeContext from './resourceTypeContext';
 

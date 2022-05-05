@@ -1,7 +1,7 @@
 import type { Reducer } from 'redux';
 import * as types from '../../actions/types';
 import Auth from '../../utils/auth';
-import Consts from '../../utils/consts';
+import type Consts from '../../utils/consts';
 import type { LicenseResponse } from '../../../backend/routes/Auth.types';
 
 type ValueOf<T> = T[keyof T];

@@ -1,11 +1,10 @@
 import { without } from 'lodash';
-import { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import type { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import Consts from 'app/utils/consts';
+import type { FilterRule, FilterRuleOperator } from '../../../../widgets/common/src/filters/types';
 import {
     AttributesFilterRuleOperators,
-    FilterRule,
     FilterRuleAttribute,
-    FilterRuleOperator,
     FilterRuleOperators,
     FilterRuleRowType,
     FilterRuleType,

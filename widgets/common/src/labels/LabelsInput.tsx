@@ -7,7 +7,7 @@ import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
 import ValueDropdown from './ValueDropdown';
-import { Label } from './types';
+import type { Label } from './types';
 
 const iconStyle = {
     position: 'absolute',

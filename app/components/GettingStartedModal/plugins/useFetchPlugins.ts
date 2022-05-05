@@ -1,7 +1,8 @@
 import i18n from 'i18next';
 import { useMemo } from 'react';
 
-import { FetchHook, useInternalFetch, useManagerFetch } from '../common/fetchHooks';
+import type { FetchHook } from '../common/fetchHooks';
+import { useInternalFetch, useManagerFetch } from '../common/fetchHooks';
 
 import type { CatalogPluginResponse, ManagerPluginResponse, ManagerPluginsResponse } from './model';
 

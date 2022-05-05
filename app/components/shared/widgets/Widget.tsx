@@ -2,8 +2,10 @@
 import _ from 'lodash';
 import log from 'loglevel';
 import i18n from 'i18next';
-import React, { Component, createRef, ErrorInfo, ReactElement } from 'react';
-import { connect, ConnectedProps, MapStateToProps } from 'react-redux';
+import type { ErrorInfo, ReactElement } from 'react';
+import React, { Component, createRef } from 'react';
+import type { ConnectedProps, MapStateToProps } from 'react-redux';
+import { connect } from 'react-redux';
 
 import { setValue } from '../../../actions/context';
 import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/WidgetData';
@@ -14,7 +16,8 @@ import WidgetDynamicContent from '../../WidgetDynamicContent';
 import type { ManagerData } from '../../../reducers/managerReducer';
 import type { ReduxState } from '../../../reducers';
 import type { Widget as WidgetObj } from '../../../utils/StageAPI';
-import { getWidgetDefinitionById, SimpleWidgetObj } from '../../../actions/page';
+import type { SimpleWidgetObj } from '../../../actions/page';
+import { getWidgetDefinitionById } from '../../../actions/page';
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;

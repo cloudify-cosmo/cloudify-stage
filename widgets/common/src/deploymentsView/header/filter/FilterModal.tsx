@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import DynamicDropdown from '../../../components/DynamicDropdown';
 import { i18nMessagesPrefix, i18nPrefix } from '../../common';
 import RulesForm from '../../../filters/RulesForm';
-import { FilterRule } from '../../../filters/types';
+import type { FilterRule } from '../../../filters/types';
 import useFilterQuery from '../../useFilterQuery';
 import FilterActions from '../../../filters/FilterActions';
 import SaveButton from './SaveButton';

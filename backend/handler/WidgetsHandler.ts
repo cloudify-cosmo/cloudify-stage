@@ -12,7 +12,7 @@ import { getConfig } from '../config';
 import { getResourcePath } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
-import { UserAppsInstance } from '../db/models/UserAppsModel';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
 
 const logger = getLogger('WidgetHandler');
 
