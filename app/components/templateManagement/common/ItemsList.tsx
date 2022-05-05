@@ -1,6 +1,7 @@
 import _, { noop } from 'lodash';
-import React, { CSSProperties, FunctionComponent } from 'react';
-import { IconProps } from 'semantic-ui-react';
+import type { CSSProperties, FunctionComponent } from 'react';
+import React from 'react';
+import type { IconProps } from 'semantic-ui-react';
 import { Divider, Icon, List, Message, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 

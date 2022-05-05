@@ -1,5 +1,6 @@
 import { camelCase } from 'lodash';
-import { FunctionComponent, useMemo } from 'react';
+import type { FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import type { DropdownItemProps } from 'semantic-ui-react/dist/commonjs/modules/Dropdown/DropdownItem';
 
 import { getTranslation } from './common';

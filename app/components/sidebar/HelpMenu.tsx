@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 
 import { useSelector } from 'react-redux';
 import type { ReduxState } from '../../reducers';
@@ -7,7 +8,7 @@ import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
 import AboutModal from '../AboutModal';
 import { useBoolean } from '../../utils/hooks';
-import { SystemMenuGroupItemProps } from './SystemMenu';
+import type { SystemMenuGroupItemProps } from './SystemMenu';
 
 const t = StageUtils.getT('users');
 const tHelp = StageUtils.getT('help');

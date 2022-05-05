@@ -1,8 +1,9 @@
-import React, { ComponentProps, FunctionComponent, useMemo } from 'react';
+import type { ComponentProps, FunctionComponent } from 'react';
+import React, { useMemo } from 'react';
 import type { DropdownProps, SemanticICONS } from 'semantic-ui-react';
 import { Dropdown, Icon } from '../basic';
 import { useBoolean } from '../../utils/hooks';
-import { CustomConfigurationComponentProps } from '../../utils/StageAPI';
+import type { CustomConfigurationComponentProps } from '../../utils/StageAPI';
 
 const semanticIcons: (SemanticICONS | '')[] = [
     'american sign language interpreting',

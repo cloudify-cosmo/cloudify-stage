@@ -9,8 +9,9 @@ import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingSta
 import type { CatalogPluginResponse, ManagerPluginResponse, URLString } from '../plugins/model';
 import type { PluginsHook } from '../plugins/useFetchPlugins';
 import type { SecretsHook } from '../secrets/useFetchSecrets';
-import useFetchBlueprints, { BlueprintsHook } from '../blueprints/useFetchBlueprints';
-import { BlueprintResponse } from '../blueprints/model';
+import type { BlueprintsHook } from '../blueprints/useFetchBlueprints';
+import useFetchBlueprints from '../blueprints/useFetchBlueprints';
+import type { BlueprintResponse } from '../blueprints/model';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.

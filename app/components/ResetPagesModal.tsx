@@ -2,7 +2,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import React from 'react';
 import i18n from 'i18next';
-import { CheckboxProps } from 'semantic-ui-react';
+import type { CheckboxProps } from 'semantic-ui-react';
 
 import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from './basic';
 

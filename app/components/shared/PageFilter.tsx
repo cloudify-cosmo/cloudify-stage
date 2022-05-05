@@ -1,8 +1,9 @@
 import { map, noop, pickBy } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { FunctionComponent, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { DropdownProps } from 'semantic-ui-react';
+import type { DropdownProps } from 'semantic-ui-react';
 import type { PageDefinition } from '../../actions/page';
 import { createPagesMap } from '../../actions/pageMenu';
 import type { ReduxState } from '../../reducers';

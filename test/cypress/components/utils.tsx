@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import { mount } from '@cypress/react';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';

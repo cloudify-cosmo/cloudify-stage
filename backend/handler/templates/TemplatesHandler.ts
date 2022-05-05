@@ -8,7 +8,7 @@ import { getResourcePath } from '../../utils';
 import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
-import { TenantsRoles } from '../../types';
+import type { TenantsRoles } from '../../types';
 
 const logger = getLogger('TemplateHandler');
 

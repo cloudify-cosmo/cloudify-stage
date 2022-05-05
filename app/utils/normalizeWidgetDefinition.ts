@@ -1,7 +1,7 @@
 import log from 'loglevel';
 
 import GenericConfig from './GenericConfig';
-import { WidgetDefinition, InitialWidgetDefinition } from './StageAPI';
+import type { WidgetDefinition, InitialWidgetDefinition } from './StageAPI';
 
 export default function normalizeWidgetDefinition<Params, Data, Configuration>(
     initialDefinition: InitialWidgetDefinition<Params, Data, Configuration>

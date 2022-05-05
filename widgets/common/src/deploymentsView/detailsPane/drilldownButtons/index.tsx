@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import type { Deployment } from '../../types';
 import { tDrillDownButtons, shouldDisplaySubdeploymentButton } from './common';
 import DetailsDrilldownButton from './DetailsDrilldownButton';
-import SubdeploymentDrilldownButton, { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
+import type { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
+import SubdeploymentDrilldownButton from './SubdeploymentDrilldownButton';
 import { getSubdeploymentResults, useSubdeploymentInfo } from './subdeployments-result';
 
 export interface DrilldownButtonsProps {

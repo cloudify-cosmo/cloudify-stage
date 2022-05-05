@@ -1,7 +1,9 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { CSSProperties, PropsWithChildren, ReactNode } from 'react';
-import { ReactGridLayoutProps, Responsive } from 'react-grid-layout';
+import type { CSSProperties, PropsWithChildren, ReactNode } from 'react';
+import React from 'react';
+import type { ReactGridLayoutProps } from 'react-grid-layout';
+import { Responsive } from 'react-grid-layout';
 import { useWidthObserver } from '../../utils/hooks';
 import GridItem from './GridItem';
 

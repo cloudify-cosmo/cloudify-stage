@@ -1,6 +1,7 @@
 import React from 'react';
 import type { CSSProperties, FunctionComponent } from 'react';
-import { closestCenter, DndContext, DragEndEvent, PointerSensor, SensorDescriptor } from '@dnd-kit/core';
+import type { DragEndEvent, SensorDescriptor } from '@dnd-kit/core';
+import { closestCenter, DndContext, PointerSensor } from '@dnd-kit/core';
 import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import _, { map } from 'lodash';
@@ -8,7 +9,7 @@ import type { IconProps } from 'semantic-ui-react';
 import { CSS } from '@dnd-kit/utilities';
 import StageUtils from '../../../utils/stageUtils';
 import { Divider, Icon, List, Message, Ref, Segment } from '../../basic';
-import { PageMenuItem } from '../templates/types';
+import type { PageMenuItem } from '../templates/types';
 
 const t = StageUtils.getT('templates');
 

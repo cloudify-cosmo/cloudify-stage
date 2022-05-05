@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import { StrictCheckboxProps, StrictConfirmProps } from 'semantic-ui-react';
+import type { StrictCheckboxProps, StrictConfirmProps } from 'semantic-ui-react';
 
 export interface DeleteConfirmProps {
     className?: string;

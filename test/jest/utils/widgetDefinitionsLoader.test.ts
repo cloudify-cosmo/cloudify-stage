@@ -1,7 +1,7 @@
 import fetchMock from 'fetch-mock';
 
 import ScriptLoader from 'utils/scriptLoader';
-import { InitialWidgetDefinition } from 'utils/StageAPI';
+import type { InitialWidgetDefinition } from 'utils/StageAPI';
 import WidgetDefinitionsLoader from 'utils/widgetDefinitionsLoader';
 
 const initialWidgetDefinition: InitialWidgetDefinition<unknown, unknown, unknown> = {

@@ -7,7 +7,7 @@ import type { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
 import * as RequestHandler from './RequestHandler';
-import { AllowedRequestMethod } from '../types';
+import type { AllowedRequestMethod } from '../types';
 
 const logger = getLogger('ManagerHandler');
 

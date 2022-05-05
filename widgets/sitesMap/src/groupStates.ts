@@ -1,5 +1,6 @@
 import type { GroupState } from '../../common/src/components/GroupState';
-import { DeploymentStatus, DeploymentStatuses } from './types';
+import type { DeploymentStatus } from './types';
+import { DeploymentStatuses } from './types';
 
 const groupStates: Record<DeploymentStatus, GroupState & { severity: number; description: string }> = {
     [DeploymentStatuses.Good]: {
