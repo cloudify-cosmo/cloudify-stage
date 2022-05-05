@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react';
+import type { SyntheticEvent } from 'react';
 import type { LabelInputType } from '../labels/types';
 
 const allowedCharactersForLabelKey = /^[a-z0-9._-]*$/i;

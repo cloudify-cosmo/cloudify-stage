@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconProps } from 'semantic-ui-react';
+import type { IconProps } from 'semantic-ui-react';
 import { Icon } from '../basic';
 
 export const defaultStyle = {

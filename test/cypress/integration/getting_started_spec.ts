@@ -1,6 +1,6 @@
 import Consts from 'app/utils/consts';
 import { escapeRegExp, find } from 'lodash';
-import { PluginDescription } from 'widgets/pluginsCatalog/src/types';
+import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
 const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json';

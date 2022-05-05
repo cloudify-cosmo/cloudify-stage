@@ -1,5 +1,6 @@
-import React, { CSSProperties, FunctionComponent, ReactNode } from 'react';
-import { DropdownMenuProps, DropdownProps } from 'semantic-ui-react';
+import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
+import React from 'react';
+import type { DropdownMenuProps, DropdownProps } from 'semantic-ui-react';
 import SideBarItem from './SideBarItem';
 import { Dropdown } from '../basic';
 

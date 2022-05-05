@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useBoolean } from '../../utils/hooks';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import consts from '../../utils/consts';
 import Internal from '../../utils/Internal';
 import useManager from '../../utils/hooks/useManager';

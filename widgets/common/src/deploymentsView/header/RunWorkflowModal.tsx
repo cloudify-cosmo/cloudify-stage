@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import SearchActions from '../../actions/SearchActions';
 import DeploymentGroupsActions from '../../deployments/DeploymentGroupsActions';
 import { i18nPrefix } from '../common';
-import { FilterRule } from '../../filters/types';
+import type { FilterRule } from '../../filters/types';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from './ExecutionGroupsActions';
 import ExecutionStartedModal from './ExecutionStartedModal';

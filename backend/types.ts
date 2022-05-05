@@ -1,4 +1,4 @@
-import { ALLOWED_METHODS_OBJECT } from './consts';
+import type { ALLOWED_METHODS_OBJECT } from './consts';
 
 export type TenantsRoles = Record<string, { 'tenant-role': string | null; roles: string[] }>;
 export type GroupSystemRoles = Record<string, string[]>;

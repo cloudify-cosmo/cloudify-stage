@@ -1,4 +1,5 @@
-import React, { FunctionComponent, ComponentProps } from 'react';
+import type { FunctionComponent, ComponentProps } from 'react';
+import React from 'react';
 import { FilterRuleType } from '../../common/src/filters/types';
 
 type BlueprintsLabelFilterProps = Pick<

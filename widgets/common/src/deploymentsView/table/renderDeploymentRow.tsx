@@ -1,7 +1,9 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
-import { deploymentsViewColumnDefinitions, DeploymentsViewColumnId } from './columns';
-import { Deployment, LatestExecutionStatus } from '../types';
+import type { DeploymentsViewColumnId } from './columns';
+import { deploymentsViewColumnDefinitions } from './columns';
+import type { Deployment } from '../types';
+import { LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
 
 const renderDeploymentRow = (

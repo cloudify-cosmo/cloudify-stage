@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 
 import StageUtils from '../../utils/stageUtils';
 import { Modal } from '../basic';
-import { GettingStartedSchemaItem, StepName } from './model';
+import type { GettingStartedSchemaItem } from './model';
+import { StepName } from './model';
 
 const tModal = StageUtils.getT('gettingStartedModal');
 const tTitle = StageUtils.composeT(tModal, 'titles');

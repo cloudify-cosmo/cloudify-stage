@@ -1,5 +1,5 @@
 import { i18nDrillDownPrefix } from '../../common';
-import { SubdeploymentsResult } from './subdeployments-result';
+import type { SubdeploymentsResult } from './subdeployments-result';
 
 const i18nDrillDownButtonsPrefix = `${i18nDrillDownPrefix}.buttons`;
 

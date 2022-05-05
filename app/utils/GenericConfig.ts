@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { GenericField } from '../components/basic';
-import { WidgetConfigurationDefinition } from './StageAPI';
+import type { WidgetConfigurationDefinition } from './StageAPI';
 
 export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0): WidgetConfigurationDefinition => {

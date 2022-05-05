@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import _ from 'lodash';
 import { Icon, List, Message } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';

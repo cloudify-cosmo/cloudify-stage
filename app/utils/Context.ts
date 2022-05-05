@@ -1,4 +1,4 @@
-import { MiddlewareAPI } from 'redux';
+import type { MiddlewareAPI } from 'redux';
 import { setValue as setContextValue } from '../actions/context';
 
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#getcontext */

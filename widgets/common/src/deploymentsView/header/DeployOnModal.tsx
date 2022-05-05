@@ -1,9 +1,9 @@
 import type { FunctionComponent } from 'react';
 import type { WorkflowParameters } from '../../executeWorkflow';
 import GenericDeployModal from '../../deployModal/GenericDeployModal';
-import { FilterRule } from '../../filters/types';
-import { DeploymentsResponse } from '../types';
-import { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
+import type { FilterRule } from '../../filters/types';
+import type { DeploymentsResponse } from '../types';
+import type { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
 import { i18nPrefix, parentDeploymentLabelKey } from '../common';
 import { getGroupIdForBatchAction } from './common';
 import ExecutionGroupsActions from './ExecutionGroupsActions';

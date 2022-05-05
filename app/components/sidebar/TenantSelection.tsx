@@ -1,7 +1,8 @@
 import _ from 'lodash';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { InputOnChangeData } from 'semantic-ui-react';
+import type { InputOnChangeData } from 'semantic-ui-react';
 
 import { Dropdown, Input, Loading } from '../basic';
 import { changeTenant, getTenants } from '../../actions/tenants';

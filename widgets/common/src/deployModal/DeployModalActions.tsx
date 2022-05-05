@@ -1,5 +1,5 @@
-import { FunctionComponent } from 'react';
-import { DropdownProps } from 'semantic-ui-react';
+import type { FunctionComponent } from 'react';
+import type { DropdownProps } from 'semantic-ui-react';
 
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
 

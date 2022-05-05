@@ -1,6 +1,6 @@
 import React from 'react';
 import { size } from 'lodash';
-import { LabelProps } from 'semantic-ui-react';
+import type { LabelProps } from 'semantic-ui-react';
 
 import { Label } from '../../basic';
 

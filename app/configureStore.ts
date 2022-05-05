@@ -8,7 +8,8 @@ import throttle from 'lodash/throttle';
 import ManagerStatePersister from './utils/ManagerStatePersister';
 import type { ClientConfig } from './utils/ConfigLoader';
 
-import createRootReducer, { ReduxState } from './reducers';
+import type { ReduxState } from './reducers';
+import createRootReducer from './reducers';
 
 export default (history: History, config: ClientConfig) => {
     const managerState = ManagerStatePersister.load(config.mode);

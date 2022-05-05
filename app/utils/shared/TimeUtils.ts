@@ -1,4 +1,5 @@
-import moment, { MomentFormatSpecification, MomentInput } from 'moment';
+import type { MomentFormatSpecification, MomentInput } from 'moment';
+import moment from 'moment';
 
 export default class TimeUtils {
     static formatTimestamp(

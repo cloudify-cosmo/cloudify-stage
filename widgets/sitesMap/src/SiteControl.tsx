@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { DeploymentStatus, DeploymentStatusesSummary } from './types';
 import groupStates from './groupStates';
 

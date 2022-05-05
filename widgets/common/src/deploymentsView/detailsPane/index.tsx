@@ -1,7 +1,8 @@
 import type { FunctionComponent } from 'react';
 
 import type { Deployment } from '../types';
-import DrilldownButtons, { DrilldownButtonsProps } from './drilldownButtons';
+import type { DrilldownButtonsProps } from './drilldownButtons';
+import DrilldownButtons from './drilldownButtons';
 import DetailsPaneHeader from './header';
 import DetailsPaneWidgets from './widgets';
 import type { SharedDeploymentsViewWidgetConfiguration } from '../configuration';

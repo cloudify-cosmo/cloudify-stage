@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import type { Label } from './types';
 import { sortLabels } from './common';
 

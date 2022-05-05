@@ -1,4 +1,4 @@
-import { GroupSystemRoles, TenantsRoles } from '../types';
+import type { GroupSystemRoles, TenantsRoles } from '../types';
 
 declare global {
     namespace Express {

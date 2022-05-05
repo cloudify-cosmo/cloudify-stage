@@ -4,10 +4,13 @@ import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
+import type {
+    BlueprintCatalogPayload,
+    BlueprintCatalogWidgetConfiguration,
+    Blueprint,
+    RepositoryViewProps
+} from './types';
 import type Actions from './actions';
-
-import { RepositoryViewProps } from './types';
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;

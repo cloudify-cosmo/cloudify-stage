@@ -1,4 +1,5 @@
-import React, { ComponentProps, FunctionComponent } from 'react';
+import type { ComponentProps, FunctionComponent } from 'react';
+import React from 'react';
 
 export interface DynamicTableProps
     extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {

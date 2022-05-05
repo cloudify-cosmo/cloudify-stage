@@ -1,5 +1,6 @@
 import { noop } from 'lodash';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import i18n from 'i18next';
 import type { SemanticICONS } from 'semantic-ui-react';
 import CreatePageModal from './CreatePageModal';

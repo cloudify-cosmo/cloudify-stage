@@ -6,7 +6,7 @@ import type { PageDefinition } from '../actions/page';
 import type { ReduxState } from '../reducers';
 
 import { Label, Breadcrumb, EditableLabel } from './basic';
-import { PageDefinitionWithContext } from './Page';
+import type { PageDefinitionWithContext } from './Page';
 
 const BreadCrumbsWrapper = styled.div`
     display: flex;

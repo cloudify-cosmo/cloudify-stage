@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Icon } from '../basic';
 import SideBarItemIcon from './SideBarItemIcon';
@@ -6,7 +7,7 @@ import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
 import { clusterStatusEnum } from '../shared/cluster/consts';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
