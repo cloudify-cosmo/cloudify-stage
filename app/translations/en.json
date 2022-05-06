@@ -926,7 +926,7 @@
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
                         "keyMissing": "Please provide variable key",
-                        "keyInvalid": "Please provide valid variable key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                        "keyInvalid": "Please provide valid variable key. It should contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Variable keys must be unique, duplicates are not allowed",
                         "sourceMissing": "Please provide variable source",
                         "nameMissing": "Please provide variable name",
