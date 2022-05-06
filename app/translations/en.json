@@ -876,6 +876,7 @@
                 "header": "Create blueprint from Terraform",
                 "submit": "Create",
                 "blueprintName": "Blueprint name",
+                "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
                 "template": "Terraform module source - URL to a zip archive or a Git repository",

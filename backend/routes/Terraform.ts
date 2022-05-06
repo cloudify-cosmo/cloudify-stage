@@ -168,6 +168,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 router.post('/blueprint', (req, res) => {
     const {
         blueprintName,
+        blueprintDescription,
         terraformVersion,
         terraformTemplate,
         resourceLocation,
@@ -187,6 +188,7 @@ router.post('/blueprint', (req, res) => {
             template,
             {
                 blueprintName,
+                blueprintDescription,
                 terraformVersion,
                 terraformTemplate,
                 urlAuthentication,

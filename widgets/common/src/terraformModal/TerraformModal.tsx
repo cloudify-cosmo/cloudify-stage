@@ -176,6 +176,8 @@ export default function TerraformModal({
 
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
+    const [blueprintDescription, setBlueprintDescription] = useInput('');
+
     const [templateUrl, setTemplateUrl] = useInput('');
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
@@ -330,6 +332,7 @@ export default function TerraformModal({
         try {
             const blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
                 blueprintName,
+                blueprintDescription,
                 terraformTemplate: templateUrl,
                 urlAuthentication,
                 terraformVersion: version,
@@ -420,6 +423,14 @@ export default function TerraformModal({
                         <Form.Input value={blueprintName} onChange={setBlueprintName}>
                             <input maxLength={inputMaxLength} />
                         </Form.Input>
+                    </Form.Field>
+                    <Form.Field label={t(`blueprintDescription`)} error={errors.blueprint}>
+                        <Form.TextArea
+                            name="blueprintDescription"
+                            value={blueprintDescription}
+                            onChange={setBlueprintDescription}
+                            rows={5}
+                        />
                     </Form.Field>
                     <Form.Field label={t(`terraformVersion`)} required>
                         <Form.Dropdown
