@@ -921,7 +921,7 @@
                     "noUsername": "Please provide username",
                     "noPassword": "Please provide password",
                     "noResourceLocation": "Please provide resource location",
-                    "invalidBlueprintName": "Please provide valid blueprint name. It should start with a letter and contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
+                    "invalidBlueprintName": "Please provide valid blueprint name. It should start with a letter and contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
