@@ -8,7 +8,7 @@ import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
-import { SemanticICONS } from 'semantic-ui-react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
 import AddPageButton from './AddPageButton';
 import AddPageGroupButton from './AddPageGroupButton';
@@ -28,7 +28,7 @@ import {
 } from '../../actions/pageMenu';
 import Consts from '../../utils/consts';
 import { useBoolean, useResettableState } from '../../utils/hooks';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import IconSelection from './IconSelection';
 import { SideBarItemWrapper, sideBarItemFontSize } from './SideBarItem';
 

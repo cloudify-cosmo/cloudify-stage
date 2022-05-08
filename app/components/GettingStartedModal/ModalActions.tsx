@@ -2,7 +2,8 @@ import React, { useMemo } from 'react';
 
 import StageUtils from '../../utils/stageUtils';
 import { Button, Modal } from '../basic';
-import { GettingStartedEnvironmentsData, StepName } from './model';
+import type { GettingStartedEnvironmentsData } from './model';
+import { StepName } from './model';
 
 const t = StageUtils.getT('gettingStartedModal.buttons');
 

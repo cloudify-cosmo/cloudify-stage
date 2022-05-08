@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import Internal from '../../../utils/Internal';
-import Manager from '../../../utils/Manager';
+import type Manager from '../../../utils/Manager';
 import useManager from '../../../utils/hooks/useManager';
 
 import type { ReduxState } from '../../../reducers';

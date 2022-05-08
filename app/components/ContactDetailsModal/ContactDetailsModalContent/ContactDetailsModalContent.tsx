@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useMemo } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useMemo } from 'react';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, ApproveButton } from '../../basic';
 import type { FormField } from './formFields';

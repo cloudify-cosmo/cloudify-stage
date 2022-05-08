@@ -1,4 +1,4 @@
-import { DropdownProps } from 'semantic-ui-react';
+import type { DropdownProps } from 'semantic-ui-react';
 
 export default class RolesPicker extends React.Component<{
     onUpdate: (name: DropdownProps['name'], value: DropdownProps['value']) => void;

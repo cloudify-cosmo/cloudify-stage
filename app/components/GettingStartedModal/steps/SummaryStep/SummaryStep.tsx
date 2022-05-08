@@ -12,7 +12,8 @@ import {
 } from '../../installation/tasks';
 import { useInternal } from '../../common/managerHooks';
 import useManager from '../../../../utils/hooks/useManager';
-import { createResourcesInstaller, TaskDetails, TaskStatus, TaskType } from '../../installation/process';
+import type { TaskDetails, TaskStatus, TaskType } from '../../installation/process';
+import { createResourcesInstaller } from '../../installation/process';
 import PluginsInstallationTasks from './PluginsInstallationTasks';
 import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';

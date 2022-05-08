@@ -5,25 +5,19 @@ export default function DeploymentIdInputField({
     name,
     value,
     onChange,
-    constraints,
-    error,
-    toolbox
+    ...restProps
 }: DynamicDropdownInputFieldProps) {
     const fetchUrl = '/searches/deployments?_include=id,display_name';
 
     return (
         <DynamicDropdown
             name={name}
-            error={error}
-            textFormatter={item =>
-                item.display_name && item.display_name !== item.id ? `${item.display_name} (${item.id})` : item.id
-            }
+            textFormatter={item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })}
             placeholder={Stage.i18n.t('input.deployment_id.placeholder')}
             value={value}
             fetchUrl={fetchUrl}
             onChange={newValue => onChange?.(null, { name, value: newValue })}
-            toolbox={toolbox}
-            constraints={constraints}
+            {...restProps}
         />
     );
 }

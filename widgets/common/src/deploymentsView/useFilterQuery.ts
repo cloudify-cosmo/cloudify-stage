@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query';
-import { Filter } from '../filters/types';
+import type { Filter } from '../filters/types';
 
 export default function useFilterQuery(toolbox: Stage.Types.Toolbox, filterId?: string) {
     const result = useQuery<Filter | undefined>(

@@ -1,4 +1,5 @@
-import { FunctionComponent, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
+import { useEffect } from 'react';
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase

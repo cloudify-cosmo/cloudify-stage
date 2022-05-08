@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import React from 'react';
-import { SemanticICONS } from 'semantic-ui-react';
+import type { SemanticICONS } from 'semantic-ui-react';
 
 interface WidgetData {
     metadata?: {

@@ -1,4 +1,5 @@
-import { ComponentProps, FunctionComponent, useMemo } from 'react';
+import type { ComponentProps, FunctionComponent } from 'react';
+import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 import NoDataMessage from '../../components/NoDataMessage';
 import DeploymentActions from '../../deployments/DeploymentActions';

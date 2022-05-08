@@ -1,6 +1,8 @@
 import { stringify } from 'query-string';
-import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { waitUntil, waitUntilEmpty, WaitUntilOptions } from './resource_commons';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { WaitUntilOptions } from './resource_commons';
+import { waitUntil, waitUntilEmpty } from './resource_commons';
 
 declare global {
     namespace Cypress {

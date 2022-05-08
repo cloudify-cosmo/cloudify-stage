@@ -4,7 +4,7 @@ import { i18nPrefix } from '../common';
 import FilterModal from './filter/FilterModal';
 import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
-import { FilterRule } from '../../filters/types';
+import type { FilterRule } from '../../filters/types';
 import { useFilterIdFromUrl } from './common';
 
 interface DeploymentsViewHeaderProps {

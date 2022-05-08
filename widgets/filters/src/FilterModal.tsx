@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import { useMemo, useState } from 'react';
 import { isEmpty } from 'lodash';
 import type { Filter, FilterRule } from '../../common/src/filters/types';
 

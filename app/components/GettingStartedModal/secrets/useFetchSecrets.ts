@@ -1,7 +1,8 @@
 import i18n from 'i18next';
 import { useMemo } from 'react';
 
-import { FetchHook, useManagerFetch } from '../common/fetchHooks';
+import type { FetchHook } from '../common/fetchHooks';
+import { useManagerFetch } from '../common/fetchHooks';
 
 import type { SecretsResponse, SecretResponse } from './model';
 

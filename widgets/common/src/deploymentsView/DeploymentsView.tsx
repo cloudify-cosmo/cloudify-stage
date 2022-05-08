@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useMemo, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import SplitPane from 'react-split-pane';
 import useEventListener from '../hooks/useEventListener';
@@ -14,7 +15,8 @@ import {
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
 import DetailsPane from './detailsPane';
 import { DeploymentsTable } from './table';
-import { FilterRule, FilterRuleOperators, FilterRuleType } from '../filters/types';
+import type { FilterRule } from '../filters/types';
+import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 import {
     DeploymentDetailsContainer,
     DeploymentsMapLayoutContainer,

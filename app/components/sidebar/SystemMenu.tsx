@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import TenantSelection from './TenantSelection';
 import HelpMenu from './HelpMenu';
 import HealthIndicator from './HealthIndicator';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import Consts from '../../utils/consts';
 import UserMenu from './UserMenu';
 import { SideBarItemWrapper } from './SideBarItem';

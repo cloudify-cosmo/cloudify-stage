@@ -12,7 +12,9 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
         'string',
         'textarea',
         'blueprint_id',
+        'blueprint_id_list',
         'deployment_id',
+        'deployment_id_list',
         'capability_value',
         'secret_key'
     ];
@@ -59,9 +61,9 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
 
     const verifyNumberOfOptions = (number: number, atLeast = false, typedPrefix = resourcePrefix) => {
         if (typedPrefix) {
-            cy.get('input').click().type(typedPrefix);
+            cy.get('div.dropdown').click().type(typedPrefix);
         } else {
-            cy.get('input').click();
+            cy.get('div.dropdown').click();
         }
 
         const contains = typedPrefix ? ` :contains("${typedPrefix}")` : '';
@@ -73,6 +75,10 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
             cy.get(`.menu .item[role="option"]${contains}`).should('have.length', number);
         }
         cy.get('label').click();
+    };
+
+    const verifyMultipleDropdown = () => {
+        cy.get(`.multiple`).should('exist');
     };
 
     before(() => {
@@ -346,6 +352,20 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
         });
     });
 
+    it('blueprint_id_list', () => {
+        selectBlueprintInModal('blueprint_id_list');
+
+        cy.getField('blueprint_id_all').within(() => {
+            verifyNumberOfOptions(5, true);
+            verifyMultipleDropdown();
+        });
+
+        cy.getField('blueprint_id_name_contains_blueprint_id_type').within(() => {
+            verifyNumberOfOptions(1);
+            verifyMultipleDropdown();
+        });
+    });
+
     it('deployment_id', () => {
         const emptyBlueprintId = `${resourcePrefix}emptyBlueprintId`;
         const testDeploymentId = `${emptyBlueprintId}deployment1234`;
@@ -367,6 +387,25 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
 
         cy.getField('deployment_id_name_contains_not_existing').within(() => {
             verifyNumberOfOptions(0);
+        });
+    });
+
+    it('deployment_id_list', () => {
+        selectBlueprintInModal('deployment_id_list');
+
+        cy.getField('deployment_id_all').within(() => {
+            verifyNumberOfOptions(1, true);
+            verifyMultipleDropdown();
+        });
+
+        cy.getField('deployment_id_name_contains_deployment1234').within(() => {
+            verifyNumberOfOptions(1);
+            verifyMultipleDropdown();
+        });
+
+        cy.getField('deployment_id_name_contains_not_existing').within(() => {
+            verifyNumberOfOptions(0);
+            verifyMultipleDropdown();
         });
     });
 

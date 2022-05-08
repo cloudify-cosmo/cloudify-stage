@@ -1,15 +1,16 @@
 import _ from 'lodash';
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 
-import { AccordionTitleProps, DropdownProps, ModalProps } from 'semantic-ui-react';
+import type { AccordionTitleProps, DropdownProps, ModalProps } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import Consts from '../../../utils/consts';
 import StageUtils from '../../../utils/stageUtils';
 
 import { Accordion, ApproveButton, CancelButton, Divider, Form, Icon, Modal, Segment } from '../../basic';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
-import { ReduxState } from '../../../reducers';
-import { PageMenuItem } from './types';
+import type { ReduxState } from '../../../reducers';
+import type { PageMenuItem } from './types';
 import SelectionList from '../common/SelectionList';
 import SortableList from '../common/SortableList';
 

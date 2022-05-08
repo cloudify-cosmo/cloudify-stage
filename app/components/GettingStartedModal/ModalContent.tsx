@@ -5,13 +5,14 @@ import EnvironmentsStep from './steps/EnvironmentsStep';
 import SecretsStep from './steps/SecretsStep';
 import SummaryStep from './steps/SummaryStep';
 import WelcomeStep from './steps/WelcomeStep';
-import { GettingStartedSchemaItem, StepName } from './model';
+import { StepName } from './model';
 
 import type {
     GettingStartedData,
     GettingStartedSchema,
     GettingStartedSecretsData,
-    GettingStartedEnvironmentsData
+    GettingStartedEnvironmentsData,
+    GettingStartedSchemaItem
 } from './model';
 
 type Props = {

@@ -9,7 +9,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
 
-import { SemanticICONS } from 'semantic-ui-react';
+import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
@@ -18,13 +18,8 @@ import { setTemplateManagementActive } from '../../../actions/templateManagement
 import { savePage, setDrillDownWarningActive, setPageEditMode } from '../../../actions/templateManagement/pages';
 import StageUtils from '../../../utils/stageUtils';
 import { useErrors } from '../../../utils/hooks';
-import {
-    forEachWidget,
-    getWidgetDefinitionById,
-    LayoutSection,
-    SimpleWidgetObj,
-    TabContent
-} from '../../../actions/page';
+import type { LayoutSection, SimpleWidgetObj, TabContent } from '../../../actions/page';
+import { forEachWidget, getWidgetDefinitionById } from '../../../actions/page';
 import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';

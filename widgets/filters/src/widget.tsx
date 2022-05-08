@@ -1,4 +1,4 @@
-import { ComponentProps } from 'react';
+import type { ComponentProps } from 'react';
 import FiltersTable from './FiltersTable';
 import type { FilterWidgetConfiguration } from './types';
 import type { Filter } from '../../common/src/filters/types';

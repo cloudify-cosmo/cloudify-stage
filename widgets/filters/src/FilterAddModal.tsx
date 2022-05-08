@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
-import FilterModal, { FilterModalProps } from './FilterModal';
+import type { FilterModalProps } from './FilterModal';
+import FilterModal from './FilterModal';
 
 type FilterAddModalProps = Pick<FilterModalProps, 'onCancel' | 'onSubmit' | 'toolbox'>;
 

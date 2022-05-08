@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
 import DeploymentActions from '../deployments/DeploymentActions';
 import LabelsInput from './LabelsInput';
 import type { Label } from './types';
