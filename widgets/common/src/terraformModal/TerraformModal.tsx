@@ -161,13 +161,7 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     return resourceLocation.replace(/^[^/]*[/]?/, '');
 }
 
-export default function TerraformModal({
-    onHide,
-    toolbox
-}: {
-    onHide: () => void;
-    toolbox: Stage.Types.WidgetlessToolbox;
-}) {
+export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
     const { useBoolean, useErrors, useInput, useResettableState } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
@@ -325,6 +319,7 @@ export default function TerraformModal({
             id: blueprintName,
             _include: 'id'
         });
+
         if (existingBlueprintResponse.items.length) {
             setErrors({ blueprint: tError('blueprintNameInUse', { blueprintName }) });
             return;
@@ -359,8 +354,12 @@ export default function TerraformModal({
 
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
 
-            toolbox.getEventBus().trigger('blueprints:refresh');
-            onHide();
+            toolbox.drillDown(
+                toolbox.getWidget(),
+                'blueprint',
+                { blueprintId: blueprintName, openDeploymentModal: true },
+                blueprintName
+            );
         } catch (e) {
             setMessageAsError(e);
             stopProcess();
