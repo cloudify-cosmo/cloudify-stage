@@ -1,18 +1,11 @@
-import { minutesToMs } from '../../support/resource_commons';
+import { minutesToMs, secondsToMs } from '../../support/resource_commons';
 
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
 
-    before(() =>
-        cy
-            .activate()
-            .login()
-            .deleteDeployments(resourceName, true)
-            .deleteBlueprints(resourceName, true)
-            .deletePlugins()
-            .deleteSecrets('some_key_')
-            .deleteSecrets('openstack_config__lab1_tenantA')
-    );
+    beforeEach(() => {
+        cy.activate().login();
+    });
 
     function createSecret(secretName: string) {
         cy.contains('Create').click();
@@ -22,7 +15,17 @@ describe('User flow', () => {
             cy.get('button.green').click();
         });
     }
+
     it('installs deployment from scratch', () => {
+        before(() =>
+            cy
+                .deleteDeployments(resourceName, true)
+                .deleteBlueprints(resourceName, true)
+                .deletePlugins()
+                .deleteSecrets('some_key_')
+                .deleteSecrets('openstack_config__lab1_tenantA')
+        );
+
         cy.visitSubPage('Resources', 'Plugins');
 
         cy.contains('Upload').click();
@@ -69,5 +72,19 @@ describe('User flow', () => {
 
         cy.contains('Deployment Info').click();
         cy.get('#gridContent > .nodeContainer').should('have.length', 3);
+    });
+
+    it('uploads blueprint using first journey buttons', () => {
+        const uploadBlueprintButtonSelector = 'i[title="Upload blueprint"]:not(.disabled)';
+
+        cy.contains('Create new Deployment').click();
+
+        cy.contains('Blueprint Marketplace');
+        cy.get(uploadBlueprintButtonSelector).first().click();
+        cy.contains('Uploading');
+
+        cy.get('.modal').contains('Deploy blueprint', {
+            timeout: secondsToMs(30)
+        });
     });
 });

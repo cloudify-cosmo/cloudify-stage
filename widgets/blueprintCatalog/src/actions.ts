@@ -3,8 +3,11 @@ import type { WidgetParameters } from './types';
 
 export default class Actions {
     private toolbox: Stage.Types.WidgetlessToolbox;
+
     private username: string;
+
     private filter: string;
+
     private jsonPath?: string;
 
     constructor(toolbox: Stage.Types.WidgetlessToolbox, username: string, filter: string, jsonPath?: string) {

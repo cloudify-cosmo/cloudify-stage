@@ -88,7 +88,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 }}
                             />
                             <Icon
-                                name={'upload'}
+                                name="upload"
                                 disabled={isBlueprintUploaded}
                                 link={!isBlueprintUploaded}
                                 title={t('actions.uploadBlueprint')}

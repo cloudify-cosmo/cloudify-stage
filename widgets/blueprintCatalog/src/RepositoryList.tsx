@@ -90,7 +90,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     setUploadingBlueprint = (uploadingBlueprint: string) => {
         const { toolbox } = this.props;
 
-        this.setState({ uploadingBlueprint: uploadingBlueprint });
+        this.setState({ uploadingBlueprint });
         Utils.setUploadingBlueprintAcrossCatalogTabs(toolbox, uploadingBlueprint);
     };
 

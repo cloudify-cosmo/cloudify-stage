@@ -1,4 +1,4 @@
-import { WidgetlessToolbox } from '../../../app/utils/StageAPI';
+import type { WidgetlessToolbox } from '../../../app/utils/StageAPI';
 import Consts from './consts';
 
 const widgetTranslation = Stage.Utils.getT(`widgets.${Consts.WIDGET_ID}`);

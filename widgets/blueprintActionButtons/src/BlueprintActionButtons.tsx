@@ -38,6 +38,15 @@ export default class BlueprintActionButtons extends React.Component<
         };
     }
 
+    componentDidMount() {
+        const { toolbox } = this.props;
+        const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
+
+        if (openDeploymentModal) {
+            this.showDeployModal();
+        }
+    }
+
     shouldComponentUpdate(nextProps: BlueprintActionButtonsProps, nextState: BlueprintActionButtonsState) {
         return !_.isEqual(this.state, nextState) || !_.isMatch(this.props, _.omit(nextProps, 'toolbox'));
     }
@@ -110,15 +119,6 @@ export default class BlueprintActionButtons extends React.Component<
     clearErrors = () => {
         this.setState({ error: null });
     };
-
-    componentDidMount() {
-        const { toolbox } = this.props;
-        const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
-
-        if (openDeploymentModal) {
-            this.showDeployModal();
-        }
-    }
 
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
