@@ -1,7 +1,7 @@
-import pathlib from 'path';
+import fs from 'fs-extra';
 import _ from 'lodash';
 import moment from 'moment';
-import fs from 'fs-extra';
+import pathlib from 'path';
 
 import { getLogger } from '../LoggerHandler';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
@@ -11,7 +11,7 @@ const logger = getLogger('TemplateHandler');
 const builtInPagesFolder = pathlib.resolve(builtInTemplatesFolder, 'pages');
 export const userPagesFolder = pathlib.resolve(userTemplatesFolder, 'pages');
 
-function getPages(folder: string, isCustom: boolean) {
+function getPages(folder: string, custom: boolean) {
     return _.chain(fs.readdirSync(pathlib.resolve(folder)))
         .map(pageFile => {
             const pageFilePath = pathlib.resolve(folder, pageFile);
@@ -20,11 +20,9 @@ function getPages(folder: string, isCustom: boolean) {
                 const pageFileContent = fs.readJsonSync(pageFilePath);
                 const id = pathlib.basename(pageFile, '.json');
 
-                const name = _.get(pageFileContent, 'name', id);
-                const updatedBy = _.get(pageFileContent, 'updatedBy', isCustom ? '' : 'Manager');
-                const updatedAt = _.get(pageFileContent, 'updatedAt', '');
+                const { name = id, updatedBy = custom ? '' : 'Manager', updatedAt = '', ...data } = pageFileContent;
 
-                return { id, name, custom: isCustom, updatedBy, updatedAt };
+                return { id, name, custom, updatedBy, updatedAt, data };
             } catch (error) {
                 logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
 

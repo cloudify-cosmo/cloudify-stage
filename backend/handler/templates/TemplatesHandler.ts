@@ -1,14 +1,14 @@
 import fs from 'fs-extra';
-import pathlib from 'path';
 import _ from 'lodash';
 import moment from 'moment';
+import pathlib from 'path';
 
 import { getMode, MODE_MAIN } from '../../serverSettings';
+import type { TenantsRoles } from '../../types';
 import { getResourcePath } from '../../utils';
 import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
-import type { TenantsRoles } from '../../types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -31,7 +31,7 @@ interface TemplateUpdate extends Pick<Template, 'id' | 'data' | 'pages'> {
     oldId: string;
 }
 
-function getTemplates(folder: string, isCustom: boolean, filter: (fileName: string) => boolean) {
+function getTemplates(folder: string, custom: boolean, filter: (fileName: string) => boolean) {
     const compareTemplates = (templateA: Template, templateB: Template) => {
         const conflictingTemplates =
             !_.isEmpty(_.intersection(templateA.data.roles, templateB.data.roles)) &&
@@ -54,15 +54,21 @@ function getTemplates(folder: string, isCustom: boolean, filter: (fileName: stri
                 const templateFileContent = fs.readJsonSync(templateFilePath);
                 const id = pathlib.basename(templateFile, '.json');
 
-                const name = _.get(templateFileContent, 'name', id) as string;
-                const updatedBy = _.get(templateFileContent, 'updatedBy', isCustom ? '' : 'Manager') as string;
-                const updatedAt = _.get(templateFileContent, 'updatedAt', '') as string;
-                const data = {
-                    roles: _.get(templateFileContent, 'roles', []),
-                    tenants: _.get(templateFileContent, 'tenants', [])
-                };
+                const { name = id, updatedBy = custom ? '' : 'Manager', updatedAt = '', ...data } = templateFileContent;
 
-                return { id, name, custom: isCustom, data, updatedBy, updatedAt };
+                return {
+                    id,
+                    name,
+                    custom,
+                    data: {
+                        roles: [],
+                        tenants: [],
+                        pages: [],
+                        ...data
+                    },
+                    updatedBy,
+                    updatedAt
+                };
             } catch (error) {
                 logger.error(`Error when trying to parse ${templateFilePath} file to JSON.`, error);
 
