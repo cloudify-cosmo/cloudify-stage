@@ -2,13 +2,14 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import _, { find, isEmpty } from 'lodash';
+import { chain, find, some, isEmpty } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import Consts from '../Consts';
 import SecretActions from '../secrets/SecretActions';
-import TerraformModalTableAccordion, { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
+import type { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
+import TerraformModalTableAccordion from './TerraformModalTableAccordion';
 import TerraformVariableValueInput from './TerraformVariableValueInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
@@ -75,7 +76,9 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
     };
 }
 
-const cloudifyResourceRegexp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
+
+const validationRegExp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -83,7 +86,7 @@ type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
 
 const variablesColumns: Columns<Variable> = [
     {
-        id: 'name',
+        id: 'variable',
         label: t('variablesTable.variable'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: LengthLimitedDynamicTableInput,
@@ -102,7 +105,7 @@ const variablesColumns: Columns<Variable> = [
         width: 3
     },
     {
-        id: 'value',
+        id: 'name',
         label: t('variablesTable.name'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: TerraformVariableValueInput,
@@ -110,7 +113,7 @@ const variablesColumns: Columns<Variable> = [
         width: 3
     },
     {
-        id: 'default',
+        id: 'value',
         label: t('variablesTable.value'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: LengthLimitedDynamicTableInput,
@@ -146,10 +149,11 @@ const outputsColumns: Columns<Output> = [
 
 export function getResourceLocation(templateModules: string[], resourceLocation: string) {
     if (
-        _(templateModules)
+        chain(templateModules)
             .map(modulePath => modulePath.split('/')[0])
             .uniq()
-            .size() > 1
+            .size()
+            .value() > 1
     ) {
         return resourceLocation;
     }
@@ -203,7 +207,7 @@ export default function TerraformModal({
         function validateBlueprintName() {
             if (!blueprintName) {
                 formErrors.blueprint = tError('noBlueprintName');
-            } else if (!blueprintName.match(cloudifyResourceRegexp)) {
+            } else if (!blueprintName.match(validationStrictRegExp)) {
                 formErrors.blueprint = tError('invalidBlueprintName');
             }
         }
@@ -233,69 +237,71 @@ export default function TerraformModal({
             }
         }
 
-        function validateNames(namedEntities: { name: string }[], errorPrefix: string) {
+        function validateIDs(
+            entities: Record<string, any>[],
+            errorPrefix: string,
+            IDkey: 'variable' | 'name' = 'variable'
+        ): void {
             const tNameError = Stage.Utils.composeT(tError, errorPrefix);
-            let nameError = false;
-            if (find(namedEntities, variable => isEmpty(variable.name))) {
-                formErrors[`${errorPrefix}NameMissing`] = tNameError('nameMissing');
-                nameError = true;
+            let keyError = false;
+            if (some(entities, variable => isEmpty(variable[IDkey]))) {
+                formErrors[`${errorPrefix}KeyMissing`] = tNameError('keyMissing');
+                keyError = true;
             }
-            if (
-                find(namedEntities, variable => !isEmpty(variable.name) && !variable.name.match(cloudifyResourceRegexp))
-            ) {
-                formErrors[`${errorPrefix}NameInvalid`] = tNameError('nameInvalid');
-                nameError = true;
+            if (some(entities, variable => !isEmpty(variable[IDkey]) && !variable[IDkey].match(validationRegExp))) {
+                formErrors[`${errorPrefix}KeyInvalid`] = tNameError('keyInvalid');
+                keyError = true;
             }
 
-            if (!nameError && _(namedEntities).keyBy('name').size() !== namedEntities.length) {
-                formErrors[`${errorPrefix}NameDuplicated`] = tNameError('nameDuplicated');
+            if (!keyError && chain(entities).keyBy(IDkey).size().value() !== entities.length) {
+                formErrors[`${errorPrefix}KeyDuplicated`] = tNameError('keyDuplicated');
             }
         }
 
         function validateVariables(variablesList: Variable[], errorPrefix: string) {
-            validateNames(variablesList, errorPrefix);
+            validateIDs(variablesList, errorPrefix);
 
             const tVariableError = Stage.Utils.composeT(tError, errorPrefix);
 
-            if (find(variablesList, variable => isEmpty(variable.source))) {
+            if (some(variablesList, variable => isEmpty(variable.source))) {
                 formErrors[`${errorPrefix}SourceMissing`] = tVariableError('sourceMissing');
             }
             if (
-                find(
+                some(
                     variablesList,
-                    variable => isEmpty(variable.value) && (variable.source === 'secret' || variable.source === 'input')
+                    variable => isEmpty(variable.name) && (variable.source === 'secret' || variable.source === 'input')
                 )
             ) {
-                formErrors[`${errorPrefix}ValueMissing`] = tVariableError('valueMissing');
+                formErrors[`${errorPrefix}NameMissing`] = tVariableError('nameMissing');
             }
             if (
-                find(
+                some(
                     variablesList,
                     variable =>
-                        !isEmpty(variable.value) &&
+                        !isEmpty(variable.name) &&
                         variable.source !== 'static' &&
-                        !variable.value.match(cloudifyResourceRegexp)
+                        !variable.name.match(validationStrictRegExp)
                 )
             ) {
-                formErrors[`${errorPrefix}ValueInvalid`] = tVariableError('valueInvalid');
+                formErrors[`${errorPrefix}NameInvalid`] = tVariableError('nameInvalid');
             }
         }
 
         function validateOutputs() {
-            validateNames(outputs, 'output');
+            validateIDs(outputs, 'output', 'name');
 
             const tOutputError = Stage.Utils.composeT(tError, 'output');
 
-            if (find(outputs, output => isEmpty(output.type))) {
+            if (some(outputs, output => isEmpty(output.type))) {
                 formErrors.outputTypeMissing = tOutputError('typeMissing');
             }
-            if (find(outputs, output => isEmpty(output.terraformOutput))) {
+            if (some(outputs, output => isEmpty(output.terraformOutput))) {
                 formErrors.outputMissing = tOutputError('outputMissing');
             }
             if (
-                find(
+                some(
                     outputs,
-                    output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(cloudifyResourceRegexp)
+                    output => !isEmpty(output.terraformOutput) && !output.terraformOutput.match(validationStrictRegExp)
                 )
             ) {
                 formErrors.outputValueInvalid = tOutputError('outputInvalid');

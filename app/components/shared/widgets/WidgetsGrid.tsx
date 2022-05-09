@@ -3,7 +3,8 @@ import React from 'react';
 
 import Grid from '../../layout/Grid';
 import GridItem from '../../layout/GridItem';
-import Widget, { WidgetOwnProps } from './Widget';
+import type { WidgetOwnProps } from './Widget';
+import Widget from './Widget';
 
 // NOTE: this cannot be a component since `Grid` expects only `GridItem`s as direct components
 /**

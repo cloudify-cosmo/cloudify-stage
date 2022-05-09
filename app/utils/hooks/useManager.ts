@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import Manager from '../Manager';
 
 /**

@@ -1,4 +1,5 @@
-import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import { addCommands } from 'cloudify-ui-common/cypress/support';
 
 declare global {
     namespace Cypress {

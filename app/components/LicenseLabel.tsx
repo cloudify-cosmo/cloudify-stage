@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { LabelProps } from 'semantic-ui-react';
-import { ReduxState } from '../reducers';
+import type { LabelProps } from 'semantic-ui-react';
+import type { ReduxState } from '../reducers';
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
 import { Label } from './basic';

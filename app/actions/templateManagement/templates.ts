@@ -1,5 +1,5 @@
 import * as types from '../types';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 
 type Pages = ReduxState['templates']['templatesDef'][string]['pages'];
 

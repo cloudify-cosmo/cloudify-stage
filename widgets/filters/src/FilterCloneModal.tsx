@@ -1,5 +1,6 @@
-import { FunctionComponent } from 'react';
-import FilterModal, { FilterModalProps } from './FilterModal';
+import type { FunctionComponent } from 'react';
+import type { FilterModalProps } from './FilterModal';
+import FilterModal from './FilterModal';
 
 type FilterCloneModalProps = Required<
     Omit<FilterModalProps, 'i18nHeaderKey' | 'showFilterIdInput' | 'initialFilterIdSuffix'>

@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Label } from '../basic';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import { defaultStyle } from './SideBarItemIcon';
 
 const StyledLabel = styled(Label)`

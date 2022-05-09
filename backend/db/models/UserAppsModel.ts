@@ -1,5 +1,6 @@
 import type { CommonAttributes, Model, ModelFactory } from './types';
-import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN, Mode } from '../../serverSettings';
+import type { Mode } from '../../serverSettings';
+import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN } from '../../serverSettings';
 import type { PageFileDefinition } from '../../routes/Templates.types';
 
 interface UserAppsAttributes extends CommonAttributes {

@@ -16,7 +16,7 @@ import { useBoolean, useErrors } from '../../utils/hooks';
 import { addTemplate, editTemplate, removeTemplate } from '../../actions/templateManagement/templates';
 import { addPage, removePage } from '../../actions/templateManagement/pages';
 import PageGroups from './pageGroups/PageGroups';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 import useCreatePageId from './pages/useCreatePageId';
 
 export default function TemplateManagement() {

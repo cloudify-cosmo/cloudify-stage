@@ -17,9 +17,10 @@ import type {
     GettingStartedData,
     GettingStartedEnvironmentsData,
     GettingStartedSchema,
-    GettingStartedSecretsData
+    GettingStartedSecretsData,
+    GettingStartedSchemaItem
 } from './model';
-import { GettingStartedSchemaItem, StepName } from './model';
+import { StepName } from './model';
 import ModalHeader from './ModalHeader';
 import ModalContent from './ModalContent';
 import ModalActions from './ModalActions';

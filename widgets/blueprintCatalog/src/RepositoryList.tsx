@@ -7,10 +7,10 @@ import AuthenticationWarning from './AuthenticationWarning';
 import UploadingMessage from './UploadingMessage';
 
 import type {
-    RepositoryViewProps,
     BlueprintCatalogPayload,
     BlueprintCatalogWidgetConfiguration,
-    Blueprint
+    Blueprint,
+    RepositoryViewProps
 } from './types';
 import Utils from './utils';
 import type Actions from './actions';

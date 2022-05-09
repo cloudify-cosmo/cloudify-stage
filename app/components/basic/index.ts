@@ -5,6 +5,7 @@
  * whenever you change list of exported components in this file.
  */
 
+import type { StrictConfirmProps } from 'semantic-ui-react';
 import {
     Accordion,
     Breadcrumb,
@@ -31,7 +32,6 @@ import {
     Segment,
     Sidebar,
     Step,
-    StrictConfirmProps,
     Tab,
     Table
 } from 'semantic-ui-react';

@@ -1,5 +1,6 @@
 import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
-import ResourceTypes, { ResourceType } from '../types/ResourceTypes';
+import type { ResourceType } from '../types/ResourceTypes';
+import ResourceTypes from '../types/ResourceTypes';
 
 interface ResourcesAttributes extends CommonAttributes {
     resourceId: string;

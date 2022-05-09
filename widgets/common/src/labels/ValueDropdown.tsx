@@ -1,5 +1,6 @@
-import { ComponentProps, FunctionComponent } from 'react';
-import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
+import type { ComponentProps, FunctionComponent } from 'react';
+import type { KeyAndValueDropdownProps } from './CommonDropdown';
+import CommonDropdown from './CommonDropdown';
 
 interface ValueDropdownProps extends KeyAndValueDropdownProps {
     labelKey: string;

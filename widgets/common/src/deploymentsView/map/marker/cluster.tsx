@@ -1,4 +1,5 @@
-import { FunctionComponent, useEffect, useRef } from 'react';
+import type { FunctionComponent } from 'react';
+import { useEffect, useRef } from 'react';
 import { countBy, kebabCase } from 'lodash';
 import styled from 'styled-components';
 

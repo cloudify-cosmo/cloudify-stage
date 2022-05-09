@@ -4,8 +4,13 @@ import styled from 'styled-components';
 import { compact, find, map, without } from 'lodash';
 
 import Actions from './Actions';
-import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration, PluginUploadData } from './types';
-import { PluginDescription, PluginWagon } from './types';
+import type {
+    PluginDescriptionWithVersion,
+    PluginsCatalogWidgetConfiguration,
+    PluginUploadData,
+    PluginDescription,
+    PluginWagon
+} from './types';
 
 interface PluginsCatalogListProps {
     items: PluginDescriptionWithVersion[];

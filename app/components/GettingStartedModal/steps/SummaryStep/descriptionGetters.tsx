@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 import { ErrorDescription, ProcessingDescription, SuccessDescription } from './descriptions';
 import { TaskStatus } from '../../installation/process';
-import { SecretInstallationTask } from '../../installation/tasks';
+import type { SecretInstallationTask } from '../../installation/tasks';
 
 export const createTaskDescriptionGetter = (
     processingMessage: string,

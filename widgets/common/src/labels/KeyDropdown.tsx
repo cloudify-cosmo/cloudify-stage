@@ -1,5 +1,7 @@
-import { FunctionComponent, useContext } from 'react';
-import CommonDropdown, { KeyAndValueDropdownProps } from './CommonDropdown';
+import type { FunctionComponent } from 'react';
+import { useContext } from 'react';
+import type { KeyAndValueDropdownProps } from './CommonDropdown';
+import CommonDropdown from './CommonDropdown';
 import ResourceTypeContext from '../filters/resourceTypeContext';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {

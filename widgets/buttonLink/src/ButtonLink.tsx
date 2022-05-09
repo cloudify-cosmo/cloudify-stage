@@ -1,6 +1,6 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { CSSProperties } from 'react';
-import { FunctionComponent, useCallback, useMemo } from 'react';
+import type { CSSProperties, FunctionComponent } from 'react';
+import { useCallback, useMemo } from 'react';
 
 export interface ButtonLinkProps {
     basic: boolean;

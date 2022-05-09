@@ -1,12 +1,14 @@
-import React, { FunctionComponent, useContext, useState } from 'react';
+import type { FunctionComponent } from 'react';
+import React, { useContext, useState } from 'react';
 
 import styled, { css, ThemeContext } from 'styled-components';
 import { useSelector } from 'react-redux';
 import { without } from 'lodash';
 import PagesList from './PagesList';
 import { Sidebar } from '../basic';
-import { ReduxState } from '../../reducers';
-import SystemMenu, { SystemMenuGroup } from './SystemMenu';
+import type { ReduxState } from '../../reducers';
+import type { SystemMenuGroup } from './SystemMenu';
+import SystemMenu from './SystemMenu';
 import { useBoolean, useResettableState } from '../../utils/hooks';
 import SideBarHeader from './SideBarHeader';
 import { SideBarAnimatedItemWrapper } from './SideBarItem';

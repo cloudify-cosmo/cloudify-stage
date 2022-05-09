@@ -3,7 +3,7 @@ import { useRef } from 'react';
 
 import LabelKeyDropdown from '../../labels/KeyDropdown';
 import LabelValueDropdown from '../../labels/ValueDropdown';
-import { CommonAttributeValueInputProps } from './types';
+import type { CommonAttributeValueInputProps } from './types';
 import { isMultipleValuesOperator } from '../common';
 
 const LabelDropdownsDivider: FunctionComponent = () => {

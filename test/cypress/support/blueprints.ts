@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
-import { addCommands, GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
+import { addCommands } from 'cloudify-ui-common/cypress/support';
 import { waitUntilEmpty } from './resource_commons';
 
 declare global {

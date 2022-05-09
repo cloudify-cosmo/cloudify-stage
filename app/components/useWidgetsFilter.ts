@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { useSelector } from 'react-redux';
-import { getWidgetDefinitionById, SimpleWidgetObj } from '../actions/page';
+import type { SimpleWidgetObj } from '../actions/page';
+import { getWidgetDefinitionById } from '../actions/page';
 
 import type { ReduxState } from '../reducers';
 import stageUtils from '../utils/stageUtils';

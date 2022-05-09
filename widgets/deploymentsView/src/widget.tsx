@@ -1,4 +1,5 @@
-import { FunctionComponent, useEffect } from 'react';
+import type { FunctionComponent } from 'react';
+import { useEffect } from 'react';
 import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
 
 export interface DeploymentsViewWidgetConfiguration extends SharedDeploymentsViewWidgetConfiguration {

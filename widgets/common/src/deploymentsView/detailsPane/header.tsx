@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react';
 
 import './header.scss';
 import styled from 'styled-components';
-import { Deployment } from '../types';
+import type { Deployment } from '../types';
 
 const HeaderWrapper = styled.div`
     display: flex;

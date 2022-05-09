@@ -1,5 +1,6 @@
-import { FunctionComponent } from 'react';
-import LabelsModal, { LabelsModalProps } from './LabelsModal';
+import type { FunctionComponent } from 'react';
+import type { LabelsModalProps } from './LabelsModal';
+import LabelsModal from './LabelsModal';
 
 type ManageLabelsModalProps = Omit<LabelsModalProps, 'i18nHeaderKey' | 'i18nApplyKey'>;
 

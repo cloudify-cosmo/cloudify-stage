@@ -1,7 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import { db } from '../db/Connection';
-import { ApplicationsInstance } from '../db/models/ApplicationsModel';
+import type { ApplicationsInstance } from '../db/models/ApplicationsModel';
 
 const router = express.Router();
 

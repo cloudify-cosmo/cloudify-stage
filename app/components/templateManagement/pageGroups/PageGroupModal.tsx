@@ -1,10 +1,10 @@
 import _, { includes, isEmpty } from 'lodash';
 import React from 'react';
-import { ModalProps, SemanticICONS } from 'semantic-ui-react';
+import type { ModalProps, SemanticICONS } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { useBoolean, useErrors, useInput, useOpen, useResettableState } from '../../../utils/hooks';
 import { ApproveButton, CancelButton, Divider, Form, Icon, LoadingOverlay, Modal, Segment } from '../../basic';
-import { ReduxState } from '../../../reducers';
+import type { ReduxState } from '../../../reducers';
 import StageUtils from '../../../utils/stageUtils';
 import SelectionList from '../common/SelectionList';
 import SortableList from '../common/SortableList';

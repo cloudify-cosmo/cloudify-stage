@@ -1,4 +1,5 @@
-import { QueryObserverLoadingResult, QueryObserverSuccessResult, useQuery } from 'react-query';
+import type { QueryObserverLoadingResult, QueryObserverSuccessResult } from 'react-query';
+import { useQuery } from 'react-query';
 import type { Deployment, DeploymentStatus } from '../../types';
 
 // NOTE: use a constrained identity function to make sure the array members match the properties

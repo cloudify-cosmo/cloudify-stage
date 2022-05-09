@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { replace } from 'connected-react-router';
-import { ReduxState } from '../../reducers';
+import type { ReduxState } from '../../reducers';
 
 /**
  * Returns a string with URL search parameter value and two functions - one to set the value in URL and

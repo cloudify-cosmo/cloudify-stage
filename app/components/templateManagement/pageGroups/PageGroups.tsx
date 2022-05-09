@@ -1,4 +1,5 @@
-import React, { FunctionComponent } from 'react';
+import type { FunctionComponent } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
@@ -10,7 +11,7 @@ import ItemsCount from '../common/ItemsCount';
 import ItemsList from '../common/ItemsList';
 import PageGroupModal from './PageGroupModal';
 import { createPageGroup, deletePageGroup, updatePageGroup } from '../../../actions/templateManagement/pageGroups';
-import { ReduxState } from '../../../reducers';
+import type { ReduxState } from '../../../reducers';
 import Internal from '../../../utils/Internal';
 
 const tTemplates = StageUtils.getT('templates');
