@@ -35,7 +35,7 @@ export default function TerraformVariableValueInput({
             />
         );
     }
-    if (rowValues?.source === 'static' && name === 'value') {
+    if (rowValues?.source === 'static' && name === 'name') {
         return <Input value="" disabled fluid />;
     }
 

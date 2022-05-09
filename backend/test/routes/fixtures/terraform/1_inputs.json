@@ -6,30 +6,30 @@
   "resourceLocation": "/ft_folder/template",
   "variables": [
     {
-      "name": "variableA",
+      "variable": "variableA",
       "source": "secret",
-      "value": "secretA",
-      "default": "defaultA"
+      "name": "secretA",
+      "value": "defaultA"
     },
     {
-      "name": "variableB",
+      "variable": "variableB",
       "source": "input",
-      "value": "inputA",
-      "default": "defaultB"
+      "name": "inputA",
+      "value": "defaultB"
     },
     {
-      "name": "variableD",
+      "variable": "variableD",
       "source": "static",
-      "value": "",
-      "default": "defaultD"
+      "name": "",
+      "value": "defaultD"
     }
   ],
   "environmentVariables": [
     {
-      "name": "variableC",
+      "variable": "variableC",
       "source": "input",
-      "value": "inputC",
-      "default": "defaultC"
+      "name": "inputC",
+      "value": "defaultC"
     }
   ],
   "outputs": [
