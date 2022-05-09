@@ -99,15 +99,6 @@ export default class BlueprintActionButtons extends React.Component<
         toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
     };
 
-    showModal(type: MODAL_TYPE) {
-        this.setState({ modalType: type, showModal: true, force: false });
-    }
-
-    isShowModal(type: MODAL_TYPE) {
-        const { modalType, showModal } = this.state;
-        return modalType === type && showModal;
-    }
-
     showDeployModal = () => {
         this.showModal(MODAL_TYPE.DEPLOY);
     };
@@ -119,6 +110,15 @@ export default class BlueprintActionButtons extends React.Component<
     clearErrors = () => {
         this.setState({ error: null });
     };
+
+    isShowModal(type: MODAL_TYPE) {
+        const { modalType, showModal } = this.state;
+        return modalType === type && showModal;
+    }
+
+    showModal(type: MODAL_TYPE) {
+        this.setState({ modalType: type, showModal: true, force: false });
+    }
 
     render() {
         const { blueprintId, toolbox, showEditCopyInComposerButton } = this.props;
