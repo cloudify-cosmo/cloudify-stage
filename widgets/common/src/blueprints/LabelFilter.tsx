@@ -2,12 +2,12 @@ import type { FunctionComponent, ComponentProps } from 'react';
 import React from 'react';
 import { FilterRuleType } from '../filters/types';
 
-type BlueprintsLabelFilterProps = Pick<
+type LabelFilterProps = Pick<
     Stage.Types.CustomConfigurationComponentProps<any[]>,
     'name' | 'onChange' | 'value' | 'widgetlessToolbox'
 >;
 
-const BlueprintsLabelFilter: FunctionComponent<BlueprintsLabelFilterProps> = ({
+const LabelFilter: FunctionComponent<LabelFilterProps> = ({
     widgetlessToolbox,
     name,
     value,
@@ -32,4 +32,4 @@ const BlueprintsLabelFilter: FunctionComponent<BlueprintsLabelFilterProps> = ({
     );
 };
 
-export default BlueprintsLabelFilter;
+export default LabelFilter;

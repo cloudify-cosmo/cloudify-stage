@@ -61,7 +61,7 @@ Stage.defineWidget({
             name: tConfiguration('labelFilterRules.name'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: Stage.Common.Blueprints.BlueprintsLabelFilter
+            component: Stage.Common.Blueprints.LabelFilter
         }
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),

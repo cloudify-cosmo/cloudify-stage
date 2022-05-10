@@ -67,7 +67,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: Stage.Common.Blueprints.BlueprintsLabelFilter
+            component: Stage.Common.Blueprints.LabelFilter
         },
         Stage.Common.BlueprintMarketplace.tabsConfig,
         {
