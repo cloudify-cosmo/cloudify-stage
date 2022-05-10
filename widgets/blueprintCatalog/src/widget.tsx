@@ -1,9 +1,9 @@
-import '../widget.css'
+import '../widget.css';
 import Actions from './actions';
 import Consts from './consts';
 import RepositoryList from './RepositoryList';
 
-import type {Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration} from './types';
+import type { Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration } from './types';
 
 const widgetId = 'blueprintCatalog';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);

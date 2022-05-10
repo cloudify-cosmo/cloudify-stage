@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import '../widget.css'
+import '../widget.css';
 import LabelsTable from './LabelsTable';
 
 const { i18n } = Stage;

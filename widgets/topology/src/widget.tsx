@@ -1,9 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 
-import {castArray} from 'lodash';
-import '../widget.css'
+import { castArray } from 'lodash';
+import '../widget.css';
 import DataFetcher from './DataFetcher';
-import {createBaseTopology} from './DataProcessor';
+import { createBaseTopology } from './DataProcessor';
 import Topology from './Topology';
 
 Stage.defineWidget({

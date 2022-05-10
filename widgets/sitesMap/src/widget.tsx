@@ -1,9 +1,9 @@
-import type {SiteWithPosition} from '../../common/src/map/site';
+import type { SiteWithPosition } from '../../common/src/map/site';
 
 import '../widget.css';
 import SitesMap from './SitesMap';
-import type {DeploymentStatus, DeploymentStatusesSummary, SitesData} from './types';
-import {DeploymentStatuses} from './types';
+import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './types';
+import { DeploymentStatuses } from './types';
 
 const emptyDeploymentStatusesSummary: DeploymentStatusesSummary = {
     [DeploymentStatuses.Good]: 0,

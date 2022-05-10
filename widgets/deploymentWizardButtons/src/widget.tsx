@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import '../widget.css'
+import '../widget.css';
 import BlueprintStep from './steps/BlueprintStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InfrastructureStep from './steps/InfrastructureStep';

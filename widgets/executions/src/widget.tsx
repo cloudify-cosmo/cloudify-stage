@@ -1,6 +1,6 @@
-import {castArray, isEmpty} from 'lodash';
+import { castArray, isEmpty } from 'lodash';
 
-import '../widget.css'
+import '../widget.css';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
