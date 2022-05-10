@@ -1,7 +1,8 @@
 import type { ComponentProps } from 'react';
 import Consts from './consts';
+import Utils from './utils';
 
-const t = Stage.Utils.getT('widgets.blueprintActionButtons.buttons');
+const t = Utils.getWidgetTranslation('buttons');
 
 const MODAL_TYPE = {
     DEPLOY: 'deploy',

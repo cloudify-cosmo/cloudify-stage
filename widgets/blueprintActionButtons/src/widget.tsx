@@ -1,14 +1,15 @@
 import BlueprintActionButtons from './BlueprintActionButtons';
 import Consts from './consts';
+import Utils from './utils';
 
 export interface BlueprintActionButtonsConfiguration {
     showEditCopyInComposerButton: boolean;
 }
 
-const t = Stage.Utils.getT('widgets.blueprintActionButtons');
+const t = Utils.getWidgetTranslation();
 
 Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
-    id: 'blueprintActionButtons',
+    id: Consts.WIDGET_ID,
     name: t('name'),
     description: t('description'),
     initialWidth: 3,
@@ -25,7 +26,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     ],
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintActionButtons'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(Consts.WIDGET_ID),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget, _data, _error, toolbox) {
