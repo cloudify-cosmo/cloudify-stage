@@ -17,14 +17,11 @@ describe('User flow', () => {
     }
 
     it('installs deployment from scratch', () => {
-        before(() =>
-            cy
-                .deleteDeployments(resourceName, true)
-                .deleteBlueprints(resourceName, true)
-                .deletePlugins()
-                .deleteSecrets('some_key_')
-                .deleteSecrets('openstack_config__lab1_tenantA')
-        );
+        cy.deleteDeployments(resourceName, true)
+            .deleteBlueprints(resourceName, true)
+            .deletePlugins()
+            .deleteSecrets('some_key_')
+            .deleteSecrets('openstack_config__lab1_tenantA');
 
         cy.visitSubPage('Resources', 'Plugins');
 
