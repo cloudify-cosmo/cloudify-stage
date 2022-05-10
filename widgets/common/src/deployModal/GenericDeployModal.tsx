@@ -669,7 +669,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 <DynamicDropdown
                                     value={blueprint.id}
                                     name="blueprintName"
-                                    fetchUrl="/searches/blueprints?_include=id&state=uploaded"
+                                    fetchUrl={filterRules ? "/searches/blueprints?_include=id&state=uploaded" : "/blueprints?_include=id&state=uploaded"}
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     filterRules={filterRules}
