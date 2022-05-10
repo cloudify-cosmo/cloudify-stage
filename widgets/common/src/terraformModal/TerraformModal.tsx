@@ -214,6 +214,14 @@ export default function TerraformModal({
             }
         }
 
+        function validateBlueprintDescription() {
+            const descriptionValidationRegexp = /^[ -~\S]*$/;
+
+            if (!blueprintDescription.match(descriptionValidationRegexp)) {
+                formErrors.blueprintDescription = tError('invalidBlueprintDescription');
+            }
+        }
+
         function validateTemplate() {
             if (!templateUrl) {
                 formErrors.template = tError('noTerraformTemplate');
@@ -311,6 +319,7 @@ export default function TerraformModal({
         }
 
         validateBlueprintName();
+        validateBlueprintDescription();
         validateTemplate();
         validateUrlAuthentication();
         validateResourceLocation();
@@ -429,7 +438,7 @@ export default function TerraformModal({
                             <input maxLength={inputMaxLength} />
                         </Form.Input>
                     </Form.Field>
-                    <Form.Field label={t(`blueprintDescription`)} error={errors.blueprint}>
+                    <Form.Field label={t(`blueprintDescription`)} error={errors.blueprintDescription}>
                         <Form.TextArea
                             name="blueprintDescription"
                             value={blueprintDescription}
