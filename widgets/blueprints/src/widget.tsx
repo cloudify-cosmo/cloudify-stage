@@ -1,8 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
-import {join} from 'lodash';
+import { join } from 'lodash';
 import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 import BlueprintsList from './BlueprintsList';
-import type {BlueprintsWidgetConfiguration} from './types';
+import type { BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
 const t = Stage.Utils.getT('widgets.blueprints');

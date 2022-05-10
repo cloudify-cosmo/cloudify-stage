@@ -1,4 +1,4 @@
-import {castArray, isEmpty} from 'lodash';
+import { castArray, isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 

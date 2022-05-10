@@ -1,8 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 
-import {castArray} from 'lodash';
+import { castArray } from 'lodash';
 import DataFetcher from './DataFetcher';
-import {createBaseTopology} from './DataProcessor';
+import { createBaseTopology } from './DataProcessor';
 import Topology from './Topology';
 import './widget.css';
 

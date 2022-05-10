@@ -2,7 +2,7 @@ import Actions from './actions';
 import Consts from './consts';
 import RepositoryList from './RepositoryList';
 
-import type {Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration} from './types';
+import type { Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration } from './types';
 import './widget.css';
 
 const widgetId = 'blueprintCatalog';

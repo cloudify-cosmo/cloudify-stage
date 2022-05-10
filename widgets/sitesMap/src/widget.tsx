@@ -1,7 +1,7 @@
-import type {SiteWithPosition} from '../../common/src/map/site';
+import type { SiteWithPosition } from '../../common/src/map/site';
 import SitesMap from './SitesMap';
-import type {DeploymentStatus, DeploymentStatusesSummary, SitesData} from './types';
-import {DeploymentStatuses} from './types';
+import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './types';
+import { DeploymentStatuses } from './types';
 
 import './widget.css';
 

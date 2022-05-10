@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import {get, isEmpty, isEqual} from 'lodash';
+import { get, isEmpty, isEqual } from 'lodash';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import './widget.css';
