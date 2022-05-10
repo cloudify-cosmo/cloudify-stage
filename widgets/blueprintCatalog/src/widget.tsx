@@ -1,8 +1,9 @@
-import RepositoryList from './RepositoryList';
+import '../widget.css'
 import Actions from './actions';
 import Consts from './consts';
+import RepositoryList from './RepositoryList';
 
-import type { BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration, Blueprint } from './types';
+import type {Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration} from './types';
 
 const widgetId = 'blueprintCatalog';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
@@ -26,7 +27,6 @@ Stage.defineWidget<
     initialWidth: 8,
     initialHeight: 20,
     color: 'teal',
-    hasStyle: true,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintCatalog'),

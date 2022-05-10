@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import '../widget.css'
 import SitesTable from './SitesTable';
 
 Stage.defineWidget({
@@ -14,7 +15,6 @@ Stage.defineWidget({
     },
     isReact: true,
     hasReadme: true,
-    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sites'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
     initialConfiguration: [

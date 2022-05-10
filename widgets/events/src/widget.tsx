@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
+import '../widget.css'
 import EventsTable from './EventsTable';
 
 Stage.defineWidget({
@@ -13,7 +14,6 @@ Stage.defineWidget({
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('events'),
-    hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [

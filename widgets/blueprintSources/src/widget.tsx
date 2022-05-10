@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
+import '../widget.css'
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
 
@@ -12,7 +13,6 @@ Stage.defineWidget({
     color: 'orange',
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintSources'),
-    hasStyle: true,
     hasReadme: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 

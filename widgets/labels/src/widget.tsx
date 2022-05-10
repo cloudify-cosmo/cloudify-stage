@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import '../widget.css'
 import LabelsTable from './LabelsTable';
 
 const { i18n } = Stage;
@@ -11,7 +12,6 @@ Stage.defineWidget({
     initialHeight: 24,
     color: 'olive',
     isReact: true,
-    hasStyle: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
