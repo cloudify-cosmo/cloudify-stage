@@ -2,6 +2,7 @@ import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 import type { FilterRule } from '../../../../widgets/common/src/filters/types';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 import { testPageName } from '../../support/commands';
 
 import type { SystemLabel } from '../../support/deployments';
@@ -17,25 +18,16 @@ describe('Deployments View widget', () => {
     const deploymentName = `${specPrefix}deployment_name`;
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
-    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration =
-        {
-            filterByParentDeployment: false,
-            fieldsToShow: [
-                'status',
-                'id',
-                'name',
-                'blueprintName',
-                'location',
-                'subenvironmentsCount',
-                'subservicesCount'
-            ],
-            pageSize: 100,
-            customPollingTime: 10,
-            sortColumn: 'created_at',
-            sortAscending: false,
-            mapHeight: 300,
-            mapOpenByDefault: false
-        };
+    const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
+        filterByParentDeployment: false,
+        fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
+        pageSize: 100,
+        customPollingTime: 10,
+        sortColumn: 'created_at',
+        sortAscending: false,
+        mapHeight: 300,
+        mapOpenByDefault: false
+    };
     // NOTE: widgets below are shown in the details pane
     const additionalWidgetIdsToLoad = [
         'executions',
