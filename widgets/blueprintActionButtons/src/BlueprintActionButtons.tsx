@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+import Consts from './consts';
 
 const t = Stage.Utils.getT('widgets.blueprintActionButtons.buttons');
 
@@ -40,7 +41,7 @@ export default class BlueprintActionButtons extends React.Component<
 
     componentDidMount() {
         const { toolbox } = this.props;
-        const openDeploymentModal = toolbox.getContext().getValue('openDeploymentModal');
+        const openDeploymentModal = toolbox.getContext().getValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL);
 
         if (openDeploymentModal) {
             this.showDeployModal();
@@ -78,8 +79,8 @@ export default class BlueprintActionButtons extends React.Component<
                 this.setState({ loading: false, error: null });
                 this.hideModal();
                 toolbox.loading(false);
-                if (_.isEqual(blueprintId, toolbox.getContext().getValue('blueprintId'))) {
-                    toolbox.getContext().setValue('blueprintId', null);
+                if (_.isEqual(blueprintId, toolbox.getContext().getValue(Consts.CONTEXT_KEY.BLUEPRINT_ID))) {
+                    toolbox.getContext().setValue(Consts.CONTEXT_KEY.BLUEPRINT_ID, null);
                 }
                 toolbox.goToParentPage();
             })
