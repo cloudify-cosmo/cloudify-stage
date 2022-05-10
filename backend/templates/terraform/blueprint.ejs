@@ -21,10 +21,10 @@ node_templates:
     properties:
       resource_config:
         source:
-          location: "<%= terraformTemplate %>"<% if (urlAuthentication) { %>
-          username: { get_secret: "<%= blueprintName %>.username" }
-          password: { get_secret: "<%= blueprintName %>.password" }<% } %>
-        source_path: "<%= resourceLocation %>"
+          location: '<%= terraformTemplate %>'<% if (urlAuthentication) { %>
+          username: { get_secret: '<%= blueprintName %>.username' }
+          password: { get_secret: '<%= blueprintName %>.password' }<% } %>
+        source_path: '<%= resourceLocation %>'
 <%- include('variables', { name: 'variables', variables: variables }) -%>
 <%- include('variables', { name: 'environment_variables', variables: environmentVariables }) -%>
     relationships:

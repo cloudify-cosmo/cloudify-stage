@@ -1,8 +1,8 @@
 export interface Variable {
+    variable: string;
     name: string;
     source: 'input' | 'secret' | 'static';
     value: string;
-    default: string;
 }
 
 export interface Output {

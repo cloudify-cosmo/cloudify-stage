@@ -3,5 +3,5 @@
 <% } _%>
 <% outputs.forEach(output => { _%>
   <%= output.name %>:
-    value: { get_attribute: [ cloud_resources, outputs, <%= output.terraformOutput %>, value ] }
+    value: { get_attribute: [ cloud_resources, outputs, '<%= String(output.terraformOutput).replace("'", "''") %>', value ] }
 <% }) _%>
