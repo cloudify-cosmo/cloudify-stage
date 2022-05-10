@@ -10,7 +10,7 @@ interface Props {
     label: string;
     blueprintFilterRules?: FilterRule[];
 }
-const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon, label, toolbox, filterRules }) => {
+const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon, label, toolbox, blueprintFilterRules }) => {
     const { Button } = Stage.Basic;
     const { DeployBlueprintModal } = Stage.Common;
     const { useBoolean } = Stage.Hooks;
