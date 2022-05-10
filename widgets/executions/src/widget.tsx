@@ -1,8 +1,8 @@
-import { castArray, isEmpty } from 'lodash';
-
-import '../widget.css';
+import {castArray, isEmpty} from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
+
+import './widget.css';
 
 export interface ExecutionsWidgetParams {
     /* eslint-disable camelcase */

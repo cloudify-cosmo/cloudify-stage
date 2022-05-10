@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
-import '../widget.css';
 import EventsTable from './EventsTable';
+import './widget.css';
 
 Stage.defineWidget({
     id: 'events',

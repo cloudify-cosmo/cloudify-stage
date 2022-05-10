@@ -1,6 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 
-import '../widget.css';
 import BlueprintStep from './steps/BlueprintStep';
 import ConfirmationStep from './steps/ConfirmationStep';
 import InfrastructureStep from './steps/InfrastructureStep';
@@ -8,6 +7,7 @@ import InputsStep from './steps/InputsStep';
 import InstallStep from './steps/InstallStep';
 import PluginsStep from './steps/PluginsStep';
 import SecretsStep from './steps/SecretsStep';
+import './widget.css';
 import WizardButton from './WizardButton';
 
 const configurationDefaults = {

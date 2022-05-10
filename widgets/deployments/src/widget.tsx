@@ -1,9 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 
-import { get, isEmpty, isEqual } from 'lodash';
-import '../widget.css';
+import {get, isEmpty, isEqual} from 'lodash';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
+import './widget.css';
 
 const t = Stage.Utils.getT('widgets.deployments');
 
