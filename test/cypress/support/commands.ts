@@ -293,7 +293,7 @@ const commands = {
         {
             widgetsWidth = 8,
             additionalWidgetIdsToLoad = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
     ) => {
         const widgetIdsArray = _.castArray(widgetIds);
         const widgetIdsToLoad = _.compact([

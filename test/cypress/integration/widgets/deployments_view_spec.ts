@@ -1,14 +1,13 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
-
-import type { SystemLabel } from '../../support/deployments';
-
-import { exampleBlueprintUrl } from '../../support/resource_urls';
 import type { FilterRule } from '../../../../widgets/common/src/filters/types';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
-import type {} from '../../../../widgets/common/src/deploymentsView';
-import { secondsToMs } from '../../support/resource_commons';
 import { testPageName } from '../../support/commands';
+
+import type { SystemLabel } from '../../support/deployments';
+import { secondsToMs } from '../../support/resource_commons';
+
+import { exampleBlueprintUrl } from '../../support/resource_urls';
 
 describe('Deployments View widget', () => {
     const widgetId = 'deploymentsView';
@@ -18,16 +17,25 @@ describe('Deployments View widget', () => {
     const deploymentName = `${specPrefix}deployment_name`;
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
-    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration = {
-        filterByParentDeployment: false,
-        fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
-        pageSize: 100,
-        customPollingTime: 10,
-        sortColumn: 'created_at',
-        sortAscending: false,
-        mapHeight: 300,
-        mapOpenByDefault: false
-    };
+    const widgetConfiguration: import('../../../../widgets/deploymentsView/src/widget').DeploymentsViewWidgetConfiguration =
+        {
+            filterByParentDeployment: false,
+            fieldsToShow: [
+                'status',
+                'id',
+                'name',
+                'blueprintName',
+                'location',
+                'subenvironmentsCount',
+                'subservicesCount'
+            ],
+            pageSize: 100,
+            customPollingTime: 10,
+            sortColumn: 'created_at',
+            sortAscending: false,
+            mapHeight: 300,
+            mapOpenByDefault: false
+        };
     // NOTE: widgets below are shown in the details pane
     const additionalWidgetIdsToLoad = [
         'executions',
@@ -74,7 +82,7 @@ describe('Deployments View widget', () => {
         cy.usePageMock(
             [widgetId],
             { ...widgetConfiguration, ...configurationOverrides },
-            { additionalWidgetIdsToLoad, widgetsWidth: 12, additionalPageTemplates: ['drilldownDeployments'] }
+            { additionalWidgetIdsToLoad, widgetsWidth: 12 }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
         cy.wait('@deployments', { requestTimeout: secondsToMs(20) });
