@@ -343,7 +343,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 // NOTE: necessary type asssertion for the generic parameter to work
-const ConnectedWidget = connector(Widget) as unknown as <Configuration>(
+const ConnectedWidget = (connector(Widget) as unknown) as <Configuration>(
     props: WidgetOwnProps<Configuration>
 ) => ReactElement<WidgetProps<Configuration>>;
 
