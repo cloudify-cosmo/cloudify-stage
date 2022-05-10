@@ -54,6 +54,13 @@ export default class BlueprintActionButtons extends React.Component<
     }
 
     hideModal = () => {
+        const { toolbox } = this.props;
+        const shouldRemoveAutoModalOpening = toolbox.getContext().getValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL);
+
+        if (shouldRemoveAutoModalOpening) {
+            toolbox.getContext().setValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL, false);
+        }
+
         this.setState({ showModal: false });
     };
 
