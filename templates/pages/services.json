@@ -14,7 +14,7 @@
           "definition": "deploymentButton",
           "configuration": {
             "label": "Create Service",
-            "filterRules": [{
+            "blueprintFilterRules": [{
               "key": "csys-obj-type",
               "values": ["environment"],
               "operator": "is_not",

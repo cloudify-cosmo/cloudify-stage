@@ -12,7 +12,7 @@ const t = (key: string, options?: Record<string, any>) =>
 
 type DeployBlueprintModalProps = Pick<
     ComponentProps<typeof GenericDeployModal>,
-    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'filterRules'
+    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules'
 >;
 
 const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {

@@ -12,7 +12,7 @@ type DeploymentButtonConfiguration = {
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
-    filterRules: FilterRule[];
+    blueprintFilterRules: FilterRule[];
 };
 
 Stage.defineWidget({
@@ -68,7 +68,7 @@ Stage.defineWidget({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
-        const { basic, color, icon, label, filterRules } = widget.configuration;
-        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} filterRules={filterRules} />;
+        const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
+        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} blueprintFilterRules={blueprintFilterRules} />;
     }
 });

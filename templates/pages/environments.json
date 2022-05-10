@@ -14,7 +14,7 @@
           "definition": "deploymentButton",
           "configuration": {
             "label": "Create Environment",
-            "filterRules": [{
+            "blueprintFilterRules": [{
               "key": "csys-obj-type",
               "values": ["environment"],
               "operator": "any_of",

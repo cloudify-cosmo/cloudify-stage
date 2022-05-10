@@ -8,7 +8,7 @@ interface Props {
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
-    filterRules?: FilterRule[];
+    blueprintFilterRules?: FilterRule[];
 }
 const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon, label, toolbox, filterRules }) => {
     const { Button } = Stage.Basic;
@@ -27,7 +27,7 @@ const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon,
                 className="widgetButton"
                 onClick={showModal}
             />
-            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} filterRules={filterRules} />
+            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} blueprintFilterRules={blueprintFilterRules} />
         </div>
     );
 };

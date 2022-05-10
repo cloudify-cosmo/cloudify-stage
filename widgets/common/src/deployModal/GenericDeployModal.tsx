@@ -137,7 +137,7 @@ type GenericDeployModalProps = {
     /**
      * Filter rules for blueprints listing
      */
-    filterRules?: FilterRule[];
+     blueprintFilterRules?: FilterRule[];
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -601,7 +601,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             showSitesInput,
             deploymentNameLabel,
             deploymentNameHelp,
-            filterRules
+            blueprintFilterRules
         } = this.props;
         const {
             activeSection,
@@ -669,10 +669,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 <DynamicDropdown
                                     value={blueprint.id}
                                     name="blueprintName"
-                                    fetchUrl={filterRules ? "/searches/blueprints?_include=id&state=uploaded" : "/blueprints?_include=id&state=uploaded"}
+                                    fetchUrl={blueprintFilterRules ? "/searches/blueprints?_include=id&state=uploaded" : "/blueprints?_include=id&state=uploaded"}
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
-                                    filterRules={filterRules}
+                                    filterRules={blueprintFilterRules}
                                     prefetch
                                 />
                             </Form.Field>
