@@ -486,9 +486,9 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
                 cy.contains('Please provide resource location').should('be.visible');
-                cy.contains('Please provide variable name').should('be.visible');
+                cy.contains('Please provide variable key').should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
-                cy.contains('Please provide environment variable name').should('be.visible');
+                cy.contains('Please provide environment variable key').should('be.visible');
                 cy.contains('Please provide environment variable source').should('be.visible');
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
@@ -509,12 +509,12 @@ describe('Blueprints widget', () => {
 
                 cy.log('Check allowed characters validations');
                 getSegment('Variables').within(() => {
-                    cy.get('input[name=name]').type('$');
+                    cy.get('input[name=variable]').type('$');
                     selectVariableSource('Static');
                     cy.get('td:eq(3) input').type('$');
                 });
                 getSegment('Environment variables').within(() => {
-                    cy.get('input[name=name]').type('$');
+                    cy.get('input[name=variable]').type('$');
                     selectVariableSource('Static');
                     cy.get('td:eq(3) input').type('$');
                 });
@@ -524,11 +524,11 @@ describe('Blueprints widget', () => {
                 });
                 cy.clickButton('Create');
                 cy.contains('Errors in the form').scrollIntoView();
-                cy.contains('Please provide valid variable name').should('be.visible');
-                cy.contains('Please provide valid environment variable name').should('be.visible');
+                cy.contains('Please provide valid variable key').should('be.visible');
+                cy.contains('Please provide valid environment variable key').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
+                cy.get('.error.message li').should('have.length', 8);
             });
         });
 
@@ -549,7 +549,7 @@ describe('Blueprints widget', () => {
                 addFirstSegmentRow('Variables');
 
                 getSegment('Variables').within(() => {
-                    cy.get('input[name=name]').type(validVariableName);
+                    cy.get('input[name=variable]').type(validVariableName);
                     selectVariableSource('Secret');
                 });
 
@@ -561,25 +561,25 @@ describe('Blueprints widget', () => {
         it('validate variables and outputs uniqueness', () => {
             openTerraformModal();
 
-            function addDuplicatedNames(segmentName: string) {
+            function addDuplicatedNames(segmentName: string, name = 'variable') {
                 cy.contains(segmentName)
                     .click()
                     .parent()
                     .within(() => {
                         cy.clickButton('Add').click();
-                        cy.get('input[name=name]:eq(0)').type('name');
-                        cy.get('input[name=name]:eq(1)').type('name');
+                        cy.get(`input[name=${name}]:eq(0)`).type('name');
+                        cy.get(`input[name=${name}]:eq(1)`).type('name');
                     });
             }
 
             addDuplicatedNames('Variables');
             addDuplicatedNames('Environment variables');
-            addDuplicatedNames('Outputs');
+            addDuplicatedNames('Outputs', 'name');
 
             cy.clickButton('Create');
             cy.contains('Errors in the form').scrollIntoView();
-            cy.contains('Variables must be unique, duplicates are not allowed').should('be.visible');
-            cy.contains('Environment variables must be unique, duplicates are not allowed').should('be.visible');
+            cy.contains('Variable keys must be unique, duplicates are not allowed').should('be.visible');
+            cy.contains('Environment variable keys must be unique, duplicates are not allowed').should('be.visible');
             cy.contains('Outputs must be unique, duplicates are not allowed').should('be.visible');
         });
 
