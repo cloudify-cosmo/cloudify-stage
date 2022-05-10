@@ -1,13 +1,16 @@
 import BlueprintActionButtons from './BlueprintActionButtons';
+import Consts from './consts';
 
 export interface BlueprintActionButtonsConfiguration {
     showEditCopyInComposerButton: boolean;
 }
 
+const t = Stage.Utils.getT('widgets.blueprintActionButtons');
+
 Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     id: 'blueprintActionButtons',
-    name: 'Blueprint action buttons',
-    description: 'Provides set of action buttons for blueprint',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 3,
     initialHeight: 5,
     showHeader: false,
@@ -16,7 +19,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
         {
             id: 'showEditCopyInComposerButton',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: Stage.i18n.t('widgets.blueprintActionButtons.configuration.showEditCopyInComposerButton'),
+            name: t('configuration.showEditCopyInComposerButton'),
             default: false
         }
     ],
@@ -26,7 +29,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget, _data, _error, toolbox) {
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
+        const blueprintId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.BLUEPRINT_ID);
 
         return (
             <BlueprintActionButtons

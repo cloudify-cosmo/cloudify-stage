@@ -793,6 +793,8 @@
             }
         },
         "blueprintActionButtons": {
+            "name": "Blueprint action buttons",
+            "description": "Provides set of action buttons for blueprint",
             "configuration": {
                 "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
             },
