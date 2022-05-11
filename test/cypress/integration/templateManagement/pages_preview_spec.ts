@@ -1,7 +1,6 @@
 describe('Page preview', () => {
     before(() => {
         cy.activate('valid_trial_license');
-        cy.intercept('/console/appData/templates/pages/adminDash.json', { fixture: 'pages/page_with_tabs' });
         cy.mockLogin();
     });
 
@@ -10,28 +9,26 @@ describe('Page preview', () => {
 
         cy.goToTemplateManagement();
 
-        cy.get('.segment:contains(Pages) .search:eq(0)').click();
+        cy.get('.segment:contains(Pages)').contains('tr', 'deployment').find('.search').click();
 
         // Verify tabs switching works
-        cy.contains('Tab2').click();
-        cy.contains('.widgetName', 'Cluster Status').should('not.exist');
-        cy.contains('.widgetName', 'Blueprints').should('not.exist');
-        cy.get('.deploymentNumWidget');
+        cy.contains('History').click();
+        cy.contains('.widgetName', 'Execution Task Graph').should('not.exist');
+        cy.contains('.widgetName', 'Deployment Executions').should('be.visible');
 
-        cy.contains('Tab1').click();
+        cy.contains('Last Execution').click();
 
         // Verify widget maximize button works for widgets inside tabs
-        cy.get('.blueprintsWidget .expand').click({ force: true });
+        cy.getWidget('executions').find('.expand').click({ force: true });
 
-        cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
-        cy.get('.blueprintNumWidget').should('not.be.visible');
+        cy.getWidget('eventsFilter').should('not.be.visible');
+        cy.getWidget('events').should('not.be.visible');
 
         // Verify widget collapse button works
-        cy.get('.blueprintsWidget .compress').click({ force: true });
-        cy.contains('.widgetName', 'Cluster Status').should('be.visible');
-        cy.contains('.widgetName', 'Cluster Status').should('be.visible');
-        cy.contains('Tab1').should('be.visible');
-        cy.contains('Tab2').should('be.visible');
+        cy.getWidget('executions').find('.compress').click({ force: true });
+        cy.getWidget('eventsFilter').should('be.visible');
+        cy.getWidget('events').should('be.visible');
+        cy.contains('Last Execution').should('be.visible');
+        cy.contains('History').should('be.visible');
     });
 });
