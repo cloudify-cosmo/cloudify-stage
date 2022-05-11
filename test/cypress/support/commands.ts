@@ -329,7 +329,7 @@ const commands = {
                                               y: 0,
                                               maximized: false
                                           },
-                                          widgetIdsArray.map((widgetId, index) => ({
+                                          ...widgetIdsArray.map((widgetId, index) => ({
                                               id: widgetId,
                                               definition: widgetId,
                                               configuration: widgetConfiguration,
