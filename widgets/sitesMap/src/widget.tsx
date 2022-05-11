@@ -1,7 +1,9 @@
 import type { SiteWithPosition } from '../../common/src/map/site';
 import SitesMap from './SitesMap';
-import type { DeploymentStatusesSummary, DeploymentStatus, SitesData } from './types';
+import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';
+
+import './widget.css';
 
 const emptyDeploymentStatusesSummary: DeploymentStatusesSummary = {
     [DeploymentStatuses.Good]: 0,
@@ -55,7 +57,6 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     color: 'green',
     isReact: true,
     hasReadme: true,
-    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sitesMap'),
     categories: [Stage.GenericConfig.CATEGORY.SPIRE],
     supportedEditions: [Stage.Common.Consts.licenseEdition.premium, Stage.Common.Consts.licenseEdition.spire],

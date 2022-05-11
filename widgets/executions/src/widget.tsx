@@ -2,6 +2,8 @@ import { castArray, isEmpty } from 'lodash';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
+import './widget.css';
+
 export interface ExecutionsWidgetParams {
     /* eslint-disable camelcase */
     blueprint_id: any;
@@ -25,7 +27,6 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
     description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
-    hasStyle: true,
     color: 'teal',
     isReact: true,
     hasReadme: true,

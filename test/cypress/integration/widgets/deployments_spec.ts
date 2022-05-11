@@ -31,17 +31,11 @@ describe('Deployments widget', () => {
             .uploadBlueprint(blueprintUrl, blueprintName)
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite(site)
-            .usePageMock(
-                'deployments',
-                {
-                    pollingTime: 5,
-                    clickToDrillDown: true,
-                    showExecutionStatusLabel: false
-                },
-                {
-                    additionalPageTemplates: ['blueprintMarketplace']
-                }
-            )
+            .usePageMock('deployments', {
+                pollingTime: 5,
+                clickToDrillDown: true,
+                showExecutionStatusLabel: false
+            })
             .mockLogin();
     });
 

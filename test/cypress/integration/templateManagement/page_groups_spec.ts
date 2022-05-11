@@ -20,27 +20,19 @@ describe('Page groups segment', () => {
                 name: 'Mock group 1',
                 updatedBy: 'Manager',
                 updatedAt: '2021-10-21T12:39:50+02:00',
-                custom: false
+                icon: 'rocket',
+                custom: false,
+                pages: ['page1', 'page2']
             },
             {
                 id: 'mockGroup2',
                 name: 'Mock group 2',
                 updatedBy: 'Manager',
                 updatedAt: '2021-10-21T12:39:50+02:00',
-                custom: true
+                custom: true,
+                pages: ['page3', 'page4']
             }
         ]);
-        cy.intercept('GET', '/console/appData/templates/page-groups/mockGroup1.json', {
-            id: 'mockGroup1',
-            name: 'Mock group 1',
-            icon: 'rocket',
-            pages: ['page1', 'page2']
-        });
-        cy.intercept('GET', '/console/userData/templates/page-groups/mockGroup2.json', {
-            id: 'mockGroup2',
-            name: 'Mock group 2',
-            pages: ['page3', 'page4']
-        });
 
         cy.mockLogin();
         cy.goToTemplateManagement();

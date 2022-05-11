@@ -1,7 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 import { join } from 'lodash';
+import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
+import './widget.css';
 
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
@@ -15,7 +17,6 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     initialWidth: 8,
     initialHeight: 20,
     color: 'blue',
-    hasStyle: true,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),
