@@ -1,9 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 
 import { castArray } from 'lodash';
-import Topology from './Topology';
 import DataFetcher from './DataFetcher';
 import { createBaseTopology } from './DataProcessor';
+import Topology from './Topology';
+import './widget.css';
 
 Stage.defineWidget({
     id: 'topology',
@@ -15,7 +16,6 @@ Stage.defineWidget({
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),
-    hasStyle: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
     initialConfiguration: [
