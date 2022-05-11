@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
@@ -28,7 +27,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deploymentButtonWidget button').click();
     });
 
-    const selectBlueprintInModal = type => {
+    const selectBlueprintInModal = (type: string) => {
         cy.get('.modal').within(() => {
             const blueprintName = `${resourcePrefix}${type}_type`;
             cy.log(`Selecting blueprint: ${blueprintName}.`);
@@ -48,7 +47,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
-    const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
+    const fillDeployBlueprintModal = (deploymentId: string, deploymentName: string, blueprintId: string) => {
         cy.get('div.deployBlueprintModal').within(() => {
             cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
@@ -82,7 +81,7 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const deployBlueprint = (deploymentId, deploymentName, install = false, blueprintId = testBlueprintId) => {
+    const deployBlueprint = (deploymentId: string, deploymentName: string, install = false, blueprintId = testBlueprintId) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, blueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
@@ -96,14 +95,14 @@ describe('Create Deployment Button widget', () => {
         waitForDeployBlueprintModal(install);
     };
 
-    const verifyBlueprintDeployed = (blueprintId, deploymentId) => {
+    const verifyBlueprintDeployed = (blueprintId: string, deploymentId: string) => {
         cy.getDeployment(deploymentId).then(response => {
             expect(response.body.id).to.be.equal(deploymentId);
             expect(response.body.blueprint_id).to.be.equal(blueprintId);
         });
     };
 
-    const verifyDeploymentInstallStarted = deploymentId => {
+    const verifyDeploymentInstallStarted = (deploymentId: string) => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
             expect(response.body.items[0].parameters.xxx).to.be.equal(customInstallWorkflowParam1);
@@ -112,9 +111,9 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const verifyRedirectionToDeploymentPage = (deploymentId, deploymentName) => {
+    const verifyRedirectionToDeploymentPage = (deploymentId: string, deploymentName: string) => {
         cy.location('href').then(url =>
-            expect(JSON.parse(new URL(url).searchParams.get('c'))[1].context.deploymentId).to.eq(deploymentId)
+            expect(JSON.parse(new URL(url).searchParams.get('c')!)[1].context.deploymentId).to.eq(deploymentId)
         );
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
