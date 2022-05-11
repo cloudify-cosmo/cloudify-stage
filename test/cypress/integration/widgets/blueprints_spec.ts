@@ -597,6 +597,19 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
+        it('validate blueprint description', () => {
+            openTerraformModal();
+
+            cy.typeToFieldInput('Blueprint description', 'Invalid string containing non ascii Ł');
+            setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
+
+            cy.clickButton('Create');
+            cy.contains('Errors in the form').scrollIntoView();
+            cy.contains(`Please provide valid blueprint description`).should('be.visible');
+            cy.typeToFieldInput('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
+            cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
+        });
+
         it('handle template URL 401', () => {
             cy.intercept(
                 {
