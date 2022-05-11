@@ -215,7 +215,7 @@ export default function TerraformModal({
         }
 
         function validateBlueprintDescription() {
-            const descriptionValidationRegexp = /^[ -~\S]*$/;
+            const descriptionValidationRegexp = /^[ -~\s]*$/;
 
             if (!blueprintDescription.match(descriptionValidationRegexp)) {
                 formErrors.blueprintDescription = tError('invalidBlueprintDescription');
