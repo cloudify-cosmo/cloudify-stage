@@ -8,19 +8,17 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
-import 'cypress-file-upload';
-import 'cypress-localstorage-commands';
-import 'cypress-get-table';
-import _, { isString, noop } from 'lodash';
-import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import type { ManagerData } from 'app/reducers/managerReducer';
+import emptyState from 'app/reducers/managerReducer/emptyState';
+import Consts from 'app/utils/consts';
+import type { Mode } from 'backend/serverSettings';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
-import Consts from 'app/utils/consts';
-import emptyState from 'app/reducers/managerReducer/emptyState';
-import type { ManagerData } from 'app/reducers/managerReducer';
-import type { Mode } from 'backend/serverSettings';
-
-import { secondsToMs } from './resource_commons';
+import 'cypress-file-upload';
+import 'cypress-get-table';
+import 'cypress-localstorage-commands';
+import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import { castArray, compact, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -29,6 +27,8 @@ import './executions';
 import './filters';
 import './getting_started';
 import './plugins';
+
+import { secondsToMs } from './resource_commons';
 import './secrets';
 import './sites';
 import './snapshots';
@@ -292,24 +292,12 @@ const commands = {
         widgetConfiguration: any = {},
         {
             widgetsWidth = 8,
-            additionalWidgetIdsToLoad = [],
-            additionalPageTemplates = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[]; additionalPageTemplates?: string[] } = {}
+            additionalWidgetIdsToLoad = []
+        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
     ) => {
-        const widgetIdsArray = _.castArray(widgetIds);
-        const widgetIdsToLoad = _.compact([
-            ...widgetIdsArray,
-            'filter',
-            'pluginsCatalog',
-            ...additionalWidgetIdsToLoad
-        ]);
+        const widgetIdsArray = castArray(widgetIds);
+        const widgetIdsToLoad = compact([...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad]);
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
-        // required for drill-down testing
-        cy.intercept(
-            'GET',
-            '/console/templates/pages',
-            widgetIds ? ['blueprint', 'deployment', ...additionalPageTemplates].map(toIdObj) : []
-        );
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
             appDataVersion: Consts.APP_VERSION,
@@ -341,7 +329,7 @@ const commands = {
                                               y: 0,
                                               maximized: false
                                           },
-                                          ..._.map(widgetIdsArray, (widgetId, index) => ({
+                                          widgetIdsArray.map((widgetId, index) => ({
                                               id: widgetId,
                                               definition: widgetId,
                                               configuration: widgetConfiguration,
