@@ -3,6 +3,7 @@
 import { get, isEmpty, isEqual } from 'lodash';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
+import './widget.css';
 
 const t = Stage.Utils.getT('widgets.deployments');
 
@@ -59,7 +60,6 @@ Stage.defineWidget({
     ],
     isReact: true,
     hasReadme: true,
-    hasStyle: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 
     fetchParams(widget, toolbox) {
