@@ -57,7 +57,7 @@ Stage.defineWidget({
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
-            id: 'filterRules',
+            id: 'blueprintFilterRules',
             name: tConfiguration('labelFilterRules.name'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
