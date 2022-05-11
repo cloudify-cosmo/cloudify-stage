@@ -162,8 +162,9 @@ describe('Create Deployment Button widget', () => {
         });
         cy.get('div.deploymentButtonWidget button').click();
         cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName');
-            cy.get('.listbox > *').should('have.length', 1);
+            openDropdown('blueprintName').within(() => {
+                cy.get('[role="listbox"] > *').should('have.length', 1);
+            });
         });
     });
 
