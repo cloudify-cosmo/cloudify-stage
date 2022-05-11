@@ -2,6 +2,7 @@
 
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
+import './widget.css';
 
 Stage.defineWidget({
     id: 'blueprintSources',
@@ -12,7 +13,6 @@ Stage.defineWidget({
     color: 'orange',
     isReact: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintSources'),
-    hasStyle: true,
     hasReadme: true,
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
