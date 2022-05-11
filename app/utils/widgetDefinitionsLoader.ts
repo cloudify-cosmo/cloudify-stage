@@ -1,51 +1,25 @@
 // @ts-nocheck File not migrated fully to TS
+import 'd3';
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
-import 'd3';
-
-import Internal from './Internal';
-import ScriptLoader from './scriptLoader';
-import StyleLoader from './StyleLoader';
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
-import StageUtils from './stageUtils';
-import LoaderUtils from './LoaderUtils';
 import GenericConfig from './GenericConfig';
-import * as PropTypes from './props';
 import * as Hooks from './hooks';
-import type { WidgetDefinition } from './StageAPI';
+
+import Internal from './Internal';
+import LoaderUtils from './LoaderUtils';
 import normalizeWidgetDefinition from './normalizeWidgetDefinition';
+import * as PropTypes from './props';
+import ScriptLoader from './scriptLoader';
+import type { WidgetDefinition } from './StageAPI';
+import StageUtils from './stageUtils';
+import StyleLoader from './StyleLoader';
 
 let widgetDefinitions: WidgetDefinition<any, any, any>[] = [];
-
-function updateReadmeLinks(content: any) {
-    const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
-    const anchorHrefRegex = /<a href="([^#]*?)">/gm;
-
-    const newContent = content
-        .replace(anchorHrefRegex, `<a href="${i18n.t('widgets.common.readmes.linksBasePath')}$1">`)
-        .replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
-
-    return newContent;
-}
-
-function convertReadmeParams(content: any) {
-    const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
-    let newContent = content;
-
-    Array.from(newContent.matchAll(paramRegex)).forEach((match: any) => {
-        const paramName = match[1];
-        const paramValue = i18n.t(`widgets.common.readmes.params.${paramName}`);
-        if (paramValue !== undefined) {
-            newContent = newContent.replace(match[0], paramValue);
-        }
-    });
-
-    return newContent;
-}
 
 export default class WidgetDefinitionsLoader {
     public static init() {
@@ -132,21 +106,6 @@ export default class WidgetDefinitionsLoader {
                             widgetDefinition.isCustom
                         )
                     ).load()
-                );
-            }
-
-            if (widgetDefinition.hasReadme) {
-                promises.push(
-                    LoaderUtils.fetchResource(
-                        `widgets/${widgetDefinition.id}/README.md`,
-                        widgetDefinition.isCustom
-                    ).then((widgetReadme: any) => {
-                        if (widgetReadme) {
-                            widgetDefinition.readme = widgetDefinition.isCustom
-                                ? widgetReadme
-                                : updateReadmeLinks(convertReadmeParams(widgetReadme));
-                        }
-                    })
                 );
             }
         });
