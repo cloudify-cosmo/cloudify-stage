@@ -23,7 +23,9 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
-        cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
+        cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as(
+            'uploadedBlueprints'
+        );
         cy.get('div.deploymentButtonWidget button').click();
     });
 
@@ -81,7 +83,12 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const deployBlueprint = (deploymentId: string, deploymentName: string, install = false, blueprintId = testBlueprintId) => {
+    const deployBlueprint = (
+        deploymentId: string,
+        deploymentName: string,
+        install = false,
+        blueprintId = testBlueprintId
+    ) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, blueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
@@ -118,6 +125,11 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
+    type FilterRuleDropdownName = 'ruleRowType' | 'ruleOperator' | 'ruleValue' | 'labelKey' | 'labelValue';
+    function openRuleDropdown(divName: FilterRuleDropdownName) {
+        return cy.get(`div[name="${divName}"]`).click();
+    }
+
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
@@ -135,6 +147,24 @@ describe('Create Deployment Button widget', () => {
 
         cy.get('.actions > .ui:nth-child(1)').click();
         cy.get('div.deployBlueprintModal').should('not.exist');
+    });
+
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+        cy.editWidgetConfiguration('deploymentButton', () => {
+            cy.clickButton('Add new rule');
+            openRuleDropdown('ruleOperator').within(() => {
+                cy.get('input').type('is one of');
+            });
+            // TODO: the following line is not working
+            openRuleDropdown('labelKey').within(() => {
+                cy.get('input').type('obj-type');
+            });
+            openRuleDropdown('labelValue').within(() => {
+                cy.get('input').type('terraform');
+            });
+            // cy.clickButton('Save');
+        });
+        cy.get('div.deploymentButtonWidget button').click();
     });
 
     it('allows to deploy a blueprint', () => {
