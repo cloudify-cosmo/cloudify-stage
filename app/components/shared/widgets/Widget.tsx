@@ -43,13 +43,15 @@ interface WidgetState {
     showReadmeModal: boolean;
 }
 
+const tReadme = stageUtils.getT('widgets.common.readmes');
+
 function updateReadmeLinks(content: any) {
     const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
     const anchorHrefRegex = /<a href="([^#]*?)">/gm;
 
     const newContent = content
-        .replace(anchorHrefRegex, `<a href="${i18n.t('widgets.common.readmes.linksBasePath')}$1">`)
-        .replace(linkRegex, `$1(${i18n.t('widgets.common.readmes.linksBasePath')}$2)`);
+        .replace(anchorHrefRegex, `<a href="${tReadme('linksBasePath')}$1">`)
+        .replace(linkRegex, `$1(${tReadme('linksBasePath')}$2)`);
 
     return newContent;
 }
@@ -60,7 +62,7 @@ function convertReadmeParams(content: any) {
 
     Array.from(newContent.matchAll(paramRegex)).forEach((match: any) => {
         const paramName = match[1];
-        const paramValue = i18n.t(`widgets.common.readmes.params.${paramName}`);
+        const paramValue = tReadme(`params.${paramName}`);
         if (paramValue !== undefined) {
             newContent = newContent.replace(match[0], paramValue);
         }
@@ -125,6 +127,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
         let { readmeContent } = this.state;
 
         if (!readmeContent) {
+            this.setState({ readmeContent: tReadme('loading') });
             LoaderUtils.fetchResource(`widgets/${widget.definition.id}/README.md`, widget.definition.isCustom).then(
                 (fetchedReadme: any) => {
                     if (fetchedReadme) {
@@ -135,7 +138,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                             readmeContent = stageUtils.parseMarkdown(readmeContent);
                         }
                     } else {
-                        readmeContent = ':-(';
+                        readmeContent = tReadme('noReadme');
                     }
                     this.setState({ readmeContent });
                 }
