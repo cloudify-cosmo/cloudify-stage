@@ -125,8 +125,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
-    type FilterRuleDropdownName = 'ruleRowType' | 'ruleOperator' | 'ruleValue' | 'labelKey' | 'labelValue';
-    function openDropdown(divName: FilterRuleDropdownName) {
+    function openDropdown(divName: string) {
         return cy.get(`div[name="${divName}"]`).click();
     }
 
@@ -149,20 +148,23 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
-            openDropdown('ruleOperator').contains('is not one of').click();
+            openDropdown('ruleOperator')
+                .contains(/^key is$/)
+                .click();
             openDropdown('labelKey').within(() => {
                 const labelKey = 'obj-type';
                 cy.get('input').type(labelKey);
                 cy.get(`[option-value=${labelKey}]`).click();
             });
-            openDropdown('labelValue').within(() => {
-                cy.get('input').type('terraform');
-            });
         });
         cy.get('div.deploymentButtonWidget button').click();
+        cy.get('div.deployBlueprintModal').within(() => {
+            openDropdown('blueprintName');
+            cy.get('.listbox > *').should('have.length', 1);
+        });
     });
 
     it('allows to deploy a blueprint', () => {
