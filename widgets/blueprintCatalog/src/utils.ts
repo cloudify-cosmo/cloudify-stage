@@ -17,9 +17,14 @@ const isUploadingBlueprintOnAnotherCatalogTab = (toolbox: WidgetlessToolbox): bo
     return !!getUploadingBlueprintFromCatalogTabs(toolbox);
 };
 
+const resetUploadingBlueprintAcrossCatalogTabs = (toolbox: WidgetlessToolbox) => {
+    setUploadingBlueprintAcrossCatalogTabs(toolbox, '');
+};
+
 export default {
     getWidgetTranslation,
     setUploadingBlueprintAcrossCatalogTabs,
     getUploadingBlueprintFromCatalogTabs,
-    isUploadingBlueprintOnAnotherCatalogTab
+    isUploadingBlueprintOnAnotherCatalogTab,
+    resetUploadingBlueprintAcrossCatalogTabs
 };

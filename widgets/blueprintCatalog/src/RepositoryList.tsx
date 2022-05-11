@@ -4,7 +4,6 @@ import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
 import AuthenticationWarning from './AuthenticationWarning';
-import UploadingMessage from './UploadingMessage';
 
 import type {
     BlueprintCatalogPayload,
@@ -24,7 +23,6 @@ interface RepositoryListProps {
     actions: Actions;
 }
 interface RepositoryListState {
-    uploadingBlueprint?: string;
     successMessages: string[];
     errorMessages: string[] | null;
     showReadmeModal: boolean;
@@ -90,8 +88,13 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     setUploadingBlueprint = (uploadingBlueprint: string) => {
         const { toolbox } = this.props;
 
-        this.setState({ uploadingBlueprint });
         Utils.setUploadingBlueprintAcrossCatalogTabs(toolbox, uploadingBlueprint);
+    };
+
+    resetUploadingBlueprint = () => {
+        const { toolbox } = this.props;
+
+        Utils.resetUploadingBlueprintAcrossCatalogTabs(toolbox);
     };
 
     handleUpload: RepositoryViewProps['onUpload'] = (
@@ -112,6 +115,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 imageUrl: Stage.Utils.Url.url(imageUrl)
             })
             .then(() => {
+                this.resetUploadingBlueprint();
                 toolbox.drillDown(
                     widget,
                     'blueprint',
@@ -123,11 +127,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 this.setState(prevState => ({
                     errorMessages: [...(prevState.errorMessages ?? []), err.message]
                 }));
-            })
-            .finally(() => {
-                this.setState({
-                    uploadingBlueprint: undefined
-                });
             });
     };
 
@@ -154,26 +153,14 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     }
 
     render() {
-        const {
-            errorMessages,
-            readmeContent,
-            readmeLoading,
-            showReadmeModal,
-            uploadingBlueprint,
-            successMessages
-        } = this.state;
+        const { errorMessages, readmeContent, readmeLoading, showReadmeModal, successMessages } = this.state;
         const { data, widget } = this.props;
         const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
-        const isUploadingBlueprint = !!uploadingBlueprint;
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
         const RepositoryView = widget.configuration.displayStyle === 'table' ? RepositoryTable : RepositoryCatalog;
-
-        if (isUploadingBlueprint) {
-            return <UploadingMessage blueprintName={uploadingBlueprint!} />;
-        }
 
         return (
             <div>
