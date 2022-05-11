@@ -4,6 +4,7 @@ import moment from 'moment';
 import pathlib from 'path';
 
 import { getLogger } from '../LoggerHandler';
+import { defaultUpdater } from './consts';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
 
 const logger = getLogger('TemplateHandler');
@@ -20,7 +21,12 @@ function getPages(folder: string, custom: boolean) {
                 const pageFileContent = fs.readJsonSync(pageFilePath);
                 const id = pathlib.basename(pageFile, '.json');
 
-                const { name = id, updatedBy = custom ? '' : 'Manager', updatedAt = '', ...data } = pageFileContent;
+                const {
+                    name = id,
+                    updatedBy = custom ? '' : defaultUpdater,
+                    updatedAt = '',
+                    ...data
+                } = pageFileContent;
 
                 return { id, name, custom, updatedBy, updatedAt, data };
             } catch (error) {

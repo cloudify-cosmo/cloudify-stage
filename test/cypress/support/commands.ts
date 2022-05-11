@@ -18,7 +18,7 @@ import 'cypress-file-upload';
 import 'cypress-get-table';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import _, { isString, noop } from 'lodash';
+import { castArray, compact, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -295,13 +295,8 @@ const commands = {
             additionalWidgetIdsToLoad = []
         }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
     ) => {
-        const widgetIdsArray = _.castArray(widgetIds);
-        const widgetIdsToLoad = _.compact([
-            ...widgetIdsArray,
-            'filter',
-            'pluginsCatalog',
-            ...additionalWidgetIdsToLoad
-        ]);
+        const widgetIdsArray = castArray(widgetIds);
+        const widgetIdsToLoad = compact([...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad]);
         cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
@@ -334,7 +329,7 @@ const commands = {
                                               y: 0,
                                               maximized: false
                                           },
-                                          ..._.map(widgetIdsArray, (widgetId, index) => ({
+                                          widgetIdsArray.map((widgetId, index) => ({
                                               id: widgetId,
                                               definition: widgetId,
                                               configuration: widgetConfiguration,

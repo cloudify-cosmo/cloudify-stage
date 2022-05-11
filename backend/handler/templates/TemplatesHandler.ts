@@ -9,6 +9,7 @@ import { getResourcePath } from '../../utils';
 import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
+import { defaultUpdater } from './consts';
 
 const logger = getLogger('TemplateHandler');
 
@@ -54,7 +55,12 @@ function getTemplates(folder: string, custom: boolean, filter: (fileName: string
                 const templateFileContent = fs.readJsonSync(templateFilePath);
                 const id = pathlib.basename(templateFile, '.json');
 
-                const { name = id, updatedBy = custom ? '' : 'Manager', updatedAt = '', ...data } = templateFileContent;
+                const {
+                    name = id,
+                    updatedBy = custom ? '' : defaultUpdater,
+                    updatedAt = '',
+                    ...data
+                } = templateFileContent;
 
                 return {
                     id,
