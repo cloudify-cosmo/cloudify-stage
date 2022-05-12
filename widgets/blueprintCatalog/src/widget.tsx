@@ -145,10 +145,10 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
 
     render(widget, data, _error, toolbox) {
         const { Common, Basic } = Stage;
-        const isUploadingBlueprintFromAnotherTab = Utils.isUploadingBlueprintOnAnotherCatalogTab(toolbox);
+        const isUploadingBlueprintFromAnotherTab = Utils.blueprintCatalogContext.isUploadingBlueprint(toolbox);
 
         if (isUploadingBlueprintFromAnotherTab) {
-            const uploadingBlueprintName = Utils.getUploadingBlueprintFromCatalogTabs(toolbox);
+            const uploadingBlueprintName = Utils.blueprintCatalogContext.getUploadingBlueprint(toolbox);
             return <UploadingMessage blueprintName={uploadingBlueprintName} />;
         }
 

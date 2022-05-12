@@ -23,8 +23,10 @@ const resetUploadingBlueprintAcrossCatalogTabs = (toolbox: WidgetlessToolbox) =>
 
 export default {
     getWidgetTranslation,
-    setUploadingBlueprintAcrossCatalogTabs,
-    getUploadingBlueprintFromCatalogTabs,
-    isUploadingBlueprintOnAnotherCatalogTab,
-    resetUploadingBlueprintAcrossCatalogTabs
+    blueprintCatalogContext: {
+        setUploadingBlueprint: setUploadingBlueprintAcrossCatalogTabs,
+        getUploadingBlueprint: getUploadingBlueprintFromCatalogTabs,
+        isUploadingBlueprint: isUploadingBlueprintOnAnotherCatalogTab,
+        resetUploadingBlueprint: resetUploadingBlueprintAcrossCatalogTabs
+    }
 };
