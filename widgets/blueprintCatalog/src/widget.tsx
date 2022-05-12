@@ -160,7 +160,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             return <Basic.Loading />;
         }
 
-        const selectedCatalogId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_CATALOG_ID);
+        const selectedBlueprintId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_BLUEPRINT_ID);
         const formattedData = {
             ...data,
             items: data?.items.map(item => {
@@ -181,7 +181,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
                         data.source === Consts.GITHUB_DATA_SOURCE
                             ? `https://github.com/${widget.configuration.username}/${item.name}/archive/master.zip`
                             : item.zip_url,
-                    isSelected: selectedCatalogId === item.id
+                    isSelected: selectedBlueprintId === item.id
                 };
             })
         };
