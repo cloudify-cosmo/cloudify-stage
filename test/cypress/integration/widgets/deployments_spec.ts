@@ -210,7 +210,7 @@ describe('Deployments widget', () => {
     it('should allow to update deployment', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
-        cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
+        cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
         executeDeploymentAction(deploymentId, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
