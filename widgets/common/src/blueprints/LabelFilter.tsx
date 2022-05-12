@@ -7,12 +7,7 @@ type LabelFilterProps = Pick<
     'name' | 'onChange' | 'value' | 'widgetlessToolbox'
 >;
 
-const LabelFilter: FunctionComponent<LabelFilterProps> = ({
-    widgetlessToolbox,
-    name,
-    value,
-    onChange
-}) => {
+const LabelFilter: FunctionComponent<LabelFilterProps> = ({ widgetlessToolbox, name, value, onChange }) => {
     const { RulesForm } = Stage.Common.Filters;
 
     const handleChange: ComponentProps<typeof RulesForm>['onChange'] = newValue => {

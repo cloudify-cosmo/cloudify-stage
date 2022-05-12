@@ -69,6 +69,15 @@ Stage.defineWidget({
 
     render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
         const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
-        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} blueprintFilterRules={blueprintFilterRules} />;
+        return (
+            <DeploymentButton
+                toolbox={toolbox}
+                basic={basic}
+                color={color}
+                icon={icon}
+                label={label}
+                blueprintFilterRules={blueprintFilterRules}
+            />
+        );
     }
 });
