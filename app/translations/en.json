@@ -718,7 +718,9 @@
                     "cfy_spire_name": "Cloudify Spire",
                     "mgr_premium_title": "Cloudify Premium Manager",
                     "product_name": "Cloudify"
-                }
+                },
+                "noReadme": "No README available",
+                "loading": "Loading..."
             },
             "revertToDefault": "Revert to default value",
             "urls": {

@@ -10,6 +10,7 @@ import type {
     Blueprint,
     WidgetParameters
 } from './types';
+import './widget.css';
 
 const t = Utils.getWidgetTranslation('');
 
@@ -28,7 +29,6 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
     initialWidth: 8,
     initialHeight: 20,
     color: 'teal',
-    hasStyle: true,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintCatalog'),
