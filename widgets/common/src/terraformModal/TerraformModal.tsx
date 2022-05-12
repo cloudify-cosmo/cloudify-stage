@@ -314,10 +314,10 @@ export default function TerraformModal({
             const allSecretVariables: Variable[] = [...variables, ...environment].filter(
                 variable => variable.source === 'secret'
             );
-            
+
             await allSecretVariables.forEach(async secretVariable => {
                 // add secret if not exist
-                await secretActions.doGet(secretVariable.name).catch(async (e) => {
+                await secretActions.doGet(secretVariable.name).catch(async e => {
                     await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
                 });
             });
