@@ -149,6 +149,11 @@ describe('Create Deployment Button widget', () => {
     });
 
     it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+        cy.get('div.deployBlueprintModal').within(() => {
+            openDropdown('blueprintName').within(() => {
+                cy.get('[role="listbox"] > *').should('have.length', 11);
+            });
+        });
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator')
@@ -164,7 +169,11 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
+                cy.contains('topology_test_bp');
             });
+        });
+        cy.editWidgetConfiguration('deploymentButton', () => {
+            cy.get('button[aria-label="Remove rule"]').click();
         });
     });
 
