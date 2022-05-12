@@ -4,12 +4,7 @@ import Utils from './utils';
 
 const t = Utils.getWidgetTranslation('buttons');
 
-const MODAL_TYPE = {
-    DEPLOY: 'deploy',
-    DELETE: 'delete'
-} as const;
-
-type MODAL_TYPE = typeof MODAL_TYPE[keyof typeof MODAL_TYPE];
+type ModalType = 'deploy' | 'delete';
 
 interface BlueprintActionButtonsProps {
     blueprintId: string;
@@ -19,7 +14,7 @@ interface BlueprintActionButtonsProps {
 
 interface BlueprintActionButtonsState {
     showModal: boolean;
-    modalType?: MODAL_TYPE;
+    modalType?: ModalType;
     loading: boolean;
     error: any;
     force: boolean;
@@ -109,23 +104,23 @@ export default class BlueprintActionButtons extends React.Component<
     };
 
     showDeployModal = () => {
-        this.showModal(MODAL_TYPE.DEPLOY);
+        this.showModal('deploy');
     };
 
     showDeleteModal = () => {
-        this.showModal(MODAL_TYPE.DELETE);
+        this.showModal('delete');
     };
 
     clearErrors = () => {
         this.setState({ error: null });
     };
 
-    isShowModal(type: MODAL_TYPE) {
+    isShowModal(type: ModalType) {
         const { modalType, showModal } = this.state;
         return modalType === type && showModal;
     }
 
-    showModal(type: MODAL_TYPE) {
+    showModal(type: ModalType) {
         this.setState({ modalType: type, showModal: true, force: false });
     }
 
@@ -201,7 +196,7 @@ export default class BlueprintActionButtons extends React.Component<
                 )}
 
                 <DeployBlueprintModal
-                    open={this.isShowModal(MODAL_TYPE.DEPLOY)}
+                    open={this.isShowModal('deploy')}
                     blueprintId={blueprintId}
                     onHide={this.hideModal}
                     toolbox={toolbox}
@@ -210,7 +205,7 @@ export default class BlueprintActionButtons extends React.Component<
                 <DeleteConfirm
                     resourceName={`blueprint ${blueprintId}`}
                     force={force}
-                    open={this.isShowModal(MODAL_TYPE.DELETE)}
+                    open={this.isShowModal('delete')}
                     onConfirm={this.deleteBlueprint}
                     onCancel={this.hideModal}
                     onForceChange={this.handleForceChange}

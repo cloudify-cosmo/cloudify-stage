@@ -1,23 +1,24 @@
 // @ts-nocheck File not migrated fully to TS
+import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
-import i18n from 'i18next';
 import type { ErrorInfo, ReactElement } from 'react';
 import React, { Component, createRef } from 'react';
 import type { ConnectedProps, MapStateToProps } from 'react-redux';
 import { connect } from 'react-redux';
 
 import { setValue } from '../../../actions/context';
-import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/WidgetData';
-import EditWidget from '../../EditWidget';
-import stageUtils from '../../../utils/stageUtils';
-import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
-import WidgetDynamicContent from '../../WidgetDynamicContent';
-import type { ManagerData } from '../../../reducers/managerReducer';
-import type { ReduxState } from '../../../reducers';
-import type { Widget as WidgetObj } from '../../../utils/StageAPI';
 import type { SimpleWidgetObj } from '../../../actions/page';
 import { getWidgetDefinitionById } from '../../../actions/page';
+import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/WidgetData';
+import type { ReduxState } from '../../../reducers';
+import type { ManagerData } from '../../../reducers/managerReducer';
+import LoaderUtils from '../../../utils/LoaderUtils';
+import type { Widget as WidgetObj } from '../../../utils/StageAPI';
+import stageUtils from '../../../utils/stageUtils';
+import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
+import EditWidget from '../../EditWidget';
+import WidgetDynamicContent from '../../WidgetDynamicContent';
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;
@@ -42,6 +43,34 @@ interface WidgetState {
     showReadmeModal: boolean;
 }
 
+const tReadme = stageUtils.getT('widgets.common.readmes');
+
+function updateReadmeLinks(content: any) {
+    const linkRegex = /(\[.*?\])\(\s*(?!http)(.*?)\s*\)/gm;
+    const anchorHrefRegex = /<a href="([^#]*?)">/gm;
+
+    const newContent = content
+        .replace(anchorHrefRegex, `<a href="${tReadme('linksBasePath')}$1">`)
+        .replace(linkRegex, `$1(${tReadme('linksBasePath')}$2)`);
+
+    return newContent;
+}
+
+function convertReadmeParams(content: any) {
+    const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
+    let newContent = content;
+
+    Array.from(newContent.matchAll(paramRegex)).forEach((match: any) => {
+        const paramName = match[1];
+        const paramValue = tReadme(`params.${paramName}`);
+        if (paramValue !== undefined) {
+            newContent = newContent.replace(match[0], paramValue);
+        }
+    });
+
+    return newContent;
+}
+
 class Widget<Configuration> extends Component<WidgetProps<Configuration>, WidgetState> {
     private widgetItemRef = createRef<any>();
 
@@ -50,7 +79,6 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
 
         this.state = {
             hasError: false,
-            readmeContent: '',
             showReadmeModal: false
         };
     }
@@ -91,18 +119,33 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
     };
 
     hideReadmeModal = () => {
-        this.setState({ readmeContent: '', showReadmeModal: false });
+        this.setState({ showReadmeModal: false });
     };
 
     showReadmeModal = () => {
         const { widget } = this.props;
-        const { readme } = widget.definition;
-        let readmeContent = '';
+        let { readmeContent } = this.state;
 
-        if (typeof readme === 'string') {
-            readmeContent = stageUtils.parseMarkdown(readme);
+        if (!readmeContent) {
+            this.setState({ readmeContent: tReadme('loading') });
+            LoaderUtils.fetchResource(`widgets/${widget.definition.id}/README.md`, widget.definition.isCustom).then(
+                (fetchedReadme: any) => {
+                    if (fetchedReadme) {
+                        readmeContent = widget.definition.isCustom
+                            ? fetchedReadme
+                            : updateReadmeLinks(convertReadmeParams(fetchedReadme));
+                        if (typeof readmeContent === 'string') {
+                            readmeContent = stageUtils.parseMarkdown(readmeContent);
+                        }
+                    } else {
+                        readmeContent = tReadme('noReadme');
+                    }
+                    this.setState({ readmeContent });
+                }
+            );
         }
-        this.setState({ readmeContent, showReadmeModal: true });
+
+        this.setState({ showReadmeModal: true });
     };
 
     isUserAuthorized() {
@@ -163,7 +206,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     <Icon name="help circle" size={widgetIconButtonSize} link />
                 </a>
             ) : (
-                widget.definition.readme && (
+                widget.definition.hasReadme && (
                     <Icon
                         key="helpIcon"
                         name="help circle"

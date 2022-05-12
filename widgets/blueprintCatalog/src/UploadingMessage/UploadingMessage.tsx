@@ -1,4 +1,5 @@
-import Utils from './utils';
+import { MessageHeader, MessageDescription } from './UploadingMessage.styles';
+import Utils from '../utils';
 
 const { LoadingOverlay } = Stage.Basic;
 const t = Utils.getWidgetTranslation('uploadingMessage');
@@ -13,11 +14,12 @@ const UploadingMessage = ({ blueprintName }: UploadingMessageProps) => {
             message={
                 (
                     <>
-                        {t('uploading', {
-                            blueprintName
-                        })}
-                        <br />
-                        {t('redirection')}
+                        <MessageHeader>
+                            {t('uploading', {
+                                blueprintName
+                            })}
+                        </MessageHeader>
+                        <MessageDescription>{t('redirection')}</MessageDescription>
                     </>
                 ) as any
             }

@@ -718,7 +718,9 @@
                     "cfy_spire_name": "Cloudify Spire",
                     "mgr_premium_title": "Cloudify Premium Manager",
                     "product_name": "Cloudify"
-                }
+                },
+                "noReadme": "No README available",
+                "loading": "Loading..."
             },
             "revertToDefault": "Revert to default value",
             "urls": {
@@ -1000,7 +1002,7 @@
             },
             "authenticationWarning": "No GitHub credentials provided! Widget may stop working after reaching unrestricted query limit (~50). Fix this by adding &github-username& and &github-password& entries to your secrets store (Secrets widget).",
             "uploadingMessage": {
-                "uploading": "Uploading {{blueprintName}} blueprint",
+                "uploading": "Uploading '{{blueprintName}}' blueprint...",
                 "redirection": "After completing the upload, you'll be redirected to the dedicated blueprint page"
             },
             "noDataMessage": "There are no Blueprints available in catalog. Check widget's configuration.",
