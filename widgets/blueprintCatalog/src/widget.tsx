@@ -160,7 +160,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             return <Basic.Loading />;
         }
 
-        const selectedCatalogId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.BLUEPRINT_CATALOG_ID);
+        const selectedCatalogId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_CATALOG_ID);
         const formattedData = {
             ...data,
             items: data?.items.map(item => {

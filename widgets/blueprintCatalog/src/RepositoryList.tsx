@@ -74,10 +74,10 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
 
     selectItem = (item: Blueprint) => {
         const { toolbox } = this.props;
-        const selectedCatalogId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.BLUEPRINT_CATALOG_ID);
+        const selectedCatalogId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_CATALOG_ID);
         toolbox
             .getContext()
-            .setValue(Consts.CONTEXT_KEY.BLUEPRINT_CATALOG_ID, item.id === selectedCatalogId ? null : item.id);
+            .setValue(Consts.CONTEXT_KEY.SELECTED_CATALOG_ID, item.id === selectedCatalogId ? null : item.id);
     };
 
     fetchData: RepositoryViewProps['fetchData'] = fetchParams => {
