@@ -10,6 +10,7 @@ export interface AuthData {
     groupSystemRoles: Record<string, any>;
     tenantsRoles: Record<string, any>;
     state: AuthState;
+    identityProviders: string;
     error: any;
 }
 
@@ -44,6 +45,11 @@ const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
                 role: action.role,
                 groupSystemRoles: action.groupSystemRoles,
                 tenantsRoles: action.tenantsRoles
+            };
+        case types.SET_IDENTITY_PROVIDERS:
+            return {
+                ...state,
+                identityProviders: action.identityProviders
             };
         default:
             return state;

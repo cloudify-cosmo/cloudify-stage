@@ -21,6 +21,7 @@ describe('(Utils) Manager', () => {
                     }
                 },
                 state: 'loggedIn',
+                identityProviders: 'local',
                 error: null
             },
             tenants: {
