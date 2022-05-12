@@ -160,7 +160,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get(`[option-value=${labelKey}]`).click();
             });
         });
-        cy.get('div.deploymentButtonWidget button').click();
+        cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
