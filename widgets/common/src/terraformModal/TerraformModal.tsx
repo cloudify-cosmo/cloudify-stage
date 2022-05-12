@@ -308,6 +308,21 @@ export default function TerraformModal({
             }
         }
 
+        async function createSecretsFromVariables() {
+            const secretActions = new SecretActions(toolbox);
+            const { defaultVisibility } = Consts;
+            const allSecretVariables: Variable[] = [...variables, ...environment].filter(
+                variable => variable.source === 'secret'
+            );
+            
+            await allSecretVariables.forEach(async secretVariable => {
+                // add secret if not exist
+                await secretActions.doGet(secretVariable.name).catch(async (e) => {
+                    await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
+                });
+            });
+        }
+
         validateBlueprintName();
         validateTemplate();
         validateUrlAuthentication();
@@ -358,7 +373,7 @@ export default function TerraformModal({
             const image = await (await fetch(terraformLogo)).blob();
 
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
-
+            await createSecretsFromVariables();
             toolbox.getEventBus().trigger('blueprints:refresh');
             onHide();
         } catch (e) {
