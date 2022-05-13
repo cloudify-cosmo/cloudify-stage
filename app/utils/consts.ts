@@ -27,8 +27,14 @@ export default {
     NO_LICENSE_ERROR_CODE: 'missing_cloudify_license',
     EXPIRED_LICENSE_ERROR_CODE: 'expired_cloudify_license',
 
+    ROLE: {
+        DEFAULT: 'default',
+        SYS_ADMIN: 'sys_admin'
+    },
+
     DEFAULT_ADMIN_USERNAME: 'admin',
     DEFAULT_TENANT: 'default_tenant',
+
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
     permissions: {
