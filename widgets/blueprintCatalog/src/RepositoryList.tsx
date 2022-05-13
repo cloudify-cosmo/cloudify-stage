@@ -123,8 +123,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 );
             })
             .catch(err => {
-                const { toolbox } = this.props;
-
                 Utils.blueprintCatalogContext.setUploadingBlueprintError(toolbox, err.message);
                 this.resetUploadingBlueprint();
             });
