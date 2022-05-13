@@ -1,4 +1,4 @@
-import { minutesToMs, secondsToMs } from '../../support/resource_commons';
+import { minutesToMs } from '../../support/resource_commons';
 
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
@@ -77,7 +77,7 @@ describe('User flow', () => {
         cy.contains('Uploading');
 
         cy.get('.modal').contains('Deploy blueprint', {
-            timeout: secondsToMs(30)
+            timeout: minutesToMs(1)
         });
     });
 });
