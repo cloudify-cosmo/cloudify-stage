@@ -614,7 +614,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
         });
 
-        it.only('validate secret creation on form submission', () => {
+        it('validate secret creation on form submission', () => {
             openTerraformModal();
 
             const blueprintName = `${blueprintNamePrefix}_1212`;
