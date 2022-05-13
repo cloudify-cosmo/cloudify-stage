@@ -597,17 +597,17 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
-        it('validate secret creation on form submission', () => {
+        it.only('validate secret creation on form submission', () => {
             openTerraformModal();
 
-            const blueprintName = `${blueprintNamePrefix}_not_existing_blueprint121`;
+            const blueprintName = `${blueprintNamePrefix}_1212`;
             const secrets = [
                 {
-                    name: `${blueprintName}secret1`,
+                    name: `${blueprintName}_secret1`,
                     value: 'value1'
                 },
                 {
-                    name: `${blueprintName}secret2`,
+                    name: `${blueprintName}_secret2`,
                     value: 'value2'
                 }
             ];
@@ -635,7 +635,8 @@ describe('Blueprints widget', () => {
 
             cy.clickButton('Create');
             cy.contains('Uploading Terraform blueprint').should('be.visible');
-            cy.waitUntilLoaded();
+            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.get('.modal').should('not.exist');
 
             secrets.forEach(secret => {
                 cy.getSecret(secret.name).then(response => {
