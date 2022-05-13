@@ -50,6 +50,10 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
+    function typeToTextarea(fieldName: string, text: string) {
+        cy.getField(fieldName).find('textarea').clear().type(text);
+    }
+
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -597,10 +601,6 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
         it('validate blueprint description', () => {
-            function typeToTextarea(fieldName: string, text: string) {
-                cy.getField(fieldName).find('textarea').clear().type(text);
-            }
-
             openTerraformModal();
 
             cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_dpeloyment1234');
@@ -735,15 +735,20 @@ describe('Blueprints widget', () => {
 
             function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
                 const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
+                const blueprintDescription = `${blueprintNamePrefix}_terraform_${modulePath} Description`;
                 const deploymentId = blueprintName;
                 cy.get('.modal').within(() => {
                     cy.typeToFieldInput('Blueprint name', blueprintName);
+                    typeToTextarea('Blueprint description', blueprintDescription);
                     setTemplateDetails(terraformTemplateUrl, modulePath);
                     cy.clickButton('Create');
                     cy.contains('Uploading Terraform blueprint').should('be.visible');
                 });
                 cy.get('.modal', { timeout: secondsToMs(30) }).should('not.exist');
                 cy.getWidget('blueprints').within(() => {
+                    cy.getBlueprint(blueprintName).then(response => {
+                        expect(response.body.items[0].description).to.equal(blueprintDescription);
+                    });
                     cy.getSearchInput().type(blueprintName);
                     cy.contains('tr', blueprintName).find('.rocket').click();
                 });
