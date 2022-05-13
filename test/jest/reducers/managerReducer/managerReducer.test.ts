@@ -77,7 +77,8 @@ describe('(Reducer) Manager', () => {
                             groupSystemRoles: {},
                             tenantsRoles: {},
                             state: 'loggedIn',
-                            error: null
+                            error: null,
+                            identityProviders: ''
                         },
                         lastUpdated: Date.now()
                     });
