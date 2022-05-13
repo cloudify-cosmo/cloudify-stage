@@ -50,9 +50,11 @@ type StageCommon = typeof StageCommon;
 
 declare global {
     namespace Stage {
+        /* eslint-disable @typescript-eslint/no-empty-interface */
         interface Common extends StageCommon {}
         interface PropTypes extends StagePropTypes {}
         interface Hooks extends StageHooks {}
+        /* eslint-enable @typescript-eslint/no-empty-interface */
     }
 }
 
