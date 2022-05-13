@@ -5,6 +5,7 @@ const widgetTranslation = Stage.Utils.getT(`widgets.${Consts.WIDGET_ID}`);
 
 const getWidgetTranslation = (translationPath = '') => Stage.Utils.composeT(widgetTranslation, translationPath);
 
+// NOTE: Functions provided inside the class below are being used to share values across the marketplace tabs
 class BlueprintCatalogContext {
     static setUploadingBlueprint(toolbox: WidgetlessToolbox, blueprintName: string) {
         toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT, blueprintName);
