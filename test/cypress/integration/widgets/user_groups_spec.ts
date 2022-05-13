@@ -5,8 +5,8 @@ describe('User group management widget', () => {
     const ldapGroupColumnName = 'LDAP group';
     const widgetId = 'userGroups';
     const setLdapAvailability = (isEnabled: boolean) => {
-        const ldapResponse = isEnabled ? 'enabled' : 'disabled';
-        cy.intercept('GET', '/console/sp/ldap', ldapResponse);
+        const idpResponse = isEnabled ? 'ldap' : 'local';
+        cy.intercept('GET', '/console/sp/idp', idpResponse);
     };
     const mockPageAndLogin = () => {
         cy.usePageMock(widgetId).mockLogin();
