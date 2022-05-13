@@ -5,26 +5,37 @@ const widgetTranslation = Stage.Utils.getT(`widgets.${Consts.WIDGET_ID}`);
 
 const getWidgetTranslation = (translationPath = '') => Stage.Utils.composeT(widgetTranslation, translationPath);
 
-const setUploadingBlueprintAcrossCatalogTabs = (toolbox: WidgetlessToolbox, blueprintName: string) => {
-    toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT, blueprintName);
-};
+class BlueprintCatalogContext {
+    static setUploadingBlueprint(toolbox: WidgetlessToolbox, blueprintName: string) {
+        toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT, blueprintName);
+    }
 
-const getUploadingBlueprintFromCatalogTabs = (toolbox: WidgetlessToolbox) => {
-    return toolbox.getContext().getValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT);
-};
+    static getUploadingBlueprint(toolbox: WidgetlessToolbox) {
+        return toolbox.getContext().getValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT);
+    }
 
-const isUploadingBlueprintOnAnotherCatalogTab = (toolbox: WidgetlessToolbox): boolean => {
-    return !!getUploadingBlueprintFromCatalogTabs(toolbox);
-};
+    static isUploadingBlueprint(toolbox: WidgetlessToolbox) {
+        return !!BlueprintCatalogContext.getUploadingBlueprint(toolbox);
+    }
 
-const resetUploadingBlueprintAcrossCatalogTabs = (toolbox: WidgetlessToolbox) => {
-    setUploadingBlueprintAcrossCatalogTabs(toolbox, '');
-};
+    static resetUploadingBlueprint(toolbox: WidgetlessToolbox) {
+        BlueprintCatalogContext.setUploadingBlueprint(toolbox, '');
+    }
+
+    static setUploadingBlueprintError(toolbox: WidgetlessToolbox, blueprintName?: string) {
+        toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT_ERROR, blueprintName);
+    }
+
+    static getUploadingBlueprintError(toolbox: WidgetlessToolbox) {
+        return toolbox.getContext().getValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT_ERROR);
+    }
+
+    static resetUploadingBlueprintError(toolbox: WidgetlessToolbox) {
+        BlueprintCatalogContext.setUploadingBlueprintError(toolbox);
+    }
+}
 
 export default {
     getWidgetTranslation,
-    setUploadingBlueprintAcrossCatalogTabs,
-    getUploadingBlueprintFromCatalogTabs,
-    isUploadingBlueprintOnAnotherCatalogTab,
-    resetUploadingBlueprintAcrossCatalogTabs
+    blueprintCatalogContext: BlueprintCatalogContext
 };
