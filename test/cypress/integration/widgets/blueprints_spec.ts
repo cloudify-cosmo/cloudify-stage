@@ -614,6 +614,54 @@ describe('Blueprints widget', () => {
             cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
         });
 
+        it('validate secret creation on form submission', () => {
+            openTerraformModal();
+
+            const blueprintName = `${blueprintNamePrefix}_1212`;
+            const secrets = [
+                {
+                    name: `${blueprintName}_secret1`,
+                    value: 'value1'
+                },
+                {
+                    name: `${blueprintName}_secret2`,
+                    value: 'value2'
+                }
+            ];
+
+            cy.deleteSecrets(blueprintName);
+
+            addFirstSegmentRow('Variables');
+            getSegment('Variables').within(() => {
+                cy.get('input[name=variable]').type('key1');
+                selectVariableSource('Secret');
+                cy.get('td:eq(2) input').type(`${secrets[0].name}{enter}`);
+                cy.get('td:eq(3) input').type(`${secrets[0].value}`);
+            });
+
+            addFirstSegmentRow('Environment variables');
+            getSegment('Environment variables').within(() => {
+                cy.get('input[name=variable]').type('key2');
+                selectVariableSource('Secret');
+                cy.get('td:eq(2) input').type(`${secrets[1].name}{enter}`);
+                cy.get('td:eq(3) input').type(`${secrets[1].value}`);
+            });
+
+            cy.typeToFieldInput('Blueprint name', blueprintName);
+            setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
+
+            cy.clickButton('Create');
+            cy.contains('Uploading Terraform blueprint').should('be.visible');
+            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.get('.modal').should('not.exist');
+
+            secrets.forEach(secret => {
+                cy.getSecret(secret.name).then(response => {
+                    expect(response.body.value).to.equal(secret.value);
+                });
+            });
+        });
+
         it('handle template URL 401', () => {
             cy.intercept(
                 {
