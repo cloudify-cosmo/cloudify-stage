@@ -24,7 +24,6 @@ interface RepositoryListProps {
 }
 interface RepositoryListState {
     successMessages: string[];
-    errorMessages: string[] | null;
     showReadmeModal: boolean;
     readmeContent: string;
     readmeLoading: string | null;
@@ -41,7 +40,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
 
         this.state = {
             successMessages: [],
-            errorMessages: null,
             showReadmeModal: false,
             readmeContent: '',
             readmeLoading: null,
@@ -91,6 +89,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         Utils.blueprintCatalogContext.setUploadingBlueprint(toolbox, uploadingBlueprint);
     };
 
+    // TODO: Reconsider the necessity of this function wrapping
     resetUploadingBlueprint = () => {
         const { toolbox } = this.props;
 
@@ -124,9 +123,10 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 );
             })
             .catch(err => {
-                this.setState(prevState => ({
-                    errorMessages: [...(prevState.errorMessages ?? []), err.message]
-                }));
+                const { toolbox } = this.props;
+
+                Utils.blueprintCatalogContext.setUploadingBlueprintError(toolbox, err.message);
+                this.resetUploadingBlueprint();
             });
     };
 
@@ -153,10 +153,11 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     }
 
     render() {
-        const { errorMessages, readmeContent, readmeLoading, showReadmeModal, successMessages } = this.state;
-        const { data, widget } = this.props;
+        const { readmeContent, readmeLoading, showReadmeModal, successMessages } = this.state;
+        const { data, widget, toolbox } = this.props;
         const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
+        const errorMessage = Utils.blueprintCatalogContext.getUploadingBlueprintError(toolbox);
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
@@ -171,8 +172,8 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                             successMessages: without(prevState.successMessages, message)
                         }))
                     }
-                    errorMessages={errorMessages}
-                    onDismissErrors={() => this.setState({ errorMessages: null })}
+                    errorMessages={errorMessage ? [errorMessage] : null}
+                    onDismissErrors={() => Utils.blueprintCatalogContext.resetUploadingBlueprintError(toolbox)}
                 />
                 {showNotAuthenticatedWarning && <AuthenticationWarning />}
                 <RepositoryView

@@ -21,6 +21,18 @@ class BlueprintCatalogContext {
     static resetUploadingBlueprint(toolbox: WidgetlessToolbox) {
         BlueprintCatalogContext.setUploadingBlueprint(toolbox, '');
     }
+
+    static setUploadingBlueprintError(toolbox: WidgetlessToolbox, blueprintName?: string) {
+        toolbox.getContext().setValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT_ERROR, blueprintName);
+    }
+
+    static getUploadingBlueprintError(toolbox: WidgetlessToolbox) {
+        return toolbox.getContext().getValue(Consts.CONTEXT_KEY.UPLOADING_BLUEPRINT_ERROR);
+    }
+
+    static resetUploadingBlueprintError(toolbox: WidgetlessToolbox) {
+        BlueprintCatalogContext.setUploadingBlueprintError(toolbox);
+    }
 }
 
 export default {

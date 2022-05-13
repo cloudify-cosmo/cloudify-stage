@@ -4,7 +4,7 @@ describe('User flow', () => {
     const resourceName = 'user_flow_test';
 
     beforeEach(() => {
-        cy.activate().login();
+        cy.activate().login().deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
     });
 
     function createSecret(secretName: string) {
@@ -17,11 +17,7 @@ describe('User flow', () => {
     }
 
     it('installs deployment from scratch', () => {
-        cy.deleteDeployments(resourceName, true)
-            .deleteBlueprints(resourceName, true)
-            .deletePlugins()
-            .deleteSecrets('some_key_')
-            .deleteSecrets('openstack_config__lab1_tenantA');
+        cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
         cy.visitSubPage('Resources', 'Plugins');
 
