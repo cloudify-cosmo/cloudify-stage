@@ -36,9 +36,7 @@ describe('Blueprints widget', () => {
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
             .deletePlugins()
-            .usePageMock('blueprints', blueprintsWidgetConfiguration, {
-                additionalWidgetIdsToLoad: ['blueprintCatalog']
-            })
+            .usePageMock('blueprints', blueprintsWidgetConfiguration)
             .mockLogin()
     );
 

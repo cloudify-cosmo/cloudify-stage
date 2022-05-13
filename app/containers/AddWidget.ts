@@ -1,16 +1,17 @@
 // @ts-nocheck File not migrated fully to TS
-import { connect } from 'react-redux';
 import type { ComponentProps, ComponentType } from 'react';
-import { checkIfWidgetIsUsed, installWidget, uninstallWidget, updateWidgetDefinition } from '../actions/widgets';
+import { connect } from 'react-redux';
+import { checkIfWidgetIsUsed, installWidget, replaceWidget, uninstallWidget } from '../actions/widgets';
 import AddWidgetModal from '../components/AddWidgetModal';
-import stageUtils from '../utils/stageUtils';
 import Consts from '../utils/consts';
+import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
     const widgetDefinitions = state.widgetDefinitions.filter(definition => {
         return (
-            stageUtils.isUserAuthorized(definition.permission, state.manager) &&
-            stageUtils.isWidgetPermitted(definition.supportedEditions, state.manager)
+            !definition.loaded ||
+            (stageUtils.isUserAuthorized(definition.permission, state.manager) &&
+                stageUtils.isWidgetPermitted(definition.supportedEditions, state.manager))
         );
     });
     const canInstallWidgets = stageUtils.isUserAuthorized(Consts.permissions.STAGE_INSTALL_WIDGETS, state.manager);
@@ -31,7 +32,7 @@ const mapDispatchToProps = dispatch => {
             return dispatch(uninstallWidget(widgetId));
         },
         onWidgetUpdated: (widgetId, widgetFile, widgetUrl) => {
-            return dispatch(updateWidgetDefinition(widgetId, widgetFile, widgetUrl));
+            return dispatch(replaceWidget(widgetId, widgetFile, widgetUrl));
         },
         onWidgetUsed: widgetId => {
             return dispatch(checkIfWidgetIsUsed(widgetId));

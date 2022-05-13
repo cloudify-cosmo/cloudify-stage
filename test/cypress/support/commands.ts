@@ -18,7 +18,7 @@ import 'cypress-file-upload';
 import 'cypress-get-table';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import { castArray, compact, isString, noop } from 'lodash';
+import { castArray, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -290,14 +290,9 @@ const commands = {
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
-        {
-            widgetsWidth = 8,
-            additionalWidgetIdsToLoad = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
+        { widgetsWidth = 8 }: { widgetsWidth?: number } = {}
     ) => {
         const widgetIdsArray = castArray(widgetIds);
-        const widgetIdsToLoad = compact([...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad]);
-        cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
             appDataVersion: Consts.APP_VERSION,
@@ -471,10 +466,6 @@ Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: un
 Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unknown | undefined, buttonLabel: string) =>
     (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
 );
-
-function toIdObj(id: string) {
-    return { id };
-}
 
 function setContext(field: string, value: string) {
     cy.get(`.${field}FilterField`)

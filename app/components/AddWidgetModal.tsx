@@ -1,16 +1,20 @@
 // @ts-nocheck File not migrated fully to TS
 
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import colors from 'cloudify-ui-common/styles/_colors.scss';
+import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import styled from 'styled-components';
+import _, { find } from 'lodash';
+import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
-import colors from 'cloudify-ui-common/styles/_colors.scss';
-import { useBoolean, useResettableState } from '../utils/hooks';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { updateWidgetDefinition } from '../actions/widgets';
 import GenericConfig from '../utils/GenericConfig';
+import { useBoolean, useResettableState } from '../utils/hooks';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
+import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 import {
     Button,
     Checkbox,
@@ -28,8 +32,8 @@ import {
     Modal,
     Segment
 } from './basic/index';
-import InstallWidgetModal from './InstallWidgetModal';
 import EditModeButton from './EditModeButton';
+import InstallWidgetModal from './InstallWidgetModal';
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;
@@ -95,6 +99,7 @@ let nameIndex = 0;
 function generateCategories(widgets) {
     const categories = widgets.reduce((curr, next) => {
         (next.categories || [GenericConfig.CATEGORY.OTHERS]).forEach(category => {
+            if (!next.loaded) return;
             const idx = curr.findIndex(current => current.name === category);
             if (idx === -1) {
                 curr.push({ name: category, count: 1 });
@@ -130,6 +135,7 @@ function AddWidgetModal({
     const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState([]);
     const [open, setOpen, unsetOpen] = useBoolean();
     const [error, setError] = useState();
+    const dispatch = useDispatch();
 
     function resetInternalState() {
         setFilteredWidgetDefinitions(widgetDefinitions);
@@ -144,6 +150,18 @@ function AddWidgetModal({
     }
 
     useEffect(resetInternalState, [JSON.stringify(widgetDefinitions)]);
+
+    useEffect(
+        () =>
+            widgetDefinitions.forEach(widgetDefinition => {
+                if (!widgetDefinition.loaded) {
+                    WidgetDefinitionsLoader.loadWidget(widgetDefinition).then(loadedWidgetDefinition =>
+                        dispatch(updateWidgetDefinition(widgetDefinition.id, loadedWidgetDefinition))
+                    );
+                }
+            }),
+        []
+    );
 
     function openModal() {
         resetInternalState();
@@ -365,6 +383,7 @@ function AddWidgetModal({
                         <Grid.Column width={12}>
                             <WidgetListWrapper>
                                 <WidgetList divided>
+                                    {find(widgetDefinitions, { loaded: false }) && <LoadingOverlay />}
                                     {filteredWidgetDefinitions.map(
                                         widget => (
                                             <StyledItem

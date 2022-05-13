@@ -1,8 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 
-import * as types from './types';
-import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import Internal from '../utils/Internal';
+import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
+import * as types from './types';
 
 export function storeWidgetDefinitions(widgetDefinitions) {
     return {
@@ -56,10 +56,10 @@ export function minimizeWidgets() {
     };
 }
 
-export function setInstallWidget(widgetDefinitions) {
+function setInstallWidget(widgetDefinition) {
     return {
         type: types.INSTALL_WIDGET,
-        widgetDefinitions
+        widgetDefinition
     };
 }
 
@@ -67,7 +67,7 @@ export function installWidget(widgetFile, widgetUrl) {
     return (dispatch, getState) =>
         widgetDefinitionLoader
             .install(widgetFile, widgetUrl, getState().manager)
-            .then(widgetDefinitions => dispatch(setInstallWidget(widgetDefinitions)));
+            .then(widgetDefinition => dispatch(setInstallWidget(widgetDefinition)));
 }
 
 export function setUninstallWidget(widgetId) {
@@ -84,12 +84,21 @@ export function uninstallWidget(widgetId) {
             .then(() => dispatch(setUninstallWidget(widgetId)));
 }
 
-export function updateWidgetDefinition(widgetId, widgetFile, widgetUrl) {
+export function updateWidgetDefinition(widgetId, widgetDefinition) {
+    return dispatch =>
+        dispatch({
+            type: types.UPDATE_WIDGET_DEFINITION,
+            widgetDefinition,
+            widgetId
+        });
+}
+
+export function replaceWidget(widgetId, widgetFile, widgetUrl) {
     return (dispatch, getState) =>
-        widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager).then(widgetDefinitions =>
+        widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager).then(widgetDefinition =>
             dispatch({
                 type: types.UPDATE_WIDGET_DEFINITION,
-                widgetDefinitions,
+                widgetDefinition,
                 widgetId
             })
         );

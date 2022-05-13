@@ -1,21 +1,21 @@
+import type { GenericFieldType } from 'cloudify-ui-components';
 import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } from 'react';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react';
-import type { GenericFieldType } from 'cloudify-ui-components';
-import type * as BasicComponents from '../components/basic';
-import type * as SharedComponents from '../components/shared';
-import type * as StagePropTypes from './props';
-import type * as StageHooks from './hooks';
 import type { WidgetDefinition } from '../../backend/routes/Templates.types';
 import type { PaginatedResponse as CloudifyPaginatedResponse } from '../../backend/types';
-import type GenericConfigType from './GenericConfig';
-import type StageUtils from './stageUtils';
+import type * as BasicComponents from '../components/basic';
+import type * as SharedComponents from '../components/shared';
 import type WidgetContext from './Context';
 import type EventBus from './EventBus';
-import type Manager from './Manager';
-import type Internal from './Internal';
 import type External from './External';
+import type GenericConfigType from './GenericConfig';
+import type * as StageHooks from './hooks';
+import type Internal from './Internal';
+import type Manager from './Manager';
+import type * as StagePropTypes from './props';
+import type StageUtils from './stageUtils';
 // NOTE: make sure the types are registered globally
 import './types';
 
@@ -113,8 +113,9 @@ interface StageWidgetConfigurationDefinition {
 }
 export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinition };
 
-interface CommonWidgetDefinition<Params, Data, Configuration> {
+export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
+    loaded: boolean;
     name: string;
     categories: Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color: SemanticCOLORS;
@@ -170,12 +171,12 @@ type RenderCallback<Data, Output, Configuration> = (
     toolbox: StageToolbox
 ) => Output;
 
-interface ReactWidgetDefinitionPart<Data, Configuration> {
+export interface ReactWidgetDefinitionPart<Data, Configuration> {
     isReact?: true;
     render: RenderCallback<Data, ReactNode, Configuration>;
 }
 
-interface HTMLWidgetDefinitionPart<Data, Configuration> {
+export interface HTMLWidgetDefinitionPart<Data, Configuration> {
     isReact: false;
     render: RenderCallback<Data, string, Configuration>;
 
@@ -205,6 +206,7 @@ type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.Wit
     | 'initialConfiguration'
     | 'initialHeight'
     | 'initialWidth'
+    | 'loaded'
     | 'permission'
     | 'showBorder'
     | 'showHeader'
@@ -226,7 +228,9 @@ declare global {
 
         // NOTE: Common items are defined in widgets/common
         /** Common widget utilities */
-        namespace Common {}
+        // eslint-disable-next-line @typescript-eslint/no-empty-interface
+        interface Common {}
+        let Common: Common;
         const defineCommon: (definition: any) => void;
 
         // NOTE: Additional PropTypes are defined in widgets

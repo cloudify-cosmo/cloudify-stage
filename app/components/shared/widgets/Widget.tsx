@@ -11,11 +11,13 @@ import { setValue } from '../../../actions/context';
 import type { SimpleWidgetObj } from '../../../actions/page';
 import { getWidgetDefinitionById } from '../../../actions/page';
 import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/WidgetData';
+import { updateWidgetDefinition as updateWidgetDefinitionThunk } from '../../../actions/widgets';
 import type { ReduxState } from '../../../reducers';
 import type { ManagerData } from '../../../reducers/managerReducer';
 import LoaderUtils from '../../../utils/LoaderUtils';
 import type { Widget as WidgetObj } from '../../../utils/StageAPI';
 import stageUtils from '../../../utils/stageUtils';
+import WidgetDefinitionsLoader from '../../../utils/widgetDefinitionsLoader';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
 import EditWidget from '../../EditWidget';
 import WidgetDynamicContent from '../../WidgetDynamicContent';
@@ -85,6 +87,15 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
 
     static getDerivedStateFromError() {
         return { hasError: true };
+    }
+
+    componentDidMount() {
+        const { widget, updateWidgetDefinition } = this.props;
+        if (!widget.definition.loaded) {
+            WidgetDefinitionsLoader.loadWidget(widget.definition).then(widgetDefinition =>
+                updateWidgetDefinition(widgetDefinition.id, widgetDefinition)
+            );
+        }
     }
 
     shouldComponentUpdate(nextProps: WidgetProps<Configuration>, nextState: WidgetState) {
@@ -251,7 +262,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     <div className="widgetButtons" onMouseDown={e => e.stopPropagation()}>
                         {isEditMode && (
                             <div className="widgetEditButtons">
-                                {onWidgetUpdated && (
+                                {onWidgetUpdated && widget.definition.loaded && (
                                     <EditWidget
                                         widget={widget}
                                         onWidgetEdited={onWidgetUpdated}
@@ -339,7 +350,8 @@ const mapStateToProps: MapStateToProps<ReduxStateToProps<any>, WidgetOwnProps<an
 
 const mapDispatchToProps = {
     setContextValue: setValue,
-    fetchWidgetData: fetchWidgetDataThunk
+    fetchWidgetData: fetchWidgetDataThunk,
+    updateWidgetDefinition: updateWidgetDefinitionThunk
 };
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
