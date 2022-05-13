@@ -13,6 +13,7 @@ export interface Output {
 
 export interface RequestBody {
     blueprintName: string;
+    blueprintDescription: string;
     terraformVersion: string;
     terraformTemplate: string;
     urlAuthentication: boolean;
