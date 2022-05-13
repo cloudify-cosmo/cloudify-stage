@@ -57,6 +57,18 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/license');
     });
 
+    it('succeeds when provided credentials are valid, license is active and user has sys_admin role and no tenants assigned', () => {
+        cy.intercept('GET', '/console/auth/user', {
+            statusCode: 200,
+            body: { username: 'test', role: 'sys_admin', groupSystemRoles: {}, tenantsRoles: {} }
+        });
+
+        cy.activate();
+        forceLogin();
+
+        cy.location('pathname').should('be.equal', '/console/');
+    });
+
     it('provides SSO login button when SAML is enabled', () => {
         cy.activate();
 
