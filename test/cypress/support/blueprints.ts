@@ -30,6 +30,7 @@ const commands = {
             `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`
         );
     },
+    getBlueprint: (blueprintId: string) => cy.cfyRequest(`/blueprints?id=${blueprintId}`, 'GET'),
     deleteBlueprint: (blueprintId: string, force = false) =>
         cy
             .cfyRequest(`/deployments?blueprint_id=${blueprintId}`, 'GET')
