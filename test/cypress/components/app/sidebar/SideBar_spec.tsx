@@ -4,6 +4,8 @@ import '../../initAppContext';
 import Consts from 'app/utils/consts';
 import SideBar from 'app/components/sidebar/SideBar';
 import { ThemeContext } from 'styled-components';
+import type { ManagerData } from 'app/reducers/managerReducer';
+import { emptyState } from 'app/reducers/managerReducer';
 import { mountWithProvider } from '../../utils';
 
 describe('SideBar', () => {
@@ -18,7 +20,13 @@ describe('SideBar', () => {
                 </ThemeContext.Provider>,
                 {
                     pages,
-                    manager: { auth: { username }, tenants: { items: [] }, version: { version }, license: {} },
+                    manager: {
+                        ...emptyState,
+                        auth: { ...emptyState.auth, username, identityProviders: 'local' },
+                        tenants: { items: [] },
+                        version: { version },
+                        license: {}
+                    } as ManagerData,
                     config: { mode: Consts.MODE_CUSTOMER }
                 }
             );
