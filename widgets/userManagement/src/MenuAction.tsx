@@ -35,12 +35,14 @@ class MenuAction extends React.Component {
         return (
             <PopupMenu>
                 <Menu pointing vertical>
-                    {canChangePassword && <Menu.Item
-                        icon="lock"
-                        content="Change password"
-                        name={MenuAction.CHANGE_PASSWORD_ACTION}
-                        onClick={this.actionClick}
-                    />}
+                    {canChangePassword && (
+                        <Menu.Item
+                            icon="lock"
+                            content="Change password"
+                            name={MenuAction.CHANGE_PASSWORD_ACTION}
+                            onClick={this.actionClick}
+                        />
+                    )}
                     <Menu.Item
                         icon="users"
                         content="Edit user's groups"
