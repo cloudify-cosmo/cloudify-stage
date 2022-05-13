@@ -42,8 +42,8 @@ const AuthRoutes: FunctionComponent = () => {
     useEffect(() => {
         if (isProductOperational && isManagerDataFetched) {
             dispatch(getUserData())
-                .then(({ tenantsRoles }: any) => {
-                    if (_.isEmpty(tenantsRoles)) {
+                .then(({ tenantsRoles, role }: any) => {
+                    if (_.isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
                         return Promise.reject(NO_TENANTS_ERR);
                     }
                     setUserDataFetched();
