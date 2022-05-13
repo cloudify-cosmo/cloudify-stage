@@ -880,6 +880,7 @@
                 "header": "Create blueprint from Terraform",
                 "submit": "Create",
                 "blueprintName": "Blueprint name",
+                "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
                 "template": "Terraform module source - URL to a zip archive or a Git repository",
@@ -926,6 +927,7 @@
                     "noPassword": "Please provide password",
                     "noResourceLocation": "Please provide resource location",
                     "invalidBlueprintName": "Please provide valid blueprint name. It should start with a letter and contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
+                    "invalidBlueprintDescription": "Please provide valid blueprint description. It should contain only ASCII characters.",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
                     "variable": {
