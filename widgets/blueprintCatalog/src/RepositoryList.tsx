@@ -89,7 +89,6 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         Utils.blueprintCatalogContext.setUploadingBlueprint(toolbox, uploadingBlueprint);
     };
 
-    // TODO: Reconsider the necessity of this function wrapping
     resetUploadingBlueprint = () => {
         const { toolbox } = this.props;
 
