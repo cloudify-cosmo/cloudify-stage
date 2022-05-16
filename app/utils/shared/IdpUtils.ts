@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import type { ManagerData } from '../../reducers/managerReducer';
 
 export default class IdpUtils {
