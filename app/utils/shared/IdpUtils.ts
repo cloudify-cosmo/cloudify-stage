@@ -2,7 +2,8 @@ import type { ManagerData } from '../../reducers/managerReducer';
 
 export default class IdpUtils {
     static isLocal(managerData: ManagerData) {
-        return managerData.auth.identityProviders === 'local';
+        const { identityProviders } = managerData.auth;
+        return identityProviders.length === 1 && identityProviders[0] === 'local';
     }
 
     static isLdap(managerData: ManagerData) {

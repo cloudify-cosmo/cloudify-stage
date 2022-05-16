@@ -108,7 +108,7 @@ export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
         });
 }
 
-function responseIdentityProviders(identityProviders: string) {
+function responseIdentityProviders(identityProviders: string[]) {
     return {
         type: types.SET_IDENTITY_PROVIDERS,
         identityProviders
@@ -118,7 +118,9 @@ function responseIdentityProviders(identityProviders: string) {
 export function getIdentityProviders() {
     return (dispatch, getState) => {
         const manager = new Manager(getState().manager);
-        manager.doGet('/idp').then(identityProviders => dispatch(responseIdentityProviders(identityProviders)));
+        manager
+            .doGet('/idp')
+            .then(identityProviders => dispatch(responseIdentityProviders(identityProviders.split(','))));
     };
 }
 

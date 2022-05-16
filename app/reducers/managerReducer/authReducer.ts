@@ -11,7 +11,7 @@ export interface AuthData {
     groupSystemRoles: Record<string, any>;
     tenantsRoles: Record<string, any>;
     state: AuthState;
-    identityProviders: IdentityProvider;
+    identityProviders: IdentityProvider[];
     error: any;
 }
 
