@@ -45,7 +45,6 @@ export interface BlueprintCatalogPayload {
 export interface RepositoryViewProps {
     data: BlueprintCatalogPayload;
     fetchData: (fetchParams: any) => void;
-    uploadingInProgress?: string[];
     noDataMessage: string;
     onReadme: (name: string, url: string) => void;
     onSelect: (item: Blueprint) => void;
@@ -53,3 +52,5 @@ export interface RepositoryViewProps {
     readmeLoading: string | null;
     widget: Stage.Types.Widget<BlueprintCatalogWidgetConfiguration>;
 }
+
+export type WidgetParameters = Record<string, string | number>;
