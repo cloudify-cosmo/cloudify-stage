@@ -1,21 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Consts from './consts';
+import type { WidgetParameters } from './types';
 
 export default class Actions {
-    constructor(toolbox, username, filter, jsonPath) {
+    private toolbox: Stage.Types.WidgetlessToolbox;
+
+    private username: string;
+
+    private filter: string;
+
+    private jsonPath?: string;
+
+    constructor(toolbox: Stage.Types.WidgetlessToolbox, username: string, filter: string, jsonPath?: string) {
         this.toolbox = toolbox;
         this.username = username;
         this.filter = filter;
         this.jsonPath = jsonPath;
-        this.blueprintActions = new Stage.Common.Blueprints.Actions(this.toolbox);
     }
 
     getUsername() {
         return this.username;
     }
 
-    doGetRepos(params) {
+    doGetRepos(params: WidgetParameters) {
         if (!_.isEmpty(this.jsonPath)) {
             // JSON URL
             return this.toolbox
@@ -41,23 +47,19 @@ export default class Actions {
             .then(data => Promise.resolve({ ...data, source: Consts.GITHUB_DATA_SOURCE }));
     }
 
-    doGetReadme(repo, readmeUrl): Promise<string> {
+    doGetReadme(readmeUrl: string): Promise<string> {
         return this.toolbox.getInternal().doGet(readmeUrl);
     }
 
-    doGetRepoTree(repo) {
-        return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repo}/git/trees/master`);
+    doGetRepoTree(repositoryName: string) {
+        return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repositoryName}/git/trees/master`);
     }
 
-    doListYamlFiles(blueprintUrl) {
-        return this.blueprintActions.doListYamlFiles(blueprintUrl);
-    }
-
-    doFindImage(repo, defaultImage): Promise<string> {
-        return this.doGetRepoTree(repo).then(tree => {
+    doFindImage(repositoryName: string, defaultImagePath: string): Promise<string> {
+        return this.doGetRepoTree(repositoryName).then(tree => {
             return _.findIndex(tree.tree, { path: Consts.BLUEPRINT_IMAGE_FILENAME }) < 0
-                ? Promise.resolve(defaultImage)
-                : Promise.resolve(Consts.GITHUB_BLUEPRINT_IMAGE_URL(this.getUsername(), repo));
+                ? Promise.resolve(defaultImagePath)
+                : Promise.resolve(Consts.GITHUB_BLUEPRINT_IMAGE_URL(this.getUsername(), repositoryName));
         });
     }
 }

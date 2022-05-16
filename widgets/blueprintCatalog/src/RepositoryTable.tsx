@@ -1,24 +1,23 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 
+import Utils from './utils';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 
-const t = Stage.Utils.getT('widgets.blueprintCatalog');
+const { DataTable, Image, Icon } = Stage.Basic;
+const t = Utils.getWidgetTranslation();
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
-    onUpload = noop,
+    onUpload = Promise.resolve,
     readmeLoading = null,
-    uploadingInProgress = [],
     data,
     noDataMessage,
     onReadme,
     widget
 }) => {
-    const { DataTable, Image, Icon } = Stage.Basic;
-
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
@@ -58,7 +57,6 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
 
             {data.items.map(item => {
                 const isReadmeLoading = readmeLoading === item.name;
-                const isBlueprintUploading = uploadingInProgress.includes(item.name);
                 const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
 
                 return (
@@ -90,12 +88,11 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 }}
                             />
                             <Icon
-                                name={isBlueprintUploading ? 'spinner' : 'upload'}
+                                name="upload"
                                 disabled={isBlueprintUploaded}
-                                link={!isBlueprintUploading && !isBlueprintUploaded}
+                                link={!isBlueprintUploaded}
                                 title={t('actions.uploadBlueprint')}
-                                loading={isBlueprintUploading}
-                                bordered={!isBlueprintUploading}
+                                bordered
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
