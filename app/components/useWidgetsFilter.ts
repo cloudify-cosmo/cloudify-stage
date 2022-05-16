@@ -19,10 +19,10 @@ export default function useWidgetsFilter() {
             const resolvedDefinition = getWidgetDefinitionById(widget.definition, widgetDefinitions);
 
             return (
-                !resolvedDefinition?.loaded ||
-                (resolvedDefinition?.loaded &&
-                    stageUtils.isUserAuthorized(resolvedDefinition.permission, manager) &&
-                    stageUtils.isWidgetPermitted(resolvedDefinition.supportedEditions, manager))
+                resolvedDefinition &&
+                (!resolvedDefinition.loaded ||
+                    (stageUtils.isUserAuthorized(resolvedDefinition.permission, manager) &&
+                        stageUtils.isWidgetPermitted(resolvedDefinition.supportedEditions, manager)))
             );
         });
 }
