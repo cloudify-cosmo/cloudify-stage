@@ -474,11 +474,15 @@ export default function TerraformModal({
                         <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={errors.template}>
-                                <Form.Input
-                                    value={templateUrl}
-                                    onChange={setTemplateUrl}
-                                    onBlur={handleTemplateUrlBlur}
+                                <Form.UrlOrFile
+                                    name="terraformUrlOrFile"
+                                    placeholder={t(`template`)}
+                                    onChangeUrl={setTemplateUrl}
+                                    onBlurUrl={handleTemplateUrlBlur}
+                                    onChangeFile={() => {}}
                                 />
+
+                                <Form.Input onChange={setTemplateUrl} onBlur={handleTemplateUrlBlur} />
                             </Form.Field>
                             <Form.Group widths="equal">
                                 <Form.Field>

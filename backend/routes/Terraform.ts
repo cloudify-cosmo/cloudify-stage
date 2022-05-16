@@ -35,83 +35,85 @@ type ResourcesRequest = Request<
     unknown,
     unknown,
     {
-        templateUrl: string;
+        templateUrl?: string;
+        terraformPackageFile?: File;
     }
 >;
 
+const getBufferFromUrl = async (url: string, authHeader?: string) => {
+    return axios(url, {
+        responseType: 'arraybuffer',
+        headers: authHeader ? { Authorization: authHeader } : {}
+    }).then(response => response.data);
+};
+
+const getGitUrl = (url: string, authHeader?: string) => {
+    if (authHeader) {
+        // header might be "bAsIc" as well, and it should return true as well
+        const encodedCredentials = authHeader.replace('Basic ', '');
+        const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
+        const [username, personalToken] = gitCredentials.split(':');
+        const credentialsString = `${username}:${personalToken}@`;
+        return url.replace('//', `//${credentialsString}`);
+    }
+
+    return url;
+};
+
+const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: string) => {
+    try {
+        const gitUrl = getGitUrl(url, authHeader);
+        await simpleGit().clone(gitUrl, repositoryPath, [disableGitAuthenticationPromptOption]);
+        // @ts-ignore-next-line simple-git library ensures that the occurred error would be in a shape of the GitError type
+    } catch (error: GitError) {
+        const isAuthenticationIssue = error.message.includes('Authentication failed');
+        const errorMessage = isAuthenticationIssue
+            ? 'Git Authentication failed - Please note that some git providers require a token to be passed instead of a password'
+            : 'The URL is not accessible';
+
+        logger.error(`Error while cloning git repository: ${error.message}`);
+        throw new Error(errorMessage);
+    }
+};
+
 router.post('/resources', async (req: ResourcesRequest, res) => {
-    const { templateUrl } = req.query;
+    const { templateUrl, terraformPackageFile } = req.query;
     const authHeader = req.get('Authorization');
-    const isGitFile = templateUrl.endsWith('.git');
 
     const sendTerraformModules = (modules: string[]) => {
         if (modules.length) res.send(modules);
         else res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
     };
 
-    const scanZipFile = async () => {
-        return axios(templateUrl, {
-            responseType: 'arraybuffer',
-            headers: authHeader ? { Authorization: authHeader } : {}
-        }).then(response =>
-            decompress(response.data)
-                .then((files: File[]) => {
-                    const modules = _(files)
-                        .filter({ type: 'directory' })
-                        .map('path')
-                        .filter(directory =>
-                            files.some(
-                                file =>
-                                    file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
-                            )
+    const scanZipFile = async (content: Buffer) =>
+        decompress(content)
+            .then((files: File[]) => {
+                const modules = _(files)
+                    .filter({ type: 'directory' })
+                    .map('path')
+                    .filter(directory =>
+                        files.some(
+                            file => file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
                         )
-                        .map(directory => trimEnd(directory, '/'))
-                        .sort()
-                        .value();
+                    )
+                    .map(directory => trimEnd(directory, '/'))
+                    .sort()
+                    .value();
 
-                    sendTerraformModules(modules);
-                })
-                .catch((decompressErr: any) => {
-                    logger.error(`Error while decompressing zip file:`, decompressErr);
-                    res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
-                })
-        );
-    };
+                sendTerraformModules(modules);
+            })
+            .catch((decompressErr: any) => {
+                logger.error(`Error while decompressing zip file:`, decompressErr);
+                res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
+            });
 
-    const getGitUrl = () => {
-        if (authHeader) {
-            const encodedCredentials = authHeader.replace('Basic ', '');
-            const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
-            const [username, personalToken] = gitCredentials.split(':');
-            const credentialsString = `${username}:${personalToken}@`;
-            return templateUrl.replace('//', `//${credentialsString}`);
-        }
-
-        return templateUrl;
-    };
-
-    const cloneGitRepo = async (repositoryPath: string) => {
-        try {
-            const gitUrl = getGitUrl();
-            await simpleGit().clone(gitUrl, repositoryPath, [disableGitAuthenticationPromptOption]);
-            // @ts-ignore-next-line simple-git library ensures that the occured error would be in a shape of the GitError type
-        } catch (error: GitError) {
-            const isAuthenticationIssue = error.message.includes('Authentication failed');
-            const errorMessage = isAuthenticationIssue
-                ? 'Git Authentication failed - Please note that some git providers require a token to be passed instead of a password'
-                : 'The URL is not accessible';
-
-            logger.error(`Error while cloning git repository: ${error.message}`);
-            throw new Error(errorMessage);
-        }
-    };
-
-    const scanGitFile = async () => {
+    const scanGitFile = async (url: string, authHeaderValue?: string) => {
+        // TODO: The checking whether directory exist should be performed
         const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
         const terraformModuleDirectories: string[] = [];
 
         try {
-            await cloneGitRepo(repositoryPath);
+            await cloneGitRepo(repositoryPath, url, authHeaderValue);
             // @ts-ignore-next-line cloneGitRepo function ensures the error shape
         } catch (error: CloneGitRepoError) {
             res.status(400).send({
@@ -145,13 +147,18 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     };
 
     try {
-        if (isGitFile) {
-            await scanGitFile();
-        } else {
-            await scanZipFile();
+        if (terraformPackageFile) {
+            logger.error('TO BE IMPLEMENTED');
+        } else if (templateUrl) {
+            const isGitFile = templateUrl.endsWith('.git');
+            if (isGitFile) {
+                await scanGitFile(templateUrl, authHeader);
+            } else {
+                await scanZipFile(await getBufferFromUrl(templateUrl, authHeader));
+            }
         }
     } catch (err: any) {
-        logger.error(`Error while fetching ${isGitFile ? 'git' : 'zip'} file: ${err.message}`);
+        logger.error(`Error while fetching file: ${err.message}`);
         if (err.response) {
             const statusCode = err.response.status >= 400 && err.response.status < 500 ? err.response.status : 400;
             res.status(statusCode).send({
