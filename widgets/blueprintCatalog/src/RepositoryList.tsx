@@ -3,6 +3,7 @@ import { without } from 'lodash';
 import Consts from './consts';
 import RepositoryCatalog from './RepositoryCatalog';
 import RepositoryTable from './RepositoryTable';
+import AuthenticationWarning from './AuthenticationWarning';
 
 import type {
     BlueprintCatalogPayload,
@@ -10,7 +11,10 @@ import type {
     Blueprint,
     RepositoryViewProps
 } from './types';
+import Utils from './utils';
 import type Actions from './actions';
+
+const t = Utils.getWidgetTranslation();
 
 interface RepositoryListProps {
     data: BlueprintCatalogPayload;
@@ -19,9 +23,7 @@ interface RepositoryListProps {
     actions: Actions;
 }
 interface RepositoryListState {
-    uploadingBlueprints: string[];
     successMessages: string[];
-    errorMessages: string[] | null;
     showReadmeModal: boolean;
     readmeContent: string;
     readmeLoading: string | null;
@@ -37,9 +39,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         super(props);
 
         this.state = {
-            uploadingBlueprints: [],
             successMessages: [],
-            errorMessages: null,
             showReadmeModal: false,
             readmeContent: '',
             readmeLoading: null,
@@ -72,13 +72,27 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
 
     selectItem = (item: Blueprint) => {
         const { toolbox } = this.props;
-        const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
-        toolbox.getContext().setValue('blueprintCatalogId', item.id === selectedCatalogId ? null : item.id);
+        const selectedBlueprintId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_BLUEPRINT_ID);
+        toolbox
+            .getContext()
+            .setValue(Consts.CONTEXT_KEY.SELECTED_BLUEPRINT_ID, item.id === selectedBlueprintId ? null : item.id);
     };
 
     fetchData: RepositoryViewProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
+    };
+
+    setUploadingBlueprint = (uploadingBlueprint: string) => {
+        const { toolbox } = this.props;
+
+        Utils.blueprintCatalogContext.setUploadingBlueprint(toolbox, uploadingBlueprint);
+    };
+
+    resetUploadingBlueprint = () => {
+        const { toolbox } = this.props;
+
+        Utils.blueprintCatalogContext.resetUploadingBlueprint(toolbox);
     };
 
     handleUpload: RepositoryViewProps['onUpload'] = (
@@ -89,8 +103,8 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     ) => {
         const { toolbox, widget } = this.props;
         const BlueprintActions = Stage.Common.Blueprints.Actions;
-        const { uploadingBlueprints } = this.state;
-        this.setState({ uploadingBlueprints: [...uploadingBlueprints, repositoryName] });
+
+        this.setUploadingBlueprint(repositoryName);
 
         new BlueprintActions(toolbox)
             .doUpload(repositoryName, {
@@ -99,13 +113,17 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                 imageUrl: Stage.Utils.Url.url(imageUrl)
             })
             .then(() => {
-                toolbox.drillDown(widget, 'blueprint', { blueprintId: repositoryName }, repositoryName);
+                this.resetUploadingBlueprint();
+                toolbox.drillDown(
+                    widget,
+                    'blueprint',
+                    { blueprintId: repositoryName, openDeploymentModal: true },
+                    repositoryName
+                );
             })
             .catch(err => {
-                this.setState(prevState => ({
-                    errorMessages: [...(prevState.errorMessages ?? []), err.message],
-                    uploadingBlueprints: prevState.uploadingBlueprints.filter(item => item !== repositoryName)
-                }));
+                Utils.blueprintCatalogContext.setUploadingBlueprintError(toolbox, err.message);
+                this.resetUploadingBlueprint();
             });
     };
 
@@ -113,7 +131,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         const { actions } = this.props;
 
         this.setState({ readmeLoading: repositoryName });
-        actions.doGetReadme(repositoryName, readmeUrl).then(content => {
+        actions.doGetReadme(readmeUrl).then(content => {
             this.setState({
                 readmeContent: Stage.Utils.parseMarkdown(content) || '',
                 showReadmeModal: true,
@@ -132,29 +150,11 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
     }
 
     render() {
-        const {
-            errorMessages,
-            readmeContent,
-            readmeLoading,
-            showReadmeModal,
-            uploadingBlueprints,
-            successMessages
-        } = this.state;
-        const { data, widget } = this.props;
-        const NO_DATA_MESSAGE = "There are no Blueprints available in catalog. Check widget's configuration.";
-        const { Message, Icon, ReadmeModal } = Stage.Basic;
+        const { readmeContent, readmeLoading, showReadmeModal, successMessages } = this.state;
+        const { data, widget, toolbox } = this.props;
+        const { ReadmeModal } = Stage.Basic;
         const { FeedbackMessages } = Stage.Common.Components;
-
-        const notAuthenticatedWarning = (
-            <Message>
-                <Icon name="ban" />
-                <span>
-                    No GitHub credentials provided! Widget may stop working after reaching unrestricted query limit
-                    (~50). Fix this by adding &amp;github-username&amp; and &amp;github-password&amp; entries to your
-                    secrets store (Secrets widget).
-                </span>
-            </Message>
-        );
+        const errorMessage = Utils.blueprintCatalogContext.getUploadingBlueprintError(toolbox);
 
         const showNotAuthenticatedWarning = data.source === Consts.GITHUB_DATA_SOURCE && !data.isAuthenticated;
 
@@ -169,20 +169,19 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                             successMessages: without(prevState.successMessages, message)
                         }))
                     }
-                    errorMessages={errorMessages}
-                    onDismissErrors={() => this.setState({ errorMessages: null })}
+                    errorMessages={errorMessage ? [errorMessage] : null}
+                    onDismissErrors={() => Utils.blueprintCatalogContext.resetUploadingBlueprintError(toolbox)}
                 />
-                {showNotAuthenticatedWarning && notAuthenticatedWarning}
+                {showNotAuthenticatedWarning && <AuthenticationWarning />}
                 <RepositoryView
                     widget={widget}
                     data={data}
-                    uploadingInProgress={uploadingBlueprints}
                     fetchData={this.fetchData}
                     onSelect={this.selectItem}
                     onUpload={this.handleUpload}
                     onReadme={this.showReadmeModal}
                     readmeLoading={readmeLoading}
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noDataMessage')}
                 />
 
                 <ReadmeModal open={showReadmeModal} content={readmeContent} onHide={this.hideReadmeModal} />
