@@ -81,7 +81,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
 
         this.state = {
             hasError: false,
-            showReadmeModal: false
+            showReadmeModal: false,
+            readmeContent: ''
         };
     }
 
