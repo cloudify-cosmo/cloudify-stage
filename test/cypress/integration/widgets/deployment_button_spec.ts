@@ -161,7 +161,7 @@ describe('Create Deployment Button widget', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator')
                 .contains(/^is not one of$/)
-                .click();
+                .click(); // It is a hack to be able to select "is one of"
             openDropdown('ruleOperator')
                 .contains(/^is one of$/)
                 .click();
