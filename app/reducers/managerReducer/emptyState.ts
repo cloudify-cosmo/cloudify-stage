@@ -7,7 +7,7 @@ export default {
         groupSystemRoles: {},
         tenantsRoles: {},
         state: 'loggedOut',
-        identityProviders: '',
+        identityProviders: ['local'],
         error: null
     },
     clusterStatus: {},

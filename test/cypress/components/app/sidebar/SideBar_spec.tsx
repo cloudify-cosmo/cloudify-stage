@@ -22,7 +22,7 @@ describe('SideBar', () => {
                     pages,
                     manager: {
                         ...emptyState,
-                        auth: { ...emptyState.auth, username, identityProviders: 'local' },
+                        auth: { ...emptyState.auth, username },
                         tenants: { items: [] },
                         version: { version },
                         license: {}

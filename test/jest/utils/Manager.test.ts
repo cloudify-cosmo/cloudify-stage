@@ -11,6 +11,7 @@ describe('(Utils) Manager', () => {
         manager: {
             ...emptyState,
             auth: {
+                ...emptyState.auth,
                 username: 'admin',
                 role: 'sys_admin',
                 groupSystemRoles: {},
@@ -21,7 +22,6 @@ describe('(Utils) Manager', () => {
                     }
                 },
                 state: 'loggedIn',
-                identityProviders: 'local',
                 error: null
             },
             tenants: {
