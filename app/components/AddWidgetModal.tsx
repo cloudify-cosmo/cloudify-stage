@@ -3,7 +3,7 @@
 import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import { camelCase, find, forEach, includes, isEmpty, pick, sortBy, without, wrap } from 'lodash';
+import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without, wrap } from 'lodash';
 import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
