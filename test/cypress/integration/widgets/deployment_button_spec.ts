@@ -151,7 +151,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
