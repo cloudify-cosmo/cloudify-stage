@@ -8,11 +8,10 @@ import stageUtils from '../utils/stageUtils';
 
 const mapStateToProps = (state, ownProps) => {
     const widgetDefinitions = state.widgetDefinitions.filter(definition => {
-        return (
-            !definition.loaded ||
-            (stageUtils.isUserAuthorized(definition.permission, state.manager) &&
-                stageUtils.isWidgetPermitted(definition.supportedEditions, state.manager))
-        );
+        const isLoadingDefinition = !definition.loaded;
+        const isUserAuthorized = stageUtils.isUserAuthorized(definition.permission, state.manager);
+        const isWidgetPermitted = stageUtils.isWidgetPermitted(definition.supportedEditions, state.manager);
+        return isLoadingDefinition || (isUserAuthorized && isWidgetPermitted);
     });
     const canInstallWidgets = stageUtils.isUserAuthorized(Consts.permissions.STAGE_INSTALL_WIDGETS, state.manager);
 
