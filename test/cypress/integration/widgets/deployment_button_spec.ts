@@ -3,8 +3,7 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
-    const labelsBlueprintWithoutPrefix = 'labels';
-    const labelsBlueprint = `${resourcePrefix}${labelsBlueprintWithoutPrefix}`;
+    const labelsBlueprint = `${resourcePrefix}labels`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
@@ -158,7 +157,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
@@ -180,7 +179,8 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
-                cy.contains(labelsBlueprintWithoutPrefix);
+                cy.contains(labelsBlueprint);
+                cy.get('.actions > .ui:nth-child(1)').click();
             });
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
