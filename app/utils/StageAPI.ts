@@ -115,7 +115,6 @@ export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinitio
 
 export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
-    loaded: boolean;
     name: string;
     categories: Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color: SemanticCOLORS;
@@ -141,6 +140,7 @@ export interface CommonWidgetDefinition<Params, Data, Configuration> {
     readme?: string;
     template?: string;
     isCustom?: boolean;
+    loaded: boolean;
 
     init?: () => void;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchdata-widget-toolbox-params */
