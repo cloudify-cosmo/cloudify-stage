@@ -1,18 +1,19 @@
-import _ from 'lodash';
-import type { ThunkAction } from 'redux-thunk';
+import _, { find, map } from 'lodash';
 import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
-    WidgetsSection as BackendWidgetsSection,
+    PageFileDefinition,
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
-    PageFileDefinition
+    WidgetsSection as BackendWidgetsSection
 } from '../../backend/routes/Templates.types';
+import type { ReduxState } from '../reducers';
+import type { Widget, WidgetDefinition } from '../utils/StageAPI';
+import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
 import * as types from './types';
 import { addWidget } from './widgets';
-import type { Widget, WidgetDefinition } from '../utils/StageAPI';
-import type { ReduxState } from '../reducers';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
@@ -131,10 +132,22 @@ export function addLayoutToPage(
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
-        forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
-            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-            dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+        const widgetsToLoad: Record<string, WidgetDefinition<any, any, Record<string, unknown>>> = {};
+        forEachWidget(page, widget => {
+            const widgetDefinition = find(widgetDefinitions, { id: widget.definition });
+            if (widgetDefinition && !widgetDefinition.loaded) {
+                widgetsToLoad[widgetDefinition.id] = widgetDefinition;
+            }
             return widget;
+        });
+        return Promise.all(map(widgetsToLoad, WidgetDefinitionsLoader.loadWidget)).then(loadedWidgetDefinitions => {
+            forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
+                const widgetDefinition =
+                    find(loadedWidgetDefinitions, { id: widget.definition }) ??
+                    find(getState().widgetDefinitions, { id: widget.definition });
+                dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+                return widget;
+            });
         });
     };
 }
