@@ -157,10 +157,10 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('not.have.length', 1);
+                cy.get('[role="option"]').should('not.contain.text', labelsBlueprint);
             });
             cy.get('.actions > .ui:nth-child(1)').click();
         });
@@ -179,8 +179,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
-                cy.contains(labelsBlueprint);
-                cy.get('.actions > .ui:nth-child(1)').click();
+                cy.get('[role="option"]').should('contain.text', labelsBlueprint);
             });
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
