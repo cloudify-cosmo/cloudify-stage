@@ -956,6 +956,8 @@
             }
         },
         "blueprintCatalog": {
+            "name": "Blueprints Catalog",
+            "description": "Shows blueprints catalog",
             "actions": {
                 "openDocumentation": "Open documentation",
                 "uploadBlueprint": "Upload blueprint"
@@ -996,6 +998,18 @@
                 "sortByName": {
                     "label": "Sort by name",
                     "description": "If set to true, then blueprints will be sorted by name."
+                }
+            },
+            "authenticationWarning": "No GitHub credentials provided! Widget may stop working after reaching unrestricted query limit (~50). Fix this by adding &github-username& and &github-password& entries to your secrets store (Secrets widget).",
+            "uploadingMessage": {
+                "uploading": "Uploading '{{blueprintName}}' blueprint...",
+                "redirection": "Once the blueprint is uploaded, you'll be redirected to the blueprint deployment page."
+            },
+            "noDataMessage": "There are no Blueprints available in catalog. Check widget's configuration.",
+            "catalog": {
+                "properties": {
+                    "created": "Created",
+                    "updated": "Updated"
                 }
             }
         },
