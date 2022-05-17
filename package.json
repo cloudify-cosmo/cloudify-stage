@@ -80,7 +80,7 @@
     "query-string": "^6.0.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-grid-layout": "^0.16.6",
+    "react-grid-layout": "^0.18.3",
     "react-is": "^17.0.2",
     "react-leaflet": "^2.8.0",
     "react-leaflet-markercluster": "^2.0.0",
