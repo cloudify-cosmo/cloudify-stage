@@ -170,7 +170,7 @@ describe('Create Deployment Button widget', () => {
             openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
-                cy.get(`[option-value]`).click();
+                cy.get(`[option-value]`).click().blur();
             });
             selectLabelValue('k8s');
             selectLabelValue('docker');
