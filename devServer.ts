@@ -51,6 +51,7 @@ const options: WebpackDevServer.Configuration = {
         }
     },
     client: {
+        // NOTE: Logging was disabled as it was cluttering the browser console with a lot of unnecessary logs (like e.g: "[webpack-dev-server] Nothing changed.")
         logging: 'none'
     }
 };
