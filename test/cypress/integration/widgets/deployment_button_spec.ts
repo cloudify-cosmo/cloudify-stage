@@ -132,6 +132,13 @@ describe('Create Deployment Button widget', () => {
         return cy.get(`div[name="${divName}"]`).click();
     };
 
+    const selectLabelKey = (key: string) => {
+        openDropdown('labelKey').within(() => {
+            cy.get('input').type(key);
+            cy.contains(`New key ${key}`).click();
+        });
+    };
+
     const selectLabelValue = (value: string) => {
         openDropdown('labelValue').within(() => {
             cy.get('input').type(value);
@@ -167,11 +174,7 @@ describe('Create Deployment Button widget', () => {
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
-            openDropdown('labelKey').within(() => {
-                const labelKey = 'arch';
-                cy.get('input').type(labelKey);
-                cy.get(`[option-value=${labelKey}]`).click();
-            });
+            selectLabelKey('arch');
             selectLabelValue('k8s');
             selectLabelValue('docker');
         });
