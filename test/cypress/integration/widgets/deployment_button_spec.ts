@@ -163,6 +163,7 @@ describe('Create Deployment Button widget', () => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
             });
+            cy.get('.actions > .ui:nth-child(1)').click();
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
