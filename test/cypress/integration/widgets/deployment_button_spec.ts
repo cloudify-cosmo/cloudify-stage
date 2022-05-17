@@ -157,7 +157,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
@@ -181,6 +181,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
                 cy.get('[role="option"]').should('contain.text', labelsBlueprint);
             });
+            cy.get('.actions > .ui:nth-child(1)').click();
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.get('button[aria-label="Remove rule"]').click();
