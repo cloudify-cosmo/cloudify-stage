@@ -8,6 +8,7 @@ import type { Reducer } from 'redux';
 
 import { getManagerData, login, logout } from 'actions/managers';
 import * as types from 'actions/types';
+import type { ManagerData } from 'reducers/managerReducer';
 import managerReducer, { emptyState } from 'reducers/managerReducer';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import rbac from '../../resources/rbac';
@@ -72,16 +73,13 @@ describe('(Reducer) Manager', () => {
                     expect(store.getState()).toEqual({
                         ...emptyState,
                         auth: {
+                            ...emptyState.auth,
                             username,
                             role,
-                            groupSystemRoles: {},
-                            tenantsRoles: {},
-                            state: 'loggedIn',
-                            error: null,
-                            identityProviders: ''
+                            state: 'loggedIn'
                         },
                         lastUpdated: Date.now()
-                    });
+                    } as ManagerData);
                 });
             });
         });
