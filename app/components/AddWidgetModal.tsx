@@ -3,7 +3,7 @@
 import colors from 'cloudify-ui-common/styles/_colors.scss';
 import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import _, { find } from 'lodash';
+import { camelCase, find, forEach, includes, isEmpty, pick, sortBy, without, wrap } from 'lodash';
 import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
@@ -110,7 +110,7 @@ function generateCategories(widgets) {
         return curr;
     }, []);
 
-    return _.sortBy(categories, 'name');
+    return sortBy(categories, 'name');
 }
 
 function AddWidgetModal({
@@ -185,8 +185,8 @@ function AddWidgetModal({
     }
 
     function addWidgets() {
-        _.forEach(widgetsToAdd, widgetId => {
-            const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
+        forEach(widgetsToAdd, widgetId => {
+            const widget = find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
                 onWidgetAdded(
                     widget.name ||
@@ -202,7 +202,7 @@ function AddWidgetModal({
 
     function toggleWidgetInstall(widgetId) {
         setWidgetsToAdd(
-            _.includes(widgetsToAdd, widgetId) ? _.without(widgetsToAdd, widgetId) : [...widgetsToAdd, widgetId]
+            includes(widgetsToAdd, widgetId) ? without(widgetsToAdd, widgetId) : [...widgetsToAdd, widgetId]
         );
     }
 
@@ -219,7 +219,7 @@ function AddWidgetModal({
     }
 
     function getWidgetsToAddWithout(widgetId) {
-        return _.without(widgetsToAdd, widgetId);
+        return without(widgetsToAdd, widgetId);
     }
 
     function uninstallWidget() {
@@ -305,7 +305,7 @@ function AddWidgetModal({
         />
     );
 
-    const confirmContent = !_.isEmpty(usedByList) ? (
+    const confirmContent = !isEmpty(usedByList) ? (
         <Segment basic>
             <h5>{i18n.t('editMode.removeWidget.usedBy.header', 'Widget is currently used by:')}</h5>
 
@@ -343,7 +343,7 @@ function AddWidgetModal({
                         active={selectedCategory === category.name}
                         onClick={filterByCategory}
                     >
-                        {i18n.t(`editMode.addWidget.category.${_.camelCase(category.name)}`)}
+                        {i18n.t(`editMode.addWidget.category.${camelCase(category.name)}`)}
                         <Label color={category.count ? 'green' : 'yellow'}>{category.count}</Label>
                     </Menu.Item>
                 );
@@ -414,7 +414,7 @@ function AddWidgetModal({
                                                             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                                                             <div onClick={e => e.stopPropagation()}>
                                                                 <InstallWidgetModal
-                                                                    onWidgetInstalled={_.wrap(widget, updateWidget)}
+                                                                    onWidgetInstalled={wrap(widget, updateWidget)}
                                                                     trigger={updateWidgetBtn}
                                                                     buttonLabel={i18n.t(
                                                                         'editMode.addWidget.updateModal.button',
@@ -448,7 +448,7 @@ function AddWidgetModal({
                                         this
                                     )}
 
-                                    {_.isEmpty(filteredWidgetDefinitions) && (
+                                    {isEmpty(filteredWidgetDefinitions) && (
                                         <Item
                                             className="alignCenter"
                                             content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
@@ -500,7 +500,7 @@ function AddWidgetModal({
                 header={i18n.t(
                     'editMode.removeWidget.confirm',
                     `Are you sure to remove widget {{name}}`,
-                    _.pick(widgetToRemove, 'name')
+                    pick(widgetToRemove, 'name')
                 )}
                 content={confirmContent}
                 className="removeWidgetConfirm"
@@ -539,5 +539,5 @@ AddWidgetModal.defaultProps = {
 
 // NOTE: AddWidgetModal is not exported directly from this file and cannot be used as a type in the emitted declarations
 /** @type {import('react').ComponentType<import('prop-types').InferProps<typeof AddWidgetModal['propTypes']>>} */
-const MemoizedAddWidgetModal = React.memo(AddWidgetModal, _.isEqual);
+const MemoizedAddWidgetModal = React.memo(AddWidgetModal, isEqual);
 export default MemoizedAddWidgetModal;
