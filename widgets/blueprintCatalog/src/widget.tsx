@@ -1,12 +1,18 @@
+import RepositoryList from './RepositoryList';
+import UploadingMessage from './UploadingMessage';
 import Actions from './actions';
 import Consts from './consts';
-import RepositoryList from './RepositoryList';
+import Utils from './utils';
 
-import type { Blueprint, BlueprintCatalogPayload, BlueprintCatalogWidgetConfiguration } from './types';
+import type {
+    BlueprintCatalogPayload,
+    BlueprintCatalogWidgetConfiguration,
+    Blueprint,
+    WidgetParameters
+} from './types';
 import './widget.css';
 
-const widgetId = 'blueprintCatalog';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const t = Utils.getWidgetTranslation('');
 
 const fieldsToShowItems = [
     t('configuration.fieldsToShow.items.name'),
@@ -15,15 +21,11 @@ const fieldsToShowItems = [
     t('configuration.fieldsToShow.items.updated')
 ];
 
-Stage.defineWidget<
-    Record<string, string | number>,
-    BlueprintCatalogPayload | Error,
-    BlueprintCatalogWidgetConfiguration
->({
+Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
     hasTemplate: false,
-    id: widgetId,
-    name: 'Blueprints Catalog',
-    description: 'Shows blueprints catalog',
+    id: Consts.WIDGET_ID,
+    name: t('name'),
+    description: t('description'),
     initialWidth: 8,
     initialHeight: 20,
     color: 'teal',
@@ -143,6 +145,12 @@ Stage.defineWidget<
 
     render(widget, data, _error, toolbox) {
         const { Common, Basic } = Stage;
+        const isUploadingBlueprintFromAnotherTab = Utils.blueprintCatalogContext.isUploadingBlueprint(toolbox);
+
+        if (isUploadingBlueprintFromAnotherTab) {
+            const uploadingBlueprintName = Utils.blueprintCatalogContext.getUploadingBlueprint(toolbox);
+            return <UploadingMessage blueprintName={uploadingBlueprintName} />;
+        }
 
         if (data instanceof Error) {
             return <Common.Components.NoDataMessage error={data} repositoryName="blueprints" />;
@@ -152,7 +160,7 @@ Stage.defineWidget<
             return <Basic.Loading />;
         }
 
-        const selectedCatalogId = toolbox.getContext().getValue('blueprintCatalogId');
+        const selectedBlueprintId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.SELECTED_BLUEPRINT_ID);
         const formattedData = {
             ...data,
             items: data?.items.map(item => {
@@ -173,7 +181,7 @@ Stage.defineWidget<
                         data.source === Consts.GITHUB_DATA_SOURCE
                             ? `https://github.com/${widget.configuration.username}/${item.name}/archive/master.zip`
                             : item.zip_url,
-                    isSelected: selectedCatalogId === item.id
+                    isSelected: selectedBlueprintId === item.id
                 };
             })
         };
