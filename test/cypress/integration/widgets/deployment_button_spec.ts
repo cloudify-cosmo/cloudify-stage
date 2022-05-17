@@ -158,7 +158,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
@@ -170,7 +170,7 @@ describe('Create Deployment Button widget', () => {
             openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
-                cy.get(`[option-value]`).click().blur();
+                cy.get(`[option-value]`).click();
             });
             selectLabelValue('k8s');
             selectLabelValue('docker');
