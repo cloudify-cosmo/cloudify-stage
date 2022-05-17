@@ -128,9 +128,16 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
-    function openDropdown(divName: string) {
+    const openDropdown = (divName: string) => {
         return cy.get(`div[name="${divName}"]`).click();
-    }
+    };
+
+    const selectValueInDropdown = (value: string) => {
+        openDropdown('labelValue').within(() => {
+            cy.get('input').type(value);
+            cy.contains(`New value ${value}`).click();
+        });
+    };
 
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
@@ -170,11 +177,8 @@ describe('Create Deployment Button widget', () => {
                 cy.get('input').type(labelKey);
                 cy.get(`[option-value=${labelKey}]`).click();
             });
-            openDropdown('labelValue').within(() => {
-                const labelValue = 'k8s';
-                cy.get('input').type(labelValue);
-                cy.contains(`New value ${labelValue}`).click();
-            });
+            selectValueInDropdown('k8s');
+            selectValueInDropdown('docker');
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
