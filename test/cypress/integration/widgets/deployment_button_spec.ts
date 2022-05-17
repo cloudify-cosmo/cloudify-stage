@@ -166,12 +166,7 @@ describe('Create Deployment Button widget', () => {
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
-            openDropdown('ruleOperator')
-                .contains(/^is not one of$/)
-                .click(); // It is a hack to be able to select "is one of"
-            openDropdown('ruleOperator')
-                .contains(/^is one of$/)
-                .click();
+            openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
             openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
