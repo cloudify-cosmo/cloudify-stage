@@ -3,6 +3,8 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
+    const lablesBlueprintWithoutPrefix = 'labels';
+    const labelsBlueprint = `${resourcePrefix}${lablesBlueprintWithoutPrefix}`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
@@ -14,7 +16,8 @@ describe('Create Deployment Button widget', () => {
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint)
+            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
 
         types.forEach(type =>
             cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
@@ -148,28 +151,36 @@ describe('Create Deployment Button widget', () => {
         cy.get('div.deployBlueprintModal').should('not.exist');
     });
 
-    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it.only('filters blueprints according to blueprint label filter rules in widget configuration', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('have.length', 11);
+                cy.get('[role="listbox"] > *').should('not.have.length', 1);
             });
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator')
-                .contains(/^key is$/)
+                .contains(/^is not one of$/)
+                .click();
+            openDropdown('ruleOperator')
+                .contains(/^is one of$/)
                 .click();
             openDropdown('labelKey').within(() => {
-                const labelKey = 'obj-type';
+                const labelKey = 'arch';
                 cy.get('input').type(labelKey);
                 cy.get(`[option-value=${labelKey}]`).click();
+            });
+            openDropdown('labelValue').within(() => {
+                const labelValue = 'k8s';
+                cy.get('input').type(labelValue);
+                cy.contains(`New value ${labelValue}`).click();
             });
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('have.length', 1);
-                cy.contains('topology_test_bp');
+                cy.contains(lablesBlueprintWithoutPrefix);
             });
         });
         cy.editWidgetConfiguration('deploymentButton', () => {
