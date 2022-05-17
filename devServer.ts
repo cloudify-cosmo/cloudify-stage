@@ -49,6 +49,9 @@ const options: WebpackDevServer.Configuration = {
         watch: {
             ignored: ['**/userData/**']
         }
+    },
+    client: {
+        logging: 'none'
     }
 };
 
