@@ -132,7 +132,7 @@ describe('Create Deployment Button widget', () => {
         return cy.get(`div[name="${divName}"]`).click();
     };
 
-    const selectValueInDropdown = (value: string) => {
+    const selectLabelValue = (value: string) => {
         openDropdown('labelValue').within(() => {
             cy.get('input').type(value);
             cy.contains(`New value ${value}`).click();
@@ -172,8 +172,8 @@ describe('Create Deployment Button widget', () => {
                 cy.get('input').type(labelKey);
                 cy.get(`[option-value=${labelKey}]`).click();
             });
-            selectValueInDropdown('k8s');
-            selectValueInDropdown('docker');
+            selectLabelValue('k8s');
+            selectLabelValue('docker');
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
