@@ -1,10 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import type { Dispatch, Store } from 'redux';
+import type { ReduxState } from '../reducers';
 import Consts from '../utils/consts';
 import Internal from '../utils/Internal';
 
 export function saveUserAppData() {
-    return (dispatch, getState) => {
+    return (_dispatch: Dispatch, getState: Store<ReduxState>['getState']) => {
         const appData = _(getState()).pick('pages').cloneDeep();
 
         // Don't save maximized state for widgets in non-default tabs
