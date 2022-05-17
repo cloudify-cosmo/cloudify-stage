@@ -21,7 +21,7 @@ const UploadingMessage = ({ blueprintName }: UploadingMessageProps) => {
                         </MessageHeader>
                         <MessageDescription>{t('redirection')}</MessageDescription>
                     </>
-                ) as any
+                ) as any // TODO(RD-4934): Remove type assertion
             }
         />
     );

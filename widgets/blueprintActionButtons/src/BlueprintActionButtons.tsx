@@ -6,6 +6,8 @@ const t = Utils.getWidgetTranslation('buttons');
 
 type ModalType = 'deploy' | 'delete';
 
+type ModalType = 'deploy' | 'delete';
+
 interface BlueprintActionButtonsProps {
     blueprintId: string;
     toolbox: Stage.Types.Toolbox;
