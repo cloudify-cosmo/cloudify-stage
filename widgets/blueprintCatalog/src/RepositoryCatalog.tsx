@@ -2,21 +2,22 @@ import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 
 import Consts from './consts';
+import Utils from './utils';
 import type { RepositoryViewProps } from './types';
+
+const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
+const t = Utils.getWidgetTranslation('catalog');
 
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
     onUpload = noop,
     readmeLoading = null,
-    uploadingInProgress = [],
     data,
     noDataMessage,
     onReadme,
     widget
 }) => {
-    const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
-
     const catalogItems = data.items.map(item => {
         return (
             <Grid.Column key={item.id}>
@@ -44,14 +45,14 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">Created</h5>
+                                <h5 className="ui icon header">{t('properties.created')}</h5>
                             </Grid.Column>
                             <Grid.Column width="12">{item.created_at}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">Updated</h5>
+                                <h5 className="ui icon header">{t('properties.updated')}</h5>
                             </Grid.Column>
                             <Grid.Column width="12">{item.updated_at}</Grid.Column>
                         </Grid.Row>
@@ -68,7 +69,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                             }}
                         />
                         <Button
-                            loading={uploadingInProgress.includes(item.name)}
                             disabled={data.uploadedBlueprints.includes(item.name)}
                             icon="upload"
                             content="Upload"
