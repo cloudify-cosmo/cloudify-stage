@@ -1,10 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import Actions from './actions';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
-export default function CreateModal({ toolbox, isLdapEnabled }) {
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+    isLdapEnabled?: boolean;
+}
+
+const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox, isLdapEnabled = false }) => {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -81,9 +85,6 @@ export default function CreateModal({ toolbox, isLdapEnabled }) {
             </Modal.Actions>
         </Modal>
     );
-}
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    isLdapEnabled: PropTypes.bool
 };
+
+export default CreateModal;

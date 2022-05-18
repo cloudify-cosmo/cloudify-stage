@@ -3,6 +3,7 @@ import * as types from '../../actions/types';
 import emptyState from './emptyState';
 
 export type AuthState = 'loggedOut' | 'loggingIn' | 'loggedIn';
+export type IdentityProvider = 'local' | 'okta' | 'ldap' | string;
 
 export interface AuthData {
     username: string;
@@ -10,6 +11,7 @@ export interface AuthData {
     groupSystemRoles: Record<string, any>;
     tenantsRoles: Record<string, any>;
     state: AuthState;
+    identityProviders: IdentityProvider[];
     error: any;
 }
 
@@ -44,6 +46,11 @@ const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
                 role: action.role,
                 groupSystemRoles: action.groupSystemRoles,
                 tenantsRoles: action.tenantsRoles
+            };
+        case types.SET_IDENTITY_PROVIDERS:
+            return {
+                ...state,
+                identityProviders: action.identityProviders
             };
         default:
             return state;

@@ -32,7 +32,9 @@ export default {
         SYS_ADMIN: 'sys_admin'
     },
 
+    DEFAULT_ADMIN_USERNAME: 'admin',
     DEFAULT_TENANT: 'default_tenant',
+
     MODE_MAIN: 'main',
     MODE_CUSTOMER: 'customer',
     permissions: {

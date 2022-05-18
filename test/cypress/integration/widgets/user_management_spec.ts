@@ -1,21 +1,21 @@
-// @ts-nocheck File not migrated fully to TS
 import Consts from 'app/utils/consts';
 
 describe('User management widget', () => {
+    const widgetId = 'userManagement';
     const username = 'user_management_test_user';
     const group = 'user_management_test_group';
 
-    before(() =>
-        cy
-            .activate('valid_trial_license')
-            .usePageMock('userManagement')
-            .mockLogin()
-            .deleteUser(username)
-            .deleteUserGroup(group)
-            .addUserGroup(group)
-    );
+    function clickUserMenu(user: string) {
+        cy.contains('tr', user).find('.content').click();
+    }
+
+    before(() => cy.activate());
+
+    beforeEach(() => cy.deleteUser(username));
 
     it('should allow to manage users', () => {
+        cy.deleteUserGroup(group).addUserGroup(group).usePageMock(widgetId).mockLogin();
+
         cy.log('Creating new user');
         cy.get('.userManagementWidget .add').click();
         cy.get('.modal').within(() => {
@@ -27,7 +27,7 @@ describe('User management widget', () => {
             cy.get('button.green').click();
         });
 
-        function verifyCheckbox(name, url, checkedPayload, uncheckedPayload) {
+        function verifyCheckbox(name: string, url: string, checkedPayload: any, uncheckedPayload: any) {
             cy.log(`Verify ${name} checkbox is working`);
             const requestAlias = `${name}ChangeRequest`;
             cy.interceptSp('POST', url).as(requestAlias);
@@ -61,7 +61,7 @@ describe('User management widget', () => {
         );
 
         cy.log('Verifying password can be changed');
-        cy.contains('tr', username).find('.content').click();
+        clickUserMenu(username);
         cy.contains('Change password').click();
         const newPassword = 'changed';
         cy.get('input[name=password]').type(newPassword);
@@ -69,7 +69,7 @@ describe('User management widget', () => {
         cy.contains('button', 'Change').click();
 
         cy.log('Verifying user groups can be edited');
-        cy.contains('tr', username).find('.content').click();
+        clickUserMenu(username);
         cy.contains("Edit user's groups").click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();
@@ -79,7 +79,7 @@ describe('User management widget', () => {
         cy.contains('tr', username).contains('.label.green', '1');
 
         cy.log('Verifying user tenants can be edited');
-        cy.contains('tr', username).find('.content').click();
+        clickUserMenu(username);
         cy.contains("Edit user's tenants").click();
         cy.get('.modal').within(() => {
             cy.get('.selection').click();
@@ -103,5 +103,17 @@ describe('User management widget', () => {
         cy.contains('Delete').click();
         cy.contains('Yes').click();
         cy.contains('.userManagementWidget tr', username).should('not.exist');
+    });
+
+    it('should restrict password changing when external IDP is enabled', () => {
+        cy.intercept('GET', '/console/sp/idp', 'okta');
+        cy.addUser(username, 'test_password', false).usePageMock(widgetId).mockLogin();
+
+        clickUserMenu('admin');
+        cy.contains('Change password');
+        clickUserMenu('admin');
+
+        clickUserMenu(username);
+        cy.contains('Change password').should('not.exist');
     });
 });
