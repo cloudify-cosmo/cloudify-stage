@@ -17,7 +17,7 @@ function pipeRequest(
     url: string,
     queryString: any
 ) {
-    logger.debug(`Piping get request to url: ${url} with query string: ${queryString}`);
+    logger.debug('Piping get request to url:', url, 'with query string:', queryString);
 
     requestAndForwardResponse(url.startsWith('//') ? `http:${url}` : url, res, { params: queryString }).catch(err =>
         res.status(500).send({ message: err.message })

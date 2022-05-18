@@ -33,10 +33,6 @@ export function getToken(basicAuth: string) {
     );
 }
 
-export function getTenants(token: string) {
-    return jsonRequest('GET', '/tenants?_get_all_results=true&_include=name', getHeadersWithAuthenticationToken(token));
-}
-
 export function getUser(token: string): Promise<UserResponse> {
     return jsonRequest('GET', '/user?_get_data=true', getHeadersWithAuthenticationToken(token));
 }

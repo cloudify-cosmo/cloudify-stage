@@ -7,10 +7,10 @@ export default {
         groupSystemRoles: {},
         tenantsRoles: {},
         state: 'loggedOut',
+        identityProviders: ['local'],
         error: null
     },
     clusterStatus: {},
-    isLdapEnabled: false,
     lastUpdated: null,
     license: {},
     maintenance: '',
