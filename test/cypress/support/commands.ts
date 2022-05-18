@@ -220,7 +220,7 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded();
+            cy.waitUntilAppLoaded();
         }
         return cy;
     },
@@ -272,7 +272,7 @@ const commands = {
         if (expectedPageId) {
             cy.verifyLocationByPageId(expectedPageId);
         }
-        return cy.waitUntilPageLoaded();
+        return cy.waitUntilWidgetsDataLoaded();
     },
     clickSystemMenuItem: (name: string) => {
         cy.log(`Clicking '${name}' system menu item`);
