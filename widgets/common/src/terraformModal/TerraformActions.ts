@@ -7,12 +7,21 @@ export default class TerraformActions {
         return this.toolbox.getInternal().doPost('/terraform/blueprint', { body });
     }
 
-    doGetTemplateModules(templateUrl: string, username?: string, password?: string) {
+    doGetTemplateModulesByUrl(templateUrl: string, username?: string, password?: string) {
         const headers = username ? { Authorization: `Basic ${btoa(`${username}:${password}`)}` } : undefined;
         return this.toolbox.getInternal().doPost('/terraform/resources', {
             params: { templateUrl },
             headers,
             validateAuthentication: false
+        });
+    }
+
+    doGetTemplateModulesByFile(file: File) {
+        return this.toolbox.getInternal().doUpload('/terraform/resources/file', {
+            method: 'POST',
+            files: {
+                file
+            }
         });
     }
 }

@@ -4,7 +4,7 @@ import decompress from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -14,9 +14,12 @@ import uniqueDirectoryName from 'short-uuid';
 import directoryTree from 'directory-tree';
 import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
+import multer from 'multer';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestBody } from './Terraform.types';
+import { checkIfFileUploaded } from './File';
 
+const upload = multer({ limits: { fileSize: 50000 } });
 const logger = getLogger('Terraform');
 const router = express.Router();
 const templatePath = path.resolve(__dirname, '../templates/terraform');
@@ -35,8 +38,7 @@ type ResourcesRequest = Request<
     unknown,
     unknown,
     {
-        templateUrl?: string;
-        terraformPackageFile?: File;
+        templateUrl: string;
     }
 >;
 
@@ -76,86 +78,97 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
-router.post('/resources', async (req: ResourcesRequest, res) => {
-    const { templateUrl, terraformPackageFile } = req.query;
-    const authHeader = req.get('Authorization');
-
-    const sendTerraformModules = (modules: string[]) => {
-        if (modules.length) res.send(modules);
-        else res.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
-    };
-
-    const scanZipFile = async (content: Buffer) =>
-        decompress(content)
-            .then((files: File[]) => {
-                const modules = _(files)
-                    .filter({ type: 'directory' })
-                    .map('path')
-                    .filter(directory =>
-                        files.some(
-                            file => file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
-                        )
+const scanZipFile = async (content: Buffer, response: Response) =>
+    decompress(content)
+        .then((files: File[]) => {
+            const modules = _(files)
+                .filter({ type: 'directory' })
+                .map('path')
+                .filter(directory =>
+                    files.some(
+                        file => file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
                     )
-                    .map(directory => trimEnd(directory, '/'))
-                    .sort()
-                    .value();
+                )
+                .map(directory => trimEnd(directory, '/'))
+                .sort()
+                .value();
 
-                sendTerraformModules(modules);
-            })
-            .catch((decompressErr: any) => {
-                logger.error(`Error while decompressing zip file:`, decompressErr);
-                res.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
-            });
+            sendTerraformModules(modules, response);
+        })
+        .catch((decompressErr: any) => {
+            logger.error(`Error while decompressing zip file:`, decompressErr);
+            response.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
+        });
 
-    const scanGitFile = async (url: string, authHeaderValue?: string) => {
-        // TODO: The checking whether directory exist should be performed
-        const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
-        const terraformModuleDirectories: string[] = [];
+const sendTerraformModules = (modules: string[], response: Response) => {
+    if (modules.length) response.send(modules);
+    else response.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
+};
 
-        try {
-            await cloneGitRepo(repositoryPath, url, authHeaderValue);
-            // @ts-ignore-next-line cloneGitRepo function ensures the error shape
-        } catch (error: CloneGitRepoError) {
-            res.status(400).send({
-                message: error.message
-            });
-            return;
-        }
+const getUniqNotExistingTemporaryDirectory = (): string => {
+    const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
+    if (fs.existsSync(repositoryPath)) {
+        return getUniqNotExistingTemporaryDirectory();
+    }
+    return repositoryPath;
+};
 
-        directoryTree(
-            repositoryPath,
-            {
-                extensions: /.tf$/,
-                exclude: /.git/
-            },
-            (_file, filePath) => {
-                const relativeFilePath = path.relative(repositoryPath, filePath);
-                const isInRootDirectory = !relativeFilePath.includes('/');
-
-                if (!isInRootDirectory) {
-                    const fileDirectory = path.dirname(relativeFilePath);
-
-                    if (!terraformModuleDirectories.includes(fileDirectory)) {
-                        terraformModuleDirectories.push(fileDirectory);
-                    }
-                }
-            }
-        );
-
-        fs.rmdirSync(repositoryPath, { recursive: true });
-        sendTerraformModules(terraformModuleDirectories.sort());
-    };
+const scanGitFile = async (url: string, response: Response, authHeaderValue?: string) => {
+    const repositoryPath = getUniqNotExistingTemporaryDirectory();
+    const terraformModuleDirectories: string[] = [];
 
     try {
-        if (terraformPackageFile) {
-            logger.error('TO BE IMPLEMENTED');
-        } else if (templateUrl) {
-            const isGitFile = templateUrl.endsWith('.git');
-            if (isGitFile) {
-                await scanGitFile(templateUrl, authHeader);
-            } else {
-                await scanZipFile(await getBufferFromUrl(templateUrl, authHeader));
+        await cloneGitRepo(repositoryPath, url, authHeaderValue);
+        // @ts-ignore-next-line cloneGitRepo function ensures the error shape
+    } catch (error: CloneGitRepoError) {
+        response.status(400).send({
+            message: error.message
+        });
+        return;
+    }
+
+    directoryTree(
+        repositoryPath,
+        {
+            extensions: /.tf$/,
+            exclude: /.git/
+        },
+        (_file, filePath) => {
+            const relativeFilePath = path.relative(repositoryPath, filePath);
+            const isInRootDirectory = !relativeFilePath.includes('/');
+
+            if (!isInRootDirectory) {
+                const fileDirectory = path.dirname(relativeFilePath);
+
+                if (!terraformModuleDirectories.includes(fileDirectory)) {
+                    terraformModuleDirectories.push(fileDirectory);
+                }
             }
+        }
+    );
+
+    fs.rmdirSync(repositoryPath, { recursive: true });
+    sendTerraformModules(terraformModuleDirectories.sort(), response);
+};
+
+router.post('/resources/file', upload.single('file'), checkIfFileUploaded, async (req, res) => {
+    if (req.file && Buffer.isBuffer(req.file?.buffer)) {
+        await scanZipFile(req.file.buffer, res);
+    } else {
+        res.status(400).send({ message: 'The file you sent is not valid' });
+    }
+});
+
+router.post('/resources', async (req: ResourcesRequest, res) => {
+    const { templateUrl } = req.query;
+    const authHeader = req.get('Authorization');
+
+    try {
+        const isGitFile = templateUrl.endsWith('.git');
+        if (isGitFile) {
+            await scanGitFile(templateUrl, res, authHeader);
+        } else {
+            await scanZipFile(await getBufferFromUrl(templateUrl, authHeader), res);
         }
     } catch (err: any) {
         logger.error(`Error while fetching file: ${err.message}`);

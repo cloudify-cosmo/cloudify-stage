@@ -387,7 +387,7 @@ export default function TerraformModal({
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
             toolbox.getEventBus().trigger('blueprints:refresh');
             onHide();
-        } catch (e) {
+        } catch (e: any) {
             setMessageAsError(e);
             stopProcess();
         }
@@ -401,6 +401,32 @@ export default function TerraformModal({
         }
     }
 
+    function reloadTemplateModules(loadedTemplateModules: any) {
+        setTemplateModules(loadedTemplateModules);
+        setResourceLocation(
+            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
+        );
+
+        const { template, ...modalErrors } = errors;
+        setErrors(modalErrors);
+    }
+
+    function catchTemplateModulesLoadingError(err: any) {
+        if (err.status === 401) {
+            if (!urlAuthentication) {
+                setUrlAuthentication(true);
+            } else {
+                setErrors({
+                    template: tError('terraformTemplateUnauthorized')
+                });
+            }
+        } else {
+            setErrors({ template: err.message });
+        }
+        clearTemplateModules();
+        clearResourceLocation();
+    }
+
     function handleTemplateUrlBlur() {
         const authenticationDataIncomplete = urlAuthentication && (!username || !password);
         if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
@@ -409,33 +435,20 @@ export default function TerraformModal({
 
         setTemplateModulesLoading();
         new TerraformActions(toolbox)
-            .doGetTemplateModules(templateUrl, username, password)
-            .then(loadedTemplateModules => {
-                setTemplateModules(loadedTemplateModules);
-                setResourceLocation(
-                    find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-                );
-
-                const { template, ...modalErrors } = errors;
-                setErrors(modalErrors);
-            })
-            .catch(err => {
-                if (err.status === 401) {
-                    if (!urlAuthentication) {
-                        setUrlAuthentication(true);
-                    } else {
-                        setErrors({
-                            template: tError('terraformTemplateUnauthorized')
-                        });
-                    }
-                } else {
-                    setErrors({ template: err.message });
-                }
-                clearTemplateModules();
-                clearResourceLocation();
-            })
+            .doGetTemplateModulesByUrl(templateUrl, username, password)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
             .finally(unsetTemplateModulesLoading);
     }
+
+    const onTerraformPackageChange = (file: File) => {
+        setTemplateModulesLoading();
+        new TerraformActions(toolbox)
+            .doGetTemplateModulesByFile(file)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
+            .finally(unsetTemplateModulesLoading);
+    };
 
     return (
         <Modal open onClose={onHide}>
@@ -479,10 +492,8 @@ export default function TerraformModal({
                                     placeholder={t(`template`)}
                                     onChangeUrl={setTemplateUrl}
                                     onBlurUrl={handleTemplateUrlBlur}
-                                    onChangeFile={() => {}}
+                                    onChangeFile={onTerraformPackageChange}
                                 />
-
-                                <Form.Input onChange={setTemplateUrl} onBlur={handleTemplateUrlBlur} />
                             </Form.Field>
                             <Form.Group widths="equal">
                                 <Form.Field>

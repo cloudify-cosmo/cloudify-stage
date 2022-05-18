@@ -8,7 +8,7 @@ const router = express.Router();
 const upload = multer({ limits: { fileSize: 50000 } });
 const logger = getLogger('File');
 
-function checkIfFileUploaded(req: Request, res: Response, next: NextFunction) {
+export function checkIfFileUploaded(req: Request, res: Response, next: NextFunction) {
     if (!req.file) {
         const errorMessage = 'No file uploaded.';
         logger.error(errorMessage);
