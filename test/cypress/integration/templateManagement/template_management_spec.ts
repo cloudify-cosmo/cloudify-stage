@@ -18,7 +18,6 @@ describe('Template management', () => {
         cy.mockLoginWithoutWaiting(nonAdminUser);
 
         cy.visit('/console/template_management');
-        cy.waitUntilLoaded();
         cy.get('div > h2').should('have.text', '404 Page Not Found');
     });
 
