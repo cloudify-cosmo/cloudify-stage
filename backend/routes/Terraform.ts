@@ -42,6 +42,11 @@ type ResourcesRequest = Request<
     }
 >;
 
+const throwExceptionIfModuleListEmpty = (modules: string[]) => {
+    if (modules.length === 0) throw new Error("Couldn't find a Terraform module in the provided package");
+    return modules;
+};
+
 const getBufferFromUrl = async (url: string, authHeader?: string) => {
     return axios(url, {
         responseType: 'arraybuffer',
@@ -78,10 +83,10 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
-const scanZipFile = async (content: Buffer, response: Response) =>
+const scanZipFile = async (content: Buffer): Promise<string[]> =>
     decompress(content)
-        .then((files: File[]) => {
-            const modules = _(files)
+        .then((files: File[]) =>
+            _(files)
                 .filter({ type: 'directory' })
                 .map('path')
                 .filter(directory =>
@@ -91,19 +96,12 @@ const scanZipFile = async (content: Buffer, response: Response) =>
                 )
                 .map(directory => trimEnd(directory, '/'))
                 .sort()
-                .value();
-
-            sendTerraformModules(modules, response);
-        })
+                .value()
+        )
         .catch((decompressErr: any) => {
             logger.error(`Error while decompressing zip file:`, decompressErr);
-            response.status(400).send({ message: 'The URL does not point to a valid ZIP file' });
+            throw new Error('The URL does not point to a valid ZIP file');
         });
-
-const sendTerraformModules = (modules: string[], response: Response) => {
-    if (modules.length) response.send(modules);
-    else response.status(400).send({ message: "Couldn't find a Terraform module in the provided package" });
-};
 
 const getUniqNotExistingTemporaryDirectory = (): string => {
     const repositoryPath = path.join(os.tmpdir(), uniqueDirectoryName.generate());
@@ -113,7 +111,7 @@ const getUniqNotExistingTemporaryDirectory = (): string => {
     return repositoryPath;
 };
 
-const scanGitFile = async (url: string, response: Response, authHeaderValue?: string) => {
+const scanGitFile = async (url: string, authHeaderValue?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
     const terraformModuleDirectories: string[] = [];
 
@@ -121,10 +119,7 @@ const scanGitFile = async (url: string, response: Response, authHeaderValue?: st
         await cloneGitRepo(repositoryPath, url, authHeaderValue);
         // @ts-ignore-next-line cloneGitRepo function ensures the error shape
     } catch (error: CloneGitRepoError) {
-        response.status(400).send({
-            message: error.message
-        });
-        return;
+        throw new Error(error.message);
     }
 
     directoryTree(
@@ -148,12 +143,26 @@ const scanGitFile = async (url: string, response: Response, authHeaderValue?: st
     );
 
     fs.rmdirSync(repositoryPath, { recursive: true });
-    sendTerraformModules(terraformModuleDirectories.sort(), response);
+
+    return throwExceptionIfModuleListEmpty(terraformModuleDirectories.sort());
+};
+
+const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
+    const isGitFile = templateUrl.endsWith('.git');
+    return throwExceptionIfModuleListEmpty(
+        isGitFile
+            ? await scanGitFile(templateUrl, authHeader)
+            : await scanZipFile(await getBufferFromUrl(templateUrl, authHeader))
+    );
 };
 
 router.post('/resources/file', upload.single('file'), checkIfFileUploaded, async (req, res) => {
     if (req.file && Buffer.isBuffer(req.file?.buffer)) {
-        await scanZipFile(req.file.buffer, res);
+        try {
+            res.send(await scanZipFile(req.file.buffer));
+        } catch (e: any) {
+            res.status(400).send({ message: e.message });
+        }
     } else {
         res.status(400).send({ message: 'The file you sent is not valid' });
     }
@@ -164,12 +173,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     const authHeader = req.get('Authorization');
 
     try {
-        const isGitFile = templateUrl.endsWith('.git');
-        if (isGitFile) {
-            await scanGitFile(templateUrl, res, authHeader);
-        } else {
-            await scanZipFile(await getBufferFromUrl(templateUrl, authHeader), res);
-        }
+        res.send(await getModuleListForUrl(templateUrl, authHeader));
     } catch (err: any) {
         logger.error(`Error while fetching file: ${err.message}`);
         if (err.response) {
@@ -179,7 +183,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
             });
         } else {
             res.status(400).send({
-                message: 'The URL is not accessible'
+                message: err.message
             });
         }
     }
