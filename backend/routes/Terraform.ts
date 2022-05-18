@@ -4,7 +4,7 @@ import decompress from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
-import type { Request, Response } from 'express';
+import type { Request } from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
