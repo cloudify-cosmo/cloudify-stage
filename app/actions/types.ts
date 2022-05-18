@@ -56,7 +56,7 @@ export const ERR_LOGIN = 'ERR_LOGIN';
 export const LOGOUT = 'LOGOUT';
 
 export const SET_USER_DATA = 'SET_USER_DATA';
-export const SET_LDAP_ENABLED = 'SET_LDAP_ENABLED';
+export const SET_IDENTITY_PROVIDERS = 'SET_IDENTITY_PROVIDERS';
 
 export const REQ_TENANTS = 'REQ_TENANTS';
 export const RES_TENANTS = 'RES_TENANTS';

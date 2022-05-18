@@ -1,12 +1,13 @@
 import Consts from 'app/utils/consts';
+import type { IdentityProvider } from 'app/reducers/managerReducer/authReducer';
 
 describe('User group management widget', () => {
     const groupName = 'user_groups_test';
     const ldapGroupColumnName = 'LDAP group';
     const widgetId = 'userGroups';
     const setLdapAvailability = (isEnabled: boolean) => {
-        const ldapResponse = isEnabled ? 'enabled' : 'disabled';
-        cy.intercept('GET', '/console/sp/ldap', ldapResponse);
+        const idpResponse: IdentityProvider = isEnabled ? 'ldap' : 'local';
+        cy.intercept('GET', '/console/sp/idp', idpResponse);
     };
     const mockPageAndLogin = () => {
         cy.usePageMock(widgetId).mockLogin();

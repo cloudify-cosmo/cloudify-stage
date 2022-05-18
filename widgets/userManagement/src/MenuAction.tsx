@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import UserPropType from './props/UserPropType';
 
-export default class MenuAction extends React.Component {
+class MenuAction extends React.Component {
     static CHANGE_PASSWORD_ACTION = 'password';
 
     static EDIT_TENANTS_ACTION = 'tenants';
@@ -29,16 +29,20 @@ export default class MenuAction extends React.Component {
 
     render() {
         const { PopupMenu, Menu } = Stage.Basic;
+        const { item, isLocalIdp } = this.props;
+        const canChangePassword = isLocalIdp || item.username === Stage.Common.Consts.adminUsername;
 
         return (
             <PopupMenu>
                 <Menu pointing vertical>
-                    <Menu.Item
-                        icon="lock"
-                        content="Change password"
-                        name={MenuAction.CHANGE_PASSWORD_ACTION}
-                        onClick={this.actionClick}
-                    />
+                    {canChangePassword && (
+                        <Menu.Item
+                            icon="lock"
+                            content="Change password"
+                            name={MenuAction.CHANGE_PASSWORD_ACTION}
+                            onClick={this.actionClick}
+                        />
+                    )}
                     <Menu.Item
                         icon="users"
                         content="Edit user's groups"
@@ -63,4 +67,15 @@ export default class MenuAction extends React.Component {
     }
 }
 
-MenuAction.propTypes = { item: UserPropType.isRequired, onSelectAction: PropTypes.func.isRequired };
+MenuAction.propTypes = {
+    item: UserPropType.isRequired,
+    onSelectAction: PropTypes.func.isRequired,
+    isLocalIdp: PropTypes.bool.isRequired
+};
+
+export default connectToStore(
+    state => ({
+        isLocalIdp: Stage.Utils.Idp.isLocal(state.manager)
+    }),
+    {}
+)(MenuAction);
