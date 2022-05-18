@@ -97,12 +97,12 @@ const commands = {
         return cy.waitUntilWidgetsDataLoaded();
     },
     waitUntilWidgetsDataLoaded: () => cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist'),
-    waitUntilLoaded: () =>
+    waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
             .get('#loader', { timeout: secondsToMs(25) })
-            .should('be.not.visible')
-            .waitUntilPageLoaded(),
+            .should('be.not.visible'),
+    waitUntilLoaded: () => cy.waitUntilAppLoaded().waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({

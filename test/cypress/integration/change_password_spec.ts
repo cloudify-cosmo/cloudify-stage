@@ -12,7 +12,7 @@ describe('Change Password modal', () => {
                 .addUser(username, password, true)
                 .addUserToTenant(username, Consts.DEFAULT_TENANT, 'manager')
                 .usePageMock()
-                .mockLogin({ username, password });
+                .mockLoginWithoutWaiting({ username, password });
             cy.contains(username).click({ force: true });
         });
 
@@ -74,17 +74,16 @@ describe('Change Password modal', () => {
             cy.contains('Logout').click({ force: true });
 
             cy.log('Login with new password');
-            cy.usePageMock().mockLogin({ username, password: 'new-pass' });
+            cy.usePageMock().mockLoginWithoutWaiting({ username, password: 'new-pass' }).waitUntilAppLoaded();
 
             cy.get('.error.message').should('not.exist');
-            cy.waitUntilLoaded();
         });
     });
 
     it('should not be available when LDAP is enabled', () => {
         cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
 
-        cy.usePageMock().mockLogin();
+        cy.usePageMock().mockLoginWithoutWaiting();
 
         cy.contains('admin').click({ force: true });
         cy.contains('Change Password').should('not.exist');
