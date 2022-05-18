@@ -94,8 +94,9 @@ const commands = {
         cy.log('Wait for widgets loaders to disappear');
         cy.get('.widget').should('exist');
         cy.contains('Loading...').should('not.exist');
-        return cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
+        return cy.waitUntilWidgetsDataLoaded();
     },
+    waitUntilWidgetsDataLoaded: () => cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist'),
     waitUntilLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
@@ -474,7 +475,7 @@ function setContext(field: string, value: string) {
         .click()
         .within(() => {
             cy.get('input').clear({ force: true }).type(`${value}`, { force: true });
-            cy.waitUntilPageLoaded();
+            cy.waitUntilWidgetsDataLoaded();
             cy.get(`[option-value="${value}"]`).click();
             cy.get('input').type('{esc}', { force: true });
         });
