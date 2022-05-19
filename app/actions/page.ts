@@ -1,4 +1,4 @@
-import _, { find, map } from 'lodash';
+import { compact, each, find, map } from 'lodash';
 import type { AnyAction } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
@@ -88,12 +88,12 @@ export function forAllWidgets(
         tabIndex: number | null
     ) => (SimpleWidgetObj | null | undefined)[]
 ) {
-    _.each(page.layout, (layoutSection, layoutSectionIdx) => {
+    each(page.layout, (layoutSection, layoutSectionIdx) => {
         if (isWidgetsSection(layoutSection))
-            layoutSection.content = _.compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
+            layoutSection.content = compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
         else
-            _.each(layoutSection.content, (tab, tabIdx) => {
-                tab.widgets = _.compact(widgetListModifier(tab.widgets, layoutSectionIdx, tabIdx));
+            each(layoutSection.content, (tab, tabIdx) => {
+                tab.widgets = compact(widgetListModifier(tab.widgets, layoutSectionIdx, tabIdx));
             });
     });
 }
@@ -107,7 +107,7 @@ export function forEachWidget(
     ) => SimpleWidgetObj | null | undefined
 ) {
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
-        _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
+        map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
     );
 }
 
@@ -115,7 +115,7 @@ export function getWidgetDefinitionById(
     definitionId: string,
     definitions: ReduxState['widgetDefinitions']
 ): WidgetDefinition | undefined {
-    return _.find(definitions, { id: definitionId });
+    return find(definitions, { id: definitionId });
 }
 
 export function changePageDescription(pageId: string, newDescription: string) {
