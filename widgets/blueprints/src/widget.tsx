@@ -1,6 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 import { join } from 'lodash';
-import BlueprintsLabelFilter from './BlueprintsLabelFilter';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
@@ -68,7 +67,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: BlueprintsLabelFilter
+            component: Stage.Common.Blueprints.LabelFilter
         },
         Stage.Common.BlueprintMarketplace.tabsConfig,
         {

@@ -1394,6 +1394,9 @@
                 "icon": {
                     "name": "Icon",
                     "description": "Icon displayed on the button"
+                },
+                "labelFilterRules": {
+                    "name": "Blueprint label filter rules"
                 }
             }
         },
