@@ -4,7 +4,7 @@ import decompress from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -199,13 +199,23 @@ const renderBlueprint = (
     return result;
 };
 
+export function fileDebase64(req: Request, res: Response, next: NextFunction) {
+    if (!req.body?.file) {
+        const errorMessage = 'No file uploaded.';
+        logger.error(errorMessage);
+
+        res.status(400).send({ message: errorMessage });
+    } else {
+        req.body.file = Buffer.from(atob(req.body.file), 'utf-8');
+        next();
+    }
+}
+
 /**
  * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
  * @returns string[] with terraform module list inside uploaded zip file
  */
-router.post('/resources/file', async (req, res) => {
-    logger.error(JSON.parse(req.body));
-
+router.post('/resources/file', upload.single('file'), checkIfFileUploaded, async (req, res) => {
     if (req.file && Buffer.isBuffer(req.file?.buffer)) {
         try {
             res.send(await scanZipFile(req.file.buffer));
@@ -251,11 +261,11 @@ router.post('/blueprint', (req, res) => {
     res.send(result);
 });
 
-router.post('/blueprint/archive', upload.single('file'), checkIfFileUploaded, async (req, res) => {
+router.post('/blueprint/archive', fileDebase64, async (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
-    if (!(req.file && Buffer.isBuffer(req.file?.buffer))) {
+    if (!(req.file && Buffer.isBuffer(req.file))) {
         return res.status(400).send({ message: 'No file uploaded.' });
     }
 
@@ -270,12 +280,12 @@ router.post('/blueprint/archive', upload.single('file'), checkIfFileUploaded, as
     zipBlueprint?.file('blueprint.yaml', result);
 
     const zipTf = zipBlueprint?.folder('tf_module');
-    zipTf?.file('terraform.zip', req.file.buffer);
+    zipTf?.file('terraform.zip', req.file);
 
     res.setHeader('content-type', 'application/zip');
     res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
     const arrayBuffer = await zip.generateAsync({ type: 'arraybuffer' });
-    res.send(Buffer.from(arrayBuffer));
+    return res.send(Buffer.from(arrayBuffer));
 });
 
 export default router;
