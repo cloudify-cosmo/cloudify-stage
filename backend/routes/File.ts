@@ -12,6 +12,8 @@ export function checkIfFileUploaded(req: Request, res: Response, next: NextFunct
     if (!req.file) {
         const errorMessage = 'No file uploaded.';
         logger.error(errorMessage);
+        logger.error(JSON.parse(req.body));
+
         res.status(400).send({ message: errorMessage });
     } else {
         next();

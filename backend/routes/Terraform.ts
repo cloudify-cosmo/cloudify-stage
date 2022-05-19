@@ -4,7 +4,7 @@ import decompress from 'decompress';
 import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -15,8 +15,9 @@ import directoryTree from 'directory-tree';
 import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
 import multer from 'multer';
+import JSZip from 'jszip';
 import { getLogger } from '../handler/LoggerHandler';
-import type { RequestBody } from './Terraform.types';
+import type { RequestArchiveBody, RequestBody } from './Terraform.types';
 import { checkIfFileUploaded } from './File';
 
 const upload = multer({ limits: { fileSize: 50000 } });
@@ -156,7 +157,55 @@ const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => 
     );
 };
 
-router.post('/resources/file', upload.single('file'), checkIfFileUploaded, async (req, res) => {
+const renderBlueprint = (
+    {
+        blueprintName,
+        blueprintDescription,
+        terraformVersion,
+        terraformTemplate = '',
+        urlAuthentication,
+        resourceLocation,
+        variables,
+        environmentVariables,
+        outputs
+    }: RequestBody,
+    res: Response
+) => {
+    let result = '';
+
+    try {
+        result = ejs.render(
+            template,
+            {
+                blueprintName,
+                blueprintDescription,
+                terraformVersion,
+                terraformTemplate,
+                urlAuthentication,
+                resourceLocation,
+                variables,
+                environmentVariables,
+                outputs
+            },
+            {
+                views: [templatePath]
+            }
+        );
+    } catch (err) {
+        logger.error(err);
+        res.status(500).send({ message: `Error when generating blueprint` });
+    }
+
+    return result;
+};
+
+/**
+ * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
+ * @returns string[] with terraform module list inside uploaded zip file
+ */
+router.post('/resources/file', async (req, res) => {
+    logger.error(JSON.parse(req.body));
+
     if (req.file && Buffer.isBuffer(req.file?.buffer)) {
         try {
             res.send(await scanZipFile(req.file.buffer));
@@ -190,48 +239,43 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 });
 
 router.post('/blueprint', (req, res) => {
-    const {
-        blueprintName,
-        blueprintDescription,
-        terraformVersion,
-        terraformTemplate,
-        resourceLocation,
-        urlAuthentication,
-        variables = [],
-        environmentVariables = [],
-        outputs = []
-    }: RequestBody = req.body;
+    const { terraformVersion, terraformTemplate, resourceLocation }: RequestBody = req.body;
 
     logger.debug(
         `Generating Terraform blueprint using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
     );
 
-    let result;
-    try {
-        result = ejs.render(
-            template,
-            {
-                blueprintName,
-                blueprintDescription,
-                terraformVersion,
-                terraformTemplate,
-                urlAuthentication,
-                resourceLocation,
-                variables,
-                environmentVariables,
-                outputs
-            },
-            {
-                views: [templatePath]
-            }
-        );
-    } catch (err) {
-        logger.error(err);
-        res.status(500).send({ message: `Error when generating blueprint` });
-    }
+    const result = renderBlueprint(req.body, res);
 
     res.setHeader('content-type', 'text/x-yaml');
     res.send(result);
+});
+
+router.post('/blueprint/archive', upload.single('file'), checkIfFileUploaded, async (req, res) => {
+    const terraformTemplate = path.join('tf_module', 'terraform.zip');
+    const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
+
+    if (!(req.file && Buffer.isBuffer(req.file?.buffer))) {
+        return res.status(400).send({ message: 'No file uploaded.' });
+    }
+
+    logger.debug(
+        `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
+    );
+
+    const result = renderBlueprint(req.body, res);
+    const zip = new JSZip();
+    const zipBlueprint = zip.folder('blueprint');
+
+    zipBlueprint?.file('blueprint.yaml', result);
+
+    const zipTf = zipBlueprint?.folder('tf_module');
+    zipTf?.file('terraform.zip', req.file.buffer);
+
+    res.setHeader('content-type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
+    const arrayBuffer = await zip.generateAsync({ type: 'arraybuffer' });
+    res.send(Buffer.from(arrayBuffer));
 });
 
 export default router;

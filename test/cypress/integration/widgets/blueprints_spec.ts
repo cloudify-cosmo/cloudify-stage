@@ -457,10 +457,7 @@ describe('Blueprints widget', () => {
         }
 
         function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.typeToFieldInput(
-                'Terraform module source - URL to a zip archive or a Git repository',
-                templateUrl
-            ).blur();
+            cy.typeToFieldInput('Terraform module source', templateUrl).blur();
             cy.setSingleDropdownValue('Terraform module folder', modulePath);
         }
 
@@ -675,10 +672,7 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                cy.typeToFieldInput(
-                    'Terraform module source - URL to a zip archive or a Git repository',
-                    singleModuleTerraformTemplateUrl
-                ).blur();
+                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
                 cy.typeToFieldInput('Username', 'username');
                 cy.typeToFieldInput('Password', 'password').blur();
                 cy.contains('The URL requires authentication');
@@ -693,7 +687,7 @@ describe('Blueprints widget', () => {
             };
 
             const typeTerraformModuleUrl = (url: string) => {
-                cy.typeToFieldInput('Terraform module source - URL to a zip archive or a Git repository', url).blur();
+                cy.typeToFieldInput('Terraform module source', url).blur();
             };
 
             beforeEach(() => {
@@ -755,10 +749,7 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Username', username);
                 cy.typeToFieldInput('Password', password);
 
-                cy.typeToFieldInput(
-                    'Terraform module source - URL to a zip archive or a Git repository',
-                    singleModuleTerraformTemplateUrl
-                ).blur();
+                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
 
                 cy.wait('@resources');
 
