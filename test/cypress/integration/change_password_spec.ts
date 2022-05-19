@@ -28,7 +28,7 @@ describe('Change Password modal', () => {
         });
 
         it('should be available when user is default admin', () => {
-            cy.usePageMock().mockLogin();
+            cy.usePageMock().mockLoginWithoutWaiting();
 
             openUserMenu('admin');
 
@@ -38,7 +38,7 @@ describe('Change Password modal', () => {
 
     describe('when external IDP is not enabled should be available and', () => {
         before(() => {
-            cy.usePageMock().mockLogin({ username, password });
+            cy.usePageMock().mockLoginWithoutWaiting({ username, password });
             openUserMenu(username);
         });
 
