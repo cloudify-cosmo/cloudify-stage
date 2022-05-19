@@ -10,6 +10,7 @@ import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
 
 import ExecutionUtils from './shared/ExecutionUtils';
+import IdpUtils from './shared/IdpUtils';
 import JsonUtils from './shared/JsonUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
@@ -20,6 +21,8 @@ import { isEmptyWidgetData } from './StageAPI';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;
+
+    static Idp = IdpUtils;
 
     static Json = JsonUtils;
 
