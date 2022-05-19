@@ -7,7 +7,7 @@ import { loadWidgetDefinitions } from './widgets';
 
 import { getClientConfig } from './clientConfig';
 import { loadOrCreateUserAppData } from './userApp';
-import { getLdap } from './managers';
+import { getIdentityProviders } from './managers';
 import { getClusterStatus } from './clusterStatus';
 
 export function intialPageLoad() {
@@ -19,7 +19,7 @@ export function intialPageLoad() {
             dispatch(loadWidgetDefinitions()),
             dispatch(getClientConfig()),
             dispatch(getClusterStatus()),
-            dispatch(getLdap())
+            dispatch(getIdentityProviders())
         ])
             .then(() => dispatch(loadOrCreateUserAppData()))
             .then(() => {

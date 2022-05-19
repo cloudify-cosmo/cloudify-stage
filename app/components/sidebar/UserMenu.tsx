@@ -26,7 +26,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
     const dispatch = useDispatch();
 
     const username = useSelector((state: ReduxState) => state.manager.auth.username);
-    const { isUserAuthorized } = StageUtils;
+    const { isUserAuthorized, Idp } = StageUtils;
     const canEnterEditMode = useSelector(
         (state: ReduxState) =>
             state.config.mode !== Consts.MODE_CUSTOMER &&
@@ -43,7 +43,10 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
             isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, state.manager) &&
             state.manager.license.isRequired
     );
-    const canChangePassword = useSelector((state: ReduxState) => !state.manager.isLdapEnabled);
+    const canChangePassword = useSelector(
+        (state: ReduxState) =>
+            Idp.isLocal(state.manager) || state.manager.auth.username === Consts.DEFAULT_ADMIN_USERNAME
+    );
     const tenantNames = useSelector((state: ReduxState) =>
         state.manager.tenants.items!.map((tenant: { name: string }) => tenant.name)
     );

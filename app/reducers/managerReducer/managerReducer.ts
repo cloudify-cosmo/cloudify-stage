@@ -14,7 +14,6 @@ import type { AuthData } from './authReducer';
 export interface ManagerData {
     auth: AuthData;
     clusterStatus: ClusterStatusData;
-    isLdapEnabled: boolean;
     lastUpdated: number | null;
     license: LicenseData;
     maintenance: string;
@@ -35,8 +34,7 @@ const manager: Reducer<ManagerData> = (state = emptyState, action) => {
                 auth: auth(state.auth, action),
                 lastUpdated: action.receivedAt
             };
-        case types.SET_LDAP_ENABLED:
-            return { ...state, isLdapEnabled: action.isLdapEnabled };
+        case types.SET_IDENTITY_PROVIDERS:
         case types.SET_USER_DATA:
             return { ...state, auth: auth(state.auth, action) };
         case types.REQ_CLUSTER_STATUS:

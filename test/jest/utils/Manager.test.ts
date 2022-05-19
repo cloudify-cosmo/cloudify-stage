@@ -11,6 +11,7 @@ describe('(Utils) Manager', () => {
         manager: {
             ...emptyState,
             auth: {
+                ...emptyState.auth,
                 username: 'admin',
                 role: 'sys_admin',
                 groupSystemRoles: {},

@@ -1,19 +1,45 @@
 import Consts from 'app/utils/consts';
 
 describe('Change Password modal', () => {
-    before(cy.activate);
+    const username = 'test_user';
+    const password = 'test_user';
 
-    describe('should be available when LDAP is not enabled and', () => {
-        const username = 'test_user';
-        const password = 'test_user';
+    before(() =>
+        cy
+            .activate()
+            .deleteAllUsersAndTenants()
+            .addUser(username, password, true)
+            .addUserToTenant(username, Consts.DEFAULT_TENANT, 'manager')
+    );
 
+    function openUserMenu(user: string) {
+        cy.contains(user).click({ force: true });
+    }
+
+    describe('when external IDP is enabled', () => {
+        beforeEach(() => cy.interceptSp('GET', '/idp', 'okta'));
+
+        it('should not be available when user is not default admin', () => {
+            cy.usePageMock().mockLogin({ username, password });
+
+            openUserMenu(username);
+
+            cy.contains('Change Password').should('not.exist');
+        });
+
+        it('should be available when user is default admin', () => {
+            cy.usePageMock().mockLogin();
+
+            openUserMenu('admin');
+
+            cy.contains('Change Password');
+        });
+    });
+
+    describe('when external IDP is not enabled should be available and', () => {
         before(() => {
-            cy.deleteAllUsersAndTenants()
-                .addUser(username, password, true)
-                .addUserToTenant(username, Consts.DEFAULT_TENANT, 'manager')
-                .usePageMock()
-                .mockLogin({ username, password });
-            cy.contains(username).click({ force: true });
+            cy.usePageMock().mockLogin({ username, password });
+            openUserMenu(username);
         });
 
         const openChangePasswordModal = () => {
@@ -79,14 +105,5 @@ describe('Change Password modal', () => {
             cy.get('.error.message').should('not.exist');
             cy.waitUntilLoaded();
         });
-    });
-
-    it('should not be available when LDAP is enabled', () => {
-        cy.interceptSp('GET', `/ldap`, 'enabled').as('ldap');
-
-        cy.usePageMock().mockLogin();
-
-        cy.contains('admin').click({ force: true });
-        cy.contains('Change Password').should('not.exist');
     });
 });

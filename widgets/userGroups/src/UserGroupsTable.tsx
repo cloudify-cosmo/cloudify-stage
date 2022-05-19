@@ -322,7 +322,7 @@ UserGroupsTable.propTypes = {
 
 export default connectToStore(
     state => ({
-        isLdapEnabled: _.get(state, 'manager.isLdapEnabled', false)
+        isLdapEnabled: Stage.Utils.Idp.isLdap(state.manager)
     }),
     {}
 )(UserGroupsTable);

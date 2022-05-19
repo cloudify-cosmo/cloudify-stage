@@ -108,17 +108,19 @@ export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
         });
 }
 
-function responseLdap(isLdapEnabled) {
+function responseIdentityProviders(identityProviders: string[]) {
     return {
-        type: types.SET_LDAP_ENABLED,
-        isLdapEnabled
+        type: types.SET_IDENTITY_PROVIDERS,
+        identityProviders
     };
 }
 
-export function getLdap() {
+export function getIdentityProviders() {
     return (dispatch, getState) => {
         const manager = new Manager(getState().manager);
-        manager.doGet('/ldap').then(data => dispatch(responseLdap(data === 'enabled')));
+        manager
+            .doGet('/idp')
+            .then(identityProviders => dispatch(responseIdentityProviders(identityProviders.split(','))));
     };
 }
 
