@@ -200,14 +200,14 @@ const renderBlueprint = (
 };
 
 export function fileDebase64(req: Request, res: Response, next: NextFunction) {
-    if (!req.body?.file) {
+    if (req.body.file) {
+        req.body.file = Buffer.from(req.body.file, 'base64');
+        next();
+    } else {
         const errorMessage = 'No file uploaded.';
         logger.error(errorMessage);
 
         res.status(400).send({ message: errorMessage });
-    } else {
-        req.body.file = Buffer.from(atob(req.body.file), 'utf-8');
-        next();
     }
 }
 
@@ -265,7 +265,7 @@ router.post('/blueprint/archive', fileDebase64, async (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
-    if (!(req.file && Buffer.isBuffer(req.file))) {
+    if (!(req.body.file && Buffer.isBuffer(req.body.file))) {
         return res.status(400).send({ message: 'No file uploaded.' });
     }
 
@@ -280,7 +280,7 @@ router.post('/blueprint/archive', fileDebase64, async (req, res) => {
     zipBlueprint?.file('blueprint.yaml', result);
 
     const zipTf = zipBlueprint?.folder('tf_module');
-    zipTf?.file('terraform.zip', req.file);
+    zipTf?.file('terraform.zip', req.body.file);
 
     res.setHeader('content-type', 'application/zip');
     res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');

@@ -183,7 +183,7 @@ export default function TerraformModal({
 
     const [templateUrl, setTemplateUrl] = useInput('');
     const [terraformPackage, setTerraformPackage] = useState<File>();
-
+    const [terraformPackageBase64, setTerraformPackageBase64] = useState<string>()
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
     const [username, setUsername, clearUsername] = useInput('');
@@ -368,7 +368,7 @@ export default function TerraformModal({
                 blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprintArchive({
                     blueprintName,
                     blueprintDescription,
-                    file: terraformPackage,
+                    file: terraformPackageBase64?.replace('data:application/x-zip-compressed;base64,',''),
                     urlAuthentication,
                     terraformVersion: version,
                     resourceLocation: getResourceLocation(templateModules, resourceLocation),
@@ -463,6 +463,12 @@ export default function TerraformModal({
     const onTerraformPackageChange = (file: File) => {
         setTemplateModulesLoading();
         setTerraformPackage(file);
+        var reader = new FileReader();
+        reader.readAsDataURL(file); 
+        reader.onloadend = function() {
+            setTerraformPackageBase64(reader.result?.toString());                
+            console.log("terraformPackage64", reader.result);
+        }
         new TerraformActions(toolbox)
             .doGetTemplateModulesByFile(file)
             .then(reloadTemplateModules)

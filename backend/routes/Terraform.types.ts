@@ -24,5 +24,5 @@ export interface RequestBody {
 }
 
 export interface RequestArchiveBody extends Omit<RequestBody, 'terraformTemplate'> {
-    file: File;
+    file?: string;
 }
