@@ -13,7 +13,13 @@
           "height": 3,
           "definition": "deploymentButton",
           "configuration": {
-            "label": "Create Service"
+            "label": "Create Service",
+            "blueprintFilterRules": [{
+              "key": "csys-obj-type",
+              "values": ["environment"],
+              "operator": "is_not",
+              "type": "label"
+            }]
           }
         },
         {

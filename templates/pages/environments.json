@@ -13,7 +13,13 @@
           "height": 3,
           "definition": "deploymentButton",
           "configuration": {
-            "label": "Create Environment"
+            "label": "Create Environment",
+            "blueprintFilterRules": [{
+              "key": "csys-obj-type",
+              "values": ["environment"],
+              "operator": "any_of",
+              "type": "label"
+            }]
           }
         },
         {

@@ -26,6 +26,7 @@ import getInputsMap from '../inputs/utils/getInputsMap';
 import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
+import type { FilterRule } from '../filters/types';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -132,6 +133,11 @@ type GenericDeployModalProps = {
      * Deployment Name input help description
      */
     deploymentNameHelp?: string;
+
+    /**
+     * Filter rules for blueprints listing
+     */
+    blueprintFilterRules?: FilterRule[];
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -146,7 +152,8 @@ const defaultProps: Partial<GenericDeployModalProps> = {
     deployValidationMessage: '',
     deployAndInstallValidationMessage: '',
     deploymentNameLabel: t('inputs.deploymentName.label'),
-    deploymentNameHelp: t('inputs.deploymentName.help')
+    deploymentNameHelp: t('inputs.deploymentName.help'),
+    blueprintFilterRules: []
 };
 
 type GenericDeployModalState = {
@@ -594,7 +601,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             showDeployButton,
             showSitesInput,
             deploymentNameLabel,
-            deploymentNameHelp
+            deploymentNameHelp,
+            blueprintFilterRules
         } = this.props;
         const {
             activeSection,
@@ -662,9 +670,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 <DynamicDropdown
                                     value={blueprint.id}
                                     name="blueprintName"
-                                    fetchUrl="/blueprints?_include=id&state=uploaded"
+                                    fetchUrl="/searches/blueprints?_include=id&state=uploaded"
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
+                                    filterRules={blueprintFilterRules}
                                     prefetch
                                 />
                             </Form.Field>
