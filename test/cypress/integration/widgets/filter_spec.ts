@@ -104,7 +104,7 @@ describe('Filter', () => {
             cy.contains('Runtime only evaluation').click();
             cy.selectAndClickDeploy();
 
-            cy.get('.modal').should('not.exist');
+            cy.contains('.breadcrumb', deploymentName);
             cy.refreshPage();
 
             cy.get('.blueprintsWidget').within(() => cy.getSearchInput().scrollIntoView().clear().type(blueprintName));

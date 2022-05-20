@@ -18,6 +18,7 @@ import type { DropdownItemProps, DropdownOnSearchChangeData, DropdownProps } fro
 import useEventListener from '../hooks/useEventListener';
 import useUpdateEffect from '../hooks/useUpdateEffect';
 import type { DropdownValue } from '../types';
+import type { FilterRule } from '../filters/types';
 
 let instanceCount = 0;
 
@@ -78,6 +79,7 @@ export interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     multiple?: boolean;
     placeholder?: string;
     fetchUrl: string;
+    filterRules?: FilterRule[];
     fetchAll?: boolean;
     searchParams?: string[];
     value: DropdownValue;
@@ -118,6 +120,7 @@ export default function DynamicDropdown({
     value,
     valueProp = 'id',
     constraints,
+    filterRules,
     ...rest
 }: DynamicDropdownProps) {
     const { useState, useEffect } = React;
@@ -200,6 +203,11 @@ export default function DynamicDropdown({
                 fetchPromise = toolbox.getManager().doPost(fetchUrl, {
                     params,
                     body: { constraints: constraintsObject }
+                });
+            } else if (!isUndefined(filterRules)) {
+                fetchPromise = toolbox.getManager().doPost(fetchUrl, {
+                    params,
+                    body: { filter_rules: filterRules }
                 });
             } else {
                 fetchPromise = toolbox.getManager().doGet(fetchUrl, {

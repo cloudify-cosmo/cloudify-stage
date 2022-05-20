@@ -11,7 +11,7 @@ export default class ScriptLoader {
         this.path = StageUtils.Url.url(scriptPath);
     }
 
-    load(id, rejectOnError) {
+    load(id?, rejectOnError?) {
         log.log(`Loading javascript from ${this.path}...`);
 
         return new Promise((resolve, reject) => {

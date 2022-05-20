@@ -1,16 +1,20 @@
 // @ts-nocheck File not migrated fully to TS
 
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import colors from 'cloudify-ui-common/styles/_colors.scss';
+import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
-import styled from 'styled-components';
+import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without, wrap } from 'lodash';
+import PropTypes from 'prop-types';
 
 import React, { useEffect, useState } from 'react';
-import colors from 'cloudify-ui-common/styles/_colors.scss';
-import { useBoolean, useResettableState } from '../utils/hooks';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+import { updateWidgetDefinition } from '../actions/widgets';
 import GenericConfig from '../utils/GenericConfig';
+import { useBoolean, useResettableState } from '../utils/hooks';
 import LoaderUtils from '../utils/LoaderUtils';
 import StageUtils from '../utils/stageUtils';
+import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 import {
     Button,
     Checkbox,
@@ -28,8 +32,8 @@ import {
     Modal,
     Segment
 } from './basic/index';
-import InstallWidgetModal from './InstallWidgetModal';
 import EditModeButton from './EditModeButton';
+import InstallWidgetModal from './InstallWidgetModal';
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;
@@ -95,6 +99,7 @@ let nameIndex = 0;
 function generateCategories(widgets) {
     const categories = widgets.reduce((curr, next) => {
         (next.categories || [GenericConfig.CATEGORY.OTHERS]).forEach(category => {
+            if (!next.loaded) return;
             const idx = curr.findIndex(current => current.name === category);
             if (idx === -1) {
                 curr.push({ name: category, count: 1 });
@@ -105,7 +110,7 @@ function generateCategories(widgets) {
         return curr;
     }, []);
 
-    return _.sortBy(categories, 'name');
+    return sortBy(categories, 'name');
 }
 
 function AddWidgetModal({
@@ -130,6 +135,7 @@ function AddWidgetModal({
     const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState([]);
     const [open, setOpen, unsetOpen] = useBoolean();
     const [error, setError] = useState();
+    const dispatch = useDispatch();
 
     function resetInternalState() {
         setFilteredWidgetDefinitions(widgetDefinitions);
@@ -144,6 +150,18 @@ function AddWidgetModal({
     }
 
     useEffect(resetInternalState, [JSON.stringify(widgetDefinitions)]);
+
+    useEffect(
+        () =>
+            widgetDefinitions.forEach(widgetDefinition => {
+                if (!widgetDefinition.loaded) {
+                    WidgetDefinitionsLoader.loadWidget(widgetDefinition).then(loadedWidgetDefinition =>
+                        dispatch(updateWidgetDefinition(widgetDefinition.id, loadedWidgetDefinition))
+                    );
+                }
+            }),
+        []
+    );
 
     function openModal() {
         resetInternalState();
@@ -167,8 +185,8 @@ function AddWidgetModal({
     }
 
     function addWidgets() {
-        _.forEach(widgetsToAdd, widgetId => {
-            const widget = _.find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
+        forEach(widgetsToAdd, widgetId => {
+            const widget = find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
                 onWidgetAdded(
                     widget.name ||
@@ -184,7 +202,7 @@ function AddWidgetModal({
 
     function toggleWidgetInstall(widgetId) {
         setWidgetsToAdd(
-            _.includes(widgetsToAdd, widgetId) ? _.without(widgetsToAdd, widgetId) : [...widgetsToAdd, widgetId]
+            includes(widgetsToAdd, widgetId) ? without(widgetsToAdd, widgetId) : [...widgetsToAdd, widgetId]
         );
     }
 
@@ -201,7 +219,7 @@ function AddWidgetModal({
     }
 
     function getWidgetsToAddWithout(widgetId) {
-        return _.without(widgetsToAdd, widgetId);
+        return without(widgetsToAdd, widgetId);
     }
 
     function uninstallWidget() {
@@ -287,7 +305,7 @@ function AddWidgetModal({
         />
     );
 
-    const confirmContent = !_.isEmpty(usedByList) ? (
+    const confirmContent = !isEmpty(usedByList) ? (
         <Segment basic>
             <h5>{i18n.t('editMode.removeWidget.usedBy.header', 'Widget is currently used by:')}</h5>
 
@@ -325,7 +343,7 @@ function AddWidgetModal({
                         active={selectedCategory === category.name}
                         onClick={filterByCategory}
                     >
-                        {i18n.t(`editMode.addWidget.category.${_.camelCase(category.name)}`)}
+                        {i18n.t(`editMode.addWidget.category.${camelCase(category.name)}`)}
                         <Label color={category.count ? 'green' : 'yellow'}>{category.count}</Label>
                     </Menu.Item>
                 );
@@ -365,6 +383,7 @@ function AddWidgetModal({
                         <Grid.Column width={12}>
                             <WidgetListWrapper>
                                 <WidgetList divided>
+                                    {find(widgetDefinitions, { loaded: false }) && <LoadingOverlay />}
                                     {filteredWidgetDefinitions.map(
                                         widget => (
                                             <StyledItem
@@ -395,7 +414,7 @@ function AddWidgetModal({
                                                             // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                                                             <div onClick={e => e.stopPropagation()}>
                                                                 <InstallWidgetModal
-                                                                    onWidgetInstalled={_.wrap(widget, updateWidget)}
+                                                                    onWidgetInstalled={wrap(widget, updateWidget)}
                                                                     trigger={updateWidgetBtn}
                                                                     buttonLabel={i18n.t(
                                                                         'editMode.addWidget.updateModal.button',
@@ -429,7 +448,7 @@ function AddWidgetModal({
                                         this
                                     )}
 
-                                    {_.isEmpty(filteredWidgetDefinitions) && (
+                                    {isEmpty(filteredWidgetDefinitions) && (
                                         <Item
                                             className="alignCenter"
                                             content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
@@ -481,7 +500,7 @@ function AddWidgetModal({
                 header={i18n.t(
                     'editMode.removeWidget.confirm',
                     `Are you sure to remove widget {{name}}`,
-                    _.pick(widgetToRemove, 'name')
+                    pick(widgetToRemove, 'name')
                 )}
                 content={confirmContent}
                 className="removeWidgetConfirm"
@@ -520,5 +539,5 @@ AddWidgetModal.defaultProps = {
 
 // NOTE: AddWidgetModal is not exported directly from this file and cannot be used as a type in the emitted declarations
 /** @type {import('react').ComponentType<import('prop-types').InferProps<typeof AddWidgetModal['propTypes']>>} */
-const MemoizedAddWidgetModal = React.memo(AddWidgetModal, _.isEqual);
+const MemoizedAddWidgetModal = React.memo(AddWidgetModal, isEqual);
 export default MemoizedAddWidgetModal;

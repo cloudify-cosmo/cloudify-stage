@@ -48,41 +48,41 @@ describe('(Utils) widgetDefinitionsLoader', () => {
 
     afterEach(fetchMock.restore);
 
-    describe('init', () => {
-        describe('when currentScript id is set', () => {
-            it('should execute the init function for widget', async () => {
-                const widgetDefinition: InitialWidgetDefinition<unknown, unknown, unknown> = {
-                    ...initialWidgetDefinition,
-                    init: jest.fn()
-                };
-                loadMockWidgetDefinition(widgetDefinition, widgetDefinition.id);
+    it('should execute `init` function when loading a widget', async () => {
+        const widgetDefinition: InitialWidgetDefinition<unknown, unknown, unknown> = {
+            ...initialWidgetDefinition,
+            init: jest.fn()
+        };
+        loadMockWidgetDefinition(widgetDefinition, widgetDefinition.id);
 
-                await WidgetDefinitionsLoader.load({});
+        await WidgetDefinitionsLoader.loadWidget({ id: widgetDefinition.id, isCustom: false });
 
-                expect(widgetDefinition.init).toHaveBeenCalledTimes(1);
-            });
+        expect(widgetDefinition.init).toHaveBeenCalledTimes(1);
+    });
 
-            it('should return the loaded widgets', async () => {
-                loadMockWidgetDefinition(initialWidgetDefinition, initialWidgetDefinition.id);
+    it('should load widgets list', async () => {
+        loadMockWidgetDefinition(initialWidgetDefinition, initialWidgetDefinition.id);
 
-                const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
+        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
 
-                expect(loadedWidgetDefinitions).toHaveLength(1);
-                expect(loadedWidgetDefinitions[0]).toEqual(expect.objectContaining(initialWidgetDefinition));
-            });
-
-            it('should define the widget with ID = widget directory name when it does not match the one in widget defintion', async () => {
-                const widgetDefinition = {
-                    ...initialWidgetDefinition,
-                    id: 'arbitrary widget ID that does not match the widget directory name'
-                };
-                loadMockWidgetDefinition(widgetDefinition, initialWidgetDefinition.id);
-
-                const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
-
-                expect(loadedWidgetDefinitions).toHaveLength(1);
-                expect(loadedWidgetDefinitions[0].id).not.toBe(widgetDefinition.id);
-            });
+        expect(loadedWidgetDefinitions).toHaveLength(1);
+        expect(loadedWidgetDefinitions[0]).toEqual({
+            id: initialWidgetDefinition.id,
+            isCustom: false,
+            loaded: false
         });
+    });
+
+    it('should set widget ID to widget directory name', async () => {
+        const widgetDefinition = {
+            ...initialWidgetDefinition,
+            id: 'arbitrary widget ID that does not match the widget directory name'
+        };
+        loadMockWidgetDefinition(widgetDefinition, initialWidgetDefinition.id);
+
+        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
+
+        expect(loadedWidgetDefinitions).toHaveLength(1);
+        expect(loadedWidgetDefinitions[0].id).not.toBe(widgetDefinition.id);
     });
 });
