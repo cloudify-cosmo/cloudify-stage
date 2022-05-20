@@ -6,7 +6,6 @@ import type { CookieOptions, Request } from 'express';
 import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, TOKEN_COOKIE_NAME } from '../consts';
-import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
 import { getTokenFromCookies } from '../utils';
 import type { AuthUserResponse } from './Auth.types';
@@ -61,7 +60,6 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
 
 router.get('/manager', authenticateWithCookie, (req, res) => {
     const token = getTokenFromCookies(req);
-    const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
             AuthHandler.isProductLicensed(version)
