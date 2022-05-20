@@ -22,6 +22,7 @@ const Routes: FunctionComponent = () => {
         <ThemeProvider theme={theme}>
             <Switch>
                 <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
+                {isSamlEnabled && <Route exact path={Consts.PAGE_PATH.SAML_LOGIN} component={SamlLogin} />}
                 <Route
                     exact
                     path={Consts.PAGE_PATH.LOGOUT}
@@ -39,7 +40,6 @@ const Routes: FunctionComponent = () => {
                 <Route
                     render={() => {
                         if (isLoggedIn) return <AuthRoutes />;
-                        if (isSamlEnabled) return <SamlLogin />;
                         return <Redirect to={Consts.PAGE_PATH.LOGIN} />;
                     }}
                 />
