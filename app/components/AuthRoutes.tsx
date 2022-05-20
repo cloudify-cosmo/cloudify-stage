@@ -6,7 +6,6 @@ import type { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/tenants';
 import Auth from '../utils/auth';
@@ -17,6 +16,8 @@ import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import type { AuthUserResponse } from '../../backend/routes/Auth.types';
+
+class NoTenantsError extends Error {}
 
 const AuthRoutes: FunctionComponent = () => {
     const [isManagerDataFetched, setManagerDataFetched] = useBoolean();
@@ -34,20 +35,15 @@ const AuthRoutes: FunctionComponent = () => {
             .then(() => dispatch(getTenants()))
             .then(() => dispatch(getUserData()))
             .then(({ tenantsRoles, role }: AuthUserResponse) => {
-                if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
-                    return Promise.reject(NO_TENANTS_ERR);
-                }
+                if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) throw new NoTenantsError();
                 setManagerDataFetched();
-                return Promise.resolve();
             })
             .catch((error: any) => {
-                switch (error) {
-                    case NO_TENANTS_ERR:
-                        dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
-                        break;
-                    default:
-                        log.error(i18n.t('managerDataError'), error);
-                        dispatch(logout(i18n.t('managerDataError')));
+                if (error instanceof NoTenantsError) {
+                    dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
+                } else {
+                    log.error(i18n.t('managerDataError'), error);
+                    dispatch(logout(i18n.t('managerDataError')));
                 }
             });
     }, []);
