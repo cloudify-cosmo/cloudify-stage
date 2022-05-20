@@ -148,20 +148,6 @@ describe('/auth endpoint', () => {
                     });
                 });
         });
-
-        it('clearing cookies when SAML is enabled', () => {
-            mockAuthHandler('premium');
-            mockSamlConfig();
-            return request(app)
-                .get('/console/auth/manager')
-                .then(response => {
-                    const { 'set-cookie': setCookie } = response.headers;
-                    expect(setCookie).toEqual([
-                        'USERNAME=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-                        'ROLE=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
-                    ]);
-                });
-        });
     });
 
     describe('/saml/callback handles', () => {
@@ -178,11 +164,7 @@ describe('/auth endpoint', () => {
                 .then(response => {
                     const { location, 'set-cookie': setCookie } = response.headers;
                     expect(location).toEqual('/console');
-                    expect(setCookie).toEqual([
-                        'XSRF-TOKEN=token-content; Path=/; HttpOnly; SameSite=Strict',
-                        'USERNAME=testuser; Path=/; SameSite=Strict',
-                        'ROLE=sys_admin; Path=/; SameSite=Strict'
-                    ]);
+                    expect(setCookie).toEqual(['XSRF-TOKEN=token-content; Path=/; HttpOnly; SameSite=Strict']);
                 });
         });
 
