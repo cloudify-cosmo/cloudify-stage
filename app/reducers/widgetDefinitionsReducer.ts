@@ -11,10 +11,10 @@ const widgetDefinitionsReducer: Reducer<WidgetDefinitionsState> = (state = [], a
         case types.STORE_WIDGETS:
             return [...action.widgetDefinitions];
         case types.INSTALL_WIDGET:
-            return _.sortBy([...state, ...action.widgetDefinitions], ['name']);
+            return _.sortBy([...state, action.widgetDefinition], ['name']);
         case types.UPDATE_WIDGET_DEFINITION: {
             const defs = _.reject(state, { id: action.widgetId });
-            return _.sortBy([...defs, ...action.widgetDefinitions], ['name']);
+            return _.sortBy([...defs, action.widgetDefinition], ['name']);
         }
         case types.UNINSTALL_WIDGET:
             return _.reject(state, { id: action.widgetId });

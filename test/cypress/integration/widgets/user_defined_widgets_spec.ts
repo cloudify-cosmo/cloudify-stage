@@ -47,5 +47,6 @@ function useMockWidgetFixture(widgetFixturePath: string, widgetId: string, widge
     cy.compileScriptFixture(widgetFixturePath).then(compiledScriptSource =>
         cy.interceptWidgetScript(widgetId, compiledScriptSource)
     );
+    cy.intercept('GET', '/console/widgets/list', [{ id: widgetId }, { id: 'pluginsCatalog' }]);
     cy.usePageMock(widgetId, widgetConfiguration).mockLogin();
 }

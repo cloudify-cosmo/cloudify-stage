@@ -1,9 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
+    const labelsBlueprint = `${resourcePrefix}labels`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
@@ -15,7 +15,8 @@ describe('Create Deployment Button widget', () => {
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint)
+            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
 
         types.forEach(type =>
             cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
@@ -24,11 +25,13 @@ describe('Create Deployment Button widget', () => {
 
     beforeEach(() => {
         cy.refreshPage();
-        cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
+        cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as(
+            'uploadedBlueprints'
+        );
         cy.get('div.deploymentButtonWidget button').click();
     });
 
-    const selectBlueprintInModal = type => {
+    const selectBlueprintInModal = (type: string) => {
         cy.get('.modal').within(() => {
             const blueprintName = `${resourcePrefix}${type}_type`;
             cy.log(`Selecting blueprint: ${blueprintName}.`);
@@ -48,7 +51,7 @@ describe('Create Deployment Button widget', () => {
         cy.get('@loader', { timeout: install ? deployAndInstallTimeout : deployTimeout }).should('not.exist');
     };
 
-    const fillDeployBlueprintModal = (deploymentId, deploymentName, blueprintId) => {
+    const fillDeployBlueprintModal = (deploymentId: string, deploymentName: string, blueprintId: string) => {
         cy.get('div.deployBlueprintModal').within(() => {
             cy.setSearchableDropdownValue('Blueprint', blueprintId);
             cy.get('input[name="deploymentName"]').click().type(deploymentName);
@@ -82,7 +85,12 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const deployBlueprint = (deploymentId, deploymentName, install = false, blueprintId = testBlueprintId) => {
+    const deployBlueprint = (
+        deploymentId: string,
+        deploymentName: string,
+        install = false,
+        blueprintId = testBlueprintId
+    ) => {
         fillDeployBlueprintModal(deploymentId, deploymentName, blueprintId);
 
         cy.get('div.deployBlueprintModal').within(() => {
@@ -96,14 +104,14 @@ describe('Create Deployment Button widget', () => {
         waitForDeployBlueprintModal(install);
     };
 
-    const verifyBlueprintDeployed = (blueprintId, deploymentId) => {
+    const verifyBlueprintDeployed = (blueprintId: string, deploymentId: string) => {
         cy.getDeployment(deploymentId).then(response => {
             expect(response.body.id).to.be.equal(deploymentId);
             expect(response.body.blueprint_id).to.be.equal(blueprintId);
         });
     };
 
-    const verifyDeploymentInstallStarted = deploymentId => {
+    const verifyDeploymentInstallStarted = (deploymentId: string) => {
         cy.getExecutions(`deployment_id=${deploymentId}&_sort=-ended_at`).then(response => {
             expect(response.body.items[0].workflow_id).to.be.equal('install');
             expect(response.body.items[0].parameters.xxx).to.be.equal(customInstallWorkflowParam1);
@@ -112,11 +120,22 @@ describe('Create Deployment Button widget', () => {
         });
     };
 
-    const verifyRedirectionToDeploymentPage = (deploymentId, deploymentName) => {
+    const verifyRedirectionToDeploymentPage = (deploymentId: string, deploymentName: string) => {
         cy.location('href').then(url =>
-            expect(JSON.parse(new URL(url).searchParams.get('c'))[1].context.deploymentId).to.eq(deploymentId)
+            expect(JSON.parse(new URL(url).searchParams.get('c')!)[1].context.deploymentId).to.eq(deploymentId)
         );
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
+    };
+
+    const openDropdown = (divName: string) => {
+        return cy.get(`div[name="${divName}"]`).click();
+    };
+
+    const selectLabelValue = (value: string) => {
+        openDropdown('labelValue').within(() => {
+            cy.get('input').type(value);
+            cy.contains(`New value ${value}`).click();
+        });
     };
 
     it('opens deployment modal', () => {
@@ -136,6 +155,37 @@ describe('Create Deployment Button widget', () => {
 
         cy.get('.actions > .ui:nth-child(1)').click();
         cy.get('div.deployBlueprintModal').should('not.exist');
+    });
+
+    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+        cy.get('div.deployBlueprintModal').within(() => {
+            openDropdown('blueprintName').within(() => {
+                cy.get('[role="listbox"] > *').should('not.have.length', 1);
+            });
+            cy.get('.actions > .ui:nth-child(1)').click();
+        });
+        cy.editWidgetConfiguration('deploymentButton', () => {
+            cy.clickButton('Add new rule');
+            openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
+            openDropdown('labelKey').within(() => {
+                const labelKey = 'arch';
+                cy.get('input').type(labelKey);
+                cy.get(`[role="listbox"] > *`).click();
+            });
+            selectLabelValue('k8s');
+            selectLabelValue('docker');
+        });
+        cy.clickButton('Create deployment');
+        cy.get('div.deployBlueprintModal').within(() => {
+            openDropdown('blueprintName').within(() => {
+                cy.get('[role="listbox"] > *').should('have.length', 1);
+                cy.get('[role="option"]').should('contain.text', labelsBlueprint);
+            });
+            cy.get('.actions > .ui:nth-child(1)').click();
+        });
+        cy.editWidgetConfiguration('deploymentButton', () => {
+            cy.get('button[aria-label="Remove rule"]').click();
+        });
     });
 
     it('allows to deploy a blueprint', () => {

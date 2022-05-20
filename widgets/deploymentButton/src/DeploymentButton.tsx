@@ -1,5 +1,6 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
+import type { FilterRule } from '../../common/src/filters/types';
 
 interface Props {
     toolbox: Stage.Types.Toolbox;
@@ -7,8 +8,16 @@ interface Props {
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
+    blueprintFilterRules?: FilterRule[];
 }
-const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon, label, toolbox }) => {
+const DeploymentButtonWrapper: FunctionComponent<Props> = ({
+    basic,
+    color,
+    icon,
+    label,
+    toolbox,
+    blueprintFilterRules
+}) => {
     const { Button } = Stage.Basic;
     const { DeployBlueprintModal } = Stage.Common;
     const { useBoolean } = Stage.Hooks;
@@ -25,7 +34,12 @@ const DeploymentButtonWrapper: FunctionComponent<Props> = ({ basic, color, icon,
                 className="widgetButton"
                 onClick={showModal}
             />
-            <DeployBlueprintModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} />
+            <DeployBlueprintModal
+                open={isModalOpen}
+                onHide={hideModal}
+                toolbox={toolbox}
+                blueprintFilterRules={blueprintFilterRules}
+            />
         </div>
     );
 };

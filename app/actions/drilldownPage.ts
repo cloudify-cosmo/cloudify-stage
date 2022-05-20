@@ -1,10 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import * as types from './types';
+import { setDrilldownContext } from './drilldownContext';
 import { addLayoutToPage } from './page';
 import { createDrilldownPage, selectPage } from './pageMenu';
-import { setDrilldownContext } from './drilldownContext';
 import { setDrillDownWarningActive } from './templateManagement/pages';
+import * as types from './types';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
@@ -16,7 +16,7 @@ export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId)
 }
 
 export function drillDownToPage(widget, defaultTemplate, drilldownContext, drilldownPageName) {
-    return (dispatch, getState) => {
+    return async (dispatch, getState) => {
         const isTemplateManagement = _.get(getState().templateManagement, 'isActive');
         if (isTemplateManagement) {
             return dispatch(setDrillDownWarningActive(true));
@@ -30,7 +30,7 @@ export function drillDownToPage(widget, defaultTemplate, drilldownContext, drill
 
             if (!isDrilldownPagePresent) {
                 dispatch(createDrilldownPage(defaultTemplate, newPageId));
-                dispatch(addLayoutToPage(defaultTemplate, newPageId));
+                await dispatch(addLayoutToPage(defaultTemplate, newPageId));
             }
 
             dispatch(addWidgetDrilldownPage(widget.id, defaultTemplate.name, newPageId));

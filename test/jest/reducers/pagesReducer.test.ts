@@ -1,25 +1,28 @@
 // @ts-nocheck File not migrated fully to TS
-import { parse } from 'query-string';
-
-import configureMockStore from 'redux-mock-store';
-import thunk from 'redux-thunk';
-
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-
-import pageReducer from 'reducers/pageReducer';
-import drilldownContextReducer from 'reducers/drilldownContextReducer';
-
 import { drillDownToPage } from 'actions/drilldownPage';
 import { changePageDescription } from 'actions/page';
 import { changePageMenuItemName, removePageWithChildren } from 'actions/pageMenu';
 
 import * as types from 'actions/types';
+import { parse } from 'query-string';
+import drilldownContextReducer from 'reducers/drilldownContextReducer';
+
+import pageReducer from 'reducers/pageReducer';
+
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 
 const mockStore = configureMockStore([thunk]);
 
+jest.mock('utils/widgetDefinitionsLoader', () => ({
+    loadWidget: () => ({ id: 'widget1' })
+}));
+
 describe('(Reducer) Pages', () => {
     describe('Drilldown to page actions', () => {
-        it('create a drilldown page if it doesnt exist', () => {
+        it('create a drilldown page if it doesnt exist', async () => {
             const initialState = { widgetDefinitions: [{ id: 'widget1' }], drilldownContext: [] };
 
             const store = mockStore(initialState);
@@ -95,14 +98,15 @@ describe('(Reducer) Pages', () => {
                     }
                 ]
             };
-            store.dispatch(drillDownToPage(widget, pageDef, {}));
+
+            await store.dispatch(drillDownToPage(widget, pageDef, {}));
 
             const storeActions = store.getActions();
 
             expect(storeActions).toHaveLength(expectedActions.length);
             storeActions.pop(); // remove last cause we want to ignore it
 
-            _.each(storeActions, (action, index) => {
+            storeActions.forEach((action, index) => {
                 const expectedAction = expectedActions[index];
                 const actualAction = action;
                 delete actualAction.newPageId;
@@ -271,74 +275,80 @@ describe('(Reducer) Pages', () => {
     });
 
     describe('Drilldown to page state', () => {
-        const initialState = {
-            widgetDefinitions: [{ id: 'widget1' }],
-            pages: [
-                {
-                    id: '0',
-                    name: 'page',
-                    layout: [
-                        {
-                            type: 'widgets',
-                            content: [
-                                {
-                                    id: '1',
-                                    name: 'widget1',
-                                    definition: 'widget1',
-                                    drillDownPages: {}
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            drilldownContext: []
-        };
+        async function setUp() {
+            const initialState = {
+                widgetDefinitions: [{ id: 'widget1' }],
+                pages: [
+                    {
+                        id: '0',
+                        name: 'page',
+                        layout: [
+                            {
+                                type: 'widgets',
+                                content: [
+                                    {
+                                        id: '1',
+                                        name: 'widget1',
+                                        definition: 'widget1',
+                                        drillDownPages: {}
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                drilldownContext: []
+            };
 
-        const store = createStore(
-            combineReducers({
-                pages: pageReducer,
-                drilldownContext: drilldownContextReducer,
-                widgetDefinitions: pageReducer
-            }),
-            initialState,
-            applyMiddleware(thunk)
-        );
+            const store = createStore(
+                combineReducers({
+                    pages: pageReducer,
+                    drilldownContext: drilldownContextReducer,
+                    widgetDefinitions: pageReducer
+                }),
+                initialState,
+                applyMiddleware(thunk)
+            );
 
-        const widget = initialState.pages[0].layout[0].content[0];
-        const pageDef = {
-            name: 'tmp1',
-            layout: [
-                {
-                    type: 'widgets',
-                    content: [
-                        {
-                            name: 'some widget',
-                            definition: 'widget1',
-                            width: 1,
-                            height: 1,
-                            x: 1,
-                            y: 1
-                        }
-                    ]
-                }
-            ]
-        };
+            const widget = initialState.pages[0].layout[0].content[0];
+            const pageDef = {
+                name: 'tmp1',
+                layout: [
+                    {
+                        type: 'widgets',
+                        content: [
+                            {
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
+                        ]
+                    }
+                ]
+            };
 
-        store.dispatch(drillDownToPage(widget, pageDef, {}));
+            await store.dispatch(drillDownToPage(widget, pageDef, {}));
 
-        const { pages } = store.getState();
-        const parentPage = pages[0];
-        const drillDownPage = pages[1];
-        store.getState();
+            const { pages } = store.getState();
+            const parentPage = pages[0];
+            const drillDownPage = pages[1];
+            store.getState();
 
-        it('Should have a drilldown page', () => {
+            return { pages, drillDownPage, parentPage };
+        }
+
+        it('Should have a drilldown page', async () => {
+            const { pages, drillDownPage } = await setUp();
             expect(pages).toHaveLength(2);
             expect(drillDownPage.id).not.toBeUndefined();
             expect(drillDownPage.id).not.toBeNull();
         });
 
-        it('Drilldown page should have the right page definition data', () => {
+        it('Drilldown page should have the right page definition data', async () => {
+            const { parentPage, drillDownPage } = await setUp();
             const expectedPage = {
                 name: 'tmp1',
                 type: 'page',
@@ -371,11 +381,13 @@ describe('(Reducer) Pages', () => {
             expect(drillDownPage).toEqual(expectedPage);
         });
 
-        it('Drilldown parent widget should have the expected drillDownPage', () => {
+        it('Drilldown parent widget should have the expected drillDownPage', async () => {
+            const { parentPage, drillDownPage } = await setUp();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp1).toBe(drillDownPage.id);
         });
 
-        it('Should link parent and child pages properly', () => {
+        it('Should link parent and child pages properly', async () => {
+            const { parentPage, drillDownPage } = await setUp();
             expect(parentPage.children).toHaveLength(1);
             expect(parentPage.children[0]).toBe(drillDownPage.id);
 
@@ -384,88 +396,93 @@ describe('(Reducer) Pages', () => {
     });
 
     describe('Drilldown to 2 pages from the same widget', () => {
-        const initialState = {
-            pages: [
-                {
-                    id: '0',
-                    name: 'page',
-                    layout: [
-                        {
-                            type: 'widgets',
-                            content: [
-                                {
-                                    id: '1',
-                                    name: 'widget1',
-                                    definition: 'widget1',
-                                    drillDownPages: {}
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            drilldownContext: []
-        };
+        async function setUp() {
+            const initialState = {
+                pages: [
+                    {
+                        id: '0',
+                        name: 'page',
+                        layout: [
+                            {
+                                type: 'widgets',
+                                content: [
+                                    {
+                                        id: '1',
+                                        name: 'widget1',
+                                        definition: 'widget1',
+                                        drillDownPages: {}
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                drilldownContext: []
+            };
 
-        const store = createStore(
-            combineReducers({ pages: pageReducer, drilldownContext: drilldownContextReducer }),
-            initialState,
-            applyMiddleware(thunk)
-        );
+            const store = createStore(
+                combineReducers({ pages: pageReducer, drilldownContext: drilldownContextReducer }),
+                initialState,
+                applyMiddleware(thunk)
+            );
 
-        const widget = initialState.pages[0].layout[0].content[0];
-        const pageDef1 = {
-            name: 'tmp1',
-            layout: [
-                {
-                    type: 'widgets',
-                    content: [
-                        {
-                            name: 'some widget',
-                            definition: 'widget1',
-                            width: 1,
-                            height: 1,
-                            x: 1,
-                            y: 1
-                        }
-                    ]
-                }
-            ]
-        };
-        const pageDef2 = {
-            name: 'tmp2',
-            layout: [
-                {
-                    type: 'widgets',
-                    content: [
-                        {
-                            name: 'some widget2',
-                            definition: 'widget1',
-                            width: 1,
-                            height: 1,
-                            x: 1,
-                            y: 1
-                        }
-                    ]
-                }
-            ]
-        };
-        store.dispatch(drillDownToPage(widget, pageDef1, {}));
-        store.dispatch(drillDownToPage(widget, pageDef2, {}));
+            const widget = initialState.pages[0].layout[0].content[0];
+            const pageDef1 = {
+                name: 'tmp1',
+                layout: [
+                    {
+                        type: 'widgets',
+                        content: [
+                            {
+                                name: 'some widget',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
+                        ]
+                    }
+                ]
+            };
+            const pageDef2 = {
+                name: 'tmp2',
+                layout: [
+                    {
+                        type: 'widgets',
+                        content: [
+                            {
+                                name: 'some widget2',
+                                definition: 'widget1',
+                                width: 1,
+                                height: 1,
+                                x: 1,
+                                y: 1
+                            }
+                        ]
+                    }
+                ]
+            };
+            await store.dispatch(drillDownToPage(widget, pageDef1, {}));
+            await store.dispatch(drillDownToPage(widget, pageDef2, {}));
 
-        const { pages } = store.getState();
-        const parentPage = pages[0];
-        const drillDownPage1 = pages[1];
-        const drillDownPage2 = pages[2];
+            const { pages } = store.getState();
+            const parentPage = pages[0];
+            const drillDownPage1 = pages[1];
+            const drillDownPage2 = pages[2];
+            return { parentPage, drillDownPage1, drillDownPage2 };
+        }
 
-        it('The 2 pages should exist in the drilldown pages list', () => {
+        it('The 2 pages should exist in the drilldown pages list', async () => {
+            const { parentPage } = await setUp();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp1).not.toBeUndefined();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp1).not.toBeNull();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp2).not.toBeUndefined();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp2).not.toBeNull();
         });
 
-        it('Drilldown pages should have the right IDs', () => {
+        it('Drilldown pages should have the right IDs', async () => {
+            const { parentPage, drillDownPage1, drillDownPage2 } = await setUp();
             expect(parentPage.layout[0].content[0].drillDownPages.tmp1).toBe(drillDownPage1.id);
             expect(parentPage.layout[0].content[0].drillDownPages.tmp2).toBe(drillDownPage2.id);
         });
