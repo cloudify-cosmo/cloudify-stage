@@ -1,18 +1,19 @@
-import _ from 'lodash';
-import type { ThunkAction } from 'redux-thunk';
+import { compact, each, find, map } from 'lodash';
 import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
-    WidgetsSection as BackendWidgetsSection,
+    PageFileDefinition,
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
-    PageFileDefinition
+    WidgetsSection as BackendWidgetsSection
 } from '../../backend/routes/Templates.types';
+import type { ReduxState } from '../reducers';
+import type { Widget, WidgetDefinition } from '../utils/StageAPI';
+import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
 import * as types from './types';
 import { addWidget } from './widgets';
-import type { Widget, WidgetDefinition } from '../utils/StageAPI';
-import type { ReduxState } from '../reducers';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
@@ -87,12 +88,12 @@ export function forAllWidgets(
         tabIndex: number | null
     ) => (SimpleWidgetObj | null | undefined)[]
 ) {
-    _.each(page.layout, (layoutSection, layoutSectionIdx) => {
+    each(page.layout, (layoutSection, layoutSectionIdx) => {
         if (isWidgetsSection(layoutSection))
-            layoutSection.content = _.compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
+            layoutSection.content = compact(widgetListModifier(layoutSection.content, layoutSectionIdx, null));
         else
-            _.each(layoutSection.content, (tab, tabIdx) => {
-                tab.widgets = _.compact(widgetListModifier(tab.widgets, layoutSectionIdx, tabIdx));
+            each(layoutSection.content, (tab, tabIdx) => {
+                tab.widgets = compact(widgetListModifier(tab.widgets, layoutSectionIdx, tabIdx));
             });
     });
 }
@@ -106,7 +107,7 @@ export function forEachWidget(
     ) => SimpleWidgetObj | null | undefined
 ) {
     forAllWidgets(page, (widgets, layoutSectionIdx, tabIdx) =>
-        _.map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
+        map(widgets, widget => widgetModifier(widget, layoutSectionIdx, tabIdx))
     );
 }
 
@@ -114,7 +115,7 @@ export function getWidgetDefinitionById(
     definitionId: string,
     definitions: ReduxState['widgetDefinitions']
 ): WidgetDefinition | undefined {
-    return _.find(definitions, { id: definitionId });
+    return find(definitions, { id: definitionId });
 }
 
 export function changePageDescription(pageId: string, newDescription: string) {
@@ -131,10 +132,22 @@ export function addLayoutToPage(
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
-        forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
-            const widgetDefinition = _.find(widgetDefinitions, { id: widget.definition });
-            dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+        const widgetsToLoad: Record<string, WidgetDefinition<any, any, Record<string, unknown>>> = {};
+        forEachWidget(page, widget => {
+            const widgetDefinition = find(widgetDefinitions, { id: widget.definition });
+            if (widgetDefinition && !widgetDefinition.loaded) {
+                widgetsToLoad[widgetDefinition.id] = widgetDefinition;
+            }
             return widget;
+        });
+        return Promise.all(map(widgetsToLoad, WidgetDefinitionsLoader.loadWidget)).then(loadedWidgetDefinitions => {
+            forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
+                const widgetDefinition =
+                    find(loadedWidgetDefinitions, { id: widget.definition }) ??
+                    find(getState().widgetDefinitions, { id: widget.definition });
+                dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+                return widget;
+            });
         });
     };
 }

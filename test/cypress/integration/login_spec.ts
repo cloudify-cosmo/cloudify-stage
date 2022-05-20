@@ -83,7 +83,7 @@ describe('Login', () => {
             }
         });
 
-        cy.visit('/console/login').waitUntilLoaded();
+        cy.visit('/console/login').waitUntilAppLoaded();
         cy.get('button').as('loginButton');
 
         cy.get('@loginButton').should('contain.text', 'LOGIN WITH SSO');

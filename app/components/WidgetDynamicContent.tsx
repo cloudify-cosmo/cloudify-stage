@@ -1,16 +1,16 @@
 // @ts-nocheck File not migrated fully to TS
 
+import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
 import PropTypes from 'prop-types';
-import i18n from 'i18next';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
+import WidgetPropType from '../utils/props/WidgetPropType';
+import combineClassNames from '../utils/shared/combineClassNames';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
-import WidgetPropType from '../utils/props/WidgetPropType';
-import combineClassNames from '../utils/shared/combineClassNames';
 
 export default class WidgetDynamicContent extends Component {
     private readonly containerRef: RefObject<HTMLElement>;
@@ -55,6 +55,11 @@ export default class WidgetDynamicContent extends Component {
 
     componentDidUpdate(prevProps) {
         const { data, manager, widget } = this.props;
+
+        if (widget.definition.loaded && !prevProps.widget.definition.loaded) {
+            this.paramsHandler = new WidgetParamsHandler(widget, this.getToolbox());
+        }
+
         // Check if any configuration that requires fetch was changed
         let requiresFetch = false;
         if (prevProps.widget.configuration && widget.configuration) {
@@ -74,7 +79,8 @@ export default class WidgetDynamicContent extends Component {
             prevProps.manager.tenants.selected !== manager.tenants.selected ||
             // Fetch data after WIDGET_DATA_CLEAR action was dispatched (Fix for CY-957)
             (!_.isEmpty(prevProps.data) && _.isEmpty(data)) ||
-            this.paramsHandler.updateFetchParams()
+            this.paramsHandler.updateFetchParams() ||
+            prevProps.widget.definition.loaded !== widget.definition.loaded
         ) {
             requiresFetch = true;
         }

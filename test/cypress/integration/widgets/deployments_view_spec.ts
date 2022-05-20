@@ -28,21 +28,6 @@ describe('Deployments View widget', () => {
         mapHeight: 300,
         mapOpenByDefault: false
     };
-    // NOTE: widgets below are shown in the details pane
-    const additionalWidgetIdsToLoad = [
-        'executions',
-        'eventsFilter',
-        'events',
-        'topology',
-        'outputs',
-        'labels',
-        'inputs',
-        'blueprintSources',
-        'nodes',
-        'executions',
-        'deploymentActionButtons',
-        'deploymentsViewDrilledDown'
-    ];
     /** Column numbers as they appear in the table */
     const columnNumbers = {
         status: 1,
@@ -74,7 +59,7 @@ describe('Deployments View widget', () => {
         cy.usePageMock(
             [widgetId],
             { ...widgetConfiguration, ...configurationOverrides },
-            { additionalWidgetIdsToLoad, widgetsWidth: 12 }
+            { widgetsWidth: 12 }
         ).mockLoginWithoutWaiting();
         cy.interceptSp('POST', '/searches/deployments', routeHandler).as('deployments');
         cy.wait('@deployments', { requestTimeout: secondsToMs(20) });
