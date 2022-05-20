@@ -5,10 +5,11 @@ import type { CookieOptions, Request } from 'express';
 
 import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
-import { CONTEXT_PATH, ROLE_COOKIE_NAME, TOKEN_COOKIE_NAME, USERNAME_COOKIE_NAME } from '../consts';
+import { CONTEXT_PATH, TOKEN_COOKIE_NAME } from '../consts';
 import { getConfig } from '../config';
 import { getLogger } from '../handler/LoggerHandler';
 import { getTokenFromCookies } from '../utils';
+import type { AuthUserResponse } from './Auth.types';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -48,11 +49,7 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
         logger.debug('Received SAML Response for user', req.user);
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
-                const samlCookiesOptions = getCookieOptions(req, false);
-                const tokenCookieOptions = getCookieOptions(req);
-                res.cookie(TOKEN_COOKIE_NAME, token.value, tokenCookieOptions);
-                res.cookie(USERNAME_COOKIE_NAME, req.user!.username, samlCookiesOptions);
-                res.cookie(ROLE_COOKIE_NAME, token.role, samlCookiesOptions);
+                res.cookie(TOKEN_COOKIE_NAME, token.value, getCookieOptions(req));
                 res.redirect(CONTEXT_PATH);
             })
             .catch(err => {
@@ -65,10 +62,6 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
 router.get('/manager', authenticateWithCookie, (req, res) => {
     const token = getTokenFromCookies(req);
     const isSamlEnabled = _.get(getConfig(), 'app.saml.enabled', false);
-    if (isSamlEnabled) {
-        res.clearCookie(USERNAME_COOKIE_NAME);
-        res.clearCookie(ROLE_COOKIE_NAME);
-    }
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
             AuthHandler.isProductLicensed(version)
@@ -96,7 +89,7 @@ router.get('/user', authenticateWithCookie, (req, res) => {
         role: req.user!.role,
         groupSystemRoles: req.user!.group_system_roles,
         tenantsRoles: req.user!.tenants
-    });
+    } as AuthUserResponse);
 });
 
 router.post('/logout', authenticateWithCookie, (_req, res) => {

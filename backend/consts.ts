@@ -12,8 +12,6 @@ export const APP_DATA_PATH = '/appData';
 
 export const WIDGET_ID_HEADER = 'widget-id';
 export const TOKEN_COOKIE_NAME = 'XSRF-TOKEN';
-export const ROLE_COOKIE_NAME = 'ROLE';
-export const USERNAME_COOKIE_NAME = 'USERNAME';
 
 export const EDITION = {
     PREMIUM: 'premium',

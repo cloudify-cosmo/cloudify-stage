@@ -1,17 +1,16 @@
-import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import type { FunctionComponent } from 'react';
-import { useDispatch } from 'react-redux';
-import Consts from '../utils/consts';
+import { useDispatch, useSelector } from 'react-redux';
 import { receiveLogin } from '../actions/managers';
+import Auth from '../utils/auth';
+import type { ReduxState } from '../reducers';
 
 const SamlLogin: FunctionComponent = () => {
     const dispatch = useDispatch();
+    const manager = useSelector((state: ReduxState) => state.manager);
 
     useEffect(() => {
-        const role = Cookies.get(Consts.ROLE_COOKIE_NAME);
-        const username = Cookies.get(Consts.USERNAME_COOKIE_NAME);
-        dispatch(receiveLogin(username, role));
+        Auth.getUserData(manager).then(({ username, role }) => dispatch(receiveLogin(username, role)));
     }, []);
 
     return null;
