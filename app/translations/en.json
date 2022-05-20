@@ -1681,6 +1681,19 @@
                 },
                 "error": "Couldn't create a Token, please try to submit the Token data again."
             }
+        },
+        "deploymentInfo": {
+            "name": "Deployment Info",
+            "description": "Shows deployment basic information and status",
+            "configuration": {
+                "showBlueprint": "Show blueprint name",
+                "showSite": "Show site name",
+                "showCreated": "Show created date",
+                "showUpdated": "Show updated date",
+                "showCreator": "Show creator",
+                "showNodeInstances": "Show node instances status"
+            },
+            "noDeploymentSelected": "No deployment selected"
         }
     },
     "input": {

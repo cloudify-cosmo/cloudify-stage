@@ -14,18 +14,17 @@ export declare namespace DeploymentInfoWidget {
     }
 
     export interface Data {
-        // TODO: Ensure that the typing is accurate, with the core team
         deployment: {
             id: string;
             display_name?: string;
+            description: string;
             visibility: string;
-            blueprint_id?: string;
-            description?: string;
-            site_name?: string;
-            created_at?: string;
-            updated_at?: string;
-            created_by?: string;
-            isUpdated?: boolean;
+            blueprint_id: string;
+            site_name: string;
+            created_at: string;
+            updated_at: string;
+            created_by: string;
+            isUpdated: boolean;
         };
         instancesCount: number;
         instancesStates: {
