@@ -1,10 +1,20 @@
 export declare namespace DeploymentInfoWidget {
+    export interface Params {
+        deployment_id?: string | string[] | null;
+    }
+
     export interface Configuration {
-        showExpiredTokens: boolean;
         pollingTime: number;
+        showBlueprint: boolean;
+        showSite: boolean;
+        showCreated: boolean;
+        showUpdated: boolean;
+        showCreator: boolean;
+        showNodeInstances: boolean;
     }
 
     export interface Data {
+        // TODO: Ensure that the typing is accurate, with the core team
         deployment: {
             id: string;
             display_name?: string;

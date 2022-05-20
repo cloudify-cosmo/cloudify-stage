@@ -1,8 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
+import type { DeploymentInfoWidget } from './widget.types';
 import DeploymentInfo from './DeploymentInfo';
 import Consts from './consts';
 
-Stage.defineWidget({
+Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, DeploymentInfoWidget.Configuration>({
     id: Consts.WIDGET_ID,
     name: 'Deployment Info',
     description: 'Shows deployment basic information and status',
@@ -55,7 +55,7 @@ Stage.defineWidget({
         }
     ],
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
 
         return {
@@ -120,20 +120,20 @@ Stage.defineWidget({
             deployment,
             instancesStates,
             instancesCount
-        };
+        } as DeploymentInfoWidget.Data;
     },
 
-    render(widget, data, error, toolbox) {
+    render(_widget, data, _error, toolbox) {
         const { Loading, Message } = Stage.Basic;
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        if (_.isEmpty(data.deployment)) {
+        if (_.isEmpty(data?.deployment)) {
             return <Message info>No deployment selected</Message>;
         }
 
-        return <DeploymentInfo data={data} toolbox={toolbox} />;
+        return <DeploymentInfo data={data as DeploymentInfoWidget.Data} toolbox={toolbox} />;
     }
 });
