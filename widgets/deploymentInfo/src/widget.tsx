@@ -1,8 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 import DeploymentInfo from './DeploymentInfo';
+import Consts from './consts';
 
 Stage.defineWidget({
-    id: 'deploymentInfo',
+    id: Consts.WIDGET_ID,
     name: 'Deployment Info',
     description: 'Shows deployment basic information and status',
     initialWidth: 16,
