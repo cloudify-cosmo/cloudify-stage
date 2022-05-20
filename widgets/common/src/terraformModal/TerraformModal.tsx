@@ -183,7 +183,7 @@ export default function TerraformModal({
 
     const [templateUrl, setTemplateUrl] = useInput('');
     const [terraformPackage, setTerraformPackage] = useState<File>();
-    const [terraformPackageBase64, setTerraformPackageBase64] = useState<string>()
+    const [terraformPackageBase64, setTerraformPackageBase64] = useState<string>();
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
     const [username, setUsername, clearUsername] = useInput('');
@@ -368,7 +368,7 @@ export default function TerraformModal({
                 blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprintArchive({
                     blueprintName,
                     blueprintDescription,
-                    file: terraformPackageBase64?.replace('data:application/x-zip-compressed;base64,',''),
+                    file: terraformPackageBase64,
                     urlAuthentication,
                     terraformVersion: version,
                     resourceLocation: getResourceLocation(templateModules, resourceLocation),
@@ -400,7 +400,7 @@ export default function TerraformModal({
             }
 
             const file: any = new Blob([blueprintContent]);
-            file.name = Consts.defaultBlueprintYamlFileName;
+            file.name = terraformPackage ? 'blueprint.zip' : Consts.defaultBlueprintYamlFileName;
             const image = await (await fetch(terraformLogo)).blob();
             await createSecretsFromVariables();
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
@@ -463,12 +463,11 @@ export default function TerraformModal({
     const onTerraformPackageChange = (file: File) => {
         setTemplateModulesLoading();
         setTerraformPackage(file);
-        var reader = new FileReader();
-        reader.readAsDataURL(file); 
-        reader.onloadend = function() {
-            setTerraformPackageBase64(reader.result?.toString());                
-            console.log("terraformPackage64", reader.result);
-        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function onloadend() {
+            setTerraformPackageBase64(reader.result?.toString());
+        };
         new TerraformActions(toolbox)
             .doGetTemplateModulesByFile(file)
             .then(reloadTemplateModules)

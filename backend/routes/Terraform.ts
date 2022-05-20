@@ -57,8 +57,7 @@ const getBufferFromUrl = async (url: string, authHeader?: string) => {
 
 const getGitUrl = (url: string, authHeader?: string) => {
     if (authHeader) {
-        // header might be "bAsIc" as well, and it should return true as well
-        const encodedCredentials = authHeader.replace('Basic ', '');
+        const encodedCredentials = authHeader.replace(new RegExp('Basic ', 'ig'), '');
         const gitCredentials = Buffer.from(encodedCredentials, 'base64').toString('binary');
         const [username, personalToken] = gitCredentials.split(':');
         const credentialsString = `${username}:${personalToken}@`;
@@ -282,7 +281,7 @@ router.post('/blueprint/archive', fileDebase64, async (req, res) => {
     const zipTf = zipBlueprint?.folder('tf_module');
     zipTf?.file('terraform.zip', req.body.file);
 
-    res.setHeader('content-type', 'application/zip');
+    res.setHeader('Content-Type', 'application/zip');
     res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
     const arrayBuffer = await zip.generateAsync({ type: 'arraybuffer' });
     return res.send(Buffer.from(arrayBuffer));
