@@ -36,16 +36,13 @@ describe('Blueprints widget', () => {
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
             .deletePlugins()
-            .mockLogin()
-    );
-
-    beforeEach(() =>
-        cy
             .usePageMock('blueprints', blueprintsWidgetConfiguration, {
                 additionalWidgetIdsToLoad: ['blueprintCatalog', 'blueprintActionButtons']
             })
-            .refreshTemplate()
+            .mockLogin()
     );
+
+    beforeEach(() => cy.refreshTemplate());
 
     function getBlueprintRow(blueprintName: string) {
         cy.getSearchInput().clear().type(blueprintName);
@@ -446,7 +443,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from Terraform module modal and', () => {
+    describe.only('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
