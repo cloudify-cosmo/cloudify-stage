@@ -19,7 +19,6 @@ import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 
 const AuthRoutes: FunctionComponent = () => {
     const [isManagerDataFetched, setManagerDataFetched] = useBoolean();
-    const [isUserDataFetched, setUserDataFetched] = useBoolean();
     const isInMaintenanceMode = useSelector(
         state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
@@ -32,46 +31,32 @@ const AuthRoutes: FunctionComponent = () => {
 
         dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
-            .then(setManagerDataFetched)
+            .then(() => dispatch(getUserData()))
+            .then(({ tenantsRoles, role }: any) => {
+                if (_.isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
+                    return Promise.reject(NO_TENANTS_ERR);
+                }
+                setManagerDataFetched();
+                return Promise.resolve();
+            })
             .catch((error: any) => {
-                log.error(i18n.t('managerDataError'), error);
-                dispatch(logout(i18n.t('managerDataError')));
+                switch (error) {
+                    case NO_TENANTS_ERR:
+                        dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
+                        break;
+                    default:
+                        log.error(i18n.t('managerDataError'), error);
+                        dispatch(logout(i18n.t('managerDataError')));
+                }
             });
     }, []);
-
-    useEffect(() => {
-        if (isProductOperational && isManagerDataFetched) {
-            dispatch(getUserData())
-                .then(({ tenantsRoles, role }: any) => {
-                    if (_.isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
-                        return Promise.reject(NO_TENANTS_ERR);
-                    }
-                    setUserDataFetched();
-                    return Promise.resolve();
-                })
-                .catch((error: any) => {
-                    switch (error) {
-                        case NO_TENANTS_ERR:
-                            dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
-                            break;
-                        default:
-                            log.error(i18n.t('pageLoadError'), error);
-                            dispatch(logout(i18n.t('pageLoadError')));
-                    }
-                });
-        }
-    }, [isProductOperational, isManagerDataFetched]);
 
     return isManagerDataFetched ? (
         <Switch>
             {isLicenseRequired && <Route exact path={Consts.PAGE_PATH.LICENSE} component={LicensePage} />}
             <Route exact path={Consts.PAGE_PATH.MAINTENANCE} component={MaintenanceMode} />
             {isInMaintenanceMode && <Redirect to={Consts.PAGE_PATH.MAINTENANCE} />}
-            <Route
-                render={() =>
-                    isProductOperational ? isUserDataFetched && <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />
-                }
-            />
+            <Route render={() => (isProductOperational ? <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />)} />
         </Switch>
     ) : null;
 };
