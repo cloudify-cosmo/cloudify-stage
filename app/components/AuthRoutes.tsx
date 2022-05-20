@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { get, isEmpty } from 'lodash';
 import i18n from 'i18next';
 import log from 'loglevel';
 import React, { useEffect } from 'react';
@@ -16,14 +16,15 @@ import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import type { AuthUserResponse } from '../../backend/routes/Auth.types';
 
 const AuthRoutes: FunctionComponent = () => {
     const [isManagerDataFetched, setManagerDataFetched] = useBoolean();
     const isInMaintenanceMode = useSelector(
-        state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
+        state => get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
-    const isLicenseRequired = useSelector(state => _.get(state, 'manager.license.isRequired', false));
-    const isProductOperational = useSelector(state => Auth.isProductOperational(_.get(state, 'manager.license', {})));
+    const isLicenseRequired = useSelector(state => get(state, 'manager.license.isRequired', false));
+    const isProductOperational = useSelector(state => Auth.isProductOperational(get(state, 'manager.license', {})));
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -32,8 +33,8 @@ const AuthRoutes: FunctionComponent = () => {
         dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
             .then(() => dispatch(getUserData()))
-            .then(({ tenantsRoles, role }: any) => {
-                if (_.isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
+            .then(({ tenantsRoles, role }: AuthUserResponse) => {
+                if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
                     return Promise.reject(NO_TENANTS_ERR);
                 }
                 setManagerDataFetched();
