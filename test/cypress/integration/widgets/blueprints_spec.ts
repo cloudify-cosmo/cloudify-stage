@@ -1,4 +1,4 @@
-import { secondsToMs, waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
+import { waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
 describe('Blueprints widget', () => {
@@ -443,7 +443,7 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe.only('should open upload from Terraform module modal and', () => {
+    describe('should open upload from Terraform module modal and', () => {
         const terraformTemplatesBaseUrl =
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
