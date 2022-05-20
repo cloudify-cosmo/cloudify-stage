@@ -1,7 +1,7 @@
 import log from 'loglevel';
 
 import GenericConfig from './GenericConfig';
-import type { WidgetDefinition, InitialWidgetDefinition } from './StageAPI';
+import type { InitialWidgetDefinition, WidgetDefinition } from './StageAPI';
 
 export default function normalizeWidgetDefinition<Params, Data, Configuration>(
     initialDefinition: InitialWidgetDefinition<Params, Data, Configuration>
@@ -26,6 +26,7 @@ export default function normalizeWidgetDefinition<Params, Data, Configuration>(
         initialHeight: 12,
         initialWidth: 3,
         isReact: true,
+        loaded: true,
         permission: GenericConfig.CUSTOM_WIDGET_PERMISSIONS.CUSTOM_ALL,
         showBorder: true,
         showHeader: true,

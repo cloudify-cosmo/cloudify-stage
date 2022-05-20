@@ -20,8 +20,9 @@ export default function useWidgetsFilter() {
 
             return (
                 resolvedDefinition &&
-                stageUtils.isUserAuthorized(resolvedDefinition.permission, manager) &&
-                stageUtils.isWidgetPermitted(resolvedDefinition.supportedEditions, manager)
+                (!resolvedDefinition.loaded ||
+                    (stageUtils.isUserAuthorized(resolvedDefinition.permission, manager) &&
+                        stageUtils.isWidgetPermitted(resolvedDefinition.supportedEditions, manager)))
             );
         });
 }

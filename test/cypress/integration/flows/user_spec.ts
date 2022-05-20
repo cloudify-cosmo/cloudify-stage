@@ -3,8 +3,8 @@ import { minutesToMs } from '../../support/resource_commons';
 describe('User flow', () => {
     const resourceName = 'user_flow_test';
 
-    beforeEach(() => {
-        cy.activate().login().deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
+    before(() => {
+        cy.activate().login();
     });
 
     function createSecret(secretName: string) {
@@ -17,6 +17,7 @@ describe('User flow', () => {
     }
 
     it('installs deployment from scratch', () => {
+        cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
         cy.visitSubPage('Resources', 'Plugins');
@@ -68,6 +69,8 @@ describe('User flow', () => {
     });
 
     it('uploads blueprint using first journey buttons', () => {
+        cy.deleteDeployments('', true);
+        cy.visitPage('Dashboard');
         const uploadBlueprintButtonSelector = 'i[title="Upload blueprint"]:not(.disabled)';
 
         cy.contains('Create new Deployment').click();
