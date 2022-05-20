@@ -1,5 +1,5 @@
-import _ from 'lodash';
 import Consts from 'app/utils/consts';
+import _ from 'lodash';
 
 describe('User Menu', () => {
     const nonAdminUsername = 'user-menu-test';
@@ -39,7 +39,7 @@ describe('User Menu', () => {
     beforeEach(cy.usePageMock);
 
     it('should contain options for admin users', () => {
-        cy.login();
+        cy.mockLoginWithoutWaiting();
 
         cy.contains('admin').click({ force: true });
         verifyOptionIsVisible('Edit Mode', 'edit');
@@ -51,7 +51,7 @@ describe('User Menu', () => {
     });
 
     it('should contain options for non-admin users', () => {
-        cy.mockLogin({ username: nonAdminUsername, password: nonAdminPassword });
+        cy.mockLoginWithoutWaiting({ username: nonAdminUsername, password: nonAdminPassword });
 
         cy.contains(nonAdminUsername).click({ force: true });
         verifyOptionIsNotVisible('Edit Mode');
@@ -63,7 +63,7 @@ describe('User Menu', () => {
     });
 
     it('should fetch tenants on every tenants menu item click', () => {
-        cy.login();
+        cy.mockLoginWithoutWaiting();
 
         cy.log('Adding new tenant');
         cy.addTenant(newTenantName);

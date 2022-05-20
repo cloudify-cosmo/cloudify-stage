@@ -18,7 +18,7 @@ import 'cypress-file-upload';
 import 'cypress-get-table';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import { castArray, compact, isString, noop } from 'lodash';
+import { castArray, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -92,14 +92,17 @@ type License =
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
-        return cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist');
+        cy.get('.widget').should('exist');
+        cy.contains('Loading...').should('not.exist');
+        return cy.waitUntilWidgetsDataLoaded();
     },
-    waitUntilLoaded: () =>
+    waitUntilWidgetsDataLoaded: () => cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist'),
+    waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
             .get('#loader', { timeout: secondsToMs(25) })
-            .should('be.not.visible')
-            .waitUntilPageLoaded(),
+            .should('be.not.visible'),
+    waitUntilLoaded: () => cy.waitUntilAppLoaded().waitUntilPageLoaded(),
     uploadLicense: (license: License) =>
         cy.fixture(`license/${license}.yaml`).then(yaml =>
             cy.request({
@@ -217,7 +220,7 @@ const commands = {
                     expect(cookies[0]).to.have.property('name', 'XSRF-TOKEN');
                 });
 
-            cy.waitUntilLoaded();
+            cy.waitUntilAppLoaded();
         }
         return cy;
     },
@@ -269,7 +272,7 @@ const commands = {
         if (expectedPageId) {
             cy.verifyLocationByPageId(expectedPageId);
         }
-        return cy.waitUntilPageLoaded();
+        return cy.waitUntilWidgetsDataLoaded();
     },
     clickSystemMenuItem: (name: string) => {
         cy.log(`Clicking '${name}' system menu item`);
@@ -290,14 +293,9 @@ const commands = {
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
-        {
-            widgetsWidth = 8,
-            additionalWidgetIdsToLoad = []
-        }: { widgetsWidth?: number; additionalWidgetIdsToLoad?: string[] } = {}
+        { widgetsWidth = 8 }: { widgetsWidth?: number } = {}
     ) => {
         const widgetIdsArray = castArray(widgetIds);
-        const widgetIdsToLoad = compact([...widgetIdsArray, 'filter', 'pluginsCatalog', ...additionalWidgetIdsToLoad]);
-        cy.intercept('GET', '/console/widgets/list', widgetIdsToLoad.map(toIdObj));
         cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
             appDataVersion: Consts.APP_VERSION,
@@ -472,16 +470,12 @@ Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unkno
     (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
 );
 
-function toIdObj(id: string) {
-    return { id };
-}
-
 function setContext(field: string, value: string) {
     cy.get(`.${field}FilterField`)
         .click()
         .within(() => {
             cy.get('input').clear({ force: true }).type(`${value}`, { force: true });
-            cy.waitUntilPageLoaded();
+            cy.waitUntilWidgetsDataLoaded();
             cy.get(`[option-value="${value}"]`).click();
             cy.get('input').type('{esc}', { force: true });
         });

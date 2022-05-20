@@ -20,7 +20,7 @@ describe('Change Password modal', () => {
         beforeEach(() => cy.interceptSp('GET', '/idp', 'okta'));
 
         it('should not be available when user is not default admin', () => {
-            cy.usePageMock().mockLogin({ username, password });
+            cy.usePageMock().mockLoginWithoutWaiting({ username, password });
 
             openUserMenu(username);
 
@@ -28,7 +28,7 @@ describe('Change Password modal', () => {
         });
 
         it('should be available when user is default admin', () => {
-            cy.usePageMock().mockLogin();
+            cy.usePageMock().mockLoginWithoutWaiting();
 
             openUserMenu('admin');
 
@@ -38,7 +38,7 @@ describe('Change Password modal', () => {
 
     describe('when external IDP is not enabled should be available and', () => {
         before(() => {
-            cy.usePageMock().mockLogin({ username, password });
+            cy.usePageMock().mockLoginWithoutWaiting({ username, password });
             openUserMenu(username);
         });
 
@@ -100,10 +100,9 @@ describe('Change Password modal', () => {
             cy.contains('Logout').click({ force: true });
 
             cy.log('Login with new password');
-            cy.usePageMock().mockLogin({ username, password: 'new-pass' });
+            cy.usePageMock().mockLoginWithoutWaiting({ username, password: 'new-pass' }).waitUntilAppLoaded();
 
             cy.get('.error.message').should('not.exist');
-            cy.waitUntilLoaded();
         });
     });
 });

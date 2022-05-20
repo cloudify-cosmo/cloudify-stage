@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
 import Consts from 'app/utils/consts';
+import _ from 'lodash';
 
 describe('Tenants menu', () => {
     const user = {
@@ -58,11 +58,11 @@ describe('Tenants menu', () => {
         installTemplate('templateForViewer', user.tenants[0]);
         installTemplate('templateForManager', user.tenants[1]);
 
-        cy.mockLogin({ username: user.username, password: user.password });
+        cy.mockLoginWithoutWaiting({ username: user.username, password: user.password });
 
         function verifyTemplate(tenant) {
             cy.contains('.dropdown', Consts.DEFAULT_TENANT).click();
-            cy.get('.menu').contains(tenant.name).click().waitUntilLoaded();
+            cy.get('.menu').contains(tenant.name).click();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));
         }
 
