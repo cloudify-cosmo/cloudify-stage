@@ -1,10 +1,12 @@
 describe('should allow configuring deployment button', () => {
     const widgetId = 'deploymentButton';
     const resourcePrefix = 'deploy_test_';
-    const labelsBlueprint = `${resourcePrefix}labels`;
+    const labelsBlueprint = `${resourcePrefix}labels`
+    // const withoutLabelsBlueprint = `${resourcePrefix}without_labels`;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
+        // cy.uploadBlueprint('blueprints/without_labels.zip', withoutLabelsBlueprint);
         cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
     });
 
@@ -27,13 +29,26 @@ describe('should allow configuring deployment button', () => {
         });
     };
 
-    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
+    it('color', () => {
+        const color = 'red';
+        cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
+        cy.get('button').should('have.class', color);
+    });
+
+    it('icon', () => {
+        const icon = 'play';
+        cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
+        cy.get('button i').should('have.class', icon);
+    });
+
+    it('label filter rules', () => {
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
                 cy.get('[role="listbox"] > *').should('not.have.length', 1);
             });
             cy.get('.actions > .ui:nth-child(1)').click();
         });
+        // cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
@@ -53,17 +68,5 @@ describe('should allow configuring deployment button', () => {
             });
             cy.get('.actions > .ui:nth-child(1)').click();
         });
-    });
-
-    it('color', () => {
-        const color = 'red';
-        cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
-        cy.get('button').should('have.class', color);
-    });
-
-    it('icon', () => {
-        const icon = 'play';
-        cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
-        cy.get('button i').should('have.class', icon);
     });
 });
