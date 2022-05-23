@@ -2,8 +2,7 @@
 
 [note: Frontend {bg:forestgreen}]<->[ExpressJS Web Server|server.js {bg:red}]
 
-[ExpressJS Web Server|server.js]->[Routes|folder: &#47;routes|Applications;URL: &#47;applications|Auth;URL: &#47;
-auth|BlueprintAdditions;URL: &#47;ba|BlueprintUserData;URL: &#47;bud|ClientConfig;URL: &#47;config|External;URL: &#47;external|File;URL: &#47;file|Filters;URL: &#47;filters|GitHub;URL: &#47;github|Maps;URL: &#47;maps|Plugins;URL: &#47;plugins|SourceBrowser;URL: &#47;source|ServerProxy;URL: &#47;sp|Style;URL: &#47;style|Templates;URL: &#47;templates|Terraform;URL: &#47;terraform|UserApp;URL: &#47;ua|WidgetBackend;URL: &#47;wb|Widgets;URL: &#47;widgets]
+[ExpressJS Web Server|server.js]->[Routes|folder: &#47;routes|Auth;URL: &#47;auth|BlueprintAdditions;URL: &#47;ba|BlueprintUserData;URL: &#47;bud|Config;URL: &#47;config|External;URL: &#47;external|File;URL: &#47;file|Filters;URL: &#47;filters|GitHub;URL: &#47;github|Maps;URL: &#47;maps|Plugins;URL: &#47;plugins|SourceBrowser;URL: &#47;source|ServerProxy;URL: &#47;sp|Style;URL: &#47;style|Templates;URL: &#47;templates|Terraform;URL: &#47;terraform|UserApp;URL: &#47;ua|WidgetBackend;URL: &#47;wb|Widgets;URL: &#47;widgets]
 
 [ExpressJS Web Server]->[Database Connection|db&#47;Connection.js]
 [Database Connection|]->[note: Postgres DB {bg:forestgreen}]
@@ -14,4 +13,4 @@ auth|BlueprintAdditions;URL: &#47;ba|BlueprintUserData;URL: &#47;bud|ClientConfi
 
 [note: NPM Scripts {bg:forestgreen}]-->[Umzug Migration Tool|migration.js {bg:red}]
 [Umzug Migration Tool|]->[Database Connection|]
-[Database Connection|]->[Models|folder: &#47;db|ApplicationsModel;Table: Applications|BlueprintAdditionsModel;Table: BlueprintAdditions|BlueprintUserDataModel;Table: BlueprintUserData|ClientConfigsModel;Table: ClientConfig|UserAppsModel;Table: UserApps|WidgetBackendsModel;Table: WidgetBackends]
+[Database Connection|]->[Models|folder: &#47;db|BlueprintAdditionsModel;Table: BlueprintAdditions|BlueprintUserDataModel;Table: BlueprintUserData|UserAppsModel;Table: UserApps|WidgetBackendsModel;Table: WidgetBackends]
