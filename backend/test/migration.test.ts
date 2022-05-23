@@ -5,7 +5,7 @@ import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
 
-const latestMigration = '20210929110911-6_3-UserAppsPageGroups.js';
+const latestMigration = 'backend/migrations/20220523121125-6_4-RemoveApplicationsTable.js';
 const userTemplatesFolder = getResourcePath('templates', true);
 const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
