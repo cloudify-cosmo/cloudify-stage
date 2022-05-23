@@ -7,6 +7,7 @@ import RevertToDefaultIcon from './RevertToDefaultIcon';
 import SemanticColorDropdown from './SemanticColorDropdown';
 import Accordion from './accordion';
 import Parameter from './parameter';
+import ErrorPopup from './ErrorPopup';
 
 export default {
     Accordion,
@@ -17,5 +18,6 @@ export default {
     NoDataMessage,
     Parameter,
     RevertToDefaultIcon,
-    SemanticColorDropdown
+    SemanticColorDropdown,
+    ErrorPopup
 };
