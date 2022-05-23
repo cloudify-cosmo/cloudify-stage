@@ -1,18 +1,13 @@
 import type { FunctionComponent, ComponentProps } from 'react';
 import React from 'react';
-import { FilterRuleType } from '../../common/src/filters/types';
+import { FilterRuleType } from '../filters/types';
 
-type BlueprintsLabelFilterProps = Pick<
+type LabelFilterProps = Pick<
     Stage.Types.CustomConfigurationComponentProps<any[]>,
     'name' | 'onChange' | 'value' | 'widgetlessToolbox'
 >;
 
-const BlueprintsLabelFilter: FunctionComponent<BlueprintsLabelFilterProps> = ({
-    widgetlessToolbox,
-    name,
-    value,
-    onChange
-}) => {
+const LabelFilter: FunctionComponent<LabelFilterProps> = ({ widgetlessToolbox, name, value, onChange }) => {
     const { RulesForm } = Stage.Common.Filters;
 
     const handleChange: ComponentProps<typeof RulesForm>['onChange'] = newValue => {
@@ -32,4 +27,4 @@ const BlueprintsLabelFilter: FunctionComponent<BlueprintsLabelFilterProps> = ({
     );
 };
 
-export default BlueprintsLabelFilter;
+export default LabelFilter;

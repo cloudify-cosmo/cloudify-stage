@@ -1,4 +1,5 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
+import type { FilterRule } from '../../common/src/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
@@ -11,6 +12,7 @@ type DeploymentButtonConfiguration = {
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
+    blueprintFilterRules: FilterRule[];
 };
 
 Stage.defineWidget({
@@ -53,13 +55,29 @@ Stage.defineWidget({
             description: tConfiguration('label.description'),
             default: tConfiguration('label.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
+            id: 'blueprintFilterRules',
+            name: tConfiguration('labelFilterRules.name'),
+            default: [],
+            type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            component: Stage.Common.Blueprints.LabelFilter
         }
     ],
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     render(widget: Stage.Types.Widget<DeploymentButtonConfiguration>, _data, _error, toolbox) {
-        const { basic, color, icon, label } = widget.configuration;
-        return <DeploymentButton toolbox={toolbox} basic={basic} color={color} icon={icon} label={label} />;
+        const { basic, color, icon, label, blueprintFilterRules } = widget.configuration;
+        return (
+            <DeploymentButton
+                toolbox={toolbox}
+                basic={basic}
+                color={color}
+                icon={icon}
+                label={label}
+                blueprintFilterRules={blueprintFilterRules}
+            />
+        );
     }
 });

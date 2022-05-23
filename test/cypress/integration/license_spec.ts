@@ -65,7 +65,7 @@ describe('License Management', () => {
     const licenseManagementUrl = '/console/license';
 
     before(cy.activate);
-    beforeEach(() => cy.usePageMock().mockLogin());
+    beforeEach(() => cy.usePageMock().mockLoginWithoutWaiting());
 
     describe('is accessible from', () => {
         it('users menu', () => {

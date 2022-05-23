@@ -177,7 +177,9 @@ describe('Getting started modal', () => {
 
     describe('with mocked pages', () => {
         beforeEach(() =>
-            cy.usePageMock().mockLogin({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
+            cy
+                .usePageMock()
+                .mockLoginWithoutWaiting({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
         );
 
         it('should install selected environment', () => {

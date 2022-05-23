@@ -795,6 +795,8 @@
             }
         },
         "blueprintActionButtons": {
+            "name": "Blueprint action buttons",
+            "description": "Provides set of action buttons for blueprint",
             "configuration": {
                 "showEditCopyInComposerButton": "Show the \"Edit a copy in Composer\" button"
             },
@@ -1394,6 +1396,9 @@
                 "icon": {
                     "name": "Icon",
                     "description": "Icon displayed on the button"
+                },
+                "labelFilterRules": {
+                    "name": "Blueprint label filter rules"
                 }
             }
         },
