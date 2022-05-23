@@ -3,7 +3,6 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
-    const labelsBlueprint = `${resourcePrefix}labels`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
@@ -15,8 +14,7 @@ describe('Create Deployment Button widget', () => {
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint)
-            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         types.forEach(type =>
             cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
