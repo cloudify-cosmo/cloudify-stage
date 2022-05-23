@@ -53,4 +53,16 @@ describe('should allow configuring deployment button', () => {
             cy.get('.actions > .ui:nth-child(1)').click();
         });
     });
+
+    it('color', () => {
+        const color = 'red';
+        cy.setSearchableDropdownConfigurationField(widgetId, 'Color', color);
+        cy.get('button').should('have.class', color);
+    });
+
+    it('icon', () => {
+        const icon = 'play';
+        cy.setSearchableDropdownConfigurationField(widgetId, 'Icon', icon);
+        cy.get('button i').should('have.class', icon);
+    });
 });
