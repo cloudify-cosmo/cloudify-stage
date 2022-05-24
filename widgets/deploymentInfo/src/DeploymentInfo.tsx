@@ -1,6 +1,8 @@
 import type { DeploymentInfoWidget } from './widget.types';
 
-const { ErrorMessage } = Stage.Basic;
+const { ErrorPopup } = Stage.Common.Components;
+const { useResettableState } = Stage.Hooks;
+
 const DeploymentDetails = Stage.Common.Deployments.Details;
 const DeploymentActions = Stage.Common.Deployments.Actions;
 
@@ -11,7 +13,7 @@ interface DeploymentsInfoProps {
 
 export default function DeploymentInfo({ data, toolbox }: DeploymentsInfoProps) {
     const { deployment, instancesCount, instancesStates } = data;
-    const [visibilityError, setVisibilityError] = React.useState('');
+    const [visibilityError, setVisibilityError, clearVisibilityError] = useResettableState('');
 
     const setVisibility = (visibility: string) => {
         const actions = new DeploymentActions(toolbox);
@@ -25,15 +27,19 @@ export default function DeploymentInfo({ data, toolbox }: DeploymentsInfoProps) 
     };
 
     return (
-        <div>
-            {visibilityError && <ErrorMessage error={visibilityError} autoHide={false} />}
-            <DeploymentDetails
-                big
-                deployment={deployment}
-                instancesCount={instancesCount}
-                instancesStates={instancesStates}
-                onSetVisibility={setVisibility}
-            />
-        </div>
+        <ErrorPopup
+            trigger={
+                <DeploymentDetails
+                    big
+                    deployment={deployment}
+                    instancesCount={instancesCount}
+                    instancesStates={instancesStates}
+                    onSetVisibility={setVisibility}
+                />
+            }
+            onDismiss={clearVisibilityError}
+            errorMessage={visibilityError}
+            open={!!visibilityError}
+        />
     );
 }
