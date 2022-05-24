@@ -128,17 +128,4 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/error');
         cy.get('.error.message').should('have.text', 'Error getting data from the manager, cannot load page');
     });
-
-    it('fails when user data cannot be fetched', () => {
-        cy.intercept('GET', '/console/auth/user', {
-            statusCode: 500,
-            body: {}
-        });
-
-        cy.activate();
-        forceLogin();
-
-        cy.location('pathname').should('be.equal', '/console/error');
-        cy.get('.error.message').should('have.text', 'Error initializing user data, cannot load page');
-    });
 });
