@@ -173,7 +173,7 @@ export default function BlueprintsCatalog({
                                                             item.main_file_name
                                                         );
                                                     }}
-                                                    style={{width: '247px'}}
+                                                    style={{ width: '247px' }}
                                                 />
                                             )}
                                         </>
