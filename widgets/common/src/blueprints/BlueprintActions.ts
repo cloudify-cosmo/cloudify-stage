@@ -168,9 +168,7 @@ export default class BlueprintActions {
     }
 
     doDelete(blueprintId: string, force = false) {
-        return this.toolbox
-            .getManager()
-            .doDelete(`/blueprints/${blueprintId}`, { params: { force } });
+        return this.toolbox.getManager().doDelete(`/blueprints/${blueprintId}`, { params: { force } });
     }
 
     doDeploy({
@@ -308,17 +306,17 @@ export default class BlueprintActions {
     }
 
     async doUploadImage(blueprintId: string, imageUrl: string | undefined, files: any) {
-        if (!imageUrl && !files) {
-            return Promise.resolve();
-        }
-
         if (files) {
             return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files, method: 'PATCH' });
         }
 
         if (imageUrl) {
             const image = await (await fetch(imageUrl)).blob();
-            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files: image, method: 'PATCH' });
+            return this.toolbox
+                .getManager()
+                .doUpload(`/blueprints/${blueprintId}/icon`, { files: image, method: 'PATCH' });
         }
+
+        return Promise.resolve();
     }
 }

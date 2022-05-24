@@ -1,17 +1,11 @@
 import express from 'express';
-import bodyParser from 'body-parser';
-import path from 'path';
 import _ from 'lodash';
 import type { AxiosRequestHeaders } from 'axios';
-import { db } from '../db/Connection';
-import type { BlueprintAdditionsInstance } from '../db/models/BlueprintAdditionsModel';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 import * as ManagerHandler from '../handler/ManagerHandler';
 import { requestAndForwardResponse } from '../handler/RequestHandler';
-import { getLogger } from '../handler/LoggerHandler';
 
 const router = express.Router();
-const logger = getLogger('BlueprintAdditions');
 
 router.get('/image/:tenantName/:blueprintId', (req, res, next) => {
     const { blueprintId, tenantName } = req.params;
