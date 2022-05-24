@@ -16,7 +16,6 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as(
             'uploadedBlueprints'
         );
-        // cy.get('div.deploymentButtonWidget button').click();
     });
 
     const openDropdown = (divName: string) => {
@@ -43,11 +42,12 @@ describe('Create deployment button widget should allow configuring', () => {
     });
 
     it('label filter rules', () => {
+        // cy.get('div.deploymentButtonWidget button').click();
         // cy.get('div.deployBlueprintModal').within(() => {
         //     openDropdown('blueprintName').within(() => {
         //         cy.get('[role="listbox"] > *').should('not.have.length', 1);
         //     });
-        //     cy.get('.actions > .ui:nth-child(1)').click();
+        //     cy.contains('Cancel').click();
         // });
         // cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
         cy.editWidgetConfiguration('deploymentButton', () => {
@@ -64,10 +64,9 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('have.length', 1);
                 cy.get('[role="option"]').should('contain.text', labelsBlueprint);
             });
-            cy.get('.actions > .ui:nth-child(1)').click();
+            cy.contains('Cancel').click();
         });
     });
 });
