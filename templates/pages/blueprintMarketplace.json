@@ -10,7 +10,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -27,7 +27,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -43,7 +43,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -59,7 +59,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -75,7 +75,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -91,7 +91,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 28,
+                            "height": 38,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
