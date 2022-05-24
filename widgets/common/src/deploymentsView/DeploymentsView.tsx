@@ -32,6 +32,10 @@ import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
 import type { Deployment, DeploymentsResponse } from './types';
 
+const { Loading, ErrorMessage } = Stage.Basic;
+// const { ErrorPopup } = Stage.Common.Components;
+const t = Stage.Utils.getT(i18nMessagesPrefix);
+
 export interface DeploymentsViewProps {
     widget: Stage.Types.Widget<SharedDeploymentsViewWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
@@ -120,39 +124,34 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     const widgetDimensions = useWidgetDimensions(widget);
 
-    const { Loading, ErrorMessage } = Stage.Basic;
-    const { i18n } = Stage;
-
     if (defaultFilterRulesResult.isLoading) {
-        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingFilterRules`)} />;
+        return <Loading message={t('loadingFilterRules')} />;
     }
     if (defaultFilterRulesResult.isError) {
         return (
             <ErrorMessage
-                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingFilterRules`)}
+                header={t('errorLoadingFilterRules')}
                 error={defaultFilterRulesResult.error as { message: string }}
             />
         );
     }
 
     if (filteringByParentDeploymentResult.missingParentDeploymentId) {
-        const i18nMissingParentDeploymentPrefix = `${i18nMessagesPrefix}.missingParentDeploymentId`;
-
         return (
             <ErrorMessage
-                header={i18n.t(`${i18nMissingParentDeploymentPrefix}.header`)}
-                error={i18n.t(`${i18nMissingParentDeploymentPrefix}.message`)}
+                header={t('missingParentDeploymentId.header')}
+                error={t('missingParentDeploymentId.message')}
             />
         );
     }
 
     if (deploymentsResult.isLoading || deploymentsResult.isIdle) {
-        return <Loading message={i18n.t(`${i18nMessagesPrefix}.loadingDeployments`)} />;
+        return <Loading message={t('loadingDeployments')} />;
     }
     if (deploymentsResult.isError) {
         return (
             <ErrorMessage
-                header={i18n.t(`${i18nMessagesPrefix}.errorLoadingDeployments`)}
+                header={t('errorLoadingDeployments')}
                 error={deploymentsResult.error as { message: string }}
             />
         );
