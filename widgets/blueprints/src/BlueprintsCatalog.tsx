@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import ErrorPopup from '../../common/src/components/ErrorPopup';
 
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
@@ -143,15 +144,22 @@ export default function BlueprintsCatalog({
 
                 {BlueprintActions.isCompleted(item) && (
                     <div className="actionButtons">
-                        <Button
-                            icon="trash"
-                            content="Delete"
-                            basic
-                            labelPosition="left"
-                            onClick={event => {
-                                event.stopPropagation();
-                                onDeleteBlueprint(item);
-                            }}
+                        <ErrorPopup
+                            trigger={
+                                <Button
+                                    icon="trash"
+                                    content="Delete"
+                                    basic
+                                    labelPosition="left"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        onDeleteBlueprint(item);
+                                    }}
+                                />
+                            }
+                            open
+                            onDismiss={() => {}}
+                            errorMessage="Some error message"
                         />
                         {BlueprintActions.isUploaded(item) && (
                             <>

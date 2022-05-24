@@ -35,13 +35,13 @@ const ErrorPopup: FunctionComponent<ErrorPopupProps> = ({ open, trigger, errorMe
         <StyledPopup
             open={open}
             trigger={trigger}
-            content={
-                <div>
-                    {errorMessage}
+            content={errorMessage}
+            header={
+                <div className="header">
+                    {'Error has occured'}
                     <CancelButton onClick={onDismiss} />
                 </div>
             }
-            header="Error has occured"
         />
     );
 };
