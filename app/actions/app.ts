@@ -5,7 +5,6 @@ import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadWidgetDefinitions } from './widgets';
 
-import { getClientConfig } from './clientConfig';
 import { loadOrCreateUserAppData } from './userApp';
 import { getIdentityProviders } from './managers';
 import { getClusterStatus } from './clusterStatus';
@@ -17,7 +16,6 @@ export function intialPageLoad() {
         return Promise.all([
             dispatch(loadTemplates()),
             dispatch(loadWidgetDefinitions()),
-            dispatch(getClientConfig()),
             dispatch(getClusterStatus()),
             dispatch(getIdentityProviders())
         ])

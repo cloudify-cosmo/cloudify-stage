@@ -20,10 +20,8 @@ import { authenticateWithCookie } from './auth/AuthMiddlewares';
 import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
-import Applications from './routes/Applications';
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
-import ClientConfig from './routes/ClientConfig';
 import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
@@ -103,10 +101,8 @@ app.use(
 );
 // API Routes with authentication
 const authenticatedApiRoutes: Record<string, Router> = {
-    applications: Applications,
     ba: BlueprintAdditions,
     bud: BlueprintUserData,
-    clientConfig: ClientConfig,
     contactDetails: ContactDetails,
     external: External,
     file: File,
