@@ -1,4 +1,3 @@
-import Cookies from 'js-cookie';
 import React from 'react';
 import type { FunctionComponent } from 'react';
 import { useSelector } from 'react-redux';
@@ -16,7 +15,6 @@ import SamlLogin from './SamlLogin';
 const Routes: FunctionComponent = () => {
     const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
     const isSamlEnabled = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.enabled', false));
-    const isSamlLogin = isSamlEnabled && !!Cookies.get(Consts.ROLE_COOKIE_NAME);
     const samlPortalUrl = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.portalUrl', ''));
     const theme = useSelector((state: ReduxState) => _.get(state, 'config.app.whiteLabel', {}));
 
@@ -24,6 +22,7 @@ const Routes: FunctionComponent = () => {
         <ThemeProvider theme={theme}>
             <Switch>
                 <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
+                {isSamlEnabled && <Route exact path={Consts.PAGE_PATH.SAML_LOGIN} component={SamlLogin} />}
                 <Route
                     exact
                     path={Consts.PAGE_PATH.LOGOUT}
@@ -41,7 +40,6 @@ const Routes: FunctionComponent = () => {
                 <Route
                     render={() => {
                         if (isLoggedIn) return <AuthRoutes />;
-                        if (isSamlLogin) return <SamlLogin />;
                         return <Redirect to={Consts.PAGE_PATH.LOGIN} />;
                     }}
                 />
