@@ -33,7 +33,6 @@ import useFilterQuery from './useFilterQuery';
 import type { Deployment, DeploymentsResponse } from './types';
 
 const { Loading, ErrorMessage } = Stage.Basic;
-// const { ErrorPopup } = Stage.Common.Components;
 const t = Stage.Utils.getT(i18nMessagesPrefix);
 
 export interface DeploymentsViewProps {
