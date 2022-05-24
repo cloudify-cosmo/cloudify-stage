@@ -170,8 +170,7 @@ export default class BlueprintActions {
     doDelete(blueprintId: string, force = false) {
         return this.toolbox
             .getManager()
-            .doDelete(`/blueprints/${blueprintId}`, { params: { force } })
-            .then(() => this.doDeleteImage(blueprintId));
+            .doDelete(`/blueprints/${blueprintId}`, { params: { force } });
     }
 
     doDeploy({
@@ -214,7 +213,7 @@ export default class BlueprintActions {
             );
     }
 
-    doUpload(
+    async doUpload(
         blueprintName: string,
         {
             blueprintYamlFile,
@@ -243,21 +242,27 @@ export default class BlueprintActions {
             params.blueprint_archive_url = blueprintUrl;
         }
 
-        let promise;
+        if (imageUrl) {
+            try {
+                await fetch(imageUrl);
+            } catch (error) {
+                throw new Error(Stage.i18n.t('widgets.common.blueprintUpload.validationErrors.invalidImageUrl'));
+            }
+        }
+
         if (file) {
             const compressFile =
                 _.endsWith(file.name.toLowerCase(), '.yaml') || _.endsWith(file.name.toLowerCase(), '.yml');
-            promise = this.toolbox
+            await this.toolbox
                 .getManager()
                 .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
         } else {
-            promise = this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
+            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
         }
 
-        return promise
-            .then(() => this.waitUntilUploaded(blueprintName, onStateChanged))
-            .then(() => onStateChanged(InProgressBlueprintStates.UploadingImage))
-            .then(() => this.doUploadImage(blueprintName, imageUrl, image));
+        await this.waitUntilUploaded(blueprintName, onStateChanged);
+        await onStateChanged(InProgressBlueprintStates.UploadingImage);
+        return this.doUploadImage(blueprintName, imageUrl, image);
     }
 
     async waitUntilUploaded(blueprintName: string, onStateChanged: (state: string) => void) {
@@ -302,19 +307,18 @@ export default class BlueprintActions {
             .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
     }
 
-    doUploadImage(blueprintId: string, imageUrl: string | undefined, files: any) {
-        if (_.isEmpty(imageUrl) && !files) {
+    async doUploadImage(blueprintId: string, imageUrl: string | undefined, files: any) {
+        if (!imageUrl && !files) {
             return Promise.resolve();
         }
 
-        const params = { imageUrl };
         if (files) {
-            return this.toolbox.getInternal().doUpload(`/ba/image/${blueprintId}`, { params, files, method: 'post' });
+            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files, method: 'PATCH' });
         }
-        return this.toolbox.getInternal().doPost(`/ba/image/${blueprintId}`, { params });
-    }
 
-    doDeleteImage(blueprintId: string) {
-        return this.toolbox.getInternal().doDelete(`/ba/image/${blueprintId}`);
+        if (imageUrl) {
+            const image = await (await fetch(imageUrl)).blob();
+            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files: image, method: 'PATCH' });
+        }
     }
 }

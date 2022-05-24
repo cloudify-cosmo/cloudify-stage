@@ -12,8 +12,9 @@ export default function BlueprintsTable({
     toolbox,
     widget
 }: BlueprintsViewProps) {
-    const { DataTable, Icon, Image, ResourceVisibility } = Stage.Basic;
-    const BlueprintActions = Stage.Common.Blueprints.Actions;
+    const { DataTable, Icon, ResourceVisibility } = Stage.Basic;
+    const { Blueprints } = Stage.Common;
+    const manager = toolbox.getManager();
     const tableName = 'blueprintsTable';
     const { fieldsToShow } = widget.configuration;
 
@@ -43,10 +44,10 @@ export default function BlueprintsTable({
                     id={`${tableName}_${item.id}`}
                     key={item.id}
                     selected={item.isSelected}
-                    onClick={BlueprintActions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
+                    onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
                 >
                     <DataTable.Data>
-                        <Image src={Stage.Utils.Url.url(`/ba/image/${item.id}`)} width="30px" height="auto" inline />{' '}
+                        <Blueprints.Image blueprintId={item.id} tenantName={manager.getSelectedTenant()} width={30} />{' '}
                         <a className="blueprintName" href="#!">
                             {item.id}
                         </a>
@@ -69,11 +70,11 @@ export default function BlueprintsTable({
                     </DataTable.Data>
 
                     <DataTable.Data className="center aligned rowActions">
-                        {BlueprintActions.isCompleted(item) && (
+                        {Blueprints.Actions.isCompleted(item) && (
                             <>
-                                {BlueprintActions.isUploaded(item) && (
+                                {Blueprints.Actions.isUploaded(item) && (
                                     <>
-                                        {!toolbox.getManager().isCommunityEdition() &&
+                                        {!manager.isCommunityEdition() &&
                                             widget.configuration.showComposerOptions && (
                                                 <Icon
                                                     name="external share"
