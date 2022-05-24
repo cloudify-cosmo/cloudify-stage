@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import { ButtonProps, IconProps } from 'semantic-ui-react';
+import type { ButtonProps, IconProps } from 'semantic-ui-react';
 import Wizard from './wizard';
 
 const { Button, Icon } = Stage.Basic;
