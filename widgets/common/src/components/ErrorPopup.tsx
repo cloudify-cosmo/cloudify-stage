@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import type { PopupProps } from 'semantic-ui-react';
 import styled from 'styled-components';
 
-const { Popup } = Stage.Basic;
+const { Popup, CancelButton } = Stage.Basic;
 
 // TODO: Reuse colors from the semantic-ui library or from the aplication theming
 const StyledPopup = styled(Popup)`
@@ -30,8 +30,20 @@ export interface ErrorPopupProps {
 
 // TODO: Implement closing button
 // TODO: Implement max height for the error message, combined with a scrolling mechanism
-const ErrorPopup: FunctionComponent<ErrorPopupProps> = ({ open, trigger, errorMessage }) => {
-    return <StyledPopup open={open} trigger={trigger} content={errorMessage} header="Error has occured" />;
+const ErrorPopup: FunctionComponent<ErrorPopupProps> = ({ open, trigger, errorMessage, onDismiss }) => {
+    return (
+        <StyledPopup
+            open={open}
+            trigger={trigger}
+            content={
+                <div>
+                    {errorMessage}
+                    <CancelButton onClick={onDismiss} />
+                </div>
+            }
+            header="Error has occured"
+        />
+    );
 };
 
 export default ErrorPopup;
