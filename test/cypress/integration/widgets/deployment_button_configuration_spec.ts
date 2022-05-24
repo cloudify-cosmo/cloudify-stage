@@ -1,13 +1,14 @@
 describe('should allow configuring deployment button', () => {
     const widgetId = 'deploymentButton';
-    const resourcePrefix = 'deploy_test_';
+    const resourcePrefix = 'deploy_btn_config_test_';
     const labelsBlueprint = `${resourcePrefix}labels`;
-    // const withoutLabelsBlueprint = `${resourcePrefix}without_labels`;
+    const withoutLabelsBlueprint = `${resourcePrefix}without_labels`;
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
-        // cy.uploadBlueprint('blueprints/without_labels.zip', withoutLabelsBlueprint);
-        cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
+        cy.deleteBlueprints(resourcePrefix, true)
+            .uploadBlueprint('blueprints/without_labels.zip', withoutLabelsBlueprint)
+            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
     });
 
     beforeEach(() => {
@@ -15,7 +16,7 @@ describe('should allow configuring deployment button', () => {
         cy.interceptSp('POST', { pathname: '/searches/blueprints', query: { state: 'uploaded' } }).as(
             'uploadedBlueprints'
         );
-        cy.get('div.deploymentButtonWidget button').click();
+        // cy.get('div.deploymentButtonWidget button').click();
     });
 
     const openDropdown = (divName: string) => {
@@ -42,12 +43,12 @@ describe('should allow configuring deployment button', () => {
     });
 
     it('label filter rules', () => {
-        cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('not.have.length', 1);
-            });
-            cy.get('.actions > .ui:nth-child(1)').click();
-        });
+        // cy.get('div.deployBlueprintModal').within(() => {
+        //     openDropdown('blueprintName').within(() => {
+        //         cy.get('[role="listbox"] > *').should('not.have.length', 1);
+        //     });
+        //     cy.get('.actions > .ui:nth-child(1)').click();
+        // });
         // cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
