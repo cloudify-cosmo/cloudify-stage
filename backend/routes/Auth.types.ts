@@ -63,3 +63,10 @@ export interface LicenseResponse {
     trial: boolean;
 }
 /* eslint-enable camelcase */
+
+export interface AuthUserResponse {
+    username: UserResponse['username'];
+    role: UserResponse['role'];
+    groupSystemRoles: UserResponse['group_system_roles'];
+    tenantsRoles: UserResponse['tenants'];
+}
