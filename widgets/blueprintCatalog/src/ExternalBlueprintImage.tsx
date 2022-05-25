@@ -8,7 +8,9 @@ export interface ExternalBlueprintImageProps {
 const { Blueprints } = Stage.Common;
 
 const ExternalBlueprintImage: FunctionComponent<ExternalBlueprintImageProps> = ({ url, width }) => {
-    return <Blueprints.Image url={Stage.Utils.Url.url(`/external/content?url=${encodeURIComponent(url)}`)} width={width} />
+    return (
+        <Blueprints.Image url={Stage.Utils.Url.url(`/external/content?url=${encodeURIComponent(url)}`)} width={width} />
+    );
 };
 
 export default ExternalBlueprintImage;

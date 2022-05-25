@@ -47,7 +47,13 @@ export default function BlueprintsTable({
                     onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
                 >
                     <DataTable.Data>
-                        {Blueprints.Actions.isUploaded(item) && <Blueprints.UploadedImage blueprintId={item.id} tenantName={manager.getSelectedTenant()} width={30} />}{' '}
+                        {Blueprints.Actions.isUploaded(item) && (
+                            <Blueprints.UploadedImage
+                                blueprintId={item.id}
+                                tenantName={manager.getSelectedTenant()}
+                                width={30}
+                            />
+                        )}{' '}
                         <a className="blueprintName" href="#!">
                             {item.id}
                         </a>

@@ -243,9 +243,11 @@ export default class BlueprintActions {
         let imageFile = image;
         if (imageUrl) {
             try {
-                imageFile = await (await this.toolbox
-                    .getInternal()
-                    .doGet('/external/content', { params: { url: imageUrl }, parseResponse: false})).blob();
+                imageFile = await (
+                    await this.toolbox
+                        .getInternal()
+                        .doGet('/external/content', { params: { url: imageUrl }, parseResponse: false })
+                ).blob();
             } catch (error) {
                 throw new Error(Stage.i18n.t('widgets.common.blueprintUpload.validationErrors.invalidImageUrl'));
             }
@@ -310,7 +312,9 @@ export default class BlueprintActions {
 
     async doUploadImage(blueprintId: string, imageFile?: Blob) {
         if (imageFile) {
-            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files: imageFile, method: 'PATCH' });
+            return this.toolbox
+                .getManager()
+                .doUpload(`/blueprints/${blueprintId}/icon`, { files: imageFile, method: 'PATCH' });
         }
 
         return Promise.resolve();

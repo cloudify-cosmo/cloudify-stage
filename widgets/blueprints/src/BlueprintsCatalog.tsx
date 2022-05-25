@@ -33,11 +33,13 @@ export default function BlueprintsCatalog({
                     <Grid>
                         <Grid.Row>
                             <Grid.Column width="16">
-                                {Blueprints.Actions.isUploaded(item) && <Blueprints.UploadedImage
-                                    blueprintId={item.id}
-                                    tenantName={manager.getSelectedTenant()}
-                                    width={50}
-                                />}
+                                {Blueprints.Actions.isUploaded(item) && (
+                                    <Blueprints.UploadedImage
+                                        blueprintId={item.id}
+                                        tenantName={manager.getSelectedTenant()}
+                                        width={50}
+                                    />
+                                )}
                                 <ResourceVisibility
                                     visibility={item.visibility}
                                     onSetVisibility={visibility => onSetVisibility(item.id, visibility)}

@@ -20,13 +20,7 @@ const BlueprintImage: FunctionComponent<BlueprintImageProps> = ({ url, width }) 
     return defaultImage ? (
         <ProductLogo background="light" style={{ margin: 0, width, height: width }} />
     ) : (
-        <Image
-            src={url}
-            inline
-            onError={showDefaultImage}
-            width={width}
-            height="auto"
-        />
+        <Image src={url} inline onError={showDefaultImage} width={width} height="auto" />
     );
 };
 

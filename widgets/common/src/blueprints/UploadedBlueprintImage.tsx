@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import BlueprintImage from "./BlueprintImage";
+import BlueprintImage from './BlueprintImage';
 
 export interface UploadedBlueprintProps {
     tenantName: string;
@@ -8,7 +8,7 @@ export interface UploadedBlueprintProps {
 }
 
 const UploadedBlueprintImage: FunctionComponent<UploadedBlueprintProps> = ({ tenantName, blueprintId, width }) => {
-    return <BlueprintImage url={Stage.Utils.Url.url(`/ba/image/${tenantName}/${blueprintId}`)} width={width} />
+    return <BlueprintImage url={Stage.Utils.Url.url(`/ba/image/${tenantName}/${blueprintId}`)} width={width} />;
 };
 
 export default UploadedBlueprintImage;
