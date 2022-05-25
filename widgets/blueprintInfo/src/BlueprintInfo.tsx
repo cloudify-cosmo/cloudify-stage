@@ -40,7 +40,7 @@ export default class BlueprintInfo extends React.Component {
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4">
-                            <Blueprints.Image blueprintId={blueprint.id} tenantName={tenantName} width={50} />
+                            {Blueprints.Actions.isUploaded(blueprint) && <Blueprints.UploadedImage blueprintId={blueprint.id} tenantName={tenantName} width={50} />}
                         </Grid.Column>
                         <Grid.Column width="12">
                             <h3 className="ui icon header verticalCenter">

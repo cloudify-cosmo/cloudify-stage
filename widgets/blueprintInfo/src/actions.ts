@@ -13,7 +13,7 @@ export default class Actions {
         return this.toolbox
             .getManager()
             .doGet(
-                `/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name`
+                `/blueprints/${blueprintId}?_include=id,updated_at,created_at,description,created_by,visibility,main_file_name,state`
             );
     }
 

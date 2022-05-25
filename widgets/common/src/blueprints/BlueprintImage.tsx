@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
 import type { FunctionComponent } from 'react';
 
 export interface BlueprintImageProps {
-    tenantName: string;
-    blueprintId: string;
+    url: string;
     width: number;
 }
 
@@ -10,14 +10,18 @@ const { Image } = Stage.Basic;
 const { ProductLogo } = Stage.Shared;
 const { useBoolean } = Stage.Hooks;
 
-const BlueprintImage: FunctionComponent<BlueprintImageProps> = ({ tenantName, blueprintId, width }) => {
-    const [defaultImage, showDefaultImage] = useBoolean(false);
+const BlueprintImage: FunctionComponent<BlueprintImageProps> = ({ url, width }) => {
+    const [defaultImage, showDefaultImage, showBlueprintImage] = useBoolean(false);
+
+    useEffect(() => {
+        showBlueprintImage();
+    }, [url]);
 
     return defaultImage ? (
         <ProductLogo background="light" style={{ margin: 0, width, height: width }} />
     ) : (
         <Image
-            src={Stage.Utils.Url.url(`/ba/image/${tenantName}/${blueprintId}`)}
+            src={url}
             inline
             onError={showDefaultImage}
             width={width}
