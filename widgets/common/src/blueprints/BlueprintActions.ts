@@ -226,7 +226,7 @@ export default class BlueprintActions {
             blueprintUrl?: string;
             file?: Blob & { name: string };
             imageUrl?: string;
-            image?: any;
+            image?: Blob;
             visibility?: string;
             onStateChanged?: (state: string) => void;
         }
@@ -240,9 +240,12 @@ export default class BlueprintActions {
             params.blueprint_archive_url = blueprintUrl;
         }
 
+        let imageFile = image;
         if (imageUrl) {
             try {
-                await fetch(imageUrl);
+                imageFile = await (await this.toolbox
+                    .getInternal()
+                    .doGet('/external/content', { params: { url: imageUrl }, parseResponse: false})).blob();
             } catch (error) {
                 throw new Error(Stage.i18n.t('widgets.common.blueprintUpload.validationErrors.invalidImageUrl'));
             }
@@ -260,7 +263,7 @@ export default class BlueprintActions {
 
         await this.waitUntilUploaded(blueprintName, onStateChanged);
         await onStateChanged(InProgressBlueprintStates.UploadingImage);
-        return this.doUploadImage(blueprintName, imageUrl, image);
+        return this.doUploadImage(blueprintName, imageFile);
     }
 
     async waitUntilUploaded(blueprintName: string, onStateChanged: (state: string) => void) {
@@ -305,16 +308,9 @@ export default class BlueprintActions {
             .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
     }
 
-    async doUploadImage(blueprintId: string, imageUrl: string | undefined, files: any) {
-        if (files) {
-            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files, method: 'PATCH' });
-        }
-
-        if (imageUrl) {
-            const image = await (await fetch(imageUrl)).blob();
-            return this.toolbox
-                .getManager()
-                .doUpload(`/blueprints/${blueprintId}/icon`, { files: image, method: 'PATCH' });
+    async doUploadImage(blueprintId: string, imageFile?: Blob) {
+        if (imageFile) {
+            return this.toolbox.getManager().doUpload(`/blueprints/${blueprintId}/icon`, { files: imageFile, method: 'PATCH' });
         }
 
         return Promise.resolve();
