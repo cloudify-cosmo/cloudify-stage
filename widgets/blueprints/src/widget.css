@@ -18,10 +18,14 @@
     margin: 0.2rem;
 }
 
-@media screen and (min-width: 769px) and (max-width: 1645px) {
+.blueprintCatalog .stackable .column > .column {
+    min-width: 315px;
+    max-width: 20%;
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 769px) {
     .blueprintCatalog .stackable .column > .column {
-        min-width: 315px;
-        max-width: 20%;
-        margin-bottom: 1rem;
+        max-width: 100%;
     }
 }

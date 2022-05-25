@@ -136,9 +136,9 @@ export default function BlueprintsCatalog({
                         )}
                     </Grid>
                     {BlueprintActions.isCompleted(item) && (
-                        <Grid style={{ marginTop: 'auto', paddingTop: '1rem' }}>
-                            <Grid.Row className="centered">
-                                <Grid.Column className="centered aligned">
+                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+                            <Grid.Row centered>
+                                <Grid.Column textAlign="center">
                                     <Button
                                         icon="trash"
                                         content="Delete"
