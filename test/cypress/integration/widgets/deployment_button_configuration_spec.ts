@@ -6,9 +6,7 @@ describe('Create deployment button widget should allow configuring', () => {
 
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
-        cy.deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/empty.zip', withoutLabelsBlueprint)
-            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
+        cy.deleteBlueprints(resourcePrefix, true).uploadBlueprint('blueprints/empty.zip', withoutLabelsBlueprint);
     });
 
     beforeEach(() => {
@@ -42,14 +40,15 @@ describe('Create deployment button widget should allow configuring', () => {
     });
 
     it('label filter rules', () => {
-        // cy.get('div.deploymentButtonWidget button').click();
-        // cy.get('div.deployBlueprintModal').within(() => {
-        //     openDropdown('blueprintName').within(() => {
-        //         cy.get('[role="listbox"] > *').should('not.have.length', 1);
-        //     });
-        //     cy.contains('Cancel').click();
-        // });
-        // cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
+        cy.get('div.deploymentButtonWidget button').click();
+        cy.get('div.deployBlueprintModal').within(() => {
+            openDropdown('blueprintName').within(() => {
+                cy.get('[role="listbox"]').should('contain.text', withoutLabelsBlueprint);
+                cy.get('[role="listbox"]').should('not.contain.text', labelsBlueprint);
+            });
+            cy.contains('Cancel').click();
+        });
+        cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
             openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
@@ -64,7 +63,8 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="option"]').should('contain.text', labelsBlueprint);
+                cy.get('[role="listbox"]').should('contain.text', withoutLabelsBlueprint);
+                cy.get('[role="listbox"]').should('contain.text', labelsBlueprint);
             });
             cy.contains('Cancel').click();
         });
