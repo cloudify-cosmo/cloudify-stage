@@ -7,7 +7,7 @@ describe('Create deployment button widget should allow configuring', () => {
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
         cy.deleteBlueprints(resourcePrefix, true)
-            .uploadBlueprint('blueprints/without_labels.zip', withoutLabelsBlueprint)
+            .uploadBlueprint('blueprints/empty.zip', withoutLabelsBlueprint)
             .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
     });
 
