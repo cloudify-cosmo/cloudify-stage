@@ -412,7 +412,7 @@ describe('Blueprints widget', () => {
                 const blueprintName = `${blueprintNamePrefix}_upload_error`;
 
                 cy.get('input[name=blueprintName]').clear().type(blueprintName).blur();
-                cy.get('input[name=imageUrl]').type('http://not.found.error.com');
+                cy.get('input[name=imageUrl]').type('http://invalid-url.invalid-domain');
                 cy.contains('button', 'Upload').click();
 
                 cy.contains('Please provide valid URL for blueprint icon');
