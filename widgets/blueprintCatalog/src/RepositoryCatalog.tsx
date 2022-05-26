@@ -4,8 +4,9 @@ import type { FunctionComponent } from 'react';
 import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
+import ExternalBlueprintImage from './ExternalBlueprintImage';
 
-const { DataSegment, Grid, Image, Button, Header } = Stage.Basic;
+const { DataSegment, Grid, Button, Header } = Stage.Basic;
 const t = Utils.getWidgetTranslation('catalog');
 
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
@@ -32,7 +33,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid className="contentBlock">
                         <Grid.Row className="bottomDivider">
                             <Grid.Column width="16">
-                                <Image src={Stage.Utils.Url.url(item.image_url)} />
+                                <ExternalBlueprintImage url={item.image_url} width={50} />
                                 <Header>
                                     <a href={item.html_url} target="_blank" rel="noopener noreferrer">
                                         {item.name}

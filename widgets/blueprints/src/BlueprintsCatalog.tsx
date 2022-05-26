@@ -14,8 +14,8 @@ export default function BlueprintsCatalog({
     widget,
     toolbox
 }: BlueprintsViewProps) {
-    const { DataSegment, Grid, Image, Button, Label, ResourceVisibility, Header } = Stage.Basic;
-    const BlueprintActions = Stage.Common.Blueprints.Actions;
+    const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
+    const { Blueprints } = Stage.Common;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
 
@@ -33,10 +33,13 @@ export default function BlueprintsCatalog({
                     <Grid>
                         <Grid.Row>
                             <Grid.Column width="16">
-                                <Image
-                                    src={Stage.Utils.Url.url(`/ba/image/${item.id}`)}
-                                    style={{ maxWidth: 50, display: 'inline' }}
-                                />
+                                {Blueprints.Actions.isUploaded(item) && (
+                                    <Blueprints.UploadedImage
+                                        blueprintId={item.id}
+                                        tenantName={manager.getSelectedTenant()}
+                                        width={50}
+                                    />
+                                )}
                                 <ResourceVisibility
                                     visibility={item.visibility}
                                     onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
