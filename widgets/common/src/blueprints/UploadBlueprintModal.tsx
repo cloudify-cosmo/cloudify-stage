@@ -38,7 +38,7 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
         blueprintName: '',
         blueprintYamlFile: '',
         imageUrl: '',
-        imageFile: null
+        imageFile: undefined
     });
     const [uploadState, setUploadState] = useState<string>();
 
