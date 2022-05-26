@@ -7,8 +7,9 @@ const t = Utils.getWidgetTranslation('buttons');
 type ModalType = 'deploy' | 'delete';
 
 const { Button } = Stage.Basic;
+const { ErrorPopup } = Stage.Shared;
 const { DeployBlueprintModal } = Stage.Common;
-const { DeleteConfirm, ErrorPopup } = Stage.Common.Components;
+const { DeleteConfirm } = Stage.Common.Components;
 
 interface BlueprintActionButtonsProps {
     blueprintId: string;

@@ -13,6 +13,7 @@ import PageFilter from './PageFilter';
 import PasswordModal from './PasswordModal';
 import SemanticIconDropdown from './SemanticIconDropdown';
 import VerticallyAlignedCell from './VerticallyAlignedCell';
+import ErrorPopup from './ErrorPopup';
 import * as Widgets from './widgets';
 import * as PluginActions from '../../actions/plugins';
 
@@ -33,5 +34,6 @@ export {
     PluginActions,
     SemanticIconDropdown,
     VerticallyAlignedCell,
+    ErrorPopup,
     Widgets
 };

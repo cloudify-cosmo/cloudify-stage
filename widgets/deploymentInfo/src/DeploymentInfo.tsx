@@ -1,6 +1,6 @@
 import type { DeploymentInfoWidget } from './widget.types';
 
-const { ErrorPopup } = Stage.Common.Components;
+const { ErrorPopup } = Stage.Shared;
 const { useResettableState } = Stage.Hooks;
 
 const DeploymentDetails = Stage.Common.Deployments.Details;

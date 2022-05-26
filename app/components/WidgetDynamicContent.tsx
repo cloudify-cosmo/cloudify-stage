@@ -6,11 +6,13 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
+import { Message } from 'semantic-ui-react';
 import WidgetPropType from '../utils/props/WidgetPropType';
 import combineClassNames from '../utils/shared/combineClassNames';
 import { getToolbox } from '../utils/Toolbox';
 import WidgetParamsHandler from '../utils/WidgetParamsHandler';
 import { ErrorMessage } from './basic';
+import ErrorPopup from './shared/ErrorPopup';
 
 export default class WidgetDynamicContent extends Component {
     private readonly containerRef: RefObject<HTMLElement>;
@@ -239,6 +241,34 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
+
+        if (!widget.definition.showBorder) {
+            return (
+                <ErrorPopup
+                    open
+                    trigger={
+                        <div
+                            style={{
+                                backgroundColor: '#fff6f6',
+                                height: '100%',
+                                borderRadius: '4px',
+                                border: '1px solid #e0b4b4',
+                                padding: '12px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <div>{`Could not render '${widget.definition.name}' widget`}</div>
+                        </div>
+                    }
+                    onDismiss={() => {}}
+                    errorHeader="Could not render widget"
+                    errorMessage={new Error('Something has definitelly broke!').message}
+                />
+            );
+        }
+
         if (data.error) {
             log.error(data);
             return (
