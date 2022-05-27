@@ -242,22 +242,17 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
-
-        if (!widget.definition.showBorder) {
-            return (
-                <ErrorPopup
-                    open
-                    trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
-                    onDismiss={() => {}}
-                    header={i18n.t('widget.renderError.title', 'Could not render widget')}
-                    content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
-                />
-            );
-        }
+        const showErrorsWithoutPopup = widget.definition.showBorder;
 
         if (data.error) {
+            const errorHeader = i18n.t('widget.fetchingError', 'Could not fetch the widget data');
+            const errorContent = data.error;
+
             log.error(data);
-            return (
+
+            return showErrorsWithoutPopup ? (
+                <ErrorMessage header={errorHeader} error={errorContent} autoHide />
+            ) : (
                 <ErrorPopup
                     open
                     trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
@@ -272,17 +267,23 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
+                const errorHeader = i18n.t('widget.renderError.title', 'Could not render widget');
+                const errorContent = i18n.t('widget.renderError.content', 'For more details see the browser console');
+
                 log.error(
                     `Error rendering '${widget.definition.name}' widget (widget id: ${widget.definition.id}) - ${e.message}`,
                     e.stack
                 );
-                return (
+
+                return showErrorsWithoutPopup ? (
+                    <ErrorMessage header={errorHeader} error={errorContent} autoHide />
+                ) : (
                     <ErrorPopup
                         open
                         trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                         onDismiss={() => {}}
-                        header={i18n.t('widget.renderError.title', 'Could not render widget')}
-                        content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
+                        header={errorHeader}
+                        content={errorContent}
                     />
                 );
             }
