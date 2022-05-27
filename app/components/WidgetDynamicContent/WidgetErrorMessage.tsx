@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Ellipsis from './Ellipsis';
 import { Message } from '../basic';
 
 interface WidgetErrorMessageProps {
@@ -19,8 +20,12 @@ const StyledMessage = styled(Message)`
 
 const WidgetErrorMessage = ({ widgetName }: WidgetErrorMessageProps) => {
     const messageContent = `'${widgetName}' widget`;
-    // TODO: Add ellipsis for the message content
-    return <StyledMessage error>{messageContent}</StyledMessage>;
+
+    return (
+        <StyledMessage error>
+            <Ellipsis content={messageContent} />
+        </StyledMessage>
+    );
 };
 
 export default WidgetErrorMessage;
