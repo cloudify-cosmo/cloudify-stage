@@ -1,46 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
-import Ellipsis from './Ellipsis';
-import { Message } from '../basic';
-import { ErrorPopup } from '../shared';
-import { useBoolean } from '../../utils/hooks';
-import type { ErrorPopupProps } from '../shared/ErrorPopup';
+import { ErrorMessage } from '../basic';
+import ErrorMessageWithPopup from './ErrorMessageWithPopup';
 
 interface WidgetErrorMessageProps {
     widgetName: string;
-    header: ErrorPopupProps['header'];
-    content: ErrorPopupProps['content'];
+    header: string;
+    content: string;
+    showErrorWithPopup: boolean;
 }
 
-const StyledMessage = styled(Message)`
-    &&& {
-        display: flex;
-        height: 100%;
-        padding: 16px;
-        opacity: 0.65;
-        flex-direction: column;
-        justify-content: center;
-    }
-`;
-
-const WidgetErrorMessage = ({ widgetName, header, content }: WidgetErrorMessageProps) => {
-    const [isPopupVisible, _, hidePopup] = useBoolean(true);
-    const messageContent = `'${widgetName}' widget`;
-
-    return (
-        <ErrorPopup
-            open={isPopupVisible}
-            content={content}
-            header={header}
-            onDismiss={hidePopup}
-            trigger={
-                <div>
-                    <StyledMessage error>
-                        <Ellipsis content={messageContent} />
-                    </StyledMessage>
-                </div>
-            }
-        />
+const WidgetErrorMessage = ({ header, content, widgetName, showErrorWithPopup }: WidgetErrorMessageProps) => {
+    return showErrorWithPopup ? (
+        <ErrorMessageWithPopup widgetName={widgetName} header={header} content={content} />
+    ) : (
+        <ErrorMessage header={header} error={content} autoHide />
     );
 };
 

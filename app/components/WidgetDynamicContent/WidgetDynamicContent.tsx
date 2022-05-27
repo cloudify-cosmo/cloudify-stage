@@ -12,7 +12,6 @@ import combineClassNames from '../../utils/shared/combineClassNames';
 import { getToolbox } from '../../utils/Toolbox';
 import WidgetParamsHandler from '../../utils/WidgetParamsHandler';
 import { ErrorMessage } from '../basic';
-import ErrorPopup from '../shared/ErrorPopup';
 import WidgetErrorMessage from './WidgetErrorMessage';
 
 export default class WidgetDynamicContent extends Component {
@@ -242,18 +241,18 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
-        const showErrorWithoutPopup = widget.definition.showBorder;
+        const showErrorWithPopup = !widget.definition.showBorder;
 
         if (data.error) {
-            const errorHeader = i18n.t('widget.fetchingError', 'Could not fetch the widget data');
-            const errorContent = data.error;
-
             log.error(data);
 
-            return showErrorWithoutPopup ? (
-                <ErrorMessage header={errorHeader} error={errorContent} autoHide />
-            ) : (
-                <WidgetErrorMessage widgetName={widget.definition.name} header={errorHeader} content={errorContent} />
+            return (
+                <WidgetErrorMessage
+                    widgetName={widget.definition.name}
+                    showErrorWithPopup={showErrorWithPopup}
+                    header={i18n.t('widget.fetchingError', 'Could not fetch the widget data')}
+                    content={data.error}
+                />
             );
         }
 
@@ -261,21 +260,17 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
-                const errorHeader = i18n.t('widget.renderError.title', 'Could not render widget');
-                const errorContent = i18n.t('widget.renderError.content', 'For more details see the browser console');
-
                 log.error(
                     `Error rendering '${widget.definition.name}' widget (widget id: ${widget.definition.id}) - ${e.message}`,
                     e.stack
                 );
 
-                return showErrorWithoutPopup ? (
-                    <ErrorMessage header={errorHeader} error={errorContent} autoHide />
-                ) : (
+                return (
                     <WidgetErrorMessage
                         widgetName={widget.definition.name}
-                        header={errorHeader}
-                        content={errorContent}
+                        showErrorWithPopup={showErrorWithPopup}
+                        header={i18n.t('widget.renderError.title', 'Could not render widget')}
+                        content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
                     />
                 );
             }
