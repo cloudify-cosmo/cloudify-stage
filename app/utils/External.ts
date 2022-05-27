@@ -203,7 +203,7 @@ export default class External {
 
         if (body) {
             try {
-                if (_.isString(body) || body instanceof FormData) {
+                if (_.isString(body)) {
                     options.body = body;
                     _.merge(options.headers, getContentType('text/plain'));
                 } else {
