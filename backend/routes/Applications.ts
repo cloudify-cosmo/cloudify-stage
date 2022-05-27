@@ -1,11 +1,10 @@
-import bodyParser from 'body-parser';
 import express from 'express';
 import { db } from '../db/Connection';
 import type { ApplicationsInstance } from '../db/models/ApplicationsModel';
 
 const router = express.Router();
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 router.get('/', (_req, res, next) => {
     db.Applications.findAll()

@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import path from 'path';
 import _ from 'lodash';
 import { db } from '../db/Connection';
@@ -8,7 +7,7 @@ import type { BlueprintAdditionsInstance } from '../db/models/BlueprintAdditions
 const router = express.Router();
 
 router.use(
-    bodyParser.raw({
+    express.raw({
         limit: '1mb',
         type: 'image/*'
     })

@@ -1,7 +1,6 @@
 import _, { escapeRegExp, trimEnd } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
-import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
@@ -20,7 +19,7 @@ import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody } from './Terraform.types';
 import { checkIfFileUploaded } from './File';
 
-const upload = multer({ limits: { fileSize: 50000 } });
+const upload = multer({ limits: { fileSize: 1048576 } }); // 1048576 bytes ~ 1 megabyte
 const logger = getLogger('Terraform');
 const router = express.Router();
 const templatePath = path.resolve(__dirname, '../templates/terraform');
@@ -28,7 +27,7 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 type CloneGitRepoError = {
     message: string;
