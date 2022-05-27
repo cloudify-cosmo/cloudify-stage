@@ -13,11 +13,13 @@ const StyledMessage = styled(Message)`
         display: flex;
         flex-direction: column;
         justify-content: center;
+        opacity: 0.75;
     }
 `;
 
 const WidgetErrorMessage = ({ widgetName }: WidgetErrorMessageProps) => {
     const messageContent = `'${widgetName}' widget`;
+    // TODO: Add ellipsis for the message content
     return <StyledMessage error>{messageContent}</StyledMessage>;
 };
 

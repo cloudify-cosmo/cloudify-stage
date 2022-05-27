@@ -249,8 +249,8 @@ export default class WidgetDynamicContent extends Component {
                     open
                     trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                     onDismiss={() => {}}
-                    header="Could not render widget"
-                    content="For more details see the browser console"
+                    header={i18n.t('widget.renderError.title', 'Could not render widget')}
+                    content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
                 />
             );
         }
@@ -262,14 +262,9 @@ export default class WidgetDynamicContent extends Component {
                     open
                     trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                     onDismiss={() => {}}
-                    header={i18n.t('widget.unexpectedError', 'Could not fetch the widget data')}
+                    header={i18n.t('widget.fetchingError', 'Could not fetch the widget data')}
                     content={data.error}
                 />
-                // <ErrorMessage
-                //     error={data.error}
-                //     header={i18n.t('widget.unexpectedError', 'Could not fetch the widget data')}
-                //     autoHide
-                // />
             );
         }
 
@@ -284,8 +279,8 @@ export default class WidgetDynamicContent extends Component {
                         open
                         trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                         onDismiss={() => {}}
-                        header="Could not render widget"
-                        content="For more details see the browser console"
+                        header={i18n.t('widget.renderError.title', 'Could not render widget')}
+                        content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
                     />
                 );
             }

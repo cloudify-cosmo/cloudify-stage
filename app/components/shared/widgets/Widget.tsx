@@ -301,7 +301,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                         <ErrorMessage
                             autoHide={false}
                             error={i18n.t(
-                                'widget.renderError',
+                                'widget.unexpectedError',
                                 'Cannot render widget. Check browser console for details.'
                             )}
                         />
