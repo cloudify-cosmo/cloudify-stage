@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import 'd3';
 import i18n from 'i18next';
 import _ from 'lodash';
@@ -19,13 +18,25 @@ import type { WidgetDefinition } from './StageAPI';
 import StageUtils from './stageUtils';
 import StyleLoader from './StyleLoader';
 
-let widgetDefinitions: WidgetDefinition<any, any, any>[] = [];
+let bundleLoadedWidgets: WidgetDefinition<any, any, any>[] = [];
+
+function getBundleLoadedWidget(custom = true) {
+    const [registeredWidget] = bundleLoadedWidgets;
+    bundleLoadedWidgets = [];
+    registeredWidget.isCustom = custom;
+    return registeredWidget;
+}
+
+interface WidgetListItem {
+    id: string;
+    isCustom: boolean;
+}
 
 export default class WidgetDefinitionsLoader {
     public static init() {
         const stageAPI: typeof Stage = {
             defineWidget: widgetDefinition => {
-                widgetDefinitions.push(normalizeWidgetDefinition(widgetDefinition));
+                bundleLoadedWidgets.push(normalizeWidgetDefinition(widgetDefinition));
             },
             Basic,
             Shared,
@@ -54,90 +65,60 @@ export default class WidgetDefinitionsLoader {
         window.Stage = stageAPI;
     }
 
-    private static loadWidgets(manager: any) {
-        log.debug('Load widgets');
-
-        const internal = new Internal(manager);
-        return Promise.all([
-            new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
-            internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
-        ]).then(results => {
-            const data: any[] = results[1]; // widgets data
-            const promises: Promise<any>[] = [];
-            data.forEach(item => {
-                promises.push(WidgetDefinitionsLoader.loadWidget(item, false));
-            });
-
-            const output = _.keyBy(data, 'id');
-            return Promise.all(promises).then(() => output);
-        });
-    }
-
-    private static loadWidget(widget: any, rejectOnError: any) {
+    private static loadWidgetBundle(widget: WidgetListItem, rejectOnError = true) {
         const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
         return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
     }
 
-    private static loadWidgetsResources(widgets: any) {
-        log.debug('Load widgets resources');
+    public static loadWidget(widgetListItem: WidgetListItem) {
+        return WidgetDefinitionsLoader.loadWidgetBundle(widgetListItem, false)
+            .then(() => getBundleLoadedWidget(widgetListItem.isCustom))
+            .then(WidgetDefinitionsLoader.loadWidgetResources)
+            .then(WidgetDefinitionsLoader.initWidget)
+            .catch(e => {
+                log.error(e);
+            });
+    }
 
+    private static loadWidgetResources(widgetDefinition: WidgetDefinition<any, any, any>) {
         const promises: Promise<any>[] = [];
-        widgetDefinitions.forEach(widgetDefinition => {
-            // Mark system widgets to protect against uninstalling
-            widgetDefinition.isCustom = widgets[widgetDefinition.id].isCustom;
 
-            if (widgetDefinition.hasTemplate) {
-                promises.push(
-                    LoaderUtils.fetchResource(
-                        `widgets/${widgetDefinition.id}/widget.html`,
-                        widgetDefinition.isCustom
-                    ).then((widgetHtml: any) => {
+        if (widgetDefinition.hasTemplate) {
+            promises.push(
+                LoaderUtils.fetchResource(`widgets/${widgetDefinition.id}/widget.html`, widgetDefinition.isCustom).then(
+                    (widgetHtml: any) => {
                         if (widgetHtml) {
                             widgetDefinition.template = widgetHtml;
                         }
-                    })
-                );
-            }
-            if (widgetDefinition.hasStyle) {
-                promises.push(
-                    new StyleLoader(
-                        LoaderUtils.getResourceUrl(
-                            `widgets/${widgetDefinition.id}/widget.css`,
-                            widgetDefinition.isCustom
-                        )
-                    ).load()
-                );
-            }
-        });
+                    }
+                )
+            );
+        }
+        if (widgetDefinition.hasStyle) {
+            promises.push(
+                new StyleLoader(
+                    LoaderUtils.getResourceUrl(`widgets/${widgetDefinition.id}/widget.css`, widgetDefinition.isCustom)
+                ).load()
+            );
+        }
 
-        return Promise.all(promises);
+        return Promise.all(promises).then(() => widgetDefinition);
     }
 
-    private static initWidgets() {
-        log.debug('Init widgets');
+    private static initWidget(widgetDefinition: WidgetDefinition<any, any, any>) {
+        if (widgetDefinition.init && typeof widgetDefinition.init === 'function') {
+            widgetDefinition.init();
+        }
 
-        _.each(widgetDefinitions, w => {
-            if (w.init && typeof w.init === 'function') {
-                w.init();
-            }
-        });
-
-        const loadedWidgetDefinitions = _.sortBy(widgetDefinitions, ['name']);
-        widgetDefinitions = []; // Clear for next time
-
-        return Promise.resolve(loadedWidgetDefinitions);
+        return widgetDefinition;
     }
 
     public static load(manager: any): Promise<WidgetDefinition<any, any, any>[]> {
-        return WidgetDefinitionsLoader.loadWidgets(manager)
-            .then(widgets => WidgetDefinitionsLoader.loadWidgetsResources(widgets))
-            .then(() => WidgetDefinitionsLoader.initWidgets())
-            .catch(e => {
-                log.error(e);
-                widgetDefinitions = []; // Clear for next time
-
-                return Promise.resolve([]);
-            });
+        const internal = new Internal(manager);
+        return Promise.all([
+            new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
+            internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
+        ]).then(results => results[1].map((widget: WidgetListItem) => ({ ...widget, loaded: false })));
     }
 
     private static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
@@ -155,7 +136,7 @@ export default class WidgetDefinitionsLoader {
         return internal.doUpload('/widgets/install', { files: { widget: widgetFile } });
     }
 
-    private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
+    private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any): Promise<WidgetListItem> {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -169,14 +150,14 @@ export default class WidgetDefinitionsLoader {
     private static validateWidget(widgetId: any, manager: any) {
         const errors = [];
 
-        if (_.isEmpty(widgetDefinitions)) {
+        if (_.isEmpty(bundleLoadedWidgets)) {
             errors.push(
                 i18n.t(
                     'widget.validationErrors.noWidgetDefinition',
                     'Widget not properly initialized. Please check if widget.js is correctly defined.'
                 )
             );
-        } else if (widgetDefinitions.length > 1) {
+        } else if (bundleLoadedWidgets.length > 1) {
             errors.push(
                 i18n.t(
                     'widget.validationErrors.multipleDefinitions',
@@ -184,7 +165,7 @@ export default class WidgetDefinitionsLoader {
                 )
             );
         } else {
-            const widgetDefinition = widgetDefinitions[0];
+            const widgetDefinition = bundleLoadedWidgets[0];
 
             if (!_.includes(_.keys(manager.permissions), widgetDefinition.permission)) {
                 errors.push(
@@ -223,6 +204,8 @@ export default class WidgetDefinitionsLoader {
                       })
                     : errors[0];
 
+            bundleLoadedWidgets = [];
+
             return WidgetDefinitionsLoader.uninstall(widgetId, manager).then(() => {
                 throw new Error(errorMessage);
             });
@@ -237,31 +220,28 @@ export default class WidgetDefinitionsLoader {
         return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
             .then(data => {
                 widgetData = data;
-                return WidgetDefinitionsLoader.loadWidget(data, true);
+                return WidgetDefinitionsLoader.loadWidgetBundle(data);
             })
             .then(() => WidgetDefinitionsLoader.validateWidget(widgetData.id, manager))
-            .then(() => WidgetDefinitionsLoader.loadWidgetsResources(_.keyBy([widgetData], 'id')))
-            .then(() => WidgetDefinitionsLoader.initWidgets())
+            .then(() => getBundleLoadedWidget())
+            .then(WidgetDefinitionsLoader.loadWidgetResources)
+            .then(WidgetDefinitionsLoader.initWidget)
             .catch(err => {
-                widgetDefinitions = []; // Clear for next time
                 log.error(err);
                 throw err;
             });
     }
 
     public static update(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
-        let widgetData: any = {};
+        const widgetData: any = {};
 
         return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
-            .then(data => {
-                widgetData = data;
-                return WidgetDefinitionsLoader.loadWidget(data, true);
-            })
+            .then(WidgetDefinitionsLoader.loadWidgetBundle)
             .then(() => WidgetDefinitionsLoader.validateWidget(widgetData.id, manager))
-            .then(() => WidgetDefinitionsLoader.loadWidgetsResources(_.keyBy([widgetData], 'id')))
-            .then(() => WidgetDefinitionsLoader.initWidgets())
+            .then(() => getBundleLoadedWidget())
+            .then(WidgetDefinitionsLoader.loadWidgetResources)
+            .then(WidgetDefinitionsLoader.initWidget)
             .catch(err => {
-                widgetDefinitions = []; // Clear for next time
                 log.error(err);
                 throw err;
             });

@@ -1,15 +1,14 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck Not converted to TS yet
+import { saveAs } from 'file-saver';
+import 'isomorphic-fetch';
+import JSZip from 'jszip';
 import _ from 'lodash';
 import log from 'loglevel';
-import 'isomorphic-fetch';
-import { saveAs } from 'file-saver';
-import JSZip from 'jszip';
 import { stringify as stringifyQueryString } from 'query-string';
+import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
+import Interceptor from './Interceptor';
 
 import StageUtils from './stageUtils';
-import Interceptor from './Interceptor';
-import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
 
 /*
 Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
@@ -80,7 +79,7 @@ export default class External {
 
         log.debug(`Uploading file for url: ${url}`);
 
-        return new Promise((resolve, reject) => {
+        return new Promise<any>((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
             xhr.addEventListener('error', e => {

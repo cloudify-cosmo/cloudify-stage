@@ -36,9 +36,7 @@ describe('Blueprints widget', () => {
             .deleteDeployments(blueprintNamePrefix, true)
             .deleteBlueprints(blueprintNamePrefix, true)
             .deletePlugins()
-            .usePageMock('blueprints', blueprintsWidgetConfiguration, {
-                additionalWidgetIdsToLoad: ['blueprintCatalog']
-            })
+            .usePageMock('blueprints', blueprintsWidgetConfiguration)
             .mockLogin()
     );
 
@@ -770,7 +768,10 @@ describe('Blueprints widget', () => {
         });
 
         describe('create installable blueprint on submit from', () => {
-            beforeEach(openTerraformModal);
+            beforeEach(() => {
+                cy.mockLogin();
+                openTerraformModal();
+            });
 
             function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
                 const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
