@@ -55,10 +55,10 @@ export default class Actions {
         return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repositoryName}/git/trees/master`);
     }
 
-    doFindImage(repositoryName: string, defaultImagePath: string): Promise<string> {
+    doFindImage(repositoryName: string): Promise<string> {
         return this.doGetRepoTree(repositoryName).then(tree => {
             return _.findIndex(tree.tree, { path: Consts.BLUEPRINT_IMAGE_FILENAME }) < 0
-                ? Promise.resolve(defaultImagePath)
+                ? Promise.resolve('')
                 : Promise.resolve(Consts.GITHUB_BLUEPRINT_IMAGE_URL(this.getUsername(), repositoryName));
         });
     }

@@ -39,7 +39,7 @@ const IconWrapper = styled.div`
 const t = getT('widgets.deployments.firstJourney');
 
 interface FirstUserJourneyButtonsProps {
-    toolbox: Stage.Types.WidgetlessToolbox;
+    toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
 

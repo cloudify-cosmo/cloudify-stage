@@ -110,7 +110,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
             .doUpload(repositoryName, {
                 blueprintYamlFile: defaultYamlFile,
                 blueprintUrl: zipUrl,
-                imageUrl: Stage.Utils.Url.url(imageUrl)
+                imageUrl
             })
             .then(() => {
                 this.resetUploadingBlueprint();

@@ -82,7 +82,7 @@ class Toolbox implements Stage.Types.Toolbox {
     }
 
     getManagerState() {
-        return _.get(this.store.getState(), 'manager', {});
+        return this.store.getState().manager;
     }
 
     getInternal() {
