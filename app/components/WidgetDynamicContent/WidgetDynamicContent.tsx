@@ -13,6 +13,7 @@ import { getToolbox } from '../../utils/Toolbox';
 import WidgetParamsHandler from '../../utils/WidgetParamsHandler';
 import { ErrorMessage } from '../basic';
 import ErrorPopup from '../shared/ErrorPopup';
+import WidgetErrorMessage from './WidgetErrorMessage';
 
 export default class WidgetDynamicContent extends Component {
     private readonly containerRef: RefObject<HTMLElement>;
@@ -246,22 +247,7 @@ export default class WidgetDynamicContent extends Component {
             return (
                 <ErrorPopup
                     open
-                    trigger={
-                        <div
-                            style={{
-                                backgroundColor: '#fff6f6',
-                                height: '100%',
-                                borderRadius: '4px',
-                                border: '1px solid #e0b4b4',
-                                padding: '12px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            <div>{widget.definition.name}</div>
-                        </div>
-                    }
+                    trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                     onDismiss={() => {}}
                     header="Could not render widget"
                     content="For more details see the browser console"
@@ -274,19 +260,7 @@ export default class WidgetDynamicContent extends Component {
             return (
                 <ErrorPopup
                     open
-                    trigger={
-                        <div
-                            style={{
-                                height: '100%',
-                                padding: '12px',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                            }}
-                        >
-                            <div>{`'${widget.definition.name}' widget`}</div>
-                        </div>
-                    }
+                    trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                     onDismiss={() => {}}
                     header={i18n.t('widget.unexpectedError', 'Could not fetch the widget data')}
                     content={data.error}
@@ -308,22 +282,7 @@ export default class WidgetDynamicContent extends Component {
                 return (
                     <ErrorPopup
                         open
-                        trigger={
-                            <div
-                                style={{
-                                    backgroundColor: '#fff6f6',
-                                    height: '100%',
-                                    borderRadius: '4px',
-                                    border: '1px solid #e0b4b4',
-                                    padding: '12px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                <div>{`'${widget.definition.name}' widget`}</div>
-                            </div>
-                        }
+                        trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
                         onDismiss={() => {}}
                         header="Could not render widget"
                         content="For more details see the browser console"
