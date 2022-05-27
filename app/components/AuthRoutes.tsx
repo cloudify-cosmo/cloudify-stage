@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { get, isEmpty } from 'lodash';
 import i18n from 'i18next';
 import log from 'loglevel';
 import React, { useEffect } from 'react';
@@ -6,7 +6,6 @@ import type { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import { NO_TENANTS_ERR } from '../utils/ErrorCodes';
 import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/tenants';
 import Auth from '../utils/auth';
@@ -16,15 +15,17 @@ import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import type { AuthUserResponse } from '../../backend/routes/Auth.types';
+
+class NoTenantsError extends Error {}
 
 const AuthRoutes: FunctionComponent = () => {
     const [isManagerDataFetched, setManagerDataFetched] = useBoolean();
-    const [isUserDataFetched, setUserDataFetched] = useBoolean();
     const isInMaintenanceMode = useSelector(
-        state => _.get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
+        state => get(state, 'manager.maintenance') === Consts.MAINTENANCE_ACTIVATED
     );
-    const isLicenseRequired = useSelector(state => _.get(state, 'manager.license.isRequired', false));
-    const isProductOperational = useSelector(state => Auth.isProductOperational(_.get(state, 'manager.license', {})));
+    const isLicenseRequired = useSelector(state => get(state, 'manager.license.isRequired', false));
+    const isProductOperational = useSelector(state => Auth.isProductOperational(get(state, 'manager.license', {})));
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -32,46 +33,27 @@ const AuthRoutes: FunctionComponent = () => {
 
         dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
-            .then(setManagerDataFetched)
+            .then(() => dispatch(getUserData()))
+            .then(({ tenantsRoles, role }: AuthUserResponse) => {
+                if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) throw new NoTenantsError();
+                setManagerDataFetched();
+            })
             .catch((error: any) => {
-                log.error(i18n.t('managerDataError'), error);
-                dispatch(logout(i18n.t('managerDataError')));
+                if (error instanceof NoTenantsError) {
+                    dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
+                } else {
+                    log.error(i18n.t('managerDataError'), error);
+                    dispatch(logout(i18n.t('managerDataError')));
+                }
             });
     }, []);
-
-    useEffect(() => {
-        if (isProductOperational && isManagerDataFetched) {
-            dispatch(getUserData())
-                .then(({ tenantsRoles, role }: any) => {
-                    if (_.isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) {
-                        return Promise.reject(NO_TENANTS_ERR);
-                    }
-                    setUserDataFetched();
-                    return Promise.resolve();
-                })
-                .catch((error: any) => {
-                    switch (error) {
-                        case NO_TENANTS_ERR:
-                            dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
-                            break;
-                        default:
-                            log.error(i18n.t('pageLoadError'), error);
-                            dispatch(logout(i18n.t('pageLoadError')));
-                    }
-                });
-        }
-    }, [isProductOperational, isManagerDataFetched]);
 
     return isManagerDataFetched ? (
         <Switch>
             {isLicenseRequired && <Route exact path={Consts.PAGE_PATH.LICENSE} component={LicensePage} />}
             <Route exact path={Consts.PAGE_PATH.MAINTENANCE} component={MaintenanceMode} />
             {isInMaintenanceMode && <Redirect to={Consts.PAGE_PATH.MAINTENANCE} />}
-            <Route
-                render={() =>
-                    isProductOperational ? isUserDataFetched && <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />
-                }
-            />
+            <Route render={() => (isProductOperational ? <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />)} />
         </Switch>
     ) : null;
 };

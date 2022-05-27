@@ -1,6 +1,6 @@
 import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 
-function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
+export function createClientConfigs(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('ClientConfigs', {
             id: {
@@ -96,7 +96,7 @@ function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize
         );
 }
 
-function createApplicationModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
+export function createApplicationModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('Applications', {
             id: {

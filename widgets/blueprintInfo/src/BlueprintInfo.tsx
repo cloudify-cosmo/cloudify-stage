@@ -19,9 +19,11 @@ export default class BlueprintInfo extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, toolbox } = this.props;
         const { error } = this.state;
         const { ErrorMessage, Grid, Image, ResourceVisibility, Message, Label } = Stage.Basic;
+        const { Blueprints } = Stage.Common;
+        const tenantName = toolbox.getManager().getSelectedTenant();
         const blueprint = data;
 
         if (!blueprint.id) {
@@ -38,7 +40,13 @@ export default class BlueprintInfo extends React.Component {
                 <Grid>
                     <Grid.Row className="bottomDivider">
                         <Grid.Column width="4">
-                            <Image src={Stage.Utils.Url.url(`/ba/image/${blueprint.id}`)} centered />
+                            {Blueprints.Actions.isUploaded(blueprint) && (
+                                <Blueprints.UploadedImage
+                                    blueprintId={blueprint.id}
+                                    tenantName={tenantName}
+                                    width={50}
+                                />
+                            )}
                         </Grid.Column>
                         <Grid.Column width="12">
                             <h3 className="ui icon header verticalCenter">

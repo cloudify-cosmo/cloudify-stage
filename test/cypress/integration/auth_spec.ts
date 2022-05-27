@@ -13,7 +13,7 @@ describe('Authentication', () => {
         cy.activate()
             .getAdminToken()
             .then(token => setTokenAndLocalStorage(token));
-        cy.visit('/console').waitUntilLoaded();
+        cy.visit('/console');
         cy.location('pathname').should('be.equal', '/console/');
     });
 
