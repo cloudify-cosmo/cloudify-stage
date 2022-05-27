@@ -2,29 +2,45 @@ import React from 'react';
 import styled from 'styled-components';
 import Ellipsis from './Ellipsis';
 import { Message } from '../basic';
+import { ErrorPopup } from '../shared';
+import { useBoolean } from '../../utils/hooks';
+import type { ErrorPopupProps } from '../shared/ErrorPopup';
 
 interface WidgetErrorMessageProps {
     widgetName: string;
+    header: ErrorPopupProps['header'];
+    content: ErrorPopupProps['content'];
 }
 
 const StyledMessage = styled(Message)`
     &&& {
-        padding: 16px;
-        height: 100%;
         display: flex;
+        height: 100%;
+        padding: 16px;
+        opacity: 0.65;
         flex-direction: column;
         justify-content: center;
-        opacity: 0.75;
     }
 `;
 
-const WidgetErrorMessage = ({ widgetName }: WidgetErrorMessageProps) => {
+const WidgetErrorMessage = ({ widgetName, header, content }: WidgetErrorMessageProps) => {
+    const [isPopupVisible, _, hidePopup] = useBoolean(true);
     const messageContent = `'${widgetName}' widget`;
 
     return (
-        <StyledMessage error>
-            <Ellipsis content={messageContent} />
-        </StyledMessage>
+        <ErrorPopup
+            open={isPopupVisible}
+            content={content}
+            header={header}
+            onDismiss={hidePopup}
+            trigger={
+                <div>
+                    <StyledMessage error>
+                        <Ellipsis content={messageContent} />
+                    </StyledMessage>
+                </div>
+            }
+        />
     );
 };
 

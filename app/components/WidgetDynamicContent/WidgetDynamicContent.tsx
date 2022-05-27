@@ -242,7 +242,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
-        const showErrorsWithoutPopup = widget.definition.showBorder;
+        const showErrorWithoutPopup = widget.definition.showBorder;
 
         if (data.error) {
             const errorHeader = i18n.t('widget.fetchingError', 'Could not fetch the widget data');
@@ -250,16 +250,10 @@ export default class WidgetDynamicContent extends Component {
 
             log.error(data);
 
-            return showErrorsWithoutPopup ? (
+            return showErrorWithoutPopup ? (
                 <ErrorMessage header={errorHeader} error={errorContent} autoHide />
             ) : (
-                <ErrorPopup
-                    open
-                    trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
-                    onDismiss={() => {}}
-                    header={i18n.t('widget.fetchingError', 'Could not fetch the widget data')}
-                    content={data.error}
-                />
+                <WidgetErrorMessage widgetName={widget.definition.name} header={errorHeader} content={errorContent} />
             );
         }
 
@@ -275,13 +269,11 @@ export default class WidgetDynamicContent extends Component {
                     e.stack
                 );
 
-                return showErrorsWithoutPopup ? (
+                return showErrorWithoutPopup ? (
                     <ErrorMessage header={errorHeader} error={errorContent} autoHide />
                 ) : (
-                    <ErrorPopup
-                        open
-                        trigger={<WidgetErrorMessage widgetName={widget.definition.name} />}
-                        onDismiss={() => {}}
+                    <WidgetErrorMessage
+                        widgetName={widget.definition.name}
                         header={errorHeader}
                         content={errorContent}
                     />

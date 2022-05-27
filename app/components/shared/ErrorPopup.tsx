@@ -5,8 +5,10 @@ import type { FunctionComponent } from 'react';
 import type { PopupProps } from 'semantic-ui-react';
 import { Popup } from '../basic';
 
+const errorMessageBorderColor = '#e0b4b4';
+
 const StyledPopup = styled(Popup)`
-    /* TODO: Depending on the popup positon (on the top or on the bottom of an element), box shadow of the popup triangle should be positioned differently */
+    /* NOTE: Depending on the popup positon (on the top or on the bottom of an element), box shadow of the popup triangle should be positioned differently */
     &.bottom {
         --box-shadow-position: -1px -1px;
     }
@@ -17,12 +19,19 @@ const StyledPopup = styled(Popup)`
 
     &&&& {
         border: none;
+        max-width: 300px;
 
         &::before {
             background-color: inherit;
-            box-shadow: var(--box-shadow-position) 0 0 #e0b4b4;
+            box-shadow: var(--box-shadow-position) 0 0 ${errorMessageBorderColor};
         }
     }
+`;
+
+const HeaderWrapper = styled.div`
+    /* NOTE: In some cases the "x" icon is overflowing the header content. */
+    /* Note: Because of the '.ui.popup>.header' selector (coming from semanti-ui-react) specificy, !important flag seems like a valid option here */
+    padding-right: 14px !important;
 `;
 
 export interface ErrorPopupProps {
@@ -40,13 +49,13 @@ const ErrorPopup: FunctionComponent<ErrorPopupProps> = ({ open, trigger, header,
             trigger={trigger}
             className="ui error message"
             position="top left"
+            header={<HeaderWrapper className="header">{header}</HeaderWrapper>}
             content={
                 <>
-                    <Icon name="close" onClick={onDismiss} />
                     {content}
+                    <Icon name="close" onClick={onDismiss} />
                 </>
             }
-            header={header}
         />
     );
 };
