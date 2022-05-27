@@ -1,5 +1,6 @@
 export declare namespace DeploymentInfoWidget {
     export interface Params {
+        // eslint-disable-next-line camelcase
         deployment_id?: string | string[] | null;
     }
 
@@ -14,6 +15,7 @@ export declare namespace DeploymentInfoWidget {
     }
 
     export interface Data {
+        /* eslint-disable camelcase */
         deployment: {
             id: string;
             display_name?: string;
@@ -26,6 +28,7 @@ export declare namespace DeploymentInfoWidget {
             created_by: string;
             isUpdated: boolean;
         };
+        /* eslint-enable camelcase */
         instancesCount: number;
         instancesStates: {
             [key: string]: number;
