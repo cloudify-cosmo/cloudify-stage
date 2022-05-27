@@ -11,7 +11,6 @@ interface EllipsisProps {
     content: string;
 }
 
-// TODO: Add node about the ticket related to extracting Ellipsis functionality as a shared component
 const Ellipsis = ({ content }: EllipsisProps) => {
     return <StyledWrapper title={content}>{content}</StyledWrapper>;
 };
