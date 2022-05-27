@@ -5,7 +5,7 @@ import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
 
-const latestMigration = '20220523121125-6_4-RemoveApplicationsTable.js';
+const latestMigration = '20220527182401-6_4-RemoveBlueprintAdditionsTable.js';
 const userTemplatesFolder = getResourcePath('templates', true);
 const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
 
