@@ -259,12 +259,12 @@ export default class WidgetDynamicContent extends Component {
                                 justifyContent: 'center'
                             }}
                         >
-                            <div>{`Could not render '${widget.definition.name}' widget`}</div>
+                            <div>{widget.definition.name}</div>
                         </div>
                     }
                     onDismiss={() => {}}
-                    errorHeader="Could not render widget"
-                    errorMessage={new Error('Something has definitelly broke!').message}
+                    header="Could not render widget"
+                    content="For more details see the browser console"
                 />
             );
         }
@@ -272,11 +272,33 @@ export default class WidgetDynamicContent extends Component {
         if (data.error) {
             log.error(data);
             return (
-                <ErrorMessage
-                    error={data.error}
-                    header={i18n.t('widget.unexpectedError', 'An unexpected error occurred')}
-                    autoHide
+                <ErrorPopup
+                    open
+                    trigger={
+                        <div
+                            style={{
+                                backgroundColor: '#fff6f6',
+                                height: '100%',
+                                borderRadius: '4px',
+                                border: '1px solid #e0b4b4',
+                                padding: '12px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <div>{`'${widget.definition.name}' widget`}</div>
+                        </div>
+                    }
+                    onDismiss={() => {}}
+                    header={i18n.t('widget.unexpectedError', 'Could not fetch the widget data')}
+                    content={data.error}
                 />
+                // <ErrorMessage
+                //     error={data.error}
+                //     header={i18n.t('widget.unexpectedError', 'Could not fetch the widget data')}
+                //     autoHide
+                // />
             );
         }
 
@@ -284,13 +306,30 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
+                // TODO: Add widget name or/and id
                 log.error(`Error rendering widget - ${e.message}`, e.stack);
                 return (
-                    <ErrorMessage
-                        error={i18n.t('widget.detailedRenderError', `Error rendering widget: {{errorDetails}}`, {
-                            errorDetails: e.message
-                        })}
-                        autoHide
+                    <ErrorPopup
+                        open
+                        trigger={
+                            <div
+                                style={{
+                                    backgroundColor: '#fff6f6',
+                                    height: '100%',
+                                    borderRadius: '4px',
+                                    border: '1px solid #e0b4b4',
+                                    padding: '12px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <div>{`'${widget.definition.name}' widget`}</div>
+                            </div>
+                        }
+                        onDismiss={() => {}}
+                        header="Could not render widget"
+                        content="For more details see the browser console"
                     />
                 );
             }

@@ -38,7 +38,7 @@ export default function DeploymentInfo({ data, toolbox }: DeploymentsInfoProps) 
                 />
             }
             onDismiss={clearVisibilityError}
-            errorMessage={visibilityError}
+            content={visibilityError}
             open={!!visibilityError}
         />
     );

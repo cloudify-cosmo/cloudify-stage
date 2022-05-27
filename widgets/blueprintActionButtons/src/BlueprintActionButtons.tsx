@@ -132,7 +132,7 @@ export default class BlueprintActionButtons extends React.Component<
         return (
             <ErrorPopup
                 open={!!error}
-                errorMessage={error}
+                content={error}
                 onDismiss={this.clearErrors}
                 trigger={
                     <div>
