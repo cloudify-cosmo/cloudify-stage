@@ -400,7 +400,7 @@ export default function TerraformModal({
             }
 
             const file: any = new Blob([blueprintContent]);
-            file.name = terraformPackage ? 'blueprint.zip' : Consts.defaultBlueprintYamlFileName;
+            file.name = terraformPackage ? 'blueprint/blueprint.yaml' : Consts.defaultBlueprintYamlFileName;
             const image = await (await fetch(terraformLogo)).blob();
             await createSecretsFromVariables();
             await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
