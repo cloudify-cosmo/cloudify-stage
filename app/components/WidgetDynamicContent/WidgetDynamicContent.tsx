@@ -272,8 +272,10 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
-                // TODO: Add widget name or/and id
-                log.error(`Error rendering widget - ${e.message}`, e.stack);
+                log.error(
+                    `Error rendering '${widget.definition.name}' widget (widget id: ${widget.definition.id}) - ${e.message}`,
+                    e.stack
+                );
                 return (
                     <ErrorPopup
                         open
