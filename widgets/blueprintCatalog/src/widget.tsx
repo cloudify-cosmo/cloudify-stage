@@ -106,12 +106,6 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
         return Promise.all([actions.doGetRepos(params), blueprintActions.doGetUploadedBlueprints()])
             .then(([data, uploadedBlueprintsResp]) => {
                 const uploadedBlueprints = uploadedBlueprintsResp.items.map(({ id }: Partial<Blueprint>) => id);
-                const defaultImagePath = Stage.Utils.Url.widgetResourceUrl(
-                    'blueprintCatalog',
-                    Consts.DEFAULT_IMAGE,
-                    false,
-                    false
-                );
                 let repos: Blueprint[] = data.items;
                 const { source } = data.source;
                 const total = data.total_count;
@@ -120,7 +114,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
 
                     const fetches = _.map(repos, repo =>
                         actions
-                            .doFindImage(repo.name, defaultImagePath)
+                            .doFindImage(repo.name)
                             .then(imageUrl => Promise.resolve(Object.assign(repo, { image_url: imageUrl })))
                     );
 
@@ -128,11 +122,6 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
                         Promise.resolve({ items, total, source, isAuthenticated, uploadedBlueprints })
                     );
                 }
-                repos = _.map(repos, repo =>
-                    _.isEmpty(repo.image_url)
-                        ? { ...repo, image_url: defaultImagePath }
-                        : { ...repo, image_url: `/external/content?url=${encodeURIComponent(repo.image_url)}` }
-                );
 
                 if (_.get(widget.configuration, 'sortByName', false)) {
                     repos = _.sortBy(repos, 'name');

@@ -4,8 +4,9 @@ import type { FunctionComponent } from 'react';
 import Utils from './utils';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
+import ExternalBlueprintImage from './ExternalBlueprintImage';
 
-const { DataTable, Image, Icon } = Stage.Basic;
+const { DataTable, Icon } = Stage.Basic;
 const t = Utils.getWidgetTranslation();
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
@@ -67,7 +68,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         onClick={() => onSelect(item)}
                     >
                         <DataTable.Data>
-                            <Image src={Stage.Utils.Url.url(item.image_url)} width="30px" height="auto" inline />{' '}
+                            <ExternalBlueprintImage url={item.image_url} width={30} />{' '}
                             <a href={item.html_url} target="_blank" rel="noopener noreferrer">
                                 {item.name}
                             </a>

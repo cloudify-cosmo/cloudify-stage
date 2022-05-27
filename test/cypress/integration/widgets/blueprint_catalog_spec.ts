@@ -32,6 +32,7 @@ describe('Blueprints catalog widget', () => {
     it('should upload blueprint successfully', () => {
         cy.interceptSp('PUT', `/blueprints/${blueprintName}`, {});
         cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'uploaded' });
+        cy.interceptSp('PATCH', `/blueprints/${blueprintName}/icon`, { state: 'uploaded' });
 
         cy.contains('.segment', blueprintName).contains('Upload').click();
         cy.contains('.ui.label.section.active.pageTitle', blueprintName);

@@ -412,13 +412,18 @@ describe('Blueprints widget', () => {
                 const blueprintName = `${blueprintNamePrefix}_upload_error`;
 
                 cy.get('input[name=blueprintName]').clear().type(blueprintName).blur();
-                cy.get('.button.ok').click();
+                cy.get('input[name=imageUrl]').type('http://invalid-url.invalid-domain');
+                cy.contains('button', 'Upload').click();
 
+                cy.contains('Please provide valid URL for blueprint icon');
+
+                cy.get('input[name=imageUrl]').clear();
                 const error = 'error message';
                 cy.interceptSp('GET', `/blueprints/${blueprintName}`, {
                     state: 'failed_uploading',
                     error
                 });
+                cy.contains('button', 'Upload').click();
 
                 cy.contains('.header', 'Blueprint upload failed');
                 cy.contains('li', error);
