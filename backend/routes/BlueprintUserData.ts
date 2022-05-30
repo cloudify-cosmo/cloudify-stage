@@ -1,5 +1,6 @@
 import yaml from 'js-yaml';
 import express from 'express';
+import bodyParser from 'body-parser';
 import _ from 'lodash';
 
 import { browseArchiveFile, browseArchiveTree } from '../handler/SourceHandler';
@@ -8,7 +9,7 @@ import type { BlueprintUserDataInstance } from '../db/models/BlueprintUserDataMo
 
 const router = express.Router();
 
-router.use(express.json());
+router.use(bodyParser.json());
 
 router.get('/layout/:blueprintId', (req, res) => {
     db.BlueprintUserData.findOne<BlueprintUserDataInstance>({

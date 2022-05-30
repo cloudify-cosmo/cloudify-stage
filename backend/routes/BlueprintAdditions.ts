@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path';
 import _ from 'lodash';
 import type { AxiosRequestHeaders } from 'axios';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';

@@ -1,6 +1,7 @@
 import _, { escapeRegExp, trimEnd } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
+import bodyParser from 'body-parser';
 import ejs from 'ejs';
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
@@ -27,7 +28,7 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
-router.use(express.json());
+router.use(bodyParser.json());
 
 type CloneGitRepoError = {
     message: string;

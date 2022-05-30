@@ -1,7 +1,7 @@
-import express from 'express';
 import axios from 'axios';
 import type { AxiosResponse, AxiosRequestConfig } from 'axios';
 import type { Response, Router } from 'express';
+import bodyParser from 'body-parser';
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
 
@@ -19,7 +19,7 @@ export function requestAndForwardResponse(url: string, response: Response, optio
 }
 
 export function setUpRequestForwarding(router: Router) {
-    router.use(express.raw({ inflate: false, type: () => true }));
+    router.use(bodyParser.raw({ inflate: false, type: () => true }));
 }
 
 export function forward(axiosResponse: AxiosResponse, expressResponse: Response) {
