@@ -7,12 +7,12 @@ const StyledWrapper = styled.div`
     white-space: nowrap;
 `;
 
-interface EllipsisProps {
+interface TextEllipsisProps {
     content: string;
 }
 
-const Ellipsis = ({ content }: EllipsisProps) => {
+const TextEllipsis = ({ content }: TextEllipsisProps) => {
     return <StyledWrapper title={content}>{content}</StyledWrapper>;
 };
 
-export default Ellipsis;
+export default TextEllipsis;
