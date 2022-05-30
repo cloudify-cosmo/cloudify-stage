@@ -456,7 +456,6 @@
             }
         }
     },
-    "unexpectedError": "Could not fetch the widget data",
     "users": {
         "changePassword": "Change Password",
         "changePasswordModal": {
@@ -498,7 +497,7 @@
         "loadError": "Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.",
         "loading": "Loading...",
         "unexpectedError": "Cannot render widget. Check browser console for details.",
-        "fetchingError": "An unexpected error occurred",
+        "fetchingError": "Could not fetch the widget data",
         "renderError": {
             "title": "Could not render widget",
             "content": "For more details see the browser console"
