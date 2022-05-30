@@ -23,6 +23,7 @@ export {
     ClusterServicesOverview,
     ClusterStatusIcon,
     DynamicTable,
+    ErrorPopup,
     ExecutionStatus,
     Graph,
     IdPopup,
@@ -36,6 +37,5 @@ export {
     ProductLogo,
     SemanticIconDropdown,
     VerticallyAlignedCell,
-    ErrorPopup,
     Widgets
 };
