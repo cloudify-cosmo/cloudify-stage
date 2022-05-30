@@ -2,24 +2,30 @@
     min-width: 81px;
 }
 
-.blueprintCatalog .actionButtons {
-    position: absolute !important;
-    bottom: 1rem;
-    text-align: center;
-    line-height: 3;
-    width: calc(100% - 14px);
-}
-
 .blueprintCatalog .segment {
     background: white !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
-
-.blueprintCatalog .actionButtons > button {
-    margin-right: 1rem;
-}
-
 .uploadBlueprintButton {
     z-index: 5;
     position: absolute !important;
     right: 12px;
+}
+
+.blueprintCatalog .actionButtons .button {
+    margin: 0.2rem;
+}
+
+.blueprintCatalog .stackable .column > .column {
+    min-width: 315px;
+    max-width: 20%;
+    margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 769px) {
+    .blueprintCatalog .stackable .column > .column {
+        max-width: 100%;
+    }
 }
