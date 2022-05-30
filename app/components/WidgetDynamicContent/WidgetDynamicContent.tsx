@@ -250,7 +250,7 @@ export default class WidgetDynamicContent extends Component {
                 <WidgetErrorMessage
                     widgetName={widget.definition.name}
                     showErrorWithPopup={showErrorWithPopup}
-                    header={i18n.t('widget.fetchingError', 'Could not fetch the widget data')}
+                    header={i18n.t('widget.fetchingError')}
                     content={data.error}
                 />
             );
@@ -269,8 +269,8 @@ export default class WidgetDynamicContent extends Component {
                     <WidgetErrorMessage
                         widgetName={widget.definition.name}
                         showErrorWithPopup={showErrorWithPopup}
-                        header={i18n.t('widget.renderError.title', 'Could not render widget')}
-                        content={i18n.t('widget.renderError.content', 'For more details see the browser console')}
+                        header={i18n.t('widget.renderError.title')}
+                        content={i18n.t('widget.renderError.content')}
                     />
                 );
             }
@@ -280,7 +280,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderWidget() {
         const { data, widget } = this.props;
-        let widgetHtml = i18n.t('widget.loading', 'Loading...');
+        let widgetHtml = i18n.t('widget.loading');
         if (widget.definition && widget.definition.render) {
             try {
                 widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());
