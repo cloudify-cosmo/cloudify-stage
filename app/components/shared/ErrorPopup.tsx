@@ -30,7 +30,7 @@ const StyledPopup = styled(Popup)`
 
 const HeaderWrapper = styled.div`
     /* NOTE: In some cases the "x" icon is overflowing the header content. */
-    /* Note: Because of the '.ui.popup>.header' selector (coming from semanti-ui-react) specificy, !important flag seems like a valid option here */
+    /* Note: Because of the '.ui.popup>.header' selector (coming from semantic-ui-react) specificity, !important flag seems like a valid option here */
     padding-right: 14px !important;
 `;
 
