@@ -60,4 +60,24 @@ describe('Labels widget', () => {
         });
         cy.contains('There are no Labels defined');
     });
+
+    it('should disable Add button when there is no labels added to the list', () => {
+        cy.contains('Add').click();
+        cy.get('.modal').within(() => {
+            cy.get('a.label').should('not.exist');
+            cy.get('.actions > .green').should('have.attr', 'disabled');
+        });
+
+        cy.log('Verify Add button will be available after labels added to the table');
+        cy.get('.modal').within(() => {
+            cy.get('a.label').should('not.exist');
+            cy.get('.selection').click();
+            cy.get('div[name=labelKey] > input').type('sample_key');
+            cy.get('div[name=labelValue] > input').type('sample_value');
+            cy.get('.add').click();
+            cy.get('a.label').should('be.visible');
+            cy.get('.actions > .green').should('not.be.disabled');
+            cy.contains('button', 'Add').click();
+        });
+    });
 });
