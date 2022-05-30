@@ -241,7 +241,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
-        const showErrorWithPopup = !widget.definition.showBorder;
+        const showErrorInPopup = !widget.definition.showBorder;
 
         if (data.error) {
             log.error(data);
@@ -249,7 +249,7 @@ export default class WidgetDynamicContent extends Component {
             return (
                 <WidgetErrorMessage
                     widgetName={widget.definition.name}
-                    showErrorWithPopup={showErrorWithPopup}
+                    showErrorInPopup={showErrorInPopup}
                     header={i18n.t('widget.fetchingError')}
                     content={data.error}
                 />
@@ -268,7 +268,7 @@ export default class WidgetDynamicContent extends Component {
                 return (
                     <WidgetErrorMessage
                         widgetName={widget.definition.name}
-                        showErrorWithPopup={showErrorWithPopup}
+                        showErrorInPopup={showErrorInPopup}
                         header={i18n.t('widget.renderError.title')}
                         content={i18n.t('widget.renderError.content')}
                     />

@@ -6,11 +6,11 @@ interface WidgetErrorMessageProps {
     widgetName: string;
     header: string;
     content: string;
-    showErrorWithPopup: boolean;
+    showErrorInPopup: boolean;
 }
 
-const WidgetErrorMessage = ({ header, content, widgetName, showErrorWithPopup }: WidgetErrorMessageProps) => {
-    return showErrorWithPopup ? (
+const WidgetErrorMessage = ({ header, content, widgetName, showErrorInPopup }: WidgetErrorMessageProps) => {
+    return showErrorInPopup ? (
         <ErrorMessageWithPopup widgetName={widgetName} header={header} content={content} />
     ) : (
         <ErrorMessage header={header} error={content} autoHide />
