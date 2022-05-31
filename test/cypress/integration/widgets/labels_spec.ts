@@ -1,17 +1,10 @@
+import { addLabel } from '../../support/labels';
+
 describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
     const getCreatedLabel = () => cy.get('a.label');
-    const getDropdownSelect = () => cy.get('.selection');
-    const typeLabelName = (labelName: string) => cy.get('div[name=labelKey] > input').type(labelName);
-    const typeLabelValue = (labelValue: string) => cy.get('div[name=labelValue] > input').type(labelValue);
 
-    function addLabel() {
-        getDropdownSelect().click();
-        typeLabelName('sample_key');
-        typeLabelValue('sample_value');
-        cy.get('.add').click();
-    }
     before(() => {
         cy.usePageMock('labels')
             .activate()
@@ -28,7 +21,8 @@ describe('Labels widget', () => {
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
             getCreatedLabel().should('not.exist');
-            addLabel();
+            cy.contains('button', 'Add').should('have.attr', 'disabled');
+            addLabel('sample_key', 'sample_value');
             getCreatedLabel().should('be.visible');
             cy.contains('button', 'Add').click();
         });
@@ -66,16 +60,5 @@ describe('Labels widget', () => {
             cy.wrap(deleteIcon).should('not.exist');
         });
         cy.contains('There are no Labels defined');
-    });
-
-    it('should enable Add button when at least one new label in the list', () => {
-        cy.clickButton('Add');
-        cy.get('.modal').within(() => {
-            getCreatedLabel().should('not.exist');
-            cy.contains('button', 'Add').should('have.attr', 'disabled');
-            addLabel();
-            getCreatedLabel().should('be.visible');
-            cy.contains('button', 'Add').should('not.be.disabled');
-        });
     });
 });
