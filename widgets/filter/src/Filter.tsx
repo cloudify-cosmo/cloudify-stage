@@ -18,8 +18,7 @@ export default class Filter extends React.Component {
         super(props, context);
 
         this.state = {
-            ...this.getStateFromContext(),
-            error: null
+            ...this.getStateFromContext()
         };
 
         this.eventHandlers = {
@@ -137,8 +136,7 @@ export default class Filter extends React.Component {
     }
 
     render() {
-        const { error } = this.state;
-        const { ErrorMessage, Form } = Stage.Basic;
+        const { Form } = Stage.Basic;
 
         const createDropdown = ({
             stateProp,
@@ -197,68 +195,63 @@ export default class Filter extends React.Component {
         };
 
         return (
-            <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
-                <Form size="small">
-                    <Form.Group inline widths="equal">
-                        {[
-                            createDropdown({
-                                entityName: 'Blueprint',
-                                fetchManagerEndpoint: 'blueprints?state=uploaded',
-                                flushOnRefreshEvent: true
-                            }),
-                            createDropdown({
-                                entityName: 'Deployment',
-                                filter: blueprintFilter,
-                                pageSize: 20,
-                                textFormatter: item =>
-                                    Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name }),
-                                fetchIncludeExtra: 'display_name',
-                                searchParams: ['_search', '_search_name'],
-                                flushOnRefreshEvent: true
-                            }),
-                            createDropdown({
-                                entityName: 'Node',
-                                filter: blueprintDeploymentFilter,
-                                pageSize: 40
-                            }),
-                            createDropdown({
-                                entityName: 'Node Instance',
-                                filter: { ...deploymentFilter, node_id: 'nodeId' },
-                                pageSize: 40
-                            }),
-                            createDropdown({
-                                entityName: 'Execution',
-                                fetchIncludeExtra: 'workflow_id',
-                                textFormatter: item =>
-                                    item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id,
-                                filter: blueprintDeploymentFilter,
-                                pageSize: 20
-                            }),
-                            createDropdown({
-                                entityName: 'Execution Status',
-                                stateProp: 'executionStatus',
-                                enabledConfigurationKey: 'filterByExecutionsStatus',
-                                fetchManagerEndpoint: 'executions',
-                                fetchAll: true,
-                                valueProp: 'status_display',
-                                filter: {
-                                    ...blueprintDeploymentFilter,
-                                    id: 'executionId'
-                                }
-                            }),
-                            createDropdown({
-                                entityName: 'Site Name',
-                                stateProp: 'siteName',
-                                enabledConfigurationKey: 'filterBySiteName',
-                                fetchManagerEndpoint: 'sites',
-                                valueProp: 'name'
-                            })
-                        ]}
-                    </Form.Group>
-                </Form>
-            </div>
+            <Form size="small">
+                <Form.Group inline widths="equal">
+                    {[
+                        createDropdown({
+                            entityName: 'Blueprint',
+                            fetchManagerEndpoint: 'blueprints?state=uploaded',
+                            flushOnRefreshEvent: true
+                        }),
+                        createDropdown({
+                            entityName: 'Deployment',
+                            filter: blueprintFilter,
+                            pageSize: 20,
+                            textFormatter: item =>
+                                Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name }),
+                            fetchIncludeExtra: 'display_name',
+                            searchParams: ['_search', '_search_name'],
+                            flushOnRefreshEvent: true
+                        }),
+                        createDropdown({
+                            entityName: 'Node',
+                            filter: blueprintDeploymentFilter,
+                            pageSize: 40
+                        }),
+                        createDropdown({
+                            entityName: 'Node Instance',
+                            filter: { ...deploymentFilter, node_id: 'nodeId' },
+                            pageSize: 40
+                        }),
+                        createDropdown({
+                            entityName: 'Execution',
+                            fetchIncludeExtra: 'workflow_id',
+                            textFormatter: item => (item.workflow_id ? `${item.id} (${item.workflow_id})` : item.id),
+                            filter: blueprintDeploymentFilter,
+                            pageSize: 20
+                        }),
+                        createDropdown({
+                            entityName: 'Execution Status',
+                            stateProp: 'executionStatus',
+                            enabledConfigurationKey: 'filterByExecutionsStatus',
+                            fetchManagerEndpoint: 'executions',
+                            fetchAll: true,
+                            valueProp: 'status_display',
+                            filter: {
+                                ...blueprintDeploymentFilter,
+                                id: 'executionId'
+                            }
+                        }),
+                        createDropdown({
+                            entityName: 'Site Name',
+                            stateProp: 'siteName',
+                            enabledConfigurationKey: 'filterBySiteName',
+                            fetchManagerEndpoint: 'sites',
+                            valueProp: 'name'
+                        })
+                    ]}
+                </Form.Group>
+            </Form>
         );
     }
 }
