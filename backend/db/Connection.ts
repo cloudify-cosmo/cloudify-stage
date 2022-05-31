@@ -9,7 +9,6 @@ import WidgetBackendsModel from './models/WidgetBackendsModel';
 
 const dbModule = getDbModule(getConfig().app.db, loggerFactory, [
     BlueprintUserDataModel,
-    ResourcesModel,
     UserAppsModel,
     WidgetBackendsModel
 ]);
