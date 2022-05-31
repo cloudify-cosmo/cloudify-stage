@@ -48,6 +48,11 @@ describe('Tenants management widget', () => {
         cy.get('.modal').within(() => {
             clickDropdown('Groups');
             clickDropdownItem(group);
+            clickDropdown('Groups');
+
+            clickDropdown(`Choose a role for user group ${group}`);
+            clickDropdownItem('user');
+
             cy.clickButton('Save');
         });
         cy.contains('tr', tenant).contains('.label.green', '1');
