@@ -1,7 +1,18 @@
 describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
+    const getCreatedLabel = () => cy.get('a.label');
+    const getDropdownSelect = () => cy.get('.selection');
+    const typeLabelName = (labelName: string) => cy.get('div[name=labelKey] > input').type(labelName);
+    const typeLabelValue = (labelValue: string) => cy.get('div[name=labelValue] > input').type(labelValue);
 
+    function addLabel() {
+        getCreatedLabel().should('not.exist');
+        getDropdownSelect().click();
+        typeLabelName('sample_key');
+        typeLabelValue('sample_value');
+        cy.get('.add').click();
+    }
     before(() => {
         cy.usePageMock('labels')
             .activate()
@@ -17,12 +28,8 @@ describe('Labels widget', () => {
     it('should allow to add labels', () => {
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
-            cy.get('a.label').should('not.exist');
-            cy.get('.selection').click();
-            cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
-            cy.get('.add').click();
-            cy.get('a.label').should('be.visible');
+            addLabel();
+            getCreatedLabel().should('be.visible');
             cy.contains('button', 'Add').click();
         });
 
@@ -61,23 +68,14 @@ describe('Labels widget', () => {
         cy.contains('There are no Labels defined');
     });
 
-    it('should disable Add button when there is no labels added to the list', () => {
-        cy.contains('Add').click();
+    it('should enable Add button when at least one new label in the list', () => {
+        cy.clickButton('Add');
         cy.get('.modal').within(() => {
-            cy.get('a.label').should('not.exist');
-            cy.get('.actions > .green').should('have.attr', 'disabled');
-        });
-
-        cy.log('Verify Add button will be available after labels added to the table');
-        cy.get('.modal').within(() => {
-            cy.get('a.label').should('not.exist');
-            cy.get('.selection').click();
-            cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
-            cy.get('.add').click();
-            cy.get('a.label').should('be.visible');
-            cy.get('.actions > .green').should('not.be.disabled');
-            cy.contains('button', 'Add').click();
+            getCreatedLabel().should('not.exist');
+            cy.contains('button', 'Add').should('have.attr', 'disabled');
+            addLabel();
+            getCreatedLabel().should('be.visible');
+            cy.contains('button', 'Add').should('not.be.disabled');
         });
     });
 });
