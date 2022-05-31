@@ -4,6 +4,14 @@ describe('Tenants management widget', () => {
     const group = 'tenants_management_test_group';
     const user = 'tenants_management_test_user';
 
+    const clickDropdown = (dropdownLabel: string) => {
+        cy.getField(dropdownLabel).find('.selection').click();
+    };
+
+    const clickDropdownItem = (itemLabel: string) => {
+        cy.contains('.item', itemLabel).click();
+    };
+
     before(() =>
         cy
             .activate('valid_trial_license')
@@ -28,9 +36,9 @@ describe('Tenants management widget', () => {
         cy.contains('tr', tenant).find('.content').click();
         cy.contains('Edit users').click();
         cy.get('.modal').within(() => {
-            cy.get('.selection').click();
-            cy.contains('.item', user).click();
-            cy.contains('Save').click({ force: true });
+            clickDropdown('Users');
+            clickDropdownItem(user);
+            cy.clickButton('Save');
         });
         cy.contains('tr', tenant).contains('.label.blue', '1');
 
@@ -38,9 +46,9 @@ describe('Tenants management widget', () => {
         cy.contains('tr', tenant).find('.content').click();
         cy.contains('Edit user groups').click();
         cy.get('.modal').within(() => {
-            cy.get('.selection').click();
-            cy.contains('.item', group).click();
-            cy.contains('Save').click({ force: true });
+            clickDropdown('Groups');
+            clickDropdownItem(group);
+            cy.clickButton('Save');
         });
         cy.contains('tr', tenant).contains('.label.green', '1');
 

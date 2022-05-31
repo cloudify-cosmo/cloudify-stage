@@ -2,7 +2,7 @@ import type { DropdownProps } from 'semantic-ui-react';
 
 const { Form } = Stage.Basic;
 
-interface RolesPickerProps {
+export interface RolesPickerProps {
     onUpdate: (name: DropdownProps['name'], value: DropdownProps['value']) => void;
     resources: Record<string, string>;
     resourceName: string;
