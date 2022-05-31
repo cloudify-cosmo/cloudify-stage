@@ -293,7 +293,13 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                             ))}
                     </div>
 
-                    {hasError && <ErrorMessage autoHide={false} error={i18n.t('widget.renderError')} />}
+                    {hasError && (
+                        <ErrorMessage
+                            autoHide={false}
+                            header={i18n.t('widget.renderError.title')}
+                            error={i18n.t('widget.renderError.content')}
+                        />
+                    )}
                     {!hasError &&
                         (widget.definition && !_.isEmpty(_.get(this.props, 'manager.tenants.selected')) ? (
                             <WidgetDynamicContent
