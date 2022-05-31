@@ -14,7 +14,7 @@ import directoryTree from 'directory-tree';
 import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
 import multer from 'multer';
-import JSZip from 'jszip';
+import archiver from 'archiver';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody } from './Terraform.types';
 import { checkIfFileUploaded } from './File';
@@ -66,7 +66,7 @@ const getGitUrl = (url: string, authHeader?: string) => {
     return url;
 };
 
-const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: string) => {
+const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: string): Promise<void> => {
     try {
         const gitUrl = getGitUrl(url, authHeader);
         await simpleGit().clone(gitUrl, repositoryPath, [disableGitAuthenticationPromptOption]);
@@ -199,7 +199,8 @@ const renderBlueprint = (
 
 export function fileDebase64(req: Request, res: Response, next: NextFunction) {
     if (req.body.file) {
-        req.body.file = Buffer.from(req.body.file, 'base64');
+        const clearedBase64File = req.body.file.replace(/^(.*);base64,/, '');
+        req.body.file = Buffer.from(clearedBase64File, 'base64');
         next();
     } else {
         const errorMessage = 'No file uploaded.';
@@ -259,31 +260,30 @@ router.post('/blueprint', (req, res) => {
     res.send(result);
 });
 
-router.post('/blueprint/archive', fileDebase64, async (req, res) => {
+router.post('/blueprint/archive', fileDebase64, (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
     if (!(req.body.file && Buffer.isBuffer(req.body.file))) {
-        return res.status(400).send({ message: 'No file uploaded.' });
+        res.status(400).send({ message: 'No file uploaded.' });
+    } else {
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
+
+        logger.debug(
+            `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
+        );
+
+        const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
+
+        const archive = archiver('zip');
+
+        archive.pipe(res);
+
+        archive.append(result, { name: 'blueprint/blueprint.yaml' });
+        archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
+        archive.finalize();
     }
-
-    logger.debug(
-        `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
-    );
-
-    const result = renderBlueprint(req.body, res);
-    const zip = new JSZip();
-    const zipBlueprint = zip.folder('blueprint');
-
-    zipBlueprint?.file('blueprint.yaml', result);
-
-    const zipTf = zipBlueprint?.folder('tf_module');
-    zipTf?.file('terraform.zip', req.body.file);
-
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
-    const arrayBuffer = await zip.generateAsync({ type: 'arraybuffer' });
-    return res.send(Buffer.from(arrayBuffer));
 });
 
 export default router;

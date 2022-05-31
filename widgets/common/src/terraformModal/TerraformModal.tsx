@@ -176,8 +176,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [blueprintDescription, setBlueprintDescription] = useInput('');
 
     const [templateUrl, setTemplateUrl] = useInput('');
-    const [terraformPackage, setTerraformPackage] = useState<File>();
-    const [terraformPackageBase64, setTerraformPackageBase64] = useState<string>();
+    const [terraformTemplatePackage, setTerraformTemplatePackage] = useState<File>();
+    const [terraformTemplatePackageBase64, setTerraformTemplatePackageBase64] = useState<string>();
     const [resourceLocation, setResourceLocation, clearResourceLocation] = useInput('');
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
     const [username, setUsername, clearUsername] = useInput('');
@@ -219,7 +219,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
 
         function validateTemplate() {
-            if (!terraformPackage) {
+            if (!terraformTemplatePackage) {
                 if (!templateUrl) {
                     formErrors.template = tError('noTerraformTemplate');
                 } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
@@ -358,12 +358,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         setProcessPhase('generation');
 
         try {
-            let blueprintContent;
-            if (terraformPackage) {
+            let blueprintContent: string;
+            if (terraformTemplatePackage) {
                 blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprintArchive({
                     blueprintName,
                     blueprintDescription,
-                    file: terraformPackageBase64,
+                    file: terraformTemplatePackageBase64,
                     urlAuthentication,
                     terraformVersion: version,
                     resourceLocation: getResourceLocation(templateModules, resourceLocation),
@@ -394,11 +394,16 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
             }
 
-            const file: any = new Blob([blueprintContent]);
-            file.name = terraformPackage ? 'blueprint/blueprint.yaml' : Consts.defaultBlueprintYamlFileName;
+            const fileName = terraformTemplatePackage ? 'blueprint.zip' : Consts.defaultBlueprintYamlFileName;
+
+            const file: File = new File([blueprintContent], fileName, { type: 'application/zip' });
             const image = await (await fetch(terraformLogo)).blob();
             await createSecretsFromVariables();
-            await new BlueprintActions(toolbox).doUpload(blueprintName, { file, image });
+            await new BlueprintActions(toolbox).doUpload(blueprintName, {
+                file,
+                image,
+                blueprintYamlFile: Consts.defaultBlueprintYamlFileName
+            });
 
             toolbox.drillDown(
                 toolbox.getWidget(),
@@ -460,13 +465,19 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             .finally(unsetTemplateModulesLoading);
     }
 
-    const onTerraformPackageChange = (file: File) => {
+    const onTerraformTemplatePackageChange = (file?: File) => {
         setTemplateModulesLoading();
-        setTerraformPackage(file);
+        setTerraformTemplatePackage(file);
+        if (!file) {
+            setTerraformTemplatePackageBase64('');
+            clearTemplateModules();
+            unsetTemplateModulesLoading();
+            return;
+        }
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = function onloadend() {
-            setTerraformPackageBase64(reader.result?.toString());
+            setTerraformTemplatePackageBase64(reader.result?.toString());
         };
         new TerraformActions(toolbox)
             .doGetTemplateModulesByFile(file)
@@ -517,7 +528,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                     placeholder={t(`template`)}
                                     onChangeUrl={setTemplateUrl}
                                     onBlurUrl={handleTemplateUrlBlur}
-                                    onChangeFile={onTerraformPackageChange}
+                                    onChangeFile={onTerraformTemplatePackageChange}
                                 />
                             </Form.Field>
                             <Form.Group widths="equal">

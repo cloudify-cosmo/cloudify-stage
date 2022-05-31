@@ -233,8 +233,7 @@ export default class BlueprintActions {
     ) {
         const params: Record<string, any> = {
             visibility,
-            async_upload: true,
-            ...(file?.name ? { application_file_name: file.name } : {})
+            async_upload: true
         };
 
         if (!_.isEmpty(blueprintYamlFile)) {
