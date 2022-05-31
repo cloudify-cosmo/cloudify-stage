@@ -6,17 +6,17 @@ import { inputMaxLength } from './TerraformModal';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal.variablesTable');
 
-interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
+interface TerraformVariableNameInputProps extends CustomConfigurationComponentProps<string> {
     rowValues?: Variable;
 }
 
-export default function TerraformVariableValueInput({
+export default function TerraformVariableNameInput({
     rowValues,
     name,
     value,
     onChange,
     widgetlessToolbox
-}: TerraformVariableValueInputProps) {
+}: TerraformVariableNameInputProps) {
     const { Input } = Stage.Basic;
 
     if (rowValues?.source === 'secret') {

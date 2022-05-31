@@ -138,54 +138,54 @@ export default function BlueprintsCatalog({
                             </Grid.Row>
                         )}
                     </Grid>
-
-                    <Grid.Column width="16">
-                        <div style={{ height: '80px' }} />
-                    </Grid.Column>
-                </DataSegment.Item>
-
-                {Blueprints.Actions.isCompleted(item) && (
-                    <div className="actionButtons">
-                        <Button
-                            icon="trash"
-                            content="Delete"
-                            basic
-                            labelPosition="left"
-                            onClick={event => {
-                                event.stopPropagation();
-                                onDeleteBlueprint(item);
-                            }}
-                        />
-                        {Blueprints.Actions.isUploaded(item) && (
-                            <>
-                                <Button
-                                    icon="rocket"
-                                    content="Deploy"
-                                    labelPosition="left"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        onCreateDeployment(item);
-                                    }}
-                                />
-
-                                {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
+                    {Blueprints.Actions.isCompleted(item) && (
+                        <Grid style={{ marginTop: 'auto', paddingTop: '2rem' }}>
+                            <Grid.Row centered>
+                                <Grid.Column textAlign="center" className="actionButtons">
                                     <Button
-                                        icon="external share"
-                                        content="Edit a copy in Composer"
+                                        icon="trash"
+                                        content="Delete"
+                                        basic
                                         labelPosition="left"
                                         onClick={event => {
                                             event.stopPropagation();
-                                            new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
-                                                item.id,
-                                                item.main_file_name
-                                            );
+                                            onDeleteBlueprint(item);
                                         }}
                                     />
-                                )}
-                            </>
-                        )}
-                    </div>
-                )}
+                                    {Blueprints.Actions.isUploaded(item) && (
+                                        <>
+                                            <Button
+                                                icon="rocket"
+                                                content="Deploy"
+                                                labelPosition="left"
+                                                onClick={event => {
+                                                    event.stopPropagation();
+                                                    onCreateDeployment(item);
+                                                }}
+                                            />
+
+                                            {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
+                                                <Button
+                                                    icon="external share"
+                                                    content="Edit a copy in Composer"
+                                                    labelPosition="left"
+                                                    onClick={event => {
+                                                        event.stopPropagation();
+                                                        new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
+                                                            item.id,
+                                                            item.main_file_name
+                                                        );
+                                                    }}
+                                                    style={{ width: '247px' }}
+                                                />
+                                            )}
+                                        </>
+                                    )}
+                                </Grid.Column>
+                            </Grid.Row>
+                        </Grid>
+                    )}
+                </DataSegment.Item>
             </Grid.Column>
         );
     });
@@ -221,7 +221,7 @@ export default function BlueprintsCatalog({
                 searchable
                 noDataMessage={noDataMessage}
             >
-                <Grid>{blueprintsRows}</Grid>
+                <Grid stackable>{blueprintsRows}</Grid>
             </DataSegment>
         </div>
     );
