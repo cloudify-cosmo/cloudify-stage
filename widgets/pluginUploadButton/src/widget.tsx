@@ -1,8 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-
 import UploadButton from './UploadButton';
 
-Stage.defineWidget({
+Stage.defineWidget<never, never, never>({
     id: 'pluginUploadButton',
     name: 'Plugin upload button',
     description: 'Adds button to upload new plugin',
@@ -15,7 +13,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginUploadButton'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
+    render(_widget, _data, _error, toolbox) {
         return <UploadButton toolbox={toolbox} />;
     }
 });
