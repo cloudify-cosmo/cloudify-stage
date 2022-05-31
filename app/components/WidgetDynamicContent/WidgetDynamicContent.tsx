@@ -6,11 +6,13 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
-import WidgetPropType from '../utils/props/WidgetPropType';
-import combineClassNames from '../utils/shared/combineClassNames';
-import { getToolbox } from '../utils/Toolbox';
-import WidgetParamsHandler from '../utils/WidgetParamsHandler';
-import { ErrorMessage } from './basic';
+import { Message } from 'semantic-ui-react';
+import WidgetPropType from '../../utils/props/WidgetPropType';
+import combineClassNames from '../../utils/shared/combineClassNames';
+import { getToolbox } from '../../utils/Toolbox';
+import WidgetParamsHandler from '../../utils/WidgetParamsHandler';
+import { ErrorMessage } from '../basic';
+import WidgetErrorMessage from './WidgetErrorMessage';
 
 export default class WidgetDynamicContent extends Component {
     private readonly containerRef: RefObject<HTMLElement>;
@@ -239,13 +241,17 @@ export default class WidgetDynamicContent extends Component {
 
     renderReact() {
         const { data, widget } = this.props;
+        const showErrorInPopup = !widget.definition.showBorder;
+
         if (data.error) {
             log.error(data);
+
             return (
-                <ErrorMessage
-                    error={data.error}
-                    header={i18n.t('widget.unexpectedError', 'An unexpected error occurred')}
-                    autoHide
+                <WidgetErrorMessage
+                    widgetName={widget.definition.name}
+                    showErrorInPopup={showErrorInPopup}
+                    header={i18n.t('widget.fetchingError')}
+                    content={data.error}
                 />
             );
         }
@@ -254,13 +260,17 @@ export default class WidgetDynamicContent extends Component {
             try {
                 return widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
-                log.error(`Error rendering widget - ${e.message}`, e.stack);
+                log.error(
+                    `Error rendering '${widget.definition.name}' widget (widget id: ${widget.definition.id}) - ${e.message}`,
+                    e.stack
+                );
+
                 return (
-                    <ErrorMessage
-                        error={i18n.t('widget.detailedRenderError', `Error rendering widget: {{errorDetails}}`, {
-                            errorDetails: e.message
-                        })}
-                        autoHide
+                    <WidgetErrorMessage
+                        widgetName={widget.definition.name}
+                        showErrorInPopup={showErrorInPopup}
+                        header={i18n.t('widget.renderError.title')}
+                        content={i18n.t('widget.renderError.content')}
                     />
                 );
             }
@@ -270,7 +280,7 @@ export default class WidgetDynamicContent extends Component {
 
     renderWidget() {
         const { data, widget } = this.props;
-        let widgetHtml = i18n.t('widget.loading', 'Loading...');
+        let widgetHtml = i18n.t('widget.loading');
         if (widget.definition && widget.definition.render) {
             try {
                 widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());

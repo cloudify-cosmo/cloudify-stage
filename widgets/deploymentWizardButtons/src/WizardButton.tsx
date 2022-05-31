@@ -1,51 +1,35 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
+import type { ButtonProps, IconProps } from 'semantic-ui-react';
 import Wizard from './wizard';
 
-export default class WizardButton extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+const { Button, Icon } = Stage.Basic;
+const { useBoolean } = Stage.Hooks;
 
-        this.state = {
-            open: false
-        };
-        this.openWizard = this.openWizard.bind(this);
-        this.closeWizard = this.closeWizard.bind(this);
-    }
-
-    openWizard(event) {
-        event.stopPropagation();
-        this.setState({ open: true });
-    }
-
-    closeWizard() {
-        this.setState({ open: false });
-    }
-
-    render() {
-        const { Button, Icon } = Stage.Basic;
-        const { color, icon, name, steps, toolbox, wizardTitle } = this.props;
-        const { open } = this.state;
-
-        return (
-            <>
-                <Button color={color} onClick={this.openWizard} labelPosition="left" icon className="widgetButton">
-                    <Icon name={icon} size="large" />
-                    {name}
-                </Button>
-                {open && (
-                    <Wizard.Modal header={wizardTitle} steps={steps} onClose={this.closeWizard} toolbox={toolbox} />
-                )}
-            </>
-        );
-    }
+interface WizardButtonProps {
+    color: ButtonProps['color'];
+    icon: IconProps['name'];
+    name: string;
+    wizardTitle: string;
+    // NOTE: Currently the type for steps is being described in Wizard.Modal.StepsPropType
+    steps: any[];
+    toolbox: Stage.Types.Toolbox;
 }
 
-WizardButton.propTypes = {
-    color: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired,
-    wizardTitle: PropTypes.string.isRequired,
-    steps: Wizard.Modal.StepsPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
+const WizardButton: FunctionComponent<WizardButtonProps> = ({ color, icon, name, steps, toolbox, wizardTitle }) => {
+    const [isWizardOpen, openWizard, closeWizard] = useBoolean();
+
+    return (
+        <>
+            <Button color={color} onClick={openWizard} labelPosition="left" icon className="widgetButton">
+                <Icon name={icon} size="large" />
+                {name}
+            </Button>
+            {isWizardOpen && (
+                // @ts-ignore Wizard.Modal is not migrated to typescript
+                <Wizard.Modal header={wizardTitle} steps={steps} onClose={closeWizard} toolbox={toolbox} />
+            )}
+        </>
+    );
 };
+
+export default WizardButton;
