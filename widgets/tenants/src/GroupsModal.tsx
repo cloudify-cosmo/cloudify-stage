@@ -69,9 +69,8 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <Form.Field label="Groups">
                         <Form.Dropdown
-                            placeholder="Groups"
                             multiple
                             selection
                             options={_.map(userGroups.items, userGroup => {
