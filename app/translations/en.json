@@ -496,10 +496,9 @@
         "fetchError": "Error fetching widget data",
         "loadError": "Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.",
         "loading": "Loading...",
-        "unexpectedError": "Cannot render widget. Check browser console for details.",
-        "fetchingError": "Could not fetch the widget data",
+        "fetchingError": "Cannot fetch the widget data",
         "renderError": {
-            "title": "Could not render widget",
+            "title": "Cannot render widget",
             "content": "For more details see the browser console"
         },
         "validationErrors": {
