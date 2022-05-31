@@ -1,44 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
+import type { FunctionComponent } from 'react';
 
-export default class UploadButton extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+const { Button } = Stage.Basic;
+const { useBoolean } = Stage.Hooks;
+const { UploadModal } = Stage.Common.Plugins;
 
-        this.state = {
-            open: false
-        };
-    }
-
-    showModal = () => {
-        this.setState({ open: true });
-    };
-
-    hideModal = () => {
-        this.setState({ open: false });
-    };
-
-    render() {
-        const { toolbox } = this.props;
-        const { loading, open } = this.state;
-        const { Button } = Stage.Basic;
-        const { UploadModal } = Stage.Common.Plugins;
-
-        return (
-            <div>
-                <Button
-                    color="yellow"
-                    icon="upload"
-                    content="Upload Plugin"
-                    labelPosition="left"
-                    className="widgetButton"
-                    loading={loading}
-                    onClick={this.showModal}
-                />
-
-                <UploadModal open={open} onHide={this.hideModal} toolbox={toolbox} />
-            </div>
-        );
-    }
+interface UploadButtonProps {
+    toolbox: Stage.Types.Toolbox;
 }
 
-UploadButton.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };
+const UploadButton: FunctionComponent<UploadButtonProps> = ({ toolbox }) => {
+    const [isModalOpen, showModal, hideModal] = useBoolean();
+
+    return (
+        <div>
+            <Button
+                color="yellow"
+                icon="upload"
+                content="Upload Plugin"
+                labelPosition="left"
+                className="widgetButton"
+                onClick={showModal}
+            />
+
+            <UploadModal open={isModalOpen} onHide={hideModal} toolbox={toolbox} />
+        </div>
+    );
+};
+
+export default UploadButton;
