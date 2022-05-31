@@ -396,7 +396,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             const fileName = terraformTemplatePackage ? 'blueprint.zip' : Consts.defaultBlueprintYamlFileName;
 
-            const file: File = new File([blueprintContent], fileName, { type: 'application/zip' });
+            const file: File = new File([blueprintContent], fileName, { type: 'application/x-zip-compressed' });
             const image = await (await fetch(terraformLogo)).blob();
             await createSecretsFromVariables();
             await new BlueprintActions(toolbox).doUpload(blueprintName, {
