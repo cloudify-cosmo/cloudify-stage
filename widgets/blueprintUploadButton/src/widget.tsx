@@ -1,8 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-
 import UploadButton from './UploadButton';
 
-Stage.defineWidget({
+Stage.defineWidget<never, never, never>({
     id: 'blueprintUploadButton',
     name: 'Blueprint upload button',
     description: 'Adds button to upload new blueprint',
@@ -15,7 +13,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintUploadButton'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
-    render(widget, data, error, toolbox) {
+    render(_widget, _data, _error, toolbox) {
         return <UploadButton toolbox={toolbox} />;
     }
 });
