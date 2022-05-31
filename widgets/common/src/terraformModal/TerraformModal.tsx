@@ -10,7 +10,7 @@ import Consts from '../Consts';
 import SecretActions from '../secrets/SecretActions';
 import type { TerraformModalTableAccordionProps } from './TerraformModalTableAccordion';
 import TerraformModalTableAccordion from './TerraformModalTableAccordion';
-import TerraformVariableValueInput from './TerraformVariableValueInput';
+import TerraformVariableNameInput from './TerraformVariableNameInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
@@ -51,6 +51,24 @@ export const inputMaxLength = 256;
 function LengthLimitedDynamicTableInput({ name, onChange, ...rest }: CustomConfigurationComponentProps<string>) {
     return (
         <Input
+            name={name}
+            fluid
+            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            {...rest}
+        >
+            <input maxLength={inputMaxLength} />
+        </Input>
+    );
+}
+
+interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
+    rowValues?: Variable;
+}
+
+function TerraformVariableValueInput({ name, onChange, rowValues, ...rest }: TerraformVariableValueInputProps) {
+    return (
+        <Input
+            type={rowValues?.source === 'secret' ? 'password' : 'text'}
             name={name}
             fluid
             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
@@ -108,7 +126,7 @@ const variablesColumns: Columns<Variable> = [
         id: 'name',
         label: t('variablesTable.name'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
-        component: TerraformVariableValueInput,
+        component: TerraformVariableNameInput,
         style: dynamicTableFieldStyle,
         width: 3
     },
@@ -116,7 +134,7 @@ const variablesColumns: Columns<Variable> = [
         id: 'value',
         label: t('variablesTable.value'),
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
-        component: LengthLimitedDynamicTableInput,
+        component: TerraformVariableValueInput,
         style: dynamicTableFieldStyle
     }
 ];

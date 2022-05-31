@@ -1,8 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-
 import MyResourcesCheckbox from './MyResourcesCheckbox';
 
-Stage.defineWidget({
+Stage.defineWidget<never, never, never>({
     id: 'onlyMyResources',
     name: 'Show Only My Resources',
     description: 'Show only my resources checkbox, work with (plugins, snapshots, blueprints, deployments)',
@@ -15,7 +13,7 @@ Stage.defineWidget({
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('onlyMyResources'),
 
-    render(widget, data, error, toolbox) {
-        return <MyResourcesCheckbox widget={widget} toolbox={toolbox} />;
+    render(_widget, _data, _error, toolbox) {
+        return <MyResourcesCheckbox toolbox={toolbox} />;
     }
 });
