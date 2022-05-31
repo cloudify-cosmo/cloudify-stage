@@ -14,6 +14,7 @@ import PasswordModal from './PasswordModal';
 import ProductLogo from './ProductLogo';
 import SemanticIconDropdown from './SemanticIconDropdown';
 import VerticallyAlignedCell from './VerticallyAlignedCell';
+import ErrorPopup from './ErrorPopup';
 import * as Widgets from './widgets';
 import * as PluginActions from '../../actions/plugins';
 
@@ -22,6 +23,7 @@ export {
     ClusterServicesOverview,
     ClusterStatusIcon,
     DynamicTable,
+    ErrorPopup,
     ExecutionStatus,
     Graph,
     IdPopup,
