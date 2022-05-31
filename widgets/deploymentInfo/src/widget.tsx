@@ -1,60 +1,64 @@
-// @ts-nocheck File not migrated fully to TS
+import type { DeploymentInfoWidget } from './widget.types';
 import DeploymentInfo from './DeploymentInfo';
+import Consts from './consts';
+import Utils from './utils';
 
-Stage.defineWidget({
-    id: 'deploymentInfo',
-    name: 'Deployment Info',
-    description: 'Shows deployment basic information and status',
+const t = Utils.getWidgetTranslation();
+
+Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, DeploymentInfoWidget.Configuration>({
+    id: Consts.WIDGET_ID,
+    name: t('name'),
+    description: t('description'),
     initialWidth: 16,
     initialHeight: 7,
     isReact: true,
     hasReadme: true,
     showHeader: false,
     showBorder: false,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentInfo'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(Consts.WIDGET_ID),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'showBlueprint',
-            name: 'Show blueprint name',
+            name: t('configuration.showBlueprint'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showSite',
-            name: 'Show site name',
+            name: t('configuration.showSite'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showCreated',
-            name: 'Show created date',
+            name: t('configuration.showCreated'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showUpdated',
-            name: 'Show updated date',
+            name: t('configuration.showUpdated'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showCreator',
-            name: 'Show creator',
+            name: t('configuration.showCreator'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showNodeInstances',
-            name: 'Show node instances status',
+            name: t('configuration.showNodeInstances'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
     ],
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
 
         return {
@@ -119,20 +123,20 @@ Stage.defineWidget({
             deployment,
             instancesStates,
             instancesCount
-        };
+        } as DeploymentInfoWidget.Data;
     },
 
-    render(widget, data, error, toolbox) {
+    render(_widget, data, _error, toolbox) {
         const { Loading, Message } = Stage.Basic;
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        if (_.isEmpty(data.deployment)) {
-            return <Message info>No deployment selected</Message>;
+        if (_.isEmpty(data?.deployment)) {
+            return <Message info>{t('noDeploymentSelected')}</Message>;
         }
 
-        return <DeploymentInfo data={data} toolbox={toolbox} />;
+        return <DeploymentInfo data={data as DeploymentInfoWidget.Data} toolbox={toolbox} />;
     }
 });

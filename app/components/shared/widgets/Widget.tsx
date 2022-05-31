@@ -198,11 +198,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                         <Segment basic style={{ height: '100%' }}>
                             <Message icon error>
                                 <Icon name="ban" />
-                                {i18n.t(
-                                    'widget.loadError',
-                                    'Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.',
-                                    { widgetName: widget.name }
-                                )}
+                                {i18n.t('widget.loadError', { widgetName: widget.name })}
                             </Message>
                         </Segment>
                     </Segment>
@@ -300,10 +296,8 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                     {hasError && (
                         <ErrorMessage
                             autoHide={false}
-                            error={i18n.t(
-                                'widget.renderError',
-                                'Cannot render widget. Check browser console for details.'
-                            )}
+                            header={i18n.t('widget.renderError.title')}
+                            error={i18n.t('widget.renderError.content')}
                         />
                     )}
                     {!hasError &&

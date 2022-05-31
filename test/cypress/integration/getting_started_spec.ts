@@ -141,7 +141,7 @@ describe('Getting started modal', () => {
 
     describe('without mocked pages', () => {
         beforeEach(() => {
-            cy.mockLogin({ disableGettingStarted: false });
+            cy.mockLoginWithoutWaiting({ disableGettingStarted: false }).waitUntilAppLoaded();
         });
 
         it('should redirect to the dashboard page upon canceling the modal process', () => {
