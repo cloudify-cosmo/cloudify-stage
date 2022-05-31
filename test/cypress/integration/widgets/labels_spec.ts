@@ -7,7 +7,6 @@ describe('Labels widget', () => {
     const typeLabelValue = (labelValue: string) => cy.get('div[name=labelValue] > input').type(labelValue);
 
     function addLabel() {
-        getCreatedLabel().should('not.exist');
         getDropdownSelect().click();
         typeLabelName('sample_key');
         typeLabelValue('sample_value');
@@ -28,6 +27,7 @@ describe('Labels widget', () => {
     it('should allow to add labels', () => {
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
+            getCreatedLabel().should('not.exist');
             addLabel();
             getCreatedLabel().should('be.visible');
             cy.contains('button', 'Add').click();
