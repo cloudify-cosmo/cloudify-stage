@@ -376,31 +376,37 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         setProcessPhase('generation');
 
         try {
-            let blueprintContent: string;
+            let blueprintContent: any;
             if (terraformTemplatePackage) {
-                blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprintArchive({
-                    blueprintName,
-                    blueprintDescription,
-                    file: terraformTemplatePackageBase64,
-                    urlAuthentication,
-                    terraformVersion: version,
-                    resourceLocation: getResourceLocation(templateModules, resourceLocation),
-                    variables,
-                    environmentVariables: environment,
-                    outputs
-                });
+                blueprintContent = await (
+                    await new TerraformActions(toolbox).doGenerateBlueprintArchive({
+                        blueprintName,
+                        blueprintDescription,
+                        file: terraformTemplatePackageBase64,
+                        urlAuthentication,
+                        terraformVersion: version,
+                        resourceLocation: getResourceLocation(templateModules, resourceLocation),
+                        variables,
+                        environmentVariables: environment,
+                        outputs
+                    })
+                ).blob();
+                blueprintContent.name = 'blueprint.zip';
             } else {
-                blueprintContent = await new TerraformActions(toolbox).doGenerateBlueprint({
-                    blueprintName,
-                    blueprintDescription,
-                    terraformTemplate: templateUrl,
-                    urlAuthentication,
-                    terraformVersion: version,
-                    resourceLocation: getResourceLocation(templateModules, resourceLocation),
-                    variables,
-                    environmentVariables: environment,
-                    outputs
-                });
+                blueprintContent = new Blob([
+                    await new TerraformActions(toolbox).doGenerateBlueprint({
+                        blueprintName,
+                        blueprintDescription,
+                        terraformTemplate: templateUrl,
+                        urlAuthentication,
+                        terraformVersion: version,
+                        resourceLocation: getResourceLocation(templateModules, resourceLocation),
+                        variables,
+                        environmentVariables: environment,
+                        outputs
+                    })
+                ]);
+                blueprintContent.name = Consts.defaultBlueprintYamlFileName;
             }
 
             setProcessPhase('upload');
@@ -412,9 +418,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
             }
 
-            const fileName = terraformTemplatePackage ? 'blueprint.zip' : Consts.defaultBlueprintYamlFileName;
+            const file: Blob & { name: string } = blueprintContent;
 
-            const file: File = new File([blueprintContent], fileName, { type: 'application/x-zip-compressed' });
             const image = await (await fetch(terraformLogo)).blob();
             await createSecretsFromVariables();
             await new BlueprintActions(toolbox).doUpload(blueprintName, {

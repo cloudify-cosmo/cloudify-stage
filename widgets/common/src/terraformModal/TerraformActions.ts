@@ -8,7 +8,7 @@ export default class TerraformActions {
     }
 
     doGenerateBlueprintArchive(body: RequestArchiveBody) {
-        return this.toolbox.getInternal().doPost('/terraform/blueprint/archive', { body });
+        return this.toolbox.getInternal().doPost('/terraform/blueprint/archive', { body, parseResponse: false });
     }
 
     doGetTemplateModulesByUrl(templateUrl: string, username?: string, password?: string) {
