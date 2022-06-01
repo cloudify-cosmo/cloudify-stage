@@ -1,6 +1,7 @@
 import request from 'supertest';
+import path, { join, resolve } from 'path';
 import app from 'app';
-import { join, resolve } from 'path';
+
 import { readFileSync } from 'fs';
 import { readJsonSync } from 'fs-extra';
 import ejs from 'ejs';
@@ -29,15 +30,45 @@ describe('/terraform/blueprint endpoint', () => {
     });
 
     it('handles ejs errors', async () => {
-        ejs.render = () => {
+        const spy = jest.spyOn(ejs, 'render').mockImplementation(() => {
             throw Error('err');
-        };
+        });
         const response = await request(app).post('/console/terraform/blueprint').send(getInputs(1));
 
         expect(response.status).toBe(500);
         expect(response.body).toStrictEqual({
             message: 'Error when generating blueprint'
         });
+        spy.mockRestore();
+    });
+});
+
+describe('/terraform/blueprint/archive endpoint', () => {
+    const endpointUrl = '/console/terraform/blueprint/archive';
+
+    const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
+
+    const requestBody = readJsonSync(getFixturePath(`archive_inputs.json`));
+
+    it(`generates Terraform blueprint archive`, async () => {
+        const response = await request(app).post(endpointUrl).send(requestBody);
+        console.log('response', response.text, response.body);
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toBe('application/zip');
+    });
+
+    it('handles ejs errors', async () => {
+        const spy = jest.spyOn(ejs, 'render').mockImplementation(() => {
+            throw Error('err');
+        });
+        const response = await request(app).post(endpointUrl).send(requestBody);
+        console.log('response2', response.text, response.body);
+        expect(response.status).toBe(500);
+        expect(response.body).toStrictEqual({
+            message: 'Error when generating blueprint'
+        });
+        spy.mockRestore();
     });
 });
 
@@ -66,5 +97,18 @@ describe('/terraform/resources endpoint', () => {
         const response = await request(app).post(endpointUrl).query({ templateUrl: privateGitFileUrl }).send();
 
         expect(response.status).toBe(400);
+    });
+});
+
+describe('/terraform/resources/file endpoint', () => {
+    const endpointUrl = '/console/terraform/resources/file';
+
+    it('provides modules list', async () => {
+        const response = await request(app)
+            .post(endpointUrl)
+            .attach('file', path.resolve(path.join(__dirname, 'fixtures/terraform/template.zip')));
+
+        expect(response.status).toBe(200);
+        expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
     });
 });
