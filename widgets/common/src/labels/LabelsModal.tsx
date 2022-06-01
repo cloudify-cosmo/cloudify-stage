@@ -111,7 +111,12 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={onApply} disabled={isLoading} content={i18n.t(i18nApplyKey)} color="green" />
+                <ApproveButton
+                    onClick={onApply}
+                    disabled={isLoading || labels.length === 0}
+                    content={i18n.t(i18nApplyKey)}
+                    color="green"
+                />
             </Modal.Actions>
         </Modal>
     );
