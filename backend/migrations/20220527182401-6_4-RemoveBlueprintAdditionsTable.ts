@@ -7,8 +7,8 @@ import type { MigrationObject } from './common/types';
 import BlueprintAdditions from '../db/models/BlueprintAdditionsModel';
 import { getResourcePath } from '../utils';
 
-const iconsDirectory = 'blueprint-icons';
-const iconFilename = 'icon.png';
+export const iconsDirectory = 'blueprint-icons';
+export const iconFilename = 'icon.png';
 
 export const { up, down }: MigrationObject = {
     up: async (queryInterface, Sequelize, logger) => {
