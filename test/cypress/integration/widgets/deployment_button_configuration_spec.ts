@@ -43,8 +43,8 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.get('div.deploymentButtonWidget button').click();
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"]').should('contain.text', withoutLabelsBlueprint);
-                cy.get('[role="listbox"]').should('not.contain.text', labelsBlueprint);
+                cy.contains(withoutLabelsBlueprint).should('exist');
+                cy.contains(labelsBlueprint).should('not.exist');
             });
             cy.contains('Cancel').click();
         });
@@ -63,8 +63,7 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"]').should('contain.text', withoutLabelsBlueprint);
-                cy.get('[role="listbox"]').should('contain.text', labelsBlueprint);
+                cy.contains(labelsBlueprint).should('exist');
             });
             cy.contains('Cancel').click();
         });
