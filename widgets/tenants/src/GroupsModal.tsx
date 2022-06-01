@@ -1,14 +1,15 @@
 // @ts-nocheck File not migrated fully to TS
 
+import { useEffect } from 'react';
 import Actions from './actions';
 import TenantPropType from './props/TenantPropType';
 
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
+const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
+const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
 
 export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups }) {
-    const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
-
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [editedUserGroups, setEditedUserGroups] = useInput({});
@@ -20,7 +21,7 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
     });
 
     function onRoleChange(group, role) {
-        const newUserGroups = { ...userGroups };
+        const newUserGroups = { ...editedUserGroups };
         newUserGroups[group] = role;
         setEditedUserGroups(newUserGroups);
     }
@@ -60,8 +61,6 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
         setEditedUserGroups(newUserGroups);
     }
 
-    const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
-
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
@@ -70,9 +69,8 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <Form.Field label="Groups">
                         <Form.Dropdown
-                            placeholder="Groups"
                             multiple
                             selection
                             options={_.map(userGroups.items, userGroup => {
