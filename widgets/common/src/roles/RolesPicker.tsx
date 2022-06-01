@@ -1,4 +1,5 @@
 import type { DropdownProps } from 'semantic-ui-react';
+import { map } from 'lodash';
 
 const { Form } = Stage.Basic;
 
@@ -16,15 +17,18 @@ const RolesPicker = ({ onUpdate, resources, resourceName, toolbox }: RolesPicker
         onUpdate(field.name, field.value);
     };
 
-    const roleOptions = _.reverse(
-        _.map(_.filter(toolbox.getManagerState().roles, { type: 'tenant_role' }), role => {
-            return { text: role.name, value: role.name };
-        })
-    );
+    const roleOptions = toolbox
+        .getManagerState()
+        .roles.filter(role => role.type === 'tenant_role')
+        .map(role => ({
+            text: role.name,
+            value: role.name
+        }))
+        .reverse();
 
     return (
         <span>
-            {_.map(resources, (role, resource) => {
+            {map(resources, (role, resource) => {
                 return (
                     <Form.Field
                         key={resource}
