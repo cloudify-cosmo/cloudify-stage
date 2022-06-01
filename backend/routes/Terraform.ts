@@ -143,7 +143,7 @@ const scanGitFile = async (url: string, authHeaderValue?: string) => {
 
     fs.rmdirSync(repositoryPath, { recursive: true });
 
-    return throwExceptionIfModuleListEmpty(terraformModuleDirectories.sort());
+    return terraformModuleDirectories.sort();
 };
 
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
