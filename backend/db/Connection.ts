@@ -3,7 +3,6 @@ import { getConfig } from '../config';
 import loggerFactory from '../handler/LoggerHandler';
 
 import BlueprintUserDataModel from './models/BlueprintUserDataModel';
-import ResourcesModel from './models/ResourcesModel';
 import UserAppsModel from './models/UserAppsModel';
 import WidgetBackendsModel from './models/WidgetBackendsModel';
 
