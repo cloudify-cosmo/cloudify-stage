@@ -46,8 +46,12 @@
                         "label": "Create Kubernetes cluster",
                         "marketplaceTabs": [
                             {
-                                "name": "Clusters",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/k8s-examples.json"
+                                "name": "Kubernetes",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/k8s_services.json"
+                            },
+                            {
+                                "name": "K8S Discovery",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/K8S_Discovery.json"
                             }
                         ]
                     }

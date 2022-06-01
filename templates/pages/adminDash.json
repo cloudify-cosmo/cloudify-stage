@@ -91,10 +91,16 @@
             "color": "blue",
             "icon": "add",
             "label": "Create Kubernetes cluster",
-            "marketplaceTabs": [{
-              "name": "Clusters",
-              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/k8s-examples.json"
-            }]
+            "marketplaceTabs": [
+              {
+                "name": "Kubernetes",
+                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/k8s_services.json"
+              },
+              {
+                "name": "K8S Discovery",
+                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/K8S_Discovery.json"
+              }
+            ]
           }
         },
         {
@@ -110,7 +116,7 @@
             "label": "Run Terraform module",
             "marketplaceTabs": [{
               "name": "Terraform",
-              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
+              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/terraform_services.json"
             }]
           }
         },

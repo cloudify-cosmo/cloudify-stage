@@ -1,7 +1,7 @@
 import { times } from 'lodash';
 
 const t = Stage.Utils.getT(`widgets.blueprints.configuration.marketplaceTabs`);
-const defaultNumberOfTabs = 6;
+const defaultNumberOfTabs = 13;
 
 export const blueprintMarketplaceTabsConfig: Stage.Types.WidgetConfigurationDefinition = {
     id: 'marketplaceTabs',

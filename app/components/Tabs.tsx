@@ -57,7 +57,7 @@ export default function Tabs({
                     else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
                     else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
                 }}
-                style={{ position: 'relative' }}
+                style={{ position: 'relative', overflowX: 'auto', overflowY: 'hidden' }}
             >
                 {_.map(tabs, (tab, tabIndex) => (
                     <SortableMenuItem

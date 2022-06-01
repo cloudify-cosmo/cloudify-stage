@@ -839,28 +839,56 @@
                         "urlNameLabel": "URL to marketplace",
                         "defaultValues": [
                             {
+                                "name": "Getting Started",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/getting_started.json"
+                            },
+                            {
                                 "name": "AWS",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/aws_services.json"
                             },
                             {
                                 "name": "Azure",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/azure_services.json"
                             },
                             {
                                 "name": "GCP",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/gcp_services.json"
                             },
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/terraform_services.json"
                             },
                             {
                                 "name": "Helm",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/helm_services.json"
+                            },
+                            {
+                                "name": "Kubernetes",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/k8s_services.json"
+                            },
+                            {
+                                "name": "K8S Discovery",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/K8S_Discovery.json"
+                            },
+                            {
+                                "name": "Docker",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/docker_services.json"
+                            },
+                            {
+                                "name": "Ansible",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/ansible_services.json"
+                            },
+                            {
+                                "name": "VMWare",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/vmware_services.json"
+                            },
+                            {
+                                "name": "Certified Environments",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/certified_environments.json"
                             },
                             {
                                 "name": "Other",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/other_services.json"
                             }
                         ]
                     }
