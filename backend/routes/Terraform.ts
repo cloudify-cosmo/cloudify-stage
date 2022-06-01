@@ -17,7 +17,7 @@ import multer from 'multer';
 import archiver from 'archiver';
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody } from './Terraform.types';
-import { checkIfFileUploaded } from './File';
+import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 
 const upload = multer({ limits: { fileSize: 1048576 } }); // 1048576 bytes ~ 1 megabyte
 const logger = getLogger('Terraform');
@@ -28,10 +28,6 @@ const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'u
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
 
 router.use(express.json());
-
-type CloneGitRepoError = {
-    message: string;
-};
 
 type ResourcesRequest = Request<
     unknown,
@@ -114,12 +110,7 @@ const scanGitFile = async (url: string, authHeaderValue?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
     const terraformModuleDirectories: string[] = [];
 
-    try {
-        await cloneGitRepo(repositoryPath, url, authHeaderValue);
-        // @ts-ignore-next-line cloneGitRepo function ensures the error shape
-    } catch (error: CloneGitRepoError) {
-        throw new Error(error.message);
-    }
+    await cloneGitRepo(repositoryPath, url, authHeaderValue);
 
     directoryTree(
         repositoryPath,
@@ -163,9 +154,9 @@ const renderBlueprint = (
         terraformTemplate = '',
         urlAuthentication,
         resourceLocation,
-        variables,
-        environmentVariables,
-        outputs
+        variables = [],
+        environmentVariables = [],
+        outputs = []
     }: RequestBody,
     res: Response
 ) => {
@@ -214,7 +205,7 @@ export function fileDebase64(req: Request, res: Response, next: NextFunction) {
  * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
  * @returns string[] with terraform module list inside uploaded zip file
  */
-router.post('/resources/file', upload.single('file'), checkIfFileUploaded, async (req, res) => {
+router.post('/resources/file', upload.single('file'), checkIfFileUploaded(logger), async (req, res) => {
     if (req.file && Buffer.isBuffer(req.file?.buffer)) {
         try {
             res.send(await scanZipFile(req.file.buffer));
