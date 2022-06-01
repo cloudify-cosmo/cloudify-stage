@@ -456,7 +456,6 @@
             }
         }
     },
-    "unexpectedError": "Unexpected Error Occurred",
     "users": {
         "changePassword": "Change Password",
         "changePasswordModal": {
@@ -497,8 +496,11 @@
         "fetchError": "Error fetching widget data",
         "loadError": "Cannot load widget {{widgetName}}. It might not be installed in your env. Please contact administrator.",
         "loading": "Loading...",
-        "renderError": "Cannot render widget. Check browser console for details.",
-        "unexpectedError": "An unexpected error occurred",
+        "fetchingError": "Cannot fetch the widget data",
+        "renderError": {
+            "title": "Cannot render widget",
+            "content": "For more details see the browser console"
+        },
         "validationErrors": {
             "idNotSpecified": "Mandatory field - 'id' - not specified in widget definition.",
             "invalidPermission": "Specified widget permission ('{{permission}}') not found in available permissions list.",
@@ -792,6 +794,10 @@
             },
             "executions": {
                 "noErrorDetails": "No error details available"
+            },
+            "rolesPicker": {
+                "label": "Choose a role for {{resourceName}} {{resource}}:",
+                "placeholder": "Choose a role"
             }
         },
         "blueprintActionButtons": {
@@ -1681,6 +1687,19 @@
                 },
                 "error": "Couldn't create a Token, please try to submit the Token data again."
             }
+        },
+        "deploymentInfo": {
+            "name": "Deployment Info",
+            "description": "Shows deployment basic information and status",
+            "configuration": {
+                "showBlueprint": "Show blueprint name",
+                "showSite": "Show site name",
+                "showCreated": "Show created date",
+                "showUpdated": "Show updated date",
+                "showCreator": "Show creator",
+                "showNodeInstances": "Show node instances status"
+            },
+            "noDeploymentSelected": "No deployment selected"
         }
     },
     "input": {
