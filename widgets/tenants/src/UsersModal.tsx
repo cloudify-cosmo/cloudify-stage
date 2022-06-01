@@ -79,9 +79,8 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <Form.Field label="Users">
                         <Form.Dropdown
-                            placeholder="Users"
                             multiple
                             selection
                             options={_.map(users.items, user => {
