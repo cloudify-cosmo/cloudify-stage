@@ -2,6 +2,8 @@ import type { DropdownProps } from 'semantic-ui-react';
 
 const { Form } = Stage.Basic;
 
+const t = Stage.Utils.getT('widgets.common.rolesPicker');
+
 export interface RolesPickerProps {
     onUpdate: (name: DropdownProps['name'], value: DropdownProps['value']) => void;
     resources: Record<string, string>;
@@ -24,9 +26,15 @@ const RolesPicker = ({ onUpdate, resources, resourceName, toolbox }: RolesPicker
         <span>
             {_.map(resources, (role, resource) => {
                 return (
-                    <Form.Field key={resource} label={`Choose a role for ${resourceName} ${resource}:`}>
+                    <Form.Field
+                        key={resource}
+                        label={t('label', {
+                            resourceName,
+                            resource
+                        })}
+                    >
                         <Form.Dropdown
-                            placeholder="Choose a role"
+                            placeholder={t('placeholder')}
                             selection
                             options={roleOptions}
                             name={resource}
