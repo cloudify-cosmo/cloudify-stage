@@ -1,4 +1,5 @@
 import type { LabelInputType } from '../../../../widgets/common/src/labels/types';
+import { addLabel, typeLabelInput, typeLabelKey, typeLabelValue } from '../../support/labels';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
@@ -62,30 +63,6 @@ describe('Deployment Action Buttons widget', () => {
     });
 
     describe('should allow to manage deployment labels', () => {
-        function typeLabelKey(key: string) {
-            cy.get('div[name=labelKey] > input').clear().type(key);
-        }
-        function typeLabelValue(value: string) {
-            cy.get('div[name=labelValue] > input').clear().type(value);
-        }
-        function addLabel(key: string, value: string) {
-            cy.interceptSp('GET', { path: `/labels/deployments/${key}?_search=${value}` }).as('fetchLabel');
-
-            typeLabelKey(key);
-            typeLabelValue(value);
-            cy.get('button[aria-label=Add]').click();
-
-            cy.wait('@fetchLabel');
-            cy.contains('a.label', `${key} ${value}`).should('exist');
-        }
-        function typeLabelInput(inputType: LabelInputType, text: string) {
-            if (inputType === 'key') {
-                typeLabelKey(text);
-            } else {
-                typeLabelKey('a');
-                typeLabelValue(text);
-            }
-        }
         function checkIfPopupIsDisplayed(inputType: LabelInputType, text: string, popupContent: string) {
             typeLabelInput(inputType, text);
             cy.contains('.popup', popupContent).should('be.visible');
