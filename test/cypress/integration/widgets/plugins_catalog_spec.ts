@@ -29,7 +29,7 @@ describe('Plugins Catalog widget', () => {
         cy.activate().deletePlugins().usePageMock(['pluginsCatalog', 'plugins'], widgetConfiguration).mockLogin()
     );
 
-    it.skip('should allow uploading multiple plugins', () => {
+    it.only('should allow uploading multiple plugins', () => {
         const pluginsToUpload = ['Helm', 'Libvirt'];
         uploadPlugins(pluginsToUpload);
         pluginsToUpload.forEach(pluginToUpload => {
@@ -109,7 +109,7 @@ describe('Plugins Catalog widget', () => {
         );
     });
 
-    it.skip('should upload all plugins', () => {
+    it('should upload all plugins', () => {
         // eslint-disable-next-line security/detect-non-literal-regexp
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=AWS`)).as('awsPluginUpload');
         cy.contains('Upload all plugins').click().should('be.disabled');
