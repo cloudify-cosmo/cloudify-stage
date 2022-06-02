@@ -2,6 +2,7 @@
 import { execSync } from 'child_process';
 import { existsSync, mkdirSync, renameSync, rmdirSync } from 'fs-extra';
 import { join } from 'path';
+import { noop } from 'lodash';
 
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
@@ -41,11 +42,7 @@ describe('Migration script', () => {
         execMigration(`downTo ${latestMigration}`);
     });
 
-    function testMigrationUp(
-        snapshotVersion: string,
-        initialMigration: string,
-        verifyMigration: () => boolean = () => true
-    ) {
+    function testMigrationUp(snapshotVersion: string, initialMigration: string, verifyMigration = noop) {
         // eslint-disable-next-line jest/expect-expect
         it(`migrates from ${snapshotVersion} snapshot`, () => {
             try {
@@ -62,7 +59,7 @@ describe('Migration script', () => {
 
                 throw e;
             }
-            expect(verifyMigration()).toEqual(true);
+            verifyMigration();
         });
     }
 
@@ -73,12 +70,13 @@ describe('Migration script', () => {
     testMigrationUp('6.0', '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js');
     testMigrationUp('6.3', '20210929110911-6_3-UserAppsPageGroups.js', () => {
         const iconsPath = getResourcePath(iconsDirectory, true);
-        return (
-            existsSync(join(iconsPath, 'external_jpeg', iconFilename)) &&
-            existsSync(join(iconsPath, 'external_png', iconFilename)) &&
-            existsSync(join(iconsPath, 'local_gif', iconFilename)) &&
-            existsSync(join(iconsPath, 'local_jpg', iconFilename)) &&
-            existsSync(join(iconsPath, 'local_png', iconFilename))
-        );
+
+        /* eslint-disable jest/no-standalone-expect */
+        expect(existsSync(join(iconsPath, 'external_jpeg', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'external_png', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_gif', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_jpg', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_png', iconFilename))).toEqual(true);
+        /* eslint-enable jest/no-standalone-expect */
     });
 });
