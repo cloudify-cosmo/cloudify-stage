@@ -1,6 +1,9 @@
+import { addLabel } from '../../support/labels';
+
 describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
+    const getCreatedLabel = () => cy.get('a.label');
 
     before(() => {
         cy.usePageMock('labels')
@@ -17,12 +20,10 @@ describe('Labels widget', () => {
     it('should allow to add labels', () => {
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
-            cy.get('a.label').should('not.exist');
-            cy.get('.selection').click();
-            cy.get('div[name=labelKey] > input').type('sample_key');
-            cy.get('div[name=labelValue] > input').type('sample_value');
-            cy.get('.add').click();
-            cy.get('a.label').should('be.visible');
+            getCreatedLabel().should('not.exist');
+            cy.contains('button', 'Add').should('have.attr', 'disabled');
+            addLabel('sample_key', 'sample_value');
+            getCreatedLabel().should('be.visible');
             cy.contains('button', 'Add').click();
         });
 
