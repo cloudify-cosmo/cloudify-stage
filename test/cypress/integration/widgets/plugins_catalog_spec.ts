@@ -29,7 +29,7 @@ describe('Plugins Catalog widget', () => {
         cy.activate().deletePlugins().usePageMock(['pluginsCatalog', 'plugins'], widgetConfiguration).mockLogin()
     );
 
-    it.only('should allow uploading multiple plugins', () => {
+    it('should allow uploading multiple plugins', () => {
         const pluginsToUpload = ['Helm', 'Libvirt'];
         uploadPlugins(pluginsToUpload);
         pluginsToUpload.forEach(pluginToUpload => {
