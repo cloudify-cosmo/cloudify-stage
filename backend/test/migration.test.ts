@@ -1,13 +1,16 @@
 // eslint-disable-next-line security/detect-child-process
 import { execSync } from 'child_process';
-import { mkdirSync, renameSync, rmdirSync } from 'fs-extra';
+import { existsSync, mkdirSync, renameSync, rmdirSync } from 'fs-extra';
+import { join } from 'path';
+import { noop } from 'lodash';
 
 import { getConfig } from 'config';
 import { getResourcePath } from '../utils';
+import { iconFilename, iconsDirectory } from '../migrations/20220527182401-6_4-RemoveBlueprintAdditionsTable';
 
-const latestMigration = '20220523121125-6_4-RemoveApplicationsTable.js';
-const userTemplatesFolder = getResourcePath('templates', true);
-const userTemplatesBackupFolder = `${userTemplatesFolder}-backup`;
+const latestMigration = '20220527182401-6_4-RemoveBlueprintAdditionsTable.js';
+const userDataFolder = getResourcePath('', true);
+const userDataBackupFolder = `${userDataFolder}-backup`;
 
 describe('Migration script', () => {
     function execMigration(command: string) {
@@ -19,12 +22,12 @@ describe('Migration script', () => {
     // Backup user templates for tests to restore later
     beforeAll(() => {
         // NOTE: make the directory just to ensure the rest of the backup code completes anyway
-        mkdirSync(userTemplatesFolder, { recursive: true });
-        renameSync(userTemplatesFolder, userTemplatesBackupFolder);
+        mkdirSync(userDataFolder, { recursive: true });
+        renameSync(userDataFolder, userDataBackupFolder);
     });
     afterAll(() => {
-        rmdirSync(userTemplatesFolder, { recursive: true });
-        renameSync(userTemplatesBackupFolder, userTemplatesFolder);
+        rmdirSync(userDataFolder, { recursive: true });
+        renameSync(userDataBackupFolder, userDataFolder);
     });
 
     beforeEach(() => execMigration('clear'));
@@ -39,7 +42,7 @@ describe('Migration script', () => {
         execMigration(`downTo ${latestMigration}`);
     });
 
-    function testMigrationUp(snapshotVersion: string, initialMigration: string) {
+    function testMigrationUp(snapshotVersion: string, initialMigration: string, verifyMigration = noop) {
         // eslint-disable-next-line jest/expect-expect
         it(`migrates from ${snapshotVersion} snapshot`, () => {
             try {
@@ -56,6 +59,7 @@ describe('Migration script', () => {
 
                 throw e;
             }
+            verifyMigration();
         });
     }
 
@@ -64,4 +68,15 @@ describe('Migration script', () => {
     testMigrationUp('5.0.5', '20190423064931-5_0-CreateWidgetBackendTable.js');
     testMigrationUp('5.1', '20200123095213-5_1-CreateBlueprintUserData.js');
     testMigrationUp('6.0', '20210519093609-6_0-UserAppsManagerIpColumnRemoval.js');
+    testMigrationUp('6.3', '20210929110911-6_3-UserAppsPageGroups.js', () => {
+        const iconsPath = getResourcePath(iconsDirectory, true);
+
+        /* eslint-disable jest/no-standalone-expect */
+        expect(existsSync(join(iconsPath, 'external_jpeg', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'external_png', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_gif', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_jpg', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'local_png', iconFilename))).toEqual(true);
+        /* eslint-enable jest/no-standalone-expect */
+    });
 });

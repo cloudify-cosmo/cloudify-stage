@@ -66,7 +66,7 @@ function createUserAppModel(queryInterface: QueryInterface, Sequelize: DataTypes
         );
 }
 
-function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
+export function createBlueprintAdditionsModel(queryInterface: QueryInterface, Sequelize: DataTypes) {
     return queryInterface
         .createTable('BlueprintAdditions', {
             id: {
