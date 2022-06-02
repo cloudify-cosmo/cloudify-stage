@@ -794,6 +794,10 @@
             },
             "executions": {
                 "noErrorDetails": "No error details available"
+            },
+            "rolesPicker": {
+                "label": "Choose a role for {{resourceName}} {{resource}}:",
+                "placeholder": "Choose a role"
             }
         },
         "blueprintActionButtons": {
