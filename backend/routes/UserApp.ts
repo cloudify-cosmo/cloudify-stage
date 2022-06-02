@@ -56,7 +56,7 @@ router.get('/clear-pages', (req, res, next) => {
         where: {
             username: req.user!.username,
             mode: getMode(),
-            tenant: req.query.tenant
+            tenant: req.query.tenant?.toString()
         }
     })
         .then(userApp => {
