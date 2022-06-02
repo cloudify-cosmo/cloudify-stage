@@ -19,7 +19,7 @@ import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 
-const upload = multer({ limits: { fileSize: 1024 * 1024 } });
+const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
 const logger = getLogger('Terraform');
 const router = express.Router();
 const templatePath = path.resolve(__dirname, '../templates/terraform');
