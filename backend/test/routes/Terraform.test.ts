@@ -1,5 +1,5 @@
 import request from 'supertest';
-import path, { join, resolve } from 'path';
+import { join, resolve } from 'path';
 import app from 'app';
 
 import { readFileSync } from 'fs';
@@ -106,7 +106,7 @@ describe('/terraform/resources/file endpoint', () => {
     it('provides modules list', async () => {
         const response = await request(app)
             .post(endpointUrl)
-            .attach('file', path.resolve(path.join(__dirname, 'fixtures/terraform/template.zip')));
+            .attach('file', resolve(join(__dirname, 'fixtures/terraform/template.zip')));
 
         expect(response.status).toBe(200);
         expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
