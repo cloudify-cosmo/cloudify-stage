@@ -70,7 +70,7 @@
                         "marketplaceTabs": [
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/terraform_services.json"
                             }
                         ]
                     }
