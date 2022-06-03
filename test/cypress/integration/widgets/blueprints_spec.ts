@@ -463,14 +463,9 @@ describe('Blueprints widget', () => {
 
         function setTemplateDetails(template: string, modulePath: string, fromFile = false) {
             if (fromFile) {
-                cy.get('.fileOrUrl').within(() => {
-                    cy.get('.remove.icon').click({ force: true });
-                    cy.contains('.label', 'URL');
-                    cy.get('input[name=terraformUrlOrFileFile]').attachFile(template);
-                    cy.contains('.label', 'File');
-                });
+                cy.get('input[name=terraformUrlOrFileFile]').attachFile(template);
             } else {
-                cy.typeToFieldInput('Terraform module source', template).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(template).blur();
             }
             cy.setSingleDropdownValue('Terraform module folder', modulePath);
         }
@@ -823,7 +818,7 @@ describe('Blueprints widget', () => {
             it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
             it('multiple modules template', () =>
                 testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
-            it('single module template as a file', () =>
+            it.only('single module template as a file', () =>
                 testBlueprintGeneration(singleModuleTerraformTemplatePath, 'local', true));
             it('multiple modules template as a file', () =>
                 testBlueprintGeneration(multipleModulesTerraformTemplatePath, 'local2', true));
