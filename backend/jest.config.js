@@ -18,7 +18,7 @@ try {
 
 module.exports = {
     collectCoverage: true,
-    collectCoverageFrom: [...changedFiles, 'config.ts', '!migrations/**', '!jest.config.js', '!migration.ts'],
+    collectCoverageFrom: [...changedFiles, 'config.ts', '!db/**', '!migrations/**', '!jest.config.js', '!migration.ts'],
     coverageThreshold: {
         '**/*.{js,ts}': {
             branches: 1,
