@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import _ from 'lodash';
 import type { CookieOptions, Request } from 'express';
 
@@ -13,8 +12,8 @@ import type { AuthUserResponse } from './Auth.types';
 const router = express.Router();
 const logger = getLogger('Auth');
 
-router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
 function getCookieOptions(req: Request, httpOnly = true) {
     const httpsUsed = req.header('X-Scheme') === 'https' || req.header('X-Force-Secure') === 'true';

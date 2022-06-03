@@ -53,7 +53,7 @@ describe('Migration script', () => {
                     } -v ON_ERROR_STOP=1 --single-transaction -f test/snapshots/${snapshotVersion}.sql`
                 );
                 execMigration('up');
-            } catch (e) {
+            } catch (e: any) {
                 console.log(`Error when migrating from ${initialMigration} for ${snapshotVersion}`);
                 console.log(e.stdout.toString(), e.stderr.toString());
 

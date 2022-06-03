@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';
@@ -7,7 +6,7 @@ import type { UserAppsInstance } from '../db/models/UserAppsModel';
 
 const router = express.Router();
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
@@ -57,7 +56,7 @@ router.get('/clear-pages', (req, res, next) => {
         where: {
             username: req.user!.username,
             mode: getMode(),
-            tenant: req.query.tenant
+            tenant: req.query.tenant?.toString()
         }
     })
         .then(userApp => {
