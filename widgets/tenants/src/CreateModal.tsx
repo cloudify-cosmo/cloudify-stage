@@ -51,13 +51,8 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.tenantName}>
-                        <Form.Input
-                            name="tenantName"
-                            placeholder={t('form.fields.tenantName')}
-                            value={tenantName}
-                            onChange={setTenantName}
-                        />
+                    <Form.Field error={errors.tenantName} label={t('form.fields.tenantName')}>
+                        <Form.Input name="tenantName" value={tenantName} onChange={setTenantName} />
                     </Form.Field>
                 </Form>
             </Modal.Content>

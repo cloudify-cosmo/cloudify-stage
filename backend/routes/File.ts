@@ -5,7 +5,7 @@ import { getLogger } from '../handler/LoggerHandler';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 
 const router = express.Router();
-const upload = multer({ limits: { fileSize: 50000 } });
+const upload = multer({ limits: { fileSize: 1024 * 50 } }); // 1024 bytes * 50 = 50 kB
 const logger = getLogger('File');
 
 router.post('/text', upload.single('file'), checkIfFileUploaded(logger), (req, res) => {

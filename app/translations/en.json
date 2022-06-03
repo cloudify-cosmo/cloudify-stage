@@ -794,6 +794,10 @@
             },
             "executions": {
                 "noErrorDetails": "No error details available"
+            },
+            "rolesPicker": {
+                "label": "Choose a role for {{resourceName}} {{resource}}:",
+                "placeholder": "Choose a role"
             }
         },
         "blueprintActionButtons": {
@@ -885,7 +889,7 @@
                 "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "Terraform module source (Zip archive URL, Git repository URL, or Upload a Zip archive)",
+                "template": "Terraform module source (ZIP archive URL, Git repository URL or local ZIP archive)",
                 "resourceLocation": "Terraform module folder",
                 "urlAuthentication": "URL authentication",
                 "username": "Username",
