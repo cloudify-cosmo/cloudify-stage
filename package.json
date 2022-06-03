@@ -126,7 +126,7 @@
         "file-loader": "^1.1.11",
         "fork-ts-checker-webpack-plugin": "^6.1.0",
         "glob": "^7.1.2",
-        "html-webpack-plugin": "^4.5.2",
+        "html-webpack-plugin": "^5.5.0",
         "imagemin-webpack-plugin": "^2.4.2",
         "json-loader": "^0.5.7",
         "sass": "^1.43.4",
