@@ -818,7 +818,7 @@ describe('Blueprints widget', () => {
             it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
             it('multiple modules template', () =>
                 testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
-            it.only('single module template as a file', () =>
+            it('single module template as a file', () =>
                 testBlueprintGeneration(singleModuleTerraformTemplatePath, 'local', true));
             it('multiple modules template as a file', () =>
                 testBlueprintGeneration(multipleModulesTerraformTemplatePath, 'local2', true));
