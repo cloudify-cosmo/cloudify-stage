@@ -681,7 +681,7 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(singleModuleTerraformTemplateUrl).blur();
                 cy.typeToFieldInput('Username', 'username');
                 cy.typeToFieldInput('Password', 'password').blur();
                 cy.contains('The URL requires authentication');
@@ -696,7 +696,7 @@ describe('Blueprints widget', () => {
             };
 
             const typeTerraformModuleUrl = (url: string) => {
-                cy.typeToFieldInput('Terraform module source', url).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(url).blur();
             };
 
             beforeEach(() => {
@@ -758,7 +758,7 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Username', username);
                 cy.typeToFieldInput('Password', password);
 
-                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(singleModuleTerraformTemplateUrl).blur();
 
                 cy.wait('@resources');
 
