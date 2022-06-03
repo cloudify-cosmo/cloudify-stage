@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
 import express from 'express';
-import bodyParser from 'body-parser';
 import passport from 'passport';
 import * as WidgetsHandler from '../handler/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
@@ -9,7 +8,7 @@ import { getTokenFromCookies } from '../utils';
 
 const router = express.Router();
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 router.get('/list', (req, res, next) => {
     WidgetsHandler.listWidgets()

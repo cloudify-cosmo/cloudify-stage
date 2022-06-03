@@ -1,31 +1,21 @@
 import express from 'express';
 import multer from 'multer';
 import yaml from 'js-yaml';
-import type { Request, Response, NextFunction } from 'express';
 import { getLogger } from '../handler/LoggerHandler';
+import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 
 const router = express.Router();
-const upload = multer({ limits: { fileSize: 50000 } });
+const upload = multer({ limits: { fileSize: 1024 * 50 } }); // 1024 bytes * 50 = 50 kB
 const logger = getLogger('File');
 
-function checkIfFileUploaded(req: Request, res: Response, next: NextFunction) {
-    if (!req.file) {
-        const errorMessage = 'No file uploaded.';
-        logger.error(errorMessage);
-        res.status(400).send({ message: errorMessage });
-    } else {
-        next();
-    }
-}
-
-router.post('/text', upload.single('file'), checkIfFileUploaded, (req, res) => {
+router.post('/text', upload.single('file'), checkIfFileUploaded(logger), (req, res) => {
     const file = req.file as Express.Multer.File;
     logger.debug(`Text file uploaded, name: ${file.originalname}, size: ${file.size}`);
     const data = file.buffer.toString();
     res.contentType('application/text').send(data);
 });
 
-router.post('/yaml', upload.single('file'), checkIfFileUploaded, (req, res) => {
+router.post('/yaml', upload.single('file'), checkIfFileUploaded(logger), (req, res) => {
     const file = req.file as Express.Multer.File;
     logger.debug(`YAML file uploaded, name: ${file.originalname}, size: ${file.size}`);
     const yamlString = file.buffer.toString();

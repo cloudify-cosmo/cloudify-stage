@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import fs from 'fs';
 import { getLogger } from '../handler/LoggerHandler';
 import { getHeadersWithAuthenticationToken, getResourcePath, getTokenFromCookies } from '../utils';
@@ -51,7 +50,7 @@ const submitContactDetails = async (contactDetails: ContactDetails, token: strin
     }
 };
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
