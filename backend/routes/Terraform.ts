@@ -238,6 +238,22 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     }
 });
 
+/**
+ * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
+ * @returns string[] with terraform module list inside uploaded zip file
+ */
+ router.post('/resources/file', upload.single('file'), checkIfFileUploaded(logger), async (req, res) => {
+    if (req.file && Buffer.isBuffer(req.file?.buffer)) {
+        try {
+            res.send(await scanZipFile(req.file.buffer));
+        } catch (e: any) {
+            res.status(400).send({ message: e.message });
+        }
+    } else {
+        res.status(400).send({ message: 'The file you sent is not valid' });
+    }
+});
+
 router.post('/blueprint', (req, res) => {
     const { terraformVersion, terraformTemplate, resourceLocation }: RequestBody = req.body;
 
