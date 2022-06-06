@@ -12,7 +12,8 @@ function SecretValue({
     secretKey,
     onHide,
     onShow,
-    toolbox
+    toolbox,
+    allowedSettingTo = Stage.Common.Consts.allowedSettingTo
 }) {
     const { Icon, Popup } = Stage.Basic;
 
@@ -255,7 +256,7 @@ export default class SecretsTable extends React.Component {
                                             onSetVisibility={visibility => {
                                                 this.setSecretVisibility(item.key, visibility);
                                             }}
-                                            allowedSettingTo={['tenant', 'global']}
+                                            allowedSettingTo={allowedSettingTo}
                                             className="rightFloated"
                                         />
                                     </VerticallyAlignedCell>
@@ -333,5 +334,6 @@ SecretsTable.propTypes = {
         total: PropTypes.number
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
+    widget: Stage.PropTypes.Widget.isRequired,
+    allowedSettingTo: PropTypes.arrayOf(PropTypes.string)
 };

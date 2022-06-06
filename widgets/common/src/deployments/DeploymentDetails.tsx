@@ -34,7 +34,8 @@ export default function DeploymentDetails({
     deployment,
     instancesCount,
     instancesStates,
-    onSetVisibility
+    onSetVisibility,
+    allowedSettingTo = Stage.Common.Consts.allowedSettingTo
 }) {
     const { Grid, ResourceVisibility } = Stage.Basic;
 
@@ -49,7 +50,7 @@ export default function DeploymentDetails({
 
     const resourceVisibility = (
         <ResourceVisibility
-            allowedSettingTo={['tenant', 'global']}
+            allowedSettingTo={allowedSettingTo}
             visibility={deployment.visibility}
             onSetVisibility={onSetVisibility}
             className="rightFloated"
@@ -146,7 +147,8 @@ DeploymentDetails.propTypes = {
     onSetVisibility: PropTypes.func.isRequired,
     big: PropTypes.bool,
     customName: PropTypes.node,
-    customActions: PropTypes.node
+    customActions: PropTypes.node,
+    allowedSettingTo: PropTypes.arrayOf(PropTypes.string)
 };
 
 DeploymentDetails.defaultProps = {

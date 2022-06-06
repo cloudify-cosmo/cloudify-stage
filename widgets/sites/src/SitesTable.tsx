@@ -104,6 +104,7 @@ export default class SitesTable extends React.Component {
         const DeleteModal = Stage.Basic.Confirm;
         const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
+        const { allowedSettingTo } = Stage.Common.Consts;
         let latitude;
         let longitude = null;
 
@@ -144,7 +145,7 @@ export default class SitesTable extends React.Component {
                                             onSetVisibility={visibility => {
                                                 this.setSiteVisibility(item.name, visibility);
                                             }}
-                                            allowedSettingTo={['tenant', 'global']}
+                                            allowedSettingTo={allowedSettingTo}
                                             className="rightFloated"
                                         />
                                     </VerticallyAlignedCell>
@@ -234,5 +235,6 @@ SitesTable.propTypes = {
         total: PropTypes.number
     }).isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
+    widget: Stage.PropTypes.Widget.isRequired,
+    allowedSettingTo: PropTypes.arrayOf(PropTypes.string)
 };
