@@ -262,6 +262,11 @@ module.exports = (env, argv) => {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
                     react: `${__dirname}/node_modules/react`
+                },
+                fallback: {
+                    // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default
+                    // If some other node.js core module (like 'fs') would be used within the cypress code, it should be listed below
+                    path: false
                 }
             },
             entry: ['./app/main.ts'],
