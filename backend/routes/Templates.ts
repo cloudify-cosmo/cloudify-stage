@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
 import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
@@ -7,7 +6,7 @@ import { getTokenFromCookies } from '../utils';
 
 const router = express.Router();
 
-router.use(bodyParser.json());
+router.use(express.json());
 
 router.get('/', (_req, res, next) => {
     TemplatesHandler.listTemplates()
