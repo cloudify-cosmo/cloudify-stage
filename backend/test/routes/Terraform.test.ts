@@ -52,7 +52,6 @@ describe('/terraform/blueprint/archive endpoint', () => {
 
     it(`generates Terraform blueprint archive`, async () => {
         const response = await request(app).post(endpointUrl).send(requestBody);
-        console.log('response', response.text, response.body);
 
         expect(response.status).toBe(200);
         expect(response.headers['content-type']).toBe('application/zip');
@@ -63,7 +62,6 @@ describe('/terraform/blueprint/archive endpoint', () => {
             throw Error('err');
         });
         const response = await request(app).post(endpointUrl).send(requestBody);
-        console.log('response2', response.text, response.body);
         expect(response.status).toBe(500);
         expect(response.body).toStrictEqual({
             message: 'Error when generating blueprint'
