@@ -66,6 +66,7 @@ export default function Tabs({
                         active={activeTab === tabIndex}
                         onClick={() => setActiveTab(tabIndex)}
                         disabled={!isEditMode}
+                        style={{ marginBottom: '-1px', borderBottom: '1px solid rgba(34,36,38,.15)' }}
                     >
                         {tab.name}
                         {isEditMode && (
