@@ -184,7 +184,7 @@ export default r => {
             // Connecting all the operations into a graph
             // *IMPORTANT NOTE* - Retrying tasks depend on their previous failed task
             const edges: any[] = [];
-            _.map(operationsList, task => {
+            _.each(operationsList, task => {
                 if (task.parameters.current_retries > 0) {
                     allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
                 }
@@ -192,7 +192,7 @@ export default r => {
                     allSubgraphs[task.id].width = 270;
                     allSubgraphs[task.id].height = 40;
                 }
-                _.map(operationsList, dependantTask => {
+                _.each(operationsList, dependantTask => {
                     const edge = {
                         id: '',
                         sources: [],
