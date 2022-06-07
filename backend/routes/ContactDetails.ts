@@ -40,6 +40,7 @@ router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
 
     try {
+        // TODO: Rethink if it may be a good option to extract it as a separate, named function
         await jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
         res.send({
             contactDetailsReceived: true
@@ -65,6 +66,7 @@ router.post(
                 status: 'ok'
             });
         } catch (error) {
+            // TODO: Adjust error message
             const errorMessage = `Cannot submit contact details. Error: ${error}`;
             logger.error(errorMessage);
             res.status(400).send({ message: errorMessage });
