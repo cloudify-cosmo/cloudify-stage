@@ -23,18 +23,17 @@ interface HubspotResponse {
 }
 /* eslint-enable camelcase */
 
+const sendDataToHubspot = (contactDetails: ContactDetails, token: string): Promise<HubspotResponse> => {
+    return jsonRequest('post', '/contacts', getHeadersWithAuthenticationToken(token), contactDetails);
+};
+
+const sendHubspotDataToManager = (hubspotData: HubspotResponse, token: string) => {
+    return jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotData);
+};
+
 const submitContactDetails = async (contactDetails: ContactDetails, token: string) => {
-    try {
-        const hubspotResponse = (await jsonRequest(
-            'post',
-            '/contacts',
-            getHeadersWithAuthenticationToken(token),
-            contactDetails
-        )) as HubspotResponse;
-        await jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotResponse);
-    } catch (error) {
-        logger.error(error);
-    }
+    const hubspotResponse = await sendDataToHubspot(contactDetails, token);
+    return sendHubspotDataToManager(hubspotResponse, token);
 };
 
 router.use(express.json());
