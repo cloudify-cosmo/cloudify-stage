@@ -9,7 +9,6 @@ const router = express.Router();
 const contactDetailsFilePath = getResourcePath('submittedContactDetails.json', true);
 
 /* eslint-disable camelcase */
-// NOTE: DTO are used as a shapes of requests which are sent/received
 interface ContactDetails {
     first_name: string;
     last_name: string;
@@ -23,18 +22,6 @@ interface HubspotResponse {
     customer_id: string;
 }
 /* eslint-enable camelcase */
-
-// Reading the data from the stored file
-const getStoredContactDetails = (): ContactDetails => {
-    // Synchronised methods were used, as they are more common in the backend that async methods
-    const fileContent = fs.readFileSync(contactDetailsFilePath, 'utf8');
-    const jsonContent = JSON.parse(fileContent);
-    return jsonContent;
-};
-
-const saveContactDetailsData = (contactDetails: ContactDetails) => {
-    fs.writeFileSync(contactDetailsFilePath, JSON.stringify(contactDetails), 'utf8');
-};
 
 const submitContactDetails = async (contactDetails: ContactDetails, token: string) => {
     try {
@@ -77,9 +64,6 @@ router.post(
 
         res.send({});
 
-        // Further submission of the data should be transparent for the user
-        // Because of that, the functionality below is implemented after sending a response to the user
-        saveContactDetailsData(contactDetails);
         submitContactDetails(contactDetails, token);
     }
 );
