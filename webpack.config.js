@@ -128,8 +128,8 @@ module.exports = (env, argv) => {
                   })
               ];
     const environmentPlugin = new webpack.EnvironmentPlugin({
-        NODE_ENV: 'production',
-        TEST: ''
+        'process.env.NODE_ENV': 'production',
+        'process.env.TEST': ''
     });
 
     const exitWithError = error => {
