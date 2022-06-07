@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
-import { allowedVisivilitySettings } from '../Consts';
-
+import Consts from '../Consts';
 function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
     const { Header } = Stage.Basic;
 
@@ -50,7 +49,7 @@ export default function DeploymentDetails({
 
     const resourceVisibility = (
         <ResourceVisibility
-            allowedSettingTo={allowedVisibilitySettings}
+            allowedSettingTo={Consts.allowedVisibilitySettings}
             visibility={deployment.visibility}
             onSetVisibility={onSetVisibility}
             className="rightFloated"
