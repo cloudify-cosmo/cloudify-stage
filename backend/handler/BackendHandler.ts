@@ -188,7 +188,7 @@ export function importWidgetBackend(widgetId: string, isCustom = true) {
                      });`;
 
             return vm.run(script, { filename: pathlib.resolve(`${process.cwd()}/${widgetId}`) });
-        } catch (err) {
+        } catch (err: any) {
             logger.error('reject', backendFileWithExtension, err);
             return Promise.reject(
                 `Error during importing widget backend from file ${backendFileWithExtension} - ${err.message}`

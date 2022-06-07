@@ -3,15 +3,6 @@ services:
   cfy_manager_local_dockerhub:
     image: cloudifyplatform/premium-cloudify-manager-aio:latest
     restart: "unless-stopped"
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /run/lock
-    security_opt:
-      - seccomp:unconfined
-    cap_add:
-      - SYS_ADMIN
     ports:
       - 80:80
       - 443:443
@@ -23,15 +14,6 @@ services:
   cfy_manager_local:
     image: cloudify-manager-aio:latest
     restart: "unless-stopped"
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /run
-      - /run/lock
-    security_opt:
-      - seccomp:unconfined
-    cap_add:
-      - SYS_ADMIN
     ports:
       - 80:80
       - 443:443

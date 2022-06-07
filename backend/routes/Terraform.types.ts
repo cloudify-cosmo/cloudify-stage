@@ -22,3 +22,7 @@ export interface RequestBody {
     environmentVariables?: Variable[];
     outputs?: Output[];
 }
+
+export interface RequestArchiveBody extends Omit<RequestBody, 'terraformTemplate'> {
+    file?: string;
+}

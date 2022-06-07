@@ -44,7 +44,7 @@ export const { up, down }: MigrationObject = {
                                 `Unexpected template file at ${templateFilePath}. Expected a whole template or just the pages array`
                             );
                         }
-                    } catch (error) {
+                    } catch (error: any) {
                         if (error.code === 'ENOENT') {
                             pages = [];
                             logger.info('File does not exist. Creating new one...');
