@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
-
+import { allowedVisivilitySettings } from '../Consts';
 function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
     const { Header } = Stage.Basic;
 
@@ -46,7 +46,6 @@ export default function DeploymentDetails({
     const showNodeInstances = instancesStates !== null;
     const as = big ? 'h3' : 'h5';
     const stackable = !big;
-    const { allowedVisibilitySettings } = Stage.Common.Consts;
 
     const resourceVisibility = (
         <ResourceVisibility
