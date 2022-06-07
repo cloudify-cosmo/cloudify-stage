@@ -1,4 +1,4 @@
-import _, { escapeRegExp, trimEnd } from 'lodash';
+import _, { escapeRegExp, find, forEach, trimEnd } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
 import ejs from 'ejs';
@@ -15,6 +15,8 @@ import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
 import multer from 'multer';
 import archiver from 'archiver';
+import tfParser from '@evops/hcl-terraform-parser';
+
 import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
@@ -201,21 +203,32 @@ export function fileDebase64(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+function checkIfFileBuffer(req: Request, res: Response, next: NextFunction) {
+    if (!(req.file && Buffer.isBuffer(req.file?.buffer))) {
+        res.status(400).send({ message: 'The file you sent is not valid' });
+    } else {
+        next();
+    }
+}
+
 /**
  * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
  * @returns string[] with terraform module list inside uploaded zip file
  */
-router.post('/resources/file', upload.single('file'), checkIfFileUploaded(logger), async (req, res) => {
-    if (req.file && Buffer.isBuffer(req.file?.buffer)) {
+router.post(
+    '/resources/file',
+    upload.single('file'),
+    checkIfFileUploaded(logger),
+    checkIfFileBuffer,
+    async (req, res) => {
         try {
+            // @ts-ignore: checkIfFileBuffer middleware function ensures us that req.file.buffer is not undefined
             res.send(await scanZipFile(req.file.buffer));
         } catch (e: any) {
             res.status(400).send({ message: e.message });
         }
-    } else {
-        res.status(400).send({ message: 'The file you sent is not valid' });
     }
-});
+);
 
 router.post('/resources', async (req: ResourcesRequest, res) => {
     const { templateUrl } = req.query;
@@ -238,20 +251,13 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     }
 });
 
-/**
- * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
- * @returns string[] with terraform module list inside uploaded zip file
- */
- router.post('/resources/file', upload.single('file'), checkIfFileUploaded(logger), async (req, res) => {
-    if (req.file && Buffer.isBuffer(req.file?.buffer)) {
-        try {
-            res.send(await scanZipFile(req.file.buffer));
-        } catch (e: any) {
-            res.status(400).send({ message: e.message });
-        }
-    } else {
-        res.status(400).send({ message: 'The file you sent is not valid' });
-    }
+router.post('/fetch-data/file', fileDebase64, async (req, res) => {
+    const { resourceLocation } = req.body;
+    const files = await decompress(req.body.file);
+    const terraformFile = files.length === 1 ? files[0] : files.find(file => file.path.indexOf(resourceLocation) > -1);
+
+    const hclFile = tfParser.parse(terraformFile?.data);
+    res.send(hclFile);
 });
 
 router.post('/blueprint', (req, res) => {
@@ -271,26 +277,22 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
-    if (!(req.body.file && Buffer.isBuffer(req.body.file))) {
-        res.status(400).send({ message: 'No file uploaded.' });
-    } else {
-        res.setHeader('Content-Type', 'application/zip');
-        res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
 
-        logger.debug(
-            `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
-        );
+    logger.debug(
+        `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
+    );
 
-        const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
+    const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
 
-        const archive = archiver('zip');
+    const archive = archiver('zip');
 
-        archive.pipe(res);
+    archive.pipe(res);
 
-        archive.append(result, { name: 'blueprint/blueprint.yaml' });
-        archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
-        archive.finalize();
-    }
+    archive.append(result, { name: 'blueprint/blueprint.yaml' });
+    archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
+    archive.finalize();
 });
 
 export default router;

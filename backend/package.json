@@ -29,6 +29,7 @@
     "delay": 2000
   },
   "dependencies": {
+    "@evops/hcl-terraform-parser": "^1.0.0",
     "@tsconfig/node14": "^1.0.1",
     "archiver": "^5.3.0",
     "axios": "^0.26.0",

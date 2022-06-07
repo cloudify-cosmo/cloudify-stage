@@ -6,9 +6,10 @@ import { readJsonSync } from 'fs-extra';
 import ejs from 'ejs';
 import nock from 'nock';
 
+const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
+const getInputs = (id: number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
+
 describe('/terraform/blueprint endpoint', () => {
-    const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
-    const getInputs = (id: number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
     const getBlueprint = (id: number) => readFileSync(getFixturePath(`${id}_blueprint.yaml`), 'utf8');
     const testCases = [
         { id: 1, description: 'all parameters provided' },
@@ -66,5 +67,18 @@ describe('/terraform/resources endpoint', () => {
         const response = await request(app).post(endpointUrl).query({ templateUrl: privateGitFileUrl }).send();
 
         expect(response.status).toBe(400);
+    });
+});
+
+describe('/terraform/fetch-data/file endpoint', () => {
+    const endpointUrl = '/console/terraform/fetch-data/file';
+
+    it('returns outputs and inputs in response', async () => {
+        const requestBody = getInputs(testCase.id);
+
+        const response = await request(app).post(endpointUrl).send(requestBody);
+
+        expect(response.status).toBe(200);
+        expect(response.body).toStrictEqual({});
     });
 });
