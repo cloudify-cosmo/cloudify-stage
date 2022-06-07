@@ -105,8 +105,8 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
     const { DeleteConfirm } = Stage.Common.Components;
     const { UploadModal, Icon: PluginIcon } = Stage.Common.Plugins;
+    const { allowedVisibilitySettings } = Stage.Common.Consts;
     const { Item, Menu } = Dropdown;
-    const { allowedSettingTo } = Stage.Common.Consts;
 
     return (
         <div>
@@ -156,7 +156,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                     <ResourceVisibility
                                         visibility={item.visibility}
                                         onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={allowedSettingTo}
+                                        allowedSettingTo={allowedVisibilitySettings}
                                         className="rightFloated"
                                     />
                                 </VerticallyAlignedCell>

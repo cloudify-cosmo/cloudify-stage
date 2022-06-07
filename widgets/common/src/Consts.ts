@@ -23,7 +23,7 @@ const consts = {
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
-    allowedSettingTo: ['tenant', 'global'] as string[]
+    allowedVisibilitySettings: ['tenant', 'global'] as string[]
 } as const;
 
 export default consts;

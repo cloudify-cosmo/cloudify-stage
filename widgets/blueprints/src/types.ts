@@ -53,5 +53,4 @@ export interface BlueprintsViewProps {
     onCreateDeployment: (blueprint: ExtendedBlueprint) => void;
     onSetVisibility: (blueprintId: string, visibility: string) => void;
     noDataMessage?: string;
-    allowedSettingTo?: string[];
 }
