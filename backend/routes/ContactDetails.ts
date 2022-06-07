@@ -48,7 +48,7 @@ router.get('/', async (req, res) => {
         });
     } catch (error) {
         // Customer ID not found
-        logger.debug(error);
+        logger.error(error);
         res.send({
             contactDetailsReceived: false
         });
@@ -61,9 +61,16 @@ router.post(
         const token = getTokenFromCookies(req);
         const contactDetails: ContactDetails = req.body;
 
-        res.send({});
-
-        submitContactDetails(contactDetails, token);
+        try {
+            await submitContactDetails(contactDetails, token);
+            res.send({
+                status: 'ok'
+            });
+        } catch (error) {
+            const errorMessage = `Cannot submit contact details. Error: ${error}`;
+            logger.error(errorMessage);
+            res.status(400).send({ message: errorMessage });
+        }
     }
 );
 
