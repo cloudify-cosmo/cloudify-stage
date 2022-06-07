@@ -1,12 +1,10 @@
 import express from 'express';
-import fs from 'fs';
 import { getLogger } from '../handler/LoggerHandler';
-import { getHeadersWithAuthenticationToken, getResourcePath, getTokenFromCookies } from '../utils';
+import { getHeadersWithAuthenticationToken, getTokenFromCookies } from '../utils';
 import { jsonRequest } from '../handler/ManagerHandler';
 
 const logger = getLogger('ContactDetails');
 const router = express.Router();
-const contactDetailsFilePath = getResourcePath('submittedContactDetails.json', true);
 
 /* eslint-disable camelcase */
 interface ContactDetails {
