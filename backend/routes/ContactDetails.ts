@@ -54,22 +54,18 @@ router.use(express.json());
 
 router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
-    const contactDetailsReceived = fs.existsSync(contactDetailsFilePath);
-
-    res.send({
-        contactDetailsReceived
-    });
-
-    // Further functionality should be transparent for the user
-    // Because of that, the functionality below is implemented after sending a response to the user
-    if (!contactDetailsReceived) return;
 
     try {
         await jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
+        res.send({
+            contactDetailsReceived: true
+        });
     } catch (error) {
         // Customer ID not found
         logger.debug(error);
-        submitContactDetails(getStoredContactDetails(), token);
+        res.send({
+            contactDetailsReceived: false
+        });
     }
 });
 
