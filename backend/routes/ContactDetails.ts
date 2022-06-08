@@ -66,7 +66,6 @@ router.post(
                 status: 'ok'
             });
         } catch (error) {
-            // TODO: Adjust error message
             const errorMessage = `Cannot submit contact details. Error: ${error}`;
             logger.error(errorMessage);
             res.status(400).send({ message: errorMessage });

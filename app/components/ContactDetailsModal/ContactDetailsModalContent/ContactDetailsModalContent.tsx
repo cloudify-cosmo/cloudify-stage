@@ -53,7 +53,6 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
         return true;
     };
 
-    // TODO: Adjust displaying error messages
     const validateFields = (): boolean => {
         const validationErrors: Record<string, unknown> = {};
 
@@ -79,23 +78,23 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
 
         if (fieldsAreValid) {
             setLoading();
-            // Promise.reject()
-            //     .then(() => {
-            //         closeModal();
-            //     })
-            //     .catch(() => {
-            //         showSubmittingError();
-            //         cancelLoading();
-            //     });
-            internal
-                .doPost('contactDetails/', {
-                    body: formInputs
+            Promise.reject()
+                .then(() => {
+                    closeModal();
                 })
-                .then(() => closeModal())
                 .catch(() => {
                     showSubmittingError();
                     cancelLoading();
                 });
+            // internal
+            //     .doPost('contactDetails/', {
+            //         body: formInputs
+            //     })
+            //     .then(() => closeModal())
+            //     .catch(() => {
+            //         showSubmittingError();
+            //         cancelLoading();
+            //     });
         }
     };
 
@@ -103,8 +102,11 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
         <>
             <Modal.Content>
                 {hasSubmittingError && (
-                    // TODO: Adjust error message
-                    <ErrorMessage error={"Couldn't submit hubspot data"} onDismiss={hideSubmittingError} />
+                    <ErrorMessage
+                        header={t('submittingError.title')}
+                        error={t('submittingError.description')}
+                        onDismiss={hideSubmittingError}
+                    />
                 )}
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {formFields.map(formField => (
