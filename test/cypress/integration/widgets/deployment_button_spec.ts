@@ -3,7 +3,6 @@ describe('Create Deployment Button widget', () => {
     const testBlueprintId = `${resourcePrefix}bp`;
     const requiredSecretsBlueprint = `${resourcePrefix}required_secrets_type`;
     const customInstallWorkflowBlueprint = `${resourcePrefix}custom_install_workflow_type`;
-    const labelsBlueprint = `${resourcePrefix}labels`;
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
@@ -15,8 +14,7 @@ describe('Create Deployment Button widget', () => {
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint)
-            .uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         types.forEach(type =>
             cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
@@ -127,17 +125,6 @@ describe('Create Deployment Button widget', () => {
         cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
-    const openDropdown = (divName: string) => {
-        return cy.get(`div[name="${divName}"]`).click();
-    };
-
-    const selectLabelValue = (value: string) => {
-        openDropdown('labelValue').within(() => {
-            cy.get('input').type(value);
-            cy.contains(`New value ${value}`).click();
-        });
-    };
-
     it('opens deployment modal', () => {
         cy.wait('@uploadedBlueprints');
         cy.get('div.deployBlueprintModal').should('be.visible');
@@ -155,37 +142,6 @@ describe('Create Deployment Button widget', () => {
 
         cy.get('.actions > .ui:nth-child(1)').click();
         cy.get('div.deployBlueprintModal').should('not.exist');
-    });
-
-    it('filters blueprints according to blueprint label filter rules in widget configuration', () => {
-        cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('not.have.length', 1);
-            });
-            cy.get('.actions > .ui:nth-child(1)').click();
-        });
-        cy.editWidgetConfiguration('deploymentButton', () => {
-            cy.clickButton('Add new rule');
-            openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
-            openDropdown('labelKey').within(() => {
-                const labelKey = 'arch';
-                cy.get('input').type(labelKey);
-                cy.get(`[role="listbox"] > *`).click();
-            });
-            selectLabelValue('k8s');
-            selectLabelValue('docker');
-        });
-        cy.clickButton('Create deployment');
-        cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName').within(() => {
-                cy.get('[role="listbox"] > *').should('have.length', 1);
-                cy.get('[role="option"]').should('contain.text', labelsBlueprint);
-            });
-            cy.get('.actions > .ui:nth-child(1)').click();
-        });
-        cy.editWidgetConfiguration('deploymentButton', () => {
-            cy.get('button[aria-label="Remove rule"]').click();
-        });
     });
 
     it('allows to deploy a blueprint', () => {
