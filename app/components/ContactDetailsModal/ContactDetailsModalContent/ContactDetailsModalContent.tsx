@@ -53,11 +53,12 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
         return true;
     };
 
+    // TODO: Adjust displaying error messages
     const validateFields = (): boolean => {
         const validationErrors: Record<string, unknown> = {};
 
         requiredFormFields.forEach(formField => {
-            const formFieldLabel = removeHtmlTagsFromString(t(formField.label));
+            const formFieldLabel = removeHtmlTagsFromString(formField.label);
 
             if (formField.isRequired && isFieldEmpty(formField)) {
                 validationErrors[formField.name] = `${formFieldLabel} - ${t('validation.isFieldRequired')}`;
