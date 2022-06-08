@@ -1,0 +1,12 @@
+.circleci/**
+backend/node_modules/**
+conf/**
+dist/**
+doc/**
+templates/**
+tours/**
+userData/**
+tsc-dist/**
+widgets/*/backend.ts
+
+# To be removed, when code is fixed in these folders
