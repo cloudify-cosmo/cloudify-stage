@@ -4,6 +4,7 @@
 .history
 .tmp
 .nyc_output
+.DS_Store
 coverage-*
 conf/me.json
 /dist
