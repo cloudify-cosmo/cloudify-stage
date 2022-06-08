@@ -29,6 +29,10 @@ const sendHubspotDataToManager = (hubspotData: HubspotResponse, token: string) =
     return jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotData);
 };
 
+const checkContactDetailsExistance = (token: string) => {
+    return jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
+};
+
 const submitContactDetails = async (contactDetails: ContactDetails, token: string) => {
     const hubspotResponse = await sendDataToHubspot(contactDetails, token);
     return sendHubspotDataToManager(hubspotResponse, token);
@@ -40,8 +44,7 @@ router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
 
     try {
-        // TODO: Rethink if it may be a good option to extract it as a separate, named function
-        await jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
+        await checkContactDetailsExistance(token);
         res.send({
             contactDetailsReceived: true
         });

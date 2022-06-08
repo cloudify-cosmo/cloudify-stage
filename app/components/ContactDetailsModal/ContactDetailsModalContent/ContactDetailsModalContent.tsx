@@ -78,23 +78,15 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
 
         if (fieldsAreValid) {
             setLoading();
-            Promise.reject()
-                .then(() => {
-                    closeModal();
+            internal
+                .doPost('contactDetails/', {
+                    body: formInputs
                 })
+                .then(() => closeModal())
                 .catch(() => {
                     showSubmittingError();
                     cancelLoading();
                 });
-            // internal
-            //     .doPost('contactDetails/', {
-            //         body: formInputs
-            //     })
-            //     .then(() => closeModal())
-            //     .catch(() => {
-            //         showSubmittingError();
-            //         cancelLoading();
-            //     });
         }
     };
 
