@@ -119,10 +119,10 @@ describe('Create Deployment Button widget', () => {
     };
 
     const verifyRedirectionToDeploymentPage = (deploymentId: string, deploymentName: string) => {
+        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
         cy.location('href').then(url =>
             expect(JSON.parse(new URL(url).searchParams.get('c')!)[1].context.deploymentId).to.eq(deploymentId)
         );
-        cy.get('.breadcrumb .pageTitle').should('have.text', deploymentName);
     };
 
     it('opens deployment modal', () => {
