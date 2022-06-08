@@ -57,7 +57,7 @@ export default function Tabs({
                     else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
                     else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
                 }}
-                style={{ position: 'relative' }}
+                style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '1em 0' }}
             >
                 {_.map(tabs, (tab, tabIndex) => (
                     <SortableMenuItem
@@ -66,6 +66,10 @@ export default function Tabs({
                         active={activeTab === tabIndex}
                         onClick={() => setActiveTab(tabIndex)}
                         disabled={!isEditMode}
+                        style={{
+                            marginBottom: '-1px',
+                            borderBottom: activeTab === tabIndex ? 'none' : '1px solid #d4d4d5'
+                        }}
                     >
                         {tab.name}
                         {isEditMode && (

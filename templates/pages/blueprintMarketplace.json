@@ -6,6 +6,23 @@
             "type": "tabs",
             "content": [
                 {
+                    "name": "Getting Started",
+                    "widgets": [
+                        {
+                            "name": "Getting Started",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ],
+                    "isDefault": true
+                },
+                {
                     "name": "AWS",
                     "widgets": [
                         {
@@ -14,7 +31,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
@@ -31,7 +48,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
@@ -47,7 +64,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
@@ -63,7 +80,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
@@ -79,7 +96,103 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/helm_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Kubernetes",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "K8S Discovery",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Docker",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/docker_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Ansible",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/ansible_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "VMWare",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vmware_services.json",
+                                "displayStyle": "table",
+                                "fieldsToShow": ["Name", "Description"]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Certified Environments",
+                    "widgets": [
+                        {
+                            "name": "Blueprints Catalog",
+                            "height": 38,
+                            "width": 24,
+                            "definition": "blueprintCatalog",
+                            "configuration": {
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/certified_environments.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
@@ -95,7 +208,7 @@
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
-                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json",
+                                "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other_services.json",
                                 "displayStyle": "table",
                                 "fieldsToShow": ["Name", "Description"]
                             }
