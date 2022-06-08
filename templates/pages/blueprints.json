@@ -47,11 +47,11 @@
                         "marketplaceTabs": [
                             {
                                 "name": "Kubernetes",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/k8s_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
                             },
                             {
                                 "name": "K8S Discovery",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/K8S_Discovery.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
                             }
                         ]
                     }
@@ -70,7 +70,7 @@
                         "marketplaceTabs": [
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
                             }
                         ]
                     }

@@ -1,148 +1,150 @@
 {
-  "name": "Dashboard",
-  "icon": "dashboard",
-  "layout": [
-    {
-      "type": "widgets",
-      "content": [
+    "name": "Dashboard",
+    "icon": "dashboard",
+    "layout": [
         {
-          "width": 3,
-          "height": 8,
-          "definition": "cloudNum",
-          "x": 0,
-          "y": 3
-        },
-        {
-          "width": 3,
-          "height": 8,
-          "definition": "deploymentNum",
-          "x": 3,
-          "y": 3,
-          "configuration": {
-            "label": "Services",
-            "page": "services",
-            "filterId": "csys-service-filter"
-          }
-        },
-        {
-          "width": 3,
-          "height": 8,
-          "definition": "deploymentNum",
-          "x": 6,
-          "y": 3,
-          "configuration": {
-            "icon": "",
-            "imageSrc": "/console/static/images/k8s_logo.png",
-            "label": "Kubernetes clusters",
-            "page": "services",
-            "filterId": "csys-k8s-filter"
-          }
-        },
-        {
-          "width": 3,
-          "height": 8,
-          "definition": "deploymentNum",
-          "x": 9,
-          "y": 3,
-          "configuration": {
-            "icon": "",
-            "imageSrc": "/console/static/images/terraform_logo-dark.png",
-            "label": "Terraform modules",
-            "page": "services",
-            "filterId": "csys-terraform-filter"
-          }
-        },
-        {
-          "width": 3,
-          "height": 3,
-          "definition": "buttonLink",
-          "x": 0,
-          "y": 0,
-          "configuration": {
-            "basic": false,
-            "color": "blue",
-            "icon": "wizard",
-            "label": "Setup cloud account",
-            "url": "?cloudSetup=true",
-            "fullHeight": false
-          }
-        },
-        {
-          "width": 3,
-          "height": 3,
-          "definition": "serviceButton",
-          "x": 3,
-          "y": 0,
-          "configuration": {
-            "basic": false,
-            "color": "blue",
-            "icon": "add",
-            "label": "Create a service"
-          }
-        },
-        {
-          "width": 3,
-          "height": 3,
-          "definition": "serviceButton",
-          "x": 6,
-          "y": 0,
-          "configuration": {
-            "basic": false,
-            "color": "blue",
-            "icon": "add",
-            "label": "Create Kubernetes cluster",
-            "marketplaceTabs": [
-              {
-                "name": "Kubernetes",
-                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/k8s_services.json"
-              },
-              {
-                "name": "K8S Discovery",
-                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/K8S_Discovery.json"
-              }
+            "type": "widgets",
+            "content": [
+                {
+                    "width": 3,
+                    "height": 8,
+                    "definition": "cloudNum",
+                    "x": 0,
+                    "y": 3
+                },
+                {
+                    "width": 3,
+                    "height": 8,
+                    "definition": "deploymentNum",
+                    "x": 3,
+                    "y": 3,
+                    "configuration": {
+                        "label": "Services",
+                        "page": "services",
+                        "filterId": "csys-service-filter"
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 8,
+                    "definition": "deploymentNum",
+                    "x": 6,
+                    "y": 3,
+                    "configuration": {
+                        "icon": "",
+                        "imageSrc": "/console/static/images/k8s_logo.png",
+                        "label": "Kubernetes clusters",
+                        "page": "services",
+                        "filterId": "csys-k8s-filter"
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 8,
+                    "definition": "deploymentNum",
+                    "x": 9,
+                    "y": 3,
+                    "configuration": {
+                        "icon": "",
+                        "imageSrc": "/console/static/images/terraform_logo-dark.png",
+                        "label": "Terraform modules",
+                        "page": "services",
+                        "filterId": "csys-terraform-filter"
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 3,
+                    "definition": "buttonLink",
+                    "x": 0,
+                    "y": 0,
+                    "configuration": {
+                        "basic": false,
+                        "color": "blue",
+                        "icon": "wizard",
+                        "label": "Setup cloud account",
+                        "url": "?cloudSetup=true",
+                        "fullHeight": false
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 3,
+                    "definition": "serviceButton",
+                    "x": 3,
+                    "y": 0,
+                    "configuration": {
+                        "basic": false,
+                        "color": "blue",
+                        "icon": "add",
+                        "label": "Create a service"
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 3,
+                    "definition": "serviceButton",
+                    "x": 6,
+                    "y": 0,
+                    "configuration": {
+                        "basic": false,
+                        "color": "blue",
+                        "icon": "add",
+                        "label": "Create Kubernetes cluster",
+                        "marketplaceTabs": [
+                            {
+                                "name": "Kubernetes",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
+                            },
+                            {
+                                "name": "K8S Discovery",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "width": 3,
+                    "height": 3,
+                    "definition": "serviceButton",
+                    "x": 9,
+                    "y": 0,
+                    "configuration": {
+                        "basic": false,
+                        "color": "blue",
+                        "icon": "add",
+                        "label": "Run Terraform module",
+                        "marketplaceTabs": [
+                            {
+                                "name": "Terraform",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "definition": "filter",
+                    "x": 0,
+                    "y": 10,
+                    "configuration": {
+                        "filterByDeployments": false,
+                        "filterByExecutions": false,
+                        "allowMultipleSelection": true
+                    }
+                },
+                {
+                    "name": "Deployments",
+                    "width": 12,
+                    "height": 42,
+                    "definition": "deployments",
+                    "x": 0,
+                    "y": 38,
+                    "configuration": {
+                        "displayStyle": "list",
+                        "showFirstUserJourneyButtons": true
+                    }
+                }
             ]
-          }
-        },
-        {
-          "width": 3,
-          "height": 3,
-          "definition": "serviceButton",
-          "x": 9,
-          "y": 0,
-          "configuration": {
-            "basic": false,
-            "color": "blue",
-            "icon": "add",
-            "label": "Run Terraform module",
-            "marketplaceTabs": [{
-              "name": "Terraform",
-              "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/catalogs/terraform_services.json"
-            }]
-          }
-        },
-        {
-          "definition": "filter",
-          "x": 0,
-          "y": 10,
-          "configuration": {
-            "filterByDeployments": false,
-            "filterByExecutions": false,
-            "allowMultipleSelection": true
-          }
-        },
-        {
-          "name": "Deployments",
-          "width": 12,
-          "height": 42,
-          "definition": "deployments",
-          "x": 0,
-          "y": 38,
-          "configuration":{
-            "displayStyle": "list",
-            "showFirstUserJourneyButtons": true
-          }
         }
-      ]
-    }
-  ]
+    ]
 }
