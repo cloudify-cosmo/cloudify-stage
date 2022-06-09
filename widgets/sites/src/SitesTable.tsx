@@ -103,6 +103,7 @@ export default class SitesTable extends React.Component {
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { VerticallyAlignedCell } = Stage.Shared;
+        const { allowedVisibilitySettings } = Stage.Common.Consts;
         const { data, toolbox, widget } = this.props;
         let latitude;
         let longitude = null;
@@ -144,7 +145,7 @@ export default class SitesTable extends React.Component {
                                             onSetVisibility={visibility => {
                                                 this.setSiteVisibility(item.name, visibility);
                                             }}
-                                            allowedSettingTo={['tenant', 'global']}
+                                            allowedSettingTo={allowedVisibilitySettings}
                                             className="rightFloated"
                                         />
                                     </VerticallyAlignedCell>
