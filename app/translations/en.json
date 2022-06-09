@@ -57,6 +57,10 @@
             },
             "buttons": {
                 "submit": "Continue"
+            },
+            "submittingError": {
+                "title": "Form data cannot be submitted",
+                "description": "Please check network connection and try to submit the data again"
             }
         }
     },
