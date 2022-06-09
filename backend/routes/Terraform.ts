@@ -15,6 +15,7 @@ import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
 import multer from 'multer';
 import archiver from 'archiver';
+// @ts-ignore-next-line typing doesn't exist for this library
 import tfParser from '@evops/hcl-terraform-parser';
 
 import { getLogger } from '../handler/LoggerHandler';
@@ -254,7 +255,12 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 router.post('/fetch-data/file', fileDebase64, async (req, res) => {
     const { resourceLocation } = req.body;
     const files = await decompress(req.body.file);
-    const terraformFile = files.length === 1 ? files[0] : files.find(file => file.path.indexOf(resourceLocation) > -1);
+    const terraformFile =
+        files.length === 1
+            ? files[0]
+            : files
+                  .filter(file => file.path.indexOf('main.tf') > -1)
+                  .find(file => `/${file.path}`.indexOf(`${resourceLocation}/main.tf`) > -1);
 
     const hclFile = tfParser.parse(terraformFile?.data);
     res.send(hclFile);

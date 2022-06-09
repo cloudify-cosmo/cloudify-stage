@@ -7,7 +7,7 @@ import ejs from 'ejs';
 import nock from 'nock';
 
 const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
-const getInputs = (id: number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
+const getInputs = (id: string | number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
 
 describe('/terraform/blueprint endpoint', () => {
     const getBlueprint = (id: number) => readFileSync(getFixturePath(`${id}_blueprint.yaml`), 'utf8');
@@ -73,12 +73,14 @@ describe('/terraform/resources endpoint', () => {
 describe('/terraform/fetch-data/file endpoint', () => {
     const endpointUrl = '/console/terraform/fetch-data/file';
 
-    it('returns outputs and inputs in response', async () => {
-        const requestBody = getInputs(testCase.id);
+    it('returns outputs and variables in response', async () => {
+        const requestBody = getInputs('fetch-data');
 
         const response = await request(app).post(endpointUrl).send(requestBody);
 
         expect(response.status).toBe(200);
-        expect(response.body).toStrictEqual({});
+        expect(response.body?.outputs.ip?.name).toEqual('ip');
+        expect(response.body?.variables?.filename?.name).toEqual('filename');
+        expect(response.body?.variables?.filename?.default).toEqual('cloud-config.cfg');
     });
 });
