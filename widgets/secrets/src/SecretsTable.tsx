@@ -15,7 +15,6 @@ function SecretValue({
     toolbox
 }) {
     const { Icon, Popup } = Stage.Basic;
-    const { allowedVisibilitySettings } = Stage.Common.Consts;
 
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
@@ -221,6 +220,7 @@ export default class SecretsTable extends React.Component {
         const DeleteModal = Stage.Basic.Confirm;
         const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
+        const { allowedVisibilitySettings } = Stage.Common.Consts;
 
         return (
             <div>
