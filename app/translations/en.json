@@ -843,28 +843,56 @@
                         "urlNameLabel": "URL to marketplace",
                         "defaultValues": [
                             {
+                                "name": "Getting Started",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json"
+                            },
+                            {
                                 "name": "AWS",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/aws_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws_services.json"
                             },
                             {
                                 "name": "Azure",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/azure_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure_services.json"
                             },
                             {
                                 "name": "GCP",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/gcp_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp_services.json"
                             },
                             {
                                 "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
                             },
                             {
                                 "name": "Helm",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/helm_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/helm_services.json"
+                            },
+                            {
+                                "name": "Kubernetes",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
+                            },
+                            {
+                                "name": "K8S Discovery",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
+                            },
+                            {
+                                "name": "Docker",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/docker_services.json"
+                            },
+                            {
+                                "name": "Ansible",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/ansible_services.json"
+                            },
+                            {
+                                "name": "VMWare",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vmware_services.json"
+                            },
+                            {
+                                "name": "Certified Environments",
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/certified_environments.json"
                             },
                             {
                                 "name": "Other",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/other_services.json"
+                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other_services.json"
                             }
                         ]
                     }
@@ -889,7 +917,7 @@
                 "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
                 "blueprintInformation": "Blueprint main information",
-                "template": "Terraform module source - URL to a zip archive or a Git repository",
+                "template": "Terraform module source (ZIP archive URL, Git repository URL or local ZIP archive)",
                 "resourceLocation": "Terraform module folder",
                 "urlAuthentication": "URL authentication",
                 "username": "Username",

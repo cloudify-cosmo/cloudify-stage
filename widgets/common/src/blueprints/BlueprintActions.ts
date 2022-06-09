@@ -231,7 +231,10 @@ export default class BlueprintActions {
             onStateChanged?: (state: string) => void;
         }
     ) {
-        const params: Record<string, any> = { visibility, async_upload: true };
+        const params: Record<string, any> = {
+            visibility,
+            async_upload: true
+        };
 
         if (!_.isEmpty(blueprintYamlFile)) {
             params.application_file_name = blueprintYamlFile;
