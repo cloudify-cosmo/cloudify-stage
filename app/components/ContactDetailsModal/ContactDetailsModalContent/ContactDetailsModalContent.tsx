@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
-import { Modal, Form, ApproveButton } from '../../basic';
+import { Modal, Form, ApproveButton, ErrorMessage } from '../../basic';
 import type { FormField } from './formFields';
 import { FormFieldType, getFormFields } from './formFields';
 import CheckboxLabel from './CheckboxLabel';
@@ -25,7 +25,8 @@ interface ContactDetailsModalContentProps {
 const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentProps> = ({ closeModal }) => {
     const [formInputs, setFormInputs] = useInputs<FormInputs>({});
     const { errors, setErrors, clearErrors } = useErrors();
-    const [loading, setLoading] = useBoolean();
+    const [hasSubmittingError, showSubmittingError, hideSubmittingError] = useBoolean();
+    const [loading, setLoading, cancelLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
     const formFields = useMemo(getFormFields, undefined);
@@ -56,7 +57,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
         const validationErrors: Record<string, unknown> = {};
 
         requiredFormFields.forEach(formField => {
-            const formFieldLabel = removeHtmlTagsFromString(t(formField.label));
+            const formFieldLabel = removeHtmlTagsFromString(formField.label);
 
             if (formField.isRequired && isFieldEmpty(formField)) {
                 validationErrors[formField.name] = `${formFieldLabel} - ${t('validation.isFieldRequired')}`;
@@ -73,6 +74,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
 
     const handleSubmit = () => {
         const fieldsAreValid = validateFields();
+        hideSubmittingError();
 
         if (fieldsAreValid) {
             setLoading();
@@ -80,13 +82,24 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                 .doPost('contactDetails/', {
                     body: formInputs
                 })
-                .then(() => closeModal());
+                .then(() => closeModal())
+                .catch(() => {
+                    showSubmittingError();
+                    cancelLoading();
+                });
         }
     };
 
     return (
         <>
             <Modal.Content>
+                {hasSubmittingError && (
+                    <ErrorMessage
+                        header={t('submittingError.title')}
+                        error={t('submittingError.description')}
+                        onDismiss={hideSubmittingError}
+                    />
+                )}
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {formFields.map(formField => (
                         <Form.Field key={formField.name} required={formField.isRequired}>
