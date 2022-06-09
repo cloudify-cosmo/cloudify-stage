@@ -1,15 +1,12 @@
 import express from 'express';
-import fs from 'fs';
 import { getLogger } from '../handler/LoggerHandler';
-import { getHeadersWithAuthenticationToken, getResourcePath, getTokenFromCookies } from '../utils';
+import { getHeadersWithAuthenticationToken, getTokenFromCookies } from '../utils';
 import { jsonRequest } from '../handler/ManagerHandler';
 
 const logger = getLogger('ContactDetails');
 const router = express.Router();
-const contactDetailsFilePath = getResourcePath('submittedContactDetails.json', true);
 
 /* eslint-disable camelcase */
-// NOTE: DTO are used as a shapes of requests which are sent/received
 interface ContactDetails {
     first_name: string;
     last_name: string;
@@ -24,52 +21,39 @@ interface HubspotResponse {
 }
 /* eslint-enable camelcase */
 
-// Reading the data from the stored file
-const getStoredContactDetails = (): ContactDetails => {
-    // Synchronised methods were used, as they are more common in the backend that async methods
-    const fileContent = fs.readFileSync(contactDetailsFilePath, 'utf8');
-    const jsonContent = JSON.parse(fileContent);
-    return jsonContent;
+const sendDataToHubspot = (contactDetails: ContactDetails, token: string): Promise<HubspotResponse> => {
+    return jsonRequest('post', '/contacts', getHeadersWithAuthenticationToken(token), contactDetails);
 };
 
-const saveContactDetailsData = (contactDetails: ContactDetails) => {
-    fs.writeFileSync(contactDetailsFilePath, JSON.stringify(contactDetails), 'utf8');
+const sendHubspotDataToManager = (hubspotData: HubspotResponse, token: string) => {
+    return jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotData);
+};
+
+const checkContactDetailsExistance = (token: string) => {
+    return jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
 };
 
 const submitContactDetails = async (contactDetails: ContactDetails, token: string) => {
-    try {
-        const hubspotResponse = (await jsonRequest(
-            'post',
-            '/contacts',
-            getHeadersWithAuthenticationToken(token),
-            contactDetails
-        )) as HubspotResponse;
-        await jsonRequest('post', '/license', getHeadersWithAuthenticationToken(token), hubspotResponse);
-    } catch (error) {
-        logger.error(error);
-    }
+    const hubspotResponse = await sendDataToHubspot(contactDetails, token);
+    return sendHubspotDataToManager(hubspotResponse, token);
 };
 
 router.use(express.json());
 
 router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
-    const contactDetailsReceived = fs.existsSync(contactDetailsFilePath);
-
-    res.send({
-        contactDetailsReceived
-    });
-
-    // Further functionality should be transparent for the user
-    // Because of that, the functionality below is implemented after sending a response to the user
-    if (!contactDetailsReceived) return;
 
     try {
-        await jsonRequest('get', '/license-check', getHeadersWithAuthenticationToken(token));
+        await checkContactDetailsExistance(token);
+        res.send({
+            contactDetailsReceived: true
+        });
     } catch (error) {
         // Customer ID not found
-        logger.debug(error);
-        submitContactDetails(getStoredContactDetails(), token);
+        logger.warn(error);
+        res.send({
+            contactDetailsReceived: false
+        });
     }
 });
 
@@ -79,12 +63,16 @@ router.post(
         const token = getTokenFromCookies(req);
         const contactDetails: ContactDetails = req.body;
 
-        res.send({});
-
-        // Further submission of the data should be transparent for the user
-        // Because of that, the functionality below is implemented after sending a response to the user
-        saveContactDetailsData(contactDetails);
-        submitContactDetails(contactDetails, token);
+        try {
+            await submitContactDetails(contactDetails, token);
+            res.send({
+                status: 'ok'
+            });
+        } catch (error) {
+            const errorMessage = `Cannot submit contact details. Error: ${error}`;
+            logger.error(errorMessage);
+            res.status(400).send({ message: errorMessage });
+        }
     }
 );
 
