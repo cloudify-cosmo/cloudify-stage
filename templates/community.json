@@ -1,12 +1,12 @@
 {
-  "roles": ["*"],
-  "tenants": ["*"],
+    "roles": ["*"],
+    "tenants": ["*"],
 
-  "pages": [
-    {"id": "adminDash", "type": "page"},
-    {"id": "blueprints-community", "type": "page"},
-    {"id": "deployments", "type": "pageGroup"},
-    {"id": "executions", "type": "page"},
-    {"id": "resources", "type": "pageGroup"}
-  ]
+    "pages": [
+        { "id": "adminDash", "type": "page" },
+        { "id": "blueprints", "type": "page" },
+        { "id": "deployments", "type": "pageGroup" },
+        { "id": "executions", "type": "page" },
+        { "id": "resources", "type": "pageGroup" }
+    ]
 }
