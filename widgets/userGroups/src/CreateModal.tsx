@@ -13,7 +13,11 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [inputs, setInput, clearInputs] = useInputs({ groupName: '', ldapGroup: '', isAdmin: false });
+    const [inputs, setInput, clearInputs] = useInputs({
+        groupName: '',
+        ldapGroup: '',
+        isAdmin: false
+    });
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [isOpen, doOpen, doClose] = useOpen(() => {
         unsetLoading();
