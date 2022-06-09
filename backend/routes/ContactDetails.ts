@@ -50,7 +50,7 @@ router.get('/', async (req, res) => {
         });
     } catch (error) {
         // Customer ID not found
-        logger.error(error);
+        logger.warn(error);
         res.send({
             contactDetailsReceived: false
         });
