@@ -6,34 +6,36 @@ import type { Deployment } from '../types';
 import { LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
 
-const renderDeploymentRow = (
-    toolbox: Stage.Types.Toolbox,
-    fieldsToShow: DeploymentsViewColumnId[],
-    selectedDeployment: Deployment | undefined
-) => (deployment: Deployment) => {
-    const { DataTable } = Stage.Basic;
-    const progressUnderline = getDeploymentProgressUnderline(deployment);
+const renderDeploymentRow =
+    (
+        toolbox: Stage.Types.Toolbox,
+        fieldsToShow: DeploymentsViewColumnId[],
+        selectedDeployment: Deployment | undefined
+    ) =>
+    (deployment: Deployment) => {
+        const { DataTable } = Stage.Basic;
+        const progressUnderline = getDeploymentProgressUnderline(deployment);
 
-    return [
-        <DataTable.Row
-            key={deployment.id}
-            className={progressUnderline ? undefined : 'deployment-progressless-row'}
-            selected={deployment.id === selectedDeployment?.id}
-            onClick={() => selectDeployment(toolbox, deployment.id)}
-        >
-            {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
-                <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
-            ))}
-        </DataTable.Row>,
-        progressUnderline && (
-            <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
-                <DataTable.Data className="deployment-progress-row-cell" colSpan={fieldsToShow.length}>
-                    {progressUnderline}
-                </DataTable.Data>
-            </DataTable.Row>
-        )
-    ].filter(Boolean);
-};
+        return [
+            <DataTable.Row
+                key={deployment.id}
+                className={progressUnderline ? undefined : 'deployment-progressless-row'}
+                selected={deployment.id === selectedDeployment?.id}
+                onClick={() => selectDeployment(toolbox, deployment.id)}
+            >
+                {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
+                    <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
+                ))}
+            </DataTable.Row>,
+            progressUnderline && (
+                <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
+                    <DataTable.Data className="deployment-progress-row-cell" colSpan={fieldsToShow.length}>
+                        {progressUnderline}
+                    </DataTable.Data>
+                </DataTable.Row>
+            )
+        ].filter(Boolean);
+    };
 export default renderDeploymentRow;
 
 const executionStatusToClassNameMapping: Record<LatestExecutionStatus, string | undefined> = {

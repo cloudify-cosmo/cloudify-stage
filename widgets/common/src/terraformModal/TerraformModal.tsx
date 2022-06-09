@@ -20,19 +20,8 @@ import terraformLogo from '../../../../app/images/terraform_logo.png';
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const {
-    Dropdown,
-    Input,
-    Accordion,
-    ApproveButton,
-    CancelButton,
-    Confirm,
-    Header,
-    Image,
-    LoadingOverlay,
-    Modal,
-    Form
-} = Stage.Basic;
+const { Dropdown, Input, Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } =
+    Stage.Basic;
 
 const TerraformLogo = styled(Image)`
     &&& {

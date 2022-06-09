@@ -43,8 +43,7 @@ describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
                         parameters: {
                             blueprint_id: 'Cloudify-Hello-World',
                             app_file_name: 'blueprint.yaml',
-                            url:
-                                'https://github.com/cloudify-community/blueprint-examples/releases/latest/download/simple-hello-world-example.zip',
+                            url: 'https://github.com/cloudify-community/blueprint-examples/releases/latest/download/simple-hello-world-example.zip',
                             file_server_root: '/opt/manager/resources',
                             validate_only: false,
                             labels: null

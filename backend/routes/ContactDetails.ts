@@ -57,23 +57,20 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post(
-    '/',
-    async (req, res): Promise<void> => {
-        const token = getTokenFromCookies(req);
-        const contactDetails: ContactDetails = req.body;
+router.post('/', async (req, res): Promise<void> => {
+    const token = getTokenFromCookies(req);
+    const contactDetails: ContactDetails = req.body;
 
-        try {
-            await submitContactDetails(contactDetails, token);
-            res.send({
-                status: 'ok'
-            });
-        } catch (error) {
-            const errorMessage = `Cannot submit contact details. Error: ${error}`;
-            logger.error(errorMessage);
-            res.status(400).send({ message: errorMessage });
-        }
+    try {
+        await submitContactDetails(contactDetails, token);
+        res.send({
+            status: 'ok'
+        });
+    } catch (error) {
+        const errorMessage = `Cannot submit contact details. Error: ${error}`;
+        logger.error(errorMessage);
+        res.status(400).send({ message: errorMessage });
     }
-);
+});
 
 export default router;
