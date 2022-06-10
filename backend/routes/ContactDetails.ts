@@ -68,8 +68,8 @@ router.post(
             res.send({
                 status: 'ok'
             });
-        } catch (error) {
-            const errorMessage = `Cannot submit contact details. Error: ${error}`;
+        } catch (error: any) {
+            const errorMessage = `Cannot submit contact details. Error: ${error.message}`;
             logger.error(errorMessage);
             res.status(400).send({ message: errorMessage });
         }
