@@ -203,6 +203,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
+    const [variablesDeferred, setVariablesDeferred] = useState<Variable[]>([]);
+    const [outputDeferred, setOutputDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -214,6 +216,56 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         },
         [urlAuthentication, username]
     );
+
+    useEffect(
+        function getVariablesAndOutputsOnSourceChange() {
+            if (!resourceLocation) {
+                return;
+            }
+
+            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
+                const outputsTmp: Output[] = outputsResponse.entries().map(([, outputObj]: any) => ({
+                    name: outputObj.name,
+                    type: 'capability',
+                    terraformOutput: ''
+                }));
+                const variablesTmp: Variable[] = variablesResponse.entries().map(([key, variableObj]: any) => ({
+                    variable: key,
+                    name: variableObj.name,
+                    source: 'input',
+                    value: variableObj.default
+                }));
+
+                setOutputDeferred(outputsTmp);
+                setVariablesDeferred(variablesTmp);
+
+                unsetTemplateModulesLoading();
+            }
+
+            setTemplateModulesLoading();
+            if (terraformTemplatePackageBase64) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
+                    .then(setOutputsAndVariables);
+            } else if (templateUrl) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                    .then(setOutputsAndVariables);
+            }
+        },
+        [resourceLocation, templateUrl]
+    );
+
+    function assignDeferredVariablesAndOutputs() {
+        if (outputDeferred.length) {
+            setOutputs(outputDeferred);
+            setOutputDeferred([]);
+        }
+        if (variablesDeferred.length) {
+            setVariables(variablesDeferred);
+            setVariablesDeferred([]);
+        }
+    }
 
     async function handleSubmit() {
         clearErrors();
@@ -377,7 +429,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         try {
             let blueprintContent: any;
-            if (terraformTemplatePackage) {
+            if (terraformTemplatePackageBase64) {
                 blueprintContent = await (
                     await new TerraformActions(toolbox).doGenerateBlueprintArchive({
                         blueprintName,
@@ -638,6 +690,18 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 content={t('cancelConfirm')}
                 onConfirm={onHide}
                 onCancel={hideCancelConfirm}
+            />
+            <Confirm
+                open={!!(outputDeferred.length || variablesDeferred.length)}
+                content={t('assignOutputsVariablesConfirm', undefined, {
+                    variablesAmount: variablesDeferred.length,
+                    outputAmount: outputDeferred.length
+                })}
+                onConfirm={assignDeferredVariablesAndOutputs}
+                onCancel={() => {
+                    setOutputDeferred([]);
+                    setVariablesDeferred([]);
+                }}
             />
         </Modal>
     );

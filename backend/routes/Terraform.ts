@@ -1,4 +1,4 @@
-import _, { escapeRegExp, find, forEach, trimEnd } from 'lodash';
+import _, { escapeRegExp, trimEnd } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
 import ejs from 'ejs';
@@ -19,8 +19,14 @@ import archiver from 'archiver';
 import tfParser from '@evops/hcl-terraform-parser';
 
 import { getLogger } from '../handler/LoggerHandler';
-import type { RequestArchiveBody, RequestBody } from './Terraform.types';
+import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
+
+const directoryTreeOptions = {
+    extensions: /.tf$/,
+    exclude: /.git/,
+    name: 'main.tf'
+};
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
 const logger = getLogger('Terraform');
@@ -81,7 +87,7 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
-const scanZipFile = async (content: Buffer): Promise<string[]> =>
+const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)
@@ -109,43 +115,63 @@ const getUniqNotExistingTemporaryDirectory = (): string => {
     return repositoryPath;
 };
 
-const scanGitFile = async (url: string, authHeaderValue?: string) => {
+const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
     const terraformModuleDirectories: string[] = [];
 
-    await cloneGitRepo(repositoryPath, url, authHeaderValue);
+    await cloneGitRepo(repositoryPath, url, authHeader);
 
-    directoryTree(
-        repositoryPath,
-        {
-            extensions: /.tf$/,
-            exclude: /.git/
-        },
-        (_file, filePath) => {
-            const relativeFilePath = path.relative(repositoryPath, filePath);
-            const isInRootDirectory = !relativeFilePath.includes('/');
+    directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+        const relativeFilePath = path.relative(repositoryPath, filePath);
+        const isInRootDirectory = !relativeFilePath.includes('/');
 
-            if (!isInRootDirectory) {
-                const fileDirectory = path.dirname(relativeFilePath);
-
-                if (!terraformModuleDirectories.includes(fileDirectory)) {
-                    terraformModuleDirectories.push(fileDirectory);
-                }
-            }
+        if (isInRootDirectory) {
+            return;
         }
-    );
+
+        const fileDirectory = path.dirname(relativeFilePath);
+
+        terraformModuleDirectories.push(fileDirectory);
+    });
 
     fs.rmdirSync(repositoryPath, { recursive: true });
 
     return terraformModuleDirectories.sort();
 };
 
+const getTfFileBufferFromGitRepositoryUrl = async (url: string, resourceLocation: string, authHeader?: string) => {
+    const repositoryPath = getUniqNotExistingTemporaryDirectory();
+    const files: string[] = [];
+
+    await cloneGitRepo(repositoryPath, url, authHeader);
+
+    directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+        const fileAbsolutePath = path.join(repositoryPath, filePath);
+        const isInRootDirectory = !filePath.includes('/');
+
+        if (isInRootDirectory) {
+            return;
+        }
+
+        files.push(fileAbsolutePath);
+    });
+
+    fs.rmdirSync(repositoryPath, { recursive: true });
+
+    const filePath = files.find(file => `${file}`.indexOf(`${resourceLocation}/main.tf`) > -1);
+
+    if (filePath) {
+        return fs.readFileSync(filePath);
+    }
+    return Buffer.from('');
+};
+
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
     const isGitFile = templateUrl.endsWith('.git');
     return throwExceptionIfModuleListEmpty(
         isGitFile
-            ? await scanGitFile(templateUrl, authHeader)
-            : await scanZipFile(await getBufferFromUrl(templateUrl, authHeader))
+            ? await getModuleListForGitUrl(templateUrl, authHeader)
+            : await getModuleListForZipBuffer(await getBufferFromUrl(templateUrl, authHeader))
     );
 };
 
@@ -224,7 +250,7 @@ router.post(
     async (req, res) => {
         try {
             // @ts-ignore: checkIfFileBuffer middleware function ensures us that req.file.buffer is not undefined
-            res.send(await scanZipFile(req.file.buffer));
+            res.send(await getModuleListForZipBuffer(req.file.buffer));
         } catch (e: any) {
             res.status(400).send({ message: e.message });
         }
@@ -252,17 +278,39 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     }
 });
 
+async function getTerraformFileFromZipBuffer(zipBuffer: Buffer, resourceLocation: string) {
+    const files = await decompress(zipBuffer);
+    return (files.length === 1
+        ? files[0]
+        : files
+              .filter(file => file.path.indexOf('main.tf') > -1)
+              .find(file => `/${file.path}`.indexOf(`${resourceLocation}/main.tf`) > -1)
+    )?.data;
+}
+
+router.post('/fetch-data', async (req, res) => {
+    const authHeader = req.get('Authorization');
+
+    const { templateUrl, resourceLocation }: RequestFetchDataBody = req.body;
+    const isGitFile = templateUrl.endsWith('.git');
+
+    if (isGitFile) {
+        const terraformFileData = await getTfFileBufferFromGitRepositoryUrl(templateUrl, resourceLocation, authHeader);
+        const hclFile = tfParser.parse(terraformFileData);
+        res.send(hclFile);
+    } else {
+        const zipBuffer = await getBufferFromUrl(templateUrl, authHeader);
+        const terraformFileData = await getTerraformFileFromZipBuffer(zipBuffer, resourceLocation);
+        const hclFile = tfParser.parse(terraformFileData);
+        res.send(hclFile);
+    }
+});
+
 router.post('/fetch-data/file', fileDebase64, async (req, res) => {
     const { resourceLocation } = req.body;
-    const files = await decompress(req.body.file);
-    const terraformFile =
-        files.length === 1
-            ? files[0]
-            : files
-                  .filter(file => file.path.indexOf('main.tf') > -1)
-                  .find(file => `/${file.path}`.indexOf(`${resourceLocation}/main.tf`) > -1);
+    const terraformFileData = await getTerraformFileFromZipBuffer(req.body.file, resourceLocation);
 
-    const hclFile = tfParser.parse(terraformFile?.data);
+    const hclFile = tfParser.parse(terraformFileData);
     res.send(hclFile);
 });
 

@@ -924,6 +924,7 @@
                     "upload": "2/2: Uploading Terraform blueprint..."
                 },
                 "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
+                "assignOutputsVariablesConfirm": "The Terraform module in the path contains {{variablesAmount}} variables and {{outputAmount}} output. Define them in the blueprint?",
                 "default": "Default",
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",

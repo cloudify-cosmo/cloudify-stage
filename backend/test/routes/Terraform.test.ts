@@ -70,11 +70,30 @@ describe('/terraform/resources endpoint', () => {
     });
 });
 
+describe('/terraform/fetch-data endpoint', () => {
+    const endpointUrl = '/console/terraform/fetch-data';
+
+    it('returns outputs and variables in response', async () => {
+        const requestBody = getInputs('fetch-data');
+        
+        nock(/test/, )
+            .get(`/test.zip`)
+            .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template_fetch-data.zip'), null));
+
+        const response = await request(app).post(endpointUrl).send(requestBody);
+
+        expect(response.status).toBe(200);
+        expect(response.body?.outputs.ip?.name).toEqual('ip');
+        expect(response.body?.variables?.filename?.name).toEqual('filename');
+        expect(response.body?.variables?.filename?.default).toEqual('cloud-config.cfg');
+    });
+});
+
 describe('/terraform/fetch-data/file endpoint', () => {
     const endpointUrl = '/console/terraform/fetch-data/file';
 
     it('returns outputs and variables in response', async () => {
-        const requestBody = getInputs('fetch-data');
+        const requestBody = getInputs('fetch-data-file');
 
         const response = await request(app).post(endpointUrl).send(requestBody);
 
