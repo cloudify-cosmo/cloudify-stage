@@ -60,6 +60,5 @@ describe('Community version', () => {
                 is_send_services_details: true
             });
         });
-        cy.get('.modal').should('not.exist');
     });
 });
