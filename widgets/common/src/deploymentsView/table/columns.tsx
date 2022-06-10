@@ -106,21 +106,21 @@ const partialDeploymentsViewColumnDefinitions: Record<
     }
 };
 
-export const deploymentsViewColumnDefinitions: Record<
-    DeploymentsViewColumnId,
-    DeploymentsViewColumnDefinition
-> = mapValues(
-    partialDeploymentsViewColumnDefinitions,
-    (columnDefinition, columnId): DeploymentsViewColumnDefinition => {
-        const name = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.name`);
-        const label = columnDefinition.label ?? name;
-        const tooltip: string | null = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.tooltip`, { defaultValue: null });
+export const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, DeploymentsViewColumnDefinition> =
+    mapValues(
+        partialDeploymentsViewColumnDefinitions,
+        (columnDefinition, columnId): DeploymentsViewColumnDefinition => {
+            const name = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.name`);
+            const label = columnDefinition.label ?? name;
+            const tooltip: string | null = Stage.i18n.t(`${i18nColumnsPrefix}.${columnId}.tooltip`, {
+                defaultValue: null
+            });
 
-        return {
-            ...columnDefinition,
-            name,
-            label,
-            tooltip
-        };
-    }
-);
+            return {
+                ...columnDefinition,
+                name,
+                label,
+                tooltip
+            };
+        }
+    );

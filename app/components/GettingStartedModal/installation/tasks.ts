@@ -286,10 +286,10 @@ export const useSecretsInstallationTasks = (
     typedSecrets: GettingStartedData
 ) => {
     const currentSecrets = useFetchSecrets();
-    const filteredTypedSecrets = useMemo(() => filterSchemaData(selectedEnvironments, typedSecrets), [
-        selectedEnvironments,
-        typedSecrets
-    ]);
+    const filteredTypedSecrets = useMemo(
+        () => filterSchemaData(selectedEnvironments, typedSecrets),
+        [selectedEnvironments, typedSecrets]
+    );
     return useMemo(() => {
         if (currentSecrets.loading) {
             return { loading: true as const };

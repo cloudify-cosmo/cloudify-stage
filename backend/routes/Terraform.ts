@@ -216,7 +216,7 @@ const renderBlueprint = (
                 views: [templatePath]
             }
         );
-    } catch (err) {
+    } catch (err: any) {
         logger.error(err);
         res.status(500).send({ message: `Error when generating blueprint` });
     }
@@ -343,9 +343,6 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
-    res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
-
     logger.debug(
         `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
     );
@@ -354,6 +351,8 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
 
     const archive = archiver('zip');
 
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
     archive.pipe(res);
 
     archive.append(result, { name: 'blueprint/blueprint.yaml' });

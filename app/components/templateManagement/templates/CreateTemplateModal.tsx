@@ -53,9 +53,8 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
     const [roles, setRoles, resetRoles] = useInput(initialRoles);
     const [templateName, setTemplateName, resetTemplateName] = useInput(initialTemplateName);
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [selectedPageMenuItems, setSelectedPageMenuItems, resetSelectedPageMenuItems] = useResettableState(
-        initialPageMenuItems
-    );
+    const [selectedPageMenuItems, setSelectedPageMenuItems, resetSelectedPageMenuItems] =
+        useResettableState(initialPageMenuItems);
     const [expandedAccordions, setExpandedAccordions, resetExpandedAccordions] = useResettableState<
         Record<AccordionSection, boolean>
     >({ pages: false, pageGroups: false });
