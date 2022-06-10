@@ -50,7 +50,7 @@ describe('Community version', () => {
 
         cy.intercept('POST', '/console/contactDetails').as('contactDetailsSubmit');
         cy.clickButton('Continue');
-        cy.wait('@contactDetailsSubmit').then(({ request, response }) => {
+        cy.wait('@contactDetailsSubmit').then(({ request }) => {
             expect(request.body).to.deep.equal({
                 first_name: 'Ja',
                 last_name: 'Ma',
@@ -59,7 +59,6 @@ describe('Community version', () => {
                 is_eula: true,
                 is_send_services_details: true
             });
-            expect(response?.statusCode).to.equal(200);
         });
         cy.get('.modal').should('not.exist');
     });
