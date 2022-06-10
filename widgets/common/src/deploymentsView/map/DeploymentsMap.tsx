@@ -34,10 +34,10 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
 }) => {
     const sitesWithPositions = useMemo(() => sites.filter(isSiteWithPosition), [sites]);
     const sitesLookupTable = useMemo(() => keyBy(sitesWithPositions, 'name'), [sitesWithPositions]);
-    const deploymentSitePairs = useMemo(() => getDeploymentSitePairs(sitesLookupTable, deployments), [
-        sitesLookupTable,
-        deployments
-    ]);
+    const deploymentSitePairs = useMemo(
+        () => getDeploymentSitePairs(sitesLookupTable, deployments),
+        [sitesLookupTable, deployments]
+    );
 
     // NOTE: selected deployment site pairs should not be clustered
     const [selectedDeploymentSitePairs, notSelectedDeploymentSitePairs] = useMemo(
@@ -47,11 +47,10 @@ const DeploymentsMap: FunctionComponent<DeploymentsMapProps> = ({
 
     const mapRef = useRef<Map>(null);
 
-    useEffect(() => invalidateSizeAfterDimensionsChange(mapRef), [
-        widgetDimensions.height,
-        widgetDimensions.width,
-        widgetDimensions.maximized
-    ]);
+    useEffect(
+        () => invalidateSizeAfterDimensionsChange(mapRef),
+        [widgetDimensions.height, widgetDimensions.width, widgetDimensions.maximized]
+    );
 
     const sitesDisplayed = useMemo(() => deploymentSitePairs.map(({ site }) => site), [deploymentSitePairs]);
 

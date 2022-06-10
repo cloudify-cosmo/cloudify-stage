@@ -380,9 +380,8 @@ function UpdateDetailsModal({
     const [deploymentUpdate, setDeploymentUpdate, resetDeploymentUpdate] = useResettableState(
         !_.isEmpty(deploymentUpdateId) ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
     );
-    const [executionParameters, setExecutionParameters, resetExecutionParameters] = useResettableState(
-        EMPTY_EXECUTION_PARAMETERS
-    );
+    const [executionParameters, setExecutionParameters, resetExecutionParameters] =
+        useResettableState(EMPTY_EXECUTION_PARAMETERS);
 
     useEffect(() => {
         if (!_.isEmpty(deploymentUpdateId) && open) {

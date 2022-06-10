@@ -14,6 +14,7 @@ export default function BlueprintsTable({
 }: BlueprintsViewProps) {
     const { DataTable, Icon, ResourceVisibility } = Stage.Basic;
     const { Blueprints } = Stage.Common;
+    const { allowedVisibilitySettings } = Stage.Common.Consts;
     const manager = toolbox.getManager();
     const tableName = 'blueprintsTable';
     const { fieldsToShow } = widget.configuration;
@@ -60,7 +61,7 @@ export default function BlueprintsTable({
                         <ResourceVisibility
                             visibility={item.visibility}
                             onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                            allowedSettingTo={['tenant', 'global']}
+                            allowedSettingTo={allowedVisibilitySettings}
                             className="rightFloated"
                         />
                     </DataTable.Data>
