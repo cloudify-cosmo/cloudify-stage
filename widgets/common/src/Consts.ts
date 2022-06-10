@@ -22,7 +22,8 @@ const consts = {
         } as MapOptions,
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
-    }
+    },
+    allowedVisibilitySettings: ['tenant', 'global'] as string[]
 } as const;
 
 export default consts;

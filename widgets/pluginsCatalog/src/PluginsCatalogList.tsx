@@ -138,10 +138,10 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     const { FeedbackMessages } = Stage.Common.Components;
     const PluginIcon = Stage.Common.Plugins.Icon;
 
-    const distro = `${toolbox
+    const distro = `${toolbox.getManager().getDistributionName().toLowerCase()} ${toolbox
         .getManager()
-        .getDistributionName()
-        .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
+        .getDistributionRelease()
+        .toLowerCase()}`;
     const plugins = compact(
         map(itemsProp, item => {
             const wagon = find(
