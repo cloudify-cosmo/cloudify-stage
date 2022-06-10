@@ -75,8 +75,8 @@ describe('/terraform/fetch-data endpoint', () => {
 
     it('returns outputs and variables in response', async () => {
         const requestBody = getInputs('fetch-data');
-        
-        nock(/test/, )
+
+        nock(/test/)
             .get(`/test.zip`)
             .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template_fetch-data.zip'), null));
 
