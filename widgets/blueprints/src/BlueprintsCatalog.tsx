@@ -16,6 +16,7 @@ export default function BlueprintsCatalog({
 }: BlueprintsViewProps) {
     const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { Blueprints } = Stage.Common;
+    const { allowedVisibilitySettings } = Stage.Common.Consts;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
 
@@ -43,7 +44,7 @@ export default function BlueprintsCatalog({
                                 <ResourceVisibility
                                     visibility={item.visibility}
                                     onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
-                                    allowedSettingTo={['tenant', 'global']}
+                                    allowedSettingTo={allowedVisibilitySettings}
                                     className="rightFloated"
                                 />
                             </Grid.Column>

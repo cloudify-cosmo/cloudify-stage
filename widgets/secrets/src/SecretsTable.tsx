@@ -220,6 +220,7 @@ export default class SecretsTable extends React.Component {
         const DeleteModal = Stage.Basic.Confirm;
         const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
+        const { allowedVisibilitySettings } = Stage.Common.Consts;
 
         return (
             <div>
@@ -255,7 +256,7 @@ export default class SecretsTable extends React.Component {
                                             onSetVisibility={visibility => {
                                                 this.setSecretVisibility(item.key, visibility);
                                             }}
-                                            allowedSettingTo={['tenant', 'global']}
+                                            allowedSettingTo={allowedVisibilitySettings}
                                             className="rightFloated"
                                         />
                                     </VerticallyAlignedCell>
