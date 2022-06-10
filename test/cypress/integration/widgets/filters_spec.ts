@@ -512,19 +512,23 @@ describe('Filters widget', () => {
         }
 
         function isLabelValueOperator(operator: FilterRuleOperator) {
-            return ([
-                FilterRuleOperators.AnyOf,
-                FilterRuleOperators.NotAnyOf,
-                FilterRuleOperators.IsNot
-            ] as FilterRuleOperator[]).includes(operator);
+            return (
+                [
+                    FilterRuleOperators.AnyOf,
+                    FilterRuleOperators.NotAnyOf,
+                    FilterRuleOperators.IsNot
+                ] as FilterRuleOperator[]
+            ).includes(operator);
         }
         function isFreeTextValueOperator(operator: FilterRuleOperator) {
-            return ([
-                FilterRuleOperators.Contains,
-                FilterRuleOperators.NotContains,
-                FilterRuleOperators.StartsWith,
-                FilterRuleOperators.EndsWith
-            ] as FilterRuleOperator[]).includes(operator);
+            return (
+                [
+                    FilterRuleOperators.Contains,
+                    FilterRuleOperators.NotContains,
+                    FilterRuleOperators.StartsWith,
+                    FilterRuleOperators.EndsWith
+                ] as FilterRuleOperator[]
+            ).includes(operator);
         }
         function populateFilterRuleRow(rule: ExtendedFilterRule) {
             const ruleRowType =

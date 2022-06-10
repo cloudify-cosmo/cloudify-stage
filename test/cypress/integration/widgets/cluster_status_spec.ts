@@ -122,11 +122,9 @@ describe('Cluster Status widget', () => {
     });
 
     it('shows correct status', () => {
-        const responses = [
-            'cluster_status/degraded.json',
-            'cluster_status/ok.json',
-            'cluster_status/fail.json'
-        ].map(fixture => ({ fixture }));
+        const responses = ['cluster_status/degraded.json', 'cluster_status/ok.json', 'cluster_status/fail.json'].map(
+            fixture => ({ fixture })
+        );
         cy.interceptSp('GET', { path: '/cluster-status?summary=false' }, req => req.reply(responses.shift())).as(
             'clusterStatusFull'
         );
