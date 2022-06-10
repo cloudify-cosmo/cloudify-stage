@@ -170,17 +170,8 @@ export default class Graph extends Component {
     static MAX_NUMBER_OF_CHARTS = 5;
 
     render() {
-        const {
-            charts,
-            data,
-            onClick,
-            showLegend,
-            syncId,
-            type,
-            xDataKey,
-            yAxisAllowDecimals,
-            yAxisDataFormatter
-        } = this.props;
+        const { charts, data, onClick, showLegend, syncId, type, xDataKey, yAxisAllowDecimals, yAxisDataFormatter } =
+            this.props;
         const CHART_COMPONENTS = {
             [Graph.LINE_CHART_TYPE]: LineChart,
             [Graph.BAR_CHART_TYPE]: BarChart,

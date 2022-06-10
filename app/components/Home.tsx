@@ -1,23 +1,23 @@
 // @ts-nocheck File not migrated fully to TS
 
+import { push } from 'connected-react-router';
+import i18n from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-import i18n from 'i18next';
 
 import { parse } from 'query-string';
-import { push } from 'connected-react-router';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
-import Page from './Page';
-import GettingStartedModal from './GettingStartedModal';
-import ContactDetailsModal from './ContactDetailsModal';
-import { createPagesMap } from '../actions/pageMenu';
-import Consts from '../utils/consts';
+import { storeCurrentPageId } from '../actions/app';
+import { setAppError } from '../actions/appState';
 import { clearContext, setValue } from '../actions/context';
 import { setDrilldownContext } from '../actions/drilldownContext';
-import { setAppError } from '../actions/appState';
-import { storeCurrentPageId } from '../actions/app';
+import { createPagesMap } from '../actions/pageMenu';
+import Consts from '../utils/consts';
+import ContactDetailsModal from './ContactDetailsModal';
+import GettingStartedModal from './GettingStartedModal';
+import Page from './Page';
+import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 
 class Home extends Component {
     // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
@@ -39,14 +39,8 @@ class Home extends Component {
     }
 
     componentDidUpdate() {
-        const {
-            emptyPages,
-            isMaintenance,
-            navigateTo404,
-            navigateToError,
-            navigateToMaintenancePage,
-            selectedPage
-        } = this.props;
+        const { emptyPages, isMaintenance, navigateTo404, navigateToError, navigateToMaintenancePage, selectedPage } =
+            this.props;
         if (isMaintenance) {
             navigateToMaintenancePage();
         }
