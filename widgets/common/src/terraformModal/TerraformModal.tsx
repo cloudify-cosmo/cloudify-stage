@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, find, some, isEmpty } from 'lodash';
+import { chain, find, some, isEmpty, entries } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -224,21 +224,20 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             }
 
             function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
-                const outputsTmp: Output[] = outputsResponse.entries().map(([, outputObj]: any) => ({
+                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
                     name: outputObj.name,
                     type: 'capability',
                     terraformOutput: ''
                 }));
-                const variablesTmp: Variable[] = variablesResponse.entries().map(([key, variableObj]: any) => ({
+                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
                     variable: key,
                     name: variableObj.name,
                     source: 'input',
-                    value: variableObj.default
+                    value: ''
                 }));
 
                 setOutputDeferred(outputsTmp);
                 setVariablesDeferred(variablesTmp);
-
                 unsetTemplateModulesLoading();
             }
 
@@ -253,7 +252,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     .then(setOutputsAndVariables);
             }
         },
-        [resourceLocation, templateUrl]
+        [resourceLocation]
     );
 
     function assignDeferredVariablesAndOutputs() {
