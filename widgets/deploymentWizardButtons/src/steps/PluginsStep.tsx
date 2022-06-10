@@ -219,10 +219,10 @@ class PluginsStepContent extends React.Component {
                     );
 
                     if (pluginState.status === pluginStatuses.notInstalledAndInCatalog) {
-                        const distro = `${toolbox
+                        const distro = `${toolbox.getManager().getDistributionName().toLowerCase()} ${toolbox
                             .getManager()
-                            .getDistributionName()
-                            .toLowerCase()} ${toolbox.getManager().getDistributionRelease().toLowerCase()}`;
+                            .getDistributionRelease()
+                            .toLowerCase()}`;
                         const matchingWagon = _.find(
                             formattedPluginsInCatalog[plugin].wagons,
                             wagon => wagon.name.toLowerCase() === distro || wagon.name.toLowerCase() === 'any'

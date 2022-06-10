@@ -75,9 +75,8 @@ const BareDeploymentSiteMarker: FunctionComponent<{
 }> = ({ status, position, children, onClick }) => {
     const { Marker } = Stage.Basic.Leaflet;
     const icon = createMarkerIcon(deploymentStatusToIconColorMapping[status]);
-    const markerRef = useRef<
-        import('react-leaflet').Marker<import('react-leaflet').MarkerProps, DeploymentMarkerWithStatus>
-    >();
+    const markerRef =
+        useRef<import('react-leaflet').Marker<import('react-leaflet').MarkerProps, DeploymentMarkerWithStatus>>();
 
     useEffect(() => {
         if (!markerRef.current) {
