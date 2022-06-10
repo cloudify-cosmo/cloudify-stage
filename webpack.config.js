@@ -4,6 +4,7 @@ const glob = require('glob');
 const fs = require('fs');
 const _ = require('lodash');
 
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
@@ -251,7 +252,12 @@ module.exports = (env, argv) => {
                                   chunks: 'initial'
                               }
                           }
-                      }
+                      },
+                      minimizer: [
+                          new TerserPlugin({
+                              extractComments: false
+                          })
+                      ]
                   }
                 : undefined,
             context,
