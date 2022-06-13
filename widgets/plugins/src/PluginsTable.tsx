@@ -174,6 +174,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                     bordered
                                     title={t('download')}
                                     onClick={(event: Event) => downloadPlugin(item, event)}
+                                    style={{ marginBottom: 4 }}
                                 />
                                 <Icon
                                     name="trash"
