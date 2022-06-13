@@ -43,10 +43,6 @@ router.use(express.json());
 router.get('/', async (req, res) => {
     const token = getTokenFromCookies(req);
 
-    return res.send({
-        contactDetailsReceived: false
-    });
-
     try {
         await checkContactDetailsExistance(token);
         res.send({
