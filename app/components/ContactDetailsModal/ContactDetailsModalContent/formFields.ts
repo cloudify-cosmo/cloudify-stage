@@ -31,8 +31,8 @@ const getFormFieldLabel = (fieldName: string, params?: Record<string, any>) => {
     return composeT(t, fieldName)('label', params);
 };
 
-export const getFormFields = () => [
-    {
+export const getFormFields = (): Record<string, FormField> => ({
+    firstName: {
         name: 'first_name',
         label: getFormFieldLabel('firstName'),
         type: FormFieldType.Text,
@@ -42,7 +42,7 @@ export const getFormFields = () => [
         },
         isRequired: true
     },
-    {
+    lastName: {
         name: 'last_name',
         label: getFormFieldLabel('lastName'),
         type: FormFieldType.Text,
@@ -52,7 +52,7 @@ export const getFormFields = () => [
         },
         isRequired: true
     },
-    {
+    email: {
         name: 'email',
         label: getFormFieldLabel('email'),
         type: FormFieldType.Text,
@@ -62,26 +62,24 @@ export const getFormFields = () => [
         },
         isRequired: true
     },
-    {
+    phone: {
         name: 'phone',
         label: getFormFieldLabel('phone'),
         type: FormFieldType.Text,
         validation: {
             errorMessage: getFormFieldValidationMessage('phone'),
             regexp: ValidationRegexpPatterns.isBetweenDigitCharactersRange(4, 20)
-        },
-        isRequired: true
+        }
     },
-    {
+    isEula: {
         name: 'is_eula',
         label: getFormFieldLabel('isEULA', { eulaLink: getT('licenseManagement')('eulaLinkCommunity') }),
         type: FormFieldType.Checkbox,
         isRequired: true
     },
-    {
+    isSendServiceDetails: {
         name: 'is_send_services_details',
         label: getFormFieldLabel('isSendServicesDetails'),
-        type: FormFieldType.Checkbox,
-        isRequired: true
+        type: FormFieldType.Checkbox
     }
-];
+});

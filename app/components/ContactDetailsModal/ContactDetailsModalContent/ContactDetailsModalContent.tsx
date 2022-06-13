@@ -29,8 +29,11 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
     const [loading, setLoading, cancelLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
-    const formFields = useMemo(getFormFields, undefined);
-    const requiredFormFields = useMemo(() => formFields.filter(formField => formField.isRequired), undefined);
+    const formFields = useMemo(() => getFormFields(), undefined);
+    const requiredFormFields = useMemo(
+        () => Object.values(formFields).filter(formField => formField.isRequired),
+        undefined
+    );
 
     const isFieldEmpty = (formField: FormField) => {
         const fieldValue = formInputs[formField.name];
@@ -101,8 +104,9 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                     />
                 )}
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {formFields.map(formField => (
+                    {Object.values(formFields).map(formField => (
                         <Form.Field key={formField.name} required={formField.isRequired}>
+                            {/* TODO: Extract logic a separate component */}
                             {formField.type === FormFieldType.Text ? (
                                 <Form.Input
                                     type="text"
