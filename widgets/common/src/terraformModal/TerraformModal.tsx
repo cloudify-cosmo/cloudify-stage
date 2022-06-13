@@ -193,7 +193,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
     const [variablesDeferred, setVariablesDeferred] = useState<Variable[]>([]);
-    const [outputDeferred, setOutputDeferred] = useState<Output[]>([]);
+    const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -225,7 +225,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     value: ''
                 }));
 
-                setOutputDeferred(outputsTmp);
+                setOutputsDeferred(outputsTmp);
                 setVariablesDeferred(variablesTmp);
                 unsetTemplateModulesLoading();
             }
@@ -245,9 +245,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     );
 
     function assignDeferredVariablesAndOutputs() {
-        if (outputDeferred.length) {
-            setOutputs(outputDeferred);
-            setOutputDeferred([]);
+        if (outputsDeferred.length) {
+            setOutputs(outputsDeferred);
+            setOutputsDeferred([]);
         }
         if (variablesDeferred.length) {
             setVariables(variablesDeferred);
@@ -680,14 +680,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 onCancel={hideCancelConfirm}
             />
             <Confirm
-                open={!!(outputDeferred.length || variablesDeferred.length)}
-                content={t('assignOutputsVariablesConfirm', undefined, {
+                open={!!(outputsDeferred.length || variablesDeferred.length)}
+                content={t('assignOutputsVariablesConfirm', {
                     variablesAmount: variablesDeferred.length,
-                    outputAmount: outputDeferred.length
+                    outputAmount: outputsDeferred.length
                 })}
                 onConfirm={assignDeferredVariablesAndOutputs}
                 onCancel={() => {
-                    setOutputDeferred([]);
+                    setOutputsDeferred([]);
                     setVariablesDeferred([]);
                 }}
             />

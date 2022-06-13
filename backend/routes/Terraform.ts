@@ -286,15 +286,14 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 });
 
 async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
+    const acceptableFilePaths = [
+        `${resourceLocation}/main.tf`,
+        `${resourceLocation}/outputs.tf`,
+        `${resourceLocation}/variables.tf`
+    ];
+
     const files = await decompress(zipBuffer);
-    return files
-        .filter(
-            file =>
-                `/${file.path}`.indexOf(`${resourceLocation}/main.tf`) > -1 ||
-                `/${file.path}`.indexOf(`${resourceLocation}/outputs.tf`) > -1 ||
-                `/${file.path}`.indexOf(`${resourceLocation}/variables.tf`) > -1
-        )
-        .map(file => file?.data);
+    return files.filter(file => acceptableFilePaths.includes(`/${file.path}`)).map(file => file?.data);
 }
 
 function getTerraformJsonMergedFromFileBufferList(files: Buffer[]) {
