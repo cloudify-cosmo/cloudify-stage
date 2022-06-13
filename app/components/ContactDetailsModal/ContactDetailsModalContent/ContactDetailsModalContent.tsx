@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
+import styled from 'styled-components';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, ApproveButton, ErrorMessage } from '../../basic';
 import type { FormField, FormValues } from './formFields';
@@ -9,6 +10,15 @@ import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
 import useManager from '../../../utils/hooks/useManager';
 import Internal from '../../../utils/Internal';
+
+const FieldsRow = styled.div`
+    display: flex;
+    gap: 16px;
+
+    & > * {
+        flex: 1;
+    }
+`;
 
 const t = StageUtils.getT('contactDetailsModal.form');
 
@@ -98,13 +108,40 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                     />
                 )}
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {Object.values(formFields).map(formField => (
+                    <FieldsRow>
                         <ContactDetailsFormField
-                            formField={formField}
+                            formField={formFields.firstName}
                             formValues={formValues}
                             onChange={setFormValues}
                         />
-                    ))}
+                        <ContactDetailsFormField
+                            formField={formFields.lastName}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                    </FieldsRow>
+                    <FieldsRow>
+                        <ContactDetailsFormField
+                            formField={formFields.email}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                        <ContactDetailsFormField
+                            formField={formFields.phone}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                    </FieldsRow>
+                    <ContactDetailsFormField
+                        formField={formFields.isEula}
+                        formValues={formValues}
+                        onChange={setFormValues}
+                    />
+                    <ContactDetailsFormField
+                        formField={formFields.isSendServiceDetails}
+                        formValues={formValues}
+                        onChange={setFormValues}
+                    />
                 </Form>
             </Modal.Content>
             <Modal.Actions>
