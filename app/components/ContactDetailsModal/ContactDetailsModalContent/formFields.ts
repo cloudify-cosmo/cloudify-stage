@@ -19,6 +19,12 @@ export interface FormField {
     validation?: FormFieldValidation;
 }
 
+type FormFieldValue = string | boolean;
+
+export interface FormValues {
+    [inputName: string]: FormFieldValue;
+}
+
 const { getT, composeT } = StageUtils;
 
 const t = getT('contactDetailsModal.form.fields');
