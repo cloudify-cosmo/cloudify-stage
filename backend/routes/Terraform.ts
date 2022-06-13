@@ -293,7 +293,7 @@ async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLoca
     ];
 
     const files = await decompress(zipBuffer);
-    return files.filter(file => acceptableFilePaths.includes(`/${file.path}`)).map(file => file?.data);
+    return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
 }
 
 function getTerraformJsonMergedFromFileBufferList(files: Buffer[]) {
