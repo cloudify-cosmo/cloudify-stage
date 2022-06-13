@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import { isEmpty } from 'lodash';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, ApproveButton, ErrorMessage } from '../../basic';
 import type { FormField, FormValues } from './formFields';
@@ -42,7 +43,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
     const isFieldEmpty = (formField: FormField) => {
         const fieldValue = formValues[formField.name];
         if (formField.type === FormFieldType.Text) {
-            return _.isEmpty(fieldValue);
+            return isEmpty(fieldValue);
         }
 
         return !fieldValue;
@@ -76,7 +77,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
 
         setErrors(validationErrors);
 
-        return _.isEmpty(validationErrors);
+        return isEmpty(validationErrors);
     };
 
     const handleSubmit = () => {
