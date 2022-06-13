@@ -47,8 +47,6 @@ describe('/terraform/blueprint endpoint', () => {
 describe('/terraform/blueprint/archive endpoint', () => {
     const endpointUrl = '/console/terraform/blueprint/archive';
 
-    const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
-
     const requestBody = readJsonSync(getFixturePath(`archive_inputs.json`));
 
     it(`generates Terraform blueprint archive`, async () => {
