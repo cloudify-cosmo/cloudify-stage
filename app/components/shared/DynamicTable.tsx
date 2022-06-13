@@ -11,21 +11,22 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
     const { GenericField, Button, Table } = Stage.Basic;
     const t = Stage.Utils.getT('shared.dynamicTable');
 
-    const handleEditRow = (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] => (
-        event,
-        data
-    ) => {
-        onChange(event, {
-            name,
-            value: [...value.slice(0, index), { ...value[index], [key]: data.value }, ...value.slice(index + 1)]
-        });
-    };
-    const handleRemoveRow = (index: number): ComponentProps<typeof Button>['onClick'] => event => {
-        onChange(event, {
-            name,
-            value: [...value.slice(0, index), ...value.slice(index + 1)]
-        });
-    };
+    const handleEditRow =
+        (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] =>
+        (event, data) => {
+            onChange(event, {
+                name,
+                value: [...value.slice(0, index), { ...value[index], [key]: data.value }, ...value.slice(index + 1)]
+            });
+        };
+    const handleRemoveRow =
+        (index: number): ComponentProps<typeof Button>['onClick'] =>
+        event => {
+            onChange(event, {
+                name,
+                value: [...value.slice(0, index), ...value.slice(index + 1)]
+            });
+        };
     const handleAddRow: ComponentProps<typeof Button>['onClick'] = event => {
         onChange(event, {
             name,

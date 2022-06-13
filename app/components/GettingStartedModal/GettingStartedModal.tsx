@@ -37,9 +37,8 @@ const GettingStartedModal = () => {
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
     const [stepName, setStepName] = useState(StepName.Welcome);
-    const [environmentsStepData, setEnvironmentsStepData, resetEnvironmentsStepData] = useResettableState<
-        GettingStartedEnvironmentsData
-    >({});
+    const [environmentsStepData, setEnvironmentsStepData, resetEnvironmentsStepData] =
+        useResettableState<GettingStartedEnvironmentsData>({});
     const [secretsStepIndex, setSecretsStepIndex, resetSecretsStepIndex] = useResettableState(0);
     const [secretsStepsData, setSecretsStepsData, resetSecretsStepsData] = useResettableState<GettingStartedData>({});
 
@@ -49,9 +48,10 @@ const GettingStartedModal = () => {
     const [schema, setSchema] = useState(gettingStartedSchema);
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
-    const commonStepsSchemas = useMemo(() => schema.filter(item => environmentsStepData[item.name]), [
-        environmentsStepData
-    ]);
+    const commonStepsSchemas = useMemo(
+        () => schema.filter(item => environmentsStepData[item.name]),
+        [environmentsStepData]
+    );
 
     const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
     const summaryStepSchemas = useMemo(() => {

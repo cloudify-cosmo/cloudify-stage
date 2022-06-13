@@ -49,28 +49,28 @@ class Toolbox implements Stage.Types.Toolbox {
 
     drillDown: Stage.Types.Toolbox['drillDown'] = (widget, defaultTemplate, drilldownContext, drilldownPageName) => {
         this.store.dispatch(
-            (drillDownToPage(
+            drillDownToPage(
                 widget,
                 this.templates.pagesDef[defaultTemplate],
                 drilldownContext,
                 drilldownPageName
                 // NOTE: redux's type do not handle thunks well
-            ) as unknown) as AnyAction
+            ) as unknown as AnyAction
         );
     };
 
     goToHomePage() {
         // NOTE: redux's type do not handle thunks well
-        this.store.dispatch((selectHomePage() as unknown) as AnyAction);
+        this.store.dispatch(selectHomePage() as unknown as AnyAction);
     }
 
     goToParentPage() {
         // NOTE: redux's type do not handle thunks well
-        this.store.dispatch((selectParentPage() as unknown) as AnyAction);
+        this.store.dispatch(selectParentPage() as unknown as AnyAction);
     }
 
     goToPage: Stage.Types.Toolbox['goToPage'] = (pageName, context) => {
-        this.store.dispatch((selectPageByName(pageName, context) as unknown) as AnyAction);
+        this.store.dispatch(selectPageByName(pageName, context) as unknown as AnyAction);
     };
 
     getEventBus() {

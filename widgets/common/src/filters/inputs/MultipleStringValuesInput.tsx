@@ -16,9 +16,10 @@ const MultipleStringValuesInput: FunctionComponent<MultipleStringValuesInputProp
     value
 }) => {
     const { Dropdown } = Stage.Basic;
-    const options = useMemo(() => value.map((element): DropdownItemProps => ({ text: element, value: element })), [
-        value
-    ]);
+    const options = useMemo(
+        () => value.map((element): DropdownItemProps => ({ text: element, value: element })),
+        [value]
+    );
 
     return (
         <Dropdown
