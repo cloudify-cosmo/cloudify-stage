@@ -1,4 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
+// // @ts-nocheck File not migrated fully to TS
+
 import Actions from './actions';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
@@ -11,6 +12,7 @@ interface CreateModalProps {
 const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const { useEffect, useState, useRef } = React;
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
+    const { TenantsDropdown } = Stage.Common.tenants;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [inputs, setInput, clearInputs] = useInputs({
@@ -85,24 +87,12 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         setTenants(newTenants);
     }
 
-    function handleTenantChange(proxy, field) {
-        const newTenants = {};
-        _.forEach(field.value, tenant => {
-            newTenants[tenant] =
-                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
-        });
-        setTenants(newTenants);
-    }
-
     const { groupName, isAdmin, ldapGroup } = inputs;
     const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
 
     const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
 
-    const options = _.map(availableTenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
-    });
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
@@ -125,17 +115,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
                     <Form.Field error={errors.isAdmin}>
                         <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
                     </Form.Field>
-
-                    <Form.Field label="Tenants">
-                        <Form.Dropdown
-                            name="tenants"
-                            multiple
-                            selection
-                            options={options}
-                            value={Object.keys(tenants)}
-                            onChange={handleTenantChange}
-                        />
-                    </Form.Field>
+                    <TenantsDropdown />
                     <RolesPicker
                         onUpdate={handleRoleChange}
                         resources={tenants}
