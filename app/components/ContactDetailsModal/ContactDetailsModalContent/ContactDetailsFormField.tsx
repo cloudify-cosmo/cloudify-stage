@@ -1,9 +1,14 @@
 import React from 'react';
 import type { FormEvent, ChangeEvent } from 'react';
+import styled from 'styled-components';
 import { FormFieldType } from './formFields';
 import type { FormField, FormValues } from './formFields';
 import { Form } from '../../basic';
 import CheckboxLabel from './CheckboxLabel';
+
+const StyledFormField = styled(Form.Field)`
+    flex: 1;
+`;
 
 interface ContactDetailsFormFieldProps {
     formField: FormField;
@@ -13,7 +18,7 @@ interface ContactDetailsFormFieldProps {
 
 const ContactDetailsFormField = ({ formField, formValues, onChange }: ContactDetailsFormFieldProps) => {
     return (
-        <Form.Field key={formField.name} required={formField.isRequired}>
+        <StyledFormField required={formField.isRequired}>
             {formField.type === FormFieldType.Text ? (
                 <Form.Input
                     type="text"
@@ -32,7 +37,7 @@ const ContactDetailsFormField = ({ formField, formValues, onChange }: ContactDet
                     onChange={onChange}
                 />
             )}
-        </Form.Field>
+        </StyledFormField>
     );
 };
 

@@ -15,10 +15,6 @@ import Internal from '../../../utils/Internal';
 const FieldsRow = styled.div`
     display: flex;
     gap: 16px;
-
-    & > * {
-        flex: 1;
-    }
 `;
 
 const t = StageUtils.getT('contactDetailsModal.form');
