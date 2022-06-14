@@ -1,48 +1,52 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
+import styled from 'styled-components';
+import { isEmpty } from 'lodash';
 import { useBoolean, useErrors, useInputs } from '../../../utils/hooks';
 import { Modal, Form, ApproveButton, ErrorMessage } from '../../basic';
-import type { FormField } from './formFields';
+import type { FormField, FormValues } from './formFields';
 import { FormFieldType, getFormFields } from './formFields';
-import CheckboxLabel from './CheckboxLabel';
+import ContactDetailsFormField from './ContactDetailsFormField';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
 import useManager from '../../../utils/hooks/useManager';
 import Internal from '../../../utils/Internal';
 
+const FieldsRow = styled.div`
+    display: flex;
+    gap: 16px;
+`;
+
 const t = StageUtils.getT('contactDetailsModal.form');
-
-type FormFieldValue = string | boolean;
-
-interface FormInputs {
-    [inputName: string]: FormFieldValue;
-}
 
 interface ContactDetailsModalContentProps {
     closeModal: () => void;
 }
 
 const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentProps> = ({ closeModal }) => {
-    const [formInputs, setFormInputs] = useInputs<FormInputs>({});
+    const [formValues, setFormValues] = useInputs<FormValues>({});
     const { errors, setErrors, clearErrors } = useErrors();
     const [hasSubmittingError, showSubmittingError, hideSubmittingError] = useBoolean();
     const [loading, setLoading, cancelLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
     const formFields = useMemo(getFormFields, undefined);
-    const requiredFormFields = useMemo(() => formFields.filter(formField => formField.isRequired), undefined);
+    const requiredFormFields = useMemo(
+        () => Object.values(formFields).filter(formField => formField.isRequired),
+        undefined
+    );
 
     const isFieldEmpty = (formField: FormField) => {
-        const fieldValue = formInputs[formField.name];
+        const fieldValue = formValues[formField.name];
         if (formField.type === FormFieldType.Text) {
-            return _.isEmpty(fieldValue);
+            return isEmpty(fieldValue);
         }
 
         return !fieldValue;
     };
 
     const isFieldValid = (formField: FormField) => {
-        const fieldValue = formInputs[formField.name] as string;
+        const fieldValue = formValues[formField.name] as string;
         const shouldBeValidated = !!formField.validation;
 
         if (shouldBeValidated) {
@@ -69,7 +73,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
 
         setErrors(validationErrors);
 
-        return _.isEmpty(validationErrors);
+        return isEmpty(validationErrors);
     };
 
     const handleSubmit = () => {
@@ -80,7 +84,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
             setLoading();
             internal
                 .doPost('contactDetails/', {
-                    body: formInputs
+                    body: formValues
                 })
                 .then(() => closeModal())
                 .catch(() => {
@@ -101,28 +105,40 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                     />
                 )}
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {formFields.map(formField => (
-                        <Form.Field key={formField.name} required={formField.isRequired}>
-                            {formField.type === FormFieldType.Text ? (
-                                <Form.Input
-                                    type="text"
-                                    name={formField.name}
-                                    label={formField.label}
-                                    value={formInputs[formField.name]}
-                                    onChange={setFormInputs}
-                                    required={formField.isRequired}
-                                />
-                            ) : (
-                                <Form.Checkbox
-                                    name={formField.name}
-                                    label={<CheckboxLabel label={formField.label} />}
-                                    help=""
-                                    checked={!!formInputs[formField.name]}
-                                    onChange={setFormInputs}
-                                />
-                            )}
-                        </Form.Field>
-                    ))}
+                    <FieldsRow>
+                        <ContactDetailsFormField
+                            formField={formFields.firstName}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                        <ContactDetailsFormField
+                            formField={formFields.lastName}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                    </FieldsRow>
+                    <FieldsRow>
+                        <ContactDetailsFormField
+                            formField={formFields.email}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                        <ContactDetailsFormField
+                            formField={formFields.phone}
+                            formValues={formValues}
+                            onChange={setFormValues}
+                        />
+                    </FieldsRow>
+                    <ContactDetailsFormField
+                        formField={formFields.isEula}
+                        formValues={formValues}
+                        onChange={setFormValues}
+                    />
+                    <ContactDetailsFormField
+                        formField={formFields.isSendServiceDetails}
+                        formValues={formValues}
+                        onChange={setFormValues}
+                    />
                 </Form>
             </Modal.Content>
             <Modal.Actions>

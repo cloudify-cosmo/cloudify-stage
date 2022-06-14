@@ -1,4 +1,4 @@
-import _, { escapeRegExp, trimEnd } from 'lodash';
+import _, { escapeRegExp, trimEnd, merge, trimStart } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
 import ejs from 'ejs';
@@ -15,9 +15,18 @@ import simpleGit from 'simple-git';
 import type { GitError } from 'simple-git';
 import multer from 'multer';
 import archiver from 'archiver';
+// @ts-ignore-next-line typing doesn't exist for this library
+import tfParser from '@evops/hcl-terraform-parser';
+
 import { getLogger } from '../handler/LoggerHandler';
-import type { RequestArchiveBody, RequestBody } from './Terraform.types';
+import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
+
+const directoryTreeOptions = {
+    extensions: /.tf$/,
+    exclude: /.git/,
+    name: 'main.tf'
+};
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
 const logger = getLogger('Terraform');
@@ -78,7 +87,7 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
-const scanZipFile = async (content: Buffer): Promise<string[]> =>
+const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)
@@ -106,43 +115,71 @@ const getUniqNotExistingTemporaryDirectory = (): string => {
     return repositoryPath;
 };
 
-const scanGitFile = async (url: string, authHeaderValue?: string) => {
+const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
     const terraformModuleDirectories: string[] = [];
 
-    await cloneGitRepo(repositoryPath, url, authHeaderValue);
+    await cloneGitRepo(repositoryPath, url, authHeader);
 
-    directoryTree(
-        repositoryPath,
-        {
-            extensions: /.tf$/,
-            exclude: /.git/
-        },
-        (_file, filePath) => {
-            const relativeFilePath = path.relative(repositoryPath, filePath);
-            const isInRootDirectory = !relativeFilePath.includes('/');
+    directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+        const relativeFilePath = path.relative(repositoryPath, filePath);
+        const isInRootDirectory = !relativeFilePath.includes('/');
 
-            if (!isInRootDirectory) {
-                const fileDirectory = path.dirname(relativeFilePath);
-
-                if (!terraformModuleDirectories.includes(fileDirectory)) {
-                    terraformModuleDirectories.push(fileDirectory);
-                }
-            }
+        if (isInRootDirectory) {
+            return;
         }
-    );
+
+        const fileDirectory = path.dirname(relativeFilePath);
+        if (!terraformModuleDirectories.includes(fileDirectory)) {
+            terraformModuleDirectories.push(fileDirectory);
+        }
+    });
 
     fs.rmdirSync(repositoryPath, { recursive: true });
 
     return terraformModuleDirectories.sort();
 };
 
+const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLocation: string, authHeader?: string) => {
+    const repositoryPath = getUniqNotExistingTemporaryDirectory();
+    const files: string[] = [];
+
+    await cloneGitRepo(repositoryPath, url, authHeader);
+
+    await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+        const isInRootDirectory = !filePath.includes('/');
+        if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
+            return;
+        }
+        const mainPath = path.dirname(filePath);
+        files.push(filePath);
+
+        const outputsPath = path.join(mainPath, 'outputs.tf');
+        if (fs.existsSync(outputsPath)) {
+            files.push(outputsPath);
+        }
+
+        const variablesPath = path.join(mainPath, 'variables.tf');
+        if (fs.existsSync(variablesPath)) {
+            files.push(variablesPath);
+        }
+    });
+
+    const fileBufferList = files.map(filePath => {
+        return fs.readFileSync(filePath);
+    });
+
+    fs.rmdirSync(repositoryPath, { recursive: true });
+
+    return fileBufferList;
+};
+
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
     const isGitFile = templateUrl.endsWith('.git');
     return throwExceptionIfModuleListEmpty(
         isGitFile
-            ? await scanGitFile(templateUrl, authHeader)
-            : await scanZipFile(await getBufferFromUrl(templateUrl, authHeader))
+            ? await getModuleListForGitUrl(templateUrl, authHeader)
+            : await getModuleListForZipBuffer(await getBufferFromUrl(templateUrl, authHeader))
     );
 };
 
@@ -201,21 +238,32 @@ export function fileDebase64(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+function checkIfFileBuffer(req: Request, res: Response, next: NextFunction) {
+    if (!(req.file && Buffer.isBuffer(req.file?.buffer))) {
+        res.status(400).send({ message: 'The file you sent is not valid' });
+    } else {
+        next();
+    }
+}
+
 /**
  * @description endpoint dedicated to list Terraform modules inside of uploaded zip archive
  * @returns string[] with terraform module list inside uploaded zip file
  */
-router.post('/resources/file', upload.single('file'), checkIfFileUploaded(logger), async (req, res) => {
-    if (req.file && Buffer.isBuffer(req.file?.buffer)) {
+router.post(
+    '/resources/file',
+    upload.single('file'),
+    checkIfFileUploaded(logger),
+    checkIfFileBuffer,
+    async (req, res) => {
         try {
-            res.send(await scanZipFile(req.file.buffer));
+            // @ts-ignore: checkIfFileBuffer middleware function ensures us that req.file.buffer is not undefined
+            res.send(await getModuleListForZipBuffer(req.file.buffer));
         } catch (e: any) {
             res.status(400).send({ message: e.message });
         }
-    } else {
-        res.status(400).send({ message: 'The file you sent is not valid' });
     }
-});
+);
 
 router.post('/resources', async (req: ResourcesRequest, res) => {
     const { templateUrl } = req.query;
@@ -238,6 +286,47 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
     }
 });
 
+async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
+    const resourceLocationTrimmed = trimStart(resourceLocation, '/');
+    const acceptableFilePaths = [
+        `${resourceLocationTrimmed}/main.tf`,
+        `${resourceLocationTrimmed}/outputs.tf`,
+        `${resourceLocationTrimmed}/variables.tf`
+    ];
+
+    const files = await decompress(zipBuffer);
+    return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
+}
+
+function getTerraformJsonMergedFromFileBufferList(files: Buffer[]) {
+    return files.reduce(
+        (previousValue: any, terraformFile: Buffer) => merge(previousValue, tfParser.parse(terraformFile)),
+        {}
+    );
+}
+
+router.post('/fetch-data', async (req, res) => {
+    const authHeader = req.get('Authorization');
+
+    const { templateUrl, resourceLocation }: RequestFetchDataBody = req.body;
+    const isGitFile = templateUrl.endsWith('.git');
+
+    if (isGitFile) {
+        const terraformFiles = await getTfFileBufferListFromGitRepositoryUrl(templateUrl, resourceLocation, authHeader);
+        res.send(getTerraformJsonMergedFromFileBufferList(terraformFiles));
+    } else {
+        const zipBuffer = await getBufferFromUrl(templateUrl, authHeader);
+        const terraformFiles = await getTerraformFileBufferListFromZip(zipBuffer, resourceLocation);
+        res.send(getTerraformJsonMergedFromFileBufferList(terraformFiles));
+    }
+});
+
+router.post('/fetch-data/file', fileDebase64, async (req, res) => {
+    const { resourceLocation } = req.body;
+    const terraformFiles = await getTerraformFileBufferListFromZip(req.body.file, resourceLocation);
+    res.send(getTerraformJsonMergedFromFileBufferList(terraformFiles));
+});
+
 router.post('/blueprint', (req, res) => {
     const { terraformVersion, terraformTemplate, resourceLocation }: RequestBody = req.body;
 
@@ -255,25 +344,21 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
-    if (!(req.body.file && Buffer.isBuffer(req.body.file))) {
-        res.status(400).send({ message: 'No file uploaded.' });
-    } else {
-        logger.debug(
-            `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
-        );
+    logger.debug(
+        `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
+    );
 
-        const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
+    const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
 
-        const archive = archiver('zip');
+    const archive = archiver('zip');
 
-        res.setHeader('Content-Type', 'application/zip');
-        res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
-        archive.pipe(res);
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
+    archive.pipe(res);
 
-        archive.append(result, { name: 'blueprint/blueprint.yaml' });
-        archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
-        archive.finalize();
-    }
+    archive.append(result, { name: 'blueprint/blueprint.yaml' });
+    archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
+    archive.finalize();
 });
 
 export default router;
