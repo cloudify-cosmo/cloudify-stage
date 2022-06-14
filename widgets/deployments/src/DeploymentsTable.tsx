@@ -1,8 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
+import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 
 const t = Stage.Utils.getT('widgets.deployments.table');
 
@@ -23,7 +23,7 @@ export default function DeploymentsTable({
     const { useResettableState } = Stage.Hooks;
     const { IdPopup } = Stage.Shared;
     const { DataTable, ResourceVisibility } = Stage.Basic;
-    const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const { LatestExecutionStatusIcon } = Stage.Common.Executions;
     const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
     const tableName = 'deploymentsTable';
 
@@ -76,7 +76,7 @@ export default function DeploymentsTable({
                             />
                         </DataTable.Data>
                         <DataTable.Data>
-                            <LastExecutionStatusIcon
+                            <LatestExecutionStatusIcon
                                 execution={item.lastExecution}
                                 onActOnExecution={onActOnExecution}
                                 showLabel={showExecutionStatusLabel}

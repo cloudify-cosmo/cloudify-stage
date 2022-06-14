@@ -6,7 +6,7 @@ import ExecutionActions from './ExecutionActions';
 
 const t = Stage.Utils.getT('widgets.common.executions');
 
-export default class LastExecutionStatusIcon extends React.Component {
+export default class LatestExecutionStatusIcon extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = { errorModalOpen: false, updateModalOpen: false, open: false };
@@ -238,7 +238,7 @@ export default class LastExecutionStatusIcon extends React.Component {
     }
 }
 
-LastExecutionStatusIcon.propTypes = {
+LatestExecutionStatusIcon.propTypes = {
     toolbox: ToolboxPropType.isRequired,
     execution: PropTypes.shape({
         created_at: PropTypes.string,
@@ -256,7 +256,7 @@ LastExecutionStatusIcon.propTypes = {
     labelAttached: PropTypes.bool
 };
 
-LastExecutionStatusIcon.defaultProps = {
+LatestExecutionStatusIcon.defaultProps = {
     execution: { workflow_id: '', status: '' },
     onActOnExecution: _.noop,
     showLabel: false,

@@ -119,12 +119,12 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
         }
 
         if (singleExecutionView) {
-            const lastExecution = data;
-            if (isEmpty(lastExecution)) {
+            const latestExecution = data;
+            if (isEmpty(latestExecution)) {
                 const { ErrorMessage } = Stage.Basic;
                 return <ErrorMessage error={t('noExecutionFound')} />;
             }
-            return <SingleExecution execution={lastExecution} toolbox={toolbox} />;
+            return <SingleExecution execution={latestExecution} toolbox={toolbox} />;
         }
 
         const selectedExecution = toolbox.getContext().getValue('executionId');
