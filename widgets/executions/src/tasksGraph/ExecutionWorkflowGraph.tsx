@@ -145,12 +145,12 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
 
     function renderGraph(width, height, positionValue, positionSetter, openInModalIcon = true, minimap) {
         const { Icon } = Stage.Basic;
-        const { LastExecutionStatusIcon } = Stage.Common.Executions;
+        const { LatestExecutionStatusIcon } = Stage.Common.Executions;
         return (
             <>
                 {showStatus && !minimap && (
                     <div style={{ position: 'absolute', top: 2, left: 2, zIndex: 1, opacity: 1 }}>
-                        <LastExecutionStatusIcon
+                        <LatestExecutionStatusIcon
                             execution={selectedExecution}
                             onActOnExecution={actOnExecution}
                             showLabel
@@ -211,12 +211,12 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }
 
     const { Loading, Message, Modal } = Stage.Basic;
-    const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const { LatestExecutionStatusIcon } = Stage.Common.Executions;
 
     return (
         <div>
             {showStatus && !graphData && (
-                <LastExecutionStatusIcon
+                <LatestExecutionStatusIcon
                     execution={selectedExecution}
                     onActOnExecution={actOnExecution}
                     showLabel

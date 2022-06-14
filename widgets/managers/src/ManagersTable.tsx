@@ -91,7 +91,7 @@ function ManagersTable({ data, toolbox, widget }) {
 
     const { Checkbox, DataTable, ErrorMessage } = Stage.Basic;
     const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
-    const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const { LatestExecutionStatusIcon } = Stage.Common.Executions;
 
     return (
         <div>
@@ -154,7 +154,7 @@ function ManagersTable({ data, toolbox, widget }) {
                             <DataTable.Data>{manager.id}</DataTable.Data>
                             <DataTable.Data>{manager.ip}</DataTable.Data>
                             <DataTable.Data>
-                                <LastExecutionStatusIcon
+                                <LatestExecutionStatusIcon
                                     execution={manager.lastExecution}
                                     onActOnExecution={actOnExecution}
                                     showLabel
