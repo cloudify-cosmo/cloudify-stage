@@ -784,8 +784,8 @@ describe('Blueprints widget', () => {
             });
 
             function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string, fromFile = false) {
-                const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}_${fromFile.toString()}`;
-                const blueprintDescription = `${blueprintNamePrefix}_terraform_${modulePath}_${fromFile.toString()} Description`;
+                const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}_${fromFile}`;
+                const blueprintDescription = `${blueprintNamePrefix}_terraform_${modulePath}_${fromFile} Description`;
                 const deploymentId = blueprintName;
 
                 cy.contains('Create blueprint from Terraform')
