@@ -1,23 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-import { useState } from 'react';
+// // @ts-nocheck File not migrated fully to TS
+import type { DropdownProps } from 'semantic-ui-react';
 
-const TenantsDropdown = () => {
-    const { Form } = Stage.Basic;
-    const [availableTenants, setAvailableTenants] = useState({});
-    const [tenants, setTenants] = useState({});
+const { Form } = Stage.Basic;
 
-    function handleTenantChange(field) {
-        const newTenants = {};
-        _.forEach(field.value, tenant => {
-            newTenants[tenant] =
-                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
-        });
-        setTenants(newTenants);
-    }
+interface IAvailableTenantsOptions {
+    text: string | undefined;
+    value: string | undefined;
+    key: string | undefined;
+}
 
-    const availableTenantsOptions = _.map(availableTenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
-    });
+export interface TenantsDropdownProps {
+    onUpdate: (proxy: any, field: { value?: any }) => void;
+    tenants: any;
+    availableTenantsOptions: any;
+}
+const TenantsDropdown = ({ onUpdate, tenants, availableTenantsOptions }: TenantsDropdownProps) => {
+    const handleInputChange: DropdownProps['onChange'] = (_proxy, field) => {
+        onUpdate(_proxy, field);
+    };
 
     return (
         <Form.Field label="Tenants">
@@ -27,7 +27,7 @@ const TenantsDropdown = () => {
                 selection
                 options={availableTenantsOptions}
                 value={Object.keys(tenants)}
-                onChange={handleTenantChange}
+                onChange={handleInputChange}
             />
         </Form.Field>
     );

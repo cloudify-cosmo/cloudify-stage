@@ -1,5 +1,3 @@
-// // @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
@@ -8,11 +6,32 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
     isLdapEnabled?: boolean;
 }
+interface INewTenants {
+    [key: string]: string | number | boolean | (string | number | boolean)[] | undefined;
+}
+
+// interface ITenants {
+//     items?: {
+//         name: string;
+//     }[];
+//     metadata?: any;
+// }
+interface ITenantItem {
+    name?: string;
+    value?: string;
+    key?: string;
+}
+
+interface IAvailableTenants {
+    items: ITenantItem[];
+}
 
 const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const { useEffect, useState, useRef } = React;
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
-    const { TenantsDropdown } = Stage.Common.tenants;
+    const { TenantsDropdown } = Stage.Common.TenantsDropdown;
+    const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+    const RolesPicker = Stage.Common.Roles.Picker;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [inputs, setInput, clearInputs] = useInputs({
@@ -52,12 +71,10 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }, []);
 
     const [tenants, setTenants] = useState({});
-    const [availableTenants, setAvailableTenants] = useState({});
-    const availableTenantsPromise = useRef(null);
+    const [availableTenants, setAvailableTenants] = useState<IAvailableTenants | undefined>();
+    const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
 
     function submitCreate() {
-        const { groupName, isAdmin, ldapGroup } = inputs;
-
         if (_.isEmpty(groupName)) {
             const validationMessage = t('validation.groupName');
             setErrors({ groupName: validationMessage });
@@ -81,16 +98,29 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .finally(unsetLoading);
     }
 
-    function handleRoleChange(tenant, role) {
-        const newTenants = { ...tenants };
+    function handleRoleChange(
+        tenant: string,
+        role: string | number | boolean | (string | number | boolean)[] | undefined
+    ) {
+        const newTenants: INewTenants = { ...tenants };
         newTenants[tenant] = role;
         setTenants(newTenants);
     }
 
-    const { groupName, isAdmin, ldapGroup } = inputs;
-    const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
-    const RolesPicker = Stage.Common.Roles.Picker;
+    function handleTenantChange(proxy: any, field: { value?: any }) {
+        const newTenants: INewTenants = {};
+        _.forEach(field.value, tenant => {
+            newTenants[tenant] =
+                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
+        });
+        setTenants(newTenants);
+    }
 
+    const { groupName, isAdmin, ldapGroup } = inputs;
+
+    const availableTenantsOptions = _.map(availableTenants?.items, item => {
+        return { text: item.name, value: item.name, key: item.name };
+    });
     const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
 
     return (
@@ -115,7 +145,11 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
                     <Form.Field error={errors.isAdmin}>
                         <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
                     </Form.Field>
-                    <TenantsDropdown />
+                    <TenantsDropdown
+                        tenants={tenants}
+                        availableTenantsOptions={availableTenantsOptions}
+                        onUpdate={handleTenantChange}
+                    />
                     <RolesPicker
                         onUpdate={handleRoleChange}
                         resources={tenants}
