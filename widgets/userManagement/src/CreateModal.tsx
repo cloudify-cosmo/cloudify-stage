@@ -116,10 +116,11 @@ export default function CreateModal({ toolbox }) {
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
+    const { TenantsDropdown } = Stage.Common.TenantsDropdown;
 
     const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
 
-    const options = _.map(availableTenants.items, item => {
+    const availableTenantsOptions = _.map(availableTenants.items, item => {
         return { text: item.name, value: item.name, key: item.name };
     });
 
@@ -156,16 +157,11 @@ export default function CreateModal({ toolbox }) {
                         <Message>Admin users have full permissions to all tenants on the manager.</Message>
                     )}
 
-                    <Form.Field label="Tenants">
-                        <Form.Dropdown
-                            name="tenants"
-                            multiple
-                            selection
-                            options={options}
-                            value={Object.keys(tenants)}
-                            onChange={handleTenantChange}
-                        />
-                    </Form.Field>
+                    <TenantsDropdown
+                        tenants={tenants}
+                        availableTenantsOptions={availableTenantsOptions}
+                        onUpdate={handleTenantChange}
+                    />
                     <RolesPicker
                         onUpdate={handleRoleChange}
                         resources={tenants}
