@@ -130,8 +130,9 @@ const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
         }
 
         const fileDirectory = path.dirname(relativeFilePath);
-
-        terraformModuleDirectories.push(fileDirectory);
+        if (!terraformModuleDirectories.includes(fileDirectory)) {
+            terraformModuleDirectories.push(fileDirectory);
+        }
     });
 
     fs.rmdirSync(repositoryPath, { recursive: true });
@@ -145,15 +146,13 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
 
     await cloneGitRepo(repositoryPath, url, authHeader);
 
-    directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
-        const fileAbsolutePath = path.join(repositoryPath, filePath);
+    await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
         const isInRootDirectory = !filePath.includes('/');
-        if (isInRootDirectory || fileAbsolutePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
+        if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
             return;
         }
-        const mainPath = path.dirname(fileAbsolutePath);
-
-        files.push(fileAbsolutePath);
+        const mainPath = path.dirname(filePath);
+        files.push(filePath);
 
         const outputsPath = path.join(mainPath, 'outputs.tf');
         if (fs.existsSync(outputsPath)) {
@@ -166,11 +165,13 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
         }
     });
 
-    fs.rmdirSync(repositoryPath, { recursive: true });
-
-    return files.map(filePath => {
+    const fileBufferList = files.map(filePath => {
         return fs.readFileSync(filePath);
     });
+
+    fs.rmdirSync(repositoryPath, { recursive: true });
+
+    return fileBufferList;
 };
 
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
