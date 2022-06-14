@@ -112,7 +112,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         setTenants(newTenants);
     }
 
-    function handleTenantChange(proxy: any, field: { value?: any }) {
+    function handleTenantChange(_proxy: any, field: { value?: any }) {
         const newTenants: INewTenants = {};
         _.forEach(field.value, tenant => {
             newTenants[tenant] =

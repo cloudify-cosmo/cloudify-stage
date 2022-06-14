@@ -1,13 +1,6 @@
-// // @ts-nocheck File not migrated fully to TS
 import type { DropdownProps } from 'semantic-ui-react';
 
 const { Form } = Stage.Basic;
-
-interface IAvailableTenantsOptions {
-    text: string | undefined;
-    value: string | undefined;
-    key: string | undefined;
-}
 
 export interface TenantsDropdownProps {
     onUpdate: (proxy: any, field: { value?: any }) => void;
