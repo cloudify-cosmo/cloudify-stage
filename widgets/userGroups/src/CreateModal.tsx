@@ -6,16 +6,13 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
     isLdapEnabled?: boolean;
 }
+
+type Role = string | number | boolean | (string | number | boolean)[] | undefined;
+
 interface INewTenants {
-    [key: string]: string | number | boolean | (string | number | boolean)[] | undefined;
+    [key: string]: Role;
 }
 
-// interface ITenants {
-//     items?: {
-//         name: string;
-//     }[];
-//     metadata?: any;
-// }
 interface ITenantItem {
     name?: string;
     value?: string;
@@ -26,7 +23,7 @@ interface IAvailableTenants {
     items: ITenantItem[];
 }
 
-interface availableTenantsPromise {
+interface IAvailableTenantsPromise {
     promise: Promise<any>;
     cancel(): void;
 }
@@ -77,7 +74,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
     const [tenants, setTenants] = useState<any>({});
     const [availableTenants, setAvailableTenants] = useState<IAvailableTenants | undefined>();
-    const availableTenantsPromise = useRef<availableTenantsPromise | null>(null);
+    const availableTenantsPromise = useRef<IAvailableTenantsPromise | null>(null);
 
     function submitCreate() {
         if (_.isEmpty(groupName)) {
@@ -103,10 +100,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .finally(unsetLoading);
     }
 
-    function handleRoleChange(
-        tenant: string,
-        role: string | number | boolean | (string | number | boolean)[] | undefined
-    ) {
+    function handleRoleChange(tenant: string, role: Role) {
         const newTenants: INewTenants = { ...tenants };
         newTenants[tenant] = role;
         setTenants(newTenants);
