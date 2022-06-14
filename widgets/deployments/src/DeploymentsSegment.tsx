@@ -2,8 +2,8 @@
 import styled from 'styled-components';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
+import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 
 const DeploymentName = styled.span`
     display: -webkit-box;
@@ -27,7 +27,7 @@ export default function DeploymentsSegment({
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
     const DeploymentDetails = Stage.Common.Deployments.Details;
-    const { LastExecutionStatusIcon } = Stage.Common.Executions;
+    const { LatestExecutionStatusIcon } = Stage.Common.Executions;
     const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
 
     return (
@@ -48,7 +48,7 @@ export default function DeploymentsSegment({
                     <DeploymentDetails
                         customName={
                             <div>
-                                <LastExecutionStatusIcon
+                                <LatestExecutionStatusIcon
                                     execution={item.lastExecution}
                                     onActOnExecution={onActOnExecution}
                                     showLabel={showExecutionStatusLabel}

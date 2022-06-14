@@ -1,7 +1,7 @@
 import Actions from './ExecutionActions';
-import LastExecutionStatusIcon from './LastExecutionStatusIcon';
+import LatestExecutionStatusIcon from './LatestExecutionStatusIcon';
 
 export default {
     Actions,
-    LastExecutionStatusIcon
+    LatestExecutionStatusIcon
 };
