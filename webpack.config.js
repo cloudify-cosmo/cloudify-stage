@@ -4,6 +4,7 @@ const glob = require('glob');
 const fs = require('fs');
 const _ = require('lodash');
 
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
@@ -128,8 +129,8 @@ module.exports = (env, argv) => {
                   })
               ];
     const environmentPlugin = new webpack.EnvironmentPlugin({
-        NODE_ENV: 'production',
-        TEST: ''
+        'process.env.NODE_ENV': 'production',
+        'process.env.TEST': ''
     });
 
     const exitWithError = error => {
@@ -251,7 +252,12 @@ module.exports = (env, argv) => {
                                   chunks: 'initial'
                               }
                           }
-                      }
+                      },
+                      minimizer: [
+                          new TerserPlugin({
+                              extractComments: false
+                          })
+                      ]
                   }
                 : undefined,
             context,
@@ -262,6 +268,11 @@ module.exports = (env, argv) => {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
                     react: `${__dirname}/node_modules/react`
+                },
+                fallback: {
+                    // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default
+                    // If some other node.js core module (like 'fs') would be used within the cypress code, it should be listed below
+                    path: false
                 }
             },
             entry: ['./app/main.ts'],

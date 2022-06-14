@@ -451,6 +451,8 @@ describe('Blueprints widget', () => {
             'https://github.com/cloudify-cosmo/cloudify-stage/raw/master/test/cypress/fixtures/terraform/';
         const singleModuleTerraformTemplateUrl = `${terraformTemplatesBaseUrl}single.zip`;
         const multipleModulesTerraformTemplateUrl = `${terraformTemplatesBaseUrl}multiple.zip`;
+        const singleModuleTerraformTemplatePath = `terraform/single.zip`;
+        const multipleModulesTerraformTemplatePath = 'terraform/multiple.zip';
 
         beforeEach(cy.refreshPage);
 
@@ -459,8 +461,12 @@ describe('Blueprints widget', () => {
             cy.contains('Upload from Terraform module').click();
         }
 
-        function setTemplateDetails(templateUrl: string, modulePath: string) {
-            cy.typeToFieldInput('Terraform module source', templateUrl).blur();
+        function setTemplateDetails(template: string, modulePath: string, fromFile = false) {
+            if (fromFile) {
+                cy.get('input[name=terraformUrlOrFileFile]').attachFile(template);
+            } else {
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(template).blur();
+            }
             cy.setSingleDropdownValue('Terraform module folder', modulePath);
         }
 
@@ -675,7 +681,7 @@ describe('Blueprints widget', () => {
             openTerraformModal();
 
             cy.get('.modal').within(() => {
-                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(singleModuleTerraformTemplateUrl).blur();
                 cy.typeToFieldInput('Username', 'username');
                 cy.typeToFieldInput('Password', 'password').blur();
                 cy.contains('The URL requires authentication');
@@ -690,7 +696,7 @@ describe('Blueprints widget', () => {
             };
 
             const typeTerraformModuleUrl = (url: string) => {
-                cy.typeToFieldInput('Terraform module source', url).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(url).blur();
             };
 
             beforeEach(() => {
@@ -752,7 +758,7 @@ describe('Blueprints widget', () => {
                 cy.typeToFieldInput('Username', username);
                 cy.typeToFieldInput('Password', password);
 
-                cy.typeToFieldInput('Terraform module source', singleModuleTerraformTemplateUrl).blur();
+                cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(singleModuleTerraformTemplateUrl).blur();
 
                 cy.wait('@resources');
 
@@ -777,7 +783,7 @@ describe('Blueprints widget', () => {
                 openTerraformModal();
             });
 
-            function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string) {
+            function testBlueprintGeneration(terraformTemplateUrl: string, modulePath: string, fromFile = false) {
                 const blueprintName = `${blueprintNamePrefix}_terraform_${modulePath}`;
                 const blueprintDescription = `${blueprintNamePrefix}_terraform_${modulePath} Description`;
                 const deploymentId = blueprintName;
@@ -787,7 +793,7 @@ describe('Blueprints widget', () => {
                     .within(() => {
                         cy.typeToFieldInput('Blueprint name', blueprintName);
                         typeToTextarea('Blueprint description', blueprintDescription);
-                        setTemplateDetails(terraformTemplateUrl, modulePath);
+                        setTemplateDetails(terraformTemplateUrl, modulePath, fromFile);
                         cy.clickButton('Create');
                         cy.contains('Uploading Terraform blueprint').should('be.visible');
                     });
@@ -812,6 +818,10 @@ describe('Blueprints widget', () => {
             it('single module template', () => testBlueprintGeneration(singleModuleTerraformTemplateUrl, 'local'));
             it('multiple modules template', () =>
                 testBlueprintGeneration(multipleModulesTerraformTemplateUrl, 'local2'));
+            it('single module template as a file', () =>
+                testBlueprintGeneration(singleModuleTerraformTemplatePath, 'local', true));
+            it('multiple modules template as a file', () =>
+                testBlueprintGeneration(multipleModulesTerraformTemplatePath, 'local2', true));
         });
     });
 

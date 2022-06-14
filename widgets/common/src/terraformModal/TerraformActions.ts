@@ -28,4 +28,25 @@ export default class TerraformActions {
             }
         });
     }
+
+    doGetOutputsAndVariablesByURL(templateUrl: string, resourceLocation: string, username?: string, password?: string) {
+        const headers = username ? { Authorization: `Basic ${btoa(`${username}:${password}`)}` } : undefined;
+
+        return this.toolbox.getInternal().doPost('/terraform/fetch-data', {
+            body: {
+                templateUrl,
+                resourceLocation
+            },
+            headers
+        });
+    }
+
+    doGetOutputsAndVariablesByFile(file: string, resourceLocation: string) {
+        return this.toolbox.getInternal().doPost('/terraform/fetch-data/file', {
+            body: {
+                file,
+                resourceLocation
+            }
+        });
+    }
 }

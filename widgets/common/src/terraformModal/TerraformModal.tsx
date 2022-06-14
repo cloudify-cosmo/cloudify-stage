@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, find, some, isEmpty } from 'lodash';
+import { chain, find, some, isEmpty, entries } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -20,19 +20,8 @@ import terraformLogo from '../../../../app/images/terraform_logo.png';
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
-const {
-    Dropdown,
-    Input,
-    Accordion,
-    ApproveButton,
-    CancelButton,
-    Confirm,
-    Header,
-    Image,
-    LoadingOverlay,
-    Modal,
-    Form
-} = Stage.Basic;
+const { Dropdown, Input, Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } =
+    Stage.Basic;
 
 const TerraformLogo = styled(Image)`
     &&& {
@@ -203,6 +192,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [variables, setVariables] = useState<Variable[]>([]);
     const [environment, setEnvironment] = useState<Variable[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
+    const [variablesDeferred, setVariablesDeferred] = useState<Variable[]>([]);
+    const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
 
@@ -214,6 +205,55 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         },
         [urlAuthentication, username]
     );
+
+    useEffect(
+        function getVariablesAndOutputsOnSourceChange() {
+            if (!resourceLocation) {
+                return;
+            }
+
+            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
+                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
+                    name: outputObj.name,
+                    type: 'capability',
+                    terraformOutput: ''
+                }));
+                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
+                    variable: key,
+                    name: variableObj.name,
+                    source: 'input',
+                    value: ''
+                }));
+
+                setOutputsDeferred(outputsTmp);
+                setVariablesDeferred(variablesTmp);
+                unsetTemplateModulesLoading();
+            }
+
+            setTemplateModulesLoading();
+            if (terraformTemplatePackageBase64) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
+                    .then(setOutputsAndVariables);
+            } else if (templateUrl) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                    .then(setOutputsAndVariables);
+            }
+        },
+        [resourceLocation]
+    );
+
+    function assignDeferredVariablesAndOutputs() {
+        if (outputsDeferred.length) {
+            setOutputs(outputsDeferred);
+            setOutputsDeferred([]);
+        }
+        if (variablesDeferred.length) {
+            setVariables(variablesDeferred);
+            setVariablesDeferred([]);
+        }
+    }
 
     async function handleSubmit() {
         clearErrors();
@@ -377,7 +417,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         try {
             let blueprintContent: any;
-            if (terraformTemplatePackage) {
+            if (terraformTemplatePackageBase64) {
                 blueprintContent = await (
                     await new TerraformActions(toolbox).doGenerateBlueprintArchive({
                         blueprintName,
@@ -638,6 +678,18 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 content={t('cancelConfirm')}
                 onConfirm={onHide}
                 onCancel={hideCancelConfirm}
+            />
+            <Confirm
+                open={!!(outputsDeferred.length || variablesDeferred.length)}
+                content={t('assignOutputsVariablesConfirm', {
+                    variablesAmount: variablesDeferred.length,
+                    outputAmount: outputsDeferred.length
+                })}
+                onConfirm={assignDeferredVariablesAndOutputs}
+                onCancel={() => {
+                    setOutputsDeferred([]);
+                    setVariablesDeferred([]);
+                }}
             />
         </Modal>
     );

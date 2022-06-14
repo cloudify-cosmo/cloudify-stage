@@ -151,6 +151,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
                 <div className="uploadBlueprintButton">
                     <BlueprintUploadActionsMenu
+                        upward={false}
                         direction="left"
                         toolbox={toolbox}
                         showGenerateInComposerButton={

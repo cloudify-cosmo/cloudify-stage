@@ -105,6 +105,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
     const { DeleteConfirm } = Stage.Common.Components;
     const { UploadModal, Icon: PluginIcon } = Stage.Common.Plugins;
+    const { allowedVisibilitySettings } = Stage.Common.Consts;
     const { Item, Menu } = Dropdown;
 
     return (
@@ -155,7 +156,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                     <ResourceVisibility
                                         visibility={item.visibility}
                                         onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={['tenant', 'global']}
+                                        allowedSettingTo={allowedVisibilitySettings}
                                         className="rightFloated"
                                     />
                                 </VerticallyAlignedCell>
@@ -174,6 +175,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                     bordered
                                     title={t('download')}
                                     onClick={(event: Event) => downloadPlugin(item, event)}
+                                    style={{ marginBottom: 4 }}
                                 />
                                 <Icon
                                     name="trash"

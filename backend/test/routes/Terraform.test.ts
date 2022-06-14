@@ -1,14 +1,16 @@
 import request from 'supertest';
-import app from 'app';
 import { join, resolve } from 'path';
+import app from 'app';
+
 import { readFileSync } from 'fs';
 import { readJsonSync } from 'fs-extra';
 import ejs from 'ejs';
 import nock from 'nock';
 
+const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
+const getInputs = (id: string | number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
+
 describe('/terraform/blueprint endpoint', () => {
-    const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
-    const getInputs = (id: number) => readJsonSync(getFixturePath(`${id}_inputs.json`));
     const getBlueprint = (id: number) => readFileSync(getFixturePath(`${id}_blueprint.yaml`), 'utf8');
     const testCases = [
         { id: 1, description: 'all parameters provided' },
@@ -29,15 +31,41 @@ describe('/terraform/blueprint endpoint', () => {
     });
 
     it('handles ejs errors', async () => {
-        ejs.render = () => {
+        const spy = jest.spyOn(ejs, 'render').mockImplementation(() => {
             throw Error('err');
-        };
+        });
         const response = await request(app).post('/console/terraform/blueprint').send(getInputs(1));
 
         expect(response.status).toBe(500);
         expect(response.body).toStrictEqual({
             message: 'Error when generating blueprint'
         });
+        spy.mockRestore();
+    });
+});
+
+describe('/terraform/blueprint/archive endpoint', () => {
+    const endpointUrl = '/console/terraform/blueprint/archive';
+
+    const requestBody = readJsonSync(getFixturePath(`archive_inputs.json`));
+
+    it(`generates Terraform blueprint archive`, async () => {
+        const response = await request(app).post(endpointUrl).send(requestBody);
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toBe('application/zip');
+    });
+
+    it('handles ejs errors', async () => {
+        const spy = jest.spyOn(ejs, 'render').mockImplementation(() => {
+            throw Error('err');
+        });
+        const response = await request(app).post(endpointUrl).send(requestBody);
+        expect(response.status).toBe(500);
+        expect(response.body).toStrictEqual({
+            message: 'Error when generating blueprint'
+        });
+        spy.mockRestore();
     });
 });
 
@@ -66,5 +94,52 @@ describe('/terraform/resources endpoint', () => {
         const response = await request(app).post(endpointUrl).query({ templateUrl: privateGitFileUrl }).send();
 
         expect(response.status).toBe(400);
+    });
+});
+
+describe('/terraform/resources/file endpoint', () => {
+    const endpointUrl = '/console/terraform/resources/file';
+
+    it('provides modules list', async () => {
+        const response = await request(app)
+            .post(endpointUrl)
+            .attach('file', resolve(join(__dirname, 'fixtures/terraform/template.zip')));
+
+        expect(response.status).toBe(200);
+        expect(response.body).toStrictEqual(['local', 'local/nested/subdir', 'local/subdir', 'local3']);
+    });
+});
+
+describe('/terraform/fetch-data endpoint', () => {
+    const endpointUrl = '/console/terraform/fetch-data';
+
+    it('returns outputs and variables in response', async () => {
+        const requestBody = getInputs('fetch-data');
+
+        nock(/test/)
+            .get(`/test.zip`)
+            .reply(200, readFileSync(resolve(__dirname, 'fixtures/terraform/template_fetch-data.zip'), null));
+
+        const response = await request(app).post(endpointUrl).send(requestBody);
+
+        expect(response.status).toBe(200);
+        expect(response.body?.outputs.ip?.name).toEqual('ip');
+        expect(response.body?.variables?.filename?.name).toEqual('filename');
+        expect(response.body?.variables?.filename?.default).toEqual('cloud-config.cfg');
+    });
+});
+
+describe('/terraform/fetch-data/file endpoint', () => {
+    const endpointUrl = '/console/terraform/fetch-data/file';
+
+    it('returns outputs and variables in response', async () => {
+        const requestBody = getInputs('fetch-data-file');
+
+        const response = await request(app).post(endpointUrl).send(requestBody);
+
+        expect(response.status).toBe(200);
+        expect(response.body?.outputs.ip?.name).toEqual('ip');
+        expect(response.body?.variables?.filename?.name).toEqual('filename');
+        expect(response.body?.variables?.filename?.default).toEqual('cloud-config.cfg');
     });
 });

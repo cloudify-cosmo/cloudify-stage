@@ -41,9 +41,9 @@ function useSelfRefreshingMarkerClusterGroupRef(deploymentSitePairs: DeploymentS
         }
 
         // NOTE: necessary to update cluster marker icons
-        (markerClusterGroupRef.current?.leafletElement as
-            | import('leaflet').MarkerClusterGroup
-            | undefined)?.refreshClusters?.();
+        (
+            markerClusterGroupRef.current?.leafletElement as import('leaflet').MarkerClusterGroup | undefined
+        )?.refreshClusters?.();
     }, [deploymentSitePairs]);
 
     return markerClusterGroupRef;
