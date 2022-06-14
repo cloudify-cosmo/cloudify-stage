@@ -14,7 +14,7 @@ export default function IdPopup({ buttonPosition, id, selected }) {
                 <Label style={{ opacity: selected ? '1' : '0.2' }}>{i18n.t('shared.idPopup.label')}</Label>
             </Popup.Trigger>
             <Popup.Content>
-                <div className="noWrap">
+                <div className="noWrap" style={{ display: 'flex', alignItems: 'center' }}>
                     {buttonPosition === IdPopup.buttonPositions.left ? (
                         <>
                             {button}
