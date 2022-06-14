@@ -30,7 +30,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
     const [loading, setLoading, cancelLoading] = useBoolean();
     const manager = useManager();
     const internal = new Internal(manager);
-    const formFields = useMemo(() => getFormFields(), undefined);
+    const formFields = useMemo(getFormFields, undefined);
     const requiredFormFields = useMemo(
         () => Object.values(formFields).filter(formField => formField.isRequired),
         undefined
