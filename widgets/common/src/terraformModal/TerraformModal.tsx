@@ -54,13 +54,15 @@ interface TerraformVariableValueInputProps extends CustomConfigurationComponentP
     rowValues?: Variable;
 }
 
-function TerraformVariableValueInput({ name, onChange, rowValues, ...rest }: TerraformVariableValueInputProps) {
+function TerraformVariableValueInput({ name, onChange, rowValues, value, ...rest }: TerraformVariableValueInputProps) {
     return (
         <Input
             type={rowValues?.source === 'secret' ? 'password' : 'text'}
+            disabled={rowValues?.duplicated}
             name={name}
             fluid
-            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            onChange={(event, { value: valuePassed }) => onChange?.(event, { name, value: valuePassed as string })}
+            value={rowValues?.duplicated ? '' : value}
             {...rest}
         >
             <input maxLength={inputMaxLength} />
@@ -166,6 +168,42 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     }
     // Remove first dir from the path ('dir1/dir2' -> 'dir2')
     return resourceLocation.replace(/^[^/]*[/]?/, '');
+}
+
+function markDuplicates(
+    variables: Variable[],
+    environment: Variable[],
+    setVariables: (v: Variable[]) => void,
+    setEnvironment: (v: Variable[]) => void
+) {
+    const existingInputs: string[] = [];
+    const existingSecrets: string[] = [];
+
+    function markDuplicatesForEachIterator(row: Variable, key: number, array: Variable[]) {
+        if (row.source === 'input') {
+            if (existingInputs.includes(row.name)) {
+                array[key].duplicated = true;
+            } else {
+                array[key].duplicated = false;
+                existingInputs.push(row.name);
+            }
+        } else if (row.source === 'secret') {
+            if (existingSecrets.includes(row.name)) {
+                array[key].duplicated = true;
+            } else {
+                array[key].duplicated = false;
+                existingSecrets.push(row.name);
+            }
+        } else {
+            array[key].duplicated = false;
+        }
+    }
+
+    variables.forEach(markDuplicatesForEachIterator);
+    environment.forEach(markDuplicatesForEachIterator);
+
+    setEnvironment(environment);
+    setVariables(variables);
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
@@ -330,12 +368,19 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 variable => variable.source === 'secret'
             );
 
-            await allSecretVariables.forEach(async secretVariable => {
-                // add secret if not exist
-                await secretActions.doGet(secretVariable.name).catch(async () => {
-                    await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
+            await allSecretVariables
+                .filter(secretVar => !secretVar.duplicated)
+                .forEach(async secretVariable => {
+                    // add secret if not exist
+                    await secretActions.doGet(secretVariable.name).catch(async () => {
+                        await secretActions.doCreate(
+                            secretVariable.name,
+                            secretVariable.value,
+                            defaultVisibility,
+                            false
+                        );
+                    });
                 });
-            });
         }
 
         validateBlueprintName();
@@ -498,6 +543,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             .finally(unsetTemplateModulesLoading);
     };
 
+    function handleVariablesChange(modifiedVariables: Variable[]) {
+        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
+    }
+
+    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
+        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
+    }
+
     return (
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
@@ -595,14 +648,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         <TerraformModalTableAccordion
                             title={t('variables')}
                             value={variables}
-                            onChange={setVariables}
+                            onChange={handleVariablesChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
                         />
                         <TerraformModalTableAccordion
                             title={t('environment')}
                             value={environment}
-                            onChange={setEnvironment}
+                            onChange={handleEnvironmentChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
                         />
