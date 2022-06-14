@@ -13,6 +13,7 @@ interface MarketplaceModalConfig {
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
+    upward?: boolean;
     toolbox: Stage.Types.Toolbox;
     marketplaceConfig: MarketplaceModalConfig;
     showGenerateInComposerButton?: boolean;
@@ -20,6 +21,7 @@ interface BlueprintUploadActionsMenuProps {
 
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
+    upward,
     toolbox,
     marketplaceConfig,
     showGenerateInComposerButton = false
@@ -52,7 +54,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 
     return (
         <>
-            <Dropdown button text={t('uploadButton')} direction={direction}>
+            <Dropdown button text={t('uploadButton')} direction={direction} upward={upward}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
                     {map(menuItems, (clickHandler, key) => (
