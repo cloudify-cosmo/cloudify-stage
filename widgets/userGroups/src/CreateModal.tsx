@@ -26,6 +26,11 @@ interface IAvailableTenants {
     items: ITenantItem[];
 }
 
+interface availableTenantsPromise {
+    promise: Promise<any>;
+    cancel(): void;
+}
+
 const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const { useEffect, useState, useRef } = React;
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
@@ -70,9 +75,9 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         };
     }, []);
 
-    const [tenants, setTenants] = useState({});
+    const [tenants, setTenants] = useState<any>({});
     const [availableTenants, setAvailableTenants] = useState<IAvailableTenants | undefined>();
-    const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
+    const availableTenantsPromise = useRef<availableTenantsPromise | null>(null);
 
     function submitCreate() {
         if (_.isEmpty(groupName)) {
