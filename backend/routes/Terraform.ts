@@ -1,4 +1,4 @@
-import _, { escapeRegExp, trimEnd, merge } from 'lodash';
+import _, { escapeRegExp, trimEnd, merge, trimStart } from 'lodash';
 import type { File } from 'decompress';
 import decompress from 'decompress';
 import ejs from 'ejs';
@@ -287,10 +287,11 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 });
 
 async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
+    const resourceLocationTrimmed = trimStart(resourceLocation, '/');
     const acceptableFilePaths = [
-        `${resourceLocation}/main.tf`,
-        `${resourceLocation}/outputs.tf`,
-        `${resourceLocation}/variables.tf`
+        `${resourceLocationTrimmed}/main.tf`,
+        `${resourceLocationTrimmed}/outputs.tf`,
+        `${resourceLocationTrimmed}/variables.tf`
     ];
 
     const files = await decompress(zipBuffer);
