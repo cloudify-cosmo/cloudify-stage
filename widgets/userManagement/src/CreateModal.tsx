@@ -154,7 +154,7 @@ export default function CreateModal({ toolbox }) {
                     )}
 
                     <TenantsDropdown
-                        tenants={tenants}
+                        value={Object.keys(tenants)}
                         availableTenants={availableTenants}
                         onChange={handleTenantChange}
                     />
