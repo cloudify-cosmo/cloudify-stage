@@ -2,9 +2,9 @@ import type { DropdownProps } from 'semantic-ui-react';
 
 const { Form } = Stage.Basic;
 
-interface TenantsDropdownProps {
+export interface TenantsDropdownProps {
     onChange: DropdownProps['onChange'];
-    tenants: Record<string, string>;
+    value: string[];
     availableTenants: AvailableTenants | undefined;
 }
 
@@ -18,10 +18,11 @@ interface AvailableTenants {
     items: TenantItem[];
 }
 
-const TenantsDropdown = ({ tenants, availableTenants, onChange }: TenantsDropdownProps) => {
+const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownProps) => {
     const availableTenantsOptions = _.map(availableTenants?.items, item => {
         return { text: item.name, value: item.name, key: item.name };
     });
+
     return (
         <Form.Field label="Tenants">
             <Form.Dropdown
@@ -29,7 +30,7 @@ const TenantsDropdown = ({ tenants, availableTenants, onChange }: TenantsDropdow
                 multiple
                 selection
                 options={availableTenantsOptions}
-                value={Object.keys(tenants)}
+                value={value}
                 onChange={onChange}
             />
         </Form.Field>

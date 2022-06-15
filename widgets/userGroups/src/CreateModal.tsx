@@ -60,7 +60,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         };
     }, []);
 
-    const [tenants, setTenants] = useState<any>([]);
+    const [tenants, setTenants] = useState<any>({});
     const [availableTenants, setAvailableTenants] = useState<any>();
     const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
@@ -129,7 +129,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
                         <Form.Checkbox label={t('fields.admin')} name="isAdmin" checked={isAdmin} onChange={setInput} />
                     </Form.Field>
                     <TenantsDropdown
-                        tenants={tenants}
+                        value={Object.keys(tenants)}
                         availableTenants={availableTenants}
                         onChange={handleTenantChange}
                     />
