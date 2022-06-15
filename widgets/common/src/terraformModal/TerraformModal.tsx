@@ -270,7 +270,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     variable: key,
                     name: variableObj.name,
                     source: 'input',
-                    value: ''
+                    value: '',
+                    duplicated: false
                 }));
 
                 setOutputsDeferred(outputsTmp);
