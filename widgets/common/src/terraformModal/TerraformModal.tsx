@@ -169,31 +169,41 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     // Remove first dir from the path ('dir1/dir2' -> 'dir2')
     return resourceLocation.replace(/^[^/]*[/]?/, '');
 }
+interface ExistingVariableNames {
+    input: string[];
+    secret: string[];
+}
 
+/**
+ * The function set Variable.duplicated state inside of environment Variable and variable Variable.
+ * The duplicated state is set based on the following rules for secret and input Variable.source separately:
+ *  if certain variable.name is first time present in the table of Variables mark variable.duplicated as false.
+ *      otherwise mark as true.
+ *  if variable.source is different than 'input' or 'secret' mark variable.duplicated as false
+ */
 function markDuplicates(
     variables: Variable[],
     environment: Variable[],
     setVariables: (v: Variable[]) => void,
     setEnvironment: (v: Variable[]) => void
 ) {
-    const existingInputs: string[] = [];
-    const existingSecrets: string[] = [];
+    const existing: ExistingVariableNames = {
+        input: [],
+        secret: []
+    };
+
+    function markItemDuplicated(variable: Variable, existingArray: string[]) {
+        if (existingArray.includes(variable.name)) {
+            variable.duplicated = true;
+        } else {
+            variable.duplicated = false;
+            existingArray.push(variable.name);
+        }
+    }
 
     function markDuplicatesForEachIterator(row: Variable, key: number, array: Variable[]) {
-        if (row.source === 'input') {
-            if (existingInputs.includes(row.name)) {
-                array[key].duplicated = true;
-            } else {
-                array[key].duplicated = false;
-                existingInputs.push(row.name);
-            }
-        } else if (row.source === 'secret') {
-            if (existingSecrets.includes(row.name)) {
-                array[key].duplicated = true;
-            } else {
-                array[key].duplicated = false;
-                existingSecrets.push(row.name);
-            }
+        if (row.source === 'input' || row.source === 'secret') {
+            markItemDuplicated(array[key], existing[row.source]);
         } else {
             array[key].duplicated = false;
         }
