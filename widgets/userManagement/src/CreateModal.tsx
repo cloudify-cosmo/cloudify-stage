@@ -116,13 +116,9 @@ export default function CreateModal({ toolbox }) {
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
-    const { TenantsDropdown } = Stage.Common.TenantsDropdown;
+    const { TenantsDropdown } = Stage.Common.Tenants;
 
     const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
-
-    const availableTenantsOptions = _.map(availableTenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
-    });
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose} className="addUserModal">
@@ -159,8 +155,8 @@ export default function CreateModal({ toolbox }) {
 
                     <TenantsDropdown
                         tenants={tenants}
-                        availableTenantsOptions={availableTenantsOptions}
-                        onUpdate={handleTenantChange}
+                        availableTenants={availableTenants}
+                        onChange={handleTenantChange}
                     />
                     <RolesPicker
                         onUpdate={handleRoleChange}

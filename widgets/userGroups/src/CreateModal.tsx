@@ -7,23 +7,21 @@ interface CreateModalProps {
     isLdapEnabled?: boolean;
 }
 
-type Role = string | number | boolean | (string | number | boolean)[] | undefined;
+type Role = string | undefined;
 
-interface INewTenants {
-    [key: string]: Role;
-}
+type NewTenants = Record<string, Role>;
 
-interface ITenantItem {
+interface TenantItem {
     name?: string;
     value?: string;
     key?: string;
 }
 
-interface IAvailableTenants {
-    items: ITenantItem[];
+interface AvailableTenants {
+    items?: TenantItem[];
 }
 
-interface IAvailableTenantsPromise {
+interface AvailableTenantsPromise {
     promise: Promise<any>;
     cancel(): void;
 }
@@ -31,7 +29,7 @@ interface IAvailableTenantsPromise {
 const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const { useEffect, useState, useRef } = React;
     const { useBoolean, useErrors, useOpen, useInputs } = Stage.Hooks;
-    const { TenantsDropdown } = Stage.Common.TenantsDropdown;
+    const { TenantsDropdown } = Stage.Common.Tenants;
     const { Modal, Button, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
 
@@ -72,9 +70,9 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         };
     }, []);
 
-    const [tenants, setTenants] = useState<any>({});
-    const [availableTenants, setAvailableTenants] = useState<IAvailableTenants | undefined>();
-    const availableTenantsPromise = useRef<IAvailableTenantsPromise | null>(null);
+    const [tenants, setTenants] = useState<any>([]);
+    const [availableTenants, setAvailableTenants] = useState<AvailableTenants | undefined>();
+    const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
     function submitCreate() {
         if (_.isEmpty(groupName)) {
@@ -100,15 +98,14 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .finally(unsetLoading);
     }
 
-    function handleRoleChange(tenant: string, role: Role) {
-        const newTenants: INewTenants = { ...tenants };
-        newTenants[tenant] = role;
+    function handleRoleChange(tenant: string, role: string | undefined) {
+        const newTenants: NewTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
     }
 
     function handleTenantChange(_proxy: any, field: { value?: any }) {
-        const newTenants: INewTenants = {};
-        _.forEach(field.value, tenant => {
+        const newTenants: NewTenants = {};
+        _.map(field.value, tenant => {
             newTenants[tenant] =
                 tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
         });
@@ -117,9 +114,6 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
     const { groupName, isAdmin, ldapGroup } = inputs;
 
-    const availableTenantsOptions = _.map(availableTenants?.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
-    });
     const addButton = <Button content={t('buttons.add')} icon="add user" labelPosition="left" />;
 
     return (
@@ -146,8 +140,8 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
                     </Form.Field>
                     <TenantsDropdown
                         tenants={tenants}
-                        availableTenantsOptions={availableTenantsOptions}
-                        onUpdate={handleTenantChange}
+                        availableTenants={availableTenants}
+                        onChange={handleTenantChange}
                     />
                     <RolesPicker
                         onUpdate={handleRoleChange}
