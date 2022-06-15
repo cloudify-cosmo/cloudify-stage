@@ -3,6 +3,7 @@ export interface Variable {
     name: string;
     source: 'input' | 'secret' | 'static';
     value: string;
+    duplicated: boolean;
 }
 
 export interface Output {
