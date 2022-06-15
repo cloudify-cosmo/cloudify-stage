@@ -11,16 +11,6 @@ type Role = string | undefined;
 
 type NewTenants = Record<string, Role>;
 
-interface TenantItem {
-    name?: string;
-    value?: string;
-    key?: string;
-}
-
-interface AvailableTenants {
-    items?: TenantItem[];
-}
-
 interface AvailableTenantsPromise {
     promise: Promise<any>;
     cancel(): void;
@@ -71,7 +61,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }, []);
 
     const [tenants, setTenants] = useState<any>([]);
-    const [availableTenants, setAvailableTenants] = useState<AvailableTenants | undefined>();
+    const [availableTenants, setAvailableTenants] = useState<any>();
     const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
     function submitCreate() {
