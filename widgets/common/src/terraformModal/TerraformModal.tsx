@@ -54,13 +54,15 @@ interface TerraformVariableValueInputProps extends CustomConfigurationComponentP
     rowValues?: Variable;
 }
 
-function TerraformVariableValueInput({ name, onChange, rowValues, ...rest }: TerraformVariableValueInputProps) {
+function TerraformVariableValueInput({ name, onChange, rowValues, value, ...rest }: TerraformVariableValueInputProps) {
     return (
         <Input
             type={rowValues?.source === 'secret' ? 'password' : 'text'}
+            disabled={rowValues?.duplicated}
             name={name}
             fluid
-            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+            onChange={(event, { value: valuePassed }) => onChange?.(event, { name, value: valuePassed as string })}
+            value={rowValues?.duplicated ? '' : value}
             {...rest}
         >
             <input maxLength={inputMaxLength} />
@@ -167,6 +169,52 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     // Remove first dir from the path ('dir1/dir2' -> 'dir2')
     return resourceLocation.replace(/^[^/]*[/]?/, '');
 }
+interface ExistingVariableNames {
+    input: string[];
+    secret: string[];
+}
+
+/**
+ * The function set Variable.duplicated state inside of environment Variable and variable Variable.
+ * The duplicated state is set based on the following rules for secret and input Variable.source separately:
+ *  if certain variable.name is first time present in the table of Variables mark variable.duplicated as false.
+ *      otherwise mark as true.
+ *  if variable.source is different than 'input' or 'secret' mark variable.duplicated as false
+ */
+function markDuplicates(
+    variables: Variable[],
+    environment: Variable[],
+    setVariables: (v: Variable[]) => void,
+    setEnvironment: (v: Variable[]) => void
+) {
+    const existing: ExistingVariableNames = {
+        input: [],
+        secret: []
+    };
+
+    function markItemDuplicated(variable: Variable, existingArray: string[]) {
+        if (existingArray.includes(variable.name)) {
+            variable.duplicated = true;
+        } else {
+            variable.duplicated = false;
+            existingArray.push(variable.name);
+        }
+    }
+
+    function markDuplicatesForEachIterator(row: Variable, key: number, array: Variable[]) {
+        if (row.source === 'input' || row.source === 'secret') {
+            markItemDuplicated(array[key], existing[row.source]);
+        } else {
+            array[key].duplicated = false;
+        }
+    }
+
+    variables.forEach(markDuplicatesForEachIterator);
+    environment.forEach(markDuplicatesForEachIterator);
+
+    setEnvironment(environment);
+    setVariables(variables);
+}
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
     const { useBoolean, useErrors, useInput, useResettableState } = Stage.Hooks;
@@ -222,7 +270,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     variable: key,
                     name: variableObj.name,
                     source: 'input',
-                    value: ''
+                    value: '',
+                    duplicated: false
                 }));
 
                 setOutputsDeferred(outputsTmp);
@@ -381,12 +430,19 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 variable => variable.source === 'secret'
             );
 
-            await allSecretVariables.forEach(async secretVariable => {
-                // add secret if not exist
-                await secretActions.doGet(secretVariable.name).catch(async () => {
-                    await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
+            await allSecretVariables
+                .filter(secretVar => !secretVar.duplicated)
+                .forEach(async secretVariable => {
+                    // add secret if not exist
+                    await secretActions.doGet(secretVariable.name).catch(async () => {
+                        await secretActions.doCreate(
+                            secretVariable.name,
+                            secretVariable.value,
+                            defaultVisibility,
+                            false
+                        );
+                    });
                 });
-            });
         }
 
         validateBlueprintName();
@@ -549,6 +605,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             .finally(unsetTemplateModulesLoading);
     };
 
+    function handleVariablesChange(modifiedVariables: Variable[]) {
+        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
+    }
+
+    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
+        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
+    }
+
     return (
         <Modal open onClose={onHide}>
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
@@ -646,14 +710,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         <TerraformModalTableAccordion
                             title={t('variables')}
                             value={variables}
-                            onChange={setVariables}
+                            onChange={handleVariablesChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
                         />
                         <TerraformModalTableAccordion
                             title={t('environment')}
                             value={environment}
-                            onChange={setEnvironment}
+                            onChange={handleEnvironmentChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
                         />
