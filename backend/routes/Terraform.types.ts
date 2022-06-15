@@ -27,3 +27,8 @@ export interface RequestBody {
 export interface RequestArchiveBody extends Omit<RequestBody, 'terraformTemplate'> {
     file?: string;
 }
+
+export interface RequestFetchDataBody {
+    templateUrl: string;
+    resourceLocation: string;
+}

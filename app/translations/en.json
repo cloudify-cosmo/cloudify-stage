@@ -30,15 +30,15 @@
         "form": {
             "fields": {
                 "firstName": {
-                    "label": "First name",
+                    "label": "First Name",
                     "validationMessage": "Please provide a valid first name, which should be between 2 to 20 characters long"
                 },
                 "lastName": {
-                    "label": "Last name",
+                    "label": "Last Name",
                     "validationMessage": "Please provide a valid last name, which should be between 2 and 20 characters long"
                 },
                 "email": {
-                    "label": "Email address",
+                    "label": "Email",
                     "validationMessage": "Please provide a valid email address"
                 },
                 "phone": {
@@ -46,10 +46,10 @@
                     "validationMessage": "Please provide a valid phone number, which should consists only of 4 - 20 digits"
                 },
                 "isEULA": {
-                    "label": "By registering for the Cloudify Hosted Service you agree to the <a href=\"{{eulaLink}}\" target=\"_blank\" onclick=\"event.stopPropagation();\">Hosted Trial End User License Agreement</a>"
+                    "label": "By downloading Cloudify you agree to the terms of the <a href=\"{{eulaLink}}\" target=\"_blank\" onclick=\"event.stopPropagation();\">End User License Agreement</a>"
                 },
                 "isSendServicesDetails": {
-                    "label": "Cloudify uses the information provided to send you your service details. For more information see our <a href=\"https://cloudify.co/privacy-policy/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>"
+                    "label": "I agree to receive communications from Cloudify and store and process this information to provide you trial license key in accordance with our <a href=\"https://cloudify.co/privacy-policy/\" target=\"_blank\" onclick=\"event.stopPropagation();\">Privacy Policy</a>"
                 }
             },
             "validation": {
@@ -956,6 +956,7 @@
                     "upload": "2/2: Uploading Terraform blueprint..."
                 },
                 "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
+                "assignOutputsVariablesConfirm": "Detected {{variablesAmount}} variables and {{outputAmount}} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?",
                 "default": "Default",
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
