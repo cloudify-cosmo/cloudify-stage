@@ -42,7 +42,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .catch(err => {
                 if (!err.isCanceled) {
                     unsetLoading();
-                    setAvailableTenants([]);
+                    setAvailableTenants({ items: [] });
                 }
             });
     });
