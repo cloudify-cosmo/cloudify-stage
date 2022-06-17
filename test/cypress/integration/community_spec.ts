@@ -35,18 +35,18 @@ describe('Community version', () => {
         cy.intercept('GET', '/console/contactDetails', { contactDetailsReceived: false });
         cy.refreshTemplate();
 
-        cy.contains('a', 'Hosted Trial End User License Agreement').should(
+        cy.contains('a', 'End User License Agreement').should(
             'have.attr',
             'href',
             'https://cloudify.co/license-community/'
         );
 
-        cy.typeToFieldInput('First name', 'Ja');
-        cy.typeToFieldInput('Last name', 'Ma');
-        cy.typeToFieldInput('Email address', 'a@o.pl');
+        cy.typeToFieldInput('First Name', 'Ja');
+        cy.typeToFieldInput('Last Name', 'Ma');
+        cy.typeToFieldInput('Email', 'a@o.pl');
         cy.typeToFieldInput('Phone number', '1234');
-        cy.contains('Cloudify Hosted Service').click();
-        cy.contains('Cloudify uses the information').click();
+        cy.contains('By downloading Cloudify you agree to the terms').click();
+        cy.contains('I agree to receive communications').click();
 
         cy.intercept('POST', '/console/contactDetails').as('contactDetailsSubmit');
         cy.clickButton('Continue');
