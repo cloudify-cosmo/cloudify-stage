@@ -623,15 +623,11 @@ describe('Blueprints widget', () => {
         });
 
         it('validate outputs and inputs auto-import', () => {
-            const expectedVariables = 8;
-            const expectedOutputs = 1;
+            const expectedVariables = 7;
+            const expectedOutputs = 2;
             openTerraformModal();
             cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_outputs_inputs_test');
-            setTemplateDetails(
-                variablesAndOutputsModulesTerraformTemplatePath,
-                'tf-source-main/template/modules/public_vm',
-                true
-            );
+            setTemplateDetails(variablesAndOutputsModulesTerraformTemplatePath, 'tf-source-main/template', true);
             cy.contains(
                 `Detected ${expectedVariables} variables and ${expectedOutputs} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?`
             ).should('be.visible');
