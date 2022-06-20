@@ -233,6 +233,7 @@ export default class LicensePage extends Component {
         const { license: licenseString, error, isLoading, isEditLicenseActive } = this.state;
 
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
+        const { redirectToPage } = Stage.Utils.Url;
 
         return (
             <FullScreenSegment>
@@ -287,6 +288,17 @@ export default class LicensePage extends Component {
                                 disabled={!isProductOperational}
                                 onClick={onGoToApp}
                             />
+                            {!isProductOperational && (
+                                <Button
+                                    content={i18n.t('licenseManagement.getLicense', 'Get a license')}
+                                    icon="external"
+                                    color="green"
+                                    labelPosition="right"
+                                    fluid={false}
+                                    onClick={() => redirectToPage(i18n.t('licenseManagement.getLicenseLink'))}
+                                    style={{ marginLeft: '0.5rem' }}
+                                />
+                            )}
                         </Grid.Column>
                     </Grid>
                 </MessageContainer>
