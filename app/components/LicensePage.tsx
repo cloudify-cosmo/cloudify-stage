@@ -288,7 +288,7 @@ export default class LicensePage extends Component {
                                 disabled={!isProductOperational}
                                 onClick={onGoToApp}
                             />
-                            {!isProductOperational && (
+                            {status === 'no_license' && (
                                 <Button
                                     content={i18n.t('licenseManagement.getLicense', 'Get a license')}
                                     icon="external"
