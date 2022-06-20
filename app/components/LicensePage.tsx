@@ -8,6 +8,7 @@ import { HeaderBar } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
+import StageUtils from '../utils/stageUtils';
 import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
