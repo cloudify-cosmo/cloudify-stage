@@ -233,7 +233,7 @@ export default class LicensePage extends Component {
         const { license: licenseString, error, isLoading, isEditLicenseActive } = this.state;
 
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
-        const { redirectToPage } = Stage.Utils.Url;
+        const { redirectToPage } = StageUtils.Url;
 
         return (
             <FullScreenSegment>
