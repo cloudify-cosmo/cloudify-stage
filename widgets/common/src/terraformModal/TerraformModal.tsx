@@ -264,7 +264,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
                     name: outputObj.name,
                     type: 'capability',
-                    terraformOutput: ''
+                    terraformOutput: outputObj.name
                 }));
                 const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
                     variable: key,
