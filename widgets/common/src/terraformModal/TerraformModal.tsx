@@ -217,7 +217,7 @@ function markDuplicates(
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
-    const { useBoolean, useErrors, useInput, useResettableState } = Stage.Hooks;
+    const { useBoolean, useErrors, useInput, useResettableState, useFormErrors } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
@@ -225,7 +225,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
     const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
-
+    const { getFieldError, setFieldError, cleanFormErrors } = useFormErrors('terraformModal');
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [blueprintDescription, setBlueprintDescription] = useInput('');
@@ -306,14 +306,15 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     async function handleSubmit() {
         clearErrors();
+        cleanFormErrors();
 
         const formErrors: Record<string, string> = {};
 
         function validateBlueprintName() {
             if (!blueprintName) {
-                formErrors.blueprint = tError('noBlueprintName');
+                setFieldError('blueprintName', tError('noBlueprintName'));
             } else if (!blueprintName.match(validationStrictRegExp)) {
-                formErrors.blueprint = tError('invalidBlueprintName');
+                setFieldError('blueprintName', tError('invalidBlueprintName'));
             }
         }
 
@@ -321,7 +322,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             const descriptionValidationRegexp = /^[ -~\s]*$/;
 
             if (!blueprintDescription.match(descriptionValidationRegexp)) {
-                formErrors.blueprintDescription = tError('invalidBlueprintDescription');
+                setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
             }
         }
 
@@ -329,8 +330,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (!terraformTemplatePackage) {
                 if (!templateUrl) {
                     formErrors.template = tError('noTerraformTemplate');
+                    setFieldError('template', tError('noTerraformTemplate'));
                 } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
                     formErrors.template = tError('invalidTerraformTemplate');
+                    setFieldError('template', tError('invalidTerraformTemplate'));
                 }
             }
         }
@@ -344,10 +347,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         function validateUrlAuthentication() {
             if (urlAuthentication) {
                 if (!username) {
-                    formErrors.username = tError('noUsername');
+                    setFieldError('username', tError('noUsername'));
                 }
                 if (!password) {
-                    formErrors.password = tError('noPassword');
+                    setFieldError('password', tError('noPassword'));
                 }
             }
         }
@@ -623,17 +626,22 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             <Modal.Content>
                 <Form errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <Form.Field label={t(`blueprintName`)} required error={errors.blueprint}>
-                        <Form.Input value={blueprintName} onChange={setBlueprintName}>
+                    <Form.Field label={t(`blueprintName`)} required>
+                        <Form.Input
+                            value={blueprintName}
+                            onChange={setBlueprintName}
+                            error={getFieldError('blueprintName')}
+                        >
                             <input maxLength={inputMaxLength} />
                         </Form.Input>
                     </Form.Field>
-                    <Form.Field label={t(`blueprintDescription`)} error={errors.blueprintDescription}>
+                    <Form.Field label={t(`blueprintDescription`)}>
                         <Form.TextArea
                             name="blueprintDescription"
                             value={blueprintDescription}
                             onChange={setBlueprintDescription}
                             rows={5}
+                            error={getFieldError('blueprintDescription')}
                         />
                     </Form.Field>
                     <Form.Field label={t(`terraformVersion`)} required>
@@ -651,6 +659,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={errors.template}>
                                 <Form.UrlOrFile
+                                    error={getFieldError('template')}
                                     name="terraformUrlOrFile"
                                     placeholder={t(`template`)}
                                     onChangeUrl={setTemplateUrl}
@@ -668,9 +677,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                         onChange={handleUrlAuthenticationChange}
                                     />
                                 </Form.Field>
-                                <Form.Field error={errors.username}>
+                                <Form.Field>
                                     <Ref innerRef={usernameInputRef}>
                                         <Form.Input
+                                            error={getFieldError('username')}
                                             disabled={!urlAuthentication}
                                             value={username}
                                             onChange={setUsername}
@@ -680,8 +690,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                         />
                                     </Ref>
                                 </Form.Field>
-                                <Form.Field error={errors.password}>
+                                <Form.Field>
                                     <Form.Input
+                                        error={getFieldError('password')}
                                         disabled={!urlAuthentication}
                                         value={password}
                                         onChange={setPassword}

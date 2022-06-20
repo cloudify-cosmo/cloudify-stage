@@ -1,8 +1,8 @@
 import type { Reducer } from 'redux';
 import * as types from '../actions/types';
 
-export type FieldError = string[] | undefined;
-type FieldErrors = Record<string, FieldError>;
+export type FieldError = string | undefined;
+export type FieldErrors = Record<string, FieldError>;
 type FormErrors = Record<string, FieldErrors>;
 
 /*
