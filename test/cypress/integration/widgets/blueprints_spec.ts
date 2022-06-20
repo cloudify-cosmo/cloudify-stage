@@ -622,7 +622,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
         });
 
-        it.only('validate outputs and inputs auto-import', () => {
+        it('validate outputs and inputs auto-import', () => {
             const expectedVariables = 8;
             const expectedOutputs = 1;
             openTerraformModal();
