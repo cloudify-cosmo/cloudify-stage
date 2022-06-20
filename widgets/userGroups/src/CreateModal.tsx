@@ -35,14 +35,14 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         availableTenantsPromise.current = Stage.Utils.makeCancelable(actions.doGetTenants());
 
         availableTenantsPromise.current.promise
-            .then(resolvedTenants => {
+            .then((resolvedTenants: any) => {
                 unsetLoading();
-                setAvailableTenants(resolvedTenants);
+                setAvailableTenants(resolvedTenants.items);
             })
             .catch(err => {
                 if (!err.isCanceled) {
                     unsetLoading();
-                    setAvailableTenants({ items: [] });
+                    setAvailableTenants([]);
                 }
             });
     });
@@ -56,7 +56,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }, []);
 
     const [tenants, setTenants] = useState<any>({});
-    const [availableTenants, setAvailableTenants] = useState<any>();
+    const [availableTenants, setAvailableTenants] = useState<string[]>();
     const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
 
     function submitCreate() {

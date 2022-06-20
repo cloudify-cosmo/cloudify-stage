@@ -5,22 +5,12 @@ const { Form } = Stage.Basic;
 export interface TenantsDropdownProps {
     onChange: DropdownProps['onChange'];
     value: string[];
-    availableTenants: AvailableTenants | undefined;
-}
-
-interface TenantItem {
-    name?: string;
-    value?: string;
-    key?: string;
-}
-
-interface AvailableTenants {
-    items: TenantItem[];
+    availableTenants: string[] | undefined;
 }
 
 const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownProps) => {
-    const availableTenantsOptions = _.map(availableTenants?.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
+    const availableTenantsOptions = _.map(availableTenants, item => {
+        return { text: item, value: item, key: item };
     });
 
     return (
