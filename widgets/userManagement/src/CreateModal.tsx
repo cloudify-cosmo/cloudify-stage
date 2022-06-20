@@ -31,12 +31,12 @@ export default function CreateModal({ toolbox }) {
         availableTenantsPromise.current.promise
             .then(resolvedTenants => {
                 unsetLoading();
-                setAvailableTenants(resolvedTenants);
+                setAvailableTenants(resolvedTenants.items);
             })
             .catch(err => {
                 if (!err.isCanceled) {
                     unsetLoading();
-                    setAvailableTenants({ items: [] });
+                    setAvailableTenants([]);
                 }
             });
     });
@@ -101,7 +101,7 @@ export default function CreateModal({ toolbox }) {
 
     function handleTenantChange(proxy, field) {
         const newTenants = {};
-        _.forEach(field.value, tenant => {
+        _.map(field.value, tenant => {
             newTenants[tenant] =
                 tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
         });
@@ -109,8 +109,7 @@ export default function CreateModal({ toolbox }) {
     }
 
     function handleRoleChange(tenant, role) {
-        const newTenants = { ...tenants };
-        newTenants[tenant] = role;
+        const newTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
     }
 

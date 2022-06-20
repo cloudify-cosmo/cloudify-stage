@@ -56,7 +56,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }, []);
 
     const [tenants, setTenants] = useState<any>({});
-    const [availableTenants, setAvailableTenants] = useState<string[]>();
+    const [availableTenants, setAvailableTenants] = useState<any>();
     const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
 
     function submitCreate() {
