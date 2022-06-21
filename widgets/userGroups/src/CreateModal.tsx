@@ -7,7 +7,14 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
     isLdapEnabled?: boolean;
 }
+interface ResolveTenants {
+    items: AvailableTenants;
+}
 
+interface AvailableTenantsPromise {
+    promise: Promise<ResolveTenants>;
+    cancel(): void;
+}
 type AvailableTenants = TenantItem[];
 
 type Role = string | undefined;
@@ -38,7 +45,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         availableTenantsPromise.current = Stage.Utils.makeCancelable(actions.doGetTenants());
 
         availableTenantsPromise.current.promise
-            .then((resolvedTenants: any) => {
+            .then((resolvedTenants: ResolveTenants) => {
                 unsetLoading();
                 setAvailableTenants(resolvedTenants.items);
             })
@@ -60,7 +67,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
     const [tenants, setTenants] = useState<any>({});
     const [availableTenants, setAvailableTenants] = useState<AvailableTenants>();
-    const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
+    const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
     function submitCreate() {
         if (_.isEmpty(groupName)) {
