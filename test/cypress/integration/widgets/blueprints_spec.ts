@@ -453,6 +453,7 @@ describe('Blueprints widget', () => {
         const multipleModulesTerraformTemplateUrl = `${terraformTemplatesBaseUrl}multiple.zip`;
         const singleModuleTerraformTemplatePath = `terraform/single.zip`;
         const multipleModulesTerraformTemplatePath = 'terraform/multiple.zip';
+        const variablesAndOutputsModulesTerraformTemplatePath = 'terraform/variables-and-outputs.zip';
 
         beforeEach(cy.refreshPage);
 
@@ -619,6 +620,25 @@ describe('Blueprints widget', () => {
             cy.contains(`Please provide valid blueprint description`).should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
             cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
+        });
+
+        it('validate outputs and inputs auto-import', () => {
+            const expectedVariables = 7;
+            const expectedOutputs = 2;
+            openTerraformModal();
+            cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_outputs_inputs_test');
+            setTemplateDetails(variablesAndOutputsModulesTerraformTemplatePath, 'tf-source-main/template', true);
+            cy.contains(
+                `Detected ${expectedVariables} variables and ${expectedOutputs} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?`
+            ).should('be.visible');
+            cy.contains('.modal .button', 'Yes').click();
+            cy.contains('.segment', 'Variables').click();
+            cy.contains('.segment', 'Outputs').click();
+
+            cy.get('.segment .content.active table > tbody > tr').should(
+                'have.length',
+                expectedVariables + expectedOutputs
+            );
         });
 
         it('validate secret creation on form submission', () => {
