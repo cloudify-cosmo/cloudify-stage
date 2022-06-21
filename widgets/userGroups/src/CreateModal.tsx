@@ -1,5 +1,6 @@
 import Actions from './actions';
 import type { TenantItem } from '../../common/src/tenants/TenantsDropdown';
+import type { Role } from '../../common/src/roles/RolesPicker';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
@@ -16,8 +17,6 @@ interface AvailableTenantsPromise {
     cancel(): void;
 }
 type AvailableTenants = TenantItem[];
-
-type Role = string | undefined;
 
 type NewTenants = Record<string, Role>;
 
@@ -99,11 +98,13 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }
 
     function handleTenantChange(_proxy: any, field: { value?: any }) {
-        const newTenants: NewTenants = {};
-        _.map(field.value, tenant => {
-            newTenants[tenant] =
-                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
-        });
+        const newTenants: NewTenants = _(field.value)
+            .keyBy()
+            .mapValues(
+                tenant =>
+                    tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles)
+            )
+            .value();
         setTenants(newTenants);
     }
 
