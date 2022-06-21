@@ -1,4 +1,5 @@
 import Actions from './actions';
+import type { TenantItem } from '../../common/src/tenants/TenantsDropdown';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
@@ -6,6 +7,8 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
     isLdapEnabled?: boolean;
 }
+
+type AvailableTenants = TenantItem[];
 
 type Role = string | undefined;
 
@@ -56,7 +59,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     }, []);
 
     const [tenants, setTenants] = useState<any>({});
-    const [availableTenants, setAvailableTenants] = useState<any>();
+    const [availableTenants, setAvailableTenants] = useState<AvailableTenants>();
     const availableTenantsPromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
 
     function submitCreate() {

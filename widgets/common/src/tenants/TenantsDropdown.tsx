@@ -3,7 +3,7 @@ import type { DropdownProps } from 'semantic-ui-react';
 const { Form } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
-interface TenantItem {
+export interface TenantItem {
     name?: string;
     value?: string;
     key?: string;
