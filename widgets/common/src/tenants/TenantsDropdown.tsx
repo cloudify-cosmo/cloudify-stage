@@ -1,6 +1,7 @@
 import type { DropdownProps } from 'semantic-ui-react';
 
 const { Form } = Stage.Basic;
+const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
 interface TenantItem {
     name?: string;
@@ -11,7 +12,7 @@ interface TenantItem {
 export interface TenantsDropdownProps {
     onChange: DropdownProps['onChange'];
     value: string[];
-    availableTenants: TenantItem[] | undefined;
+    availableTenants?: TenantItem[];
 }
 
 const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownProps) => {
@@ -20,7 +21,7 @@ const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownP
     });
 
     return (
-        <Form.Field label="Tenants">
+        <Form.Field label={t('fields.tenants', 'Tenants')}>
             <Form.Dropdown
                 name="tenants"
                 multiple

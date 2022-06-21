@@ -83,7 +83,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .finally(unsetLoading);
     }
 
-    function handleRoleChange(tenant: string, role: string | undefined) {
+    function handleRoleChange(tenant: string, role?: string) {
         const newTenants: NewTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
     }

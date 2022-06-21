@@ -1540,7 +1540,8 @@
                     "fields": {
                         "groupName": "Group name",
                         "ldapGroup": "LDAP group name",
-                        "admin": "Admin"
+                        "admin": "Admin",
+                        "tenants": "Tenants"
                     },
                     "validation": {
                         "groupName": "Please provide group name"
