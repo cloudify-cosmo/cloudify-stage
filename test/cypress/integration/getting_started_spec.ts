@@ -1,6 +1,7 @@
 import Consts from 'app/utils/consts';
 import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
+import PluginUtils from 'app/utils/shared/PluginUtils';
 import { minutesToMs } from '../support/resource_commons';
 
 const pluginsCatalogUrl = 'https://marketplace.cloudify.co/plugins/catalog';
@@ -98,7 +99,7 @@ function interceptPluginsUpload(plugins: string[]) {
                     title: catalogEntry.display_name,
                     visibility: 'tenant',
                     iconUrl: catalogEntry.logo_url,
-                    yamlUrl: _.last(catalogEntry.yaml_urls)!.url,
+                    yamlUrl: PluginUtils.getYamlUrl(catalogEntry),
                     wagonUrl: RegExp(catalogEntry.wagon_urls.map(wagon => escapeRegExp(wagon.url)).join('|'))
                 }
             }).as(toAlias(plugin));
@@ -140,6 +141,12 @@ describe('Getting started modal', () => {
     before(() => cy.activate());
 
     describe('without mocked pages', () => {
+        before(() => {
+            cy.cfyRequest('/users/admin', 'POST', null, {
+                show_getting_started: true
+            });
+        });
+
         beforeEach(() => {
             cy.mockLoginWithoutWaiting({ disableGettingStarted: false }).waitUntilAppLoaded();
         });
