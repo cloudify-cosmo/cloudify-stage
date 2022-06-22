@@ -3,7 +3,7 @@ import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
 import { minutesToMs } from '../support/resource_commons';
 
-const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json';
+const pluginsCatalogUrl = 'https://marketplace.cloudify.co/plugins/catalog';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
@@ -95,11 +95,11 @@ function interceptPluginsUpload(plugins: string[]) {
                 method: 'POST',
                 pathname: '/console/plugins/upload',
                 query: {
-                    title: catalogEntry.title,
+                    title: catalogEntry.display_name,
                     visibility: 'tenant',
-                    iconUrl: catalogEntry.icon,
-                    yamlUrl: catalogEntry.link,
-                    wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
+                    iconUrl: catalogEntry.logo_url,
+                    yamlUrl: _.last(catalogEntry.yaml_urls)!.url,
+                    wagonUrl: RegExp(catalogEntry.wagon_urls.map(wagon => escapeRegExp(wagon.url)).join('|'))
                 }
             }).as(toAlias(plugin));
         });

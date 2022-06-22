@@ -21,7 +21,7 @@ function uploadPlugins(pluginNames: string[]) {
 
 describe('Plugins Catalog widget', () => {
     const widgetConfiguration: PluginsCatalogWidgetConfiguration = {
-        jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json',
+        jsonPath: 'https://marketplace.cloudify.co/plugins/catalog',
         sortByName: true
     };
 
@@ -29,8 +29,8 @@ describe('Plugins Catalog widget', () => {
         cy.activate().deletePlugins().usePageMock(['pluginsCatalog', 'plugins'], widgetConfiguration).mockLogin()
     );
 
-    it.skip('should allow uploading multiple plugins', () => {
-        const pluginsToUpload = ['Helm', 'Libvirt'];
+    it('should allow uploading multiple plugins', () => {
+        const pluginsToUpload = ['Helm', 'Fabric'];
         uploadPlugins(pluginsToUpload);
         pluginsToUpload.forEach(pluginToUpload => {
             cy.get('.pluginsCatalogWidget table')
@@ -109,7 +109,7 @@ describe('Plugins Catalog widget', () => {
         );
     });
 
-    it.skip('should upload all plugins', () => {
+    it('should upload all plugins', () => {
         // eslint-disable-next-line security/detect-non-literal-regexp
         cy.intercept('POST', new RegExp(`console/plugins/upload.*title=AWS`)).as('awsPluginUpload');
         cy.contains('Upload all plugins').click().should('be.disabled');
