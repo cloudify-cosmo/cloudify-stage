@@ -28,9 +28,9 @@ const t = Stage.Utils.getT('widgets.pluginsCatalog');
 function toUploadData(item: PluginsCatalogItem) {
     return {
         url: item.wagon.url,
-        title: item.title,
-        icon: item.icon,
-        yamlUrl: item.link
+        title: item.display_name,
+        icon: item.logo_url,
+        yamlUrl: Stage.Utils.Plugin.getYamlUrl(item)
     };
 }
 
@@ -87,13 +87,13 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     }
 
     function isAvailableForUpload(item: PluginsCatalogItem) {
-        return !uploadingPlugins[item.link] && item.version !== item.uploadedVersion;
+        return !uploadingPlugins[Stage.Utils.Plugin.getYamlUrl(item)] && item.version !== item.uploadedVersion;
     }
 
     function onUploadAll(plugins: PluginsCatalogItem[]) {
         let promise = Promise.resolve();
         plugins.forEach(plugin => {
-            const pluginUrl = plugin.link;
+            const pluginUrl = Stage.Utils.Plugin.getYamlUrl(plugin);
             if (isAvailableForUpload(plugin)) {
                 dispatch(PluginActions.setPluginUploading(pluginUrl));
                 promise = promise.then(() => doUpload(toUploadData(plugin)));
@@ -124,7 +124,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
                 icon="upload"
                 onClick={event => {
                     event.preventDefault();
-                    dispatch(PluginActions.setPluginUploading(item.link));
+                    dispatch(PluginActions.setPluginUploading(Stage.Utils.Plugin.getYamlUrl(item)));
                     doUpload(pluginUploadData);
                 }}
                 title={t(`uploadButton.${titleKey}`)}
@@ -144,10 +144,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
         .toLowerCase()}`;
     const plugins = compact(
         map(itemsProp, item => {
-            const wagon = find(
-                item.pluginDescription.wagons,
-                w => w.name.toLowerCase() === distro || w.name.toLowerCase() === 'any'
-            );
+            const wagon = Stage.Utils.Plugin.getWagonUrl(item.pluginDescription, distro);
             return wagon ? { ...item.pluginDescription, wagon, uploadedVersion: item.uploadedVersion } : undefined;
         })
     );
@@ -171,11 +168,11 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
 
                 {plugins.map(item => {
                     return (
-                        <DataTable.Row key={item.title}>
+                        <DataTable.Row key={item.display_name}>
                             <DataTable.Data>
-                                <PluginIcon src={item.icon} />
+                                <PluginIcon src={item.logo_url} />
                             </DataTable.Data>
-                            <DataTable.Data>{item.title}</DataTable.Data>
+                            <DataTable.Data>{item.display_name}</DataTable.Data>
                             <DataTable.Data>{item.description}</DataTable.Data>
                             <DataTable.Data>{item.version}</DataTable.Data>
                             <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>

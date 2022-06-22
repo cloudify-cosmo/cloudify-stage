@@ -12,6 +12,7 @@ import type { SecretsHook } from '../secrets/useFetchSecrets';
 import type { BlueprintsHook } from '../blueprints/useFetchBlueprints';
 import useFetchBlueprints from '../blueprints/useFetchBlueprints';
 import type { BlueprintResponse } from '../blueprints/model';
+import PluginUtils from '../../../utils/shared/PluginUtils';
 
 /**
  * Validates plugin version. If version pattern is not defined, any version is accepted.
@@ -75,20 +76,17 @@ const findScheduledPluginCandidate = (
     if (!catalogPlugin) {
         return null;
     }
-    const matchedWagon = _.find(catalogPlugin.wagons, wagon => {
-        const wagonName = wagon.name.toLowerCase();
-        return wagonName === currentDistribution || wagonName === 'any';
-    });
+    const matchedWagon = PluginUtils.getWagonUrl(catalogPlugin, currentDistribution);
     if (!matchedWagon) {
         return null;
     }
     return {
-        icon: catalogPlugin.icon,
+        icon: catalogPlugin.logo_url,
         name: expectedPluginName,
-        title: catalogPlugin.title ?? expectedPluginName,
+        title: catalogPlugin.display_name ?? expectedPluginName,
         version: catalogPlugin.version,
-        distribution: matchedWagon.name,
-        yamlUrl: catalogPlugin.link,
+        distribution: matchedWagon.release,
+        yamlUrl: PluginUtils.getYamlUrl(catalogPlugin),
         wagonUrl: matchedWagon.url
     };
 };

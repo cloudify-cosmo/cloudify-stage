@@ -1,19 +1,8 @@
-export interface PluginWagon {
-    name: string;
-    url: string;
-    md5url: string;
-}
+/* eslint-disable camelcase */
+import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
 
-export interface PluginDescription {
-    name: string;
-    title: string;
-    version: string;
-    link: string;
-    icon: string;
-    description: string;
-    releases: string;
-    wagons: PluginWagon[];
-}
+export type { PluginWagon } from '../../../backend/routes/Plugins.types';
+export type PluginDescription = PluginCatalogEntry;
 
 export interface PluginDescriptionWithVersion {
     pluginDescription: PluginDescription;
