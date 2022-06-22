@@ -468,7 +468,7 @@ describe('Blueprints widget', () => {
             } else {
                 cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(template).blur();
             }
-            if(modulePath) {
+            if (modulePath) {
                 cy.setSingleDropdownValue('Terraform module folder', modulePath);
             }
         }
