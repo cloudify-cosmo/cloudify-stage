@@ -462,13 +462,15 @@ describe('Blueprints widget', () => {
             cy.contains('Upload from Terraform module').click();
         }
 
-        function setTemplateDetails(template: string, modulePath: string, fromFile = false) {
+        function setTemplateDetails(template: string, modulePath?: string, fromFile = false) {
             if (fromFile) {
                 cy.get('input[name=terraformUrlOrFileFile]').attachFile(template);
             } else {
                 cy.get('input[name="terraformUrlOrFileUrl"]').clear().type(template).blur();
             }
-            cy.setSingleDropdownValue('Terraform module folder', modulePath);
+            if (modulePath) {
+                cy.setSingleDropdownValue('Terraform module folder', modulePath);
+            }
         }
 
         function selectVariableSource(source: string) {
@@ -627,7 +629,7 @@ describe('Blueprints widget', () => {
             const expectedOutputs = 2;
             openTerraformModal();
             cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_outputs_inputs_test');
-            setTemplateDetails(variablesAndOutputsModulesTerraformTemplatePath, 'tf-source-main/template', true);
+            setTemplateDetails(variablesAndOutputsModulesTerraformTemplatePath, undefined, true);
             cy.contains(
                 `Detected ${expectedVariables} variables and ${expectedOutputs} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?`
             ).should('be.visible');
