@@ -5,7 +5,7 @@ const { Form } = Stage.Basic;
 
 const t = Stage.Utils.getT('widgets.common.rolesPicker');
 
-export type Role = string | undefined;
+export type Role = string;
 
 export interface RolesPickerProps {
     onUpdate: (name: string, value: Role) => void;
@@ -15,8 +15,8 @@ export interface RolesPickerProps {
 }
 
 const RolesPicker = ({ onUpdate, resources, resourceName, toolbox }: RolesPickerProps) => {
-    const handleInputChange: DropdownProps['onChange'] = (_proxy, field: any) => {
-        onUpdate(field.name, field.value);
+    const handleInputChange: DropdownProps['onChange'] = (_proxy, field) => {
+        onUpdate(field.name, field.value as Role);
     };
 
     const roleOptions = toolbox

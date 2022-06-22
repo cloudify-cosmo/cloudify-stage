@@ -1,9 +1,14 @@
+import type { DropdownProps } from 'semantic-ui-react';
 import type { Role } from '../roles/RolesPicker';
 
-export type NewTenants = Record<string, Role>;
+export type RolesAssignment = Record<string, Role>;
 
-export function tenantChange(field: { value?: any }, tenants: any, toolbox: Stage.Types.Toolbox) {
-    const newTenants: NewTenants = _(field.value)
+export function mapTenantsToRoles(
+    field: { value?: DropdownProps },
+    tenants: Record<string, Role>,
+    toolbox: Stage.Types.Toolbox
+) {
+    const newTenants: RolesAssignment = _(field.value)
         .keyBy()
         .mapValues(
             tenant => tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles)

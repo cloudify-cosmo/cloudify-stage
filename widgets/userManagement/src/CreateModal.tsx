@@ -101,7 +101,7 @@ export default function CreateModal({ toolbox }) {
     }
 
     function handleTenantChange(proxy, field) {
-        const newTenants = tenantChange(field, tenants, toolbox);
+        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
         setTenants(newTenants);
     }
 

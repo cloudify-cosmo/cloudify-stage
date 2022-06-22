@@ -1,7 +1,8 @@
 import Actions from './actions';
 import type { TenantItem } from '../../common/src/tenants/TenantsDropdown';
-import type { NewTenants } from '../../common/src/tenants/utils';
-import { tenantChange } from '../../common/src/tenants/utils';
+import type { RolesAssignment } from '../../common/src/tenants/utils';
+import type { Role } from '../../common/src/roles/RolesPicker';
+import { mapTenantsToRoles } from '../../common/src/tenants/utils';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
@@ -9,12 +10,12 @@ interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
     isLdapEnabled?: boolean;
 }
-interface ResolveTenants {
+interface ResolvedTenants {
     items: AvailableTenants;
 }
 
 interface AvailableTenantsPromise {
-    promise: Promise<ResolveTenants>;
+    promise: Promise<ResolvedTenants>;
     cancel(): void;
 }
 type AvailableTenants = TenantItem[];
@@ -43,7 +44,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         availableTenantsPromise.current = Stage.Utils.makeCancelable(actions.doGetTenants());
 
         availableTenantsPromise.current.promise
-            .then((resolvedTenants: ResolveTenants) => {
+            .then((resolvedTenants: ResolvedTenants) => {
                 unsetLoading();
                 setAvailableTenants(resolvedTenants.items);
             })
@@ -63,7 +64,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         };
     }, []);
 
-    const [tenants, setTenants] = useState<any>({});
+    const [tenants, setTenants] = useState<Record<string, Role>>({});
     const [availableTenants, setAvailableTenants] = useState<AvailableTenants>();
     const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
@@ -91,13 +92,13 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
             .finally(unsetLoading);
     }
 
-    function handleRoleChange(tenant: string, role?: string) {
-        const newTenants: NewTenants = { ...tenants, [tenant]: role };
+    function handleRoleChange(tenant: string, role: string) {
+        const newTenants: RolesAssignment = { ...tenants, [tenant]: role };
         setTenants(newTenants);
     }
 
     function handleTenantChange(_proxy: any, field: { value?: any }) {
-        const newTenants = tenantChange(field, tenants, toolbox);
+        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
         setTenants(newTenants);
     }
 
