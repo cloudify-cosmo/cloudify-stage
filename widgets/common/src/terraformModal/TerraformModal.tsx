@@ -245,14 +245,13 @@ function markDuplicates(
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
-    const { useBoolean, useErrors, useInput, useResettableState, useFormErrors } = Stage.Hooks;
+    const { useBoolean, useInput, useResettableState, useFormErrors } = Stage.Hooks;
 
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
     const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
-    const { errors, setErrors, setMessageAsError, clearErrors } = useErrors();
     const { getFieldError, setFieldError, cleanFormErrors } = useFormErrors('terraformModal');
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
@@ -333,15 +332,16 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     async function handleSubmit() {
-        clearErrors();
         cleanFormErrors();
 
-        const formErrors: Record<string, string> = {};
+        let formErrors = false;
 
         function validateBlueprintName() {
             if (!blueprintName) {
+                formErrors = true;
                 setFieldError('blueprintName', tError('noBlueprintName'));
             } else if (!blueprintName.match(validationStrictRegExp)) {
+                formErrors = true;
                 setFieldError('blueprintName', tError('invalidBlueprintName'));
             }
         }
@@ -350,6 +350,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             const descriptionValidationRegexp = /^[ -~\s]*$/;
 
             if (!blueprintDescription.match(descriptionValidationRegexp)) {
+                formErrors = true;
                 setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
             }
         }
@@ -357,10 +358,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         function validateTemplate() {
             if (!terraformTemplatePackage) {
                 if (!templateUrl) {
-                    formErrors.template = tError('noTerraformTemplate');
+                    formErrors = true;
                     setFieldError('template', tError('noTerraformTemplate'));
                 } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                    formErrors.template = tError('invalidTerraformTemplate');
+                    formErrors = true;
                     setFieldError('template', tError('invalidTerraformTemplate'));
                 }
             }
@@ -368,6 +369,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         function validateResourceLocation() {
             if (!resourceLocation) {
+                formErrors = true;
                 setFieldError('resource', tError('noResourceLocation'));
             }
         }
@@ -375,9 +377,11 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         function validateUrlAuthentication() {
             if (urlAuthentication) {
                 if (!username) {
+                    formErrors = true;
                     setFieldError('username', tError('noUsername'));
                 }
                 if (!password) {
+                    formErrors = true;
                     setFieldError('password', tError('noPassword'));
                 }
             }
@@ -392,15 +396,15 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             entities.forEach((variable, index) => {
                 if (isEmpty(variable[IDkey])) {
-                    formErrors[`${type}KeyMissing`] = tNameError('keyMissing');
+                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
                 } else if (!variable[IDkey].match(validationRegExp)) {
-                    formErrors[`${type}KeyInvalid`] = tNameError('keyInvalid');
+                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
                 } else if (
                     some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
                 ) {
-                    formErrors[`${type}KeyDuplicated`] = tNameError('keyDuplicated');
+                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
                 }
             });
@@ -413,14 +417,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             variablesList.forEach((variable, index) => {
                 if (isEmpty(variable.source)) {
-                    formErrors[`${type}SourceMissing`] = tVariableError('sourceMissing');
+                    formErrors = true;
                     setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
                 } else if (variable.source !== 'static') {
                     if (isEmpty(variable.name)) {
-                        formErrors[`${type}NameMissing`] = tVariableError('nameMissing');
+                        formErrors = true;
                         setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
                     } else if (!variable.name.match(validationStrictRegExp)) {
-                        formErrors[`${type}NameInvalid`] = tVariableError('nameInvalid');
+                        formErrors = true;
                         setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
                     }
                 }
@@ -434,15 +438,15 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             outputs.forEach((output: Output, index: number) => {
                 if (isEmpty(output.type)) {
-                    formErrors.outputTypeMissing = tOutputError('typeMissing');
+                    formErrors = true;
                     setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
                 }
 
                 if (isEmpty(output.terraformOutput)) {
-                    formErrors.outputMissing = tOutputError('outputMissing');
+                    formErrors = true;
                     setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
                 } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                    formErrors.outputValueInvalid = tOutputError('outputInvalid');
+                    formErrors = true;
                     setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
                 }
             });
@@ -479,8 +483,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateVariables(environment, 'environmentVariables');
         validateOutputs();
 
-        if (!isEmpty(formErrors)) {
-            setErrors(formErrors);
+        if (formErrors) {
             return;
         }
 
@@ -490,7 +493,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         });
 
         if (existingBlueprintResponse.items.length) {
-            setErrors({ blueprint: tError('blueprintNameInUse', { blueprintName }) });
+            setFieldError('blueprintName', tError('blueprintNameInUse', { blueprintName }));
             return;
         }
 
@@ -556,7 +559,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 blueprintName
             );
         } catch (e: any) {
-            setMessageAsError(e);
+            setFieldError('template', e.message);
             stopProcess();
         }
     }
@@ -575,8 +578,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
         );
 
-        const { template, ...modalErrors } = errors;
-        setErrors(modalErrors);
+        setFieldError('template');
     }
 
     function catchTemplateModulesLoadingError(err: any) {
@@ -584,12 +586,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (!urlAuthentication) {
                 setUrlAuthentication(true);
             } else {
-                setErrors({
-                    template: tError('terraformTemplateUnauthorized')
-                });
+                setFieldError('template', tError('terraformTemplateUnauthorized'));
             }
         } else {
-            setErrors({ template: err.message });
+            setFieldError('template', err.message);
         }
         clearTemplateModules();
         clearResourceLocation();
@@ -647,7 +647,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             </Modal.Header>
 
             <Modal.Content>
-                <Form errors={errors} scrollToError onErrorsDismiss={clearErrors}>
+                <Form scrollToError>
                     <Form.Field label={t(`blueprintName`)} required>
                         <Form.Input
                             value={blueprintName}

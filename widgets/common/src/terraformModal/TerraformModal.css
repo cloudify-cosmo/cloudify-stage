@@ -1,3 +1,7 @@
 #terraformModal .accordion .content .ui.table td {
     vertical-align: top;
 }
+
+#terraformModal .error.field > .label {
+    z-index: 1;
+}
