@@ -313,7 +313,8 @@ export default function DynamicDropdown({
                     const preparedOptions = filteredOptions.map(
                         (item): DropdownItemProps => ({
                             text: (textFormatter ?? ((i: Record<string, string>) => i[valueProp]))(item),
-                            value: item[valueProp]
+                            value: item[valueProp],
+                            title: item[valueProp]
                         })
                     );
                     if (fetchState.hasMore) {
