@@ -4,7 +4,7 @@ import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
 export default class PluginUtils {
     static getYamlUrl(plugin: Pick<PluginCatalogEntry, 'yaml_urls'>) {
         const latestDslVersion = 'cloudify_dsl_1_4';
-        const latestDslYamlUrl = find(plugin.yaml_urls, yaml => yaml.dsl_version === latestDslVersion)?.url;
+        const latestDslYamlUrl = find(plugin.yaml_urls, { dsl_version: latestDslVersion })?.url;
         const fallbackYamlUrl = last(plugin.yaml_urls)!.url;
 
         return latestDslYamlUrl || fallbackYamlUrl;

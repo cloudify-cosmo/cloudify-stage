@@ -1,13 +1,13 @@
 /* eslint-disable camelcase */
 
-export interface PluginWagon {
+export interface PluginWagonUrl {
     arch: string;
     file_size: string;
     release: string;
     url: string;
 }
 
-export interface PluginYaml {
+export interface PluginYamlUrl {
     dsl_version: string;
     url: string;
 }
@@ -18,8 +18,8 @@ export interface PluginCatalogEntry {
     version: string;
     logo_url: string;
     description: string;
-    wagon_urls: PluginWagon[];
-    yaml_urls: PluginYaml[];
+    wagon_urls: PluginWagonUrl[];
+    yaml_urls: PluginYamlUrl[];
 }
 
 export interface PluginEntry {

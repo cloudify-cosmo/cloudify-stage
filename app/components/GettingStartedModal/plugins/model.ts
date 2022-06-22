@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import type { PluginCatalogEntry, PluginEntry } from '../../../../backend/routes/Plugins.types';
 
 export type URLString = string;
