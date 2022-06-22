@@ -172,8 +172,8 @@ module.exports = (env, argv) => {
                 new CopyWebpackPlugin({
                     patterns: _.compact([
                         {
-                            from: 'widgets/**/src/backend.ts',
-                            to: '[path]../backend.ts'
+                            from: 'widgets/**/src/backend.{js,ts}',
+                            to: '[path]../backend.[ext]'
                         },
                         {
                             from: 'widgets',
@@ -217,10 +217,11 @@ module.exports = (env, argv) => {
             plugins: _.flatten(
                 _.compact([
                     new CopyWebpackPlugin({
-                        patterns: _.compact([
-                            fs.existsSync(`widgets/${widgetName}/src/backend.ts`) && {
-                                from: `widgets/${widgetName}/src/backend.ts`,
-                                to: `widgets/${widgetName}`
+                        patterns: [
+                            {
+                                from: `widgets/${widgetName}/src/backend.{js,ts}`,
+                                to: `widgets/${widgetName}/backend.[ext]`,
+                                noErrorOnMissing: true
                             },
                             {
                                 from: `widgets/${widgetName}`,
@@ -229,7 +230,7 @@ module.exports = (env, argv) => {
                                     ignore: ['**/src/**']
                                 }
                             }
-                        ])
+                        ]
                     }),
                     environmentPlugin,
                     isProduction && getProductionPlugins(env && env.analyse === 'widgets')
