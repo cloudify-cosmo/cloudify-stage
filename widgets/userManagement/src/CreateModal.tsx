@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import Actions from './actions';
+import { tenantChange } from '../../common/src/tenants/utils';
 
 export default function CreateModal({ toolbox }) {
     const { useEffect, useState, useRef } = React;
@@ -100,11 +101,7 @@ export default function CreateModal({ toolbox }) {
     }
 
     function handleTenantChange(proxy, field) {
-        const newTenants = {};
-        _.map(field.value, tenant => {
-            newTenants[tenant] =
-                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
-        });
+        const newTenants = tenantChange(field, tenants, toolbox);
         setTenants(newTenants);
     }
 
