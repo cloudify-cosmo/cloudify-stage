@@ -15,33 +15,45 @@ export default function TerraformVariableNameInput({
     name,
     value,
     onChange,
+    idPrefix,
+    index,
     widgetlessToolbox
 }: TerraformVariableNameInputProps) {
-    const { Input } = Stage.Basic;
+    const { Form } = Stage.Basic;
+
+    const { useFormErrors } = Stage.Hooks;
+    const { getFieldError } = useFormErrors('terraformModal');
 
     if (rowValues?.source === 'secret') {
         return (
-            <DynamicDropdown
-                fluid
-                selection
-                value={value}
-                fetchUrl="/secrets"
-                onChange={newValue => onChange(undefined, { name, value: newValue as string })}
-                clearable={false}
-                toolbox={widgetlessToolbox}
-                valueProp="key"
-                allowAdditions
-                additionLabel={`${t('newSecretPrefix')} `}
-            />
+            <Form.Field error={getFieldError(`${idPrefix}_${index}_${name}`)}>
+                <DynamicDropdown
+                    fluid
+                    selection
+                    value={value}
+                    fetchUrl="/secrets"
+                    onChange={newValue => onChange(undefined, { name, value: newValue as string })}
+                    clearable={false}
+                    toolbox={widgetlessToolbox}
+                    valueProp="key"
+                    allowAdditions
+                    additionLabel={`${t('newSecretPrefix')} `}
+                />
+            </Form.Field>
         );
     }
     if (rowValues?.source === 'static' && name === 'name') {
-        return <Input value="" disabled fluid />;
+        return <Form.Input error={getFieldError(`${idPrefix}_${index}_${name}`)} value="" disabled fluid />;
     }
 
     return (
-        <Input value={value === null ? '' : value} onChange={(event, data) => onChange(event, { name, ...data })} fluid>
+        <Form.Input
+            error={getFieldError(`${idPrefix}_${index}_${name}`)}
+            value={value === null ? '' : value}
+            onChange={(event, data) => onChange(event, { name, ...data })}
+            fluid
+        >
             <input maxLength={inputMaxLength} />
-        </Input>
+        </Form.Input>
     );
 }

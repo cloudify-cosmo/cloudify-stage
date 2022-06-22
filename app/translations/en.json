@@ -969,7 +969,7 @@
                     "invalidBlueprintDescription": "Please provide valid blueprint description. It should contain only ASCII characters.",
                     "invalidTerraformTemplate": "Please provide valid Terraform template URL",
                     "blueprintNameInUse": "Blueprint '{{blueprintName}}' already exists",
-                    "variable": {
+                    "variables": {
                         "keyMissing": "Please provide variable key",
                         "keyInvalid": "Please provide valid variable key. It should contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Variable keys must be unique, duplicates are not allowed",
@@ -977,7 +977,7 @@
                         "nameMissing": "Please provide variable name",
                         "nameInvalid": "Please provide valid variable name. It should start with a letter and contain only letters, digits and the characters \"-\", \".\" and \"_\"."
                     },
-                    "environmentVariable": {
+                    "environmentVariables": {
                         "keyMissing": "Please provide environment variable key",
                         "keyInvalid": "Please provide valid environment variable key. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Environment variable keys must be unique, duplicates are not allowed",
@@ -985,7 +985,7 @@
                         "nameMissing": "Please provide environment variable name",
                         "nameInvalid": "Please provide valid environment variable name. It should start with a letter and contain only letters, digits and the characters \"-\", \".\" and \"_\"."
                     },
-                    "output": {
+                    "outputs": {
                         "keyMissing": "Please provide output name",
                         "keyInvalid": "Please provide valid output name. It should contain only letters, digits and the following characters \"-\", \".\" and \"_\".",
                         "keyDuplicated": "Outputs must be unique, duplicates are not allowed",
