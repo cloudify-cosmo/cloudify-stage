@@ -223,10 +223,10 @@ class PluginsStepContent extends React.Component {
                             .getManager()
                             .getDistributionRelease()
                             .toLowerCase()}`;
-                        const matchingWagon = Stage.Utils.Plugin.getWagonUrl(formattedPluginsInCatalog[plugin], distro);
 
-                        pluginState.wagonUrl = matchingWagon.url;
-                        pluginState.yamlUrl = Stage.Utils.Plugin.getYamlUrl(formattedPluginsInCatalog[plugin]);
+                        const { getWagon, getYamlUrl } = Stage.Utils.Plugin;
+                        pluginState.wagonUrl = getWagon(formattedPluginsInCatalog[plugin], distro)?.url;
+                        pluginState.yamlUrl = getYamlUrl(formattedPluginsInCatalog[plugin]);
                         pluginState.title = formattedPluginsInCatalog[plugin].display_name;
                     } else if (pluginState.status === pluginStatuses.installedAndParametersMatched) {
                         pluginState.visibility = formattedPluginsInManager[plugin].visibility;

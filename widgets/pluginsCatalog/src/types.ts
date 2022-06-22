@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
 
-export type { PluginWagon } from '../../../backend/routes/Plugins.types';
 export type PluginDescription = PluginCatalogEntry;
 
 export interface PluginDescriptionWithVersion {

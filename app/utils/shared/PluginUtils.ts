@@ -2,7 +2,7 @@ import { find, last } from 'lodash';
 import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
 
 export default class PluginUtils {
-    static getYamlUrl(plugin: PluginCatalogEntry) {
+    static getYamlUrl(plugin: Pick<PluginCatalogEntry, 'yaml_urls'>) {
         const latestDslVersion = 'cloudify_dsl_1_4';
         const latestDslYamlUrl = find(plugin.yaml_urls, yaml => yaml.dsl_version === latestDslVersion)?.url;
         const fallbackYamlUrl = last(plugin.yaml_urls)!.url;
@@ -10,7 +10,7 @@ export default class PluginUtils {
         return latestDslYamlUrl || fallbackYamlUrl;
     }
 
-    static getWagonUrl(plugin: PluginCatalogEntry, currentDistribution: string) {
+    static getWagon(plugin: Pick<PluginCatalogEntry, 'wagon_urls'>, currentDistribution: string) {
         return find(plugin.wagon_urls, wagon => {
             const lowerCasedRelease = wagon.release.toLowerCase();
             return lowerCasedRelease === currentDistribution || lowerCasedRelease === 'any';

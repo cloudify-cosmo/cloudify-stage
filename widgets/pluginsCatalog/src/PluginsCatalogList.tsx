@@ -8,8 +8,7 @@ import type {
     PluginDescriptionWithVersion,
     PluginsCatalogWidgetConfiguration,
     PluginUploadData,
-    PluginDescription,
-    PluginWagon
+    PluginDescription
 } from './types';
 
 interface PluginsCatalogListProps {
@@ -18,16 +17,16 @@ interface PluginsCatalogListProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagons'> {
+export interface PluginsCatalogItem extends Omit<PluginDescription, 'wagon_urls'> {
     uploadedVersion: string | undefined;
-    wagon: PluginWagon;
+    wagonUrl: string;
 }
 
 const t = Stage.Utils.getT('widgets.pluginsCatalog');
 
 function toUploadData(item: PluginsCatalogItem) {
     return {
-        url: item.wagon.url,
+        url: item.wagonUrl,
         title: item.display_name,
         icon: item.logo_url,
         yamlUrl: Stage.Utils.Plugin.getYamlUrl(item)
@@ -142,10 +141,12 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
         .getManager()
         .getDistributionRelease()
         .toLowerCase()}`;
-    const plugins = compact(
+    const plugins: PluginsCatalogItem[] = compact(
         map(itemsProp, item => {
-            const wagon = Stage.Utils.Plugin.getWagonUrl(item.pluginDescription, distro);
-            return wagon ? { ...item.pluginDescription, wagon, uploadedVersion: item.uploadedVersion } : undefined;
+            const wagonUrl = Stage.Utils.Plugin.getWagon(item.pluginDescription, distro)?.url;
+            return wagonUrl
+                ? { ...item.pluginDescription, wagonUrl, uploadedVersion: item.uploadedVersion }
+                : undefined;
         })
     );
 

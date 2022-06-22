@@ -76,8 +76,8 @@ const findScheduledPluginCandidate = (
     if (!catalogPlugin) {
         return null;
     }
-    const matchedWagon = PluginUtils.getWagonUrl(catalogPlugin, currentDistribution);
-    if (!matchedWagon) {
+    const wagon = PluginUtils.getWagon(catalogPlugin, currentDistribution);
+    if (!wagon) {
         return null;
     }
     return {
@@ -85,9 +85,9 @@ const findScheduledPluginCandidate = (
         name: expectedPluginName,
         title: catalogPlugin.display_name ?? expectedPluginName,
         version: catalogPlugin.version,
-        distribution: matchedWagon.release,
+        distribution: wagon.release,
         yamlUrl: PluginUtils.getYamlUrl(catalogPlugin),
-        wagonUrl: matchedWagon.url
+        wagonUrl: wagon.url
     };
 };
 
