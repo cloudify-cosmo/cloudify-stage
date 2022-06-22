@@ -4,7 +4,6 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
-    const errorBoxSelector = '.error.message';
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
