@@ -348,19 +348,6 @@ describe('Blueprints widget', () => {
             cy.contains('Cancel').click();
         });
 
-        it('should successfully dismiss error messages', () => {
-            cy.get('.modal').within(() => {
-                cy.contains('button', 'Upload').click();
-
-                cy.get(errorBoxSelector).within(() => {
-                    cy.get('.header').should('contain', 'Errors');
-                    cy.get('.close.icon').click();
-                });
-
-                cy.get(errorBoxSelector).should('not.exist');
-            });
-        });
-
         describe('should upload a blueprint', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
@@ -495,7 +482,6 @@ describe('Blueprints widget', () => {
                 addFirstSegmentRow('Environment variables');
                 addFirstSegmentRow('Outputs');
                 cy.clickButton('Create');
-                cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide blueprint name').should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
                 cy.contains('Please provide resource location').should('be.visible');
@@ -506,7 +492,6 @@ describe('Blueprints widget', () => {
                 cy.contains('Please provide output name').should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
 
                 getSegment('Variables').within(() => {
                     selectVariableSource('Secret');
@@ -515,10 +500,8 @@ describe('Blueprints widget', () => {
                     selectVariableSource('Secret');
                 });
                 cy.clickButton('Create');
-                cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide variable name').should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
-                cy.get('.error.message li').should('have.length', 10);
 
                 cy.log('Check allowed characters validations');
                 getSegment('Variables').within(() => {
@@ -536,12 +519,10 @@ describe('Blueprints widget', () => {
                     cy.get('input[name=terraformOutput]').type('$');
                 });
                 cy.clickButton('Create');
-                cy.contains('Errors in the form').scrollIntoView();
                 cy.contains('Please provide valid variable key').should('be.visible');
                 cy.contains('Please provide valid environment variable key').should('be.visible');
                 cy.contains('Please provide valid output name').should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
-                cy.get('.error.message li').should('have.length', 8);
             });
         });
 
@@ -590,7 +571,6 @@ describe('Blueprints widget', () => {
             addDuplicatedNames('Outputs', 'name');
 
             cy.clickButton('Create');
-            cy.contains('Errors in the form').scrollIntoView();
             cy.contains('Variable keys must be unique, duplicates are not allowed').should('be.visible');
             cy.contains('Environment variable keys must be unique, duplicates are not allowed').should('be.visible');
             cy.contains('Outputs must be unique, duplicates are not allowed').should('be.visible');
@@ -606,7 +586,6 @@ describe('Blueprints widget', () => {
             setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
-            cy.contains('Errors in the form').scrollIntoView();
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
         });
 
@@ -618,7 +597,6 @@ describe('Blueprints widget', () => {
             setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
-            cy.contains('Errors in the form').scrollIntoView();
             cy.contains(`Please provide valid blueprint description`).should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
             cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
@@ -741,7 +719,7 @@ describe('Blueprints widget', () => {
                     typeTerraformModuleUrl(incorrectPublicGitFileUrl);
                     terraformModuleDropdownHasOptions(false);
 
-                    cy.get(errorBoxSelector).contains('The URL is not accessible').should('exist');
+                    cy.contains('The URL is not accessible').should('exist');
                 });
             });
 
@@ -752,7 +730,7 @@ describe('Blueprints widget', () => {
                     typeTerraformModuleUrl(privateGitFileUrl);
                     terraformModuleDropdownHasOptions(false);
 
-                    cy.get(errorBoxSelector).contains('Git Authentication failed').should('exist');
+                    cy.contains('Git Authentication failed').should('exist');
                 });
             });
         });
