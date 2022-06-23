@@ -1,6 +1,6 @@
 describe('Create deployment button widget should allow configuring', () => {
     const widgetId = 'deploymentButton';
-    const resourcePrefix = 'deploy_btn_config_test_';
+    const resourcePrefix = 'a_deploy_btn_config_test_';
     const labelsBlueprint = `${resourcePrefix}labels`;
     const withoutLabelsBlueprint = `${resourcePrefix}without_labels`;
 
