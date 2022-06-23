@@ -592,22 +592,18 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).scrollIntoView().should('be.visible');
         });
 
-        it('validate blueprint description', () => {
+        it.only('validate blueprint description', () => {
             openTerraformModal();
 
             typeToTextarea('Blueprint description', 'Invalid string containing non ascii Łódź');
 
             cy.clickButton('Create');
-            cy.contains('Blueprint description')
-                .scrollIntoView()
-                .contains(`Please provide valid blueprint description`)
-                .should('be.visible');
+            cy.contains('Blueprint description').scrollIntoView();
+            cy.contains(`Please provide valid blueprint description`).should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
             cy.clickButton('Create');
-            cy.contains('Blueprint description')
-                .scrollIntoView()
-                .contains(`Please provide valid blueprint description`)
-                .should('not.be.visible');
+            cy.contains('Blueprint description').scrollIntoView();
+            cy.contains(`Please provide valid blueprint description`).should('not.exist');
         });
 
         it('validate outputs and inputs auto-import', () => {
