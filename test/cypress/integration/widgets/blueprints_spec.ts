@@ -481,14 +481,14 @@ describe('Blueprints widget', () => {
                 addFirstSegmentRow('Environment variables');
                 addFirstSegmentRow('Outputs');
                 cy.clickButton('Create');
-                cy.contains('Please provide blueprint name').should('be.visible');
+                cy.contains('Please provide blueprint name').scrollIntoView().should('be.visible');
                 cy.contains('Please provide Terraform template').should('be.visible');
-                cy.contains('Please provide resource location').should('be.visible');
-                cy.contains('Please provide variable key').should('be.visible');
+                cy.contains('Please provide resource location').scrollIntoView().should('be.visible');
+                cy.contains('Please provide variable key').scrollIntoView().should('be.visible');
                 cy.contains('Please provide variable source').should('be.visible');
-                cy.contains('Please provide environment variable key').should('be.visible');
+                cy.contains('Please provide environment variable key').scrollIntoView().should('be.visible');
                 cy.contains('Please provide environment variable source').should('be.visible');
-                cy.contains('Please provide output name').should('be.visible');
+                cy.contains('Please provide output name').scrollIntoView().should('be.visible');
                 cy.contains('Please provide output type').should('be.visible');
                 cy.contains('Please provide Terraform output').should('be.visible');
 
@@ -499,7 +499,7 @@ describe('Blueprints widget', () => {
                     selectVariableSource('Secret');
                 });
                 cy.clickButton('Create');
-                cy.contains('Please provide variable name').should('be.visible');
+                cy.contains('Please provide variable name').scrollIntoView().should('be.visible');
                 cy.contains('Please provide environment variable name').should('be.visible');
 
                 cy.log('Check allowed characters validations');
@@ -519,8 +519,8 @@ describe('Blueprints widget', () => {
                 });
                 cy.clickButton('Create');
                 cy.contains('Please provide valid variable key').should('be.visible');
-                cy.contains('Please provide valid environment variable key').should('be.visible');
-                cy.contains('Please provide valid output name').should('be.visible');
+                cy.contains('Please provide valid environment variable key').scrollIntoView().should('be.visible');
+                cy.contains('Please provide valid output name').scrollIntoView().should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
             });
         });
@@ -570,9 +570,13 @@ describe('Blueprints widget', () => {
             addDuplicatedNames('Outputs', 'name');
 
             cy.clickButton('Create');
-            cy.contains('Variable keys must be unique, duplicates are not allowed').should('be.visible');
-            cy.contains('Environment variable keys must be unique, duplicates are not allowed').should('be.visible');
-            cy.contains('Outputs must be unique, duplicates are not allowed').should('be.visible');
+            cy.contains('Variable keys must be unique, duplicates are not allowed')
+                .scrollIntoView()
+                .should('be.visible');
+            cy.contains('Environment variable keys must be unique, duplicates are not allowed')
+                .scrollIntoView()
+                .should('be.visible');
+            cy.contains('Outputs must be unique, duplicates are not allowed').scrollIntoView().should('be.visible');
         });
 
         it('validate blueprint name uniqueness', () => {
@@ -585,7 +589,7 @@ describe('Blueprints widget', () => {
             setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
-            cy.contains(`Blueprint '${existingBlueprintName}' already exists`).should('be.visible');
+            cy.contains(`Blueprint '${existingBlueprintName}' already exists`).scrollIntoView().should('be.visible');
         });
 
         it('validate blueprint description', () => {
@@ -596,9 +600,9 @@ describe('Blueprints widget', () => {
             setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
-            cy.contains(`Please provide valid blueprint description`).should('be.visible');
+            cy.contains(`Please provide valid blueprint description`).scrollIntoView().should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
-            cy.contains(`Please provide valid blueprint description`).should('not.be.visible');
+            cy.contains(`Please provide valid blueprint description`).scrollIntoView().should('not.be.visible');
         });
 
         it('validate outputs and inputs auto-import', () => {
