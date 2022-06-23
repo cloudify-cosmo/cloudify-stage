@@ -280,6 +280,17 @@ export default class LicensePage extends Component {
                         </Grid.Column>
 
                         <Grid.Column textAlign="right" verticalAlign="middle">
+                            {status === 'no_license' && (
+                                <Button
+                                    content={i18n.t('licenseManagement.getLicense', 'Get a license')}
+                                    icon="external"
+                                    color="green"
+                                    labelPosition="right"
+                                    fluid={false}
+                                    onClick={() => redirectToPage(i18n.t('licenseManagement.getLicenseLink'))}
+                                    style={{ marginRight: '0.5rem' }}
+                                />
+                            )}
                             <Button
                                 content={i18n.t('licenseManagement.goToApp', 'Go to app')}
                                 icon="arrow right"
@@ -289,17 +300,6 @@ export default class LicensePage extends Component {
                                 disabled={!isProductOperational}
                                 onClick={onGoToApp}
                             />
-                            {status === 'no_license' && (
-                                <Button
-                                    content={i18n.t('licenseManagement.getLicense', 'Get a license')}
-                                    icon="external"
-                                    color="green"
-                                    labelPosition="right"
-                                    fluid={false}
-                                    onClick={() => redirectToPage(i18n.t('licenseManagement.getLicenseLink'))}
-                                    style={{ marginLeft: '0.5rem' }}
-                                />
-                            )}
                         </Grid.Column>
                     </Grid>
                 </MessageContainer>
