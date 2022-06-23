@@ -141,6 +141,9 @@ describe('Templates segment', () => {
             cy.get('[option-value="T2"]').click();
             clickOnHeader();
 
+            cy.log('Add pages');
+            cy.contains('Available pages').click().parent().contains('users').find('.add').click();
+
             cy.log('Remove page menu items');
             cy.contains('Selected page menu items').within(() => {
                 cy.contains('logs').find('.minus').click();
@@ -154,7 +157,12 @@ describe('Templates segment', () => {
         cy.get('.modal').should('not.exist');
 
         cy.log('Verify template changes');
-        verifyTemplateRow('Another Template', ['deployment', 'plugins'], ['manager', 'operations'], ['T1', 'T2']);
+        verifyTemplateRow(
+            'Another Template',
+            ['deployment', 'plugins', 'users'],
+            ['manager', 'operations'],
+            ['T1', 'T2']
+        );
 
         cy.log('Remove template');
         cy.get('.blue.segment');
