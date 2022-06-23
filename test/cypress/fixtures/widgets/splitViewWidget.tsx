@@ -22,7 +22,7 @@ Stage.defineWidget({
                         widget: {
                             id: 'pluginsCatalog',
                             configuration: {
-                                jsonPath: 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json'
+                                jsonPath: 'https://marketplace.cloudify.co/plugins/catalog'
                             },
                             definition: 'pluginsCatalog',
                             drillDownPages: {},
