@@ -1,6 +1,6 @@
 describe('Create deployment button widget should allow configuring', () => {
     const widgetId = 'deploymentButton';
-    const resourcePrefix = 'a_deploy_btn_config_test_';
+    const resourcePrefix = 'deploy_btn_config_test_';
     const labelsBlueprint = `${resourcePrefix}labels`;
     const withoutLabelsBlueprint = `${resourcePrefix}without_labels`;
 
@@ -43,8 +43,11 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.get('div.deploymentButtonWidget button').click();
         cy.get('div.deployBlueprintModal').within(() => {
             openDropdown('blueprintName').within(() => {
-                cy.contains(withoutLabelsBlueprint).should('exist');
                 cy.contains(labelsBlueprint).should('not.exist');
+            });
+            cy.setSearchableDropdownValue('Blueprint', withoutLabelsBlueprint);
+            openDropdown('blueprintName').within(() => {
+                cy.contains(withoutLabelsBlueprint).should('exist');
             });
             cy.contains('Cancel').click();
         });
@@ -62,6 +65,7 @@ describe('Create deployment button widget should allow configuring', () => {
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
+            cy.setSearchableDropdownValue('Blueprint', labelsBlueprint);
             openDropdown('blueprintName').within(() => {
                 cy.contains(labelsBlueprint).should('exist');
             });
