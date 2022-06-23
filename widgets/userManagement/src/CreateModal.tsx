@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import Actions from './actions';
-import { tenantChange } from '../../common/src/tenants/utils';
+import { mapTenantsToRoles } from '../../common/src/tenants/utils';
 
 export default function CreateModal({ toolbox }) {
     const { useEffect, useState, useRef } = React;
