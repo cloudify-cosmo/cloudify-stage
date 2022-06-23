@@ -1,9 +1,10 @@
 import Consts from 'app/utils/consts';
 import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
+import PluginUtils from 'app/utils/shared/PluginUtils';
 import { minutesToMs } from '../support/resource_commons';
 
-const pluginsCatalogUrl = 'http://repository.cloudifysource.org/cloudify/wagons/v2_plugins.json';
+const pluginsCatalogUrl = 'https://marketplace.cloudify.co/plugins/catalog';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
@@ -95,11 +96,11 @@ function interceptPluginsUpload(plugins: string[]) {
                 method: 'POST',
                 pathname: '/console/plugins/upload',
                 query: {
-                    title: catalogEntry.title,
+                    title: catalogEntry.display_name,
                     visibility: 'tenant',
-                    iconUrl: catalogEntry.icon,
-                    yamlUrl: catalogEntry.link,
-                    wagonUrl: RegExp(catalogEntry.wagons.map(wagon => escapeRegExp(wagon.url)).join('|'))
+                    iconUrl: catalogEntry.logo_url,
+                    yamlUrl: PluginUtils.getYamlUrl(catalogEntry),
+                    wagonUrl: RegExp(catalogEntry.wagon_urls.map(wagon => escapeRegExp(wagon.url)).join('|'))
                 }
             }).as(toAlias(plugin));
         });
@@ -140,6 +141,12 @@ describe('Getting started modal', () => {
     before(() => cy.activate());
 
     describe('without mocked pages', () => {
+        before(() => {
+            cy.cfyRequest('/users/admin', 'POST', null, {
+                show_getting_started: true
+            });
+        });
+
         beforeEach(() => {
             cy.mockLoginWithoutWaiting({ disableGettingStarted: false }).waitUntilAppLoaded();
         });

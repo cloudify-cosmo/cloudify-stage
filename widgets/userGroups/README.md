@@ -42,7 +42,8 @@ Please notice that by belonging to several groups, users might be assigned to a 
 3. (Optional) If you want to add user group that is configured in your LDAP/AD system, enter the LDAP Group Distinguished Name (DN). The format must be `CN=GroupName,OU=OUName,DC=Domaincomponent,DC=DomainComponent`, for example `CN=ldapwiki,OU=groups,DC=example,DC=com`.   
    This field will not be visible if LDAP is disabled in {{< param product_name >}}.
 4. Check **Admin** checkbox if you want group members to have administrator privileges.
-5. Click **Add**.
+5. Select tenant(s) from **Tenants** list and assign a tenant-specific role(s) for the user group.
+6. Click **Add**.
 
 Like Users, User-Groups need to be assigned with tenants in order to access {{< param product_name >}} resources. The assignment of a group to a tenant is done in the exact same manner as single users, and likewise require specifying a role in the tenant.
 
