@@ -595,9 +595,7 @@ describe('Blueprints widget', () => {
         it('validate blueprint description', () => {
             openTerraformModal();
 
-            cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_dpeloyment1234');
             typeToTextarea('Blueprint description', 'Invalid string containing non ascii Łódź');
-            setTemplateDetails(singleModuleTerraformTemplateUrl, 'local');
 
             cy.clickButton('Create');
             cy.contains(`Please provide valid blueprint description`).scrollIntoView().should('be.visible');
