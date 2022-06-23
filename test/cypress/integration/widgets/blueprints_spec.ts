@@ -518,7 +518,7 @@ describe('Blueprints widget', () => {
                     cy.get('input[name=terraformOutput]').type('$');
                 });
                 cy.clickButton('Create');
-                cy.contains('Please provide valid variable key').should('be.visible');
+                cy.contains('Please provide valid variable key').scrollIntoView().should('be.visible');
                 cy.contains('Please provide valid environment variable key').scrollIntoView().should('be.visible');
                 cy.contains('Please provide valid output name').scrollIntoView().should('be.visible');
                 cy.contains('Please provide valid Terraform output').should('be.visible');
@@ -602,6 +602,7 @@ describe('Blueprints widget', () => {
             cy.clickButton('Create');
             cy.contains(`Please provide valid blueprint description`).scrollIntoView().should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
+            cy.clickButton('Create');
             cy.contains(`Please provide valid blueprint description`).scrollIntoView().should('not.be.visible');
         });
 
