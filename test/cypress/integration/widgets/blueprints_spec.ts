@@ -598,10 +598,16 @@ describe('Blueprints widget', () => {
             typeToTextarea('Blueprint description', 'Invalid string containing non ascii Łódź');
 
             cy.clickButton('Create');
-            cy.contains('Blueprint description').scrollIntoView().contains(`Please provide valid blueprint description`).should('be.visible');
+            cy.contains('Blueprint description')
+                .scrollIntoView()
+                .contains(`Please provide valid blueprint description`)
+                .should('be.visible');
             typeToTextarea('Blueprint description', 'VALID ASCII STRING. \n!@#$%^&*()[]?\ts');
             cy.clickButton('Create');
-            cy.contains('Blueprint description').scrollIntoView().contains(`Please provide valid blueprint description`).should('not.be.visible');
+            cy.contains('Blueprint description')
+                .scrollIntoView()
+                .contains(`Please provide valid blueprint description`)
+                .should('not.be.visible');
         });
 
         it('validate outputs and inputs auto-import', () => {
