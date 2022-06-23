@@ -51,7 +51,7 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
 
         let formattedData = data;
         if (_.get(widget.configuration, 'sortByName', false)) {
-            formattedData = _.sortBy(data, item => item.pluginDescription.title);
+            formattedData = _.sortBy(data, item => item.pluginDescription.display_name);
         }
 
         return <PluginsCatalogList widget={widget} items={formattedData} toolbox={toolbox} />;

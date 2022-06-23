@@ -45,31 +45,37 @@ describe('(Utils) Manager', () => {
             },
             roles: [
                 {
+                    id: 1,
                     name: 'sys_admin',
                     type: 'system_role',
                     description: 'User that can manage Cloudify'
                 },
                 {
+                    id: 2,
                     name: 'manager',
                     type: 'tenant_role',
                     description: 'User that can manage tenants'
                 },
                 {
+                    id: 3,
                     name: 'user',
                     type: 'tenant_role',
                     description: 'Regular user, can perform actions on tenants resources'
                 },
                 {
+                    id: 4,
                     name: 'operations',
                     type: 'tenant_role',
                     description: 'User that can deploy and execute workflows, but cannot manage blueprints or plugins.'
                 },
                 {
+                    id: 5,
                     name: 'viewer',
                     type: 'tenant_role',
                     description: 'User that can only view tenant resources'
                 },
                 {
+                    id: 6,
                     name: 'default',
                     type: 'system_role',
                     description: 'User exists, but have no permissions'
@@ -129,11 +135,13 @@ describe('(Utils) Manager', () => {
     it('allows to get system roles', () => {
         expect(manager.getSystemRoles()).toEqual([
             {
+                id: 1,
                 description: 'User that can manage Cloudify',
                 name: 'sys_admin',
                 type: 'system_role'
             },
             {
+                id: 6,
                 description: 'User exists, but have no permissions',
                 name: 'default',
                 type: 'system_role'

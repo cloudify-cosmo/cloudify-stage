@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { minutesToMs } from '../../support/resource_commons';
 
 describe('Deployment Wizard Buttons widget', () => {
@@ -31,7 +30,7 @@ describe('Deployment Wizard Buttons widget', () => {
         cy.get('.minus').click();
         next();
 
-        function setSecretValue(name, value) {
+        function setSecretValue(name: string, value: string) {
             cy.get(`tr[name=${name}]`).within(() => {
                 cy.get('i.yellow.warning.icon');
                 cy.get('input').type(value);

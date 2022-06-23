@@ -18,7 +18,12 @@ export interface ManagerData {
     license: LicenseData;
     maintenance: string;
     permissions: Record<string, any>;
-    roles: any[];
+    roles: {
+        id: number;
+        name: string;
+        type: string;
+        description: string;
+    }[];
     tenants: TenantsData;
     version: Partial<VersionResponse>;
 }
