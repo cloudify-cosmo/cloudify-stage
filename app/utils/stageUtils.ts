@@ -12,6 +12,7 @@ import type { ManagerData } from '../reducers/managerReducer';
 import ExecutionUtils from './shared/ExecutionUtils';
 import IdpUtils from './shared/IdpUtils';
 import JsonUtils from './shared/JsonUtils';
+import PluginUtils from './shared/PluginUtils';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
@@ -25,6 +26,8 @@ export default class StageUtils {
     static Idp = IdpUtils;
 
     static Json = JsonUtils;
+
+    static Plugin = PluginUtils;
 
     static Time = TimeUtils;
 

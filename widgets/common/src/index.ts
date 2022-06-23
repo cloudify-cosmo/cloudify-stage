@@ -19,6 +19,7 @@ import StagePropTypes from './props';
 import Roles from './roles';
 import SecretActions from './secrets/SecretActions';
 import TerraformModal from './terraformModal';
+import Tenants from './tenants';
 import EventUtils from './utils/EventUtils';
 
 const StageCommon = {
@@ -40,6 +41,7 @@ const StageCommon = {
     Roles,
     SecretActions,
     TerraformModal,
+    Tenants,
     EventUtils,
     Consts
 };

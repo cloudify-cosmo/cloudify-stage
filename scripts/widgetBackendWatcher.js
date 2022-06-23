@@ -4,8 +4,9 @@ const path = require('path');
 
 const appConfig = require('../conf/config.json');
 
-const widgetBackendFilename = `${appConfig.widgets.backendFilename}.${appConfig.widgets.backendFilenameExtensions[0]}`;
-const widgetBackendFilesGlob = `./widgets/*/src/${widgetBackendFilename}`;
+const widgetBackendFilesGlob = `./widgets/*/src/${
+    appConfig.widgets.backendFilename
+}.{${appConfig.widgets.backendFilenameExtensions.join()}}`;
 
 const logger = {
     log: logString => console.log(`[widgetBackendWatcher] ${logString}`),
@@ -14,7 +15,7 @@ const logger = {
 
 // Update Widget Backend file
 const updateWidgetBackendFile = (srcFilePath, event) => {
-    const destFilePath = path.join(path.dirname(srcFilePath), '..', widgetBackendFilename);
+    const destFilePath = path.join(path.dirname(srcFilePath), '..', path.basename(srcFilePath));
 
     switch (event) {
         case 'add':
