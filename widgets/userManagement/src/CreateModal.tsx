@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import Actions from './actions';
+import { tenantChange } from '../../common/src/tenants/utils';
 
 export default function CreateModal({ toolbox }) {
     const { useEffect, useState, useRef } = React;
@@ -31,12 +32,12 @@ export default function CreateModal({ toolbox }) {
         availableTenantsPromise.current.promise
             .then(resolvedTenants => {
                 unsetLoading();
-                setAvailableTenants(resolvedTenants);
+                setAvailableTenants(resolvedTenants.items);
             })
             .catch(err => {
                 if (!err.isCanceled) {
                     unsetLoading();
-                    setAvailableTenants({ items: [] });
+                    setAvailableTenants([]);
                 }
             });
     });
@@ -100,28 +101,20 @@ export default function CreateModal({ toolbox }) {
     }
 
     function handleTenantChange(proxy, field) {
-        const newTenants = {};
-        _.forEach(field.value, tenant => {
-            newTenants[tenant] =
-                tenants[tenant] || Stage.Common.Roles.Utils.getDefaultRoleName(toolbox.getManagerState().roles);
-        });
+        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
         setTenants(newTenants);
     }
 
     function handleRoleChange(tenant, role) {
-        const newTenants = { ...tenants };
-        newTenants[tenant] = role;
+        const newTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
     }
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
+    const { TenantsDropdown } = Stage.Common.Tenants;
 
     const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
-
-    const options = _.map(availableTenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
-    });
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose} className="addUserModal">
@@ -156,16 +149,11 @@ export default function CreateModal({ toolbox }) {
                         <Message>Admin users have full permissions to all tenants on the manager.</Message>
                     )}
 
-                    <Form.Field label="Tenants">
-                        <Form.Dropdown
-                            name="tenants"
-                            multiple
-                            selection
-                            options={options}
-                            value={Object.keys(tenants)}
-                            onChange={handleTenantChange}
-                        />
-                    </Form.Field>
+                    <TenantsDropdown
+                        value={Object.keys(tenants)}
+                        availableTenants={availableTenants}
+                        onChange={handleTenantChange}
+                    />
                     <RolesPicker
                         onUpdate={handleRoleChange}
                         resources={tenants}
