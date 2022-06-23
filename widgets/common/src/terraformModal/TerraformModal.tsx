@@ -648,26 +648,27 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             <Modal.Content>
                 <Form scrollToError>
-                    <Form.Field label={t(`blueprintName`)} required>
-                        <Form.Input
-                            value={blueprintName}
-                            onChange={setBlueprintName}
-                            error={getFieldError('blueprintName')}
-                        >
-                            <input maxLength={inputMaxLength} />
-                        </Form.Input>
-                    </Form.Field>
-                    <Form.Field label={t(`blueprintDescription`)}>
-                        <Form.TextArea
-                            name="blueprintDescription"
-                            value={blueprintDescription}
-                            onChange={setBlueprintDescription}
-                            rows={5}
-                            error={getFieldError('blueprintDescription')}
-                        />
-                    </Form.Field>
+                    <Form.Input
+                        label={t(`blueprintName`)}
+                        required
+                        value={blueprintName}
+                        onChange={setBlueprintName}
+                        error={getFieldError('blueprintName')}
+                    >
+                        <input maxLength={inputMaxLength} />
+                    </Form.Input>
+                    <Form.TextArea
+                        label={t(`blueprintDescription`)}
+                        name="blueprintDescription"
+                        value={blueprintDescription}
+                        onChange={setBlueprintDescription}
+                        rows={5}
+                        error={getFieldError('blueprintDescription')}
+                    />
                     <Form.Field label={t(`terraformVersion`)} required>
                         <Form.Dropdown
+                            required
+                            label={t(`terraformVersion`)}
                             search
                             selection
                             options={terraformVersionOptions}
@@ -698,31 +699,27 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                         onChange={handleUrlAuthenticationChange}
                                     />
                                 </Form.Field>
-                                <Form.Field>
-                                    <Ref innerRef={usernameInputRef}>
-                                        <Form.Input
-                                            error={getFieldError('username')}
-                                            disabled={!urlAuthentication}
-                                            value={username}
-                                            onChange={setUsername}
-                                            label={t(`username`)}
-                                            onBlur={handleTemplateUrlBlur}
-                                            required={urlAuthentication}
-                                        />
-                                    </Ref>
-                                </Form.Field>
-                                <Form.Field>
+                                <Ref innerRef={usernameInputRef}>
                                     <Form.Input
-                                        error={getFieldError('password')}
+                                        error={getFieldError('username')}
                                         disabled={!urlAuthentication}
-                                        value={password}
-                                        onChange={setPassword}
-                                        label={t(`password`)}
+                                        value={username}
+                                        onChange={setUsername}
+                                        label={t(`username`)}
                                         onBlur={handleTemplateUrlBlur}
                                         required={urlAuthentication}
-                                        type="password"
                                     />
-                                </Form.Field>
+                                </Ref>
+                                <Form.Input
+                                    error={getFieldError('password')}
+                                    disabled={!urlAuthentication}
+                                    value={password}
+                                    onChange={setPassword}
+                                    label={t(`password`)}
+                                    onBlur={handleTemplateUrlBlur}
+                                    required={urlAuthentication}
+                                    type="password"
+                                />
                             </Form.Group>
                             <Form.Field label={t(`resourceLocation`)} required error={getFieldError('resource')}>
                                 <Form.Dropdown
