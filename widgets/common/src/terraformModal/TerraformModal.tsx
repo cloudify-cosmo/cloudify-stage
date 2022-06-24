@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
@@ -252,7 +252,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
     const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
-    const { getFieldError, setFieldError, cleanFormErrors } = useFormErrors('terraformModal');
+    const { getFieldError, setFieldError, cleanFormErrors, fieldErrors } = useFormErrors('terraformModal');
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [blueprintDescription, setBlueprintDescription] = useInput('');
@@ -272,6 +272,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
 
+    const formHeaderErrors = useMemo(() => (fieldErrors ? [] : undefined), [fieldErrors]);
+
+    const handleOnHideModal = useCallback(() => {
+        cleanFormErrors();
+        onHide();
+    }, [onHide, cleanFormErrors]);
+
     useEffect(
         function setFocusOnUsernameInput() {
             if (urlAuthentication && !username) {
@@ -286,6 +293,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (!resourceLocation) {
                 return;
             }
+            setFieldError('resource');
 
             function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
                 const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
@@ -639,7 +647,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     return (
-        <Modal open onClose={onHide} id="terraformModal">
+        <Modal open onClose={handleOnHideModal} id="terraformModal">
             {processPhase && <LoadingOverlay message={t(`progress.${processPhase}`)} />}
 
             <Modal.Header>
@@ -647,7 +655,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             </Modal.Header>
 
             <Modal.Content>
-                <Form scrollToError>
+                <Form scrollToError errors={formHeaderErrors}>
                     <Form.Input
                         label={t(`blueprintName`)}
                         required
@@ -772,7 +780,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             <Confirm
                 open={cancelConfirmVisible}
                 content={t('cancelConfirm')}
-                onConfirm={onHide}
+                onConfirm={handleOnHideModal}
                 onCancel={hideCancelConfirm}
             />
             <Confirm
