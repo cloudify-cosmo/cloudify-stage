@@ -185,7 +185,7 @@ DescriptionMessage.propTypes = {
     status: PropTypes.oneOf([Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED, Consts.LICENSE.ACTIVE]).isRequired
 };
 
-interface LicensePageProps {
+export interface LicensePageProps {
     canUploadLicense: boolean;
     isProductOperational: boolean;
     onLicenseChange: (license: string) => void;
