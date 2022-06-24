@@ -1,12 +1,16 @@
 // @ts-nocheck File not migrated fully to TS
 
 const WorkflowsPropType = PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string.isRequired, plugin: PropTypes.string.isRequired })
+    PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        plugin: PropTypes.string.isRequired,
+        is_available: PropTypes.bool.isRequired
+    })
 );
 
 function filterWorkflows(workflows) {
     const updateWorkflow = 'update';
-    return _.filter(workflows, workflow => workflow.name !== updateWorkflow);
+    return _.filter(workflows, workflow => workflow.is_available && workflow.name !== updateWorkflow);
 }
 
 function StyledTitle({ name, bold }) {
