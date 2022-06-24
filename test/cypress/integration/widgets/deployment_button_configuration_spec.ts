@@ -42,10 +42,14 @@ describe('Create deployment button widget should allow configuring', () => {
     it('label filter rules', () => {
         cy.get('div.deploymentButtonWidget button').click();
         cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName').within(() => {
-                cy.contains(withoutLabelsBlueprint).should('exist');
-                cy.contains(labelsBlueprint).should('not.exist');
-            });
+            cy.getField('Blueprint')
+                .click()
+                .within(() => {
+                    cy.get('input').type(labelsBlueprint);
+                    cy.contains(labelsBlueprint).should('not.exist');
+                    cy.get('input').clear().type(withoutLabelsBlueprint);
+                    cy.contains('[role="listbox"]', withoutLabelsBlueprint).should('exist');
+                });
             cy.contains('Cancel').click();
         });
         cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
@@ -62,9 +66,14 @@ describe('Create deployment button widget should allow configuring', () => {
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
-            openDropdown('blueprintName').within(() => {
-                cy.contains(labelsBlueprint).should('exist');
-            });
+            cy.getField('Blueprint')
+                .click()
+                .within(() => {
+                    cy.get('input').type(labelsBlueprint);
+                    cy.contains('[role="listbox"]', labelsBlueprint).should('exist');
+                    cy.get('input').clear().type(withoutLabelsBlueprint);
+                    cy.contains('[role="listbox"]', withoutLabelsBlueprint).should('exist');
+                });
             cy.contains('Cancel').click();
         });
     });
