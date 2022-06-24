@@ -45,8 +45,9 @@ describe('Create deployment button widget should allow configuring', () => {
             cy.getField('Blueprint')
                 .click()
                 .within(() => {
+                    cy.get('input').type(labelsBlueprint);
                     cy.contains(labelsBlueprint).should('not.exist');
-                    cy.get('input').type(withoutLabelsBlueprint);
+                    cy.get('input').clear().type(withoutLabelsBlueprint);
                     cy.contains('[role="listbox"]', withoutLabelsBlueprint).should('exist');
                 });
             cy.contains('Cancel').click();
