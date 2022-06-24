@@ -8,6 +8,8 @@ export type Workflow = {
     name: string;
     parameters: Record<string, { description?: string; default?: any; type?: any }>;
     plugin: string;
+    // eslint-disable-next-line camelcase
+    is_available: boolean;
 };
 
 export type WorkflowParameters = Record<string, string>;
