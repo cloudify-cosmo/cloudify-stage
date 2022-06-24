@@ -592,7 +592,7 @@ describe('Blueprints widget', () => {
             cy.contains(`Blueprint '${existingBlueprintName}' already exists`).scrollIntoView().should('be.visible');
         });
 
-        it.only('validate blueprint description', () => {
+        it('validate blueprint description', () => {
             openTerraformModal();
 
             typeToTextarea('Blueprint description', 'Invalid string containing non ascii Łódź');
