@@ -1,22 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
+import type { ButtonProps } from 'semantic-ui-react';
+import styled from 'styled-components';
 
+import type { LicenseResponse } from '../../backend/routes/Auth.types';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
-import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
+import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import type Manager from '../utils/Manager';
 
+type LicenseStatus = 'no_license' | 'expired_license' | 'active_license';
+
+interface Field {
+    name: string;
+    value: unknown;
+    type: string;
+    checked?: string;
+}
+
+interface LicenseSwitchButtonProps {
+    color: ButtonProps['color'];
+    isEditLicenseActive: boolean;
+    onClick: () => void;
+}
 const t = StageUtils.getT('licenseManagement');
 
-function LicenseSwitchButton({ color, isEditLicenseActive, onClick }) {
+function LicenseSwitchButton({ color, isEditLicenseActive, onClick }: LicenseSwitchButtonProps) {
     return (
         <Button
             content={isEditLicenseActive ? t('showLicense') : t('editLicense')}
@@ -35,25 +51,57 @@ LicenseSwitchButton.propTypes = {
     onClick: PropTypes.func.isRequired
 };
 
-function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status }) {
+interface DescriptionMessageProps {
+    canUploadLicense: boolean;
+    isTrial: boolean;
+    isEditLicenseActive: boolean;
+    status: LicenseStatus;
+    onLicenseButtonClick: () => void;
+}
+function DescriptionMessage({
+    canUploadLicense,
+    isTrial,
+    isEditLicenseActive,
+    onLicenseButtonClick,
+    status
+}: DescriptionMessageProps) {
+    const { redirectToPage } = StageUtils.Url;
+    const StyledMessageContent = styled(Message.Content)`
+        &&&& {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    `;
     switch (status) {
         case Consts.LICENSE.EMPTY:
             return (
                 <Message negative icon>
                     <Icon name="ban" />
-                    <Message.Content>
-                        <Message.Header>{t('subheader.noLicense')}</Message.Header>
-                        {canUploadLicense ? (
-                            <span
-                                // eslint-disable-next-line react/no-danger
-                                dangerouslySetInnerHTML={{
-                                    __html: t('action.canUpload.noLicense')
-                                }}
-                            />
-                        ) : (
-                            <span>{t('action.cannotUpload.noLicense')}</span>
-                        )}
-                    </Message.Content>
+                    <StyledMessageContent>
+                        <div>
+                            <Message.Header>{t('subheader.noLicense')}</Message.Header>
+                            {canUploadLicense ? (
+                                <span
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                        __html: t('action.canUpload.noLicense')
+                                    }}
+                                />
+                            ) : (
+                                <span>{t('action.cannotUpload.noLicense')}</span>
+                            )}
+                        </div>
+                        <Button
+                            content={t('getLicense')}
+                            icon="external"
+                            color="red"
+                            labelPosition="right"
+                            fluid={false}
+                            onClick={() => redirectToPage(t('getLicenseLink'))}
+                            style={{ minWidth: '160px' }}
+                        />
+                    </StyledMessageContent>
                 </Message>
             );
         case Consts.LICENSE.EXPIRED:
@@ -137,8 +185,24 @@ DescriptionMessage.propTypes = {
     status: PropTypes.oneOf([Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED, Consts.LICENSE.ACTIVE]).isRequired
 };
 
-export default class LicensePage extends Component {
-    constructor(props) {
+interface LicensePageProps {
+    canUploadLicense: boolean;
+    isProductOperational: boolean;
+    onLicenseChange: (license: string) => void;
+    onGoToApp: () => void;
+    status: LicenseStatus;
+    license: LicenseResponse;
+    manager: Manager;
+}
+
+interface LicensePageState {
+    error: string | null;
+    isLoading: boolean;
+    isEditLicenseActive: boolean;
+    license: string;
+}
+export default class LicensePage extends Component<LicensePageProps, LicensePageState> {
+    constructor(props: LicensePageProps) {
         super(props);
 
         this.state = {
@@ -171,8 +235,10 @@ export default class LicensePage extends Component {
         this.setState({ error: null });
     }
 
-    onLicenseEdit(proxy, field) {
-        this.setState(Form.fieldNameValue(field));
+    onLicenseEdit(_proxy: any, field: Field) {
+        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        const licenseString = fieldNameValue.license as string;
+        this.setState({ license: licenseString });
     }
 
     onLicenseUpload() {
@@ -199,11 +265,10 @@ export default class LicensePage extends Component {
         const { license: licenseString, error, isLoading, isEditLicenseActive } = this.state;
 
         const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
-        const { redirectToPage } = StageUtils.Url;
 
         return (
             <FullScreenSegment>
-                <HeaderBar>
+                <HeaderBar className={undefined}>
                     <Banner hideOnSmallScreen={false} />
                 </HeaderBar>
 
@@ -245,17 +310,6 @@ export default class LicensePage extends Component {
                         </Grid.Column>
 
                         <Grid.Column textAlign="right" verticalAlign="middle">
-                            {status !== 'no_license' && (
-                                <Button
-                                    content={t('getLicense')}
-                                    icon="external"
-                                    color="green"
-                                    labelPosition="right"
-                                    fluid={false}
-                                    onClick={() => redirectToPage(t('getLicenseLink'))}
-                                    style={{ marginRight: '0.5rem' }}
-                                />
-                            )}
                             <Button
                                 content={t('goToApp')}
                                 icon="arrow right"
@@ -272,13 +326,3 @@ export default class LicensePage extends Component {
         );
     }
 }
-
-LicensePage.propTypes = {
-    canUploadLicense: PropTypes.bool.isRequired,
-    isProductOperational: PropTypes.bool.isRequired,
-    license: PropTypes.shape({ trial: PropTypes.bool }).isRequired,
-    onLicenseChange: PropTypes.func.isRequired,
-    onGoToApp: PropTypes.func.isRequired,
-    status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
-    manager: PropTypes.shape({ doGet: PropTypes.func, doPut: PropTypes.func }).isRequired
-};
