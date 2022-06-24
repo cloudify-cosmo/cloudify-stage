@@ -142,7 +142,7 @@ describe('Templates segment', () => {
             clickOnHeader();
 
             cy.log('Add pages');
-            cy.contains('Available pages').click().parent().contains('tmm').find('.add').click();
+            cy.contains('Available pages').click().parent().contains('users').find('.add').click();
 
             cy.log('Remove page menu items');
             cy.contains('Selected page menu items').within(() => {
@@ -159,7 +159,7 @@ describe('Templates segment', () => {
         cy.log('Verify template changes');
         verifyTemplateRow(
             'Another Template',
-            ['deployment', 'plugins', 'tmm'],
+            ['deployment', 'plugins', 'users'],
             ['manager', 'operations'],
             ['T1', 'T2']
         );
