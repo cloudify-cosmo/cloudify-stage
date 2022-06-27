@@ -1,11 +1,11 @@
-import type { StrictTextAreaProps } from 'semantic-ui-react';
+import type { FormTextAreaProps } from 'semantic-ui-react';
 
-type MultilineFieldProps = Pick<StrictTextAreaProps, 'value' | 'onChange'>;
+type MultilineFieldProps = Pick<FormTextAreaProps, 'name' | 'placeholder' | 'value' | 'onChange'>;
 
 const { Form } = Stage.Basic;
 
-const MultilineField = ({ onChange, value }: MultilineFieldProps) => {
-    return <Form.TextArea name="secretValue" placeholder="Secret value" autoHeight value={value} onChange={onChange} />;
+const MultilineField = ({ name, placeholder, value, onChange }: MultilineFieldProps) => {
+    return <Form.TextArea name={name} placeholder={placeholder} autoHeight value={value} onChange={onChange} />;
 };
 
 export default MultilineField;

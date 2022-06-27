@@ -19,6 +19,7 @@ import StagePropTypes from './props';
 import Roles from './roles';
 import SecretActions from './secrets/SecretActions';
 import TerraformModal from './terraformModal';
+import Secrets from './secrets';
 import Tenants from './tenants';
 import EventUtils from './utils/EventUtils';
 
@@ -40,6 +41,7 @@ const StageCommon = {
     Plugins,
     Roles,
     SecretActions,
+    Secrets,
     TerraformModal,
     Tenants,
     EventUtils,
