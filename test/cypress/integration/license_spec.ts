@@ -122,5 +122,10 @@ describe('License Management', () => {
                 uploadLicense(license.file).then(() => verifyError(license.error));
             });
         });
+
+        it('shows inactive license error', () => {
+            cy.cfyRequest('/license', 'DELETE');
+            cy.contains('Get a license');
+        });
     });
 });
