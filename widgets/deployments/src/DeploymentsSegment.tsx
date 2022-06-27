@@ -26,9 +26,12 @@ export default function DeploymentsSegment({
     widget
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
+    const { IdPopup } = Stage.Shared;
+    const { useResettableState } = Stage.Hooks;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
     const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
+    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
 
     return (
         <DataSegment
@@ -44,6 +47,9 @@ export default function DeploymentsSegment({
                     selected={item.isSelected}
                     className={`${item.id} deploymentSegment`}
                     onClick={() => onSelectDeployment(item)}
+                    onMouseOver={setHoveredDeployment}
+                    onFocus={setHoveredDeployment}
+                    onMouseOut={clearHoveredDeployment}
                 >
                     <DeploymentDetails
                         customName={
@@ -55,12 +61,13 @@ export default function DeploymentsSegment({
                                     toolbox={toolbox}
                                 />
                                 {showExecutionStatusLabel && <Divider hidden />}
+                                <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
                                 <Header
                                     as="h3"
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <DeploymentName title={formatName(item)}>{formatName(item)}</DeploymentName>
+                                    <DeploymentName title={formatName(item)}>{item.display_name}</DeploymentName>
                                 </Header>
                             </div>
                         }
