@@ -32,6 +32,21 @@ function getContentType(type?: string) {
     return { 'content-type': type || 'application/json' };
 }
 
+function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
+    let filename = fallbackFilename;
+    const contentDispositionHeader = response.headers.get('content-disposition');
+
+    if (contentDispositionHeader && contentDispositionHeader.indexOf('attachment') !== -1) {
+        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+        const matches = filenameRegex.exec(contentDispositionHeader);
+        if (matches != null && matches[1]) {
+            filename = matches[1].replace(/['"]/g, '');
+        }
+    }
+
+    return filename;
+}
+
 export default class External {
     constructor(protected managerData: any) {}
 
@@ -55,7 +70,7 @@ export default class External {
         return this.ajaxCall(url, 'PATCH', requestOptions);
     }
 
-    doDownload(url: string, fileName: string) {
+    doDownload(url: string, fileName? = '') {
         return this.ajaxCall(url, 'get', { fileName });
     }
 
@@ -219,12 +234,15 @@ export default class External {
             options.credentials = 'include';
         }
 
-        if (fileName) {
+        if (!_.isUndefined(fileName)) {
             return fetch(actualUrl, options)
                 .then(this.checkStatus.bind(this))
-                .then(response => response.blob())
-                .then(blob => saveAs(blob, fileName));
+                .then(response => {
+                    const filename = getFilenameFromHeaders(response.headers, fileName);
+                    return response.blob().then(blob => saveAs(blob, filename));
+                });
         }
+
         return fetch(actualUrl, options)
             .then(response => this.checkStatus.bind(this)(response, validateAuthentication))
             .then(response => {
