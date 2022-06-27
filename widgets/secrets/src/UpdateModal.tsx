@@ -1,6 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 import SecretPropType from './props/SecretPropType';
 
+const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
+const { MultilineField } = Stage.Common.Secrets;
+
 export default function UpdateModal({ open, secret, toolbox, onHide }) {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
@@ -53,7 +56,6 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
             .finally(unsetLoading);
     }
 
-    const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
 
@@ -73,10 +75,9 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         {canUpdateSecret && (
                             <Form.Field error={errors.secretValue}>
-                                <Form.TextArea
+                                <MultilineField
                                     name="secretValue"
                                     placeholder="Secret value"
-                                    autoHeight
                                     value={secretValue}
                                     onChange={setSecretValue}
                                 />
