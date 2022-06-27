@@ -123,9 +123,9 @@ describe('License Management', () => {
             });
         });
 
-        it('shows inactive license error', () => {
+        it('handles inactive license error', () => {
             cy.cfyRequest('/license', 'DELETE');
-            cy.contains('Get a license');
+            cy.contains('Get a license').should('be.visible');
         });
     });
 });
