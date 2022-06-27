@@ -6,6 +6,7 @@ import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import type { LicenseResponse } from '../../backend/routes/Auth.types';
+import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
 import StageUtils from '../utils/stageUtils';
@@ -16,19 +17,10 @@ import UploadLicense from './license/UploadLicense';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import type Manager from '../utils/Manager';
 
-type LicenseStatus = 'no_license' | 'expired_license' | 'active_license';
-
-interface Field {
-    name: string;
-    value: unknown;
-    type: string;
-    checked?: string;
-}
-
 interface LicenseSwitchButtonProps {
     color: ButtonProps['color'];
     isEditLicenseActive: boolean;
-    onClick: () => void;
+    onClick: ButtonProps['onClick'];
 }
 const t = StageUtils.getT('licenseManagement');
 
@@ -56,8 +48,17 @@ interface DescriptionMessageProps {
     isTrial: boolean;
     isEditLicenseActive: boolean;
     status: LicenseStatus;
-    onLicenseButtonClick: () => void;
+    onLicenseButtonClick: ButtonProps['onClick'];
 }
+
+const { redirectToPage } = StageUtils.Url;
+const StyledMessageContent = styled(Message.Content)`
+    &&&& {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
 function DescriptionMessage({
     canUploadLicense,
     isTrial,
@@ -65,14 +66,6 @@ function DescriptionMessage({
     onLicenseButtonClick,
     status
 }: DescriptionMessageProps) {
-    const { redirectToPage } = StageUtils.Url;
-    const StyledMessageContent = styled(Message.Content)`
-        &&&& {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    `;
     switch (status) {
         case Consts.LICENSE.EMPTY:
             return (
@@ -189,7 +182,7 @@ export interface LicensePageProps {
     canUploadLicense: boolean;
     isProductOperational: boolean;
     onLicenseChange: (license: string) => void;
-    onGoToApp: () => void;
+    onGoToApp: ButtonProps['onClick'];
     status: LicenseStatus;
     license: LicenseResponse;
     manager: Manager;
@@ -235,7 +228,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         this.setState({ error: null });
     }
 
-    onLicenseEdit(_proxy: any, field: Field) {
+    onLicenseEdit(_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         const licenseString = fieldNameValue.license as string;
         this.setState({ license: licenseString });
