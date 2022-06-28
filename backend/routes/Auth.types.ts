@@ -50,7 +50,7 @@ export interface UserResponse {
     first_login_at: string;
     last_login_at: string;
     is_locked: boolean;
-    show_getting_started: boolean;
+    show_getting_started?: boolean;
 }
 
 export interface LicenseResponse {
