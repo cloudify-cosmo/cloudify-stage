@@ -16,6 +16,7 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
+import PasswordField from '../secrets/PasswordField';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -55,18 +56,22 @@ interface TerraformVariableValueInputProps extends CustomConfigurationComponentP
 }
 
 function TerraformVariableValueInput({ name, onChange, rowValues, value, ...rest }: TerraformVariableValueInputProps) {
+    const showPasswordField = rowValues?.source === 'secret';
+    // TODO: Rethink the name of the component
+    const FieldComponent = showPasswordField ? PasswordField : Input;
+
     return (
-        <Input
-            type={rowValues?.source === 'secret' ? 'password' : 'text'}
+        <FieldComponent
             disabled={rowValues?.duplicated}
             name={name}
             fluid
+            // TODO: Extract onChange to a separate funtion
             onChange={(event, { value: valuePassed }) => onChange?.(event, { name, value: valuePassed as string })}
             value={rowValues?.duplicated ? '' : value}
             {...rest}
         >
             <input maxLength={inputMaxLength} />
-        </Input>
+        </FieldComponent>
     );
 }
 
