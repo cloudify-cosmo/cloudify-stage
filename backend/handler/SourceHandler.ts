@@ -118,6 +118,14 @@ export async function browseArchiveFile(req, timestamp, path) {
     return fs.readFile(absolutePath, 'utf-8');
 }
 
+export function getMimeType(req, timestamp, path) {
+    const { blueprintId } = req.params;
+    const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
+    const execSync = require('child_process').execSync;
+    const mimeType = execSync('file --mime-type -b "' + absolutePath + '"').toString();
+    return mimeType.trim();
+}
+
 function saveMultipartData(req) {
     const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
     return ArchiveHelper.saveMultipartData(req, targetPath, 'archive');
