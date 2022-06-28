@@ -13,7 +13,7 @@ export interface AuthData {
     state: AuthState;
     identityProviders: IdentityProvider[];
     error: any;
-    showGettingStarted: boolean;
+    showGettingStarted?: boolean;
 }
 
 const emptyAuthState = emptyState.auth;
