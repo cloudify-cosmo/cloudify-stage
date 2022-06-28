@@ -85,7 +85,7 @@ const AccordionWorkflowsMenu: FunctionComponent<AccordionWorkflowsMenuProps> = (
     );
 };
 
-interface WorkflowsMenuProps {
+export interface WorkflowsMenuProps {
     workflows: Workflow[];
     onClick: OnWorkflowClick;
     showInPopup?: boolean;
