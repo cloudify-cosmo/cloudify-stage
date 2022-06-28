@@ -4,11 +4,21 @@ export interface PasswordFieldProps extends Pick<FormInputProps, 'name' | 'onCha
     value?: FormInputProps['value'];
 }
 
-const { Form } = Stage.Basic;
+const { Form, Icon } = Stage.Basic;
+const { useToggle } = Stage.Hooks;
 
 // TODO: Rething if the name will be appropriate after adding toggling functionality
 const PasswordField = ({ name, value, onChange }: PasswordFieldProps) => {
-    return <Form.Input type="password" name={name} value={value} onChange={onChange} />;
+    const [isPasswordMasked, togglePasswordVisibility] = useToggle(true);
+    return (
+        <Form.Input
+            type={isPasswordMasked ? 'password' : 'text'}
+            name={name}
+            value={value}
+            onChange={onChange}
+            icon={<Icon name={isPasswordMasked ? 'eye slash' : 'eye'} onClick={togglePasswordVisibility} link />}
+        />
+    );
 };
 
 export default PasswordField;
