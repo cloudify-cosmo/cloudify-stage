@@ -250,6 +250,8 @@
         "eulaLinkCommunity": "https://cloudify.co/license-community/",
         "expirationDate": "Expiration Date",
         "expirationDateNever": "Never",
+        "getLicense": "Get a license",
+        "getLicenseLink": "https://cloudify.co/cloudify-premium-download/",
         "goToApp": "Go to app",
         "header": "License Management",
         "licenseEdition": "License Edition",
