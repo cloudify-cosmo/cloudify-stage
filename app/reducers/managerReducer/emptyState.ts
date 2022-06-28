@@ -8,7 +8,8 @@ export default {
         tenantsRoles: {},
         state: 'loggedOut',
         identityProviders: ['local'],
-        error: null
+        error: null,
+        showGettingStarted: true
     },
     clusterStatus: {},
     lastUpdated: null,

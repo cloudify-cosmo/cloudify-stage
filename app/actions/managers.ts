@@ -76,13 +76,14 @@ export function login(
     };
 }
 
-function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles) {
+function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles, showGettingStarted) {
     return {
         type: types.SET_USER_DATA,
         username,
         role: systemRole,
         groupSystemRoles,
-        tenantsRoles
+        tenantsRoles,
+        showGettingStarted
     };
 }
 
