@@ -1,15 +1,14 @@
-import type { ComponentProps } from 'react';
+import { isEmpty, noop } from 'lodash';
+import type { WorkflowsMenuProps } from '../../common/src/executeWorkflow/WorkflowsMenu';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
 export default function ExecuteWorkflowIcon({
-    onClick = _.noop,
+    onClick = noop,
     workflows = []
 }: {
-    onClick?: (workflow: Parameters<ComponentProps<typeof WorkflowsMenu>['onClick']>[0]) => void;
-    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+    onClick?: WorkflowsMenuProps['onClick'];
+    workflows: WorkflowsMenuProps['workflows'];
 }) {
-    return !_.isEmpty(workflows) ? (
-        <WorkflowsMenu workflows={workflows} onClick={workflow => onClick(workflow)} />
-    ) : null;
+    return !isEmpty(workflows) ? <WorkflowsMenu workflows={workflows} onClick={onClick} /> : null;
 }

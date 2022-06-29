@@ -47,7 +47,7 @@ describe('Deployment Action Buttons widget', () => {
             cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setSite');
 
             cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
-            cy.contains('button', 'Deployment actions').click();
+            cy.clickButton('Deployment actions');
 
             cy.get('.popupMenu > .menu').contains('Set Site').click();
             cy.get('.modal').within(() => {
@@ -59,6 +59,20 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.wait('@setSite');
             cy.get('.modal').should('not.exist');
+        });
+
+        it('should show only available workflows and actions', () => {
+            cy.clickButton('Deployment actions');
+            cy.get('.popupMenu > .menu').within(() => {
+                cy.contains('Uninstall').should('have.class', 'disabled');
+                cy.contains('Install').should('not.have.class', 'disabled');
+            });
+
+            cy.clickButton('Execute workflow');
+            cy.get('.popupMenu > .menu').within(() => {
+                cy.contains('Uninstall').should('not.exist');
+                cy.contains('Install').should('be.visible');
+            });
         });
     });
 
@@ -77,9 +91,9 @@ describe('Deployment Action Buttons widget', () => {
 
         before(() => {
             cy.setLabels(deploymentId, [{ existing_key: 'existing_value' }]);
-            cy.setDeploymentContext(deploymentId);
+            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
             cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
-            cy.contains('button', 'Deployment actions').click();
+            cy.clickButton('Deployment actions');
             cy.get('.popupMenu > .menu').contains('Manage Labels').click();
             cy.get('.modal').within(() => {
                 cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
