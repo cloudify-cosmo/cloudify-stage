@@ -9,7 +9,7 @@ export default function IdPopup({ buttonPosition, id, selected }) {
     const button = <CopyToClipboardButton content={i18n.t('shared.idPopup.copyButton')} text={id} />;
 
     return (
-        <Popup wide hoverable position="right center">
+        <Popup wide hoverable position="right center" onClick={e => e.stopPropagation()}>
             <Popup.Trigger>
                 <Label style={{ opacity: selected ? '1' : '0.2' }}>{i18n.t('shared.idPopup.label')}</Label>
             </Popup.Trigger>

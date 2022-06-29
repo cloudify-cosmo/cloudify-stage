@@ -61,13 +61,15 @@ export default function DeploymentsSegment({
                                     toolbox={toolbox}
                                 />
                                 {showExecutionStatusLabel && <Divider hidden />}
-                                <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
                                 <Header
                                     as="h3"
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <DeploymentName title={formatName(item)}>{item.display_name}</DeploymentName>
+                                    <span style={{ display: 'inline-flex' }}>
+                                        <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
+                                        <DeploymentName title={formatName(item)}>{item.display_name}</DeploymentName>
+                                    </span>
                                 </Header>
                             </div>
                         }
