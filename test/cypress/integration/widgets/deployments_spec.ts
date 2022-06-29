@@ -41,7 +41,7 @@ describe('Deployments widget', () => {
 
     it('should be present in Deployments page', () => {
         cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', `${deploymentName}`);
+        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
     });
 
     describe('should provide display configuration for', () => {
@@ -49,14 +49,14 @@ describe('Deployments widget', () => {
 
         it('clickToDrillDown option', () => {
             cy.searchInDeploymentsWidget(deploymentId);
-            cy.get('.deploymentsWidget').contains(deploymentId).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click({ force: true });
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
             cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', false);
 
-            cy.get('.deploymentsWidget').contains(deploymentId).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
             cy.get('.deploymentsWidget');
         });
