@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
+import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
 import { chain, find, some, isEmpty, entries } from 'lodash';
 import styled from 'styled-components';
@@ -57,21 +57,23 @@ interface TerraformVariableValueInputProps extends CustomConfigurationComponentP
 
 function TerraformVariableValueInput({ name, onChange, rowValues, value, ...rest }: TerraformVariableValueInputProps) {
     const showPasswordField = rowValues?.source === 'secret';
-    // TODO: Rethink the name of the component
-    const FieldComponent = showPasswordField ? PasswordField : Input;
+    const InputComponent = showPasswordField ? PasswordField : Input;
+
+    const handleChange: InputProps['onChange'] = (event, { value: valuePassed }) => {
+        onChange?.(event, { name, value: valuePassed });
+    };
 
     return (
-        <FieldComponent
+        <InputComponent
             disabled={rowValues?.duplicated}
             name={name}
             fluid
-            // TODO: Extract onChange to a separate funtion
-            onChange={(event, { value: valuePassed }) => onChange?.(event, { name, value: valuePassed as string })}
+            onChange={handleChange}
             value={rowValues?.duplicated ? '' : value}
             {...rest}
         >
             <input maxLength={inputMaxLength} />
-        </FieldComponent>
+        </InputComponent>
     );
 }
 
