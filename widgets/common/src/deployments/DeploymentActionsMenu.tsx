@@ -1,4 +1,3 @@
-import { find } from 'lodash';
 import type { ReactNode, ComponentProps } from 'react';
 import type { Workflow } from '../executeWorkflow';
 import ToolboxPropType from '../props/Toolbox';
