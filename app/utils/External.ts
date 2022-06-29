@@ -37,9 +37,7 @@ function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
     let filename = fallbackFilename;
     const contentDispositionHeader = headers.get('content-disposition');
 
-    if (contentDispositionHeader?.indexOf('attachment') >= 0) {
-        // NOTE: Regex taken from https://stackoverflow.com/questions/23054475/javascript-regex-for-extracting-filename-from-content-disposition-header
-        const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    if (contentDispositionHeader && contentDispositionHeader?.indexOf('attachment') >= 0) {
         const matches = filenameRegex.exec(contentDispositionHeader);
         if (matches?.[1]) {
             filename = matches[1].replace(/['"]/g, '');
