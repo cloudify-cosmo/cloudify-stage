@@ -1,0 +1,13 @@
+#terraformModal .accordion .content .ui.table td {
+    vertical-align: top;
+}
+
+#terraformModal .error.field > .label {
+    z-index: 1;
+}
+
+#terraformModal .accordion .field.type,
+#terraformModal .accordion .field.name,
+#terraformModal .accordion .field.source {
+    height: auto !important;
+}
