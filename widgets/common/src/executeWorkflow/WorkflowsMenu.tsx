@@ -1,3 +1,4 @@
+import { capitalize, chain, filter, lowerCase, map, sortBy, size } from 'lodash';
 import type { AccordionTitleProps } from 'semantic-ui-react';
 import type { ComponentProps, FunctionComponent, ReactNode } from 'react';
 import { useState } from 'react';
@@ -10,7 +11,7 @@ const {
 
 function filterWorkflows(workflows: Workflow[]) {
     const updateWorkflow = 'update';
-    return _.filter(workflows, workflow => workflow.is_available && workflow.name !== updateWorkflow);
+    return filter(workflows, workflow => workflow.is_available && workflow.name !== updateWorkflow);
 }
 
 interface StyledTitleProps {
@@ -18,7 +19,7 @@ interface StyledTitleProps {
     bold?: boolean;
 }
 const StyledTitle: FunctionComponent<StyledTitleProps> = ({ name, bold = false }) => {
-    const displayName = _.capitalize(_.lowerCase(name));
+    const displayName = capitalize(lowerCase(name));
     return <span style={bold ? { fontWeight: 'bold' } : {}}>{displayName}</span>;
 };
 
@@ -30,7 +31,7 @@ interface WorkflowsMenuItemsProps {
 }
 const WorkflowsMenuItems: FunctionComponent<WorkflowsMenuItemsProps> = ({ workflows, onClick }) => (
     <>
-        {_.map(workflows, workflow => (
+        {map(workflows, workflow => (
             <Menu.Item
                 name={workflow.name}
                 content={<StyledTitle name={workflow.name} />}
@@ -63,7 +64,7 @@ const AccordionWorkflowsMenu: FunctionComponent<AccordionWorkflowsMenuProps> = (
 
     return (
         <Accordion as={Menu} vertical style={{ boxShadow: 'none' }}>
-            {_.map(workflowsGroups, group => (
+            {map(workflowsGroups, group => (
                 <Menu.Item key={group.name} style={{ padding: 0 }}>
                     <Accordion.Title
                         active={activeGroup === group.name}
@@ -98,13 +99,13 @@ const WorkflowsMenu: FunctionComponent<WorkflowsMenuProps> = ({
     showInPopup = true,
     trigger = null
 }) => {
-    const filteredAndSortedWorkflows = _.sortBy(filterWorkflows(workflows), 'name');
-    const workflowsGroups = _.chain(filteredAndSortedWorkflows)
+    const filteredAndSortedWorkflows = sortBy(filterWorkflows(workflows), 'name');
+    const workflowsGroups = chain(filteredAndSortedWorkflows)
         .groupBy('plugin')
         .map((value, key) => ({ name: key, workflows: value }))
         .sortBy('name')
         .value();
-    const showOnlyDefaultWorkflows = _.size(workflowsGroups) === 1;
+    const showOnlyDefaultWorkflows = size(workflowsGroups) === 1;
     const popupMenuProps: Partial<ComponentProps<typeof PopupMenu>> = !trigger
         ? {
               bordered: true,
