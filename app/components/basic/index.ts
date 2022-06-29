@@ -74,8 +74,6 @@ import {
 } from 'cloudify-ui-components';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 
-// it might be moved to cloudify-ui-components library if needed
-
 import { Map, TileLayer, Marker, Popup as LeafletPopup, Tooltip, FeatureGroup, CircleMarker } from 'react-leaflet';
 import type { ComponentType } from 'react';
 import type { InferProps } from 'prop-types';

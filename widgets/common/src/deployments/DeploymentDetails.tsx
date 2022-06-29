@@ -72,7 +72,7 @@ export default function DeploymentDetails({
                             name={
                                 <div>
                                     <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
-                                    <TextEllipsis multiline={3}>{deployment.display_name}</TextEllipsis>
+                                    <TextEllipsis multiline={4}>{deployment.display_name}</TextEllipsis>
                                 </div>
                             }
                             value={deployment.description}
@@ -103,7 +103,7 @@ export default function DeploymentDetails({
                     </Grid.Column>
                 )}
                 {(showCreated || showUpdated) && (
-                    <Grid.Column width={4}>
+                    <Grid.Column width={3}>
                         {showCreated && <DeploymentParameter as={as} name="Created" value={deployment.created_at} />}
                         {showUpdated && <DeploymentParameter as={as} name="Updated" value={deployment.updated_at} />}
                     </Grid.Column>

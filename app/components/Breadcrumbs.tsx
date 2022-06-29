@@ -61,6 +61,12 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
                         enabled={isEditMode}
                         onChange={newName => onPageNameChange(editablePage, newName)}
                         inputSize="mini"
+                        style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            maxWidth: '450px'
+                        }}
                     />
                 )}
             </Breadcrumb>
