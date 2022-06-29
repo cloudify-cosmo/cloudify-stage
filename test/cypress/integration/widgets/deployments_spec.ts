@@ -41,7 +41,7 @@ describe('Deployments widget', () => {
 
     it('should be present in Deployments page', () => {
         cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3').should('have.text', `${deploymentName}`);
+        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', `${deploymentName}`);
     });
 
     describe('should provide display configuration for', () => {

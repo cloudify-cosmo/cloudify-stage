@@ -68,7 +68,9 @@ export default function DeploymentsSegment({
                                 >
                                     <span style={{ display: 'inline-flex' }}>
                                         <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
-                                        <DeploymentName title={formatName(item)}>{item.display_name}</DeploymentName>
+                                        <DeploymentName title={formatName(item)} aria-label="Deployment name">
+                                            {item.display_name}
+                                        </DeploymentName>
                                     </span>
                                 </Header>
                             </div>
