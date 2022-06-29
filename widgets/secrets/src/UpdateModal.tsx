@@ -2,7 +2,7 @@
 import SecretPropType from './props/SecretPropType';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
-const { MultilineField } = Stage.Common.Secrets;
+const { MultilineInput } = Stage.Common.Secrets;
 
 export default function UpdateModal({ open, secret, toolbox, onHide }) {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
@@ -75,7 +75,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         {canUpdateSecret && (
                             <Form.Field error={errors.secretValue}>
-                                <MultilineField
+                                <MultilineInput
                                     name="secretValue"
                                     placeholder="Secret value"
                                     value={secretValue}

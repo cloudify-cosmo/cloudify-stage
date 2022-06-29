@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
-const { MultilineField } = Stage.Common.Secrets;
+const { MultilineInput } = Stage.Common.Secrets;
 
 export default function CreateModal({ toolbox }) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;
@@ -92,7 +92,7 @@ export default function CreateModal({ toolbox }) {
                         <Form.Input name="secretKey" placeholder="Secret key" value={secretKey} onChange={setInput} />
                     </Form.Field>
                     <Form.Field error={errors.secretValue}>
-                        <MultilineField
+                        <MultilineInput
                             name="secretValue"
                             placeholder="Secret value"
                             value={secretValue}
