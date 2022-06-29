@@ -25,7 +25,7 @@ describe('Blueprints catalog widget', () => {
 
         cy.contains('.segment', blueprintName).contains('Upload').click();
 
-        cy.contains('.header', 'Error Occured');
+        cy.contains('.header', 'Error Occurred');
         cy.contains('li', error);
     });
 
