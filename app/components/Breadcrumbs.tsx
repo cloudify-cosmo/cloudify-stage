@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import type { PageDefinition } from '../actions/page';
 import type { ReduxState } from '../reducers';
 
-import { Label, Breadcrumb, EditableLabel } from './basic';
+import { Label, Breadcrumb, EditableLabel, TextEllipsis } from './basic';
 import type { PageDefinitionWithContext } from './Page';
 
 const BreadCrumbsWrapper = styled.div`
@@ -47,7 +47,7 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
                 {historyPageList.map((page, pageIndex) => (
                     <React.Fragment key={page.id}>
                         <Breadcrumb.Section link onClick={() => onPageSelected(page, pagesList, pageIndex)}>
-                            {page.name}
+                            <TextEllipsis maxWidth="300px">{page.name}</TextEllipsis>
                         </Breadcrumb.Section>
                         <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
                     </React.Fragment>

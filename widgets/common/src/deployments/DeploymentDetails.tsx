@@ -96,7 +96,13 @@ export default function DeploymentDetails({
                                 as={as}
                                 name="Blueprint"
                                 value={deployment.blueprint_id}
-                                subHeaderStyle={{ wordBreak: 'break-word' }}
+                                subHeaderStyle={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    maxWidth: '450px',
+                                    wordBreak: 'break-word'
+                                }}
                             />
                         )}
                         {showSiteName && <DeploymentParameter as={as} name="Site Name" value={deployment.site_name} />}
