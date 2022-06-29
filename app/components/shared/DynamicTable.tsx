@@ -52,23 +52,21 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                     <Table.Row key={index}>
                         {columns
                             .filter(column => !column.hidden)
-                            .map(column => {
-                                const { id, label, width, ...columnRest } = column;
-                                return (
-                                    <Table.Cell key={id} width={width}>
-                                        <GenericField
-                                            label=""
-                                            key={id}
-                                            name={id}
-                                            value={val[id]}
-                                            rowValues={val}
-                                            onChange={handleEditRow(id, index)}
-                                            {...rest}
-                                            {...columnRest}
-                                        />
-                                    </Table.Cell>
-                                );
-                            })}
+                            .map(({ id, label, width, ...columnRest }) => (
+                                <Table.Cell key={id} width={width}>
+                                    <GenericField
+                                        label=""
+                                        key={id}
+                                        index={index}
+                                        name={id}
+                                        value={val[id]}
+                                        rowValues={val}
+                                        onChange={handleEditRow(id, index)}
+                                        {...rest}
+                                        {...columnRest}
+                                    />
+                                </Table.Cell>
+                            ))}
                         <Table.Cell textAlign="right" width={1}>
                             <Button
                                 basic

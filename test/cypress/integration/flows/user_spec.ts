@@ -69,7 +69,7 @@ describe('User flow', () => {
     });
 
     it('uploads blueprint using first journey buttons', () => {
-        cy.deleteDeployments('', true);
+        cy.killRunningExecutions().deleteDeployments('', true);
         cy.visitPage('Dashboard');
         const uploadBlueprintButtonSelector = 'i[title="Upload blueprint"]:not(.disabled)';
 

@@ -85,6 +85,8 @@ export type { StageWidgetDefinition as WidgetDefinition };
 
 interface StageCustomConfigurationComponentProps<T> {
     name: string;
+    idPrefix?: string;
+    index?: number;
     value: T;
     onChange: (
         event: SyntheticEvent<HTMLElement, Event> | undefined,

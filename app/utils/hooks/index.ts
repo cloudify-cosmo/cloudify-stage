@@ -1,5 +1,6 @@
 import useBoolean from './useBoolean';
 import useErrors from './useErrors';
+import useFormErrors from './useFormErrors';
 import useInput from './useInput';
 import useInputs from './useInputs';
 import useOpen from './useOpen';
@@ -12,6 +13,7 @@ import useWidthObserver from './useWidthObserver';
 export {
     useBoolean,
     useErrors,
+    useFormErrors,
     useInput,
     useInputs,
     useOpen,
