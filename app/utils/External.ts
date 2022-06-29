@@ -1,4 +1,3 @@
-// @ts-nocheck Not converted to TS yet
 import { saveAs } from 'file-saver';
 import 'isomorphic-fetch';
 import JSZip from 'jszip';
@@ -34,7 +33,7 @@ function getContentType(type?: string) {
 
 function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
     let filename = fallbackFilename;
-    const contentDispositionHeader = response.headers.get('content-disposition');
+    const contentDispositionHeader = headers.get('content-disposition');
 
     if (contentDispositionHeader && contentDispositionHeader.indexOf('attachment') !== -1) {
         const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -70,7 +69,7 @@ export default class External {
         return this.ajaxCall(url, 'PATCH', requestOptions);
     }
 
-    doDownload(url: string, fileName? = '') {
+    doDownload(url: string, fileName = '') {
         return this.ajaxCall(url, 'get', { fileName });
     }
 
@@ -234,18 +233,13 @@ export default class External {
             options.credentials = 'include';
         }
 
-        if (!_.isUndefined(fileName)) {
-            return fetch(actualUrl, options)
-                .then(this.checkStatus.bind(this))
-                .then(response => {
-                    const filename = getFilenameFromHeaders(response.headers, fileName);
-                    return response.blob().then(blob => saveAs(blob, filename));
-                });
-        }
-
         return fetch(actualUrl, options)
             .then(response => this.checkStatus.bind(this)(response, validateAuthentication))
             .then(response => {
+                if (fileName !== undefined) {
+                    const filename = getFilenameFromHeaders(response.headers, fileName);
+                    return response.blob().then(blob => saveAs(blob, filename));
+                }
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
                     return response.status !== 204 && contentType.indexOf('application/json') >= 0
