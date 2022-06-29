@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import type { FormEvent } from 'react';
 import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, find, some, isEmpty, entries } from 'lodash';
+import { chain, find, isEmpty, entries } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -16,7 +16,17 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
+import {
+    validateBlueprintName,
+    validateBlueprintDescription,
+    validateTemplate,
+    validateResourceLocation,
+    validateUrlAuthentication,
+    validateVariables,
+    validateOutputs
+} from './validation';
 import './TerraformModal.css';
+import BlueprintNameField from './fields/BlueprintNameField';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
@@ -112,10 +122,6 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
         );
     };
 }
-
-const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
-
-const validationRegExp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -342,124 +348,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     async function handleSubmit() {
         cleanFormErrors();
 
-        let formErrors = false;
-
-        function validateBlueprintName() {
-            if (!blueprintName) {
-                formErrors = true;
-                setFieldError('blueprintName', tError('noBlueprintName'));
-            } else if (!blueprintName.match(validationStrictRegExp)) {
-                formErrors = true;
-                setFieldError('blueprintName', tError('invalidBlueprintName'));
-            }
-        }
-
-        function validateBlueprintDescription() {
-            const descriptionValidationRegexp = /^[ -~\s]*$/;
-
-            if (!blueprintDescription.match(descriptionValidationRegexp)) {
-                formErrors = true;
-                setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
-            }
-        }
-
-        function validateTemplate() {
-            if (!terraformTemplatePackage) {
-                if (!templateUrl) {
-                    formErrors = true;
-                    setFieldError('template', tError('noTerraformTemplate'));
-                } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                    formErrors = true;
-                    setFieldError('template', tError('invalidTerraformTemplate'));
-                }
-            }
-        }
-
-        function validateResourceLocation() {
-            if (!resourceLocation) {
-                formErrors = true;
-                setFieldError('resource', tError('noResourceLocation'));
-            }
-        }
-
-        function validateUrlAuthentication() {
-            if (urlAuthentication) {
-                if (!username) {
-                    formErrors = true;
-                    setFieldError('username', tError('noUsername'));
-                }
-                if (!password) {
-                    formErrors = true;
-                    setFieldError('password', tError('noPassword'));
-                }
-            }
-        }
-
-        function validateIDs(
-            entities: Record<string, any>[],
-            type: string,
-            IDkey: 'variable' | 'name' = 'variable'
-        ): void {
-            const tNameError = Stage.Utils.composeT(tError, type);
-
-            entities.forEach((variable, index) => {
-                if (isEmpty(variable[IDkey])) {
-                    formErrors = true;
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-                } else if (!variable[IDkey].match(validationRegExp)) {
-                    formErrors = true;
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
-                } else if (
-                    some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
-                ) {
-                    formErrors = true;
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
-                }
-            });
-        }
-
-        function validateVariables(variablesList: Variable[], type: string) {
-            validateIDs(variablesList, type);
-
-            const tVariableError = Stage.Utils.composeT(tError, type);
-
-            variablesList.forEach((variable, index) => {
-                if (isEmpty(variable.source)) {
-                    formErrors = true;
-                    setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
-                } else if (variable.source !== 'static') {
-                    if (isEmpty(variable.name)) {
-                        formErrors = true;
-                        setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
-                    } else if (!variable.name.match(validationStrictRegExp)) {
-                        formErrors = true;
-                        setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
-                    }
-                }
-            });
-        }
-
-        function validateOutputs() {
-            validateIDs(outputs, 'outputs', 'name');
-
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            outputs.forEach((output: Output, index: number) => {
-                if (isEmpty(output.type)) {
-                    formErrors = true;
-                    setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
-                }
-
-                if (isEmpty(output.terraformOutput)) {
-                    formErrors = true;
-                    setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
-                } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                    formErrors = true;
-                    setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
-                }
-            });
-        }
-
         async function createSecretsFromVariables() {
             const secretActions = new SecretActions(toolbox);
             const { defaultVisibility } = Consts;
@@ -482,26 +370,59 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 });
         }
 
-        validateBlueprintName();
-        validateBlueprintDescription();
-        validateTemplate();
-        validateUrlAuthentication();
-        validateResourceLocation();
-        validateVariables(variables, 'variables');
-        validateVariables(environment, 'environmentVariables');
-        validateOutputs();
+        function validateForm() {
+            let validity = true;
 
-        if (formErrors) {
-            return;
+            if (!validateBlueprintName(blueprintName, setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateBlueprintDescription(blueprintDescription, setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateTemplate(terraformTemplatePackage, templateUrl, setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateUrlAuthentication(urlAuthentication, username, password, setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateResourceLocation(resourceLocation, setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateVariables(variables, 'variables', setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateVariables(environment, 'environmentVariables', setFieldError)) {
+                validity = false;
+            }
+
+            if (!validateOutputs(outputs, setFieldError)) {
+                validity = false;
+            }
+
+            return validity;
         }
 
-        const existingBlueprintResponse = await new BlueprintActions(toolbox).doGetBlueprints({
-            id: blueprintName,
-            _include: 'id'
-        });
+        async function validateBlueprintExistence(): Promise<boolean> {
+            const existingBlueprintResponse = await new BlueprintActions(toolbox).doGetBlueprints({
+                id: blueprintName,
+                _include: 'id'
+            });
 
-        if (existingBlueprintResponse.items.length) {
-            setFieldError('blueprintName', tError('blueprintNameInUse', { blueprintName }));
+            if (existingBlueprintResponse.items.length) {
+                setFieldError('blueprintName', tError('blueprintNameInUse', { blueprintName }));
+                return false;
+            }
+
+            return true;
+        }
+
+        if (!validateForm() || !(await validateBlueprintExistence())) {
             return;
         }
 
@@ -656,15 +577,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             <Modal.Content>
                 <Form scrollToError errors={formHeaderErrors}>
-                    <Form.Input
-                        label={t(`blueprintName`)}
-                        required
-                        value={blueprintName}
-                        onChange={setBlueprintName}
-                        error={getFieldError('blueprintName')}
-                    >
-                        <input maxLength={inputMaxLength} />
-                    </Form.Input>
+                    <BlueprintNameField setName={setBlueprintName} name={blueprintName} />
                     <Form.TextArea
                         label={t(`blueprintDescription`)}
                         name="blueprintDescription"
