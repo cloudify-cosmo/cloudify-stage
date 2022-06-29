@@ -69,11 +69,10 @@ function TerraformVariableValueInput({ name, onChange, rowValues, value, ...rest
             name={name}
             fluid
             onChange={handleChange}
+            maxLength={inputMaxLength}
             value={rowValues?.duplicated ? '' : value}
             {...rest}
-        >
-            <input maxLength={inputMaxLength} />
-        </InputComponent>
+        />
     );
 }
 

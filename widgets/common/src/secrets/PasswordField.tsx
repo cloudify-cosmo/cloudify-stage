@@ -8,12 +8,13 @@ export interface PasswordFieldProps extends Pick<FormInputProps, 'name' | 'onCha
     disabled?: FormInputProps['disabled'];
     style?: FormInputProps['style'];
     children?: FormInputProps['children'];
+    maxLength?: FormInputProps['maxLength'];
 }
 
 const { Form } = Stage.Basic;
 const { useToggle } = Stage.Hooks;
 
-const PasswordField = ({ name, value, onChange, disabled, fluid, style, children }: PasswordFieldProps) => {
+const PasswordField = ({ name, value, onChange, disabled, fluid, style, maxLength }: PasswordFieldProps) => {
     const [isPasswordMasked, togglePasswordVisibility] = useToggle(true);
     return (
         <Form.Input
@@ -24,10 +25,9 @@ const PasswordField = ({ name, value, onChange, disabled, fluid, style, children
             disabled={disabled}
             fluid={fluid}
             style={style}
+            maxLength={maxLength}
             icon={<PasswordMaskIcon isPasswordMasked={isPasswordMasked} onClick={togglePasswordVisibility} />}
-        >
-            {children}
-        </Form.Input>
+        />
     );
 };
 
