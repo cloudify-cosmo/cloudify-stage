@@ -42,7 +42,7 @@ export default function CreateModal({ toolbox }) {
         // Disable the form
         setLoading();
 
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         actions
             .doCreate(secretKey, secretValue, visibility, isHiddenValue)
             .then(() => {
