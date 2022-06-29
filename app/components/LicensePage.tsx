@@ -1,27 +1,33 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
+import type { ButtonProps } from 'semantic-ui-react';
+import styled from 'styled-components';
 
-import i18n from 'i18next';
+import type { LicenseResponse } from '../../backend/routes/Auth.types';
+import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
-import { Button, Form, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
+import StageUtils from '../utils/stageUtils';
+import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import type Manager from '../utils/Manager';
 
-function LicenseSwitchButton({ color, isEditLicenseActive, onClick }) {
+interface LicenseSwitchButtonProps {
+    color: ButtonProps['color'];
+    isEditLicenseActive: boolean;
+    onClick: ButtonProps['onClick'];
+}
+const t = StageUtils.getT('licenseManagement');
+
+function LicenseSwitchButton({ color, isEditLicenseActive, onClick }: LicenseSwitchButtonProps) {
     return (
         <Button
-            content={
-                isEditLicenseActive
-                    ? i18n.t('licenseManagement.showLicense', 'Show License')
-                    : i18n.t('licenseManagement.editLicense', 'Edit License')
-            }
+            content={isEditLicenseActive ? t('showLicense') : t('editLicense')}
             floated="right"
             icon={isEditLicenseActive ? 'text file' : 'edit'}
             color={color}
@@ -37,35 +43,58 @@ LicenseSwitchButton.propTypes = {
     onClick: PropTypes.func.isRequired
 };
 
-function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, onLicenseButtonClick, status }) {
+interface DescriptionMessageProps {
+    canUploadLicense: boolean;
+    isTrial: boolean;
+    isEditLicenseActive: boolean;
+    status: LicenseStatus;
+    onLicenseButtonClick: ButtonProps['onClick'];
+}
+
+const { redirectToPage } = StageUtils.Url;
+const StyledMessageContent = styled(Message.Content)`
+    &&&& {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+`;
+function DescriptionMessage({
+    canUploadLicense,
+    isTrial,
+    isEditLicenseActive,
+    onLicenseButtonClick,
+    status
+}: DescriptionMessageProps) {
     switch (status) {
         case Consts.LICENSE.EMPTY:
             return (
                 <Message negative icon>
                     <Icon name="ban" />
-                    <Message.Content>
-                        <Message.Header>
-                            {i18n.t('licenseManagement.subheader.noLicense', 'No active license')}
-                        </Message.Header>
-                        {canUploadLicense ? (
-                            <span
-                                // eslint-disable-next-line react/no-danger
-                                dangerouslySetInnerHTML={{
-                                    __html: i18n.t(
-                                        'licenseManagement.action.canUpload.noLicense',
-                                        'To activate this product, please enter the license key provided by Cloudify below and press update. Visit the Cloudify <a target="_blank" href="https://cloudify.co">web site</a> to learn more and acquire a free <a target="_blank" href="https://cloudify.co/download/#trial">trial license</a>.'
-                                    )
-                                }}
-                            />
-                        ) : (
-                            <span>
-                                {i18n.t(
-                                    'licenseManagement.action.cannotUpload.noLicense',
-                                    'To activate this product, please contact your Cloudify administrator.'
-                                )}
-                            </span>
-                        )}
-                    </Message.Content>
+                    <StyledMessageContent>
+                        <div>
+                            <Message.Header>{t('subheader.noLicense')}</Message.Header>
+                            {canUploadLicense ? (
+                                <span
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                        __html: t('action.canUpload.noLicense')
+                                    }}
+                                />
+                            ) : (
+                                <span>{t('action.cannotUpload.noLicense')}</span>
+                            )}
+                        </div>
+                        <Button
+                            content={t('getLicense')}
+                            icon="external"
+                            color="red"
+                            labelPosition="right"
+                            fluid={false}
+                            onClick={() => redirectToPage(t('getLicenseLink'))}
+                            style={{ minWidth: '160px' }}
+                        />
+                    </StyledMessageContent>
                 </Message>
             );
         case Consts.LICENSE.EXPIRED:
@@ -80,26 +109,16 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                                 color="red"
                             />
                         )}
-                        <Message.Header>
-                            {i18n.t('licenseManagement.subheader.trialLicenseExpired', 'The trial license has expired')}
-                        </Message.Header>
+                        <Message.Header>{t('subheader.trialLicenseExpired')}</Message.Header>
                         {canUploadLicense ? (
                             <span
                                 // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
-                                    __html: i18n.t(
-                                        'licenseManagement.action.canUpload.trialLicenseExpired',
-                                        'Please contact <a target="_blank" href="https://cloudify.co/contact">Cloudify</a> to obtain a license key.'
-                                    )
+                                    __html: t('action.canUpload.trialLicenseExpired')
                                 }}
                             />
                         ) : (
-                            <span>
-                                {i18n.t(
-                                    'licenseManagement.action.cannotUpload.common',
-                                    'Please contact your Cloudify administrator.'
-                                )}
-                            </span>
+                            <span>{t('action.cannotUpload.common')}</span>
                         )}
                     </Message.Content>
                 </Message>
@@ -115,26 +134,16 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                             />
                         )}
 
-                        <Message.Header>
-                            {i18n.t('licenseManagement.subheader.regularLicenseExpired', 'Product license has expired')}
-                        </Message.Header>
+                        <Message.Header>{t('subheader.regularLicenseExpired')}</Message.Header>
                         {canUploadLicense ? (
                             <span
                                 // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
-                                    __html: i18n.t(
-                                        'licenseManagement.action.canUpload.regularLicenseExpired',
-                                        'Please contact <a target="_blank" href="https://cloudify.co/support">Cloudify support</a> to obtain a new license key.'
-                                    )
+                                    __html: t('action.canUpload.regularLicenseExpired')
                                 }}
                             />
                         ) : (
-                            <span>
-                                {i18n.t(
-                                    'licenseManagement.action.cannotUpload.common',
-                                    'Please contact your Cloudify administrator.'
-                                )}
-                            </span>
+                            <span>{t('action.cannotUpload.common')}</span>
                         )}
                     </Message.Content>
                 </Message>
@@ -151,10 +160,8 @@ function DescriptionMessage({ canUploadLicense, isTrial, isEditLicenseActive, on
                                 color="green"
                             />
                         )}
-                        <Message.Header>
-                            {i18n.t('licenseManagement.subheader.activeLicense', 'License is valid')}
-                        </Message.Header>
-                        <span>{i18n.t('licenseManagement.action.activeLicense', 'No action required.')}</span>
+                        <Message.Header>{t('subheader.activeLicense')}</Message.Header>
+                        <span>{t('action.activeLicense')}</span>
                     </Message.Content>
                 </Message>
             );
@@ -171,8 +178,24 @@ DescriptionMessage.propTypes = {
     status: PropTypes.oneOf([Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED, Consts.LICENSE.ACTIVE]).isRequired
 };
 
-export default class LicensePage extends Component {
-    constructor(props) {
+export interface LicensePageProps {
+    canUploadLicense: boolean;
+    isProductOperational: boolean;
+    onLicenseChange: (license: string) => void;
+    onGoToApp: ButtonProps['onClick'];
+    status: LicenseStatus;
+    license: LicenseResponse;
+    manager: Manager;
+}
+
+interface LicensePageState {
+    error: string | null;
+    isLoading: boolean;
+    isEditLicenseActive: boolean;
+    license: string;
+}
+export default class LicensePage extends Component<LicensePageProps, LicensePageState> {
+    constructor(props: LicensePageProps) {
         super(props);
 
         this.state = {
@@ -205,8 +228,10 @@ export default class LicensePage extends Component {
         this.setState({ error: null });
     }
 
-    onLicenseEdit(proxy, field) {
-        this.setState(Form.fieldNameValue(field));
+    onLicenseEdit(_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) {
+        const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
+        const licenseString = fieldNameValue.license as string;
+        this.setState({ license: licenseString });
     }
 
     onLicenseUpload() {
@@ -236,7 +261,7 @@ export default class LicensePage extends Component {
 
         return (
             <FullScreenSegment>
-                <HeaderBar>
+                <HeaderBar className={undefined}>
                     <Banner hideOnSmallScreen={false} />
                 </HeaderBar>
 
@@ -248,7 +273,7 @@ export default class LicensePage extends Component {
                     onRender={SplashLoadingScreen.turnOff}
                 >
                     <Header as="h2">
-                        <Icon name="key" /> {i18n.t('licenseManagement.header', 'License Management')}
+                        <Icon name="key" /> {t('header')}
                     </Header>
 
                     <DescriptionMessage
@@ -279,7 +304,7 @@ export default class LicensePage extends Component {
 
                         <Grid.Column textAlign="right" verticalAlign="middle">
                             <Button
-                                content={i18n.t('licenseManagement.goToApp', 'Go to app')}
+                                content={t('goToApp')}
                                 icon="arrow right"
                                 color="green"
                                 labelPosition="right"
@@ -294,13 +319,3 @@ export default class LicensePage extends Component {
         );
     }
 }
-
-LicensePage.propTypes = {
-    canUploadLicense: PropTypes.bool.isRequired,
-    isProductOperational: PropTypes.bool.isRequired,
-    license: PropTypes.shape({ trial: PropTypes.bool }).isRequired,
-    onLicenseChange: PropTypes.func.isRequired,
-    onGoToApp: PropTypes.func.isRequired,
-    status: PropTypes.oneOf([Consts.LICENSE.ACTIVE, Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED]).isRequired,
-    manager: PropTypes.shape({ doGet: PropTypes.func, doPut: PropTypes.func }).isRequired
-};

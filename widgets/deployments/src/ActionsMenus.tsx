@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { WorkflowsMenuProps } from '../../common/src/executeWorkflow/WorkflowsMenu';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
@@ -6,7 +6,7 @@ interface ActionsMenusProps<D> {
     deployment?: D;
     onDeploymentAction: (deployment: D | undefined, actionName: string) => void;
     onWorkflowAction: (deployment: D | undefined, workflowName: string) => void;
-    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+    workflows: WorkflowsMenuProps['workflows'];
     toolbox: Stage.Types.Toolbox;
 }
 
@@ -25,6 +25,7 @@ export default function ActionsMenus<D>({
             <DeploymentActionsMenu
                 onActionClick={actionName => onDeploymentAction(deployment, actionName)}
                 toolbox={toolbox}
+                workflows={workflows}
             />
         </>
     );
