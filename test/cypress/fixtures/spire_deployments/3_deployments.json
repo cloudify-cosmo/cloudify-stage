@@ -26,7 +26,8 @@
                     },
                     "name":"scale",
                     "operation":"cloudify.plugins.workflows.scale_entity",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -47,7 +48,8 @@
                     },
                     "name":"validate_agents",
                     "operation":"cloudify.plugins.workflows.validate_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -66,7 +68,8 @@
                     },
                     "name":"heal",
                     "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -97,7 +100,8 @@
                     },
                     "name":"stop",
                     "operation":"cloudify.plugins.workflows.stop",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -172,7 +176,8 @@
                     },
                     "name":"update",
                     "operation":"cloudify.plugins.workflows.update",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -203,7 +208,8 @@
                     },
                     "name":"start",
                     "operation":"cloudify.plugins.workflows.start",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -240,7 +246,8 @@
                     },
                     "name":"execute_operation",
                     "operation":"cloudify.plugins.workflows.execute_operation",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -249,7 +256,8 @@
                     },
                     "name":"install",
                     "operation":"cloudify.plugins.workflows.install",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -294,7 +302,8 @@
                     },
                     "name":"install_new_agents",
                     "operation":"cloudify.plugins.workflows.install_new_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -330,7 +339,8 @@
                     },
                     "name":"restart",
                     "operation":"cloudify.plugins.workflows.restart",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -342,7 +352,8 @@
                     },
                     "name":"uninstall",
                     "operation":"cloudify.plugins.workflows.uninstall",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 }
             ],
             "lastExecution": {
@@ -393,7 +404,8 @@
                     },
                     "name":"scale",
                     "operation":"cloudify.plugins.workflows.scale_entity",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -414,7 +426,8 @@
                     },
                     "name":"validate_agents",
                     "operation":"cloudify.plugins.workflows.validate_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -433,7 +446,8 @@
                     },
                     "name":"heal",
                     "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -464,7 +478,8 @@
                     },
                     "name":"stop",
                     "operation":"cloudify.plugins.workflows.stop",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -539,7 +554,8 @@
                     },
                     "name":"update",
                     "operation":"cloudify.plugins.workflows.update",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -570,7 +586,8 @@
                     },
                     "name":"start",
                     "operation":"cloudify.plugins.workflows.start",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -607,7 +624,8 @@
                     },
                     "name":"execute_operation",
                     "operation":"cloudify.plugins.workflows.execute_operation",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -616,7 +634,8 @@
                     },
                     "name":"install",
                     "operation":"cloudify.plugins.workflows.install",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -661,7 +680,8 @@
                     },
                     "name":"install_new_agents",
                     "operation":"cloudify.plugins.workflows.install_new_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -697,7 +717,8 @@
                     },
                     "name":"restart",
                     "operation":"cloudify.plugins.workflows.restart",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -709,7 +730,8 @@
                     },
                     "name":"uninstall",
                     "operation":"cloudify.plugins.workflows.uninstall",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 }
             ],
             "lastExecution": {
@@ -760,7 +782,8 @@
                     },
                     "name":"scale",
                     "operation":"cloudify.plugins.workflows.scale_entity",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -781,7 +804,8 @@
                     },
                     "name":"validate_agents",
                     "operation":"cloudify.plugins.workflows.validate_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -800,7 +824,8 @@
                     },
                     "name":"heal",
                     "operation":"cloudify.plugins.workflows.auto_heal_reinstall_node_subgraph",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -831,7 +856,8 @@
                     },
                     "name":"stop",
                     "operation":"cloudify.plugins.workflows.stop",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -906,7 +932,8 @@
                     },
                     "name":"update",
                     "operation":"cloudify.plugins.workflows.update",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -937,7 +964,8 @@
                     },
                     "name":"start",
                     "operation":"cloudify.plugins.workflows.start",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -974,7 +1002,8 @@
                     },
                     "name":"execute_operation",
                     "operation":"cloudify.plugins.workflows.execute_operation",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -983,7 +1012,8 @@
                     },
                     "name":"install",
                     "operation":"cloudify.plugins.workflows.install",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -1028,7 +1058,8 @@
                     },
                     "name":"install_new_agents",
                     "operation":"cloudify.plugins.workflows.install_new_agents",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -1064,7 +1095,8 @@
                     },
                     "name":"restart",
                     "operation":"cloudify.plugins.workflows.restart",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 },
                 {
                     "created_at":null,
@@ -1076,7 +1108,8 @@
                     },
                     "name":"uninstall",
                     "operation":"cloudify.plugins.workflows.uninstall",
-                    "plugin":"default_workflows"
+                    "plugin":"default_workflows",
+                    "is_available":true
                 }
             ],
             "lastExecution": {

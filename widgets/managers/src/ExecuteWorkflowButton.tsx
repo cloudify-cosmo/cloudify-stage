@@ -1,4 +1,4 @@
-import type { ComponentProps } from 'react';
+import type { WorkflowsMenuProps } from '../../common/src/executeWorkflow/WorkflowsMenu';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
@@ -8,8 +8,8 @@ export default function ExecuteWorkflowButton({
     workflows
 }: {
     noManagers: boolean;
-    onClick: (workflow: Parameters<ComponentProps<typeof WorkflowsMenu>['onClick']>[0]) => void;
-    workflows: ComponentProps<typeof WorkflowsMenu>['workflows'];
+    onClick: WorkflowsMenuProps['onClick'];
+    workflows: WorkflowsMenuProps['workflows'];
 }) {
     const { Button, Popup } = Stage.Basic;
 
@@ -22,7 +22,7 @@ export default function ExecuteWorkflowButton({
                         trigger={
                             <Button icon="cogs" content="Execute Workflow" labelPosition="left" disabled={noManagers} />
                         }
-                        onClick={workflow => onClick(workflow)}
+                        onClick={onClick}
                     />
                 </div>
             </Popup.Trigger>
