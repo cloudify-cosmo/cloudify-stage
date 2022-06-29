@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import type { TokensWidget } from './widget.types';
-import TextEllipsis from './TextEllipsis';
 import TokensTableHeader from './TokensTableHeader';
 import RemoveTokenButton from './RemoveTokenButton';
 import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
 import { translationPath } from './widget.consts';
 
-const { DataTable } = Stage.Basic;
+const { DataTable, TextEllipsis } = Stage.Basic;
 const { Time, getT } = Stage.Utils;
 
 const t = getT(`${translationPath}.table`);
@@ -44,32 +43,26 @@ const TokensTable = ({ data, toolbox }: TokensTableProps) => {
                 />
                 <DataTable.Column label={t('columns.lastUsed')} name={dataSortingKeys.lastUsed} width="156px" />
                 <DataTable.Column label="" width="48px" />
-                {data?.items?.map(dataItem => {
-                    return (
-                        <DataTable.Row key={dataItem.id}>
+                {data?.items?.map(dataItem => (
+                    <DataTable.Row key={dataItem.id}>
+                        <DataTable.Data>
+                            <TextEllipsis maxWidth="300px">{dataItem.value}</TextEllipsis>
+                        </DataTable.Data>
+                        <DataTable.Data>
+                            <TextEllipsis maxWidth="300px">{dataItem.description ?? ''}</TextEllipsis>
+                        </DataTable.Data>
+                        {shouldDisplayUsers && (
                             <DataTable.Data>
-                                <TextEllipsis content={dataItem.value} />
+                                <TextEllipsis maxWidth="100px">{dataItem.username}</TextEllipsis>
                             </DataTable.Data>
-                            <DataTable.Data>
-                                <TextEllipsis content={dataItem.description} />
-                            </DataTable.Data>
-                            {shouldDisplayUsers && (
-                                <DataTable.Data>
-                                    <TextEllipsis content={dataItem.username} />
-                                </DataTable.Data>
-                            )}
-                            <DataTable.Data>
-                                <TextEllipsis content={Time.formatTimestamp(dataItem.expiration_date)} />
-                            </DataTable.Data>
-                            <DataTable.Data>
-                                <TextEllipsis content={Time.formatTimestamp(dataItem.last_used)} />
-                            </DataTable.Data>
-                            <DataTable.Data>
-                                <RemoveTokenButton token={dataItem} toolbox={toolbox} />
-                            </DataTable.Data>
-                        </DataTable.Row>
-                    );
-                })}
+                        )}
+                        <DataTable.Data>{Time.formatTimestamp(dataItem.expiration_date)}</DataTable.Data>
+                        <DataTable.Data>{Time.formatTimestamp(dataItem.last_used)}</DataTable.Data>
+                        <DataTable.Data>
+                            <RemoveTokenButton token={dataItem} toolbox={toolbox} />
+                        </DataTable.Data>
+                    </DataTable.Row>
+                ))}
             </DataTable>
         </>
     );

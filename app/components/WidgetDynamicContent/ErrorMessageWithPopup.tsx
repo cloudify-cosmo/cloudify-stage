@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TextEllipsis from './TextEllipsis';
+import TextEllipsis from '../TextEllipsis';
 import { Message } from '../basic';
 import { ErrorPopup } from '../shared';
 import { useBoolean } from '../../utils/hooks';
@@ -36,7 +36,7 @@ const ErrorMessageWithPopup = ({ widgetName, header, content }: ErrorMessageWith
             trigger={
                 <div>
                     <StyledMessage error>
-                        <TextEllipsis content={messageContent} />
+                        <TextEllipsis>{messageContent}</TextEllipsis>
                     </StyledMessage>
                 </div>
             }

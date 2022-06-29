@@ -39,44 +39,40 @@ const partialDeploymentsViewColumnDefinitions: Record<
 > = {
     status: {
         width: '20px',
-        render(deployment) {
-            // NOTE: Rule reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
-            // eslint-disable-next-line react/destructuring-assignment
-            return <DeploymentStatusIcon status={deployment.deployment_status} />;
+        render({deployment_status: deploymentStatus}) {
+            return <DeploymentStatusIcon status={deploymentStatus} />;
         },
         // NOTE: do not show the column label
         label: ''
     },
     id: {
         width: '20px',
-        render(deployment) {
-            // NOTE: Rule reports false positives (ref.: https://github.com/yannickcr/eslint-plugin-react/issues/3022)
-            // eslint-disable-next-line react/destructuring-assignment
-            return <Stage.Shared.IdPopup id={deployment.id} />;
+        render({ id }) {
+            return <Stage.Shared.IdPopup id={id} />;
         }
     },
     name: {
         sortFieldName: 'display_name',
-        render(deployment) {
-            return deployment.display_name;
+        render({ display_name: displayName }) {
+            return <Stage.Basic.TextEllipsis maxWidth="300px">{displayName}</Stage.Basic.TextEllipsis>;
         }
     },
     blueprintName: {
         sortFieldName: 'blueprint_id',
-        render(deployment) {
-            return deployment.blueprint_id;
+        render({ blueprint_id: blueprintId }) {
+            return <Stage.Basic.TextEllipsis maxWidth="300px">{blueprintId}</Stage.Basic.TextEllipsis>;
         }
     },
     environmentType: {
         sortFieldName: 'environment_type',
-        render(deployment) {
-            return deployment.environment_type;
+        render({ environment_type: environmentType }) {
+            return environmentType;
         }
     },
     location: {
         sortFieldName: 'site_name',
-        render(deployment) {
-            return deployment.site_name;
+        render({ site_name: siteName }) {
+            return <Stage.Basic.TextEllipsis maxWidth="100px">{siteName}</Stage.Basic.TextEllipsis>;
         }
     },
     subenvironmentsCount: {

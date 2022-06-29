@@ -216,7 +216,7 @@ export default class SecretsTable extends React.Component {
             showSecretValue
         } = this.state;
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
-        const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
+        const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility, TextEllipsis } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { VerticallyAlignedCell } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
@@ -250,7 +250,7 @@ export default class SecretsTable extends React.Component {
                             <DataTable.Row key={item.key}>
                                 <DataTable.Data>
                                     <VerticallyAlignedCell>
-                                        {item.key}
+                                        <TextEllipsis maxWidth="400px">{item.key}</TextEllipsis>
                                         <ResourceVisibility
                                             visibility={item.visibility}
                                             onSetVisibility={visibility => {

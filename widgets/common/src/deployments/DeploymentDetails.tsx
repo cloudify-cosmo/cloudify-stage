@@ -37,7 +37,7 @@ export default function DeploymentDetails({
     instancesStates,
     onSetVisibility
 }) {
-    const { Grid, ResourceVisibility } = Stage.Basic;
+    const { Grid, ResourceVisibility, TextEllipsis } = Stage.Basic;
 
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !_.isEmpty(deployment.site_name);
@@ -72,7 +72,7 @@ export default function DeploymentDetails({
                             name={
                                 <div>
                                     <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
-                                    {deployment.display_name}
+                                    <TextEllipsis multiline={3}>{deployment.display_name}</TextEllipsis>
                                 </div>
                             }
                             value={deployment.description}
@@ -103,7 +103,7 @@ export default function DeploymentDetails({
                     </Grid.Column>
                 )}
                 {(showCreated || showUpdated) && (
-                    <Grid.Column width={3}>
+                    <Grid.Column width={4}>
                         {showCreated && <DeploymentParameter as={as} name="Created" value={deployment.created_at} />}
                         {showUpdated && <DeploymentParameter as={as} name="Updated" value={deployment.updated_at} />}
                     </Grid.Column>
