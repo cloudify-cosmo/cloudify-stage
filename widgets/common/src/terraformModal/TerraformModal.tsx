@@ -16,7 +16,7 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
-import PasswordField from '../secrets/PasswordField';
+import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
@@ -75,9 +75,9 @@ function TerraformVariableValueInput({
     index,
     ...rest
 }: TerraformVariableValueInputProps) {
-    const showPasswordField = rowValues?.source === 'secret';
+    const showSinglelineInput = rowValues?.source === 'secret';
     const { getFieldError } = useFormErrors('terraformModal');
-    const InputComponent = showPasswordField ? PasswordField : Form.Input;
+    const InputComponent = showSinglelineInput ? SinglelineInput : Form.Input;
 
     const handleChange: InputProps['onChange'] = (event, { value: valuePassed }) => {
         onChange?.(event, { name, value: valuePassed });

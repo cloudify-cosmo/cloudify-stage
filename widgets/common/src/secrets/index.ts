@@ -1,9 +1,9 @@
 import Actions from './SecretActions';
-import PasswordField from './PasswordField';
+import SinglelineInput from './SinglelineInput';
 import MultilineInput from './MultilineInput';
 
 export default {
     Actions,
-    PasswordField,
+    SinglelineInput,
     MultilineInput
 };

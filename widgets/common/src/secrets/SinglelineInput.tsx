@@ -1,18 +1,19 @@
 import type { FormInputProps } from 'semantic-ui-react';
-import PasswordMaskIcon from './PasswordMaskIcon';
+import InputMaskIcon from './InputMaskIcon';
 
-type PasswordFieldProps = Partial<
+type SinglelineInputProps = Partial<
     Pick<FormInputProps, 'onChange' | 'name' | 'value' | 'fluid' | 'style' | 'maxLength' | 'disabled'>
 >;
 
 const { Form } = Stage.Basic;
 const { useToggle } = Stage.Hooks;
 
-const PasswordField = ({ name, value, onChange, disabled, fluid, style, maxLength }: PasswordFieldProps) => {
-    const [isPasswordMasked, togglePasswordVisibility] = useToggle(true);
+const SinglelineInput = ({ name, value, onChange, disabled, fluid, style, maxLength }: SinglelineInputProps) => {
+    const [isInputMasked, toggleInputMask] = useToggle(true);
+
     return (
         <Form.Input
-            type={isPasswordMasked ? 'password' : 'text'}
+            type={isInputMasked ? 'password' : 'text'}
             name={name}
             value={value}
             onChange={onChange}
@@ -20,9 +21,9 @@ const PasswordField = ({ name, value, onChange, disabled, fluid, style, maxLengt
             fluid={fluid}
             style={style}
             maxLength={maxLength}
-            icon={<PasswordMaskIcon isPasswordMasked={isPasswordMasked} onClick={togglePasswordVisibility} />}
+            icon={<InputMaskIcon isInputMasked={isInputMasked} onClick={toggleInputMask} />}
         />
     );
 };
 
-export default PasswordField;
+export default SinglelineInput;

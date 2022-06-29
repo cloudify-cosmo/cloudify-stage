@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
-import PasswordField from './PasswordField';
+import SinglelineInput from './SinglelineInput';
 import type { Visibility } from './SecretActions';
 
 interface SecretsModalProps {
@@ -67,7 +67,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {secretKeys.map(field => (
                         <Form.Field key={field} required label={field}>
-                            <PasswordField name={field} onChange={setSecretInputs} />
+                            <SinglelineInput name={field} onChange={setSecretInputs} />
                         </Form.Field>
                     ))}
                 </Form>
