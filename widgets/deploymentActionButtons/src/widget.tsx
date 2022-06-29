@@ -24,6 +24,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
 
     initialConfiguration: [
+        Stage.GenericConfig.POLLING_TIME_CONFIG(5),
         {
             // NOTE: for programmatic use only, not exposed in the UI
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,

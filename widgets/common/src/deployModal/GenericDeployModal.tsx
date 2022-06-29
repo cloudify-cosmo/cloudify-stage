@@ -201,7 +201,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         ...GenericDeployModal.EMPTY_BLUEPRINT.plan.workflows.install,
         name: 'install',
         parameters: {},
-        plugin: ''
+        plugin: '',
+        is_available: true
     };
 
     static initialState = {
