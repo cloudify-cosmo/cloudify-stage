@@ -1,4 +1,5 @@
 import type { FormInputProps } from 'semantic-ui-react';
+import PasswordMaskIcon from './PasswordMaskIcon';
 
 // TODO: Simplify props typing
 export interface PasswordFieldProps extends Pick<FormInputProps, 'name' | 'onChange'> {
@@ -9,10 +10,9 @@ export interface PasswordFieldProps extends Pick<FormInputProps, 'name' | 'onCha
     children?: FormInputProps['children'];
 }
 
-const { Form, Icon } = Stage.Basic;
+const { Form } = Stage.Basic;
 const { useToggle } = Stage.Hooks;
 
-// TODO: Rething if the name will be appropriate after adding toggling functionality
 const PasswordField = ({ name, value, onChange, disabled, fluid, style, children }: PasswordFieldProps) => {
     const [isPasswordMasked, togglePasswordVisibility] = useToggle(true);
     return (
@@ -24,7 +24,7 @@ const PasswordField = ({ name, value, onChange, disabled, fluid, style, children
             disabled={disabled}
             fluid={fluid}
             style={style}
-            icon={<Icon name={isPasswordMasked ? 'eye slash' : 'eye'} onClick={togglePasswordVisibility} link />}
+            icon={<PasswordMaskIcon isPasswordMasked={isPasswordMasked} onClick={togglePasswordVisibility} />}
         >
             {children}
         </Form.Input>
