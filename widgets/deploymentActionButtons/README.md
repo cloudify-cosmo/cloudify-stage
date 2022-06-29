@@ -8,4 +8,4 @@ See [notes](/working_with/console/widgets/index.html) for more information on re
 
 ## Settings
 
-None
+* `Refresh time interval` - The time interval in which the widget’s data will be refreshed, in seconds. Default: 5 seconds.
