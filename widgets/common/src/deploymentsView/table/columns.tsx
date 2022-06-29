@@ -39,7 +39,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
 > = {
     status: {
         width: '20px',
-        render({deployment_status: deploymentStatus}) {
+        render({ deployment_status: deploymentStatus }) {
             return <DeploymentStatusIcon status={deploymentStatus} />;
         },
         // NOTE: do not show the column label
