@@ -253,6 +253,27 @@ function markDuplicates(
     setVariables(variables);
 }
 
+async function createSecretsFromVariables(
+    variables: Variable[],
+    environment: Variable[],
+    toolbox: Stage.Types.Toolbox
+) {
+    const secretActions = new SecretActions(toolbox);
+    const { defaultVisibility } = Consts;
+    const allSecretVariables: Variable[] = [...variables, ...environment].filter(
+        variable => variable.source === 'secret'
+    );
+
+    await allSecretVariables
+        .filter(secretVar => !secretVar.duplicated)
+        .forEach(async secretVariable => {
+            // add secret if not exist
+            await secretActions.doGet(secretVariable.name).catch(async () => {
+                await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
+            });
+        });
+}
+
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
@@ -348,28 +369,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     async function handleSubmit() {
         cleanFormErrors();
-
-        async function createSecretsFromVariables() {
-            const secretActions = new SecretActions(toolbox);
-            const { defaultVisibility } = Consts;
-            const allSecretVariables: Variable[] = [...variables, ...environment].filter(
-                variable => variable.source === 'secret'
-            );
-
-            await allSecretVariables
-                .filter(secretVar => !secretVar.duplicated)
-                .forEach(async secretVariable => {
-                    // add secret if not exist
-                    await secretActions.doGet(secretVariable.name).catch(async () => {
-                        await secretActions.doCreate(
-                            secretVariable.name,
-                            secretVariable.value,
-                            defaultVisibility,
-                            false
-                        );
-                    });
-                });
-        }
 
         function validateForm() {
             let validity = true;
@@ -475,7 +474,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             const file: Blob & { name: string } = blueprintContent;
 
             const image = await (await fetch(terraformLogo)).blob();
-            await createSecretsFromVariables();
+            await createSecretsFromVariables(variables, environment, toolbox);
             await new BlueprintActions(toolbox).doUpload(blueprintName, {
                 file,
                 image,
