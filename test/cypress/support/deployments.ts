@@ -65,9 +65,9 @@ const commands = {
             .cfyRequest(`/deployments?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
             .then(() => waitUntilEmpty('deployments', { search })),
-    searchInDeploymentsWidget: (deploymentId: string) =>
+    searchInDeploymentsWidget: (searchInput: string) =>
         cy.get('.deploymentsWidget').within(() => {
-            cy.getSearchInput().clear().type(deploymentId);
+            cy.getSearchInput().clear().type(searchInput);
             cy.get('.input.loading').should('not.exist');
             cy.get('.widgetLoader').should('be.not.visible');
         }),
