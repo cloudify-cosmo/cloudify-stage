@@ -34,17 +34,17 @@ function getContentType(type?: string) {
 // NOTE: Regex taken from https://stackoverflow.com/questions/23054475/javascript-regex-for-extracting-filename-from-content-disposition-header
 const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
 function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
-    let filename = fallbackFilename;
     const contentDispositionHeader = headers.get('content-disposition');
 
     if (contentDispositionHeader && contentDispositionHeader?.indexOf('attachment') >= 0) {
         const matches = filenameRegex.exec(contentDispositionHeader);
         if (matches?.[1]) {
-            filename = matches[1].replace(/['"]/g, '');
+            const filename = matches[1].replace(/['"]/g, '');
+            return filename;
         }
     }
 
-    return filename;
+    return fallbackFilename;
 }
 
 export default class External {
