@@ -2,14 +2,6 @@
     "maintenancePollingInterval": 10000,
     "singleManager": true,
 
-    "proxy": {
-        "timeouts": {
-            "get": 10000,
-            "post": 30000,
-            "put": 30000,
-            "delete": 10000
-        }
-    },
     "github": {
         "username": "secret(github-username)",
         "password": "secret(github-password)"
@@ -27,11 +19,5 @@
     },
     "ssl": {
         "ca": "/etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
-    },
-    "saml":{
-        "enabled": false,
-        "certPath": "",
-        "ssoUrl": "",
-        "portalUrl": ""
     }
 }
