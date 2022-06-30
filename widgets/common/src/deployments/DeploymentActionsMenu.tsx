@@ -27,7 +27,7 @@ const menuItems: MenuItem[] = [
 
 function isAvailable(item: MenuItem, workflows: Workflow[]) {
     if (item.permission === executeWorkflowPermission) {
-        const workflow = workflows.find(w => w.name === item.name);
+        const workflow = workflows?.find(w => w.name === item.name);
         return !!workflow?.is_available;
     }
     return true;
