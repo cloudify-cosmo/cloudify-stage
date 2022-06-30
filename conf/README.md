@@ -7,13 +7,6 @@ The following section describes different configuration files used in cloudify-s
 * `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
 * `singleManager` - boolean, defines if Manager is executed as single (depracated)
 
-* `proxy` - object, configuration of Stage Backend proxy to Manager 
-  * `timeouts`
-    * `get` - integer, GET request timeout (milliseconds)
-    * `post` - integer, POST request timeout (milliseconds)
-    * `put` - integer, PUT request timeout (milliseconds)
-    * `delete` - integer, DELETE request timeout (milliseconds)
-
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
   * `password` - string, GitHub password secret name, eg. "secret(github-password)"
@@ -31,12 +24,6 @@ The following section describes different configuration files used in cloudify-s
 
 * `ssl` - object, configuration for SSL connection
   * `ca` - string, absolute path to SSL CA certificate
-  
-* `saml` - object, SAML configuration
-  * `enabled` - boolean, if set to true SAML will be enabled
-  * `certPath` - string, SAML certificate path
-  * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
-  * `portalUrl` - string, redirect URL to the organization portal
 
 ## Application (`app.json`)
 
@@ -76,6 +63,19 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
   * `tilesUrlTemplate` - string, template map tiles provider URL, check URL template section at [TileLayer page](https://leafletjs.com/reference-1.5.0.html#tilelayer) for details
   * `attribution` -  string, attribution data to be displayed as small text box on a map,  HTML allowed, it is required by map providers, check [Leaflet-providers preview](https://leaflet-extras.github.io/leaflet-providers/preview/) for examples and requirements from different providers
   * `accessToken` - string, API key to be passed to map tile tiles provider 
+
+* `proxy` - object, configuration of Stage Backend proxy to Manager
+  * `timeouts`
+    * `get` - integer, GET request timeout (milliseconds)
+    * `post` - integer, POST request timeout (milliseconds)
+    * `put` - integer, PUT request timeout (milliseconds)
+    * `delete` - integer, DELETE request timeout (milliseconds)
+
+* `saml` - object, SAML configuration
+  * `enabled` - boolean, if set to true SAML will be enabled
+  * `certPath` - string, SAML certificate path
+  * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
+  * `portalUrl` - string, redirect URL to the organization portal
 
 * `whiteLabel` - object, UI white-labelling configuration
   * `logoUrl` - string, relative URL to logo image

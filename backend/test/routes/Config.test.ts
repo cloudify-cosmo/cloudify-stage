@@ -19,7 +19,7 @@ describe('/config endpoint', () => {
                         maps: userConfig.maps,
                         maintenancePollingInterval: appConfig.maintenancePollingInterval,
                         singleManager: appConfig.singleManager,
-                        saml: _.omit(appConfig.saml, 'certPath')
+                        saml: _.omit(userConfig.saml, 'certPath')
                     },
                     manager: {
                         ip: expect.any(String)
