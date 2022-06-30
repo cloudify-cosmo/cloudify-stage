@@ -96,9 +96,8 @@ export default class BlueprintActionButtons extends React.Component<
     downloadBlueprint = () => {
         const { toolbox, blueprintId } = this.props;
         const blueprintDownloadUrl = `/blueprints/${blueprintId}/archive`;
-        const blueprintFileName = `${blueprintId}.zip`;
 
-        toolbox.getManager().doDownload(blueprintDownloadUrl, blueprintFileName);
+        toolbox.getManager().doDownload(blueprintDownloadUrl);
     };
 
     showDeployModal = () => {
