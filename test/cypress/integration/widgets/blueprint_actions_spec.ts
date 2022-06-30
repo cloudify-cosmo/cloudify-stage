@@ -1,7 +1,8 @@
 import type { BlueprintActionButtonsConfiguration } from '../../../../widgets/blueprintActionButtons/src/widget';
 
 describe('Blueprint Action Buttons widget', () => {
-    const blueprintName = 'blueprints_actions_test';
+    const resourcePrefix = 'blueprints_actions_test_';
+    const blueprintName = `${resourcePrefix}empty`;
 
     before(() =>
         cy
@@ -10,8 +11,14 @@ describe('Blueprint Action Buttons widget', () => {
             .uploadBlueprint('blueprints/empty.zip', blueprintName)
     );
 
-    const useBlueprintActionButtonsWidget = (widgetConfig: Partial<BlueprintActionButtonsConfiguration> = {}) => {
-        cy.usePageMock('blueprintActionButtons', widgetConfig).mockLogin().setBlueprintContext(blueprintName);
+    interface BlueprintActionButtonsWidgetConfig extends Partial<BlueprintActionButtonsConfiguration> {
+        contextBlueprintName?: string;
+    }
+    const useBlueprintActionButtonsWidget = ({
+        contextBlueprintName = blueprintName,
+        ...widgetConfig
+    }: BlueprintActionButtonsWidgetConfig = {}) => {
+        cy.usePageMock('blueprintActionButtons', widgetConfig).mockLogin().setBlueprintContext(contextBlueprintName);
     };
 
     const getEditACopyInComposerButton = () => cy.contains('Edit a copy in Composer');
@@ -32,12 +39,25 @@ describe('Blueprint Action Buttons widget', () => {
             .should('be.calledWith', `/composer/import/default_tenant/${blueprintName}/blueprint.yaml`);
     });
 
-    it('should download the blueprint', () => {
-        const downloadedFileName = `${blueprintName}.zip`;
-        useBlueprintActionButtonsWidget();
+    describe('should download the blueprint', () => {
+        it('in ZIP format', () => {
+            const downloadedFileName = `${blueprintName}.zip`;
+            useBlueprintActionButtonsWidget();
 
-        cy.contains('Download blueprint').click();
-        cy.verifyDownloadedFileExistence(downloadedFileName);
+            cy.contains('Download blueprint').click();
+            cy.verifyDownloadedFile(downloadedFileName, 'application/zip');
+        });
+
+        it('in TAR format', () => {
+            const tarBlueprintName = `${resourcePrefix}empty_tar`;
+            const downloadedFileName = `${tarBlueprintName}.tar`;
+
+            cy.uploadBlueprint('blueprints/empty.tar', tarBlueprintName);
+            useBlueprintActionButtonsWidget({ contextBlueprintName: tarBlueprintName });
+
+            cy.contains('Download blueprint').click();
+            cy.verifyDownloadedFile(downloadedFileName, 'application/x-tar');
+        });
     });
 
     it('should open deployment modal', () => {

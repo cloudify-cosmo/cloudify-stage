@@ -38,6 +38,7 @@ export default function DeploymentDetails({
     onSetVisibility
 }) {
     const { Grid, ResourceVisibility } = Stage.Basic;
+    const { TextEllipsis } = Stage.Shared;
 
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !_.isEmpty(deployment.site_name);
@@ -72,7 +73,7 @@ export default function DeploymentDetails({
                             name={
                                 <div>
                                     <span style={{ fontSize: 14 }}>{resourceVisibility}</span>
-                                    {deployment.display_name}
+                                    <TextEllipsis multiline={4}>{deployment.display_name}</TextEllipsis>
                                 </div>
                             }
                             value={deployment.description}
@@ -96,7 +97,13 @@ export default function DeploymentDetails({
                                 as={as}
                                 name="Blueprint"
                                 value={deployment.blueprint_id}
-                                subHeaderStyle={{ wordBreak: 'break-word' }}
+                                subHeaderStyle={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    maxWidth: '450px',
+                                    wordBreak: 'break-word'
+                                }}
                             />
                         )}
                         {showSiteName && <DeploymentParameter as={as} name="Site Name" value={deployment.site_name} />}
