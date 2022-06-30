@@ -9,7 +9,7 @@ export default {
         state: 'loggedOut',
         identityProviders: ['local'],
         error: null,
-        showGettingStarted: true
+        showGettingStarted: false
     },
     clusterStatus: {},
     lastUpdated: null,
