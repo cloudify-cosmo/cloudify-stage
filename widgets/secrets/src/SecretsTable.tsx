@@ -115,7 +115,7 @@ export default class SecretsTable extends React.Component {
             showSecretLoading: true
         });
 
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -140,7 +140,7 @@ export default class SecretsTable extends React.Component {
 
     onIsHiddenValueChange(secretKey, isHiddenValue) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetIsHiddenValue(secretKey, isHiddenValue)
@@ -156,7 +156,7 @@ export default class SecretsTable extends React.Component {
 
     setSecretVisibility(secretKey, visibility) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetVisibility(secretKey, visibility)
@@ -179,7 +179,7 @@ export default class SecretsTable extends React.Component {
         const { toolbox } = this.props;
         const { secret } = this.state;
         const secretKey = secret.key;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
         actions
@@ -218,7 +218,7 @@ export default class SecretsTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
         const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { VerticallyAlignedCell } = Stage.Shared;
+        const { VerticallyAlignedCell, TextEllipsis } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
         const { allowedVisibilitySettings } = Stage.Common.Consts;
 
@@ -250,7 +250,7 @@ export default class SecretsTable extends React.Component {
                             <DataTable.Row key={item.key}>
                                 <DataTable.Data>
                                     <VerticallyAlignedCell>
-                                        {item.key}
+                                        <TextEllipsis maxWidth="400px">{item.key}</TextEllipsis>
                                         <ResourceVisibility
                                             visibility={item.visibility}
                                             onSetVisibility={visibility => {
