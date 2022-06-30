@@ -54,13 +54,13 @@ const partialDeploymentsViewColumnDefinitions: Record<
     name: {
         sortFieldName: 'display_name',
         render({ display_name: displayName }) {
-            return <Stage.Basic.TextEllipsis maxWidth="150px">{displayName}</Stage.Basic.TextEllipsis>;
+            return <Stage.Shared.TextEllipsis maxWidth="150px">{displayName}</Stage.Shared.TextEllipsis>;
         }
     },
     blueprintName: {
         sortFieldName: 'blueprint_id',
         render({ blueprint_id: blueprintId }) {
-            return <Stage.Basic.TextEllipsis maxWidth="150px">{blueprintId}</Stage.Basic.TextEllipsis>;
+            return <Stage.Shared.TextEllipsis maxWidth="150px">{blueprintId}</Stage.Shared.TextEllipsis>;
         }
     },
     environmentType: {
@@ -72,7 +72,7 @@ const partialDeploymentsViewColumnDefinitions: Record<
     location: {
         sortFieldName: 'site_name',
         render({ site_name: siteName }) {
-            return <Stage.Basic.TextEllipsis maxWidth="70px">{siteName}</Stage.Basic.TextEllipsis>;
+            return <Stage.Shared.TextEllipsis maxWidth="70px">{siteName}</Stage.Shared.TextEllipsis>;
         }
     },
     subenvironmentsCount: {

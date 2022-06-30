@@ -37,7 +37,8 @@ export default function DeploymentDetails({
     instancesStates,
     onSetVisibility
 }) {
-    const { Grid, ResourceVisibility, TextEllipsis } = Stage.Basic;
+    const { Grid, ResourceVisibility } = Stage.Basic;
+    const { TextEllipsis } = Stage.Shared;
 
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !_.isEmpty(deployment.site_name);

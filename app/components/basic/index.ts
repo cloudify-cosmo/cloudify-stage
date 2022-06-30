@@ -77,7 +77,6 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Map, TileLayer, Marker, Popup as LeafletPopup, Tooltip, FeatureGroup, CircleMarker } from 'react-leaflet';
 import type { ComponentType } from 'react';
 import type { InferProps } from 'prop-types';
-import TextEllipsis from '../TextEllipsis';
 
 Modal.defaultProps = {
     ...Modal.defaultProps,
@@ -172,7 +171,6 @@ export {
     Step,
     Tab,
     Table,
-    TextEllipsis,
     UnsafelyTypedFormField,
     UnsafelyTypedFormGroup,
     VisibilityIcon,

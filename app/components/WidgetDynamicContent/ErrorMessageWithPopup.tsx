@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TextEllipsis from '../TextEllipsis';
+import TextEllipsis from '../shared/TextEllipsis';
 import { Message } from '../basic';
 import { ErrorPopup } from '../shared';
 import { useBoolean } from '../../utils/hooks';

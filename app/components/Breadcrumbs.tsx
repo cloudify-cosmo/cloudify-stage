@@ -5,7 +5,9 @@ import styled from 'styled-components';
 import type { PageDefinition } from '../actions/page';
 import type { ReduxState } from '../reducers';
 
-import { Label, Breadcrumb, EditableLabel, TextEllipsis } from './basic';
+import { Label, Breadcrumb, EditableLabel } from './basic';
+import { TextEllipsis } from './shared';
+
 import type { PageDefinitionWithContext } from './Page';
 
 const BreadCrumbsWrapper = styled.div`

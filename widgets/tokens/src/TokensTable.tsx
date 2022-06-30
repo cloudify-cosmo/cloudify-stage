@@ -5,7 +5,9 @@ import RemoveTokenButton from './RemoveTokenButton';
 import { tableRefreshEvent, dataSortingKeys } from './TokensTable.consts';
 import { translationPath } from './widget.consts';
 
-const { DataTable, TextEllipsis } = Stage.Basic;
+const { DataTable } = Stage.Basic;
+const { TextEllipsis } = Stage.Shared;
+
 const { Time, getT } = Stage.Utils;
 
 const t = getT(`${translationPath}.table`);
