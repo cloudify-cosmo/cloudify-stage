@@ -8,7 +8,12 @@ if (COVERAGE_CHECK) {
 
 module.exports = {
     presets: [
-        '@babel/env',
+        [
+            '@babel/env',
+            {
+                loose: true
+            }
+        ],
         '@babel/react',
         [
             '@babel/typescript',
