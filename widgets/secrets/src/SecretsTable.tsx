@@ -115,7 +115,7 @@ export default class SecretsTable extends React.Component {
             showSecretLoading: true
         });
 
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -140,7 +140,7 @@ export default class SecretsTable extends React.Component {
 
     onIsHiddenValueChange(secretKey, isHiddenValue) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetIsHiddenValue(secretKey, isHiddenValue)
@@ -156,7 +156,7 @@ export default class SecretsTable extends React.Component {
 
     setSecretVisibility(secretKey, visibility) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         toolbox.loading(true);
         actions
             .doSetVisibility(secretKey, visibility)
@@ -179,7 +179,7 @@ export default class SecretsTable extends React.Component {
         const { toolbox } = this.props;
         const { secret } = this.state;
         const secretKey = secret.key;
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
         actions
