@@ -1,4 +1,3 @@
-// @ts-nocheck Not converted to TS yet
 import { saveAs } from 'file-saver';
 import 'isomorphic-fetch';
 import JSZip from 'jszip';
@@ -32,6 +31,22 @@ function getContentType(type?: string) {
     return { 'content-type': type || 'application/json' };
 }
 
+// NOTE: Regex taken from https://stackoverflow.com/questions/23054475/javascript-regex-for-extracting-filename-from-content-disposition-header
+const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
+    const contentDispositionHeader = headers.get('content-disposition');
+
+    if (contentDispositionHeader && contentDispositionHeader?.indexOf('attachment') >= 0) {
+        const matches = filenameRegex.exec(contentDispositionHeader);
+        if (matches?.[1]) {
+            const filename = matches[1].replace(/['"]/g, '');
+            return filename;
+        }
+    }
+
+    return fallbackFilename;
+}
+
 export default class External {
     constructor(protected managerData: any) {}
 
@@ -55,7 +70,7 @@ export default class External {
         return this.ajaxCall(url, 'PATCH', requestOptions);
     }
 
-    doDownload(url: string, fileName: string) {
+    doDownload(url: string, fileName = '') {
         return this.ajaxCall(url, 'get', { fileName });
     }
 
@@ -219,15 +234,13 @@ export default class External {
             options.credentials = 'include';
         }
 
-        if (fileName) {
-            return fetch(actualUrl, options)
-                .then(this.checkStatus.bind(this))
-                .then(response => response.blob())
-                .then(blob => saveAs(blob, fileName));
-        }
         return fetch(actualUrl, options)
             .then(response => this.checkStatus.bind(this)(response, validateAuthentication))
             .then(response => {
+                if (fileName !== undefined) {
+                    const filename = getFilenameFromHeaders(response.headers, fileName);
+                    return response.blob().then(blob => saveAs(blob, filename));
+                }
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
                     return response.status !== 204 && contentType.indexOf('application/json') >= 0
