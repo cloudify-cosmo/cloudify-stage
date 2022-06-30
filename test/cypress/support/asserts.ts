@@ -1,5 +1,6 @@
 import path from 'path';
 import { last } from 'lodash';
+import mime from 'mime-types';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 
@@ -25,11 +26,12 @@ const commands = {
     },
     verifyLocationByPageId: (expectedPageId: string) =>
         cy.location('pathname').should('be.equal', `/console/page/${expectedPageId}`),
-    verifyDownloadedFileExistence: (fileName: string) => {
+    verifyDownloadedFile: (fileName: string, mimeType: string) => {
         const downloadsFolder = Cypress.config('downloadsFolder');
         const downloadedFilePath = path.join(downloadsFolder, fileName);
 
         cy.readFile(downloadedFilePath).should('exist');
+        expect(mime.lookup(downloadedFilePath)).to.be.equal(mimeType);
     }
 };
 

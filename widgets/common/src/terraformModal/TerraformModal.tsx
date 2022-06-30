@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { FormEvent } from 'react';
-import type { CheckboxProps, DropdownProps } from 'semantic-ui-react';
+import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
 import { chain, find, some, isEmpty, entries } from 'lodash';
 import styled from 'styled-components';
@@ -16,11 +16,13 @@ import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
 import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
+import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';
 
 const t = Stage.Utils.getT('widgets.blueprints.terraformModal');
 const tError = Stage.Utils.composeT(t, 'errors');
 
+const { useBoolean, useInput, useResettableState, useFormErrors } = Stage.Hooks;
 const { Dropdown, Accordion, ApproveButton, CancelButton, Confirm, Header, Image, LoadingOverlay, Modal, Form } =
     Stage.Basic;
 
@@ -45,7 +47,6 @@ function LengthLimitedDynamicTableInput({
     index,
     ...rest
 }: CustomConfigurationComponentProps<string>) {
-    const { useFormErrors } = Stage.Hooks;
     const { getFieldError } = useFormErrors('terraformModal');
 
     return (
@@ -74,28 +75,30 @@ function TerraformVariableValueInput({
     index,
     ...rest
 }: TerraformVariableValueInputProps) {
-    const { useFormErrors } = Stage.Hooks;
+    const showSinglelineInput = rowValues?.source === 'secret';
     const { getFieldError } = useFormErrors('terraformModal');
+    const InputComponent = showSinglelineInput ? SinglelineInput : Form.Input;
+
+    const handleChange: InputProps['onChange'] = (event, { value: valuePassed }) => {
+        onChange?.(event, { name, value: valuePassed });
+    };
 
     return (
-        <Form.Input
-            type={rowValues?.source === 'secret' ? 'password' : 'text'}
+        <InputComponent
             disabled={rowValues?.duplicated}
             name={name}
             error={getFieldError(`${idPrefix}_${index}_${name}`)}
             fluid
-            onChange={(event, { value: valuePassed }) => onChange?.(event, { name, value: valuePassed as string })}
+            onChange={handleChange}
+            maxLength={inputMaxLength}
             value={rowValues?.duplicated ? '' : value}
             {...rest}
-        >
-            <input maxLength={inputMaxLength} />
-        </Form.Input>
+        />
     );
 }
 
 function getDynamicTableDropdown(options: DropdownProps['options']) {
     return ({ name, onChange, idPrefix, index, ...rest }: CustomConfigurationComponentProps<string>) => {
-        const { useFormErrors } = Stage.Hooks;
         const { getFieldError } = useFormErrors('terraformModal');
 
         return (
@@ -245,8 +248,6 @@ function markDuplicates(
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
-    const { useBoolean, useInput, useResettableState, useFormErrors } = Stage.Hooks;
-
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();

@@ -17,6 +17,7 @@ import VerticallyAlignedCell from './VerticallyAlignedCell';
 import ErrorPopup from './ErrorPopup';
 import * as Widgets from './widgets';
 import * as PluginActions from '../../actions/plugins';
+import TextEllipsis from './TextEllipsis';
 
 export {
     ClusterServicesList,
@@ -28,6 +29,7 @@ export {
     Graph,
     IdPopup,
     Link,
+    TextEllipsis,
     MaintenanceModeActivationButton,
     MaintenanceModeModal,
     PageFilter,
