@@ -13,7 +13,7 @@ interface TextEllipsisProps {
     maxWidth?: string;
 
     /**
-     * undefined or number of allowed line
+     * number of allowed lines
      */
     multiline?: number;
 }
