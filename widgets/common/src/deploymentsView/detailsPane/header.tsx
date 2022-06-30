@@ -24,6 +24,7 @@ export interface DetailsPaneHeaderProps {
 const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployment, drilldownButtons }) => {
     const { id, display_name: displayName } = deployment;
     const { Header } = Stage.Basic;
+    const { TextEllipsis } = Stage.Shared;
     const { Widget } = Stage.Shared.Widgets;
     const uuidRef = useRef(Stage.Utils.uuid);
     const deploymentActionButtonsWidgetDescription = useMemo(
@@ -46,7 +47,9 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
     return (
         <HeaderWrapper>
             <div style={{ marginRight: '1rem', marginBottom: '1rem' }}>
-                <Header>{displayName}</Header>
+                <Header>
+                    <TextEllipsis maxWidth="300px">{displayName}</TextEllipsis>
+                </Header>
             </div>
             {drilldownButtons}
             <Widget
