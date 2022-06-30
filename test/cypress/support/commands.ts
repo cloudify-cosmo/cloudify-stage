@@ -46,9 +46,9 @@ const getCommonHeaders = () => ({
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.intercept('GET', `/user?_get_data=true`, req => {
+    cy.intercept('GET', '/user?_get_data=true', req => {
         req.continue(res => {
-            res.send({ show_getting_started: modalEnabled });
+            res.send({ showGettingStarted: modalEnabled });
         });
     });
 
