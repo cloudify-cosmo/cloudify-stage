@@ -77,17 +77,11 @@ export function login(
     };
 }
 
-function responseUserData({
-    username,
-    systemRole,
-    groupSystemRoles,
-    tenantsRoles,
-    showGettingStarted
-}: AuthUserResponse) {
+function responseUserData({ username, role, groupSystemRoles, tenantsRoles, showGettingStarted }: AuthUserResponse) {
     return {
         type: types.SET_USER_DATA,
         username,
-        role: systemRole,
+        role,
         groupSystemRoles,
         tenantsRoles,
         showGettingStarted
