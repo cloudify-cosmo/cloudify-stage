@@ -257,6 +257,7 @@ const commands = {
                 mode: isCommunity ? 'community' : 'main',
                 showGettingStarted: !disableGettingStarted
             });
+            if (disableGettingStarted) mockGettingStarted(false);
         });
         return cy.visit(visitPage);
     },
@@ -367,11 +368,13 @@ const commands = {
             // In order to load default configuration for widget widget edit configuration modal should be opened
             // and configuration saved without making any changes
             .editWidgetConfiguration(widgetId, noop),
-    refreshPage: () => {
+    refreshPage: (disableGettingStarted = true) => {
+        mockGettingStarted(!disableGettingStarted);
         cy.get('.pageMenuItem.active').click({ force: true });
         return collapseSidebar();
     },
-    refreshTemplate: () => {
+    refreshTemplate: (disableGettingStarted = true) => {
+        mockGettingStarted(!disableGettingStarted);
         return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
