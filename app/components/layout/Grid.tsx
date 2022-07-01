@@ -1,13 +1,10 @@
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import type { CSSProperties, PropsWithChildren, ReactNode } from 'react';
+import type { CSSProperties, FunctionComponent, ReactNode } from 'react';
 import React from 'react';
 import type { ReactGridLayoutProps } from 'react-grid-layout';
-import { Responsive } from 'react-grid-layout';
+import ReactGridLayout from 'react-grid-layout';
 import { useWidthObserver } from '../../utils/hooks';
 import GridItem from './GridItem';
-
-const ReactGridLayout = Responsive;
 
 interface GridProps {
     isEditMode: boolean;
@@ -15,7 +12,7 @@ interface GridProps {
     style?: CSSProperties;
 }
 
-export default function Grid({ children, isEditMode, onGridDataChange, style }: PropsWithChildren<GridProps>) {
+const Grid: FunctionComponent<GridProps> = ({ children, isEditMode, onGridDataChange, style }) => {
     const [wrapperRef, getWidth] = useWidthObserver();
 
     const saveChangedItems: ReactGridLayoutProps['onLayoutChange'] = layout => {
@@ -66,8 +63,7 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
             {width && (
                 <ReactGridLayout
                     className={['layout', isEditMode && 'isEditMode'].join(' ')}
-                    breakpoints={{ lg: 1000, md: 800, sm: 640, xs: 320, xxs: 0 }}
-                    cols={{ lg: 12, md: 10, sm: 8, xs: 6, xxs: 2 }}
+                    cols={12}
                     rowHeight={10}
                     onLayoutChange={saveChangedItems}
                     isDraggable={isEditMode}
@@ -82,15 +78,5 @@ export default function Grid({ children, isEditMode, onGridDataChange, style }: 
             )}
         </div>
     );
-}
-
-Grid.propTypes = {
-    children: PropTypes.node.isRequired,
-    onGridDataChange: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired,
-    style: PropTypes.shape({})
 };
-
-Grid.defaultProps = {
-    style: undefined
-};
+export default Grid;
