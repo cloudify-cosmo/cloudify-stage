@@ -73,7 +73,6 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
                     disabled={loading}
                     content={i18n.t('templates.createPageModal.create', 'Create')}
                     icon="checkmark"
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>

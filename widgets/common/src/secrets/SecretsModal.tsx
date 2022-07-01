@@ -75,13 +75,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
             <Modal.Actions>
                 <CancelButton onClick={onClose} disabled={isLoading} />
-                <ApproveButton
-                    onClick={onSave}
-                    disabled={isLoading}
-                    content={t('buttons.add')}
-                    icon="plus"
-                    color="green"
-                />
+                <ApproveButton onClick={onSave} disabled={isLoading} content={t('buttons.add')} icon="plus" />
             </Modal.Actions>
         </Modal>
     );

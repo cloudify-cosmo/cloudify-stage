@@ -261,13 +261,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton
-                    onClick={onApprove}
-                    disabled={isLoading}
-                    content={t('execute')}
-                    icon="cogs"
-                    color="green"
-                />
+                <ApproveButton onClick={onApprove} disabled={isLoading} content={t('execute')} icon="cogs" />
             </Modal.Actions>
         </Modal>
     );

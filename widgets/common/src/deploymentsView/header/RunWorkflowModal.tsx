@@ -108,12 +108,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} />
-                <ApproveButton
-                    onClick={runWorkflow}
-                    color="green"
-                    content={modalT('buttons.run')}
-                    disabled={!workflowId}
-                />
+                <ApproveButton onClick={runWorkflow} content={modalT('buttons.run')} disabled={!workflowId} />
             </Modal.Actions>
         </Modal>
     );

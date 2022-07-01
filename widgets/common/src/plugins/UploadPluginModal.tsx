@@ -115,13 +115,7 @@ function UploadPluginModal({ open, onHide, toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton
-                    onClick={uploadPlugin}
-                    disabled={isLoading}
-                    content="Upload"
-                    icon="upload"
-                    color="green"
-                />
+                <ApproveButton onClick={uploadPlugin} disabled={isLoading} content="Upload" icon="upload" />
             </Modal.Actions>
         </Modal>
     );

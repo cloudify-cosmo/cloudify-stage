@@ -100,7 +100,6 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
                     disabled={loading}
                     content={i18n.t('widgets.common.deployments.setSiteModal.updateButton')}
                     icon="edit"
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>

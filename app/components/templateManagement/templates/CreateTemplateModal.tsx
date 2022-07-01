@@ -255,7 +255,6 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
                     disabled={loading}
                     content={editMode ? t('update') : t('create')}
                     icon={editMode ? 'edit' : 'checkmark'}
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>

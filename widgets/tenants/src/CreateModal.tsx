@@ -64,7 +64,6 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                     disabled={isLoading}
                     content={t('form.buttons.addTenant')}
                     icon="add user"
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>
