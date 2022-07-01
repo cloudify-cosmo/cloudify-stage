@@ -480,6 +480,10 @@ table.servicesData button.refreshButton {
 .ui.dropdown.multiple[role=combobox][aria-expanded=false] {
   overflow-y: auto;
   max-height: 35px;
+
+  .icon {
+    line-height: inherit;
+  }
 }
 
 .ui.form .inline.fields {
