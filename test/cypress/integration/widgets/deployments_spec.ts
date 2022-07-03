@@ -10,16 +10,16 @@ describe('Deployments widget', () => {
     const site = { name: siteName };
     const blueprintUrl = exampleBlueprintUrl;
 
-    const selectDeploymentActionFromMenu = (name: string, menuClassName: string, action: string) => {
-        cy.searchInDeploymentsWidget(name);
+    const selectDeploymentActionFromMenu = (id: string, name: string, menuClassName: string, action: string) => {
+        cy.searchInDeploymentsWidget(id);
         cy.contains('div.row', name).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
-    const executeDeploymentAction = (name: string, action: string) => {
-        selectDeploymentActionFromMenu(name, '.deploymentActionsMenu', action);
+    const executeDeploymentAction = (id: string, name: string, action: string) => {
+        selectDeploymentActionFromMenu(id, name, '.deploymentActionsMenu', action);
     };
-    const executeDeploymentWorkflow = (name: string, workflow: string) => {
-        selectDeploymentActionFromMenu(name, '.workflowsMenu', workflow);
+    const executeDeploymentWorkflow = (id: string, name: string, workflow: string) => {
+        selectDeploymentActionFromMenu(id, name, '.workflowsMenu', workflow);
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
 
@@ -179,12 +179,12 @@ describe('Deployments widget', () => {
         };
 
         it('install workflow from deployment actions menu', () => {
-            executeDeploymentAction(deploymentName, 'Install');
+            executeDeploymentAction(deploymentId, deploymentName, 'Install');
             startAndVerifyWorkflowExecution('install');
         });
 
         it('a workflow from workflows menu', () => {
-            executeDeploymentWorkflow(deploymentName, 'Restart');
+            executeDeploymentWorkflow(deploymentId, deploymentName, 'Restart');
             startAndVerifyWorkflowExecution('restart');
         });
     });
@@ -192,7 +192,7 @@ describe('Deployments widget', () => {
     it('should allow to set site for deployment', () => {
         cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setDeploymentSite');
 
-        executeDeploymentAction(deploymentName, 'Set Site');
+        executeDeploymentAction(deploymentId, deploymentName, 'Set Site');
 
         cy.get('.modal').within(() => {
             cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
@@ -211,7 +211,7 @@ describe('Deployments widget', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
-        executeDeploymentAction(deploymentName, 'Update');
+        executeDeploymentAction(deploymentId, deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
@@ -250,7 +250,7 @@ describe('Deployments widget', () => {
             cy.get(`div[name=${name}]`).click();
             cy.get(`div[name=${name}] input`).type(value);
         };
-        executeDeploymentAction(deploymentName, 'Manage Labels');
+        executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
         cy.get('.modal').within(() => {
             cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
             cy.wait('@fetchLabels');
@@ -287,7 +287,7 @@ describe('Deployments widget', () => {
         cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
         cy.interceptSp('DELETE', { path: `/deployments/${testDeploymentId}?force=true` }).as('deleteDeployment');
 
-        executeDeploymentAction(testDeploymentName, 'Force Delete');
+        executeDeploymentAction(testDeploymentId, testDeploymentName, 'Force Delete');
 
         cy.contains(
             `Are you sure you want to ignore the live nodes and delete the deployment ${testDeploymentName} (${testDeploymentId})?`
