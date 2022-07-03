@@ -18,7 +18,7 @@ const getPageLayout = (tabs: MarketplaceTab[], displayStyle: MarketplaceDisplayS
             id: `blueprint-catalog-${index}`,
             name: t('modal.blueprintCatalogName'),
             height: 24,
-            maximized: true,
+            width: 12,
             definition: 'blueprintCatalog',
             configuration: {
                 jsonPath: tab.url,
