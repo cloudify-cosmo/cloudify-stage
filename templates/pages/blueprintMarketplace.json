@@ -156,7 +156,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 65,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -172,7 +172,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -204,7 +204,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 50,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
