@@ -165,7 +165,7 @@ export default function CreateModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={onApprove} disabled={isLoading} content="Add" icon="add user" color="green" />
+                <ApproveButton onClick={onApprove} disabled={isLoading} content="Add" icon="add user" />
             </Modal.Actions>
         </Modal>
     );

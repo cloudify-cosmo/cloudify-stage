@@ -220,13 +220,7 @@ export default function InstallAgentsModal({
             <Modal.Actions>
                 <CancelButton content={executionStarted ? 'Close' : undefined} onClick={onCancel} disabled={loading} />
                 {!executionStarted && (
-                    <ApproveButton
-                        onClick={onApprove}
-                        disabled={loading}
-                        content="Install"
-                        icon="download"
-                        color="green"
-                    />
+                    <ApproveButton onClick={onApprove} disabled={loading} content="Install" icon="download" />
                 )}
                 {executionStarted && (
                     <Button

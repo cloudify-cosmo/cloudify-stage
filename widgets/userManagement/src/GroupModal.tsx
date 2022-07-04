@@ -72,7 +72,7 @@ export default function GroupModal({ onHide, open, user, toolbox, groups }) {
 
             <Modal.Actions>
                 <CancelButton onClick={onCancel} disabled={isLoading} />
-                <ApproveButton onClick={submitGroup} disabled={isLoading} icon="user" color="green" />
+                <ApproveButton onClick={submitGroup} disabled={isLoading} icon="user" />
             </Modal.Actions>
         </Modal>
     );

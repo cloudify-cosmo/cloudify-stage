@@ -497,7 +497,7 @@ function UpdateDetailsModal({
 
                 <Modal.Actions>
                     <CancelButton onClick={onClose} content="Close" />
-                    {isPreview && <ApproveButton onClick={onUpdate} content="Update" icon="edit" color="green" />}
+                    {isPreview && <ApproveButton onClick={onUpdate} content="Update" icon="edit" />}
                 </Modal.Actions>
             </Modal>
         </div>

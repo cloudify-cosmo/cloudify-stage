@@ -68,7 +68,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {showCreateForm ? (
                     <>
                         <CancelButton content={t('buttons.cancel')} onClick={onClose} />
-                        <ApproveButton content={t('buttons.create')} color="green" icon="plus" onClick={handleSubmit} />
+                        <ApproveButton content={t('buttons.create')} icon="plus" onClick={handleSubmit} />
                     </>
                 ) : (
                     <CancelButton content={t('buttons.close')} onClick={onClose} />
