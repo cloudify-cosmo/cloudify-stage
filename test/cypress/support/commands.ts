@@ -368,13 +368,11 @@ const commands = {
             // In order to load default configuration for widget widget edit configuration modal should be opened
             // and configuration saved without making any changes
             .editWidgetConfiguration(widgetId, noop),
-    refreshPage: (disableGettingStarted = true) => {
-        mockGettingStarted(!disableGettingStarted);
+    refreshPage: () => {
         cy.get('.pageMenuItem.active').click({ force: true });
         return collapseSidebar();
     },
-    refreshTemplate: (disableGettingStarted = true) => {
-        mockGettingStarted(!disableGettingStarted);
+    refreshTemplate: () => {
         return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
