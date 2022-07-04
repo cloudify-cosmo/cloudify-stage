@@ -254,7 +254,8 @@ const commands = {
             cy.initLocalStorage({
                 username,
                 role,
-                mode: isCommunity ? 'community' : 'main'
+                mode: isCommunity ? 'community' : 'main',
+                showGettingStarted: !disableGettingStarted
             });
             if (disableGettingStarted) mockGettingStarted(false);
         });
