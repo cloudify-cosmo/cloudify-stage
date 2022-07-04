@@ -27,7 +27,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 50,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -44,7 +44,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 65,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -60,7 +60,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 48,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -76,7 +76,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 70,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -92,7 +92,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 65,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -140,7 +140,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 65,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -156,7 +156,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -172,7 +172,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -188,7 +188,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 50,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
@@ -204,7 +204,7 @@
                     "widgets": [
                         {
                             "name": "Blueprints Catalog",
-                            "height": 38,
+                            "height": 18,
                             "width": 24,
                             "definition": "blueprintCatalog",
                             "configuration": {
