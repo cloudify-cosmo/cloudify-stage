@@ -120,7 +120,8 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation completed! (you can now close this window)"
+            "doneMessage": "Installation completed! (you can now close this window)",
+            "failureMessage": "Installation Failed."
         }
     },
     "editMode": {
