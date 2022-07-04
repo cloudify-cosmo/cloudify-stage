@@ -103,7 +103,6 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
                         onClick={() => onConfirm(this.getSelectedTenants())}
                         disabled={loading || noTenantsSelected}
                         icon="undo"
-                        color="green"
                         content="Reset"
                     />
                 </Modal.Actions>

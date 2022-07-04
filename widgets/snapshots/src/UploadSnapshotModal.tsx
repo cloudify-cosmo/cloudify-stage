@@ -94,13 +94,7 @@ export default function UploadModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton
-                    onClick={submitUpload}
-                    disabled={isLoading}
-                    content="Upload"
-                    icon="upload"
-                    color="green"
-                />
+                <ApproveButton onClick={submitUpload} disabled={isLoading} content="Upload" icon="upload" />
             </Modal.Actions>
         </Modal>
     );

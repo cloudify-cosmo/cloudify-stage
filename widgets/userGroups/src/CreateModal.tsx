@@ -144,13 +144,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton
-                    onClick={submitCreate}
-                    disabled={isLoading}
-                    content={t('buttons.add')}
-                    icon="add user"
-                    color="green"
-                />
+                <ApproveButton onClick={submitCreate} disabled={isLoading} content={t('buttons.add')} icon="add user" />
             </Modal.Actions>
         </Modal>
     );

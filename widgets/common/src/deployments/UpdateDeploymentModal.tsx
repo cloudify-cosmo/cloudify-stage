@@ -382,7 +382,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
                 <ApproveButton onClick={onPreview} disabled={isLoading} content="Preview" icon="zoom" color="blue" />
-                <ApproveButton onClick={onUpdate} disabled={isLoading} content="Update" icon="edit" color="green" />
+                <ApproveButton onClick={onUpdate} disabled={isLoading} content="Update" icon="edit" />
             </Modal.Actions>
         </Modal>
     );

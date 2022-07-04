@@ -106,7 +106,6 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
                     onClick={submitUsers}
                     disabled={isLoading}
                     icon="user"
-                    color="green"
                     content={waitingForConfirmation ? t('buttons.approve') : undefined}
                 />
             </Modal.Actions>
