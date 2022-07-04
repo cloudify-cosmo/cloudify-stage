@@ -111,9 +111,9 @@ const SummaryStep = ({
         pluginsInstallationTasks.loading || secretsInstallationTasks.loading || blueprintsInstallationTasks.loading;
 
     const errorDetected =
-        pluginsInstallationTasks.error ||
-        secretsInstallationTasks.error ||
-        blueprintsInstallationTasks.error ||
+        !!pluginsInstallationTasks.error ||
+        !!secretsInstallationTasks.error ||
+        !!blueprintsInstallationTasks.error ||
         installationErrors.length > 0;
 
     const getProgressMessage = useCallback((): string => {
@@ -166,10 +166,17 @@ const SummaryStep = ({
                             statuses={installationStatuses.blueprint}
                         />
                     </List>
+                    {/* TODO: Extract as a separate component */}
                     {installationProgress !== undefined && (
                         <>
                             <Divider hidden />
-                            <Progress progress size="large" percent={installationProgress} indicating>
+                            <Progress
+                                progress
+                                size="large"
+                                percent={installationProgress}
+                                indicating
+                                error={errorDetected}
+                            >
                                 {getProgressMessage()}
                             </Progress>
                         </>
