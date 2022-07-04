@@ -15,9 +15,9 @@ import type {
 
 interface TaskListProps {
     installationStatuses: Record<TaskType, Record<string, TaskStatus>>;
-    pluginsTasks: ReturnType<typeof createPluginInstallationTasks>;
-    secretsTasks: ReturnType<typeof createSecretsInstallationTasks>;
-    blueprintsTasks: ReturnType<typeof createBlueprintsInstallationTasks>;
+    pluginsTasks?: ReturnType<typeof createPluginInstallationTasks>;
+    secretsTasks?: ReturnType<typeof createSecretsInstallationTasks>;
+    blueprintsTasks?: ReturnType<typeof createBlueprintsInstallationTasks>;
 }
 
 const TaskList: FunctionComponent<TaskListProps> = ({

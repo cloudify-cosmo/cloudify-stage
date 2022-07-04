@@ -19,6 +19,7 @@ import SecretsInstallationTasks from './SecretsInstallationTasks';
 import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+import TaskList from './TaskList';
 
 const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
@@ -151,21 +152,12 @@ const SummaryStep = ({
             )}
             {showTaskListSummary && (
                 <>
-                    <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
-                    <List relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
-                        <PluginsInstallationTasks
-                            tasks={pluginsInstallationTasks.tasks}
-                            statuses={installationStatuses.plugin}
-                        />
-                        <SecretsInstallationTasks
-                            tasks={secretsInstallationTasks.tasks}
-                            statuses={installationStatuses.secret}
-                        />
-                        <BlueprintsInstallationTasks
-                            tasks={blueprintsInstallationTasks.tasks}
-                            statuses={installationStatuses.blueprint}
-                        />
-                    </List>
+                    <TaskList
+                        installationStatuses={installationStatuses}
+                        pluginsTasks={pluginsInstallationTasks.tasks}
+                        secretsTasks={secretsInstallationTasks.tasks}
+                        blueprintsTasks={blueprintsInstallationTasks.tasks}
+                    />
                     {installationProgress !== undefined && (
                         <>
                             <Divider hidden />
