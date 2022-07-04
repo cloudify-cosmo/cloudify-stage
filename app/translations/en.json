@@ -121,7 +121,7 @@
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation completed! (you can now close this window)",
-            "failureMessage": "Installation Failed."
+            "failureMessage": "Installation failed."
         }
     },
     "editMode": {
