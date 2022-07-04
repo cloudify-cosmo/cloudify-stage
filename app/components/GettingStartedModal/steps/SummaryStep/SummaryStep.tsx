@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import React, { memo, useCallback, useEffect } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
 import { useResettableState } from '../../../../utils/hooks';
@@ -116,14 +116,17 @@ const SummaryStep = ({
         !!blueprintsInstallationTasks.error ||
         installationErrors.length > 0;
 
-    const getProgressMessage = useCallback((): string => {
-        const installationHasBeenCompleted = installationProgress && installationProgress >= 100;
+    const showTaskListSummary =
+        pluginsInstallationTasks.tasks || secretsInstallationTasks.tasks || blueprintsInstallationTasks.tasks;
+
+    const installationProgressMessage: string = useMemo(() => {
+        const installationCompleted = installationProgress && installationProgress >= 100;
 
         if (errorDetected) {
             return tMessages('failureMessage');
         }
 
-        if (installationHasBeenCompleted) {
+        if (installationCompleted) {
             return tMessages('doneMessage');
         }
 
@@ -146,10 +149,7 @@ const SummaryStep = ({
                     </List>
                 </Message>
             )}
-            {/* TODO: Extract as a separate variable */}
-            {(pluginsInstallationTasks.tasks ||
-                secretsInstallationTasks.tasks ||
-                blueprintsInstallationTasks.tasks) && (
+            {showTaskListSummary && (
                 <>
                     <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
                     <List relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
@@ -166,7 +166,6 @@ const SummaryStep = ({
                             statuses={installationStatuses.blueprint}
                         />
                     </List>
-                    {/* TODO: Extract as a separate component */}
                     {installationProgress !== undefined && (
                         <>
                             <Divider hidden />
@@ -177,7 +176,7 @@ const SummaryStep = ({
                                 indicating
                                 error={errorDetected}
                             >
-                                {getProgressMessage()}
+                                {installationProgressMessage}
                             </Progress>
                         </>
                     )}
