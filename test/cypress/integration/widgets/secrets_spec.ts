@@ -10,7 +10,7 @@ describe('Secret store management widget', () => {
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
             cy.get('textarea').type(secretValue);
-            cy.get('button.green').click();
+            cy.get('button.positive').click();
         });
 
         cy.get('.secretsWidget').within(() => {
@@ -30,7 +30,7 @@ describe('Secret store management widget', () => {
         cy.get('.secretsWidget .edit').click();
         cy.contains(secretValue);
         cy.get('textarea').clear().type(newValue);
-        cy.get('button.green').click();
+        cy.get('button.positive').click();
         cy.get('.secretsWidget').within(() => {
             cy.get('.unhide').click();
             cy.contains(newValue);
