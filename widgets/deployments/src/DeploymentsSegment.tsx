@@ -12,6 +12,11 @@ const DeploymentName = styled.span`
     overflow: hidden;
 `;
 
+const DeploymentIdAndNAme = styled.span`
+    display: inline-flex;
+    align-items: center;
+`;
+
 export default function DeploymentsSegment({
     data,
     fetchData,
@@ -66,12 +71,12 @@ export default function DeploymentsSegment({
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <span style={{ display: 'inline-flex' }}>
+                                    <DeploymentIdAndNAme>
                                         <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
                                         <DeploymentName title={formatName(item)} aria-label="Deployment name">
                                             {item.display_name}
                                         </DeploymentName>
-                                    </span>
+                                    </DeploymentIdAndNAme>
                                 </Header>
                             </div>
                         }
