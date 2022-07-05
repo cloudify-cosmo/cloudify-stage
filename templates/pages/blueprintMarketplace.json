@@ -19,8 +19,7 @@
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
-                    ],
-                    "isDefault": true
+                    ]
                 },
                 {
                     "name": "AWS",
