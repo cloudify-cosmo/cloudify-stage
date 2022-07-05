@@ -313,8 +313,6 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    renderMultilineText = text => <span style={{ whiteSpace: 'pre' }}>{text}</span>;
-
     render() {
         const {
             error,
@@ -351,7 +349,7 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label={columnT('isAdmin')} width="10%" />
                     <DataTable.Column label={columnT('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={this.renderMultilineText(columnT('showGettingStarted'))}
+                        label={Stage.Utils.renderMultilineText(columnT('showGettingStarted'))}
                         name="show_getting_started"
                         width="10%"
                     />
