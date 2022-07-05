@@ -167,7 +167,7 @@ describe('Templates segment', () => {
         cy.log('Remove template');
         cy.get('.blue.segment');
         getTemplateRow('Another Template').within(() => cy.get('.remove').click());
-        cy.get('.popup button.positive').click({ force: true });
+        cy.get('.popup button.green').click({ force: true });
         cy.get('.main .loading').should('not.exist');
 
         cy.log('Verify template was removed');
