@@ -17,6 +17,7 @@ import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import combineClassNames from './shared/combineClassNames';
 import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
+import renderMultilineText from './shared/renderMultilineText';
 import type { WidgetDefinition } from './StageAPI';
 import { isEmptyWidgetData } from './StageAPI';
 
@@ -38,6 +39,8 @@ export default class StageUtils {
     static mapGridParamsToManagerGridParams = mapGridParamsToManagerGridParams;
 
     static parseMarkdown = marked;
+
+    static renderMultilineText = renderMultilineText;
 
     static saveAs = saveAs;
 
