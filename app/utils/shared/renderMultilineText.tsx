@@ -4,7 +4,6 @@ import React from 'react';
 const newLineCharacter = '\n';
 
 const renderMultilineText = (text: string, useLineBreakElement = true) => {
-
     if (text.indexOf(newLineCharacter) === -1) {
         return text;
     }
