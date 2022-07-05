@@ -14,7 +14,10 @@ Vendor:         Cloudify Platform Ltd.
 Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 14.18.1, rsync
-Requires:       nodejs >= 14.18.1, cloudify-rest-service, nginx, shadow-utils
+Requires:       nodejs >= 14.18.1, cloudify-rest-service, nginx, shadow-utils, libsass, libpng-devel
+%if "%{arch}" == "arm64"
+Requires:       gcc-c++, gcc, node-gyp
+%endif
 AutoReqProv:    no
 
 
