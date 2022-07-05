@@ -244,7 +244,6 @@ function MaintenanceModeModal({
                     onClick={onApprove}
                     content={tConfirmModal('yes', 'Yes')}
                     icon="doctor"
-                    color="green"
                     disabled={loading}
                 />
             </Modal.Actions>

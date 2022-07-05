@@ -105,7 +105,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
 
             <Modal.Actions>
                 <CancelButton onClick={onCancel} disabled={isLoading} />
-                <ApproveButton onClick={submitTenants} disabled={isLoading} icon="user" color="green" />
+                <ApproveButton onClick={submitTenants} disabled={isLoading} icon="user" />
             </Modal.Actions>
         </Modal>
     );

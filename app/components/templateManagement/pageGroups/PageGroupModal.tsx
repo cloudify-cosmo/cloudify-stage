@@ -129,7 +129,6 @@ const PageGroupModal: React.FunctionComponent<PageGroupModalProps> = ({
                 <ApproveButton
                     content={editMode ? t('submitUpdate') : t('submitCreate')}
                     icon={editMode ? 'edit' : 'checkmark'}
-                    color="green"
                     onClick={handleSubmit}
                 />
             </Modal.Actions>

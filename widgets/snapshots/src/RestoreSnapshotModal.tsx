@@ -83,13 +83,7 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton
-                    onClick={submitRestore}
-                    disabled={isLoading}
-                    content="Restore"
-                    icon="undo"
-                    color="green"
-                />
+                <ApproveButton onClick={submitRestore} disabled={isLoading} content="Restore" icon="undo" />
             </Modal.Actions>
         </Modal>
     );

@@ -160,7 +160,6 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
                         disabled={isLoading}
                         content={t('modal.uploadButton')}
                         icon="upload"
-                        color="green"
                     />
                 </Modal.Actions>
             </Modal>

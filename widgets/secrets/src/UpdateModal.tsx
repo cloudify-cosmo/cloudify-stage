@@ -89,13 +89,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
                     {canUpdateSecret && (
-                        <ApproveButton
-                            onClick={updateSecret}
-                            disabled={isLoading}
-                            content="Update"
-                            icon="edit"
-                            color="green"
-                        />
+                        <ApproveButton onClick={updateSecret} disabled={isLoading} content="Update" icon="edit" />
                     )}
                 </Modal.Actions>
             </Modal>
