@@ -129,7 +129,6 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
                     disabled={loading}
                     content={i18n.t('users.changePasswordModal.change', 'Change')}
                     icon="lock"
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>

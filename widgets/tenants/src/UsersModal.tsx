@@ -102,7 +102,7 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={updateTenant} disabled={isLoading} content="Save" icon="user" color="green" />
+                <ApproveButton onClick={updateTenant} disabled={isLoading} content="Save" icon="user" />
             </Modal.Actions>
         </Modal>
     );

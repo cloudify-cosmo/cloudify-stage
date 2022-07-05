@@ -115,7 +115,6 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
                     onClick={onApply}
                     disabled={isLoading || labels.length === 0}
                     content={i18n.t(i18nApplyKey)}
-                    color="green"
                 />
             </Modal.Actions>
         </Modal>

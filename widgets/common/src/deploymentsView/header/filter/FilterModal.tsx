@@ -234,11 +234,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
                     saveDisabled={!filterId.value || !filterDirty.value || !!filterRulesResult.data?.is_system_filter}
                 />
                 <CancelButton onClick={handleCancel} />
-                <ApproveButton
-                    onClick={handleSubmit}
-                    color="green"
-                    content={i18n.t(`${i18nPrefix}.header.filter.modal.submit`)}
-                />
+                <ApproveButton onClick={handleSubmit} content={i18n.t(`${i18nPrefix}.header.filter.modal.submit`)} />
             </Modal.Actions>
         </Modal>
     );
