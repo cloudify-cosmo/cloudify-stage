@@ -8,23 +8,14 @@ export interface ServiceButtonProps {
     icon: SemanticICONS;
     label: string;
     defaultMarketplaceTab?: string;
-    toolbox: Stage.Types.Toolbox;
 }
 
-const ServiceButton: FunctionComponent<ServiceButtonProps> = ({
-    basic,
-    color,
-    icon,
-    label,
-    defaultMarketplaceTab,
-    toolbox
-}) => {
+const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, icon, label, defaultMarketplaceTab }) => {
     const { Button } = Stage.Basic;
     const dispatch = ReactRedux.useDispatch();
 
     const handleClick = () => {
         if (defaultMarketplaceTab) {
-            toolbox.getWidget();
             // TODO Norbert: Share blueprintMarketplace page name between this and FirstUserJourneyButtons components
             // toolbox.drillDown(widget, 'blueprintMarketplace', {
             //     defaultTab: defaultMarketplaceTab

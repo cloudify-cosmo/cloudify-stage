@@ -1,3 +1,5 @@
+// TODO Norbert: Remove this component if it will be unused
+
 import type { FunctionComponent } from 'react';
 import type { MarketplaceDisplayStyle, MarketplaceTab } from './types';
 

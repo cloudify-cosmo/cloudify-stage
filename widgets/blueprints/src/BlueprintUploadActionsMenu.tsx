@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
+import { push } from 'connected-react-router';
 import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
@@ -19,28 +20,32 @@ interface BlueprintUploadActionsMenuProps {
     showGenerateInComposerButton?: boolean;
 }
 
+// TODO Norbert: do a cleanup regarding removed configuration props
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     upward,
     toolbox,
-    marketplaceConfig,
     showGenerateInComposerButton = false
 }) => {
     const {
         Basic: { Dropdown },
-        Common: { BlueprintMarketplace, TerraformModal },
+        Common: { TerraformModal },
         Hooks: { useBoolean }
     } = Stage;
     const { Menu, Item } = Dropdown;
     const UploadBlueprintModal = Stage.Common.Blueprints.UploadModal;
+    const dispatch = ReactRedux.useDispatch();
 
-    const [marketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
+    const redirectToMarketplacePage = () => {
+        dispatch(push('/page/console_blueprint_marketplace?defaultTab=AWS'));
+    };
+
     const menuItems = useMemo(() => {
         const baseMenuItems = {
-            uploadFromMarketplace: showMarketplaceModal,
+            uploadFromMarketplace: redirectToMarketplacePage,
             uploadFromPackage: showUploadModal,
             uploadFromTerraformTemplate: showTerraformModal
         };
@@ -62,15 +67,6 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                     ))}
                 </Menu>
             </Dropdown>
-            {marketplaceModalVisible && (
-                <BlueprintMarketplace.Modal
-                    open
-                    onHide={hideMarketplaceModal}
-                    tabs={marketplaceConfig.tabs}
-                    displayStyle={marketplaceConfig.displayStyle}
-                    columns={marketplaceConfig.columns}
-                />
-            )}
             {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
             {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
         </>

@@ -59,7 +59,7 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
         Stage.Common.BlueprintMarketplace.tabsConfig
     ],
 
-    render(widget, _data, _error, toolbox) {
+    render(widget) {
         const { color, icon, basic, label, defaultMarketplaceTab } = widget.configuration;
 
         return (
@@ -69,7 +69,6 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
                 icon={icon}
                 label={label}
                 defaultMarketplaceTab={defaultMarketplaceTab}
-                toolbox={toolbox}
             />
         );
     }
