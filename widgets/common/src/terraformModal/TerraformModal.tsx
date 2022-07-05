@@ -671,7 +671,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         name="blueprintDescription"
                         value={blueprintDescription}
                         onChange={setBlueprintDescription}
-                        rows={5}
+                        rows={4}
                         error={getFieldError('blueprintDescription')}
                     />
                     <Form.Field label={t(`terraformVersion`)} required>
