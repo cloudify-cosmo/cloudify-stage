@@ -23,10 +23,7 @@ describe('Blueprints widget', () => {
         clickToDrillDown: true,
         pollingTime: 5,
         showComposerOptions: true,
-        marketplaceTabs,
-        marketplaceDisplayStyle: 'catalog',
-        filterRules: [],
-        marketplaceColumnsToShow: ['Name', 'Description']
+        filterRules: []
     };
 
     before(() =>
