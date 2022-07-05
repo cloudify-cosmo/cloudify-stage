@@ -142,7 +142,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
                 </Form>
             </Modal.Content>
             <Modal.Actions>
-                <ApproveButton color="green" onClick={handleSubmit} loading={loading} disabled={loading}>
+                <ApproveButton onClick={handleSubmit} loading={loading} disabled={loading}>
                     {t('buttons.submit')}
                 </ApproveButton>
             </Modal.Actions>
