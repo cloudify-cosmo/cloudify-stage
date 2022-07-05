@@ -24,7 +24,7 @@ describe('User management widget', () => {
             cy.get('input[name=password]').type(password);
             cy.get('input[name=confirmPassword]').type(password);
             cy.get('.checkbox').click();
-            cy.get('button.green').click();
+            cy.get('button.positive').click();
         });
 
         function verifyCheckbox(name: string, url: string, checkedPayload: any, uncheckedPayload: any) {

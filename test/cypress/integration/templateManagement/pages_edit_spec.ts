@@ -97,7 +97,7 @@ describe('Page management', () => {
 
         cy.log('Removing page');
         cy.contains('.segment', 'Pages').find('.remove').click();
-        cy.get('.popup button.green').click();
+        cy.get('.popup button.positive').click();
         cy.get('.main .loading').should('not.exist');
 
         cy.log('Verifying page was removed');
