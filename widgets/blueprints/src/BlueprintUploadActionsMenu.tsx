@@ -2,21 +2,13 @@ import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
 import { push } from 'connected-react-router';
-import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
-
-interface MarketplaceModalConfig {
-    tabs?: MarketplaceTab[];
-    displayStyle: 'table' | 'catalog';
-    columns: string[];
-}
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
     upward?: boolean;
     toolbox: Stage.Types.Toolbox;
-    marketplaceConfig: MarketplaceModalConfig;
     showGenerateInComposerButton?: boolean;
 }
 

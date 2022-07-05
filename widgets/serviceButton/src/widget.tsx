@@ -55,8 +55,7 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
             name: 'Default marketplace tab',
             description: 'Some description',
             type: Stage.Basic.GenericField.STRING_TYPE
-        },
-        Stage.Common.BlueprintMarketplace.tabsConfig
+        }
     ],
 
     render(widget) {
