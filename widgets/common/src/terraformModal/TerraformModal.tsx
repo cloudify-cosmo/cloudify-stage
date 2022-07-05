@@ -789,7 +789,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 content={t('assignOutputsVariablesConfirm', {
                     variablesAmount: variablesDeferred.length,
                     outputAmount: outputsDeferred.length
-                })}
+                })
+                    .split('\n')
+                    .map(line => (
+                        <>
+                            {line}
+                            <br />
+                        </>
+                    ))}
                 onConfirm={assignDeferredVariablesAndOutputs}
                 onCancel={() => {
                     setOutputsDeferred([]);

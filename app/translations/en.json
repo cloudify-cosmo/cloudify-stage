@@ -958,7 +958,7 @@
                     "upload": "2/2: Uploading Terraform blueprint..."
                 },
                 "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
-                "assignOutputsVariablesConfirm": "Detected {{variablesAmount}} variables and {{outputAmount}} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?",
+                "assignOutputsVariablesConfirm": "In the selected Terraform module the following parameters were detected\n- {{variablesAmount}} Variables\n- {{outputAmount}} Outputs\nWould you like to define the detected variables and outputs in the blueprint?",
                 "default": "Default",
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
