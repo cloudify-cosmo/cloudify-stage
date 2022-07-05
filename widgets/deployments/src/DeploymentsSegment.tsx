@@ -72,10 +72,10 @@ export default function DeploymentsSegment({
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
                                     <DeploymentIdAndNAme>
-                                        <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
                                         <DeploymentName title={formatName(item)} aria-label="Deployment name">
                                             {item.display_name}
                                         </DeploymentName>
+                                        <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
                                     </DeploymentIdAndNAme>
                                 </Header>
                             </div>
