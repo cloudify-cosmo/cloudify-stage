@@ -36,7 +36,7 @@ export default function DeploymentsSegment({
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
     const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
-    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
+    const [hoveredDeploymentId, setHoveredDeploymentId, clearHoveredDeploymentId] = useResettableState(null);
 
     return (
         <DataSegment
@@ -52,9 +52,9 @@ export default function DeploymentsSegment({
                     selected={item.isSelected}
                     className={`${item.id} deploymentSegment`}
                     onClick={() => onSelectDeployment(item)}
-                    onMouseOver={setHoveredDeployment}
-                    onFocus={setHoveredDeployment}
-                    onMouseOut={clearHoveredDeployment}
+                    onMouseOver={setHoveredDeploymentId}
+                    onFocus={setHoveredDeploymentId}
+                    onMouseOut={clearHoveredDeploymentId}
                 >
                     <DeploymentDetails
                         customName={
@@ -72,7 +72,7 @@ export default function DeploymentsSegment({
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
                                     <DeploymentIdAndNAme>
-                                        <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
+                                        <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
                                         <DeploymentName title={formatName(item)} aria-label="Deployment name">
                                             {item.display_name}
                                         </DeploymentName>
