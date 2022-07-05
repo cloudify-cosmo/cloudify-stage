@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
-import React, { useState } from 'react';
+// TODO Norbert: Migrate file to TS
+import React, { useEffect, useState } from 'react';
+// TODO Norbert: Migrate to explicit imports of the lodash functions
 import _ from 'lodash';
 import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
@@ -10,11 +12,12 @@ import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
-import { useBoolean } from '../utils/hooks';
+import { useBoolean, useSearchParam } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
+const defaultTabUrlParameterName = 'defaultTab';
 
 export default function Tabs({
     tabs,
@@ -28,7 +31,17 @@ export default function Tabs({
     onWidgetUpdated,
     onLayoutSectionRemoved
 }) {
-    const [activeTab, setActiveTab] = useState(Math.max(_.findIndex(tabs, { isDefault: true }), 0));
+    // TODO Norbert: Refactor & Optimize this function
+    const getDefaultTabIndex = (defaultTabName: string | null): number => {
+        if (defaultTabName) {
+            return Math.max(_.findIndex(tabs, { name: defaultTabName }), 0);
+        }
+        return Math.max(_.findIndex(tabs, { isDefault: true }), 0);
+    };
+
+    const [defaultTab] = useSearchParam(defaultTabUrlParameterName);
+    // TODO Norbert: Rename to activeTabIndex and setActiveTabIndex
+    const [activeTab, setActiveTab] = useState(() => getDefaultTabIndex(defaultTab));
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
     const [isTabsRemovalDialogShown, showTabsRemovalDialog, hideTabsRemovalDialog] = useBoolean();
 
