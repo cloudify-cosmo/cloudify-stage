@@ -922,7 +922,7 @@
                 "blueprintName": "Blueprint name",
                 "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
-                "blueprintInformation": "Blueprint main information",
+                "terraformModuleDetails": "Terraform module details",
                 "template": "Terraform module source (ZIP archive URL, Git repository URL or local ZIP archive)",
                 "resourceLocation": "Terraform module folder",
                 "urlAuthentication": "URL authentication",

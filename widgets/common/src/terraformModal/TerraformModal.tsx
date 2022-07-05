@@ -687,7 +687,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         />
                     </Form.Field>
                     <Accordion>
-                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
+                        <AccordionSectionWithDivider title={t('terraformModuleDetails')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={getFieldError('template')}>
                                 <Form.UrlOrFile
