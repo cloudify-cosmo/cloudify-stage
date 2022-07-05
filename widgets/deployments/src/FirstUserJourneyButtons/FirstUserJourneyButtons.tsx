@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { push } from 'connected-react-router';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
@@ -40,14 +41,14 @@ const t = getT('widgets.deployments.firstJourney');
 
 interface FirstUserJourneyButtonsProps {
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
 }
 
-const FirstUserJourneyButtons = ({ toolbox, widget }: FirstUserJourneyButtonsProps) => {
+const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
+    const dispatch = ReactRedux.useDispatch();
 
     const handleDeploymentsClick = () => {
-        toolbox.drillDown(widget, 'blueprintMarketplace', {});
+        dispatch(push('/page/console_blueprint_marketplace?defaultTab=Getting Started'));
     };
 
     const handleTerraformClick = () => {
