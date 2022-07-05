@@ -1,8 +1,9 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 
+const newLineCharacter = '\n';
+
 const renderMultilineText = (text: string, useLineBreakElement = true) => {
-    const newLineCharacter = '\n';
 
     if (text.indexOf(newLineCharacter) === -1) {
         return text;
