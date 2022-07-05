@@ -27,6 +27,10 @@ Cloudify Stage provides Graphical User Interface for managing and analyzing Clou
 
 export LIBSASS_EXT="no"
 npm run beforebuild:no-tests
+%if "%{arch}" == "arm64"
+npm install -g node-gyp
+npm install sharp --build-from-source --prefix backend
+%endif
 
 
 %build
