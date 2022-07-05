@@ -20,7 +20,7 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, ic
             // toolbox.drillDown(widget, 'blueprintMarketplace', {
             //     defaultTab: defaultMarketplaceTab
             // });
-            dispatch(push('/page/console_blueprint_marketplace?defaultTab=Docker'));
+            dispatch(push(`/page/console_blueprint_marketplace?defaultTab=${defaultMarketplaceTab}`));
         }
     };
 
