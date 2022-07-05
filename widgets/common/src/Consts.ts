@@ -23,7 +23,12 @@ const consts = {
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
-    allowedVisibilitySettings: ['tenant', 'global'] as string[]
+    allowedVisibilitySettings: ['tenant', 'global'] as string[],
+    pagePath: {
+        // TODO Norbert: Propagate it across components
+        // TODO Norbert: Try to remove 'console' prefix from the path
+        blueprintMarketplace: '/page/console_blueprint_marketplace'
+    }
 } as const;
 
 export default consts;

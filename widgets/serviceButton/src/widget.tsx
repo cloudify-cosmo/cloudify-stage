@@ -49,14 +49,28 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
+        // TODO Norbert: adjust configuration (maybe dropdown type, containing marketplace tabs would be a good option 🤔)
+        {
+            id: 'defaultMarketplaceTab',
+            name: 'Default marketplace tab',
+            description: 'Some description',
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
         Stage.Common.BlueprintMarketplace.tabsConfig
     ],
 
-    render(widget) {
-        const { color, icon, basic, label, marketplaceTabs } = widget.configuration;
+    render(widget, _data, _error, toolbox) {
+        const { color, icon, basic, label, defaultMarketplaceTab } = widget.configuration;
 
         return (
-            <ServiceButton basic={basic} color={color} icon={icon} label={label} marketplaceTabs={marketplaceTabs} />
+            <ServiceButton
+                basic={basic}
+                color={color}
+                icon={icon}
+                label={label}
+                defaultMarketplaceTab={defaultMarketplaceTab}
+                toolbox={toolbox}
+            />
         );
     }
 });
