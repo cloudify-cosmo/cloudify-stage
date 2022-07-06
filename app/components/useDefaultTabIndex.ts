@@ -7,10 +7,14 @@ interface TabsContext {
     defaultTab?: string;
 }
 
+const tabNamesAreMatching = (tabName: string, comparingName: string): boolean => {
+    return tabName.toLowerCase() === comparingName.toLowerCase();
+};
+
 const getDefaultTabIndex = (tabs: TabContent[], defaultTab?: string): number => {
     if (defaultTab) {
-        // TODO Norbert: make the comparison case insensitive
-        const namedTabIndex = tabs.findIndex(tab => tab.name === defaultTab);
+        const namedTabIndex = tabs.findIndex(tab => tabNamesAreMatching(tab.name, defaultTab));
+
         if (namedTabIndex >= 0) {
             return namedTabIndex;
         }
