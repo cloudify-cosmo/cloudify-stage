@@ -1,6 +1,8 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
-// import { push } from 'connected-react-router';
+
+const { Button } = Stage.Basic;
+const { drilldownPage } = Stage.Common.Consts;
 
 export interface ServiceButtonProps {
     basic: boolean;
@@ -19,17 +21,12 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({
     defaultMarketplaceTab,
     toolbox
 }) => {
-    const { Button } = Stage.Basic;
-    // const dispatch = ReactRedux.useDispatch();
-
     const handleClick = () => {
         if (defaultMarketplaceTab) {
-            // TODO Norbert: Share blueprintMarketplace page name between this and FirstUserJourneyButtons components
             const widget = toolbox.getWidget();
-            toolbox.drillDown(widget, 'blueprintMarketplace', {
+            toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
                 defaultTab: defaultMarketplaceTab
             });
-            // dispatch(push(`/page/console_blueprint_marketplace?defaultTab=${defaultMarketplaceTab}`));
         }
     };
 

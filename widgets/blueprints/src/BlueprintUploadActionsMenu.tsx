@@ -2,6 +2,13 @@ import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
 
+const { Dropdown } = Stage.Basic;
+const { Menu, Item } = Dropdown;
+const { useBoolean } = Stage.Hooks;
+const { TerraformModal } = Stage.Common;
+const { drilldownPage } = Stage.Common.Consts;
+const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
+
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const defaultMarketplaceTab = 'AWS';
 
@@ -19,20 +26,12 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     toolbox,
     showGenerateInComposerButton = false
 }) => {
-    const {
-        Basic: { Dropdown },
-        Common: { TerraformModal },
-        Hooks: { useBoolean }
-    } = Stage;
-    const { Menu, Item } = Dropdown;
-    const UploadBlueprintModal = Stage.Common.Blueprints.UploadModal;
-
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
-        toolbox.drillDown(widget, 'blueprintMarketplace', {
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
             defaultTab: defaultMarketplaceTab
         });
     };

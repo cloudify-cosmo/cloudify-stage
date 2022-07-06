@@ -36,6 +36,7 @@ const IconWrapper = styled.div`
     padding: 12px 0;
 `;
 
+const { drilldownPage } = Stage.Common.Consts;
 const t = getT('widgets.deployments.firstJourney');
 const defaultMarketplaceTab = 'Getting Started';
 
@@ -48,7 +49,7 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
 
     const handleDeploymentsClick = () => {
         const widget = toolbox.getWidget();
-        toolbox.drillDown(widget, 'blueprintMarketplace', {
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
             defaultTab: defaultMarketplaceTab
         });
     };

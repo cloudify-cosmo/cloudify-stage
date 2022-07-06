@@ -24,10 +24,8 @@ const consts = {
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
     allowedVisibilitySettings: ['tenant', 'global'] as string[],
-    pagePath: {
-        // TODO Norbert: Propagate it across components
-        // TODO Norbert: Try to remove 'console' prefix from the path
-        blueprintMarketplace: '/page/console_blueprint_marketplace'
+    drilldownPage: {
+        blueprintMarketplace: 'blueprintMarketplace'
     }
 } as const;
 
