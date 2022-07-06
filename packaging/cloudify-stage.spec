@@ -16,7 +16,7 @@ Packager:       Cloudify Platform Ltd.
 BuildRequires:  nodejs >= 14.18.1, rsync
 Requires:       nodejs >= 14.18.1, cloudify-rest-service, nginx, shadow-utils, libsass, libpng-devel
 %if "%{arch}" == "arm64"
-Requires:       gcc-c++, gcc, node-gyp
+BuildRequires:  gcc-c++, gcc
 %endif
 AutoReqProv:    no
 
