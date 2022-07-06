@@ -37,6 +37,7 @@ const IconWrapper = styled.div`
 `;
 
 const t = getT('widgets.deployments.firstJourney');
+const defaultMarketplaceTab = 'Getting Started';
 
 interface FirstUserJourneyButtonsProps {
     toolbox: Stage.Types.Toolbox;
@@ -48,8 +49,7 @@ const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const handleDeploymentsClick = () => {
         const widget = toolbox.getWidget();
         toolbox.drillDown(widget, 'blueprintMarketplace', {
-            // TODO Norbert: Extract magic string to a const
-            defaultTab: 'Getting Started'
+            defaultTab: defaultMarketplaceTab
         });
     };
 

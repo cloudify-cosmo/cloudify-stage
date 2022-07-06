@@ -3,6 +3,7 @@ import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
+const defaultMarketplaceTab = 'AWS';
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
@@ -32,8 +33,7 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     const redirectToMarketplacePage = () => {
         const widget = toolbox.getWidget();
         toolbox.drillDown(widget, 'blueprintMarketplace', {
-            // TODO Norbert: Extract magic string to a const
-            defaultTab: 'AWS'
+            defaultTab: defaultMarketplaceTab
         });
     };
 
