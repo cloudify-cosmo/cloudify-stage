@@ -671,7 +671,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         name="blueprintDescription"
                         value={blueprintDescription}
                         onChange={setBlueprintDescription}
-                        rows={5}
+                        rows={4}
                         error={getFieldError('blueprintDescription')}
                     />
                     <Form.Field label={t(`terraformVersion`)} required>
@@ -687,7 +687,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         />
                     </Form.Field>
                     <Accordion>
-                        <AccordionSectionWithDivider title={t('blueprintInformation')} initialActive>
+                        <AccordionSectionWithDivider title={t('terraformModuleDetails')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
                             <Form.Field label={t(`template`)} required error={getFieldError('template')}>
                                 <Form.UrlOrFile
@@ -786,10 +786,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             />
             <Confirm
                 open={!!(outputsDeferred.length || variablesDeferred.length)}
-                content={t('assignOutputsVariablesConfirm', {
-                    variablesAmount: variablesDeferred.length,
-                    outputAmount: outputsDeferred.length
-                })}
+                content={Stage.Utils.renderMultilineText(
+                    t('assignOutputsVariablesConfirm', {
+                        variablesAmount: variablesDeferred.length,
+                        outputAmount: outputsDeferred.length
+                    })
+                )}
                 onConfirm={assignDeferredVariablesAndOutputs}
                 onCancel={() => {
                     setOutputsDeferred([]);

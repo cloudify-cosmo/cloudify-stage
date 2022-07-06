@@ -30,7 +30,7 @@ describe('Tenants management widget', () => {
         cy.log('Creating new tenant');
         cy.get('.tenantsWidget .add').click();
         cy.get('.modal input').type(tenant);
-        cy.get('button.green').click();
+        cy.get('button.positive').click();
 
         cy.log('Verifying tenant users can be edited');
         cy.contains('tr', tenant).find('.content').click();

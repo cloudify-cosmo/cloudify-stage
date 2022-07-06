@@ -612,9 +612,8 @@ describe('Blueprints widget', () => {
             openTerraformModal();
             cy.typeToFieldInput('Blueprint name', 'not_existing_blueprint_outputs_inputs_test');
             setTemplateDetails(variablesAndOutputsModulesTerraformTemplatePath, undefined, true);
-            cy.contains(
-                `Detected ${expectedVariables} variables and ${expectedOutputs} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?`
-            ).should('be.visible');
+            cy.contains(`- ${expectedVariables} Variables`).should('be.visible');
+            cy.contains(`- ${expectedOutputs} Outputs`).should('be.visible');
             cy.contains('.modal .button', 'Yes').click();
             cy.contains('.segment', 'Variables').click();
             cy.contains('.segment', 'Outputs').click();

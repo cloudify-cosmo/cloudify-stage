@@ -31,13 +31,12 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
 
     useOpenProp(open, clearErrors);
 
-    const content = i18n
-        .t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, {
+    const content = Stage.Utils.renderMultilineText(
+        i18n.t(`widgets.common.deployments.removeModal.${force ? 'forceDelete' : 'delete'}Description`, {
             deploymentName: Stage.Utils.formatDisplayName({ id: deploymentId, displayName: deploymentName })
-        })
-        .split('\n')
-        // eslint-disable-next-line react/no-array-index-key
-        .map((line, index) => <p key={index}>{line}</p>);
+        }),
+        false
+    );
 
     function deleteDeployment() {
         const actions = new DeploymentActions(toolbox);
