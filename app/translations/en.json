@@ -1450,7 +1450,7 @@
                 "lastLoginAt": "Last login",
                 "isAdmin": "Admin",
                 "active": "Active",
-                "showGettingStarted": "Getting\nstarted",
+                "showGettingStarted": "Getting started",
                 "groupCount": "# Groups",
                 "tenantCount": "# Tenants"
             }

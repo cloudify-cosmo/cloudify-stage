@@ -349,8 +349,9 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label={columnT('isAdmin')} width="10%" />
                     <DataTable.Column label={columnT('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={Stage.Utils.renderMultilineText(columnT('showGettingStarted'))}
+                        label={columnT('showGettingStarted')}
                         name="show_getting_started"
+                        style={{ whiteSpace: 'normal' }}
                         width="10%"
                     />
                     <DataTable.Column label={columnT('groupCount')} width="10%" />
