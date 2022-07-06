@@ -209,7 +209,7 @@ class UserGroupsTable extends React.Component {
                 >
                     <DataTable.Column label={t('columns.groupName')} name="name" width="35%" />
                     {isLdapEnabled && <DataTable.Column label={t('columns.ldapGroup')} name="ldap_dn" width="20%" />}
-                    <DataTable.Column label={t('columns.admin')} name="role" width="10%" />
+                    <DataTable.Column label={t('columns.admin')} width="10%" />
                     <DataTable.Column label={t('columns.users')} width="10%" />
                     <DataTable.Column label={t('columns.tenants')} width="10%" />
                     <DataTable.Column label="" width="5%" />
