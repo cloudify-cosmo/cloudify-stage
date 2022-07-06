@@ -1,7 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-// TODO Norbert: Migrate file to TS
-import React, { useState } from 'react';
-import { get, isEmpty, isNil, map } from 'lodash';
+import React from 'react';
+import { get, isEmpty, isNil } from 'lodash';
 import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
@@ -11,12 +9,27 @@ import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
-import { useBoolean } from '../utils/hooks';
+import { useBoolean, useResettableState } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
 import useDefaultTabIndex from './useDefaultTabIndex';
+import type { SimpleWidgetObj, TabContent } from '../actions/page';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
+
+// TODO Norbert: Update interface
+interface TabsProps {
+    tabs: TabContent[];
+    isEditMode: any;
+    onTabMoved: any;
+    onTabUpdated: any;
+    onTabAdded: any;
+    onTabRemoved: any;
+    onWidgetAdded: any;
+    onWidgetRemoved: any;
+    onWidgetUpdated: any;
+    onLayoutSectionRemoved: any;
+}
 
 export default function Tabs({
     tabs,
@@ -29,16 +42,16 @@ export default function Tabs({
     onWidgetRemoved,
     onWidgetUpdated,
     onLayoutSectionRemoved
-}) {
+}: TabsProps) {
     const [activeTabIndex, setActiveTabIndex] = useDefaultTabIndex(tabs);
-    const [tabIndexToRemove, setTabIndexToRemove] = useState();
+    const [tabIndexToRemove, setTabIndexToRemove, resetTabIndexToRemove] = useResettableState(-1);
     const [isTabsRemovalDialogShown, showTabsRemovalDialog, hideTabsRemovalDialog] = useBoolean();
 
     const filterWidgets = useWidgetsFilter();
 
-    function removeTab(tabIndex) {
+    function removeTab(tabIndex: number) {
         if (tabIndex < activeTabIndex || (tabIndex === activeTabIndex && tabs.length - 1 === activeTabIndex)) {
-            setActiveTabIndex(activeTab - 1);
+            setActiveTabIndex(activeTabIndex - 1);
         }
         onTabRemoved(tabIndex);
     }
@@ -63,8 +76,9 @@ export default function Tabs({
                 }}
                 style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '1em 0' }}
             >
-                {map(tabs, (tab, tabIndex) => (
+                {tabs.map((tab, tabIndex) => (
                     <SortableMenuItem
+                        // eslint-disable-next-line react/no-array-index-key
                         key={`${tabs.length}_${tabIndex}`}
                         index={tabIndex}
                         active={activeTabIndex === tabIndex}
@@ -119,6 +133,7 @@ export default function Tabs({
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget
                             addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle', 'Add widget to this tab')}
+                            // @ts-ignore AddWidget not yet fully migrated to TS
                             onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
                     </div>
@@ -127,7 +142,7 @@ export default function Tabs({
                     <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="tab" />
                 ) : (
                     <WidgetsList
-                        widgets={activeTabWidgets}
+                        widgets={activeTabWidgets as SimpleWidgetObj[]}
                         onWidgetUpdated={onWidgetUpdated}
                         onWidgetRemoved={onWidgetRemoved}
                         isEditMode={isEditMode}
@@ -136,10 +151,10 @@ export default function Tabs({
             </span>
             <Confirm
                 open={!isNil(tabIndexToRemove)}
-                onCancel={() => setTabIndexToRemove(null)}
+                onCancel={() => resetTabIndexToRemove()}
                 onConfirm={() => {
                     removeTab(tabIndexToRemove);
-                    setTabIndexToRemove(null);
+                    resetTabIndexToRemove();
                 }}
                 header={i18n.t('editMode.tabs.removeModal.header', `Are you sure you want to remove tab {{tabName}}?`, {
                     tabName: get(tabs, [tabIndexToRemove, 'name'])
