@@ -19,7 +19,6 @@ interface BlueprintUploadActionsMenuProps {
     showGenerateInComposerButton?: boolean;
 }
 
-// TODO Norbert: do a cleanup regarding removed configuration props
 const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuProps> = ({
     direction,
     upward,

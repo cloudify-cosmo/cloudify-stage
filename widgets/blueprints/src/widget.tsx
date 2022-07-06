@@ -4,8 +4,6 @@ import BlueprintsList from './BlueprintsList';
 import type { BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
-// TODO Norbert: Adjust blueprints.json file to contain a proper configuration
-
 const t = Stage.Utils.getT('widgets.blueprints');
 const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
 
