@@ -1335,6 +1335,10 @@
                     "name": "Icon",
                     "description": "Icon displayed on the button",
                     "default": "add"
+                },
+                "defaultMarketplaceTab": {
+                    "name": "Default marketplace tab",
+                    "description": "Name of the initially activated tab on Blueprint Marketplace page"
                 }
             }
         },

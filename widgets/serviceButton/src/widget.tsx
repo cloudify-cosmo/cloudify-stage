@@ -43,18 +43,17 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
         {
+            id: 'defaultMarketplaceTab',
+            name: t('configuration.defaultMarketplaceTab.name'),
+            description: t('configuration.defaultMarketplaceTab.description'),
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
+        {
             id: 'basic',
             name: t('configuration.basic.name'),
             description: t('configuration.basic.description'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
-        },
-        // TODO Norbert: adjust configuration (maybe dropdown type, containing marketplace tabs would be a good option 🤔)
-        {
-            id: 'defaultMarketplaceTab',
-            name: 'Default marketplace tab',
-            description: 'Some description',
-            type: Stage.Basic.GenericField.STRING_TYPE
         }
     ],
 
