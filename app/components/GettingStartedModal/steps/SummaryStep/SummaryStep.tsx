@@ -1,9 +1,8 @@
-import i18n from 'i18next';
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useMemo } from 'react';
 
 import StageUtils from '../../../../utils/stageUtils';
 import { useResettableState } from '../../../../utils/hooks';
-import { Divider, Form, Header, List, Message, Progress } from '../../../basic';
+import { Divider, Form, List, Message, Progress } from '../../../basic';
 import useCurrentCallback from '../../common/useCurrentCallback';
 import {
     usePluginsInstallationTasks,
@@ -14,11 +13,9 @@ import { useInternal } from '../../common/managerHooks';
 import useManager from '../../../../utils/hooks/useManager';
 import type { TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import { createResourcesInstaller } from '../../installation/process';
-import PluginsInstallationTasks from './PluginsInstallationTasks';
-import SecretsInstallationTasks from './SecretsInstallationTasks';
-import BlueprintsInstallationTasks from './BlueprintsInstallationTasks';
 
 import type { GettingStartedData, GettingStartedSchema } from '../../model';
+import TaskList from './TaskList';
 
 const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
@@ -109,11 +106,29 @@ const SummaryStep = ({
 
     const tasksLoading =
         pluginsInstallationTasks.loading || secretsInstallationTasks.loading || blueprintsInstallationTasks.loading;
+
     const errorDetected =
-        pluginsInstallationTasks.error ||
-        secretsInstallationTasks.error ||
-        blueprintsInstallationTasks.error ||
+        !!pluginsInstallationTasks.error ||
+        !!secretsInstallationTasks.error ||
+        !!blueprintsInstallationTasks.error ||
         installationErrors.length > 0;
+
+    const showTaskListSummary =
+        pluginsInstallationTasks.tasks || secretsInstallationTasks.tasks || blueprintsInstallationTasks.tasks;
+
+    const installationProgressMessage: string = useMemo(() => {
+        const installationCompleted = installationProgress && installationProgress >= 100;
+
+        if (errorDetected) {
+            return tMessages('failureMessage');
+        }
+
+        if (installationCompleted) {
+            return tMessages('doneMessage');
+        }
+
+        return tMessages('progressMessage');
+    }, [errorDetected, installationProgress]);
 
     return (
         <Form style={{ minHeight: 150, flex: 1, display: 'flex', flexDirection: 'column' }} loading={tasksLoading}>
@@ -131,30 +146,25 @@ const SummaryStep = ({
                     </List>
                 </Message>
             )}
-            {(pluginsInstallationTasks.tasks ||
-                secretsInstallationTasks.tasks ||
-                blueprintsInstallationTasks.tasks) && (
+            {showTaskListSummary && (
                 <>
-                    <Header as="h4">{i18n.t('gettingStartedModal.summary.taskListTitle')}</Header>
-                    <List relaxed style={{ margin: 0, flex: 1, overflow: 'auto' }}>
-                        <PluginsInstallationTasks
-                            tasks={pluginsInstallationTasks.tasks}
-                            statuses={installationStatuses.plugin}
-                        />
-                        <SecretsInstallationTasks
-                            tasks={secretsInstallationTasks.tasks}
-                            statuses={installationStatuses.secret}
-                        />
-                        <BlueprintsInstallationTasks
-                            tasks={blueprintsInstallationTasks.tasks}
-                            statuses={installationStatuses.blueprint}
-                        />
-                    </List>
+                    <TaskList
+                        installationStatuses={installationStatuses}
+                        pluginsTasks={pluginsInstallationTasks.tasks}
+                        secretsTasks={secretsInstallationTasks.tasks}
+                        blueprintsTasks={blueprintsInstallationTasks.tasks}
+                    />
                     {installationProgress !== undefined && (
                         <>
                             <Divider hidden />
-                            <Progress progress size="large" percent={installationProgress} indicating>
-                                {installationProgress < 100 ? tMessages('progressMessage') : tMessages('doneMessage')}
+                            <Progress
+                                progress
+                                size="large"
+                                percent={installationProgress}
+                                indicating
+                                error={errorDetected}
+                            >
+                                {installationProgressMessage}
                             </Progress>
                         </>
                     )}

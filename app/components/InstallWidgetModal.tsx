@@ -6,7 +6,7 @@ import React, { Component } from 'react';
 import i18n from 'i18next';
 import EventBus from '../utils/EventBus';
 import StageUtils from '../utils/stageUtils';
-import { Button, Form, Icon, Message, Modal } from './basic/index';
+import { ApproveButton, Button, Form, Icon, Message, Modal } from './basic/index';
 
 export default class InstallWidgetModal extends Component {
     static initialState = {
@@ -134,10 +134,9 @@ export default class InstallWidgetModal extends Component {
                             this.closeModal();
                         }}
                     />
-                    <Button
+                    <ApproveButton
                         icon="puzzle"
                         content={buttonLabel}
-                        color="green"
                         onClick={event => {
                             event.stopPropagation();
                             this.installWidget();
