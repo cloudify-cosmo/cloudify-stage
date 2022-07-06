@@ -13,6 +13,7 @@ import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
 import type { ReduxState } from '../reducers';
+import type { AuthUserResponse } from '../../backend/routes/Auth.types';
 
 function requestLogin() {
     return {
@@ -76,13 +77,14 @@ export function login(
     };
 }
 
-function responseUserData(username, systemRole, groupSystemRoles, tenantsRoles) {
+function responseUserData({ username, role, groupSystemRoles, tenantsRoles, showGettingStarted }: AuthUserResponse) {
     return {
         type: types.SET_USER_DATA,
         username,
-        role: systemRole,
+        role,
         groupSystemRoles,
-        tenantsRoles
+        tenantsRoles,
+        showGettingStarted
     };
 }
 
@@ -103,7 +105,7 @@ export function getManagerData(): ThunkAction<void, ReduxState, never, AnyAction
 export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
-            dispatch(responseUserData(data.username, data.role, data.groupSystemRoles, data.tenantsRoles));
+            dispatch(responseUserData(data));
             return data;
         });
 }
