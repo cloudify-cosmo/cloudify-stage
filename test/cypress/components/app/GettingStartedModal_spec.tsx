@@ -6,17 +6,23 @@ import '../initAppContext';
 import GettingStartedModal from 'app/components/GettingStartedModal';
 import StageUtils from 'app/utils/stageUtils';
 import userConfig from 'conf/userConfig.json';
+import type { ManagerData } from 'app/reducers/managerReducer';
+import { emptyState } from 'app/reducers/managerReducer';
 import { mountWithProvider } from '../utils';
 
 describe('GettingStartedModal', () => {
     it('renders', () => {
-        cy.interceptSp('GET', '/users/', { show_getting_started: true });
         cy.stub(StageUtils, 'isUserAuthorized').returns(true);
 
         mountWithProvider(
             <ThemeProvider theme={userConfig.whiteLabel}>
                 <GettingStartedModal />
-            </ThemeProvider>
+            </ThemeProvider>,
+            {
+                manager: {
+                    auth: { ...emptyState.auth, showGettingStarted: true }
+                } as ManagerData
+            }
         );
 
         cy.contains('Welcome to Cloudify');

@@ -3,6 +3,7 @@ import { ThemeContext } from 'styled-components';
 import StageUtils from '../../../utils/stageUtils';
 import LogoLabel from '../../banner/LogoLabel';
 import LargeLogo from '../../banner/LargeLogo';
+import renderMultilineText from '../../../utils/shared/renderMultilineText';
 
 const t = StageUtils.getT('gettingStartedModal');
 
@@ -13,7 +14,7 @@ const WelcomeStep = () => {
         <div style={{ backgroundColor: theme.mainColor, textAlign: 'center', margin: -19, padding: '9em' }}>
             <LargeLogo />
             <LogoLabel color={theme.headerTextColor} content={t('welcomeLogoLabel')} />
-            <pre
+            <div
                 style={{
                     color: theme.headerTextColor,
                     textAlign: 'left',
@@ -24,8 +25,8 @@ const WelcomeStep = () => {
                     font: 'inherit'
                 }}
             >
-                {t('welcomeText')}
-            </pre>
+                {renderMultilineText(t('welcomeText'))}
+            </div>
         </div>
     );
 };

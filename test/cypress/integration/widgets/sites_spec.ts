@@ -37,7 +37,7 @@ describe('Sites Management', () => {
 
         cy.get('.required > .field > .ui > input').as('name');
         cy.get('form :nth-child(2) > .field > .ui > input').as('location');
-        cy.get('.actions > .green').as('createButton');
+        cy.get('.actions > .positive').as('createButton');
         cy.get('.modal > :nth-child(1) > .green').as('visibility');
 
         cy.get('@name').type(site.name).should('have.value', site.name);
@@ -146,7 +146,7 @@ describe('Sites Management', () => {
         cy.get('.modal > :nth-child(1) > .green').click();
 
         // submit
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name, location: '0.0, -0.87890625', visibility: 'private' });
     });
@@ -179,7 +179,7 @@ describe('Sites Management', () => {
         cy.get('.modal form :nth-child(2) > .field > .ui > input').clear();
 
         // Click update
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name: newName, location: '' });
     });
@@ -199,7 +199,7 @@ describe('Sites Management', () => {
         );
 
         // Click update
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323209, 33.92578125' });
     });
