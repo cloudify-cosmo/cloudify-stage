@@ -16,11 +16,10 @@ import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean, useSearchParam } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
 import type { ReduxState } from '../reducers';
+import useDefaultTabIndex from './useDefaultTabIndex';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
-// TODO Norbert: Rename parameter
-const defaultTabUrlParameterName = 'defaultTab';
 
 export default function Tabs({
     tabs,
@@ -34,16 +33,7 @@ export default function Tabs({
     onWidgetUpdated,
     onLayoutSectionRemoved
 }) {
-    // TODO Norbert: Refactor & Optimize this function
-    const getDefaultTabIndex = (defaultTabName: string | null): number => {
-        if (defaultTabName) {
-            return Math.max(_.findIndex(tabs, { name: defaultTabName }), 0);
-        }
-        return Math.max(_.findIndex(tabs, { isDefault: true }), 0);
-    };
-
-    const defaultTab = useSelector((state: ReduxState) => state.context[defaultTabUrlParameterName]);
-    const [activeTabIndex, setActiveTabIndex] = useState(() => getDefaultTabIndex(defaultTab));
+    const [activeTabIndex, setActiveTabIndex] = useDefaultTabIndex(tabs);
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
     const [isTabsRemovalDialogShown, showTabsRemovalDialog, hideTabsRemovalDialog] = useBoolean();
 
