@@ -43,21 +43,20 @@ export default function Tabs({
     };
 
     const defaultTab = useSelector((state: ReduxState) => state.context[defaultTabUrlParameterName]);
-    // TODO Norbert: Rename to activeTabIndex and setActiveTabIndex
-    const [activeTab, setActiveTab] = useState(() => getDefaultTabIndex(defaultTab));
+    const [activeTabIndex, setActiveTabIndex] = useState(() => getDefaultTabIndex(defaultTab));
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
     const [isTabsRemovalDialogShown, showTabsRemovalDialog, hideTabsRemovalDialog] = useBoolean();
 
     const filterWidgets = useWidgetsFilter();
 
     function removeTab(tabIndex) {
-        if (tabIndex < activeTab || (tabIndex === activeTab && tabs.length - 1 === activeTab)) {
-            setActiveTab(activeTab - 1);
+        if (tabIndex < activeTabIndex || (tabIndex === activeTabIndex && tabs.length - 1 === activeTabIndex)) {
+            setActiveTabIndex(activeTab - 1);
         }
         onTabRemoved(tabIndex);
     }
 
-    const activeTabWidgets = filterWidgets(tabs[activeTab].widgets);
+    const activeTabWidgets = filterWidgets(tabs[activeTabIndex].widgets);
 
     return (
         <>
@@ -69,9 +68,11 @@ export default function Tabs({
                 helperClass="draggedTab"
                 onSortEnd={({ oldIndex, newIndex }) => {
                     onTabMoved(oldIndex, newIndex);
-                    if (oldIndex === activeTab) setActiveTab(newIndex);
-                    else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
-                    else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
+                    if (oldIndex === activeTabIndex) setActiveTabIndex(newIndex);
+                    else if (oldIndex < activeTabIndex && newIndex >= activeTabIndex)
+                        setActiveTabIndex(activeTabIndex - 1);
+                    else if (oldIndex > activeTabIndex && newIndex <= activeTabIndex)
+                        setActiveTabIndex(activeTabIndex + 1);
                 }}
                 style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '1em 0' }}
             >
@@ -79,12 +80,12 @@ export default function Tabs({
                     <SortableMenuItem
                         key={`${tabs.length}_${tabIndex}`}
                         index={tabIndex}
-                        active={activeTab === tabIndex}
-                        onClick={() => setActiveTab(tabIndex)}
+                        active={activeTabIndex === tabIndex}
+                        onClick={() => setActiveTabIndex(tabIndex)}
                         disabled={!isEditMode}
                         style={{
                             marginBottom: '-1px',
-                            borderBottom: activeTab === tabIndex ? 'none' : '1px solid #d4d4d5'
+                            borderBottom: activeTabIndex === tabIndex ? 'none' : '1px solid #d4d4d5'
                         }}
                     >
                         {tab.name}
@@ -131,7 +132,7 @@ export default function Tabs({
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget
                             addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle', 'Add widget to this tab')}
-                            onWidgetAdded={(...params) => onWidgetAdded(...params, activeTab)}
+                            onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
                     </div>
                 )}
