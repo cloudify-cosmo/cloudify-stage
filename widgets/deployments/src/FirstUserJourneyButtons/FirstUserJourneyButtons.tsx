@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { push } from 'connected-react-router';
 import FirstUserJourneyButton from './FirstUserJourneyButton';
 import { StyledIcon, StyledLabel } from './styles';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
@@ -45,10 +44,13 @@ interface FirstUserJourneyButtonsProps {
 
 const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
-    const dispatch = ReactRedux.useDispatch();
 
     const handleDeploymentsClick = () => {
-        dispatch(push('/page/console_blueprint_marketplace?defaultTab=Getting Started'));
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, 'blueprintMarketplace', {
+            // TODO Norbert: Extract magic string to a const
+            defaultTab: 'Getting Started'
+        });
     };
 
     const handleTerraformClick = () => {

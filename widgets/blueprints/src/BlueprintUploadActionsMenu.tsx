@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
-import { push } from 'connected-react-router';
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 
@@ -26,13 +25,16 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     } = Stage;
     const { Menu, Item } = Dropdown;
     const UploadBlueprintModal = Stage.Common.Blueprints.UploadModal;
-    const dispatch = ReactRedux.useDispatch();
 
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const redirectToMarketplacePage = () => {
-        dispatch(push('/page/console_blueprint_marketplace?defaultTab=AWS'));
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, 'blueprintMarketplace', {
+            // TODO Norbert: Extract magic string to a const
+            defaultTab: 'AWS'
+        });
     };
 
     const menuItems = useMemo(() => {

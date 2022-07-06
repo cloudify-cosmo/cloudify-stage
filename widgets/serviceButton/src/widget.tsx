@@ -58,7 +58,7 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
         }
     ],
 
-    render(widget) {
+    render(widget, _data, _error, toolbox) {
         const { color, icon, basic, label, defaultMarketplaceTab } = widget.configuration;
 
         return (
@@ -68,6 +68,7 @@ Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
                 icon={icon}
                 label={label}
                 defaultMarketplaceTab={defaultMarketplaceTab}
+                toolbox={toolbox}
             />
         );
     }

@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 // TODO Norbert: Migrate file to TS
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 // TODO Norbert: Migrate to explicit imports of the lodash functions
 import _ from 'lodash';
 import i18n from 'i18next';
@@ -14,9 +15,11 @@ import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean, useSearchParam } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
+import type { ReduxState } from '../reducers';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
+// TODO Norbert: Rename parameter
 const defaultTabUrlParameterName = 'defaultTab';
 
 export default function Tabs({
@@ -39,7 +42,7 @@ export default function Tabs({
         return Math.max(_.findIndex(tabs, { isDefault: true }), 0);
     };
 
-    const [defaultTab] = useSearchParam(defaultTabUrlParameterName);
+    const defaultTab = useSelector((state: ReduxState) => state.context[defaultTabUrlParameterName]);
     // TODO Norbert: Rename to activeTabIndex and setActiveTabIndex
     const [activeTab, setActiveTab] = useState(() => getDefaultTabIndex(defaultTab));
     const [tabIndexToRemove, setTabIndexToRemove] = useState();
