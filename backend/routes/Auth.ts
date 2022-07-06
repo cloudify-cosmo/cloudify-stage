@@ -85,7 +85,8 @@ router.get('/user', authenticateWithCookie, (req, res) => {
         username: req.user!.username,
         role: req.user!.role,
         groupSystemRoles: req.user!.group_system_roles,
-        tenantsRoles: req.user!.tenants
+        tenantsRoles: req.user!.tenants,
+        showGettingStarted: req.user!.show_getting_started
     } as AuthUserResponse);
 });
 
