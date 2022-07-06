@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Executions', () => {
     const widgetId = 'executions';
     const blueprintName = 'executions_test';
