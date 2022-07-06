@@ -3,10 +3,8 @@ import { useSelector } from 'react-redux';
 import type { TabContent } from '../actions/page';
 import type { ReduxState } from '../reducers';
 
-const defaultTabNameContextParameter = 'defaultTab';
-
 interface TabsContext {
-    [defaultTabNameContextParameter]?: string;
+    defaultTab?: string;
 }
 
 const getDefaultTabIndex = (tabs: TabContent[], defaultTab?: string): number => {
