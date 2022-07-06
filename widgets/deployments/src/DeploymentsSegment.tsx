@@ -12,7 +12,7 @@ const DeploymentName = styled.span`
     overflow: hidden;
 `;
 
-const DeploymentIdAndNAme = styled.span`
+const DeploymentIdAndName = styled.span`
     display: inline-flex;
     align-items: center;
 `;
@@ -71,12 +71,12 @@ export default function DeploymentsSegment({
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <DeploymentIdAndNAme>
+                                    <DeploymentIdAndName>
                                         <DeploymentName title={formatName(item)} aria-label="Deployment name">
                                             {item.display_name}
                                         </DeploymentName>
                                         <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
-                                    </DeploymentIdAndNAme>
+                                    </DeploymentIdAndName>
                                 </Header>
                             </div>
                         }
