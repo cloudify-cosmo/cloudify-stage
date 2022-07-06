@@ -2,8 +2,7 @@
 // TODO Norbert: Migrate file to TS
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-// TODO Norbert: Migrate to explicit imports of the lodash functions
-import _ from 'lodash';
+import { get, isEmpty, isNil, map } from 'lodash';
 import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import PropTypes from 'prop-types';
@@ -66,7 +65,7 @@ export default function Tabs({
                 }}
                 style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '1em 0' }}
             >
-                {_.map(tabs, (tab, tabIndex) => (
+                {map(tabs, (tab, tabIndex) => (
                     <SortableMenuItem
                         key={`${tabs.length}_${tabIndex}`}
                         index={tabIndex}
@@ -92,7 +91,7 @@ export default function Tabs({
                                         icon="remove"
                                         onClick={e => {
                                             e.stopPropagation();
-                                            if (_.isEmpty(tab.widgets)) removeTab(tabIndex);
+                                            if (isEmpty(tab.widgets)) removeTab(tabIndex);
                                             else setTabIndexToRemove(tabIndex);
                                         }}
                                     />
@@ -126,7 +125,7 @@ export default function Tabs({
                         />
                     </div>
                 )}
-                {_.isEmpty(activeTabWidgets) ? (
+                {isEmpty(activeTabWidgets) ? (
                     <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="tab" />
                 ) : (
                     <WidgetsList
@@ -138,14 +137,14 @@ export default function Tabs({
                 )}
             </span>
             <Confirm
-                open={!_.isNil(tabIndexToRemove)}
+                open={!isNil(tabIndexToRemove)}
                 onCancel={() => setTabIndexToRemove(null)}
                 onConfirm={() => {
                     removeTab(tabIndexToRemove);
                     setTabIndexToRemove(null);
                 }}
                 header={i18n.t('editMode.tabs.removeModal.header', `Are you sure you want to remove tab {{tabName}}?`, {
-                    tabName: _.get(tabs, [tabIndexToRemove, 'name'])
+                    tabName: get(tabs, [tabIndexToRemove, 'name'])
                 })}
                 content={i18n.t(
                     'editMode.tabs.removeModal.message',
