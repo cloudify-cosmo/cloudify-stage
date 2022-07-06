@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 // TODO Norbert: Migrate file to TS
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import { get, isEmpty, isNil, map } from 'lodash';
 import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
@@ -12,9 +11,8 @@ import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
-import { useBoolean, useSearchParam } from '../utils/hooks';
+import { useBoolean } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
-import type { ReduxState } from '../reducers';
 import useDefaultTabIndex from './useDefaultTabIndex';
 
 const SortableMenu = SortableContainer(Menu);
