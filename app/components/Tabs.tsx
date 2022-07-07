@@ -116,16 +116,12 @@ export default function Tabs({
                 ))}
                 {isEditMode && (
                     <Menu.Item key="actions" style={{ right: 0, position: 'absolute', padding: '6px 0 0 0' }}>
-                        <EditModeButton
-                            icon="add"
-                            onClick={onTabAdded}
-                            title={i18n.t('editMode.tabs.add', 'Add new tab')}
-                        />
+                        <EditModeButton icon="add" onClick={onTabAdded} title={i18n.t('editMode.tabs.add')} />
                         &nbsp;
                         <EditModeButton
                             icon="remove"
                             onClick={showTabsRemovalDialog}
-                            title={i18n.t('editMode.removeTabsContainer', 'Remove tabs container')}
+                            title={i18n.t('editMode.removeTabsContainer')}
                         />
                     </Menu.Item>
                 )}
@@ -134,7 +130,7 @@ export default function Tabs({
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget
-                            addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle', 'Add widget to this tab')}
+                            addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle')}
                             // @ts-ignore AddWidget not yet fully migrated to TS
                             onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
@@ -158,13 +154,10 @@ export default function Tabs({
                     removeTab(tabIndexToRemove);
                     resetTabIndexToRemove();
                 }}
-                header={i18n.t('editMode.tabs.removeModal.header', `Are you sure you want to remove tab {{tabName}}?`, {
+                header={i18n.t('editMode.tabs.removeModal.header', {
                     tabName: get(tabs, [tabIndexToRemove, 'name'])
                 })}
-                content={i18n.t(
-                    'editMode.tabs.removeModal.message',
-                    'All widgets present in this tab will be removed as well'
-                )}
+                content={i18n.t('editMode.tabs.removeModal.message')}
             />
             <Confirm
                 open={isTabsRemovalDialogShown}
@@ -173,14 +166,8 @@ export default function Tabs({
                     onLayoutSectionRemoved();
                     hideTabsRemovalDialog();
                 }}
-                header={i18n.t(
-                    'editMode.tabRemovalModal.header',
-                    'Are you sure you want to remove this tabs container?'
-                )}
-                content={i18n.t(
-                    'editMode.tabRemovalModal.message',
-                    'All tabs and widgets present in this container will be removed'
-                )}
+                header={i18n.t('editMode.tabRemovalModal.header')}
+                content={i18n.t('editMode.tabRemovalModal.message')}
             />
         </>
     );
