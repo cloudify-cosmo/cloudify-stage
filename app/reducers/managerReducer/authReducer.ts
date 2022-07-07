@@ -13,6 +13,7 @@ export interface AuthData {
     state: AuthState;
     identityProviders: IdentityProvider[];
     error: any;
+    showGettingStarted: boolean;
 }
 
 const emptyAuthState = emptyState.auth;
@@ -45,7 +46,8 @@ const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
                 username: action.username,
                 role: action.role,
                 groupSystemRoles: action.groupSystemRoles,
-                tenantsRoles: action.tenantsRoles
+                tenantsRoles: action.tenantsRoles,
+                showGettingStarted: action.showGettingStarted
             };
         case types.SET_IDENTITY_PROVIDERS:
             return {

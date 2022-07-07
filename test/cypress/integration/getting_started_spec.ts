@@ -137,6 +137,10 @@ function verifyHeader(headerContent: string) {
     cy.contains('.header', headerContent).should('be.visible');
 }
 
+function resetAwsEnvironmentData() {
+    cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+}
+
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
@@ -190,7 +194,7 @@ describe('Getting started modal', () => {
         );
 
         it('should install selected environment', () => {
-            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+            resetAwsEnvironmentData();
 
             cy.get('.modal').within(() => {
                 goToNextStep();
@@ -262,7 +266,7 @@ describe('Getting started modal', () => {
         });
 
         it('should group common plugins', () => {
-            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+            resetAwsEnvironmentData();
 
             cy.get('.modal').within(() => {
                 goToNextStep();
@@ -407,6 +411,30 @@ describe('Getting started modal', () => {
             cy.contains('button', 'Yes').click();
 
             cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
+        });
+
+        it('should display information about the failure in the installation process', () => {
+            const errorProgressBarSelector = '.error > .bar';
+            const blockPluginsUpload = () => {
+                cy.intercept('post', '/console/plugins/upload?*', {
+                    forceNetworkError: true
+                });
+            };
+
+            resetAwsEnvironmentData();
+            cy.get('.modal').within(() => {
+                goToNextStep();
+
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+                goToNextStep();
+
+                blockPluginsUpload();
+                goToFinishStep();
+
+                cy.get(errorProgressBarSelector).should('exist');
+                cy.contains('Installation failed.');
+            });
         });
     });
 });
