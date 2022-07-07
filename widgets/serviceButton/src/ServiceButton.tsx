@@ -31,17 +31,15 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({
     };
 
     return (
-        <div>
-            <Button
-                basic={basic}
-                color={color || undefined}
-                content={label}
-                icon={icon || undefined}
-                fluid
-                labelPosition={icon ? 'left' : undefined}
-                onClick={handleClick}
-            />
-        </div>
+        <Button
+            basic={basic}
+            color={color || undefined}
+            content={label}
+            icon={icon || undefined}
+            fluid
+            labelPosition={icon ? 'left' : undefined}
+            onClick={handleClick}
+        />
     );
 };
 
