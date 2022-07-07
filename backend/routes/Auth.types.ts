@@ -69,4 +69,5 @@ export interface AuthUserResponse {
     role: UserResponse['role'];
     groupSystemRoles: UserResponse['group_system_roles'];
     tenantsRoles: UserResponse['tenants'];
+    showGettingStarted: UserResponse['show_getting_started'];
 }

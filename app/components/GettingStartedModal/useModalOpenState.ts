@@ -1,29 +1,25 @@
 import { useEffect, useState } from 'react';
 import log from 'loglevel';
 
-import { useFetch } from './common/fetchHooks';
+import { useSelector } from 'react-redux';
+import type { ReduxState } from '../../reducers';
 import useManager from '../../utils/hooks/useManager';
 import EventBus from '../../utils/EventBus';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 
-type UserResponse = {
-    // eslint-disable-next-line camelcase
-    show_getting_started: boolean;
-};
-
 const useModalOpenState = () => {
     const manager = useManager();
-    const { response } = useFetch<UserResponse>(manager, `/users/${manager.getCurrentUsername()}`);
+    const showGettingStarted = useSelector((state: ReduxState) => state.manager.auth.showGettingStarted);
     const [modalOpen, setModalOpen] = useState(false);
     const [shouldAutomaticallyShowModal, setShouldAutomaticallyShowModal] = useState(false);
     const [cloudSetupUrlParam, deleteCloudSetupUrlParam] = useCloudSetupUrlParam();
 
     useEffect(() => {
-        if (response?.show_getting_started) {
+        if (showGettingStarted) {
             setShouldAutomaticallyShowModal(true);
             setModalOpen(true);
         }
-    }, [response]);
+    }, [showGettingStarted]);
 
     useEffect(() => {
         if (cloudSetupUrlParam) {

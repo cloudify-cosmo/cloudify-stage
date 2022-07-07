@@ -8,6 +8,8 @@ declare global {
             // eslint-disable-next-line camelcase
             group_system_roles: GroupSystemRoles;
             tenants: TenantsRoles;
+            // eslint-disable-next-line camelcase
+            show_getting_started: boolean;
         }
     }
 }
