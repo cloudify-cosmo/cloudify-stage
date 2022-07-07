@@ -1,20 +1,40 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import i18n from 'i18next';
 import { Link } from 'react-router-dom';
+import type { FunctionComponent, ReactNode } from 'react';
+
 import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
-import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from './consts';
+import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum } from './consts';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
+import type { ClusterService as ClusterServiceName, ClusterServices, ClusterServiceStatus } from './types';
+import type { ReduxState } from '../../../reducers';
 
-export default function ClusterServicesOverview({ services, clickable, isFetching, fetchingError, header }) {
+interface ClusterServicesOverviewProps {
+    services: ClusterServices;
+    clickable?: boolean;
+    isFetching?: boolean;
+    fetchingError?: string;
+    header?: ReactNode;
+}
+const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> = ({
+    services = _.mapValues(clusterServiceEnum, () => ({
+        status: clusterServiceStatusEnum.Unknown as ClusterServiceStatus,
+        is_external: false
+    })),
+    clickable = false,
+    isFetching = false,
+    fetchingError = '',
+    header = null
+}) => {
     const systemHealthPageId = 'system_health';
     const systemHealthPageUrl = `/page/${systemHealthPageId}`;
-    const isSystemHealthPagePresent = !!useSelector(state => createPagesMap(state.pages)[systemHealthPageId]);
+    const isSystemHealthPagePresent = !!useSelector(
+        (state: ReduxState) => createPagesMap(state.pages)[systemHealthPageId]
+    );
 
     return (
         <>
@@ -30,22 +50,31 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
                     )}
                     {!fetchingError &&
                         (!_.isEmpty(services) ? (
-                            _.map(services, (service, serviceName) => (
-                                <Table.Row
-                                    key={serviceName}
-                                    style={{ backgroundColor: clusterServiceBgColor(service.status) }}
-                                >
-                                    <Table.Cell>
-                                        {clickable && isSystemHealthPagePresent ? (
-                                            <Link to={systemHealthPageUrl}>
-                                                <ClusterService isExternal={service.is_external} name={serviceName} />
-                                            </Link>
-                                        ) : (
-                                            <ClusterService isExternal={service.is_external} name={serviceName} />
-                                        )}
-                                    </Table.Cell>
-                                </Table.Row>
-                            ))
+                            _.map(services, (service, serviceName) => {
+                                const clusterServiceName = serviceName as ClusterServiceName;
+                                return (
+                                    <Table.Row
+                                        key={serviceName}
+                                        style={{ backgroundColor: clusterServiceBgColor(service.status) }}
+                                    >
+                                        <Table.Cell>
+                                            {clickable && isSystemHealthPagePresent ? (
+                                                <Link to={systemHealthPageUrl}>
+                                                    <ClusterService
+                                                        isExternal={service.is_external}
+                                                        name={clusterServiceName}
+                                                    />
+                                                </Link>
+                                            ) : (
+                                                <ClusterService
+                                                    isExternal={service.is_external}
+                                                    name={clusterServiceName}
+                                                />
+                                            )}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                );
+                            })
                         ) : (
                             <Message>
                                 <Message.Header>
@@ -57,27 +86,5 @@ export default function ClusterServicesOverview({ services, clickable, isFetchin
             </Table>
         </>
     );
-}
-
-ClusterServicesOverview.propTypes = {
-    services: PropTypes.shape(
-        _.mapValues(clusterServiceEnum, () =>
-            PropTypes.shape({
-                status: PropTypes.oneOf(clusterServiceStatuses),
-                is_external: PropTypes.bool
-            })
-        )
-    ),
-    clickable: PropTypes.bool,
-    isFetching: PropTypes.bool,
-    fetchingError: PropTypes.string,
-    header: PropTypes.node
 };
-
-ClusterServicesOverview.defaultProps = {
-    services: _.mapValues(clusterServiceEnum, () => ({ status: clusterServiceStatusEnum.Unknown, is_external: false })),
-    clickable: false,
-    isFetching: false,
-    fetchingError: '',
-    header: null
-};
+export default ClusterServicesOverview;
