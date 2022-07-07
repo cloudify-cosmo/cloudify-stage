@@ -1,8 +1,9 @@
 import React from 'react';
-import { get, isEmpty, isNil } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import PropTypes from 'prop-types';
+import type { ButtonProps } from 'semantic-ui-react';
+
 import EditTabModal from './EditTabModal';
 import EditModeButton from './EditModeButton';
 import { Confirm, Menu } from './basic';
@@ -13,22 +14,23 @@ import { useBoolean, useResettableState } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
 import useDefaultTabIndex from './useDefaultTabIndex';
 import type { SimpleWidgetObj, TabContent } from '../actions/page';
+import type { WidgetOwnProps } from './shared/widgets/Widget';
+import type { WidgetDefinition } from '../utils/StageAPI';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
 
-// TODO Norbert: Update interface
 interface TabsProps {
     tabs: TabContent[];
-    isEditMode: any;
-    onTabMoved: any;
-    onTabUpdated: any;
-    onTabAdded: any;
-    onTabRemoved: any;
-    onWidgetAdded: any;
-    onWidgetRemoved: any;
-    onWidgetUpdated: any;
-    onLayoutSectionRemoved: any;
+    isEditMode: boolean;
+    onTabMoved: (oldIndex: number, newIndex: number) => void;
+    onTabUpdated: (index: number, name: string, isDefault: boolean) => void;
+    onTabAdded: ButtonProps['onClick'];
+    onTabRemoved: (index: number) => void;
+    onWidgetAdded: (name: string, widget: WidgetDefinition, activeTabIndex: number) => void;
+    onWidgetRemoved: WidgetOwnProps<unknown>['onWidgetRemoved'];
+    onWidgetUpdated: WidgetOwnProps<unknown>['onWidgetUpdated'];
+    onLayoutSectionRemoved: () => void;
 }
 
 export default function Tabs({
@@ -150,7 +152,7 @@ export default function Tabs({
                 )}
             </span>
             <Confirm
-                open={!isNil(tabIndexToRemove)}
+                open={tabIndexToRemove >= 0}
                 onCancel={() => resetTabIndexToRemove()}
                 onConfirm={() => {
                     removeTab(tabIndexToRemove);
@@ -183,20 +185,3 @@ export default function Tabs({
         </>
     );
 }
-
-Tabs.propTypes = {
-    tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) })).isRequired,
-    onWidgetUpdated: PropTypes.func,
-    onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetAdded: PropTypes.func.isRequired,
-    onTabAdded: PropTypes.func.isRequired,
-    onTabRemoved: PropTypes.func.isRequired,
-    onTabUpdated: PropTypes.func.isRequired,
-    onTabMoved: PropTypes.func.isRequired,
-    onLayoutSectionRemoved: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired
-};
-
-Tabs.defaultProps = {
-    onWidgetUpdated: undefined
-};
