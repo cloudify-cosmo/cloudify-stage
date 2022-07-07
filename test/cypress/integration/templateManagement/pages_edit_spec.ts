@@ -56,6 +56,7 @@ describe('Page management', () => {
         cy.contains('Save').click();
 
         cy.log('Veryfiying page row');
+        cy.contains('.segment', 'Pages').should('be.visible');
         cy.get('.loading').should('not.exist');
         cy.contains('.segment', 'Pages')
             .find('table')
