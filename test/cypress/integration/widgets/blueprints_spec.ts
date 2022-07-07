@@ -4,6 +4,7 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
+    // TODO Norbert: Double check if this variable is still bringing some value
     const marketplaceTabs = [
         {
             name: 'VM Blueprint Examples',
@@ -421,11 +422,8 @@ describe('Blueprints widget', () => {
         });
 
         it('have blueprint catalog widget', () => {
-            cy.get('.modal').within(() => {
-                cy.contains('.header', 'Blueprint marketplace');
-                cy.get('.tabular > a.item').should('have.length', marketplaceTabs.length);
-                cy.get('.blueprintCatalogWidget').should('be.visible');
-            });
+            cy.contains('Blueprint Marketplace');
+            cy.containsActiveTab('AWS');
         });
     });
 
