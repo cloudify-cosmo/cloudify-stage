@@ -1,12 +1,14 @@
 describe('Service Button widget', () => {
     const widgetId = 'serviceButton';
+    const clickServiceButton = () => {
+        cy.clickButton('Create a service');
+    };
 
     before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId));
 
     it('should allow to show blueprint marketplace', () => {
-        cy.contains('Create a service').click();
-        cy.contains('Blueprint marketplace').should('be.visible');
-        cy.contains('Close').click();
+        clickServiceButton();
+        cy.contains('Blueprint Marketplace').should('be.visible');
     });
 
     describe('should allow configuring button', () => {
@@ -34,6 +36,15 @@ describe('Service Button widget', () => {
             cy.get('button').should('not.have.class', 'basic');
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
             cy.get('button').should('have.class', 'basic');
+        });
+
+        it('defaultMarketplaceTab', () => {
+            const marketplaceTabName = 'Terraform';
+            const configurationFieldName = 'Default marketplace tab';
+
+            cy.setStringConfigurationField(widgetId, configurationFieldName, marketplaceTabName);
+            clickServiceButton();
+            cy.containsActiveTab(marketplaceTabName);
         });
     });
 });
