@@ -1,15 +1,46 @@
-// @ts-nocheck File not migrated fully to TS
 import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
-export default function BlueprintSources({ data, toolbox, widget }) {
+interface BlueprintTree {
+    children: any;
+    key: string;
+    title: string;
+    isDir: boolean;
+    timestamp: number;
+}
+
+interface BlueprintSourcesProps {
+    data: {
+        blueprintId: string;
+        blueprintTree: BlueprintTree;
+        importedBlueprintIds: string[];
+        importedBlueprintTrees: {
+            timestamp: number;
+            children: any;
+        };
+        yamlFileName: string;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+interface ItemProps {
+    children: any;
+    key: string;
+    title: string;
+    isDir: boolean;
+}
+
+type HighlightTextProps = 'bash' | 'javascript' | 'json' | 'python' | 'yaml';
+
+export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
     const { useResettableState, useBoolean } = Stage.Hooks;
     const { useEffect } = React;
 
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
-    const [error, setError, clearError] = useResettableState('');
-    const [type, setType, resetType] = useResettableState('json');
+    const [error, setError, clearError] = useResettableState<string | null>(null);
+    const [type, setType, resetType] = useResettableState<HighlightTextProps>('json');
     const [isMaximized, maximize, minimize] = useBoolean();
 
     useEffect(() => {
@@ -19,7 +50,10 @@ export default function BlueprintSources({ data, toolbox, widget }) {
         resetType();
     }, [data]);
 
-    function selectFile(selectedKeys, info) {
+    function selectFile(
+        selectedKeys: string[],
+        info: { node: { props: { children: any; title: { props: { children: React.SetStateAction<string>[] } } } } }
+    ) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
             clearContent();
             clearFilename();
@@ -35,7 +69,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
             .doGetFileContent(path)
             .then(setContent)
             .then(() => {
-                let fileType = 'json';
+                let fileType: HighlightTextProps = 'json';
                 if (_.endsWith(path.toLowerCase(), '.yaml') || _.endsWith(path.toLowerCase(), '.yml')) {
                     fileType = 'yaml';
                 } else if (_.endsWith(path.toLowerCase(), '.py')) {
@@ -48,7 +82,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 setType(fileType);
                 clearError();
             })
-            .catch(err => {
+            .catch((err: { message: string }) => {
                 setError(err.message);
                 clearContent();
                 clearFilename();
@@ -58,11 +92,12 @@ export default function BlueprintSources({ data, toolbox, widget }) {
 
     const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
-    const loop = (blueprintId, timestamp, items) => {
+    const loop = (blueprintId: string, timestamp: number, items: ItemProps[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
+                    // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
                     <NodesTree.Node
                         key={key}
                         title={
@@ -76,8 +111,9 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                     </NodesTree.Node>
                 );
             }
+            const mainYamlFilePath = `${data.blueprintTree.children[0].key}/${data.yamlFileName}`;
             const label =
-                data.yamlFileName === item.title ? (
+                mainYamlFilePath === item.key ? (
                     <strong>
                         {item.title}
                         <Label color="blue" size="mini" style={{ marginLeft: 8 }}>
@@ -88,6 +124,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                     item.title
                 );
             return (
+                // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
                 <NodesTree.Node
                     key={key}
                     title={
@@ -107,10 +144,11 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 <SplitterLayout
                     primaryIndex={0}
                     percentage
-                    secondaryInitialSize={widget.configuration.contentPaneWidth}
+                    secondaryInitialSize={widget.configuration.contentPaneWidth as number}
                 >
                     <div>
                         <NodesTree className="nodes-tree" showLine selectable defaultExpandAll onSelect={selectFile}>
+                            {/* @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts */}
                             <NodesTree.Node
                                 key="blueprint"
                                 disabled
@@ -123,6 +161,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                 {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
+                                // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
                                 <NodesTree.Node
                                     key="imported"
                                     style={{ marginTop: '5px' }}
@@ -134,7 +173,8 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                         </Label>
                                     }
                                 >
-                                    {_.map(data.importedBlueprintTrees, (tree, index) => (
+                                    {_.map(data.importedBlueprintTrees, (tree, index: number) => (
+                                        // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
                                         <NodesTree.Node
                                             key={data.importedBlueprintIds[index]}
                                             style={{ marginTop: '3px' }}
