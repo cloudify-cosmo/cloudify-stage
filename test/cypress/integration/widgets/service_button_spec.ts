@@ -1,12 +1,15 @@
 describe('Service Button widget', () => {
     const widgetId = 'serviceButton';
+    const widgetSelector = `.${widgetId}Widget`;
+
     const clickServiceButton = () => {
-        cy.clickButton('Create a service');
+        cy.get(`${widgetSelector} button`).click();
     };
 
     before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId));
+    beforeEach(() => cy.refreshPage());
 
-    it('should allow to show blueprint marketplace', () => {
+    it('should allow to show blueprint marketplace page', () => {
         clickServiceButton();
         cy.contains('Blueprint Marketplace').should('be.visible');
     });
@@ -38,7 +41,7 @@ describe('Service Button widget', () => {
             cy.get('button').should('have.class', 'basic');
         });
 
-        it('defaultMarketplaceTab', () => {
+        it('tab activated on blueprint marketplace page by default', () => {
             const marketplaceTabName = 'Terraform';
             const configurationFieldName = 'Default marketplace tab';
 

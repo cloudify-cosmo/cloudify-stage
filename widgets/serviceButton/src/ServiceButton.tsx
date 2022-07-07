@@ -22,12 +22,10 @@ const ServiceButton: FunctionComponent<ServiceButtonProps> = ({
     toolbox
 }) => {
     const handleClick = () => {
-        if (defaultMarketplaceTab) {
-            const widget = toolbox.getWidget();
-            toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
-                defaultTab: defaultMarketplaceTab
-            });
-        }
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
+            defaultTab: defaultMarketplaceTab
+        });
     };
 
     return (
