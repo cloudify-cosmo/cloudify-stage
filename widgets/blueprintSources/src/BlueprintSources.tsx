@@ -157,7 +157,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 >
                     <div>
                         <NodesTree className="nodes-tree" showLine selectable defaultExpandAll onSelect={selectFile}>
-                            {/* @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts */}
+                            {/* @ts-ignore NodesTree.Node is not migrated to typescript */}
                             <NodesTree.Node
                                 key="blueprint"
                                 disabled
