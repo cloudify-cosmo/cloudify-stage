@@ -1,8 +1,31 @@
+import type { HighlightText } from 'cloudify-ui-components';
+import type { ComponentProps } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
+interface NodeTreeItem {
+    children: NodeTreeItem[];
+    key: string;
+    title: string;
+    isDir: boolean;
+}
+
+type FileType = ComponentProps<typeof HighlightText>['language'];
+
+interface FileInfo {
+    node: {
+        props: {
+            children: any;
+            title: {
+                props: {
+                    children: React.SetStateAction<string>[];
+                };
+            };
+        };
+    };
+}
 interface BlueprintTree {
-    children: any;
+    children: NodeTreeItem[];
     key: string;
     title: string;
     isDir: boolean;
@@ -14,24 +37,12 @@ interface BlueprintSourcesProps {
         blueprintId: string;
         blueprintTree: BlueprintTree;
         importedBlueprintIds: string[];
-        importedBlueprintTrees: {
-            timestamp: number;
-            children: any;
-        };
+        importedBlueprintTrees: BlueprintTree[];
         yamlFileName: string;
     };
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
-
-interface ItemProps {
-    children: any;
-    key: string;
-    title: string;
-    isDir: boolean;
-}
-
-type HighlightTextProps = 'bash' | 'javascript' | 'json' | 'python' | 'yaml';
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
     const { useResettableState, useBoolean } = Stage.Hooks;
@@ -40,7 +51,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
-    const [type, setType, resetType] = useResettableState<HighlightTextProps>('json');
+    const [type, setType, resetType] = useResettableState<FileType>('json');
     const [isMaximized, maximize, minimize] = useBoolean();
 
     useEffect(() => {
@@ -50,10 +61,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         resetType();
     }, [data]);
 
-    function selectFile(
-        selectedKeys: string[],
-        info: { node: { props: { children: any; title: { props: { children: React.SetStateAction<string>[] } } } } }
-    ) {
+    function selectFile(selectedKeys: string[], info: FileInfo) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
             clearContent();
             clearFilename();
@@ -69,7 +77,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             .doGetFileContent(path)
             .then(setContent)
             .then(() => {
-                let fileType: HighlightTextProps = 'json';
+                let fileType: FileType = 'json';
                 if (_.endsWith(path.toLowerCase(), '.yaml') || _.endsWith(path.toLowerCase(), '.yml')) {
                     fileType = 'yaml';
                 } else if (_.endsWith(path.toLowerCase(), '.py')) {
@@ -82,7 +90,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 setType(fileType);
                 clearError();
             })
-            .catch((err: { message: string }) => {
+            .catch((err: Error) => {
                 setError(err.message);
                 clearContent();
                 clearFilename();
@@ -92,12 +100,12 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
 
     const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
-    const loop = (blueprintId: string, timestamp: number, items: ItemProps[]) => {
+    const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
-                    // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
+                    // @ts-ignore NodesTree.Node is not migrated to typescript
                     <NodesTree.Node
                         key={key}
                         title={
@@ -111,7 +119,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </NodesTree.Node>
                 );
             }
-            const mainYamlFilePath = `${data.blueprintTree.children[0].key}/${data.yamlFileName}`;
+            const blueprintRootDirectory = data.blueprintTree.children[0].key;
+            const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
                 mainYamlFilePath === item.key ? (
                     <strong>
@@ -124,7 +133,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     item.title
                 );
             return (
-                // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
+                // @ts-ignore NodesTree.Node is not migrated to typescript
                 <NodesTree.Node
                     key={key}
                     title={
@@ -161,7 +170,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                 {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
-                                // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
+                                // @ts-ignore NodesTree.Node is not migrated to typescript
                                 <NodesTree.Node
                                     key="imported"
                                     style={{ marginTop: '5px' }}
@@ -174,7 +183,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     }
                                 >
                                     {_.map(data.importedBlueprintTrees, (tree, index: number) => (
-                                        // @ts-ignore Missing the following properties from type 'TreeNodeProps': style, onSelect, icon, switcherIconts
+                                        // @ts-ignore NodesTree.Node is not migrated to typescript
                                         <NodesTree.Node
                                             key={data.importedBlueprintIds[index]}
                                             style={{ marginTop: '3px' }}
@@ -225,18 +234,3 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         </div>
     );
 }
-
-BlueprintSources.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: PropTypes.string,
-        blueprintTree: PropTypes.shape({
-            children: PropTypes.arrayOf(PropTypes.shape({})),
-            timestamp: PropTypes.number
-        }),
-        importedBlueprintIds: PropTypes.arrayOf(PropTypes.string),
-        importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
-        yamlFileName: PropTypes.string
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
