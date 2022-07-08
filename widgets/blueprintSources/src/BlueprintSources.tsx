@@ -4,7 +4,7 @@ import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
 interface NodeTreeItem {
-    children: NodeTreeItem[];
+    children?: NodeTreeItem[];
     key: string;
     title: string;
     isDir: boolean;
