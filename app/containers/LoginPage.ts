@@ -22,7 +22,7 @@ const mapStateToProps = (state: ReduxState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
     return {
-        onLogin: (username: string, password: string, redirect: string) => {
+        onLogin: (username: string, password: string, redirect?: string | null) => {
             dispatch(login(username, password, redirect));
         }
     };

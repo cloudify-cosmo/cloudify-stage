@@ -1,17 +1,59 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { parse } from 'query-string';
-import i18n from 'i18next';
-import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
+
+import styled from 'styled-components';
+import { Button, Input, Message, Form, FullScreenSegment } from './basic';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import LogoLabel from './banner/LogoLabel';
 import LargeLogo from './banner/LargeLogo';
+import StageUtils from '../utils/stageUtils';
 
-export default class LoginPage extends Component {
-    constructor(props, context) {
+export interface LoginPageProps {
+    isLoggingIn: boolean;
+    isSamlEnabled: boolean;
+    onLogin: (username: string, password: string, redirect: Redirect) => void;
+    location: {
+        search: string;
+    };
+    loginError: string | null;
+    samlSsoUrl: string;
+    username: string;
+    whiteLabel: {
+        loginPageHeaderColor: string;
+        loginPageTextColor: string;
+    };
+}
+
+interface LoginPageState {
+    username: string;
+    password: string;
+    errors: Errors;
+}
+
+type Errors = {
+    username?: string;
+    password?: string;
+} | null;
+
+type Redirect = string | null;
+
+const StyledInput = styled(Input)`
+    &&&&&& input:autofill,
+    input:autofill:focus,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 100px transparent !important;
+        box-shadow: 0 0 0 100px transparent inset !important;
+        border-color: transparent !important;
+    }
+`;
+
+const t = StageUtils.getT('login');
+
+export default class LoginPage extends Component<LoginPageProps, LoginPageState> {
+    constructor(props: LoginPageProps, context: any) {
         super(props, context);
 
         this.state = {
@@ -23,19 +65,19 @@ export default class LoginPage extends Component {
 
     onSubmit = () => {
         const { password, username } = this.state;
-        const { isSamlEnabled, location, onLogin, samlSsoUrl } = this.props;
-        const errors = {};
+        const { isSamlEnabled, location, onLogin, samlSsoUrl = '' } = this.props;
+        const errors: Errors = {};
 
         if (isSamlEnabled) {
-            // eslint-disable-next-line scanjs-rules/assign_to_location
-            window.location = samlSsoUrl;
+            // eslint-disable-next-line scanjs-rules/assign_to_href
+            window.location.href = samlSsoUrl;
         }
 
         if (_.isEmpty(username)) {
-            errors.username = i18n.t('login.error.noUsername', 'Please provide username');
+            errors.username = t('error.noUsername');
         }
         if (_.isEmpty(password)) {
-            errors.password = i18n.t('login.error.noPassword', 'Please provide password');
+            errors.password = t('error.noPassword');
         }
         if (!_.isEmpty(errors)) {
             this.setState({ errors });
@@ -43,24 +85,24 @@ export default class LoginPage extends Component {
         }
 
         const query = parse(location.search);
-        const redirect = query.redirect || null;
+        const redirect = (query.redirect as string) || null;
 
         return onLogin(username, password, redirect);
     };
 
-    handleInputChange = (proxy, field) => {
+    handleInputChange = (_proxy: any, field: any) => {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     };
 
     render() {
         const { errors, password, username } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError } = this.props;
+        const { isLoggingIn, isSamlEnabled, loginError = null } = this.props;
         SplashLoadingScreen.turnOff();
 
-        const loginPageHeader = i18n.t('login.header');
+        const loginPageHeader = t('header');
         const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
-        const loginPageText = i18n.t('login.message');
+        const loginPageText = t('message');
         const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
         const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
 
@@ -87,22 +129,22 @@ export default class LoginPage extends Component {
                     <Form onSubmit={this.onSubmit}>
                         {!isSamlEnabled && (
                             <>
-                                <Form.Field required error={errors.username}>
-                                    <Input
+                                <Form.Field required error={errors?.username}>
+                                    <StyledInput
                                         name="username"
                                         type="text"
-                                        placeholder={i18n.t('login.username', 'Username')}
+                                        placeholder={t('username')}
                                         autoFocus
                                         value={username}
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
 
-                                <Form.Field required error={errors.password}>
-                                    <Input
+                                <Form.Field required error={errors?.password}>
+                                    <StyledInput
                                         name="password"
                                         type="password"
-                                        placeholder={i18n.t('login.password', 'Password')}
+                                        placeholder={t('password')}
                                         value={password}
                                         onChange={this.handleInputChange}
                                     />
@@ -122,7 +164,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={i18n.t(isSamlEnabled ? 'login.ssoSubmit' : 'login.submit')}
+                            content={t(isSamlEnabled ? 'ssoSubmit' : 'submit')}
                         />
                     </Form>
                 </div>
@@ -130,28 +172,3 @@ export default class LoginPage extends Component {
         );
     }
 }
-
-LoginPage.propTypes = {
-    isLoggingIn: PropTypes.bool.isRequired,
-    isSamlEnabled: PropTypes.bool.isRequired,
-    onLogin: PropTypes.func.isRequired,
-    location: PropTypes.shape({ search: PropTypes.string }),
-    loginError: PropTypes.string,
-    samlSsoUrl: PropTypes.string,
-    username: PropTypes.string,
-    whiteLabel: PropTypes.shape({
-        loginPageHeaderColor: PropTypes.string,
-        loginPageTextColor: PropTypes.string
-    })
-};
-
-LoginPage.defaultProps = {
-    location: { search: '' },
-    loginError: null,
-    samlSsoUrl: '',
-    username: '',
-    whiteLabel: PropTypes.shape({
-        loginPageHeaderColor: '',
-        loginPageTextColor: ''
-    })
-};

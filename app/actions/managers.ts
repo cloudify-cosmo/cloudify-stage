@@ -50,7 +50,7 @@ export function storeRBAC(RBAC) {
 export function login(
     username: string,
     password: string,
-    redirect?: string
+    redirect?: string | null
 ): ThunkAction<void, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
