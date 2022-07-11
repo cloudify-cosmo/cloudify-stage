@@ -260,7 +260,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     noDataMessage={NO_DATA_MESSAGE}
                 >
                     <DataTable.Column label={t('columns.key')} name="key" width="20%" />
-                    <DataTable.Column label={t('columns.value')} name="value" width="20%" />
+                    <DataTable.Column label={t('columns.value')} width="20%" />
                     <DataTable.Column label={t('columns.hiddenValue')} name="is_hidden_value" width="10%" />
                     <DataTable.Column label={t('columns.created')} name="created_at" width="10%" />
                     <DataTable.Column label={t('columns.updated')} name="updated_at" width="10%" />
