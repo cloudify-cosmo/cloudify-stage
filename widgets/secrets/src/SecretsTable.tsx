@@ -12,8 +12,8 @@ interface SecretValueProps {
     showSecretKey: string;
     showSecretValue: string;
     secretKey: string;
-    onHide: () => {};
-    onShow: () => {};
+    onHide: () => void;
+    onShow: () => void;
     toolbox: Stage.Types.Toolbox;
 }
 
