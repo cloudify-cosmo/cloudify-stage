@@ -1,10 +1,21 @@
 // @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
-import SecretPropType from './props/SecretPropType';
+import { Secret } from './props/SecretPropType';
 
-function SecretValue({
+interface SecretValueProps {
+    canShowSecret: boolean;
+    showSecretLoading: boolean;
+    showSecretKey: string;
+    showSecretValue: string;
+    secretKey: string;
+    onHide: () => {};
+    onShow: () => {};
+    toolbox: Stage.Types.Toolbox;
+}
+
+const SecretValue: FunctionComponent<SecretValueProps> = ({
     canShowSecret,
     showSecretKey,
     showSecretValue,
@@ -13,7 +24,7 @@ function SecretValue({
     onHide,
     onShow,
     toolbox
-}) {
+}) => {
     const { Icon, Popup } = Stage.Basic;
 
     const currentUsername = toolbox.getManager().getCurrentUsername();
@@ -42,26 +53,36 @@ function SecretValue({
         );
     }
     return <Icon bordered link name="unhide" title="Show secret value" onClick={onShow} />;
+};
+
+interface SecretsTableProps {
+    data: {
+        items: Secret[];
+        total: number;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
 }
 
-SecretValue.propTypes = {
-    canShowSecret: PropTypes.bool.isRequired,
-    showSecretLoading: PropTypes.bool.isRequired,
-    showSecretKey: PropTypes.string.isRequired,
-    showSecretValue: PropTypes.string.isRequired,
-    secretKey: PropTypes.string.isRequired,
-    onHide: PropTypes.func.isRequired,
-    onShow: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-export default class SecretsTable extends React.Component {
+interface SecretsTableState {
+    error: any;
+    showModal: boolean;
+    modalType: string;
+    secret: any;
+    canShowSecret: boolean;
+    showSecretKey: string;
+    showSecretValue: string;
+    showSecretLoading: boolean;
+}
+
+export default class SecretsTable extends React.Component<SecretsTableProps, SecretsTableState> {
     static CREATE_SECRET_ACTION = 'create';
 
     static DELETE_SECRET_ACTION = 'delete';
 
     static UPDATE_SECRET_ACTION = 'update';
 
-    constructor(props, context) {
+    constructor(props: SecretsTableProps, context) {
         super(props, context);
 
         this.state = {
@@ -81,7 +102,7 @@ export default class SecretsTable extends React.Component {
         toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: SecretsTableProps, nextState: SecretsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -327,12 +348,3 @@ export default class SecretsTable extends React.Component {
         );
     }
 }
-
-SecretsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(SecretPropType),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
