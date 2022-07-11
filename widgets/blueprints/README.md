@@ -32,7 +32,8 @@ There are also action buttons to upload a blueprint, create deployment, delete b
 
 1. Click the **Upload** button.
 2. In the menu, click **Upload from Marketplace** option.
-3. In the Blueprint Marketplace modal, click **Upload** button on one of the blueprints shown in a table.
+3. On the Blueprint Marketplace page select a blueprint category tab (e.g. `AWS`).
+4. Click **Upload** icon ![Upload icon]( /images/ui/icons/upload-icon.png ) on one of the blueprints shown in a table.
 
 ##### Using blueprint package
 
@@ -133,6 +134,3 @@ See Settings section for details on how to turn on/off this feature.
 * `Hide failed blueprints` - Allows to hide blueprints not uploaded successfully. Default: Off
 * `Show Composer options` - Allows to show {{< param cfy_composer_name >}} options in menu and in the blueprints list. Default: No
 * `Label filter rules` - Allows to define blueprint labels' filter rules. See [blueprint filters](/cli/orch_cli/blueprints#blueprint-filters) for more details. Default: empty
-* `Marketplace tabs` - Allows to define multiple sources from which blueprints are taken to populate Blueprint Marketplace modal. User can define a name and URL for each tab.
-* `Marketplace display style` - Defines how the Blueprints Marketplace modal should be displayed. Can be either Catalog or Table.  Default: Table
-* `List of fields to show in the marketplace table` - Allow to change the list of visible columns in the Blueprint Marketplace modal. Works only when Marketplace display style is set to Table. Default: Name, Description.

@@ -1,12 +1,17 @@
 describe('Service Button widget', () => {
     const widgetId = 'serviceButton';
+    const widgetSelector = `.${widgetId}Widget`;
+
+    const clickServiceButton = () => {
+        cy.get(`${widgetSelector} button`).click();
+    };
 
     before(() => cy.activate().useWidgetWithDefaultConfiguration(widgetId));
+    beforeEach(() => cy.refreshPage());
 
-    it('should allow to show blueprint marketplace', () => {
-        cy.contains('Create a service').click();
-        cy.contains('Blueprint marketplace').should('be.visible');
-        cy.contains('Close').click();
+    it('should allow to show blueprint marketplace page', () => {
+        clickServiceButton();
+        cy.contains('Blueprint Marketplace').should('be.visible');
     });
 
     describe('should allow configuring button', () => {
@@ -34,6 +39,23 @@ describe('Service Button widget', () => {
             cy.get('button').should('not.have.class', 'basic');
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
             cy.get('button').should('have.class', 'basic');
+        });
+
+        it('default marketplace tab', () => {
+            const marketplaceTabNames = ['Terraform', 'Kubernetes', 'AWS'];
+            const configurationFieldName = 'Default marketplace tab';
+
+            marketplaceTabNames.forEach((marketplaceTabName, tabIndex) => {
+                const isFirstTabChecked = tabIndex === 0;
+
+                if (!isFirstTabChecked) {
+                    cy.refreshPage();
+                }
+
+                cy.setStringConfigurationField(widgetId, configurationFieldName, marketplaceTabName);
+                clickServiceButton();
+                cy.containsActiveTab(marketplaceTabName);
+            });
         });
     });
 });
