@@ -41,13 +41,21 @@ describe('Service Button widget', () => {
             cy.get('button').should('have.class', 'basic');
         });
 
-        it('tab activated on blueprint marketplace page by default', () => {
-            const marketplaceTabName = 'Terraform';
+        it('default marketplace tab', () => {
+            const marketplaceTabNames = ['Terraform', 'Kubernetes', 'AWS'];
             const configurationFieldName = 'Default marketplace tab';
 
-            cy.setStringConfigurationField(widgetId, configurationFieldName, marketplaceTabName);
-            clickServiceButton();
-            cy.containsActiveTab(marketplaceTabName);
+            marketplaceTabNames.forEach((marketplaceTabName, tabIndex) => {
+                const isFirstTabChecked = tabIndex === 0;
+
+                if (!isFirstTabChecked) {
+                    cy.refreshPage();
+                }
+
+                cy.setStringConfigurationField(widgetId, configurationFieldName, marketplaceTabName);
+                clickServiceButton();
+                cy.containsActiveTab(marketplaceTabName);
+            });
         });
     });
 });
