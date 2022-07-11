@@ -1,20 +1,39 @@
-// @ts-nocheck File not migrated fully to TS
-import React, { useState } from 'react';
-import _ from 'lodash';
-import i18n from 'i18next';
+import React from 'react';
+import { get, isEmpty } from 'lodash';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-import PropTypes from 'prop-types';
+import type { ButtonProps } from 'semantic-ui-react';
+
 import EditTabModal from './EditTabModal';
 import EditModeButton from './EditModeButton';
 import { Confirm, Menu } from './basic';
 import AddWidget from '../containers/AddWidget';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
-import { useBoolean } from '../utils/hooks';
+import { useBoolean, useResettableState } from '../utils/hooks';
 import EmptyContainerMessage from './EmptyContainerMessage';
+import useDefaultTabIndex from './useDefaultTabIndex';
+import type { SimpleWidgetObj, TabContent } from '../actions/page';
+import type { WidgetOwnProps } from './shared/widgets/Widget';
+import type { WidgetDefinition } from '../utils/StageAPI';
+import StageUtils from '../utils/stageUtils';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
+
+const t = StageUtils.getT('editMode');
+
+interface TabsProps {
+    tabs: TabContent[];
+    isEditMode: boolean;
+    onTabMoved: (oldIndex: number, newIndex: number) => void;
+    onTabUpdated: (index: number, name: string, isDefault: boolean) => void;
+    onTabAdded: ButtonProps['onClick'];
+    onTabRemoved: (index: number) => void;
+    onWidgetAdded: (name: string, widget: WidgetDefinition, activeTabIndex: number) => void;
+    onWidgetRemoved: WidgetOwnProps<unknown>['onWidgetRemoved'];
+    onWidgetUpdated: WidgetOwnProps<unknown>['onWidgetUpdated'];
+    onLayoutSectionRemoved: () => void;
+}
 
 export default function Tabs({
     tabs,
@@ -27,21 +46,21 @@ export default function Tabs({
     onWidgetRemoved,
     onWidgetUpdated,
     onLayoutSectionRemoved
-}) {
-    const [activeTab, setActiveTab] = useState(Math.max(_.findIndex(tabs, { isDefault: true }), 0));
-    const [tabIndexToRemove, setTabIndexToRemove] = useState();
+}: TabsProps) {
+    const [activeTabIndex, setActiveTabIndex] = useDefaultTabIndex(tabs);
+    const [tabIndexToRemove, setTabIndexToRemove, resetTabIndexToRemove] = useResettableState(-1);
     const [isTabsRemovalDialogShown, showTabsRemovalDialog, hideTabsRemovalDialog] = useBoolean();
 
     const filterWidgets = useWidgetsFilter();
 
-    function removeTab(tabIndex) {
-        if (tabIndex < activeTab || (tabIndex === activeTab && tabs.length - 1 === activeTab)) {
-            setActiveTab(activeTab - 1);
+    function removeTab(tabIndex: number) {
+        if (tabIndex < activeTabIndex || (tabIndex === activeTabIndex && tabs.length - 1 === activeTabIndex)) {
+            setActiveTabIndex(activeTabIndex - 1);
         }
         onTabRemoved(tabIndex);
     }
 
-    const activeTabWidgets = filterWidgets(tabs[activeTab].widgets);
+    const activeTabWidgets = filterWidgets(tabs[activeTabIndex].widgets);
 
     return (
         <>
@@ -53,22 +72,25 @@ export default function Tabs({
                 helperClass="draggedTab"
                 onSortEnd={({ oldIndex, newIndex }) => {
                     onTabMoved(oldIndex, newIndex);
-                    if (oldIndex === activeTab) setActiveTab(newIndex);
-                    else if (oldIndex < activeTab && newIndex >= activeTab) setActiveTab(activeTab - 1);
-                    else if (oldIndex > activeTab && newIndex <= activeTab) setActiveTab(activeTab + 1);
+                    if (oldIndex === activeTabIndex) setActiveTabIndex(newIndex);
+                    else if (oldIndex < activeTabIndex && newIndex >= activeTabIndex)
+                        setActiveTabIndex(activeTabIndex - 1);
+                    else if (oldIndex > activeTabIndex && newIndex <= activeTabIndex)
+                        setActiveTabIndex(activeTabIndex + 1);
                 }}
                 style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: '1em 0' }}
             >
-                {_.map(tabs, (tab, tabIndex) => (
+                {tabs.map((tab, tabIndex) => (
                     <SortableMenuItem
+                        // eslint-disable-next-line react/no-array-index-key
                         key={`${tabs.length}_${tabIndex}`}
                         index={tabIndex}
-                        active={activeTab === tabIndex}
-                        onClick={() => setActiveTab(tabIndex)}
+                        active={activeTabIndex === tabIndex}
+                        onClick={() => setActiveTabIndex(tabIndex)}
                         disabled={!isEditMode}
                         style={{
                             marginBottom: '-1px',
-                            borderBottom: activeTab === tabIndex ? 'none' : '1px solid #d4d4d5'
+                            borderBottom: activeTabIndex === tabIndex ? 'none' : '1px solid #d4d4d5'
                         }}
                     >
                         {tab.name}
@@ -85,7 +107,7 @@ export default function Tabs({
                                         icon="remove"
                                         onClick={e => {
                                             e.stopPropagation();
-                                            if (_.isEmpty(tab.widgets)) removeTab(tabIndex);
+                                            if (isEmpty(tab.widgets)) removeTab(tabIndex);
                                             else setTabIndexToRemove(tabIndex);
                                         }}
                                     />
@@ -96,16 +118,12 @@ export default function Tabs({
                 ))}
                 {isEditMode && (
                     <Menu.Item key="actions" style={{ right: 0, position: 'absolute', padding: '6px 0 0 0' }}>
-                        <EditModeButton
-                            icon="add"
-                            onClick={onTabAdded}
-                            title={i18n.t('editMode.tabs.add', 'Add new tab')}
-                        />
+                        <EditModeButton icon="add" onClick={onTabAdded} title={t('tabs.add')} />
                         &nbsp;
                         <EditModeButton
                             icon="remove"
                             onClick={showTabsRemovalDialog}
-                            title={i18n.t('editMode.removeTabsContainer', 'Remove tabs container')}
+                            title={t('removeTabsContainer')}
                         />
                     </Menu.Item>
                 )}
@@ -114,16 +132,17 @@ export default function Tabs({
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget
-                            addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle', 'Add widget to this tab')}
-                            onWidgetAdded={(...params) => onWidgetAdded(...params, activeTab)}
+                            addButtonTitle={t('addWidget.addToTabButtonTitle')}
+                            // @ts-ignore AddWidget not yet fully migrated to TS
+                            onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
                     </div>
                 )}
-                {_.isEmpty(activeTabWidgets) ? (
+                {isEmpty(activeTabWidgets) ? (
                     <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="tab" />
                 ) : (
                     <WidgetsList
-                        widgets={activeTabWidgets}
+                        widgets={activeTabWidgets as SimpleWidgetObj[]}
                         onWidgetUpdated={onWidgetUpdated}
                         onWidgetRemoved={onWidgetRemoved}
                         isEditMode={isEditMode}
@@ -131,19 +150,16 @@ export default function Tabs({
                 )}
             </span>
             <Confirm
-                open={!_.isNil(tabIndexToRemove)}
-                onCancel={() => setTabIndexToRemove(null)}
+                open={tabIndexToRemove >= 0}
+                onCancel={() => resetTabIndexToRemove()}
                 onConfirm={() => {
                     removeTab(tabIndexToRemove);
-                    setTabIndexToRemove(null);
+                    resetTabIndexToRemove();
                 }}
-                header={i18n.t('editMode.tabs.removeModal.header', `Are you sure you want to remove tab {{tabName}}?`, {
-                    tabName: _.get(tabs, [tabIndexToRemove, 'name'])
+                header={t('tabs.removeModal.header', {
+                    tabName: get(tabs, [tabIndexToRemove, 'name'])
                 })}
-                content={i18n.t(
-                    'editMode.tabs.removeModal.message',
-                    'All widgets present in this tab will be removed as well'
-                )}
+                content={t('tabs.removeModal.message')}
             />
             <Confirm
                 open={isTabsRemovalDialogShown}
@@ -152,32 +168,9 @@ export default function Tabs({
                     onLayoutSectionRemoved();
                     hideTabsRemovalDialog();
                 }}
-                header={i18n.t(
-                    'editMode.tabRemovalModal.header',
-                    'Are you sure you want to remove this tabs container?'
-                )}
-                content={i18n.t(
-                    'editMode.tabRemovalModal.message',
-                    'All tabs and widgets present in this container will be removed'
-                )}
+                header={t('tabRemovalModal.header')}
+                content={t('tabRemovalModal.message')}
             />
         </>
     );
 }
-
-Tabs.propTypes = {
-    tabs: PropTypes.arrayOf(PropTypes.shape({ widgets: PropTypes.arrayOf(PropTypes.shape({})) })).isRequired,
-    onWidgetUpdated: PropTypes.func,
-    onWidgetRemoved: PropTypes.func.isRequired,
-    onWidgetAdded: PropTypes.func.isRequired,
-    onTabAdded: PropTypes.func.isRequired,
-    onTabRemoved: PropTypes.func.isRequired,
-    onTabUpdated: PropTypes.func.isRequired,
-    onTabMoved: PropTypes.func.isRequired,
-    onLayoutSectionRemoved: PropTypes.func.isRequired,
-    isEditMode: PropTypes.bool.isRequired
-};
-
-Tabs.defaultProps = {
-    onWidgetUpdated: undefined
-};

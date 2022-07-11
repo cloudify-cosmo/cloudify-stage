@@ -1,36 +1,43 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
-import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
+
+const { Button } = Stage.Basic;
+const { drilldownPage } = Stage.Common.Consts;
 
 export interface ServiceButtonProps {
     basic: boolean;
     color: SemanticCOLORS;
     icon: SemanticICONS;
     label: string;
-    marketplaceTabs: MarketplaceTab[];
+    defaultMarketplaceTab?: string;
+    toolbox: Stage.Types.Toolbox;
 }
 
-const ServiceButton: FunctionComponent<ServiceButtonProps> = ({ basic, color, icon, label, marketplaceTabs = [] }) => {
-    const { useBoolean } = Stage.Hooks;
-    const [open, setOpen, unsetOpen] = useBoolean();
-
-    const { Button } = Stage.Basic;
-    const { Modal } = Stage.Common.BlueprintMarketplace;
+const ServiceButton: FunctionComponent<ServiceButtonProps> = ({
+    basic,
+    color,
+    icon,
+    label,
+    defaultMarketplaceTab,
+    toolbox
+}) => {
+    const handleClick = () => {
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
+            defaultTab: defaultMarketplaceTab
+        });
+    };
 
     return (
-        <div>
-            <Button
-                basic={basic}
-                color={color || undefined}
-                content={label}
-                icon={icon || undefined}
-                fluid
-                labelPosition={icon ? 'left' : undefined}
-                onClick={setOpen}
-            />
-
-            {open && <Modal open onHide={unsetOpen} tabs={marketplaceTabs} />}
-        </div>
+        <Button
+            basic={basic}
+            color={color || undefined}
+            content={label}
+            icon={icon || undefined}
+            fluid
+            labelPosition={icon ? 'left' : undefined}
+            onClick={handleClick}
+        />
     );
 };
 
