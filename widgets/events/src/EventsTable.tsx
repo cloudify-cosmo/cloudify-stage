@@ -149,7 +149,7 @@ export default class EventsTable extends React.Component {
                         }
                     />
                     <DataTable.Column
-                        label="Deployment id"
+                        label="Deployment ID"
                         name="deployment_id"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
