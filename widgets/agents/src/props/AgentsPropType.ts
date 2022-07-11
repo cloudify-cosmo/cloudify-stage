@@ -1,3 +1,13 @@
+export type Agents = {
+    id: string;
+    ip: string;
+    deployment: string;
+    node: string;
+    system: string;
+    version: string;
+    install_method: string;
+};
+
 export default PropTypes.arrayOf(
     PropTypes.shape({
         id: PropTypes.string,

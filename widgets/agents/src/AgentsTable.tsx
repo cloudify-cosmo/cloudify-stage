@@ -2,15 +2,27 @@
 
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
-import AgentsPropType from './props/AgentsPropType';
+import { Agents } from './props/AgentsPropType';
 
-export default class AgentsTable extends React.Component {
+interface AgentsTableProps {
+    data: {
+        items: Agents;
+        total: number;
+        deploymentId: string | string[];
+        nodeId: string | string[];
+        nodeInstanceId: string | string[];
+    };
+    widget: Stage.Types.Widget;
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default class AgentsTable extends React.Component<AgentsTableProps> {
     static Modals = {
         INSTALL_AGENT: 'install_agent',
         VALIDATE_AGENT: 'validate_agent'
     };
 
-    constructor(props, context) {
+    constructor(props: AgentsTableProps, context) {
         super(props, context);
 
         this.state = {
@@ -25,7 +37,7 @@ export default class AgentsTable extends React.Component {
         toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: AgentsTableProps, nextState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -157,15 +169,3 @@ export default class AgentsTable extends React.Component {
         );
     }
 }
-
-AgentsTable.propTypes = {
-    data: PropTypes.shape({
-        items: AgentsPropType,
-        total: PropTypes.number,
-        deploymentId: Stage.PropTypes.StringOrArray,
-        nodeId: Stage.PropTypes.StringOrArray,
-        nodeInstanceId: Stage.PropTypes.StringOrArray
-    }).isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
