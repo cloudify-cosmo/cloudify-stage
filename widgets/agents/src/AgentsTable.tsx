@@ -2,7 +2,8 @@
 
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
-import type { Agents } from './props/AgentsPropType';
+import AgentsPropType from './props/AgentsPropType';
+import type { Agents } from './types';
 
 const t = Stage.Utils.getT('widgets.agents');
 
