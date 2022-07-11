@@ -18,7 +18,13 @@ interface AgentsTableProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-export default class AgentsTable extends React.Component<AgentsTableProps> {
+interface AgentsTableState {
+    error: any;
+    showModal: boolean;
+    modal: string;
+}
+
+export default class AgentsTable extends React.Component<AgentsTableProps, AgentsTableState> {
     static Modals = {
         INSTALL_AGENT: 'install_agent',
         VALIDATE_AGENT: 'validate_agent'
@@ -39,7 +45,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps> {
         toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps: AgentsTableProps, nextState) {
+    shouldComponentUpdate(nextProps: AgentsTableProps, nextState: AgentsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -174,3 +180,15 @@ export default class AgentsTable extends React.Component<AgentsTableProps> {
         );
     }
 }
+
+AgentsTable.propTypes = {
+    data: PropTypes.shape({
+        items: AgentsPropType,
+        total: PropTypes.number,
+        deploymentId: Stage.PropTypes.StringOrArray,
+        nodeId: Stage.PropTypes.StringOrArray,
+        nodeInstanceId: Stage.PropTypes.StringOrArray
+    }).isRequired,
+    widget: Stage.PropTypes.Widget.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
