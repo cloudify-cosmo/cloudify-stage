@@ -33,6 +33,7 @@ describe('Blueprint Sources widget', () => {
                         cy.contains(blueprintName).should('be.visible');
                         cy.contains('empty').should('be.visible');
                         cy.contains('blueprint.yaml').should('be.visible');
+                        cy.contains('Main').should('be.visible');
                     });
                     cy.get('@rightPane').within(() => {
                         cy.get('pre').should('not.exist');
