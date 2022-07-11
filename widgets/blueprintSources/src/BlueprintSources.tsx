@@ -1,7 +1,12 @@
-import type { HighlightText } from 'cloudify-ui-components';
+import { useEffect } from 'react';
 import type { ComponentProps } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
+
+const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
+const { useResettableState, useBoolean } = Stage.Hooks;
+
+type FileType = ComponentProps<typeof HighlightText>['language'];
 
 interface NodeTreeItem {
     children?: NodeTreeItem[];
@@ -9,8 +14,6 @@ interface NodeTreeItem {
     title: string;
     isDir: boolean;
 }
-
-type FileType = ComponentProps<typeof HighlightText>['language'];
 
 interface FileInfo {
     node: {
@@ -24,6 +27,7 @@ interface FileInfo {
         };
     };
 }
+
 interface BlueprintTree {
     children: NodeTreeItem[];
     key: string;
@@ -45,9 +49,6 @@ interface BlueprintSourcesProps {
 }
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
-    const { useResettableState, useBoolean } = Stage.Hooks;
-    const { useEffect } = React;
-
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
@@ -97,8 +98,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             })
             .finally(() => toolbox.loading(false));
     }
-
-    const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 
     const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
