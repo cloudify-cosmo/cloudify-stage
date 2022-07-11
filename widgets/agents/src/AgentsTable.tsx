@@ -100,7 +100,7 @@ export default class AgentsTable extends React.Component {
                     />
                     <DataTable.Column label="System" show={fieldsToShow.indexOf('System') >= 0} />
                     <DataTable.Column label="Version" show={fieldsToShow.indexOf('Version') >= 0} />
-                    <DataTable.Column label="Install Method" show={fieldsToShow.indexOf('Install Method') >= 0} />
+                    <DataTable.Column label="Install method" show={fieldsToShow.indexOf('Install Method') >= 0} />
 
                     {_.map(data.items, item => (
                         <DataTable.Row key={item.id}>
