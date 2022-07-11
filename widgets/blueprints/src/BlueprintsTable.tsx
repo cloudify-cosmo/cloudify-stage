@@ -35,7 +35,7 @@ export default function BlueprintsTable({
             <DataTable.Column show={fieldsToShow?.includes('Created')} label="Created" name="created_at" width="15%" />
             <DataTable.Column show={fieldsToShow?.includes('Updated')} label="Updated" name="updated_at" width="15%" />
             <DataTable.Column show={fieldsToShow?.includes('Creator')} label="Creator" name="created_by" width="15%" />
-            <DataTable.Column label="Main Blueprint File" name="main_file_name" width="15%" />
+            <DataTable.Column label="Main blueprint file" name="main_file_name" width="15%" />
             <DataTable.Column show={fieldsToShow?.includes('State')} label="State" name="state" />
             <DataTable.Column show={fieldsToShow?.includes('Deployments')} label="# Deployments" />
             <DataTable.Column width="10%" />
