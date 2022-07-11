@@ -807,6 +807,17 @@
                 "placeholder": "Choose a role"
             }
         },
+        "agents": {
+            "columns": {
+                "id": "Id",
+                "ip": "IP",
+                "deployment": "Deployment",
+                "node": "Node",
+                "system": "System",
+                "version": "Version",
+                "installMethod": "Install method"
+            }
+        },
         "blueprintActionButtons": {
             "name": "Blueprint action buttons",
             "description": "Provides set of action buttons for blueprint",
