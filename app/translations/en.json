@@ -1394,6 +1394,17 @@
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
+        "secrets": {
+            "columns": {
+                "key": "Key",
+                "value": "Value",
+                "hiddenValue": "Hidden value",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "tenant": "Tenant"
+            }
+        },
         "serviceButton": {
             "name": "Service button",
             "description": "Displays button allowing to create a new service",

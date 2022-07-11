@@ -4,6 +4,8 @@ import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import { Secret } from './props/SecretPropType';
 
+const t = Stage.Utils.getT('widgets.secrets');
+
 interface SecretValueProps {
     canShowSecret: boolean;
     showSecretLoading: boolean;
@@ -257,13 +259,13 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     className="secretsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Key" name="key" width="20%" />
-                    <DataTable.Column label="Value" width="20%" />
-                    <DataTable.Column label="Hidden value" name="is_hidden_value" width="10%" />
-                    <DataTable.Column label="Created" name="created_at" width="10%" />
-                    <DataTable.Column label="Updated" name="updated_at" width="10%" />
-                    <DataTable.Column label="Creator" name="created_by" width="10%" />
-                    <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
+                    <DataTable.Column label={t('columns.key')} name="key" width="20%" />
+                    <DataTable.Column label={t('columns.value')} name="value" width="20%" />
+                    <DataTable.Column label={t('columns.hiddenValue')} name="is_hidden_value" width="10%" />
+                    <DataTable.Column label={t('columns.created')} name="created_at" width="10%" />
+                    <DataTable.Column label={t('columns.updated')} name="updated_at" width="10%" />
+                    <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
+                    <DataTable.Column label={t('columns.tenant')} name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
