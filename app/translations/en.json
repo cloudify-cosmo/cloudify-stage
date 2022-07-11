@@ -1259,7 +1259,7 @@
                     "name": "Name"
                 },
                 "blueprintName": {
-                    "name": "Blueprint Name"
+                    "name": "Blueprint name"
                 },
                 "environmentType": {
                     "name": "Environment Type"
