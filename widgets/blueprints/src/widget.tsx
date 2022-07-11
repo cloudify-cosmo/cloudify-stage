@@ -68,40 +68,6 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Common.Blueprints.LabelFilter
-        },
-        Stage.Common.BlueprintMarketplace.tabsConfig,
-        {
-            id: 'marketplaceDisplayStyle',
-            name: t('configuration.marketplaceDisplayStyle.label'),
-            items: [
-                {
-                    name: t('configuration.marketplaceDisplayStyle.items.table'),
-                    value: 'table'
-                },
-                {
-                    name: t('configuration.marketplaceDisplayStyle.items.catalog'),
-                    value: 'catalog'
-                }
-            ],
-            default: 'table',
-            type: Stage.Basic.GenericField.LIST_TYPE
-        },
-        {
-            id: 'marketplaceColumnsToShow',
-            name: t('configuration.marketplaceColumnsToShow.label'),
-            placeholder: t('configuration.marketplaceColumnsToShow.placeholder'),
-            items: [
-                tCatalogConfiguration('fieldsToShow.items.name'),
-                tCatalogConfiguration('fieldsToShow.items.description'),
-                tCatalogConfiguration('fieldsToShow.items.created'),
-                tCatalogConfiguration('fieldsToShow.items.updated')
-            ],
-            default: join([
-                tCatalogConfiguration('fieldsToShow.items.name'),
-                tCatalogConfiguration('fieldsToShow.items.description')
-            ]),
-
-            type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
 

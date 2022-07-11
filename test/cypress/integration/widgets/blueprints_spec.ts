@@ -4,29 +4,12 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
-    const marketplaceTabs = [
-        {
-            name: 'VM Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json'
-        },
-        {
-            name: 'Kubernetes Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/k8s-examples.json'
-        },
-        {
-            name: 'Orchestrator Blueprint Examples',
-            url: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/orc-examples.json'
-        }
-    ];
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
         displayStyle: 'table',
         clickToDrillDown: true,
         pollingTime: 5,
         showComposerOptions: true,
-        marketplaceTabs,
-        marketplaceDisplayStyle: 'catalog',
-        filterRules: [],
-        marketplaceColumnsToShow: ['Name', 'Description']
+        filterRules: []
     };
 
     before(() =>
@@ -417,18 +400,15 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should open upload from marketplace modal and', () => {
+    describe('should upload from Marketplace and ', () => {
         beforeEach(() => {
             cy.contains('Upload').click();
             cy.contains('Upload from Marketplace').click();
         });
 
-        it('have blueprint catalog widget', () => {
-            cy.get('.modal').within(() => {
-                cy.contains('.header', 'Blueprint marketplace');
-                cy.get('.tabular > a.item').should('have.length', marketplaceTabs.length);
-                cy.get('.blueprintCatalogWidget').should('be.visible');
-            });
+        it('open Blueprint Marketplace page', () => {
+            cy.contains('Blueprint Marketplace');
+            cy.containsActiveTab('AWS');
         });
     });
 
@@ -855,46 +835,6 @@ describe('Blueprints widget', () => {
             cy.contains('Generate in the Composer').should('not.exist');
             cy.contains('Upload from Marketplace').should('be.visible');
             cy.contains('Upload a blueprint package').should('be.visible');
-        });
-
-        it('should allow to add new marketplace tab', () => {
-            const testTabMarketplaceName = 'Blueprints from Dagobah';
-
-            cy.editWidgetConfiguration('blueprints', () => {
-                cy.get('.marketplaceTabs').contains('Add').click();
-                cy.get('input[name="name"]').eq(marketplaceTabs.length).type(testTabMarketplaceName);
-                cy.get('input[name="url"]').eq(marketplaceTabs.length).type('https://localhost');
-            });
-            cy.contains('Upload').click();
-            cy.contains('Upload from Marketplace').click();
-            cy.contains('.modal', testTabMarketplaceName).should('be.visible');
-        });
-
-        it('should allow to rename marketplace tab', () => {
-            const testTabMarketplaceName = 'Favorite blueprints';
-
-            cy.editWidgetConfiguration('blueprints', () => {
-                cy.get('input[name="name"]')
-                    .eq(marketplaceTabs.length - 1)
-                    .clear()
-                    .type(testTabMarketplaceName);
-            });
-            cy.contains('Upload').click();
-            cy.contains('Upload from Marketplace').click();
-            cy.get('.modal').within(() => {
-                cy.contains(testTabMarketplaceName).should('be.visible');
-            });
-        });
-
-        it('should allow to remove marketplace tab', () => {
-            cy.editWidgetConfiguration('blueprints', () => {
-                cy.get('button[title="Remove"]')
-                    .eq(marketplaceTabs.length - 1)
-                    .click();
-            });
-            cy.contains('Upload').click();
-            cy.contains('Upload from Marketplace').click();
-            cy.get('.modal .tabular > a.item').should('have.length', marketplaceTabs.length - 1);
         });
     });
 });

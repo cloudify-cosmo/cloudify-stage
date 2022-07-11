@@ -76,6 +76,7 @@ describe('User flow', () => {
         cy.contains('Create new Deployment').click();
 
         cy.contains('Blueprint Marketplace');
+        cy.containsActiveTab('Getting Started');
         cy.get(uploadBlueprintButtonSelector).first().click();
         cy.contains('Uploading');
 
