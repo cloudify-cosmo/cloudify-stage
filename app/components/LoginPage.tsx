@@ -90,7 +90,7 @@ export default class LoginPage extends Component<LoginPageProps, LoginPageState>
         return onLogin(username, password, redirect);
     };
 
-    handleInputChange = (_proxy: any, field: any) => {
+    handleInputChange = (_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     };
