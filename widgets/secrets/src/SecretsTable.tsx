@@ -238,7 +238,7 @@ export default class SecretsTable extends React.Component {
                 >
                     <DataTable.Column label="Key" name="key" width="20%" />
                     <DataTable.Column label="Value" width="20%" />
-                    <DataTable.Column label="Hidden Value" name="is_hidden_value" width="10%" />
+                    <DataTable.Column label="Hidden value" name="is_hidden_value" width="10%" />
                     <DataTable.Column label="Created" name="created_at" width="10%" />
                     <DataTable.Column label="Updated" name="updated_at" width="10%" />
                     <DataTable.Column label="Creator" name="created_by" width="10%" />
