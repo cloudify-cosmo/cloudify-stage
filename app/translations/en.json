@@ -14,7 +14,7 @@
             "noServices": "No services available"
         },
         "servicesList": {
-            "modeName": "Node name",
+            "nodeName": "Node name",
             "noServices": "There are no Cluster Services available.",
             "privateIp": "Private IP",
             "publicIp": "Public IP / LB IP",

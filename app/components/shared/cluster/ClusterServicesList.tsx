@@ -33,7 +33,7 @@ function ClusterServicesList({ services }) {
     return (
         <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
             <DataTable.Column label={i18n.t('cluster.servicesList.serviceType', 'Service Type')} width="25%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.modeName', 'Node Name')} width="25%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.nodeName', 'Node Name')} width="25%" />
             <DataTable.Column label={i18n.t('cluster.servicesList.status', 'Status')} width="5%" />
             <DataTable.Column label={i18n.t('cluster.servicesList.privateIp', 'Private IP')} width="15%" />
             <DataTable.Column label={i18n.t('cluster.servicesList.publicIp', 'Public IP / LB IP')} width="15%" />
