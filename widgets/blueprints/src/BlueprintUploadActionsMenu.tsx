@@ -1,21 +1,21 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { map } from 'lodash';
-import type { MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
+
+const { Dropdown } = Stage.Basic;
+const { Menu, Item } = Dropdown;
+const { useBoolean } = Stage.Hooks;
+const { TerraformModal } = Stage.Common;
+const { drilldownPage } = Stage.Common.Consts;
+const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
 const t = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
-
-interface MarketplaceModalConfig {
-    tabs?: MarketplaceTab[];
-    displayStyle: 'table' | 'catalog';
-    columns: string[];
-}
+const defaultMarketplaceTab = 'AWS';
 
 interface BlueprintUploadActionsMenuProps {
     direction?: 'left' | 'right';
     upward?: boolean;
     toolbox: Stage.Types.Toolbox;
-    marketplaceConfig: MarketplaceModalConfig;
     showGenerateInComposerButton?: boolean;
 }
 
@@ -23,24 +23,21 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
     direction,
     upward,
     toolbox,
-    marketplaceConfig,
     showGenerateInComposerButton = false
 }) => {
-    const {
-        Basic: { Dropdown },
-        Common: { BlueprintMarketplace, TerraformModal },
-        Hooks: { useBoolean }
-    } = Stage;
-    const { Menu, Item } = Dropdown;
-    const UploadBlueprintModal = Stage.Common.Blueprints.UploadModal;
-
-    const [marketplaceModalVisible, showMarketplaceModal, hideMarketplaceModal] = useBoolean();
     const [uploadModalVisible, showUploadModal, hideUploadModal] = useBoolean();
     const [terraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
+    const redirectToMarketplacePage = () => {
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
+            defaultTab: defaultMarketplaceTab
+        });
+    };
+
     const menuItems = useMemo(() => {
         const baseMenuItems = {
-            uploadFromMarketplace: showMarketplaceModal,
+            uploadFromMarketplace: redirectToMarketplacePage,
             uploadFromPackage: showUploadModal,
             uploadFromTerraformTemplate: showTerraformModal
         };
@@ -62,15 +59,6 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
                     ))}
                 </Menu>
             </Dropdown>
-            {marketplaceModalVisible && (
-                <BlueprintMarketplace.Modal
-                    open
-                    onHide={hideMarketplaceModal}
-                    tabs={marketplaceConfig.tabs}
-                    displayStyle={marketplaceConfig.displayStyle}
-                    columns={marketplaceConfig.columns}
-                />
-            )}
             {uploadModalVisible && <UploadBlueprintModal open onHide={hideUploadModal} toolbox={toolbox} />}
             {terraformModalVisible && <TerraformModal onHide={hideTerraformModal} toolbox={toolbox} />}
         </>
