@@ -149,7 +149,7 @@ export default class EventsTable extends React.Component {
                         }
                     />
                     <DataTable.Column
-                        label="Deployment Id"
+                        label="Deployment id"
                         name="deployment_id"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
@@ -159,12 +159,12 @@ export default class EventsTable extends React.Component {
                         }
                     />
                     <DataTable.Column
-                        label="Node Id"
+                        label="Node id"
                         name="node_name"
                         show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Id')}
                     />
                     <DataTable.Column
-                        label="Node Instance Id"
+                        label="Node instance id"
                         name="node_instance_id"
                         show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Instance Id')}
                     />
