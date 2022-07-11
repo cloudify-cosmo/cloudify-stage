@@ -2,7 +2,7 @@
 import type { FunctionComponent } from 'react';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
-import { Secret } from './props/SecretPropType';
+import type { Secret } from './props/SecretPropType';
 
 const t = Stage.Utils.getT('widgets.secrets');
 

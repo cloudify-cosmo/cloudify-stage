@@ -5,6 +5,7 @@ export type Agents = {
     node: string;
     system: string;
     version: string;
+    // eslint-disable-next-line camelcase
     install_method: string;
 };
 
