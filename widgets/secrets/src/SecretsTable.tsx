@@ -77,6 +77,16 @@ interface SecretsTableState {
     showSecretLoading: boolean;
 }
 
+SecretValue.propTypes = {
+    canShowSecret: PropTypes.bool.isRequired,
+    showSecretLoading: PropTypes.bool.isRequired,
+    showSecretKey: PropTypes.string.isRequired,
+    showSecretValue: PropTypes.string.isRequired,
+    secretKey: PropTypes.string.isRequired,
+    onHide: PropTypes.func.isRequired,
+    onShow: PropTypes.func.isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired
+};
 export default class SecretsTable extends React.Component<SecretsTableProps, SecretsTableState> {
     static CREATE_SECRET_ACTION = 'create';
 
@@ -350,3 +360,12 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         );
     }
 }
+
+SecretsTable.propTypes = {
+    data: PropTypes.shape({
+        items: PropTypes.arrayOf(SecretPropType),
+        total: PropTypes.number
+    }).isRequired,
+    toolbox: Stage.PropTypes.Toolbox.isRequired,
+    widget: Stage.PropTypes.Widget.isRequired
+};
