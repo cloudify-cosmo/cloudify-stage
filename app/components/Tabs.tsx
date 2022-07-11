@@ -1,6 +1,5 @@
 import React from 'react';
 import { get, isEmpty } from 'lodash';
-import i18n from 'i18next';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import type { ButtonProps } from 'semantic-ui-react';
 
@@ -16,9 +15,12 @@ import useDefaultTabIndex from './useDefaultTabIndex';
 import type { SimpleWidgetObj, TabContent } from '../actions/page';
 import type { WidgetOwnProps } from './shared/widgets/Widget';
 import type { WidgetDefinition } from '../utils/StageAPI';
+import StageUtils from '../utils/stageUtils';
 
 const SortableMenu = SortableContainer(Menu);
 const SortableMenuItem = SortableElement(Menu.Item);
+
+const t = StageUtils.getT('editMode');
 
 interface TabsProps {
     tabs: TabContent[];
@@ -116,12 +118,12 @@ export default function Tabs({
                 ))}
                 {isEditMode && (
                     <Menu.Item key="actions" style={{ right: 0, position: 'absolute', padding: '6px 0 0 0' }}>
-                        <EditModeButton icon="add" onClick={onTabAdded} title={i18n.t('editMode.tabs.add')} />
+                        <EditModeButton icon="add" onClick={onTabAdded} title={t('tabs.add')} />
                         &nbsp;
                         <EditModeButton
                             icon="remove"
                             onClick={showTabsRemovalDialog}
-                            title={i18n.t('editMode.removeTabsContainer')}
+                            title={t('removeTabsContainer')}
                         />
                     </Menu.Item>
                 )}
@@ -130,7 +132,7 @@ export default function Tabs({
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
                         <AddWidget
-                            addButtonTitle={i18n.t('editMode.addWidget.addToTabButtonTitle')}
+                            addButtonTitle={t('addWidget.addToTabButtonTitle')}
                             // @ts-ignore AddWidget not yet fully migrated to TS
                             onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
@@ -154,10 +156,10 @@ export default function Tabs({
                     removeTab(tabIndexToRemove);
                     resetTabIndexToRemove();
                 }}
-                header={i18n.t('editMode.tabs.removeModal.header', {
+                header={t('tabs.removeModal.header', {
                     tabName: get(tabs, [tabIndexToRemove, 'name'])
                 })}
-                content={i18n.t('editMode.tabs.removeModal.message')}
+                content={t('tabs.removeModal.message')}
             />
             <Confirm
                 open={isTabsRemovalDialogShown}
@@ -166,8 +168,8 @@ export default function Tabs({
                     onLayoutSectionRemoved();
                     hideTabsRemovalDialog();
                 }}
-                header={i18n.t('editMode.tabRemovalModal.header')}
-                content={i18n.t('editMode.tabRemovalModal.message')}
+                header={t('tabRemovalModal.header')}
+                content={t('tabRemovalModal.message')}
             />
         </>
     );
