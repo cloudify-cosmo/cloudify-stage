@@ -2,8 +2,9 @@ import type { PluginDescription, PluginDescriptionWithVersion, PluginUploadData 
 
 interface UploadedPlugin {
     // NOTE: property names match from the backend ones
+    // TODO Norbert: Remove multiple eslint-disable
     /* eslint-disable camelcase */
-    package_name: string;
+    title: string;
     package_version: string;
     /* eslint-disable camelcase */
 }
@@ -16,9 +17,9 @@ export default class Actions {
 
         const uploadedPlugins: Stage.Types.PaginatedResponse<UploadedPlugin> = await this.toolbox
             .getManager()
-            .doGet('/plugins?_include=package_name,package_version', {
+            .doGet('/plugins?_include=title,package_version', {
                 params: {
-                    package_name: pluginDescriptions.map(({ name }) => name),
+                    title: pluginDescriptions.map(({ display_name }) => display_name),
                     ...(this.toolbox.getContext().getValue('onlyMyResources')
                         ? { created_by: this.toolbox.getManager().getCurrentUsername() }
                         : {})
@@ -27,13 +28,13 @@ export default class Actions {
 
         const uploadedPluginsVersions = new Map(
             // eslint-disable-next-line camelcase
-            uploadedPlugins.items.map(({ package_name, package_version }) => [package_name, package_version])
+            uploadedPlugins.items.map(({ title, package_version }) => [title, package_version])
         );
 
         return pluginDescriptions.map(
             (pluginDescription): PluginDescriptionWithVersion => ({
                 pluginDescription,
-                uploadedVersion: uploadedPluginsVersions.get(pluginDescription.name)
+                uploadedVersion: uploadedPluginsVersions.get(pluginDescription.display_name)
             })
         );
     }

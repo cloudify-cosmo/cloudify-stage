@@ -4,6 +4,7 @@ import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } 
 
 type PluginsCatalogResponse = PluginDescriptionWithVersion[];
 
+// TODO Norbert: Migrate labels to the translation file
 Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
     name: 'Plugins Catalog',
