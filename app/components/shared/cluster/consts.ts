@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import type { SemanticICONS } from 'semantic-ui-react';
+import type { ClusterService, ClusterServiceStatus } from './types';
 
 export const clusterStatusEnum = Object.freeze({
     OK: 'OK',
@@ -23,7 +24,7 @@ export const clusterServiceStatusEnum = Object.freeze({
 });
 export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
-export const clusterServiceBgColor = serviceStatus => {
+export const clusterServiceBgColor = (serviceStatus: ClusterServiceStatus) => {
     switch (serviceStatus) {
         case clusterServiceStatusEnum.OK:
             return '#21ba45';
@@ -33,6 +34,19 @@ export const clusterServiceBgColor = serviceStatus => {
             return '#db2828';
         default:
             return '#aaaaaa';
+    }
+};
+
+export const clusterServiceIcon: (clusterService: ClusterService) => SemanticICONS = clusterService => {
+    switch (clusterService) {
+        case clusterServiceEnum.manager:
+            return 'settings' as SemanticICONS;
+        case clusterServiceEnum.db:
+            return 'database' as SemanticICONS;
+        case clusterServiceEnum.broker:
+            return 'comments' as SemanticICONS;
+        default:
+            return 'question';
     }
 };
 
