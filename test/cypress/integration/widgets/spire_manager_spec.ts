@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ClusterServiceStatus } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
+import type { StatusColor } from './cluster_status_spec';
 
 describe('Spire Manager widget', () => {
     before(() => {
@@ -37,7 +38,7 @@ describe('Spire Manager widget', () => {
         cy.get('.managersWidget .loadingSegment').should('not.exist');
 
         // Wait to load Spire Deployments status
-        const waitToLoadStatus = rowNumber => {
+        const waitToLoadStatus = (rowNumber: number) => {
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i`).should('not.have.class', 'loading');
         };
         cy.wait('@getClusterStatusForRome');
@@ -49,7 +50,13 @@ describe('Spire Manager widget', () => {
     });
 
     it('presents data properly', () => {
-        const checkData = (rowNumber, id, ip, executionStatus, statusColor) => {
+        const checkData = (
+            rowNumber: number,
+            id: string,
+            ip: string,
+            executionStatus: string,
+            statusColor: StatusColor
+        ) => {
             cy.get(`tbody > tr:nth-child(${rowNumber})`).within(() => {
                 cy.get('td:nth-child(2)').should('have.text', id);
                 cy.get('td:nth-child(3)').should('have.text', ip);
@@ -67,7 +74,7 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows checking last execution status details', () => {
-        const checkLastExecution = rowNumber => {
+        const checkLastExecution = (rowNumber: number) => {
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(4) div.label`).trigger('mouseover');
             cy.get('.popup .header').should('have.text', 'Last Execution');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(4) div.label`).trigger('mouseout');
@@ -79,7 +86,12 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows checking deployment cluster status details', () => {
-        const checkServiceRow = (rowNumber, managerStatus, databaseStatus, brokerStatus) => {
+        const checkServiceRow = (
+            rowNumber: number,
+            managerStatus: ClusterServiceStatus,
+            databaseStatus: ClusterServiceStatus,
+            brokerStatus: ClusterServiceStatus
+        ) => {
             cy.get('.popup table.servicesData').should('not.exist');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
             cy.get('.popup table.servicesData')
@@ -108,9 +120,9 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to do bulk status refresh of spire deployments', () => {
-        const checkLoading = rowNumber =>
+        const checkLoading = (rowNumber: number) =>
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i`).should('have.class', 'loading');
-        const checkStatus = (rowNumber, expectedColor) =>
+        const checkStatus = (rowNumber: number, expectedColor: StatusColor) =>
             cy
                 .get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon.heartbeat`)
                 .should('have.class', expectedColor);
@@ -141,7 +153,7 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to do bulk workflow execution on spire deployments', () => {
-        const waitForExecutionsRequest = id =>
+        const waitForExecutionsRequest = (id: string) =>
             cy.wait('@postExecutions').its('request.body').should('contain', {
                 deployment_id: id,
                 workflow_id: 'install'

@@ -1,16 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import { clusterServiceEnum, clusterServices } from './consts';
-import { Header, Icon, Label } from '../../basic';
+import type { FunctionComponent } from 'react';
 
-export default function ClusterService({ name, isExternal }) {
-    const icon = {
-        [clusterServiceEnum.manager]: 'settings',
-        [clusterServiceEnum.db]: 'database',
-        [clusterServiceEnum.broker]: 'comments'
-    }[name];
+import { clusterServiceIcon } from './consts';
+import { Header, Icon, Label } from '../../basic';
+import type { ClusterService as ClusterServiceName } from './types';
+
+interface ClusterServiceProps {
+    name: ClusterServiceName;
+    isExternal: boolean;
+}
+const ClusterService: FunctionComponent<ClusterServiceProps> = ({ name, isExternal }) => {
+    const icon = clusterServiceIcon(name);
 
     return (
         <div style={{ verticalAlign: 'middle', padding: 10, overflow: 'auto' }}>
@@ -24,9 +25,5 @@ export default function ClusterService({ name, isExternal }) {
             )}
         </div>
     );
-}
-
-ClusterService.propTypes = {
-    name: PropTypes.oneOf(clusterServices).isRequired,
-    isExternal: PropTypes.bool.isRequired
 };
+export default ClusterService;

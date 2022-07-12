@@ -14,7 +14,7 @@
                         "PostgreSQL 9.5 database server": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "PostgreSQL 9.5 database server",
@@ -44,7 +44,7 @@
                         "Blackbox Exporter": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Prometheus blackbox exporter (HTTP/HTTPS/TCP pings)",
@@ -60,7 +60,7 @@
                         "AMQP-Postgres": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Cloudify AMQP PostgreSQL Broker service",
@@ -76,7 +76,7 @@
                         "Cloudify Composer": {
                             "status": "Inactive",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Cloudify Composer service",
@@ -92,7 +92,7 @@
                         "Management Worker": {
                             "status": "Inactive",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Cloudify Management Worker service",
@@ -108,7 +108,7 @@
                         "RabbitMQ Broker": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "RabbitMQ Broker service",
@@ -124,7 +124,7 @@
                         "Manager REST": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Cloudify REST service",
@@ -140,7 +140,7 @@
                         "Cloudify Console": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Cloudify Console service",
@@ -156,7 +156,7 @@
                         "Webserver": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "nginx - high performance web server",
@@ -172,7 +172,7 @@
                         "Node Exporter": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Prometheus exporter for hardware and OS metrics",
@@ -188,7 +188,7 @@
                         "Prometheus exporter for PostgreSQL": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Prometheus exporter for PostgreSQL service",
@@ -204,7 +204,7 @@
                         "PostgreSQL 9.5 database server": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "PostgreSQL 9.5 database server",
@@ -220,7 +220,7 @@
                         "Prometheus": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "Prometheus monitoring service",
@@ -250,7 +250,7 @@
                         "RabbitMQ Broker": {
                             "status": "Active",
                             "extra_info": {
-                                "systemd": {
+                                "supervisord": {
                                     "instances": [
                                         {
                                             "Description": "RabbitMQ Broker service",
