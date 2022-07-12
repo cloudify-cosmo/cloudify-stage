@@ -1,18 +1,24 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
+import { get, isEmpty } from 'lodash';
 import { parse } from 'query-string';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Button, Input, Message, Form, FullScreenSegment } from './basic';
+
+import type { Dispatch } from 'redux';
+import type { ReduxState } from '../reducers';
+
+import { login } from '../actions/managers';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import LogoLabel from './banner/LogoLabel';
-import LargeLogo from './banner/LargeLogo';
 import StageUtils from '../utils/stageUtils';
+import LargeLogo from './banner/LargeLogo';
+import LogoLabel from './banner/LogoLabel';
+import { Button, Form, FullScreenSegment, Input, Message } from './basic';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
     isSamlEnabled: boolean;
-    onLogin: (username: string, password: string, redirect: Redirect) => void;
+    onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
         search: string;
     };
@@ -36,15 +42,12 @@ type Errors = {
     password?: string;
 } | null;
 
-type Redirect = string | null;
-
 const StyledInput = styled(Input)`
     &&&&&& input:autofill,
     input:autofill:focus,
-    input:-webkit-autofill:hover,
-    input:-webkit-autofill:focus,
-    input:-webkit-autofill:active {
-        -webkit-box-shadow: 0 0 0 100px transparent !important;
+    input:autofill:hover,
+    input:autofill:focus,
+    input:autofill:active {
         box-shadow: 0 0 0 100px transparent inset !important;
         border-color: transparent !important;
     }
@@ -52,7 +55,7 @@ const StyledInput = styled(Input)`
 
 const t = StageUtils.getT('login');
 
-export default class LoginPage extends Component<LoginPageProps, LoginPageState> {
+class LoginPage extends Component<LoginPageProps, LoginPageState> {
     constructor(props: LoginPageProps, context: any) {
         super(props, context);
 
@@ -73,24 +76,24 @@ export default class LoginPage extends Component<LoginPageProps, LoginPageState>
             window.location.href = samlSsoUrl;
         }
 
-        if (_.isEmpty(username)) {
+        if (isEmpty(username)) {
             errors.username = t('error.noUsername');
         }
-        if (_.isEmpty(password)) {
+        if (isEmpty(password)) {
             errors.password = t('error.noPassword');
         }
-        if (!_.isEmpty(errors)) {
+        if (!isEmpty(errors)) {
             this.setState({ errors });
             return false;
         }
 
         const query = parse(location.search);
-        const redirect = (query.redirect as string) || null;
+        const redirect = query.redirect as string;
 
         return onLogin(username, password, redirect);
     };
 
-    handleInputChange = (_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) => {
+    handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     };
@@ -101,10 +104,10 @@ export default class LoginPage extends Component<LoginPageProps, LoginPageState>
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = t('header');
-        const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
+        const loginPageHeaderColor = get(this.props, 'whiteLabel.loginPageHeaderColor');
         const loginPageText = t('message');
-        const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
-        const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
+        const loginPageTextColor = get(this.props, 'whiteLabel.loginPageTextColor');
+        const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
 
         return (
             <FullScreenSegment>
@@ -172,3 +175,26 @@ export default class LoginPage extends Component<LoginPageProps, LoginPageState>
         );
     }
 }
+
+const mapStateToProps = (state: ReduxState) => {
+    const { config, manager } = state;
+    return {
+        username: manager.auth.username,
+        isLoggingIn: manager.auth.state === 'loggingIn',
+        loginError: manager.auth.error,
+        mode: get(config, 'mode'),
+        whiteLabel: get(config, 'app.whiteLabel'),
+        isSamlEnabled: get(config, 'app.saml.enabled', false),
+        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        onLogin: (username: string, password: string, redirect?: string) => {
+            dispatch(login(username, password, redirect));
+        }
+    };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginPage));
