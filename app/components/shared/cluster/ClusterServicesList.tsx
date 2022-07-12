@@ -1,34 +1,32 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import type { FunctionComponent } from 'react';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import i18n from 'i18next';
 
 import { DataTable } from '../../basic';
 import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
-import { nodeServicesPropType } from './NodeServices';
-import { clusterNodeStatuses, clusterServiceEnum, clusterServiceStatuses, clusterServiceBgColor } from './consts';
+import { clusterServiceEnum, clusterServiceBgColor } from './consts';
+import type { ReduxState } from '../../../reducers';
+import type { ClusterService as ClusterServiceName } from './types';
 
-const PublicIP = ({ ip, serviceName }) =>
+interface PublicIPProps {
+    ip?: string;
+    serviceName: string;
+}
+const PublicIP: FunctionComponent<PublicIPProps> = ({ ip = '', serviceName }) =>
     ip && serviceName === clusterServiceEnum.manager ? (
         <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
             {ip}
         </a>
     ) : (
-        ip
+        <>ip</>
     );
-PublicIP.propTypes = {
-    ip: PropTypes.string,
-    serviceName: PropTypes.string.isRequired
-};
-PublicIP.defaultProps = {
-    ip: ''
-};
 
-function ClusterServicesList({ services }) {
+const ClusterServicesList: FunctionComponent = () => {
     const noServicesMessage = i18n.t('cluster.servicesList.noServices', 'There are no Cluster Services available.');
+    const services = useSelector((state: ReduxState) => state.manager.clusterStatus?.services);
 
     return (
         <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
@@ -41,6 +39,7 @@ function ClusterServicesList({ services }) {
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);
+                const clusterServiceName = serviceName as ClusterServiceName;
 
                 return _(service.nodes)
                     .map((node, nodeName) => ({ name: nodeName, ...node }))
@@ -52,21 +51,21 @@ function ClusterServicesList({ services }) {
                                     rowSpan={numberOfNodes}
                                     style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                 >
-                                    <ClusterService isExternal={service.is_external} name={serviceName} />
+                                    <ClusterService isExternal={service.is_external} name={clusterServiceName} />
                                 </DataTable.Data>
                             )}
                             <DataTable.Data>{node.name}</DataTable.Data>
                             <DataTable.Data>
                                 <NodeStatus
                                     name={node.name}
-                                    type={serviceName}
+                                    type={clusterServiceName}
                                     status={node.status}
                                     services={node.services}
                                 />
                             </DataTable.Data>
                             <DataTable.Data>{node.private_ip}</DataTable.Data>
                             <DataTable.Data>
-                                <PublicIP ip={node.public_ip} serviceName={serviceName} />
+                                <PublicIP ip={node.public_ip} serviceName={clusterServiceName} />
                             </DataTable.Data>
                             <DataTable.Data>{node.version}</DataTable.Data>
                         </DataTable.Row>
@@ -75,27 +74,6 @@ function ClusterServicesList({ services }) {
             })}
         </DataTable>
     );
-}
-
-const clusterServiceProps = PropTypes.shape({
-    status: PropTypes.oneOf(clusterServiceStatuses).isRequired,
-    nodes: PropTypes.objectOf(
-        PropTypes.shape({
-            status: PropTypes.oneOf(clusterNodeStatuses).isRequired,
-            public_ip: PropTypes.string,
-            version: PropTypes.string.isRequired,
-            private_ip: PropTypes.string.isRequired,
-            services: nodeServicesPropType
-        })
-    ).isRequired,
-    is_external: PropTypes.bool.isRequired
-}).isRequired;
-
-ClusterServicesList.propTypes = {
-    services: PropTypes.shape(_.mapValues(clusterServiceEnum, () => clusterServiceProps)).isRequired
 };
 
-const mapStateToProps = state => ({
-    services: _.get(state, 'manager.clusterStatus.services', {})
-});
-export default connect(mapStateToProps)(ClusterServicesList);
+export default ClusterServicesList;
