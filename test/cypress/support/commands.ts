@@ -461,6 +461,7 @@ const commands = {
             .click(),
     clearMultipleDropdown: (fieldName: string) => cy.getField(fieldName).find('.delete.icon').click({ multiple: true }),
 
+    containsActiveTab: (tabName: string) => cy.get('.tabular.menu .active.item').contains(tabName),
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),

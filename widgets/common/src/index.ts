@@ -1,5 +1,4 @@
 import Actions from './actions';
-import BlueprintMarketplace from './blueprintMarketplace';
 import Blueprints from './blueprints';
 import Components from './components';
 import Consts from './Consts';
@@ -24,7 +23,6 @@ import EventUtils from './utils/EventUtils';
 
 const StageCommon = {
     Actions,
-    BlueprintMarketplace,
     Blueprints,
     Components,
     Deployments,

@@ -1,4 +1,3 @@
-import type { MarketplaceDisplayStyle, MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 import type { FilterRule } from '../../common/src/filters/types';
 
 export interface BlueprintsWidgetConfiguration {
@@ -11,9 +10,6 @@ export interface BlueprintsWidgetConfiguration {
     hideFailedBlueprints: boolean;
     showComposerOptions: boolean;
     filterRules: FilterRule[];
-    marketplaceTabs: MarketplaceTab[];
-    marketplaceDisplayStyle: MarketplaceDisplayStyle;
-    marketplaceColumnsToShow: string[];
     fieldsToShow: string;
 }
 
