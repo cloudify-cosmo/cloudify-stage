@@ -1,19 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import type { FunctionComponent } from 'react';
+
 import { CopyToClipboardButton, Header, Icon, Table } from '../../basic';
 import JsonUtils from '../../../utils/shared/JsonUtils';
 
-import { clusterServiceEnum, clusterServices, nodeServiceStatusEnum, nodeServiceStatuses } from './consts';
+import { clusterServiceIcon, nodeServiceStatusEnum } from './consts';
+import type { ClusterService, NodeServiceStatus, NodeServices as Services } from './types';
 
-const StatusHeader = ({ nodeName, nodeType }) => {
-    const nodeIcon = {
-        [clusterServiceEnum.manager]: 'settings',
-        [clusterServiceEnum.db]: 'database',
-        [clusterServiceEnum.broker]: 'comments'
-    }[nodeType];
+interface StatusHeaderProps {
+    nodeName: string;
+    nodeType: ClusterService;
+}
+const StatusHeader: FunctionComponent<StatusHeaderProps> = ({ nodeName, nodeType }) => {
+    const nodeIcon = clusterServiceIcon(nodeType);
 
     return (
         <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
@@ -22,12 +23,12 @@ const StatusHeader = ({ nodeName, nodeType }) => {
         </Header>
     );
 };
-StatusHeader.propTypes = {
-    nodeName: PropTypes.string.isRequired,
-    nodeType: PropTypes.oneOf(clusterServices).isRequired
-};
 
-const ServiceHeader = ({ name, description }) => {
+interface ServiceHeaderProps {
+    name: string;
+    description: string;
+}
+const ServiceHeader: FunctionComponent<ServiceHeaderProps> = ({ name, description = '' }) => {
     return (
         <Header size="tiny">
             <Header.Content>
@@ -37,15 +38,11 @@ const ServiceHeader = ({ name, description }) => {
         </Header>
     );
 };
-ServiceHeader.propTypes = {
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string
-};
-ServiceHeader.defaultProps = {
-    description: ''
-};
 
-const ServiceStatus = ({ status }) => {
+interface ServiceStatusProps {
+    status: NodeServiceStatus;
+}
+const ServiceStatus: FunctionComponent<ServiceStatusProps> = ({ status }) => {
     let icon = <Icon name="question" color="grey" />;
     if (status === nodeServiceStatusEnum.Active) {
         icon = <Icon name="checkmark" color="green" />;
@@ -59,18 +56,20 @@ const ServiceStatus = ({ status }) => {
         </>
     );
 };
-ServiceStatus.propTypes = {
-    status: PropTypes.oneOf(nodeServiceStatuses).isRequired
-};
 
-export default function NodeServices({ name, type, services }) {
+export interface NodeServicesProps {
+    name: string;
+    type: ClusterService;
+    services: Services;
+}
+const NodeServices: FunctionComponent<NodeServicesProps> = ({ name, type, services = {} }) => {
     const formattedServices = _(services)
         .keys()
         .sort()
         .map(serviceName => ({
             name: serviceName,
             status: services[serviceName].status,
-            description: _.get(services[serviceName], 'extra_info.systemd.instances[0].Description', ''),
+            description: services[serviceName].extra_info?.supervisord?.instances?.[0]?.Description || '',
             extraInfo: services[serviceName].extra_info
         }))
         .value();
@@ -103,28 +102,5 @@ export default function NodeServices({ name, type, services }) {
             />
         </div>
     );
-}
-
-export const nodeServicesPropType = PropTypes.objectOf(
-    PropTypes.shape({
-        status: PropTypes.oneOf(nodeServiceStatuses).isRequired,
-        extra_info: PropTypes.shape({
-            systemd: PropTypes.shape({
-                display_name: PropTypes.string,
-                instances: PropTypes.arrayOf(
-                    PropTypes.shape({ Description: PropTypes.string, Id: PropTypes.string, State: PropTypes.string })
-                ),
-                unit_it: PropTypes.string
-            })
-        })
-    })
-);
-
-NodeServices.propTypes = {
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(clusterServices).isRequired,
-    services: nodeServicesPropType
 };
-NodeServices.defaultProps = {
-    services: {}
-};
+export default NodeServices;

@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 import { waitUntilEmpty } from './resource_commons';

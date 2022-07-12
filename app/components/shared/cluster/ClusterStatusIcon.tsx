@@ -1,12 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { FunctionComponent } from 'react';
+import type { SemanticCOLORS } from 'semantic-ui-react';
 
 import { Icon } from '../../basic';
 import { clusterStatusEnum } from './consts';
+import type { ClusterStatus } from './types';
 
-export default function ClusterStatusIcon({ status }) {
-    let color = 'grey';
+interface ClusterStatusIconProps {
+    status: ClusterStatus | '';
+}
+const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status = '' }) => {
+    let color: SemanticCOLORS = 'grey';
     if (status === clusterStatusEnum.Fail) {
         color = 'red';
     } else if (status === clusterStatusEnum.Degraded) {
@@ -16,10 +20,5 @@ export default function ClusterStatusIcon({ status }) {
     }
 
     return <Icon name="heartbeat" size="large" color={color} className="statusIcon" />;
-}
-ClusterStatusIcon.propTypes = {
-    status: PropTypes.string
 };
-ClusterStatusIcon.defaultProps = {
-    status: ''
-};
+export default ClusterStatusIcon;

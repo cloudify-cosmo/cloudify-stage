@@ -15,4 +15,4 @@ For more details about blueprint marketplace, check [Blueprint Catalog](/working
 * `Icon` - Name of the icon displayed in the button. Available icons list can be found
   at: [Icon - Semantic UI React](https://react.semantic-ui.com/elements/icon). Default: 'add'
 * `Basic button` - Allows to change button appearence, basic button is less pronounced. Default: Yes
-* `Marketplace tabs` - List of tab name and blueprint marketplace URL pairs.
+* `Default marketplace tab` - Name of tab that should be initally activated on Blueprint Marketplace page.

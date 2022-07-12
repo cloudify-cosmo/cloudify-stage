@@ -77,7 +77,8 @@
                         "basic": false,
                         "color": "blue",
                         "icon": "add",
-                        "label": "Create a service"
+                        "label": "Create a service",
+                        "defaultMarketplaceTab": "AWS"
                     }
                 },
                 {
@@ -91,16 +92,7 @@
                         "color": "blue",
                         "icon": "add",
                         "label": "Create Kubernetes cluster",
-                        "marketplaceTabs": [
-                            {
-                                "name": "Kubernetes",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
-                            },
-                            {
-                                "name": "K8S Discovery",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
-                            }
-                        ]
+                        "defaultMarketplaceTab": "Kubernetes"
                     }
                 },
                 {
@@ -114,12 +106,7 @@
                         "color": "blue",
                         "icon": "add",
                         "label": "Run Terraform module",
-                        "marketplaceTabs": [
-                            {
-                                "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
-                            }
-                        ]
+                        "defaultMarketplaceTab": "Terraform"
                     }
                 },
                 {

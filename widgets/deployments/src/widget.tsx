@@ -152,7 +152,7 @@ Stage.defineWidget({
         }
 
         if (shouldShowFirstUserJourneyButtons) {
-            return <FirstUserJourneyButtons toolbox={toolbox} widget={widget} />;
+            return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');

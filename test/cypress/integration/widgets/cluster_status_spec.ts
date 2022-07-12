@@ -1,5 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
-import { className, styles } from '../../support/cluster_status_commons';
+import type { SemanticICONS } from 'semantic-ui-react';
+import type { ClusterNodeStatus, ClusterService, ClusterServiceStatus } from 'app/components/shared/cluster/types';
+import { styles } from '../../support/cluster_status_commons';
+
+export type StatusColor = 'green' | 'yellow' | 'red';
+export type NodeService = { name: string; description: string; active: boolean };
 
 describe('Cluster Status widget', () => {
     const widgetId = 'highAvailability';
@@ -8,15 +12,19 @@ describe('Cluster Status widget', () => {
 
     const clusterStatusFetchTimeout = { timeout: 12000 };
 
-    const rowNumber = {
+    const rowNumber: Record<ClusterService, number> = {
         manager: 1,
-        database: 4,
+        db: 4,
         broker: 7
     };
 
-    const checkServicesStatus = (expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
+    const checkServicesStatus = (
+        expectedManagerStatus: ClusterServiceStatus,
+        expectedDbStatus: ClusterServiceStatus,
+        expectedBrokerStatus: ClusterServiceStatus
+    ) => {
         const managerCell = `tbody tr:nth-child(${rowNumber.manager}) td:nth-child(1)`;
-        const databaseCell = `tbody tr:nth-child(${rowNumber.database}) td:nth-child(1)`;
+        const databaseCell = `tbody tr:nth-child(${rowNumber.db}) td:nth-child(1)`;
         const brokerCell = `tbody tr:nth-child(${rowNumber.broker}) td:nth-child(1)`;
 
         cy.getWidget(widgetId).within(() => {
@@ -30,8 +38,12 @@ describe('Cluster Status widget', () => {
     };
 
     it('is providing node services status details in popup', () => {
-        const rowNumberAIO = {
-            database: 1,
+        const nodeStatusIconClassName: Record<ClusterNodeStatus, SemanticICONS> = {
+            OK: 'checkmark',
+            Fail: 'remove'
+        };
+        const rowNumberAIO: Record<ClusterService, number> = {
+            db: 1,
             manager: 2,
             broker: 3
         };
@@ -39,7 +51,7 @@ describe('Cluster Status widget', () => {
         const privateIp = '10.110.0.39';
         const version = '5.2.0';
 
-        const checkService = (service, nodeStatus, nodeServices) => {
+        const checkService = (service: ClusterService, nodeStatus: ClusterNodeStatus, nodeServices: NodeService[]) => {
             const nodeRow = `tbody tr:nth-child(${rowNumberAIO[service]})`;
             const nodeNameCell = `${nodeRow} > td:nth-child(2)`;
             const nodeStatusIcon = `${nodeRow} > td:nth-child(3) > i.icon`;
@@ -52,7 +64,7 @@ describe('Cluster Status widget', () => {
             cy.get(versionCell).should('have.text', version);
 
             cy.log(`Checking ${service} node status. Expected: ${nodeStatus}`);
-            cy.get(nodeStatusIcon).should('have.class', className[nodeStatus]);
+            cy.get(nodeStatusIcon).should('have.class', nodeStatusIconClassName[nodeStatus]);
 
             cy.log(`Checking ${service} node services status.`);
             cy.get(nodeStatusIcon).trigger('mouseover');
@@ -89,7 +101,7 @@ describe('Cluster Status widget', () => {
         ).as('clusterStatusFailWithServices');
         cy.wait('@clusterStatusFailWithServices', clusterStatusFetchTimeout);
 
-        checkService('database', 'OK', [
+        checkService('db', 'OK', [
             { name: 'PostgreSQL 9.5 database server', description: 'PostgreSQL 9.5 database server', active: true }
         ]);
 
