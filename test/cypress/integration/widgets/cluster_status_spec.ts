@@ -1,5 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
 import { className, styles } from '../../support/cluster_status_commons';
+
+export type StatusColor = 'green' | 'yellow' | 'red';
+export type ServiceStatus = 'OK' | 'Degraded' | 'Fail';
+export type Service = 'manager' | 'broker' | 'database';
+export type NodeStatus = 'OK' | 'Fail';
+export type NodeService = { name: string; description: string; active: boolean };
 
 describe('Cluster Status widget', () => {
     const widgetId = 'highAvailability';
@@ -14,7 +19,11 @@ describe('Cluster Status widget', () => {
         broker: 7
     };
 
-    const checkServicesStatus = (expectedManagerStatus, expectedDbStatus, expectedBrokerStatus) => {
+    const checkServicesStatus = (
+        expectedManagerStatus: ServiceStatus,
+        expectedDbStatus: ServiceStatus,
+        expectedBrokerStatus: ServiceStatus
+    ) => {
         const managerCell = `tbody tr:nth-child(${rowNumber.manager}) td:nth-child(1)`;
         const databaseCell = `tbody tr:nth-child(${rowNumber.database}) td:nth-child(1)`;
         const brokerCell = `tbody tr:nth-child(${rowNumber.broker}) td:nth-child(1)`;
@@ -39,7 +48,7 @@ describe('Cluster Status widget', () => {
         const privateIp = '10.110.0.39';
         const version = '5.2.0';
 
-        const checkService = (service, nodeStatus, nodeServices) => {
+        const checkService = (service: Service, nodeStatus: NodeStatus, nodeServices: NodeService[]) => {
             const nodeRow = `tbody tr:nth-child(${rowNumberAIO[service]})`;
             const nodeNameCell = `${nodeRow} > td:nth-child(2)`;
             const nodeStatusIcon = `${nodeRow} > td:nth-child(3) > i.icon`;
