@@ -71,3 +71,21 @@ export default class GenericConfig {
         return `widget_${widgetId}`;
     };
 }
+
+export interface PollingTimeConfiguration {
+    pollingTime: number;
+}
+
+export interface PageSizeConfiguration {
+    pageSize: number;
+}
+
+export interface SortColumnConfiguration {
+    sortColumn: string;
+}
+
+export interface SortAscendingConfiguration {
+    sortAscending: string;
+}
+
+export type DataTableConfiguration = PageSizeConfiguration & SortColumnConfiguration & SortAscendingConfiguration;
