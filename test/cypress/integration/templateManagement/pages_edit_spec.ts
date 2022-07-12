@@ -1,4 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
+import type { PageFileDefinition } from 'backend/routes/Templates.types';
+
 describe('Page management', () => {
     before(() => {
         cy.activate().removeUserPages();
@@ -47,18 +48,21 @@ describe('Page management', () => {
         cy.get('button#addWidgetsBtn').click();
         cy.get('.item .editModeButton .add').click();
         cy.get('.editModeButton .edit:eq(1)').click();
-        cy.get('.modal input[type=text]').type(2);
+        cy.get('.modal input[type=text]').type('2');
         cy.get('.modal .toggle').click();
         cy.get('.modal').contains('Save').click();
 
         cy.log('Saving page');
+        cy.intercept('GET', '/console/templates/pages').as('fetchPages');
         cy.contains('Save').click();
 
         cy.log('Veryfiying page row');
+        cy.wait('@fetchPages');
         cy.get('.loading').should('not.exist');
         cy.contains('.segment', 'Pages')
             .find('table')
-            .getTable(tableContent => {
+            .getTable()
+            .should(tableContent => {
                 const addedPageRow = tableContent[tableContent.length - 1];
                 expect(addedPageRow['Page id']).to.equal('page_1');
                 expect(addedPageRow['Page name']).to.equal('Page 1');
@@ -101,6 +105,8 @@ describe('Page management', () => {
         cy.get('.main .loading').should('not.exist');
 
         cy.log('Verifying page was removed');
-        cy.getPages().then(data => expect(data.body.filter(page => page.id.startsWith('page'))).to.be.empty);
+        cy.getPages().then(
+            data => expect(data.body.filter((page: PageFileDefinition) => page.id.startsWith('page'))).to.be.empty
+        );
     });
 });
