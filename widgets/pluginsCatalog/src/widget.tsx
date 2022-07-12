@@ -4,11 +4,12 @@ import type { PluginDescriptionWithVersion, PluginsCatalogWidgetConfiguration } 
 
 type PluginsCatalogResponse = PluginDescriptionWithVersion[];
 
-// TODO Norbert: Migrate labels to the translation file
+const t = Stage.Utils.getT('widgets.pluginsCatalog');
+
 Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
-    name: 'Plugins Catalog',
-    description: 'Shows plugins catalog',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 12,
     initialHeight: 20,
     color: 'teal',
@@ -18,15 +19,15 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
     initialConfiguration: [
         {
             id: 'jsonPath',
-            name: 'Plugins Catalog JSON Source',
-            placeHolder: 'Type JSON Path',
+            name: t('configuration.jsonPath.name'),
+            placeHolder: t('configuration.jsonPath.placeholder'),
             default: Stage.i18n.t('urls.pluginsCatalog'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'sortByName',
-            name: 'Sort by name',
-            description: 'If set to true, then plugins will be sorted by name.',
+            name: t('configuration.sortByName.name'),
+            description: t('configuration.sortByName.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
