@@ -44,7 +44,6 @@ type Errors = {
 
 const StyledInput = styled(Input)`
     &&&&&& input:autofill,
-    input:autofill:focus,
     input:autofill:hover,
     input:autofill:focus,
     input:autofill:active {
