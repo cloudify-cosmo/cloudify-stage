@@ -2,11 +2,9 @@ import type { PluginDescription, PluginDescriptionWithVersion, PluginUploadData 
 
 interface UploadedPlugin {
     // NOTE: property names match from the backend ones
-    // TODO Norbert: Remove multiple eslint-disable
-    /* eslint-disable camelcase */
     title: string;
+    // eslint-disable-next-line camelcase
     package_version: string;
-    /* eslint-disable camelcase */
 }
 
 export default class Actions {
@@ -19,6 +17,7 @@ export default class Actions {
             .getManager()
             .doGet('/plugins?_include=title,package_version', {
                 params: {
+                    // eslint-disable-next-line camelcase
                     title: pluginDescriptions.map(({ display_name }) => display_name),
                     ...(this.toolbox.getContext().getValue('onlyMyResources')
                         ? { created_by: this.toolbox.getManager().getCurrentUsername() }
