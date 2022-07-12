@@ -56,7 +56,7 @@ describe('Plugins Catalog widget', () => {
         });
     });
 
-    it.only('should allow uploading the plugin when the uploaded version is different than the latest one', () => {
+    it('should allow uploading the plugin when the uploaded version is different than the latest one', () => {
         const pluginToUpload = 'Utilities';
         const mockPluginVersion = '0.1.0';
 
