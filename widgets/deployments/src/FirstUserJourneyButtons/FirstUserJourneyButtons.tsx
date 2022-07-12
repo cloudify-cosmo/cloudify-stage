@@ -36,18 +36,22 @@ const IconWrapper = styled.div`
     padding: 12px 0;
 `;
 
+const { drilldownPage } = Stage.Common.Consts;
 const t = getT('widgets.deployments.firstJourney');
+const defaultMarketplaceTab = 'Getting Started';
 
 interface FirstUserJourneyButtonsProps {
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
 }
 
-const FirstUserJourneyButtons = ({ toolbox, widget }: FirstUserJourneyButtonsProps) => {
+const FirstUserJourneyButtons = ({ toolbox }: FirstUserJourneyButtonsProps) => {
     const [isTerraformModalVisible, showTerraformModal, hideTerraformModal] = useBoolean();
 
     const handleDeploymentsClick = () => {
-        toolbox.drillDown(widget, 'blueprintMarketplace', {});
+        const widget = toolbox.getWidget();
+        toolbox.drillDown(widget, drilldownPage.blueprintMarketplace, {
+            defaultTab: defaultMarketplaceTab
+        });
     };
 
     const handleTerraformClick = () => {

@@ -53,9 +53,11 @@ describe('Page management', () => {
         cy.get('.modal').contains('Save').click();
 
         cy.log('Saving page');
+        cy.intercept('GET', '/console/templates/pages').as('fetchPages');
         cy.contains('Save').click();
 
         cy.log('Veryfiying page row');
+        cy.wait('@fetchPages');
         cy.get('.loading').should('not.exist');
         cy.contains('.segment', 'Pages')
             .find('table')
