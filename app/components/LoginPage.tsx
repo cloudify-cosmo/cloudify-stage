@@ -1,17 +1,61 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { get, isEmpty } from 'lodash';
 import { parse } from 'query-string';
-import i18n from 'i18next';
-import { Button, Input, Message, Form, FullScreenSegment, Logo } from './basic';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import LogoLabel from './banner/LogoLabel';
-import LargeLogo from './banner/LargeLogo';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import styled from 'styled-components';
 
-export default class LoginPage extends Component {
-    constructor(props, context) {
+import type { Dispatch } from 'redux';
+import type { ReduxState } from '../reducers';
+
+import { login } from '../actions/managers';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import StageUtils from '../utils/stageUtils';
+import LargeLogo from './banner/LargeLogo';
+import LogoLabel from './banner/LogoLabel';
+import { Button, Form, FullScreenSegment, Input, Message } from './basic';
+
+export interface LoginPageProps {
+    isLoggingIn: boolean;
+    isSamlEnabled: boolean;
+    onLogin: (username: string, password: string, redirect?: string) => void;
+    location: {
+        search: string;
+    };
+    loginError: string | null;
+    samlSsoUrl: string;
+    username: string;
+    whiteLabel: {
+        loginPageHeaderColor: string;
+        loginPageTextColor: string;
+    };
+}
+
+interface LoginPageState {
+    username: string;
+    password: string;
+    errors: Errors;
+}
+
+type Errors = {
+    username?: string;
+    password?: string;
+} | null;
+
+const StyledInput = styled(Input)`
+    &&&&&& input:autofill,
+    input:autofill:hover,
+    input:autofill:focus,
+    input:autofill:active {
+        box-shadow: 0 0 0 100px transparent inset !important;
+        border-color: transparent !important;
+    }
+`;
+
+const t = StageUtils.getT('login');
+
+class LoginPage extends Component<LoginPageProps, LoginPageState> {
+    constructor(props: LoginPageProps, context: any) {
         super(props, context);
 
         this.state = {
@@ -23,46 +67,46 @@ export default class LoginPage extends Component {
 
     onSubmit = () => {
         const { password, username } = this.state;
-        const { isSamlEnabled, location, onLogin, samlSsoUrl } = this.props;
-        const errors = {};
+        const { isSamlEnabled, location, onLogin, samlSsoUrl = '' } = this.props;
+        const errors: Errors = {};
 
         if (isSamlEnabled) {
-            // eslint-disable-next-line scanjs-rules/assign_to_location
-            window.location = samlSsoUrl;
+            // eslint-disable-next-line scanjs-rules/assign_to_href
+            window.location.href = samlSsoUrl;
         }
 
-        if (_.isEmpty(username)) {
-            errors.username = i18n.t('login.error.noUsername', 'Please provide username');
+        if (isEmpty(username)) {
+            errors.username = t('error.noUsername');
         }
-        if (_.isEmpty(password)) {
-            errors.password = i18n.t('login.error.noPassword', 'Please provide password');
+        if (isEmpty(password)) {
+            errors.password = t('error.noPassword');
         }
-        if (!_.isEmpty(errors)) {
+        if (!isEmpty(errors)) {
             this.setState({ errors });
             return false;
         }
 
         const query = parse(location.search);
-        const redirect = query.redirect || null;
+        const redirect = query.redirect as string;
 
         return onLogin(username, password, redirect);
     };
 
-    handleInputChange = (proxy, field) => {
+    handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
         this.setState({ ...fieldNameValue, errors: {} });
     };
 
     render() {
         const { errors, password, username } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError } = this.props;
+        const { isLoggingIn, isSamlEnabled, loginError = null } = this.props;
         SplashLoadingScreen.turnOff();
 
-        const loginPageHeader = i18n.t('login.header');
-        const loginPageHeaderColor = _.get(this.props, 'whiteLabel.loginPageHeaderColor');
-        const loginPageText = i18n.t('login.message');
-        const loginPageTextColor = _.get(this.props, 'whiteLabel.loginPageTextColor');
-        const isHeaderTextPresent = !_.isEmpty(loginPageHeader) || !_.isEmpty(loginPageText);
+        const loginPageHeader = t('header');
+        const loginPageHeaderColor = get(this.props, 'whiteLabel.loginPageHeaderColor');
+        const loginPageText = t('message');
+        const loginPageTextColor = get(this.props, 'whiteLabel.loginPageTextColor');
+        const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
 
         return (
             <FullScreenSegment>
@@ -87,22 +131,22 @@ export default class LoginPage extends Component {
                     <Form onSubmit={this.onSubmit}>
                         {!isSamlEnabled && (
                             <>
-                                <Form.Field required error={errors.username}>
-                                    <Input
+                                <Form.Field required error={errors?.username}>
+                                    <StyledInput
                                         name="username"
                                         type="text"
-                                        placeholder={i18n.t('login.username', 'Username')}
+                                        placeholder={t('username')}
                                         autoFocus
                                         value={username}
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
 
-                                <Form.Field required error={errors.password}>
-                                    <Input
+                                <Form.Field required error={errors?.password}>
+                                    <StyledInput
                                         name="password"
                                         type="password"
-                                        placeholder={i18n.t('login.password', 'Password')}
+                                        placeholder={t('password')}
                                         value={password}
                                         onChange={this.handleInputChange}
                                     />
@@ -122,7 +166,7 @@ export default class LoginPage extends Component {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={i18n.t(isSamlEnabled ? 'login.ssoSubmit' : 'login.submit')}
+                            content={t(isSamlEnabled ? 'ssoSubmit' : 'submit')}
                         />
                     </Form>
                 </div>
@@ -131,27 +175,25 @@ export default class LoginPage extends Component {
     }
 }
 
-LoginPage.propTypes = {
-    isLoggingIn: PropTypes.bool.isRequired,
-    isSamlEnabled: PropTypes.bool.isRequired,
-    onLogin: PropTypes.func.isRequired,
-    location: PropTypes.shape({ search: PropTypes.string }),
-    loginError: PropTypes.string,
-    samlSsoUrl: PropTypes.string,
-    username: PropTypes.string,
-    whiteLabel: PropTypes.shape({
-        loginPageHeaderColor: PropTypes.string,
-        loginPageTextColor: PropTypes.string
-    })
+const mapStateToProps = (state: ReduxState) => {
+    const { config, manager } = state;
+    return {
+        username: manager.auth.username,
+        isLoggingIn: manager.auth.state === 'loggingIn',
+        loginError: manager.auth.error,
+        mode: get(config, 'mode'),
+        whiteLabel: get(config, 'app.whiteLabel'),
+        isSamlEnabled: get(config, 'app.saml.enabled', false),
+        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
+    };
 };
 
-LoginPage.defaultProps = {
-    location: { search: '' },
-    loginError: null,
-    samlSsoUrl: '',
-    username: '',
-    whiteLabel: PropTypes.shape({
-        loginPageHeaderColor: '',
-        loginPageTextColor: ''
-    })
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+        onLogin: (username: string, password: string, redirect?: string) => {
+            dispatch(login(username, password, redirect));
+        }
+    };
 };
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LoginPage));
