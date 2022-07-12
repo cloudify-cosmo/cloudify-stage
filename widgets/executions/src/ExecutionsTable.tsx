@@ -189,7 +189,7 @@ export default class ExecutionsTable extends React.Component {
                     />
                     <DataTable.Column
                         label="Deployment"
-                        name="deployment"
+                        name="deployment_display_name"
                         width="150%"
                         show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deployment_display_name}
                     />
