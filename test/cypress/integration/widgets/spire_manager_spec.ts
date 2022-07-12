@@ -1,5 +1,6 @@
+import type { ClusterServiceStatus } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
-import type { ServiceStatus, StatusColor } from './cluster_status_spec';
+import type { StatusColor } from './cluster_status_spec';
 
 describe('Spire Manager widget', () => {
     before(() => {
@@ -87,9 +88,9 @@ describe('Spire Manager widget', () => {
     it('allows checking deployment cluster status details', () => {
         const checkServiceRow = (
             rowNumber: number,
-            managerStatus: ServiceStatus,
-            databaseStatus: ServiceStatus,
-            brokerStatus: ServiceStatus
+            managerStatus: ClusterServiceStatus,
+            databaseStatus: ClusterServiceStatus,
+            brokerStatus: ClusterServiceStatus
         ) => {
             cy.get('.popup table.servicesData').should('not.exist');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
