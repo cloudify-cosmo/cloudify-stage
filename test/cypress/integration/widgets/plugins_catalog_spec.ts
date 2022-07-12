@@ -56,18 +56,18 @@ describe('Plugins Catalog widget', () => {
         });
     });
 
-    it('should allow uploading the plugin when the uploaded version is different than the latest one', () => {
+    it.only('should allow uploading the plugin when the uploaded version is different than the latest one', () => {
         const pluginToUpload = 'Utilities';
         const mockPluginVersion = '0.1.0';
 
         cy.interceptSp(
             'GET',
-            { pathname: '/plugins', query: { _include: 'package_name,package_version', package_name: '*' } },
+            { pathname: '/plugins', query: { _include: 'title,package_version', title: '*' } },
             {
                 metadata: { pagination: { total: 1, size: 1000, offset: 0 }, filtered: null },
                 items: [
                     {
-                        package_name: 'cloudify-utilities-plugin',
+                        title: pluginToUpload,
                         package_version: mockPluginVersion
                     }
                 ]
