@@ -1,10 +1,24 @@
 // @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
+import type { Secret } from './types';
 import SecretPropType from './props/SecretPropType';
 
-function SecretValue({
+const t = Stage.Utils.getT('widgets.secrets');
+
+interface SecretValueProps {
+    canShowSecret: boolean;
+    showSecretLoading: boolean;
+    showSecretKey: string;
+    showSecretValue: string;
+    secretKey: string;
+    onHide: () => void;
+    onShow: () => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+const SecretValue: FunctionComponent<SecretValueProps> = ({
     canShowSecret,
     showSecretKey,
     showSecretValue,
@@ -13,7 +27,7 @@ function SecretValue({
     onHide,
     onShow,
     toolbox
-}) {
+}) => {
     const { Icon, Popup } = Stage.Basic;
 
     const currentUsername = toolbox.getManager().getCurrentUsername();
@@ -42,6 +56,26 @@ function SecretValue({
         );
     }
     return <Icon bordered link name="unhide" title="Show secret value" onClick={onShow} />;
+};
+
+interface SecretsTableProps {
+    data: {
+        items: Secret[];
+        total: number;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+interface SecretsTableState {
+    error: any;
+    showModal: boolean;
+    modalType: string;
+    secret: any;
+    canShowSecret: boolean;
+    showSecretKey: string;
+    showSecretValue: string;
+    showSecretLoading: boolean;
 }
 
 SecretValue.propTypes = {
@@ -54,14 +88,14 @@ SecretValue.propTypes = {
     onShow: PropTypes.func.isRequired,
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
-export default class SecretsTable extends React.Component {
+export default class SecretsTable extends React.Component<SecretsTableProps, SecretsTableState> {
     static CREATE_SECRET_ACTION = 'create';
 
     static DELETE_SECRET_ACTION = 'delete';
 
     static UPDATE_SECRET_ACTION = 'update';
 
-    constructor(props, context) {
+    constructor(props: SecretsTableProps, context) {
         super(props, context);
 
         this.state = {
@@ -81,7 +115,7 @@ export default class SecretsTable extends React.Component {
         toolbox.getEventBus().on('secrets:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: SecretsTableProps, nextState: SecretsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -236,13 +270,13 @@ export default class SecretsTable extends React.Component {
                     className="secretsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Key" name="key" width="20%" />
-                    <DataTable.Column label="Value" width="20%" />
-                    <DataTable.Column label="Hidden Value" name="is_hidden_value" width="10%" />
-                    <DataTable.Column label="Created" name="created_at" width="10%" />
-                    <DataTable.Column label="Updated" name="updated_at" width="10%" />
-                    <DataTable.Column label="Creator" name="created_by" width="10%" />
-                    <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
+                    <DataTable.Column label={t('columns.key')} name="key" width="20%" />
+                    <DataTable.Column label={t('columns.value')} width="20%" />
+                    <DataTable.Column label={t('columns.hiddenValue')} name="is_hidden_value" width="10%" />
+                    <DataTable.Column label={t('columns.created')} name="created_at" width="10%" />
+                    <DataTable.Column label={t('columns.updated')} name="updated_at" width="10%" />
+                    <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
+                    <DataTable.Column label={t('columns.tenant')} name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
