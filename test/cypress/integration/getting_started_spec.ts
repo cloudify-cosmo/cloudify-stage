@@ -149,13 +149,25 @@ describe('Getting started modal', () => {
             cy.cfyRequest('/users/admin', 'POST', null, {
                 show_getting_started: true
             });
+            cy.intercept('POST', '/console/ua').as('updateUserApps');
         });
 
         beforeEach(() => {
             cy.mockLoginWithoutWaiting({ disableGettingStarted: false }).waitUntilAppLoaded();
         });
 
+        /**
+         * Waits until application is fully initialized with all templates data
+         * after calling `cy.activate` custom command (as it triggers templates reset)
+         */
+        function waitUntilAppReadyAfterActivation() {
+            cy.wait('@updateUserApps');
+            cy.url().should('contain', 'console/');
+        }
+
         it('should redirect to the dashboard page upon canceling the modal process', () => {
+            waitUntilAppReadyAfterActivation();
+
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'Close').click();
