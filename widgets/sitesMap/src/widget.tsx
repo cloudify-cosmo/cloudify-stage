@@ -4,6 +4,7 @@ import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './t
 import { DeploymentStatuses } from './types';
 
 import './widget.css';
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
 const emptyDeploymentStatusesSummary: DeploymentStatusesSummary = {
     [DeploymentStatuses.Good]: 0,
@@ -43,8 +44,7 @@ type SitesMapWidgetData = {
     sitesAreDefined: boolean;
 };
 
-interface SitesMapWidgetConfiguration {
-    pollingTime: number;
+interface SitesMapWidgetConfiguration extends PollingTimeConfiguration {
     showAllLabels: boolean;
 }
 

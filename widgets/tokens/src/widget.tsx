@@ -34,6 +34,7 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
 
     initialConfiguration: [
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
+        Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'showExpiredTokens',
             name: t('configuration.showExpiredTokens.name'),
@@ -52,7 +53,7 @@ Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
             return <Loading />;
         }
 
-        return <TokensTable data={data} toolbox={toolbox} />;
+        return <TokensTable configuration={widget.configuration} data={data} toolbox={toolbox} />;
     }
 });
 

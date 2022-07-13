@@ -13,11 +13,15 @@ const { Time, getT } = Stage.Utils;
 const t = getT(`${translationPath}.table`);
 
 interface TokensTableProps {
+    configuration: TokensWidget.Configuration;
     data: TokensWidget.Data;
     toolbox: Stage.Types.Toolbox;
 }
 
-const TokensTable = ({ data, toolbox }: TokensTableProps) => {
+const TokensTable = ({ configuration, data, toolbox }: TokensTableProps) => {
+    const { pageSize, sortColumn, sortAscending } = configuration;
+    const totalSize = data?.metadata?.pagination?.total;
+
     const shouldDisplayUsers = ReactRedux.useSelector(
         (state: Stage.Types.ReduxState) => state.manager.auth.role === Stage.Common.Consts.sysAdminRole
     );
@@ -34,7 +38,14 @@ const TokensTable = ({ data, toolbox }: TokensTableProps) => {
     return (
         <>
             <TokensTableHeader toolbox={toolbox} />
-            <DataTable fetchData={fetchTableData} noDataMessage={t('noTokens')}>
+            <DataTable
+                fetchData={fetchTableData}
+                noDataMessage={t('noTokens')}
+                totalSize={totalSize}
+                pageSize={pageSize}
+                sortColumn={sortColumn}
+                sortAscending={sortAscending}
+            >
                 <DataTable.Column label={t('columns.token')} name={dataSortingKeys.value} />
                 <DataTable.Column label={t('columns.description')} name={dataSortingKeys.description} />
                 {shouldDisplayUsers && <DataTable.Column label={t('columns.username')} />}

@@ -2,7 +2,8 @@ describe('Tokens widget', () => {
     const widgetId = 'tokens';
     const widgetSelector = `.${widgetId}Widget`;
     const widgetConfiguration = {
-        pollingTime: 3
+        pollingTime: 3,
+        pageSize: 0 // NOTE: Setting page size to 0 to list all tokens and be able to find the one created in test
     };
 
     const mockUserRole = (role: string) => {

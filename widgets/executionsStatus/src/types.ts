@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
 export namespace ExecutionsStatusWidget {
-    export type Configuration = {
-        pollingTime: number;
-    };
+    export type Configuration = PollingTimeConfiguration;
     export interface Params {
         blueprint_id: Stage.ContextEntries['blueprintId'];
         deployment_id: Stage.ContextEntries['deploymentId'] | undefined;
