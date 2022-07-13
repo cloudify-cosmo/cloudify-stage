@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 
 import Consts from '../utils/consts';
 import LogoPage from './LogoPage';
-import LoginPage from '../containers/LoginPage';
+import LoginPage from './LoginPage';
 import ExternalRedirect from './ExternalRedirect';
 import AuthRoutes from './AuthRoutes';
 import type { ReduxState } from '../reducers';

@@ -1276,6 +1276,18 @@
             "activating": "Maintenance Mode is being activated"
         },
         "pluginsCatalog": {
+            "name": "Plugins Catalog",
+            "description": "Shows plugins catalog",
+            "configuration": {
+                "jsonPath": {
+                    "name": "Plugins Catalog JSON Source",
+                    "placeholder": "Type JSON Path"
+                },
+                "sortByName": {
+                    "name": "Sort by name",
+                    "description": "If set to true, then plugins will be sorted by name."
+                }
+            },
             "uploadButton": {
                 "enabled": "Upload plugin",
                 "disabled": "Latest version is already uploaded",
