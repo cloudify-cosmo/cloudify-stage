@@ -10,7 +10,7 @@ describe('Agents widget', () => {
 
     before(() => {
         cy.usePageMock('agents', {
-            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
+            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install method', 'System', 'Version', 'Actions'],
             pageSize: 15,
             pollingTime: pollingTimeSeconds
         })
@@ -70,7 +70,7 @@ describe('Agents widget', () => {
 
             cy.setSearchableDropdownValue('Deployment', deploymentName);
             cy.setSearchableDropdownValue('Node', nodeName);
-            cy.setSearchableDropdownValue('Node Instance', nodeInstanceName);
+            cy.setSearchableDropdownValue('Node instance', nodeInstanceName);
         }
 
         type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
