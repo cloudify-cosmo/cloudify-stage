@@ -1183,7 +1183,7 @@
                     "name": "Blueprint name"
                 },
                 "environmentType": {
-                    "name": "Environment Type"
+                    "name": "Environment type"
                 },
                 "location": {
                     "name": "Location"
