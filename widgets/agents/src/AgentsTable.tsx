@@ -3,14 +3,35 @@
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
 import AgentsPropType from './props/AgentsPropType';
+import type { Agents } from './types';
 
-export default class AgentsTable extends React.Component {
+const t = Stage.Utils.getT('widgets.agents');
+
+interface AgentsTableProps {
+    data: {
+        items: Agents;
+        total: number;
+        deploymentId: string | string[];
+        nodeId: string | string[];
+        nodeInstanceId: string | string[];
+    };
+    widget: Stage.Types.Widget;
+    toolbox: Stage.Types.Toolbox;
+}
+
+interface AgentsTableState {
+    error: any;
+    showModal: boolean;
+    modal: string;
+}
+
+export default class AgentsTable extends React.Component<AgentsTableProps, AgentsTableState> {
     static Modals = {
         INSTALL_AGENT: 'install_agent',
         VALIDATE_AGENT: 'validate_agent'
     };
 
-    constructor(props, context) {
+    constructor(props: AgentsTableProps, context) {
         super(props, context);
 
         this.state = {
@@ -25,7 +46,7 @@ export default class AgentsTable extends React.Component {
         toolbox.getEventBus().on('agents:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: AgentsTableProps, nextState: AgentsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -83,24 +104,33 @@ export default class AgentsTable extends React.Component {
                     className="agentsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label="Id" show={fieldsToShow.indexOf('Id') >= 0} />
-                    <DataTable.Column label="IP" show={fieldsToShow.indexOf('IP') >= 0} />
+                    <DataTable.Column label={t('columns.id')} show={fieldsToShow.indexOf(t('columns.id')) >= 0} />
+                    <DataTable.Column label={t('columns.ip')} show={fieldsToShow.indexOf(t('columns.ip')) >= 0} />
                     <DataTable.Column
-                        label="Deployment"
+                        label={t('columns.deployment')}
                         show={
-                            fieldsToShow.indexOf('Deployment') >= 0 &&
+                            fieldsToShow.indexOf(t('columns.deployment')) >= 0 &&
                             !data.deploymentId &&
                             !data.nodeId &&
                             !data.nodeInstanceId
                         }
                     />
                     <DataTable.Column
-                        label="Node"
-                        show={fieldsToShow.indexOf('Node') >= 0 && !data.nodeId && !data.nodeInstanceId}
+                        label={t('columns.node')}
+                        show={fieldsToShow.indexOf(t('columns.node')) >= 0 && !data.nodeId && !data.nodeInstanceId}
                     />
-                    <DataTable.Column label="System" show={fieldsToShow.indexOf('System') >= 0} />
-                    <DataTable.Column label="Version" show={fieldsToShow.indexOf('Version') >= 0} />
-                    <DataTable.Column label="Install Method" show={fieldsToShow.indexOf('Install Method') >= 0} />
+                    <DataTable.Column
+                        label={t('columns.system')}
+                        show={fieldsToShow.indexOf(t('columns.system')) >= 0}
+                    />
+                    <DataTable.Column
+                        label={t('columns.version')}
+                        show={fieldsToShow.indexOf(t('columns.version')) >= 0}
+                    />
+                    <DataTable.Column
+                        label={t('columns.installMethod')}
+                        show={fieldsToShow.indexOf(t('columns.installMethod')) >= 0}
+                    />
 
                     {_.map(data.items, item => (
                         <DataTable.Row key={item.id}>
