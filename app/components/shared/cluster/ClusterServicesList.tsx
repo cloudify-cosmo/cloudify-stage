@@ -25,17 +25,17 @@ const PublicIP: FunctionComponent<PublicIPProps> = ({ ip = '', serviceName }) =>
     );
 
 const ClusterServicesList: FunctionComponent = () => {
-    const noServicesMessage = i18n.t('cluster.servicesList.noServices', 'There are no Cluster Services available.');
+    const noServicesMessage = i18n.t('cluster.servicesList.noServices');
     const services = useSelector((state: ReduxState) => state.manager.clusterStatus?.services);
 
     return (
         <DataTable noDataMessage={noServicesMessage} noDataAvailable={_.isEmpty(services)} selectable>
-            <DataTable.Column label={i18n.t('cluster.servicesList.serviceType', 'Service Type')} width="25%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.nodeName', 'Node Name')} width="25%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.status', 'Status')} width="5%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.privateIp', 'Private IP')} width="15%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.publicIp', 'Public IP / LB IP')} width="15%" />
-            <DataTable.Column label={i18n.t('cluster.servicesList.version', 'Version')} width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.serviceType')} width="25%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.nodeName')} width="25%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.status')} width="5%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.privateIp')} width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.publicIp')} width="15%" />
+            <DataTable.Column label={i18n.t('cluster.servicesList.version')} width="15%" />
 
             {_.map(services, (service, serviceName) => {
                 const numberOfNodes = _.size(service.nodes);
