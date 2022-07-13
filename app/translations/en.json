@@ -14,11 +14,11 @@
             "noServices": "No services available"
         },
         "servicesList": {
-            "modeName": "Node Name",
+            "nodeName": "Node name",
             "noServices": "There are no Cluster Services available.",
             "privateIp": "Private IP",
             "publicIp": "Public IP / LB IP",
-            "serviceType": "Service Type",
+            "serviceType": "Service type",
             "status": "Status",
             "version": "Version"
         },
@@ -1169,10 +1169,10 @@
                     "name": "Name"
                 },
                 "blueprintName": {
-                    "name": "Blueprint Name"
+                    "name": "Blueprint name"
                 },
                 "environmentType": {
-                    "name": "Environment Type"
+                    "name": "Environment type"
                 },
                 "location": {
                     "name": "Location"
