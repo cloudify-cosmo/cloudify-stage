@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
 
 export type PluginDescription = PluginCatalogEntry;
