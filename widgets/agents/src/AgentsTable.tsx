@@ -104,12 +104,12 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     className="agentsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label={t('columns.id')} show={fieldsToShow.indexOf('Id') >= 0} />
-                    <DataTable.Column label={t('columns.ip')} show={fieldsToShow.indexOf('IP') >= 0} />
+                    <DataTable.Column label={t('columns.id')} show={fieldsToShow.indexOf(t('columns.id')) >= 0} />
+                    <DataTable.Column label={t('columns.ip')} show={fieldsToShow.indexOf(t('columns.ip')) >= 0} />
                     <DataTable.Column
                         label={t('columns.deployment')}
                         show={
-                            fieldsToShow.indexOf('Deployment') >= 0 &&
+                            fieldsToShow.indexOf(t('columns.deployment')) >= 0 &&
                             !data.deploymentId &&
                             !data.nodeId &&
                             !data.nodeInstanceId
@@ -117,13 +117,19 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     />
                     <DataTable.Column
                         label={t('columns.node')}
-                        show={fieldsToShow.indexOf('Node') >= 0 && !data.nodeId && !data.nodeInstanceId}
+                        show={fieldsToShow.indexOf(t('columns.node')) >= 0 && !data.nodeId && !data.nodeInstanceId}
                     />
-                    <DataTable.Column label={t('columns.system')} show={fieldsToShow.indexOf('System') >= 0} />
-                    <DataTable.Column label={t('columns.version')} show={fieldsToShow.indexOf('Version') >= 0} />
+                    <DataTable.Column
+                        label={t('columns.system')}
+                        show={fieldsToShow.indexOf(t('columns.system')) >= 0}
+                    />
+                    <DataTable.Column
+                        label={t('columns.version')}
+                        show={fieldsToShow.indexOf(t('columns.version')) >= 0}
+                    />
                     <DataTable.Column
                         label={t('columns.installMethod')}
-                        show={fieldsToShow.indexOf('Install Method') >= 0}
+                        show={fieldsToShow.indexOf(t('columns.installMethod')) >= 0}
                     />
 
                     {_.map(data.items, item => (
