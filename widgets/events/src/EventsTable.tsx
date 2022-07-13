@@ -4,6 +4,8 @@ import DetailsIcon from './DetailsIcon';
 import DetailsModal from './DetailsModal';
 import ErrorCausesPropType from './props/ErrorCausesPropType';
 
+const t = Utils.getT('widgets.events');
+
 export default class EventsTable extends React.Component {
     static MAX_MESSAGE_LENGTH = 200;
 
@@ -121,60 +123,64 @@ export default class EventsTable extends React.Component {
                 >
                     <DataTable.Column label="" width="40px" show={fieldsToShow.includes('Icon')} />
                     <DataTable.Column
-                        label="Timestamp"
+                        label={t('timestamp')}
                         name="timestamp"
                         width="10%"
-                        show={fieldsToShow.includes('Timestamp')}
+                        show={fieldsToShow.includes(t('timestamp'))}
                     />
-                    <DataTable.Column label="Type" name="event_type" show={fieldsToShow.includes('Type')} />
+                    <DataTable.Column label={t('type')} name="event_type" show={fieldsToShow.includes(t('type'))} />
                     <DataTable.Column
-                        label="Blueprint"
+                        label={t('blueprint')}
                         name="blueprint_id"
                         show={
                             !this.isOneElementLike(data.blueprintId) &&
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes('Blueprint')
+                            fieldsToShow.includes(t('blueprint'))
                         }
                     />
                     <DataTable.Column
-                        label="Deployment"
+                        label={t('deployment')}
                         name="deployment_display_name"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes('Deployment')
+                            fieldsToShow.includes(t('deployment'))
                         }
                     />
                     <DataTable.Column
-                        label="Deployment ID"
+                        label={t('deploymentId')}
                         name="deployment_id"
                         show={
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes('Deployment ID')
+                            fieldsToShow.includes(t('deploymentId'))
                         }
                     />
                     <DataTable.Column
-                        label="Node ID"
+                        label={t('nodeId')}
                         name="node_name"
-                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node ID')}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes(t('nodeId'))}
                     />
                     <DataTable.Column
-                        label="Node instance ID"
+                        label={t('nodeInstanceId')}
                         name="node_instance_id"
-                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Instance ID')}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes(t('nodeInstanceId'))}
                     />
                     <DataTable.Column
-                        label="Workflow"
+                        label={t('workflow')}
                         name="workflow_id"
-                        show={!this.isOneElementLike(data.executionId) && fieldsToShow.includes('Workflow')}
+                        show={!this.isOneElementLike(data.executionId) && fieldsToShow.includes(t('workflow'))}
                     />
-                    <DataTable.Column label="Operation" name="operation" show={fieldsToShow.includes('Operation')} />
-                    <DataTable.Column label="Message" show={fieldsToShow.includes('Message')} />
+                    <DataTable.Column
+                        label={t('operation')}
+                        name="operation"
+                        show={fieldsToShow.includes(t('operation'))}
+                    />
+                    <DataTable.Column label={t('message')} show={fieldsToShow.includes(t('message'))} />
                     {data.items.map(item => {
                         const isEventType = item.type === EventUtils.eventType;
                         const messageText = Json.stringify(item.message, false);
