@@ -155,18 +155,18 @@ export default class EventsTable extends React.Component {
                             !this.isOneElementLike(data.deploymentId) &&
                             !this.isOneElementLike(data.nodeInstanceId) &&
                             !this.isOneElementLike(data.executionId) &&
-                            fieldsToShow.includes('Deployment Id')
+                            fieldsToShow.includes('Deployment ID')
                         }
                     />
                     <DataTable.Column
                         label="Node ID"
                         name="node_name"
-                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Id')}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node ID')}
                     />
                     <DataTable.Column
                         label="Node instance ID"
                         name="node_instance_id"
-                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Instance Id')}
+                        show={!this.isOneElementLike(data.nodeInstanceId) && fieldsToShow.includes('Node Instance ID')}
                     />
                     <DataTable.Column
                         label="Workflow"
