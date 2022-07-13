@@ -61,7 +61,7 @@ describe('Tokens widget', () => {
             });
     });
 
-    it('should validate token expiration date upon token creation', () => {
+    it('should validate token expiration date when creating a token', () => {
         const typeInExpirationDateInput = (value: string) =>
             cy.getField('Expiration date').find('input').clear().type(value);
         const submitAndVerifyError = (expectedError: string) => {
