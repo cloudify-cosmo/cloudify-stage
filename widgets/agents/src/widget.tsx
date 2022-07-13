@@ -29,7 +29,7 @@ Stage.defineWidget({
                 'eg. when Deployment ID is set in context then Deployment field will be hidden.',
             placeHolder: 'Select fields from the list',
             items: ['Id', 'Node', 'Deployment', 'IP', 'Install method', 'System', 'Version', 'Actions'],
-            default: 'Id,Node,Deployment,IP,Install Method,System,Version,Actions',
+            default: 'Id,Node,Deployment,IP,Install method,System,Version,Actions',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
