@@ -82,9 +82,9 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {submittingStatus === RequestStatus.ERROR && <Message error content={t('errors.createError')} />}
                 {showCreateForm ? (
                     <Form>
-                        <Form.Input label={t('inputs.description')}>
+                        <Form.Field label={t('inputs.description')}>
                             <Input value={description} onChange={setDescription} name="description" />
-                        </Form.Input>
+                        </Form.Field>
 
                         <Form.Field label={t('inputs.expirationDate')} error={getContextError('expirationDate')}>
                             <DateInput
