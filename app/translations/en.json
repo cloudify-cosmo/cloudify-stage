@@ -1636,7 +1636,8 @@
             "createModal": {
                 "header": "Create token",
                 "inputs": {
-                    "description": "Description"
+                    "description": "Description",
+                    "expirationDate": "Expiration date"
                 },
                 "buttons": {
                     "cancel": "Cancel",
@@ -1647,7 +1648,11 @@
                     "content": "New token has been created: {{token}}",
                     "warning": "You won't be able to show or copy the token value after closing this modal"
                 },
-                "error": "Couldn't create a Token, please try to submit the Token data again."
+                "errors": {
+                    "createError": "Couldn't create a Token, please try to submit the Token data again.",
+                    "expirationDateInvalidFormat": "Please provide a date in 'YYYY-MM-DD HH:mm' format",
+                    "expirationDateBeforeCurrentDate": "Please provide a date later than the current date"
+                }
             }
         },
         "deploymentInfo": {
