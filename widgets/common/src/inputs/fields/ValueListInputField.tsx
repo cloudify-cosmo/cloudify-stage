@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import { PositionedRevertToDefaultIcon } from './RevertToDefaultIcon';
 import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
 
@@ -19,7 +20,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
     const { Form } = Stage.Basic;
     const { name, value, onChange, error, validValues, multiple = false, defaultValue } = props;
 
-    const options = _.map(validValues, validValue => {
+    const options = map(validValues, validValue => {
         const parsedOptionValue = parseOptionValue(validValue);
 
         return {
