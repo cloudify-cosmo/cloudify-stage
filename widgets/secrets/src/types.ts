@@ -8,6 +8,5 @@ export type Secret = {
     tenant_name?: string;
     updated_at?: string;
     visibility?: string;
-    'new entry'?: string;
 };
 /* eslint-enable camelcase */
