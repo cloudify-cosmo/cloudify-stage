@@ -1253,6 +1253,18 @@
                 "traceback": "Traceback",
                 "copyCauses": "Copy Error Causes",
                 "close": "Close"
+            },
+            "columns": {
+                "timestamp": "Timestamp",
+                "type": "Type",
+                "blueprint": "Blueprint",
+                "deployment": "Deployment",
+                "deploymentId": "Deployment ID",
+                "nodeId": "Node ID",
+                "nodeInstanceId": "Node instance ID",
+                "workflow": "Workflow",
+                "operation": "Operation",
+                "message": "Message"
             }
         },
         "executions": {
@@ -1648,7 +1660,8 @@
             "createModal": {
                 "header": "Create token",
                 "inputs": {
-                    "description": "Description"
+                    "description": "Description",
+                    "expirationDate": "Expiration date"
                 },
                 "buttons": {
                     "cancel": "Cancel",
@@ -1659,7 +1672,11 @@
                     "content": "New token has been created: {{token}}",
                     "warning": "You won't be able to show or copy the token value after closing this modal"
                 },
-                "error": "Couldn't create a Token, please try to submit the Token data again."
+                "errors": {
+                    "createError": "Couldn't create a Token, please try to submit the Token data again.",
+                    "expirationDateInvalidFormat": "Please provide a date in 'YYYY-MM-DD HH:mm' format",
+                    "expirationDateInPast": "Please provide a date later than the current date"
+                }
             }
         },
         "deploymentInfo": {
