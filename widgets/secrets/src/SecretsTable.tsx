@@ -71,7 +71,7 @@ interface SecretsTableState {
     error: null | string;
     showModal: boolean;
     modalType: string;
-    secret: Record<string, any>;
+    secret: Secret;
     canShowSecret: boolean;
     showSecretKey: string;
     showSecretValue: string;
