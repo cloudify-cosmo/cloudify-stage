@@ -31,14 +31,14 @@ Stage.defineWidget({
                 'Type',
                 'Blueprint',
                 'Deployment',
-                'Deployment Id',
+                'Deployment ID',
                 'Workflow',
                 'Operation',
-                'Node Id',
-                'Node Instance Id',
+                'Node ID',
+                'Node instance ID',
                 'Message'
             ],
-            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node Id,Node Instance Id,Message',
+            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
