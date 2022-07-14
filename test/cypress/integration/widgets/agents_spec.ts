@@ -70,7 +70,7 @@ describe('Agents widget', () => {
 
             cy.setSearchableDropdownValue('Deployment', deploymentName);
             cy.setSearchableDropdownValue('Node', nodeName);
-            cy.setSearchableDropdownValue('Node instance', nodeInstanceName);
+            cy.setSearchableDropdownValue('Node Instance', nodeInstanceName);
         }
 
         type InstallMethod = 'Remote' | 'Plugin' | 'Init Script' | 'Provided';
