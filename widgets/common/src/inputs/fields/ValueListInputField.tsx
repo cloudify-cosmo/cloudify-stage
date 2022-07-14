@@ -1,4 +1,3 @@
-import type { DropdownProps } from 'semantic-ui-react';
 import { PositionedRevertToDefaultIcon } from './RevertToDefaultIcon';
 import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
 
@@ -8,18 +7,20 @@ type ValueListInputFieldProps = ErrorAwareInputFieldProps &
         multiple: boolean;
     };
 
+const isStringifiedNumber = (value: unknown): boolean => {
+    return typeof value === 'string' && !Number.isNaN(+value);
+};
+
+const parseOptionValue = (value: ValueListInputFieldProps['validValues'][0]) => {
+    return isStringifiedNumber(value) ? `"${value}"` : value;
+};
+
 export default function ValueListInputField(props: ValueListInputFieldProps) {
     const { Form } = Stage.Basic;
     const { name, value, onChange, error, validValues, multiple = false, defaultValue } = props;
 
-    // TODO Norbert: rename arguments
-    const isStringifiedNumber = (numericValue: any): boolean => {
-        return typeof numericValue === 'string' && !Number.isNaN(+numericValue);
-    };
-
-    // TODO Norbert: Extract option value getter
     const options = _.map(validValues, validValue => {
-        const parsedOptionValue = isStringifiedNumber(validValue) ? `"${validValue}"` : validValue;
+        const parsedOptionValue = parseOptionValue(validValue);
 
         return {
             name: validValue,
@@ -27,31 +28,6 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
             value: parsedOptionValue
         };
     });
-
-    const handleChange: DropdownProps['onChange'] = (event, data) => {
-        // TODO Norbert: Use for recording previous/current results
-        // if (name === 'infra_name') {
-        //     // eslint-disable-next-line
-        //     console.log('='.repeat(25));
-        //     // eslint-disable-next-line
-        //     console.log('options');
-        //     // eslint-disable-next-line
-        //     console.log(options);
-
-        //     // eslint-disable-next-line
-        //     console.log('defaultValue');
-        //     // eslint-disable-next-line
-        //     console.log(defaultValue);
-
-        //     // eslint-disable-next-line
-        //     console.log('data.value');
-        //     // eslint-disable-next-line
-        //     console.log(data.value);
-        //     // eslint-disable-next-line
-        //     console.log(typeof data.value);
-        // }
-        onChange?.(event, data);
-    };
 
     return (
         <>
@@ -62,7 +38,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
                 selection
                 error={error}
                 options={options}
-                onChange={handleChange}
+                onChange={onChange}
                 multiple={multiple}
                 defaultValue={defaultValue}
             />
