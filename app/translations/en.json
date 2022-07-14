@@ -808,7 +808,8 @@
                 "node": "Node",
                 "system": "System",
                 "version": "Version",
-                "installMethod": "Install method"
+                "installMethod": "Install method",
+                "actions": "Actions"
             }
         },
         "blueprintActionButtons": {

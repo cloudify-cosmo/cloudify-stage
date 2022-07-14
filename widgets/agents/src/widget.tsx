@@ -3,6 +3,8 @@
 import AgentsTable from './AgentsTable';
 import Consts from './consts';
 
+const t = Stage.Utils.getT('widgets.agents');
+
 Stage.defineWidget({
     id: 'agents',
     name: 'Agents',
@@ -28,8 +30,19 @@ Stage.defineWidget({
                 'Some of the fields may be hidden depending on the context, ' +
                 'eg. when Deployment ID is set in context then Deployment field will be hidden.',
             placeHolder: 'Select fields from the list',
-            items: ['ID', 'Node', 'Deployment', 'IP', 'Install method', 'System', 'Version', 'Actions'],
-            default: 'ID,Node,Deployment,IP,Install method,System,Version,Actions',
+            items: [
+                t('columns.id'),
+                t('columns.node'),
+                t('columns.deployment'),
+                t('columns.ip'),
+                t('columns.installMethod'),
+                t('columns.system'),
+                t('columns.version'),
+                t('columns.actions')
+            ],
+            default: `${t('columns.id')},${t('columns.node')},${t('columns.deployment')},${t(
+                'columns.installMethod'
+            )},${t('columns.system')},${t('columns.version')},${t('columns.actions')}`,
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
