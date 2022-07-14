@@ -1,3 +1,4 @@
+import { map } from 'lodash';
 import { PositionedRevertToDefaultIcon } from './RevertToDefaultIcon';
 import type { ErrorAwareInputFieldProps, RevertableInputFieldProps } from './types';
 
@@ -7,15 +8,27 @@ type ValueListInputFieldProps = ErrorAwareInputFieldProps &
         multiple: boolean;
     };
 
+const isStringifiedNumber = (value: unknown): boolean => {
+    return typeof value === 'string' && !Number.isNaN(+value);
+};
+
+const parseOptionValue = (value: ValueListInputFieldProps['validValues'][0]) => {
+    return isStringifiedNumber(value) ? `"${value}"` : value;
+};
+
 export default function ValueListInputField(props: ValueListInputFieldProps) {
     const { Form } = Stage.Basic;
-    const { name, value, onChange, error, validValues, multiple = false } = props;
+    const { name, value, onChange, error, validValues, multiple = false, defaultValue } = props;
 
-    const options = _.map(validValues, validValue => ({
-        name: validValue,
-        text: validValue,
-        value: validValue
-    }));
+    const options = map(validValues, validValue => {
+        const parsedOptionValue = parseOptionValue(validValue);
+
+        return {
+            name: validValue,
+            text: validValue,
+            value: parsedOptionValue
+        };
+    });
 
     return (
         <>
@@ -28,6 +41,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
                 options={options}
                 onChange={onChange}
                 multiple={multiple}
+                defaultValue={defaultValue}
             />
             <PositionedRevertToDefaultIcon {...props} right={30} />
         </>
