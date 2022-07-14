@@ -68,10 +68,10 @@ interface SecretsTableProps {
 }
 
 interface SecretsTableState {
-    error: any;
+    error: null | string;
     showModal: boolean;
     modalType: string;
-    secret: any;
+    secret: Record<string, any>;
     canShowSecret: boolean;
     showSecretKey: string;
     showSecretValue: string;
