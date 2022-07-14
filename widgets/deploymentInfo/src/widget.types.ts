@@ -1,11 +1,12 @@
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
 export declare namespace DeploymentInfoWidget {
     export interface Params {
         // eslint-disable-next-line camelcase
         deployment_id?: string | string[] | null;
     }
 
-    export interface Configuration {
-        pollingTime: number;
+    export interface Configuration extends PollingTimeConfiguration {
         showBlueprint: boolean;
         showSite: boolean;
         showCreated: boolean;
