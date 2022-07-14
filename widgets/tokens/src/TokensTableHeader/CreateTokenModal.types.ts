@@ -9,3 +9,9 @@ export interface ReceivedToken {
     value: string;
     role: string;
 }
+
+export interface TokensPostRequestBody {
+    description?: string;
+    // eslint-disable-next-line camelcase
+    expiration_date?: string;
+}
