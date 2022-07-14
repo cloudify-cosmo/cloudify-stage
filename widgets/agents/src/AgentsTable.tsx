@@ -20,7 +20,6 @@ interface AgentsTableProps {
 }
 
 interface AgentsTableState {
-    error: any;
     showModal: boolean;
     modal: string;
 }
@@ -35,7 +34,6 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
         super(props, context);
 
         this.state = {
-            error: null,
             showModal: false,
             modal: ''
         };
@@ -75,24 +73,21 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
 
     refreshData() {
         const { toolbox } = this.props;
-        this.setState({ error: null });
 
         toolbox.refresh();
     }
 
     render() {
-        const { error, modal, showModal } = this.state;
+        const { modal, showModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Agents available.';
         const { configuration } = widget;
         const { fieldsToShow } = configuration;
 
-        const { Button, DataTable, ErrorMessage } = Stage.Basic;
+        const { Button, DataTable } = Stage.Basic;
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DataTable
                     fetchData={this.fetchGridData}
                     totalSize={data.total}
