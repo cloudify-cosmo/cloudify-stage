@@ -14,10 +14,14 @@ const { Modal, Icon, CancelButton, ApproveButton, DateInput, Input, Form, Loadin
 const t = getT(`${translationPath}.createModal`);
 const expirationDateFormat = 'YYYY-MM-DD HH:mm';
 
+function formatRequestExpirationDate(expirationDate: string) {
+    return moment.utc(moment(expirationDate)).format(expirationDateFormat);
+}
+
 function getTokensPostRequestBody(description: string, expirationDate: string): TokensPostRequestBody {
     const body: TokensPostRequestBody = {};
     if (description) body.description = description;
-    if (expirationDate) body.expiration_date = moment.utc(moment(expirationDate)).format(expirationDateFormat);
+    if (expirationDate) body.expiration_date = formatRequestExpirationDate(expirationDate);
     return body;
 }
 
@@ -43,14 +47,15 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
             const expirationDateHasInvalidFormat =
                 !expirationDateMoment.isValid() ||
                 !isEqual(expirationDateMoment.format(expirationDateFormat), expirationDate);
+            const expirationDateInPast = expirationDateMoment.isBefore(moment());
 
             if (expirationDateHasInvalidFormat) {
                 setErrors({ expirationDate: t('errors.expirationDateInvalidFormat') });
                 return;
             }
 
-            if (expirationDateMoment.isBefore(moment())) {
-                setErrors({ expirationDate: t('errors.expirationDateBeforeCurrentDate') });
+            if (expirationDateInPast) {
+                setErrors({ expirationDate: t('errors.expirationDateInPast') });
                 return;
             }
         }

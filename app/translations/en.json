@@ -1663,7 +1663,7 @@
                 "errors": {
                     "createError": "Couldn't create a Token, please try to submit the Token data again.",
                     "expirationDateInvalidFormat": "Please provide a date in 'YYYY-MM-DD HH:mm' format",
-                    "expirationDateBeforeCurrentDate": "Please provide a date later than the current date"
+                    "expirationDateInPast": "Please provide a date later than the current date"
                 }
             }
         },
