@@ -802,7 +802,7 @@
         },
         "agents": {
             "columns": {
-                "id": "Id",
+                "id": "ID",
                 "ip": "IP",
                 "deployment": "Deployment",
                 "node": "Node",
