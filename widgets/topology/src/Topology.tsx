@@ -87,18 +87,19 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
-        const topologyRestartAndUpdateRequired =
+        const topologyRestartRequired =
             configuration !== prevProps.configuration ||
             blueprintId !== prevProps.blueprintId ||
             !_.isEqual(data.icons, prevProps.data.icons);
 
         const topologyUpdateRequired =
+            topologyRestartRequired ||
             !_.isEqual(data.blueprintDeploymentData, prevProps.data.blueprintDeploymentData) ||
             expandedDeployments !== prevState.expandedDeployments ||
             expandedTerraformNodes !== prevState.expandedTerraformNodes;
 
-        if (topologyRestartAndUpdateRequired) this.startTopology();
-        if (topologyRestartAndUpdateRequired || topologyUpdateRequired) this.updateTopology();
+        if (topologyRestartRequired) this.startTopology();
+        if (topologyUpdateRequired) this.updateTopology();
     }
 
     componentWillUnmount() {
