@@ -166,8 +166,6 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
         });
     });
 
-    logger.error(files.length);
-
     const fileBufferList = files.map(filePath => {
         return fs.readFileSync(filePath);
     });
@@ -294,8 +292,6 @@ async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLoca
     const acceptableFilePaths = getTerraformFilePaths(resourceLocationTrimmed);
 
     const files = await decompress(zipBuffer);
-
-    logger.error(files.length);
     return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
 }
 
