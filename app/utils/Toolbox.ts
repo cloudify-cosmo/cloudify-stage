@@ -129,7 +129,7 @@ const createToolbox = (store: Store<ReduxState>) => {
 const getToolbox = (
     onRefresh: Stage.Types.Toolbox['refresh'],
     onLoading: Stage.Types.Toolbox['loading'],
-    widget: ReturnType<Stage.Types.Toolbox['getWidget']>
+    widget?: ReturnType<Stage.Types.Toolbox['getWidget']>
 ) => {
     // NOTE: assumes the toolbox is already created
     return new Proxy(toolbox!, {
