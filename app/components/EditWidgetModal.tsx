@@ -73,6 +73,7 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 label={config.name}
                                 value={fields[config.id]}
                                 columns={config.columns}
+                                placeholder={config.placeHolder}
                                 widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
                             />
                         ))}
