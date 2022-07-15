@@ -30,6 +30,7 @@ interface TopologyProps {
     configuration: unknown;
     data: {
         blueprintDeploymentData: unknown;
+        componentDeploymentsData: unknown;
         icons: Record<string, string>;
         layout: unknown;
     };
@@ -397,11 +398,11 @@ Topology.propTypes = {
     blueprintId: PropTypes.string,
     deploymentId: PropTypes.string,
     configuration: PropTypes.shape({
-        showToolbar: PropTypes.boolean,
-        enableGroupClick: PropTypes.boolean,
-        enableNodeClick: PropTypes.boolean,
-        enableZoom: PropTypes.boolean,
-        enableDrag: PropTypes.boolean
+        showToolbar: PropTypes.bool,
+        enableGroupClick: PropTypes.bool,
+        enableNodeClick: PropTypes.bool,
+        enableZoom: PropTypes.bool,
+        enableDrag: PropTypes.bool
     }),
     data: PropTypes.shape({
         blueprintDeploymentData: PropTypes.shape({}),
