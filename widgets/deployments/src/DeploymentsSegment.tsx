@@ -97,7 +97,7 @@ export default function DeploymentsSegment({
                         onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
                     />
 
-                    <ExecutionProgress execution={item.lastExecution} />
+                    {item.lastExecution && <ExecutionProgress execution={item.lastExecution} />}
                 </DataSegment.Item>
             ))}
         </DataSegment>
