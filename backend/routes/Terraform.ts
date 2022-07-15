@@ -152,7 +152,11 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
             return;
         }
         const mainPath = path.dirname(filePath);
-        files.push(filePath);
+
+        const smthPath = path.join(mainPath, 'main.tf');
+        if (fs.existsSync(smthPath)) {
+            files.push(smthPath);
+        }
 
         const outputsPath = path.join(mainPath, 'outputs.tf');
         if (fs.existsSync(outputsPath)) {
@@ -164,6 +168,8 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
             files.push(variablesPath);
         }
     });
+
+    logger.error(files.length);
 
     const fileBufferList = files.map(filePath => {
         return fs.readFileSync(filePath);
@@ -295,6 +301,8 @@ async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLoca
     ];
 
     const files = await decompress(zipBuffer);
+
+    logger.error(files.length);
     return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
 }
 
