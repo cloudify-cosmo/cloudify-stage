@@ -9,19 +9,7 @@ import TerraformDetailsModal from './TerraformDetailsModal';
 const saveConfirmationTimeout = 2500;
 
 function isNodesChanged(topologyNodes, newNodes) {
-    // compare # of nodes
-    if (topologyNodes.length !== newNodes.length) {
-        return true;
-    }
-
-    // compare node names, and if in the same order
-    for (let i = 0; i < topologyNodes.length; i += 1) {
-        if (topologyNodes[i].name !== newNodes[i].name) {
-            return true;
-        }
-    }
-
-    return false;
+    return !_.isEqual(topologyNodes, newNodes);
 }
 
 interface TopologyProps {
