@@ -80,6 +80,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         toolbox.getEventBus().on('blueprints:refresh', toolbox.refresh, this);
         toolbox.getEventBus().on('deployments:refresh', toolbox.refresh, this);
         this.startTopology();
+        this.updateTopology();
     }
 
     shouldComponentUpdate(nextProps: TopologyProps, nextState: TopologyState) {
@@ -97,34 +98,18 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
-        if (
+        const topologyRestartAndUpdateRequired =
             configuration !== prevProps.configuration ||
             blueprintId !== prevProps.blueprintId ||
-            !_.isEqual(data.icons, prevProps.data.icons)
-        ) {
-            this.startTopology();
-        }
+            !_.isEqual(data.icons, prevProps.data.icons);
 
-        if (
-            data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData ||
+        const topologyUpdateRequired =
+            !_.isEqual(data.blueprintDeploymentData, prevProps.data.blueprintDeploymentData) ||
             expandedDeployments !== prevState.expandedDeployments ||
-            expandedTerraformNodes !== prevState.expandedTerraformNodes
-        ) {
-            const isFirstTimeLoading = this.topologyData === null;
-            const oldTopologyData = this.topologyData;
-            this.topologyData = this.buildTopologyData();
-            this.topology.setLoading(false);
+            expandedTerraformNodes !== prevState.expandedTerraformNodes;
 
-            if (_.isEmpty(data.blueprintDeploymentData)) {
-                this.topology.setTopology(this.topologyData, {});
-            } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
-                const { layout } = data;
-                this.topology.setTopology(this.topologyData, layout);
-                if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
-            } else {
-                this.topology.refreshTopologyDeploymentStatus(this.topologyData);
-            }
-        }
+        if (topologyRestartAndUpdateRequired) this.startTopology();
+        if (topologyRestartAndUpdateRequired || topologyUpdateRequired) this.updateTopology();
     }
 
     componentWillUnmount() {
@@ -163,6 +148,24 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         } else if (blueprintId) {
             toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
+    }
+
+    updateTopology() {
+        const { data } = this.props;
+        const isFirstTimeLoading = this.topologyData === null;
+        const oldTopologyData = this.topologyData;
+        this.topologyData = this.buildTopologyData();
+
+        if (_.isEmpty(data.blueprintDeploymentData)) {
+            this.topology.setTopology(this.topologyData, {});
+        } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
+            const { layout } = data;
+            this.topology.setTopology(this.topologyData, layout);
+            if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
+        } else {
+            this.topology.refreshTopologyDeploymentStatus(this.topologyData);
+        }
+        this.topology.setLoading(false);
     }
 
     startTopology() {
