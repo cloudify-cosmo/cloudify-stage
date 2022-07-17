@@ -69,8 +69,8 @@
                                     "Deployment",
                                     "Workflow",
                                     "Operation",
-                                    "Node Id",
-                                    "Node Instance Id",
+                                    "Node ID",
+                                    "Node Instance ID",
                                     "Message"
                                 ],
                                 "colorLogs": true,
@@ -247,8 +247,8 @@
                                     "Deployment",
                                     "Workflow",
                                     "Operation",
-                                    "Node Id",
-                                    "Node Instance Id",
+                                    "Node ID",
+                                    "Node Instance ID",
                                     "Message"
                                 ],
                                 "colorLogs": true,
