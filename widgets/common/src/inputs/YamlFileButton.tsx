@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import type { StrictButtonProps } from 'semantic-ui-react';
 
 export interface Props {
     dataType: string;
@@ -15,7 +16,7 @@ const YamlFileButton: FunctionComponent<Props> = ({
 }) => {
     const { Form } = Stage.Basic;
 
-    const openButtonParams = iconButton
+    const openButtonParams: StrictButtonProps = iconButton
         ? { floated: 'right' }
         : { floated: 'right', content: 'Load Values', labelPosition: 'left' };
 
