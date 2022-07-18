@@ -35,14 +35,14 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
 }) => {
     const {
         DeploymentsView,
-        Common: { i18nMessagesPrefix, filterRulesContextKey, isTopLevelPage }
+        Common: { i18nMessagesPrefix, filterRulesContextKey, hasParentDeployment }
     } = Stage.Common.DeploymentsView;
     const filterRules: FilterRule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
     const context = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.context);
 
-    if (isTopLevelPage(context)) {
+    if (!hasParentDeployment(context)) {
         const i18nTopLevelPagePrefix = `${i18nMessagesPrefix}.unexpectedWidgetUsage`;
 
         return (

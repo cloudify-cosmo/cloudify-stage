@@ -7,7 +7,7 @@ import { useWidgetDimensions } from '../map/widget-dimensions';
 
 import {
     i18nMessagesPrefix,
-    isTopLevelPage,
+    hasParentDeployment,
     mapOpenContextKey,
     parentDeploymentIdContextKey,
     parentDeploymentLabelKey
@@ -264,7 +264,7 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
 };
 
 const getParentDeploymentId = (context: Stage.Types.ReduxState['context']) => {
-    if (isTopLevelPage(context)) {
+    if (!hasParentDeployment(context)) {
         return undefined;
     }
 
