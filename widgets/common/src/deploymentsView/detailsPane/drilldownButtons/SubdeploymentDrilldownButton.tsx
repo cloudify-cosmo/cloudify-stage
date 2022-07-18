@@ -4,7 +4,7 @@ import type { FilterRule } from '../../../filters/types';
 import { FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
-    parentDeploymentIdKey,
+    parentDeploymentIdContextKey,
     i18nDrillDownPrefix,
     mapOpenContextKey,
     subenvironmentsIcon,
@@ -59,7 +59,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
             {
                 [filterRulesContextKey]: [deploymentTypeRule[type]],
                 [mapOpenContextKey]: mapOpen,
-                [parentDeploymentIdKey]: deploymentId
+                [parentDeploymentIdContextKey]: deploymentId
             },
             `${deploymentName} [${Stage.i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );

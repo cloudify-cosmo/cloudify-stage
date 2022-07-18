@@ -6,10 +6,10 @@ import useEventListener from '../hooks/useEventListener';
 import { useWidgetDimensions } from '../map/widget-dimensions';
 
 import {
-    getParentPageContext,
     i18nMessagesPrefix,
     isTopLevelPage,
     mapOpenContextKey,
+    parentDeploymentIdContextKey,
     parentDeploymentLabelKey
 } from './common';
 import type { SharedDeploymentsViewWidgetConfiguration } from './configuration';
@@ -238,8 +238,8 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 };
 
 const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterByParentDeployment: boolean }) => {
-    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
-    const parentDeploymentId = useMemo(() => getParentDeploymentId(drilldownContext), [drilldownContext]);
+    const context = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.context);
+    const parentDeploymentId = useMemo(() => getParentDeploymentId(context), [context]);
 
     if (!filterByParentDeployment) {
         return { filterable: true } as const;
@@ -263,10 +263,10 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
     } as const;
 };
 
-const getParentDeploymentId = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) => {
-    if (isTopLevelPage(drilldownContext)) {
+const getParentDeploymentId = (context: Stage.Types.ReduxState['context']) => {
+    if (isTopLevelPage(context)) {
         return undefined;
     }
 
-    return getParentPageContext(drilldownContext)?.deploymentId as string | undefined;
+    return (context as any)?.[parentDeploymentIdContextKey];
 };

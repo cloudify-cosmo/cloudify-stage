@@ -40,9 +40,9 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
     const filterRules: FilterRule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
-    const drilldownContext = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.drilldownContext);
+    const context = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.context);
 
-    if (isTopLevelPage(drilldownContext)) {
+    if (isTopLevelPage(context)) {
         const i18nTopLevelPagePrefix = `${i18nMessagesPrefix}.unexpectedWidgetUsage`;
 
         return (
