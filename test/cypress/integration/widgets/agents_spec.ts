@@ -10,7 +10,7 @@ describe('Agents widget', () => {
 
     before(() => {
         cy.usePageMock('agents', {
-            fieldsToShow: ['Id', 'Node', 'Deployment', 'IP', 'Install Method', 'System', 'Version', 'Actions'],
+            fieldsToShow: ['ID', 'Node', 'Deployment', 'IP', 'Install method', 'System', 'Version', 'Actions'],
             pageSize: 15,
             pollingTime: pollingTimeSeconds
         })
