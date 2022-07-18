@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { DeploymentContext } from '../../common/src/deploymentsView/types';
 
 const {
     Common: { i18nDrillDownPrefix },
@@ -37,7 +37,7 @@ const DrilledDownDeploymentsViewWidget: FunctionComponent<DrilledDownDeployments
         DeploymentsView,
         Common: { i18nMessagesPrefix, filterRulesContextKey, hasParentDeployment }
     } = Stage.Common.DeploymentsView;
-    const filterRules: FilterRule[] | undefined = toolbox.getContext().getValue(filterRulesContextKey);
+    const filterRules: DeploymentContext['filterRules'] = toolbox.getContext().getValue(filterRulesContextKey);
     const { ErrorMessage } = Stage.Basic;
 
     const context = ReactRedux.useSelector((state: Stage.Types.ReduxState) => state.context);

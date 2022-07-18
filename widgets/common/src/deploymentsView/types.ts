@@ -1,3 +1,6 @@
+import type { FilterRule } from '../filters/types';
+import type { mapOpenContextKey, filterRulesContextKey, parentDeploymentIdContextKey } from './common';
+
 export enum LatestExecutionStatus {
     Completed = 'completed',
     Failed = 'failed',
@@ -14,6 +17,12 @@ export enum DeploymentStatus {
     Good = 'good',
     InProgress = 'in_progress',
     RequiresAttention = 'requires_attention'
+}
+
+export interface DeploymentContext {
+    [mapOpenContextKey]?: boolean;
+    [filterRulesContextKey]?: FilterRule[];
+    [parentDeploymentIdContextKey]?: string;
 }
 
 export interface Deployment {

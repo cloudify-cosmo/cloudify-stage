@@ -30,7 +30,7 @@ import DeploymentsMapContainer from './map';
 import SearchActions from '../actions/SearchActions';
 import getSelectedDeployment from './getSelectedDeployment';
 import useFilterQuery from './useFilterQuery';
-import type { Deployment, DeploymentsResponse } from './types';
+import type { Deployment, DeploymentContext, DeploymentsResponse } from './types';
 
 const { Loading, ErrorMessage } = Stage.Basic;
 const t = Stage.Utils.getT(i18nMessagesPrefix);
@@ -172,7 +172,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     // NOTE: use the fallback deployment if it is possible to avoid showing `undefined` as the selected deployment
     const selectedOrFallbackDeployment = selectedDeployment ?? fallbackDeployment;
 
-    const mapOpen = !!(toolboxContext.getValue(mapOpenContextKey) as boolean | undefined);
+    const mapOpen: DeploymentContext['mapOpen'] = !!toolboxContext.getValue(mapOpenContextKey);
     const toggleMap = () => toolboxContext.setValue(mapOpenContextKey, !mapOpen);
 
     return (
@@ -263,10 +263,10 @@ const useFilteringByParentDeployment = ({ filterByParentDeployment }: { filterBy
     } as const;
 };
 
-const getParentDeploymentId = (context: Stage.Types.ReduxState['context']) => {
+const getParentDeploymentId = (context: DeploymentContext) => {
     if (!hasParentDeployment(context)) {
         return undefined;
     }
 
-    return (context as any)?.[parentDeploymentIdContextKey];
+    return context?.[parentDeploymentIdContextKey];
 };

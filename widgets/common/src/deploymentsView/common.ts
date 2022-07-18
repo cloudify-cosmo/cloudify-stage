@@ -1,4 +1,5 @@
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { DeploymentContext } from './types';
 
 export const i18nPrefix = 'widgets.deploymentsView';
 export const i18nMessagesPrefix = `${i18nPrefix}.messages`;
@@ -13,8 +14,8 @@ export const parentDeploymentIdContextKey = 'parentDeploymentId';
 
 export const parentDeploymentLabelKey = 'csys-obj-parent';
 
-export const hasParentDeployment = (context: Stage.Types.ReduxState['context']) => {
-    return (context as any)?.[parentDeploymentIdContextKey];
+export const hasParentDeployment = (context: DeploymentContext) => {
+    return context?.[parentDeploymentIdContextKey];
 };
 
 export const selectDeployment = (toolbox: Stage.Types.Toolbox, deploymentId: string) =>
