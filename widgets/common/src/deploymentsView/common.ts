@@ -9,6 +9,7 @@ export const subservicesIcon: SemanticICONS = 'cube';
 
 export const filterRulesContextKey = 'filterRules';
 export const mapOpenContextKey = 'mapOpen';
+export const parentDeploymentIdKey = 'parentDeploymentOd';
 
 export const parentDeploymentLabelKey = 'csys-obj-parent';
 
@@ -20,8 +21,14 @@ export const parentDeploymentLabelKey = 'csys-obj-parent';
  *
  * It may happen, that the array only contains a single item (if we are on the top-level page).
  */
-export const isTopLevelPage = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) =>
-    drilldownContext.length < 2;
+export const isTopLevelPage = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) => {
+    // eslint-disable-next-line
+    // console.log('='.repeat(25));
+    // eslint-disable-next-line
+    // console.log(drilldownContext);
+    return drilldownContext.length < 2;
+};
+
 export const getParentPageContext = (drilldownContext: Stage.Types.ReduxState['drilldownContext']) =>
     drilldownContext[drilldownContext.length - 2].context;
 

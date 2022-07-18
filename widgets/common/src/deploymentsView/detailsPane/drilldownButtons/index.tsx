@@ -66,6 +66,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
                     deploymentName={displayName}
                     result={subdeploymentResults.subenvironments}
                     mapOpen={mapOpen}
+                    deploymentId={id}
                 />
                 <SubdeploymentDrilldownButton
                     type="services"
@@ -73,6 +74,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
                     deploymentName={displayName}
                     result={subdeploymentResults.subservices}
                     mapOpen={mapOpen}
+                    deploymentId={id}
                 />
             </SubdeploymentButtonsContainer>
         </ButtonsContainer>
