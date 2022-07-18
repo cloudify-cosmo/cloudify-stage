@@ -1,29 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-import PropTypes from 'prop-types';
 import React from 'react';
+import type { FunctionComponent } from 'react';
+import type { IconProps } from 'semantic-ui-react';
 import { Icon } from './basic/index';
 
-export default function EditWidgetIcon({ onShowConfig, size }) {
-    return (
-        <Icon
-            name="setting"
-            link
-            size={size}
-            className="editWidgetIcon"
-            onClick={event => {
-                event.stopPropagation();
-                onShowConfig();
-            }}
-        />
-    );
+export interface EditWidgetIconProps {
+    onShowConfig: () => void;
+    size?: IconProps['size'];
 }
 
-EditWidgetIcon.propTypes = {
-    onShowConfig: PropTypes.func.isRequired,
-    size: PropTypes.string
-};
-
-EditWidgetIcon.defaultProps = {
-    // Use the default icon size
-    size: undefined
-};
+const EditWidgetIcon: FunctionComponent<EditWidgetIconProps> = ({ onShowConfig, size }) => (
+    <Icon
+        name="setting"
+        link
+        size={size}
+        className="editWidgetIcon"
+        onClick={(event: Event) => {
+            event.stopPropagation();
+            onShowConfig();
+        }}
+    />
+);
+export default EditWidgetIcon;

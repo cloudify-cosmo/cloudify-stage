@@ -1,35 +1,67 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { get, isEmpty, noop } from 'lodash';
+import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
+import type { GenericFieldProps } from 'cloudify-ui-components';
 import { getToolbox } from '../utils/Toolbox';
 
 import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from './basic';
+import type { WidgetConfigurationDefinition, Widget } from '../utils/StageAPI';
+import type { WidgetOwnProps } from './shared/widgets/Widget';
 
-const getInitialFields = (configDef, configuration) =>
+type Fields = Record<string, any>;
+type Configuration = Record<string, unknown>;
+
+const getInitialFields: (configDef: WidgetConfigurationDefinition[], configuration: Configuration) => Fields = (
+    configDef,
+    configuration
+) =>
     configDef
         .filter(config => !config.hidden)
-        .reduce((fields, config) => {
-            fields[config.id] = _.get(configuration, `[${config.id}]`, config.value || config.default);
+        .reduce((fields: Record<string, any>, config) => {
+            fields[config.id] = get(configuration, `[${config.id}]`, config.value || config.default);
             return fields;
         }, {});
 
-function EditWidgetGenericField({ fields, setFields, ...restProps }) {
-    const handleInputChange = (proxy, field) => {
+interface EditWidgetGenericFieldProps extends GenericFieldProps {
+    fields: Fields;
+    setFields: (fields: Fields) => void;
+}
+const EditWidgetGenericField: FunctionComponent<EditWidgetGenericFieldProps> = ({
+    fields,
+    setFields,
+    ...restProps
+}) => {
+    const handleInputChange: GenericFieldProps['onChange'] = (_proxy, field) => {
         const { name } = field;
         const value = GenericField.formatValue(
             restProps.type,
             restProps.type === GenericField.BOOLEAN_TYPE ? field.checked : field.value
         );
 
-        setFields({ ...fields, [name]: value });
+        if (name) setFields({ ...fields, [name]: value });
     };
     return <GenericField onChange={handleInputChange} {...restProps} />;
+};
+
+interface EditWidgetModalProps {
+    configuration: Configuration;
+    configDef: WidgetConfigurationDefinition[];
+    widget: Widget;
+    show: boolean;
+    onWidgetEdited: NonNullable<WidgetOwnProps<any>['onWidgetUpdated']>;
+    onHideConfig: () => void;
 }
 
-export default function EditWidgetModal({ configDef, configuration, show, onHideConfig, onWidgetEdited, widget }) {
-    const [fields, setFields] = useState(getInitialFields(configDef, configuration));
+const EditWidgetModal: FunctionComponent<EditWidgetModalProps> = ({
+    configDef,
+    configuration,
+    show,
+    onHideConfig,
+    onWidgetEdited,
+    widget
+}) => {
+    const [fields, setFields] = useState<Fields>(getInitialFields(configDef, configuration));
 
     useEffect(() => {
         if (show) setFields(getInitialFields(configDef, configuration));
@@ -70,14 +102,15 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
                                 type={config.type}
                                 key={config.id}
                                 name={config.id}
-                                label={config.name}
+                                label={config.name || ''}
                                 value={fields[config.id]}
                                 columns={config.columns}
-                                widgetlessToolbox={getToolbox(undefined, undefined, undefined)}
+                                placeholder={config.placeHolder}
+                                widgetlessToolbox={getToolbox(noop, noop)}
                             />
                         ))}
 
-                    {_.isEmpty(configDef) && (
+                    {isEmpty(configDef) && (
                         <Message>
                             {i18n.t(
                                 'editMode.editWidget.noConfiguration',
@@ -94,25 +127,5 @@ export default function EditWidgetModal({ configDef, configuration, show, onHide
             </Modal.Actions>
         </Modal>
     );
-}
-
-EditWidgetModal.propTypes = {
-    configuration: PropTypes.shape({}).isRequired,
-    configDef: PropTypes.arrayOf(
-        PropTypes.shape({
-            // eslint-disable-next-line react/forbid-prop-types
-            default: PropTypes.any,
-            id: PropTypes.string,
-            name: PropTypes.string,
-            hidden: PropTypes.bool,
-            // eslint-disable-next-line react/forbid-prop-types
-            columns: PropTypes.array,
-            // eslint-disable-next-line react/forbid-prop-types
-            value: PropTypes.any
-        })
-    ).isRequired,
-    widget: PropTypes.shape({ id: PropTypes.string }).isRequired,
-    show: PropTypes.bool.isRequired,
-    onWidgetEdited: PropTypes.func.isRequired,
-    onHideConfig: PropTypes.func.isRequired
 };
+export default EditWidgetModal;
