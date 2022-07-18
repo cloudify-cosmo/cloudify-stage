@@ -38,6 +38,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         ignoreFailure: false,
         automaticReinstall: true,
         reinstallList: [],
+        skipHeal: false,
+        skipDriftCheck: false,
+        emptyUpdate: false,
         force: false
     });
 
@@ -114,7 +117,10 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             installWorkflow,
             installWorkflowFirst,
             reinstallList,
-            uninstallWorkflow
+            uninstallWorkflow,
+            skipHeal,
+            skipDriftCheck,
+            emptyUpdate
         } = inputs;
         const validationErrors = {};
 
@@ -210,7 +216,10 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         installWorkflow,
         installWorkflowFirst,
         reinstallList,
-        uninstallWorkflow
+        uninstallWorkflow,
+        skipHeal,
+        skipDriftCheck,
+        emptyUpdate
     } = inputs;
     const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } = Stage.Basic;
 
@@ -335,6 +344,36 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                                                  that were explicitly given to "Reinstall
                                                  node instances list" will still be reinstalled'
                             checked={automaticReinstall}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Don't check resource status and attempt to heal before the update"
+                            name="skipHeal"
+                            toggle
+                            checked={skipHeal}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Don't Check Drift Before the Update"
+                            name="skipDriftCheck"
+                            toggle
+                            checked={skipDriftCheck}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Drift Update"
+                            name="emptyUpdate"
+                            toggle
+                            checked={emptyUpdate}
                             onChange={setInput}
                         />
                     </Form.Field>
