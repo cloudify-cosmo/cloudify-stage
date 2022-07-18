@@ -110,7 +110,7 @@ describe('Deployments View widget', () => {
             cy.editWidgetConfiguration(widgetId, () => {
                 widgetConfigurationHelpers.toggleFieldsDropdown();
                 widgetConfigurationHelpers.getFieldsDropdown().within(() => {
-                    cy.get('[role="option"]').contains('Blueprint Name').click();
+                    cy.get('[role="option"]').contains('Blueprint name').click();
                 });
                 widgetConfigurationHelpers.toggleFieldsDropdown();
             });
