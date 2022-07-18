@@ -9,19 +9,7 @@ import TerraformDetailsModal from './TerraformDetailsModal';
 const saveConfirmationTimeout = 2500;
 
 function isNodesChanged(topologyNodes, newNodes) {
-    // compare # of nodes
-    if (topologyNodes.length !== newNodes.length) {
-        return true;
-    }
-
-    // compare node names, and if in the same order
-    for (let i = 0; i < topologyNodes.length; i += 1) {
-        if (topologyNodes[i].name !== newNodes[i].name) {
-            return true;
-        }
-    }
-
-    return false;
+    return !_.isEqual(topologyNodes, newNodes);
 }
 
 interface TopologyProps {
@@ -30,6 +18,7 @@ interface TopologyProps {
     configuration: unknown;
     data: {
         blueprintDeploymentData: unknown;
+        componentDeploymentsData: unknown;
         icons: Record<string, string>;
         layout: unknown;
     };
@@ -80,6 +69,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         toolbox.getEventBus().on('blueprints:refresh', toolbox.refresh, this);
         toolbox.getEventBus().on('deployments:refresh', toolbox.refresh, this);
         this.startTopology();
+        this.updateTopology();
     }
 
     shouldComponentUpdate(nextProps: TopologyProps, nextState: TopologyState) {
@@ -97,34 +87,19 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
-        if (
+        const topologyRestartRequired =
             configuration !== prevProps.configuration ||
             blueprintId !== prevProps.blueprintId ||
-            !_.isEqual(data.icons, prevProps.data.icons)
-        ) {
-            this.startTopology();
-        }
+            !_.isEqual(data.icons, prevProps.data.icons);
 
-        if (
-            data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData ||
+        const topologyUpdateRequired =
+            topologyRestartRequired ||
+            !_.isEqual(data.blueprintDeploymentData, prevProps.data.blueprintDeploymentData) ||
             expandedDeployments !== prevState.expandedDeployments ||
-            expandedTerraformNodes !== prevState.expandedTerraformNodes
-        ) {
-            const isFirstTimeLoading = this.topologyData === null;
-            const oldTopologyData = this.topologyData;
-            this.topologyData = this.buildTopologyData();
-            this.topology.setLoading(false);
+            expandedTerraformNodes !== prevState.expandedTerraformNodes;
 
-            if (_.isEmpty(data.blueprintDeploymentData)) {
-                this.topology.setTopology(this.topologyData, {});
-            } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
-                const { layout } = data;
-                this.topology.setTopology(this.topologyData, layout);
-                if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
-            } else {
-                this.topology.refreshTopologyDeploymentStatus(this.topologyData);
-            }
-        }
+        if (topologyRestartRequired) this.startTopology();
+        if (topologyUpdateRequired) this.updateTopology();
     }
 
     componentWillUnmount() {
@@ -163,6 +138,24 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         } else if (blueprintId) {
             toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
+    }
+
+    updateTopology() {
+        const { data } = this.props;
+        const isFirstTimeLoading = this.topologyData === null;
+        const oldTopologyData = this.topologyData;
+        this.topologyData = this.buildTopologyData();
+
+        if (_.isEmpty(data.blueprintDeploymentData)) {
+            this.topology.setTopology(this.topologyData, {});
+        } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
+            const { layout } = data;
+            this.topology.setTopology(this.topologyData, layout);
+            if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
+        } else {
+            this.topology.refreshTopologyDeploymentStatus(this.topologyData);
+        }
+        this.topology.setLoading(false);
     }
 
     startTopology() {
@@ -394,11 +387,11 @@ Topology.propTypes = {
     blueprintId: PropTypes.string,
     deploymentId: PropTypes.string,
     configuration: PropTypes.shape({
-        showToolbar: PropTypes.boolean,
-        enableGroupClick: PropTypes.boolean,
-        enableNodeClick: PropTypes.boolean,
-        enableZoom: PropTypes.boolean,
-        enableDrag: PropTypes.boolean
+        showToolbar: PropTypes.bool,
+        enableGroupClick: PropTypes.bool,
+        enableNodeClick: PropTypes.bool,
+        enableZoom: PropTypes.bool,
+        enableDrag: PropTypes.bool
     }),
     data: PropTypes.shape({
         blueprintDeploymentData: PropTypes.shape({}),
