@@ -27,7 +27,7 @@ const SideBarHeader: FunctionComponent = () => {
     return (
         <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', flexShrink: 0, borderBottom: '1px white solid' }}>
             {showVersionDetails && (
-                <div style={{ fontFamily: productFont, display: 'inline-block', maxWidth: 10 }}>
+                <div style={{ fontFamily: productFont, display: 'inline-block', maxWidth: 10, filter: 'blur(0)' }}>
                     <LicenseLabel
                         style={{
                             marginLeft: -23,
