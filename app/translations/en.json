@@ -1030,11 +1030,11 @@
             "configuration": {
                 "icon": {
                     "name": "Icon",
-                    "description": "Icon displayed on the left side of the deployments count"
+                    "description": "Icon displayed on the left side of the cloud environments count"
                 },
                 "imageSrc": {
                     "name": "Image URL",
-                    "description": "URL of the image displayed on the left side of the deployments count"
+                    "description": "URL of the image displayed on the left side of the cloud environments count"
                 }
             }
         },
