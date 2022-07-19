@@ -81,7 +81,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
   * `logoUrl` - string, relative URL to logo image
   * `mainColor` - string, main color (CSS color)  
   * `headerTextColor` - string, color of text in page header (CSS color)
-  * `showVersionDetails` - boolean, if set to true, then version will be shown in page header
+  * `showVersionDetails` - boolean, if set to true, then version and license label will be shown in page header
   * `loginPageHeaderColor` - string, login page header color (CSS color)
   * `loginPageTextColor` - string, login page text under header color (CSS color) 
   * `sidebarColor` - string, menu sidebar color (CSS color)
