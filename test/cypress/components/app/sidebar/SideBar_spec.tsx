@@ -1,11 +1,12 @@
 import React from 'react';
+import { ThemeProvider } from 'styled-components';
 
 import '../../initAppContext';
 import Consts from 'app/utils/consts';
 import SideBar from 'app/components/sidebar/SideBar';
-import { ThemeContext } from 'styled-components';
 import type { ManagerData } from 'app/reducers/managerReducer';
 import { emptyState } from 'app/reducers/managerReducer';
+import userConfig from 'conf/userConfig.json';
 import { mountWithProvider } from '../../utils';
 
 describe('SideBar', () => {
@@ -15,9 +16,9 @@ describe('SideBar', () => {
 
         cy.fixture('pages/pages_with_groups').then(pages => {
             mountWithProvider(
-                <ThemeContext.Provider value="">
+                <ThemeProvider theme={userConfig.whiteLabel}>
                     <SideBar pageId={''} />
-                </ThemeContext.Provider>,
+                </ThemeProvider>,
                 {
                     pages,
                     manager: {

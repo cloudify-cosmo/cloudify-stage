@@ -1,7 +1,9 @@
 {
   "app": {
     "maintenancePollingInterval": 10000,
-    "whiteLabel": {}
+    "whiteLabel": {
+      "showVersionDetails": true
+    }
   },
   "manager": { "ip": "127.0.0.1" },
   "mode": "community"
