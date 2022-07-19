@@ -35,6 +35,7 @@ const templatePath = path.resolve(__dirname, '../templates/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
+const terraformFilesToScan = ['main.tf', 'outputs.tf', 'variables.tf'];
 
 router.use(express.json());
 
@@ -46,6 +47,10 @@ type ResourcesRequest = Request<
         templateUrl: string;
     }
 >;
+
+const getTerraformFilePaths = (pathPrefix: string): string[] => {
+    return terraformFilesToScan.map(fileName => path.join(pathPrefix, fileName));
+};
 
 const throwExceptionIfModuleListEmpty = (modules: string[]) => {
     if (modules.length === 0) throw new Error("Couldn't find a Terraform module in the provided package");
@@ -152,17 +157,13 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
             return;
         }
         const mainPath = path.dirname(filePath);
-        files.push(filePath);
+        const acceptableFilePaths = getTerraformFilePaths(mainPath);
 
-        const outputsPath = path.join(mainPath, 'outputs.tf');
-        if (fs.existsSync(outputsPath)) {
-            files.push(outputsPath);
-        }
-
-        const variablesPath = path.join(mainPath, 'variables.tf');
-        if (fs.existsSync(variablesPath)) {
-            files.push(variablesPath);
-        }
+        acceptableFilePaths.forEach(acceptableFilePath => {
+            if (fs.existsSync(acceptableFilePath)) {
+                files.push(acceptableFilePath);
+            }
+        });
     });
 
     const fileBufferList = files.map(filePath => {
@@ -288,11 +289,7 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 
 async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
-    const acceptableFilePaths = [
-        `${resourceLocationTrimmed}/main.tf`,
-        `${resourceLocationTrimmed}/outputs.tf`,
-        `${resourceLocationTrimmed}/variables.tf`
-    ];
+    const acceptableFilePaths = getTerraformFilePaths(resourceLocationTrimmed);
 
     const files = await decompress(zipBuffer);
     return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
