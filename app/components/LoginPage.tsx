@@ -29,6 +29,7 @@ export interface LoginPageProps {
         loginPageHeaderColor: string;
         loginPageTextColor: string;
     };
+    firstTimeLogin: boolean;
 }
 
 interface LoginPageState {
@@ -99,7 +100,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError = null } = this.props;
+        const { isLoggingIn, isSamlEnabled, loginError = null, firstTimeLogin } = this.props;
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = t('header');
@@ -151,6 +152,12 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                         onChange={this.handleInputChange}
                                     />
                                 </Form.Field>
+                                {firstTimeLogin && (
+                                    <div>
+                                        For the first login please use username: admin password:admin. It’s recommended
+                                        to change the password after login
+                                    </div>
+                                )}
                             </>
                         )}
 
@@ -184,7 +191,8 @@ const mapStateToProps = (state: ReduxState) => {
         mode: get(config, 'mode'),
         whiteLabel: get(config, 'app.whiteLabel'),
         isSamlEnabled: get(config, 'app.saml.enabled', false),
-        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
+        samlSsoUrl: get(config, 'app.saml.ssoUrl', ''),
+        firstTimeLogin: get(config, 'app.firstTimeLogin', false)
     };
 };
 

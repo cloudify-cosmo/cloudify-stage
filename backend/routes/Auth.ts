@@ -8,6 +8,9 @@ import { SAML_LOGIN_PATH, TOKEN_COOKIE_NAME } from '../consts';
 import { getLogger } from '../handler/LoggerHandler';
 import { getTokenFromCookies } from '../utils';
 import type { AuthUserResponse } from './Auth.types';
+import { db } from '../db/Connection';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
+import { getMode } from '../serverSettings';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -102,6 +105,12 @@ router.get('/RBAC', authenticateWithCookie, (req, res) => {
             logger.error(err);
             res.status(500).send({ message: 'Failed to get RBAC configuration', error: err });
         });
+});
+
+router.get('/is-first-login', (req, res, next) => {
+    db.UserApps.findAll<UserAppsInstance>()
+        .then(userApp => res.send(_.isEmpty(userApp)))
+        .catch(next);
 });
 
 export default router;
