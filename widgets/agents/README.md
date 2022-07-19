@@ -1,13 +1,13 @@
 # Agents Management
 Displays the following information about a specific agent:
 
-* **Id** - unique identifier of the agent
+* **ID** - unique identifier of the agent
 * **IP** - IP address of the agent host
 * **Deployment** - Deployment ID associated with agent
 * **Node** - Node ID associated with agent
 * **System** - agent host operation system
 * **Version** - agent version
-* **Install Method** - agent installation method (one of described [here](/install_maintain/agents/installation))
+* **Install method** - agent installation method (one of described [here](/install_maintain/agents/installation))
 
 ![agents-management]( /images/ui/widgets/agents-management.png )
 
