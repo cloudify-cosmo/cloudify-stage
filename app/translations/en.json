@@ -14,11 +14,11 @@
             "noServices": "No services available"
         },
         "servicesList": {
-            "modeName": "Node Name",
+            "nodeName": "Node name",
             "noServices": "There are no Cluster Services available.",
             "privateIp": "Private IP",
             "publicIp": "Public IP / LB IP",
-            "serviceType": "Service Type",
+            "serviceType": "Service type",
             "status": "Status",
             "version": "Version"
         },
@@ -800,6 +800,18 @@
                 "placeholder": "Choose a role"
             }
         },
+        "agents": {
+            "columns": {
+                "id": "ID",
+                "ip": "IP",
+                "deployment": "Deployment",
+                "node": "Node",
+                "system": "System",
+                "version": "Version",
+                "installMethod": "Install method",
+                "actions": "Actions"
+            }
+        },
         "blueprintActionButtons": {
             "name": "Blueprint action buttons",
             "description": "Provides set of action buttons for blueprint",
@@ -1169,10 +1181,10 @@
                     "name": "Name"
                 },
                 "blueprintName": {
-                    "name": "Blueprint Name"
+                    "name": "Blueprint name"
                 },
                 "environmentType": {
-                    "name": "Environment Type"
+                    "name": "Environment type"
                 },
                 "location": {
                     "name": "Location"
@@ -1338,6 +1350,17 @@
             "download": "Download",
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
+        },
+        "secrets": {
+            "columns": {
+                "key": "Key",
+                "value": "Value",
+                "hiddenValue": "Hidden value",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "tenant": "Tenant"
+            }
         },
         "serviceButton": {
             "name": "Service button",

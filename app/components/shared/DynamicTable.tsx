@@ -52,7 +52,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                     <Table.Row key={index}>
                         {columns
                             .filter(column => !column.hidden)
-                            .map(({ id, label, width, ...columnRest }) => (
+                            .map(({ id, label, width, placeHolder, ...columnRest }) => (
                                 <Table.Cell key={id} width={width}>
                                     <GenericField
                                         label=""
@@ -62,6 +62,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                                         value={val[id]}
                                         rowValues={val}
                                         onChange={handleEditRow(id, index)}
+                                        placeholder={placeHolder}
                                         {...rest}
                                         {...columnRest}
                                     />
