@@ -67,7 +67,11 @@
                     "height": 8,
                     "definition": "cloudNum",
                     "x": 0,
-                    "y": 3
+                    "y": 3,
+                    "configuration": {
+                        "icon": "",
+                        "imageSrc": "/console/static/images/clouds.png"
+                    }
                 },
                 {
                     "width": 3,
@@ -76,6 +80,8 @@
                     "x": 3,
                     "y": 3,
                     "configuration": {
+                        "icon": "",
+                        "imageSrc": "/console/static/images/services.png",
                         "label": "Services",
                         "page": "services",
                         "filterId": "csys-service-filter"
