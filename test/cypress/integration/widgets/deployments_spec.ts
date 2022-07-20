@@ -39,9 +39,16 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    it('should be present in Deployments page', () => {
-        cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+    describe('should be present in Deployments page', () => {
+        it('should be able search by depyloyment ID', () => {
+            cy.searchInDeploymentsWidget(deploymentId);
+            cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+        });
+
+        it('should be able by deployment name', () => {
+            cy.searchInDeploymentsWidget(deploymentName);
+            cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+        });
     });
 
     describe('should provide display configuration for', () => {
@@ -88,25 +95,8 @@ describe('Deployments widget', () => {
                 cy.visitTestPage();
             });
 
-            const getMockedResponse = (deployments: unknown[] = []) => ({
-                items: deployments,
-                metadata: {
-                    pagination: {
-                        total: deployments.length,
-                        size: 1000,
-                        offset: 0
-                    },
-                    filtered: 0
-                }
-            });
-
-            const mockDeploymentsResponse = (mockedResponse: any) =>
-                cy.interceptSp('GET', '/deployments*', mockedResponse);
-
-            it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
-                const mockedResponse = getMockedResponse([]);
-                mockDeploymentsResponse(mockedResponse);
-
+            it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
+                cy.deleteDeployments('', true);
                 cy.contains('No Deployments Yet').should('be.visible');
 
                 cy.contains('Upload from Terraform').click();
@@ -121,22 +111,8 @@ describe('Deployments widget', () => {
                 cy.contains('Blueprint Marketplace').should('be.visible');
             });
 
-            it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
-                const mockedDeployment = {
-                    blueprint_id: 'test',
-                    created_at: '2022-03-21T08:52:31.251Z',
-                    created_by: 'admin',
-                    display_name: 'Test',
-                    id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
-                    inputs: { webserver_port: 8000 },
-                    latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
-                    site_name: null,
-                    updated_at: '2022-03-21T08:52:31.251Z',
-                    visibility: 'tenant'
-                };
-                const mockedResponse = getMockedResponse([mockedDeployment]);
-                mockDeploymentsResponse(mockedResponse);
-
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
+                cy.deployBlueprint(blueprintName, deploymentId, {}, { display_name: deploymentName });
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
