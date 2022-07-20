@@ -52,7 +52,7 @@ Stage.defineWidget({
                 'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
             placeHolder: 'Select Install Methods from the list',
             items: Consts.installMethodsOptions,
-            default: '',
+            default: [],
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
