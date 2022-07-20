@@ -303,8 +303,10 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
         if (page && page.parent) {
             // NOTE: assume page is always found
             const parentPage = pagesMap[page.parent];
+            const parentPageContext = state.drilldownContext?.[state.drilldownContext.length - 2]?.context;
+
             dispatch(popDrilldownContext());
-            dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
+            dispatch(selectPage(parentPage.id, parentPage.isDrillDown, parentPageContext, parentPage.name));
         }
     };
 }
