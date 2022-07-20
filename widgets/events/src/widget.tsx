@@ -117,6 +117,9 @@ Stage.defineWidget({
 
         params.type = eventFilter.type;
 
+        // eslint-disable-next-line
+        console.log(params);
+
         return params;
     },
 
