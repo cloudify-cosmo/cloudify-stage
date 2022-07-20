@@ -296,7 +296,6 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
     return (dispatch, getState) => {
         const state = getState();
 
-        // @ts-expect-error Missing type definitions for app reducer
         const pageId = state.app.currentPageId || state.pages[0].id;
 
         const pagesMap = createPagesMap(state.pages);
