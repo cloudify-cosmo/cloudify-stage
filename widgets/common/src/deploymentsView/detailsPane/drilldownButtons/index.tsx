@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import type { Deployment } from '../../types';
 import { tDrillDownButtons, shouldDisplaySubdeploymentButton } from './common';
 import DetailsDrilldownButton from './DetailsDrilldownButton';
-import GoToParentButton from './GoToParentButton';
+import ParentButton from './ParentButton';
 import type { SubdeploymentDrilldownButtonProps } from './SubdeploymentDrilldownButton';
 import SubdeploymentDrilldownButton from './SubdeploymentDrilldownButton';
 import { getSubdeploymentResults, useSubdeploymentInfo } from './subdeployments-result';
@@ -55,7 +55,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
     return (
         <ButtonsContainer className={shouldCenterButtons ? 'centeredButtons' : ''}>
-            <GoToParentButton toolbox={toolbox} />
+            <ParentButton toolbox={toolbox} />
 
             <DetailsDrilldownButton deployment={deployment} drillDown={drillDown} />
 
