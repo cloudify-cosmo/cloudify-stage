@@ -113,7 +113,9 @@ const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
 
             // Update widget that created drilldown page
             const pagesList: PageDefinition[] = pageMenuItem.type === 'pageGroup' ? pageMenuItem.pages : [pageMenuItem];
-            _.each(pagesList, p => forAllWidgets(p, layoutSectionWidgets => widgets(layoutSectionWidgets, action)));
+            _.each(pagesList, page =>
+                forAllWidgets(page, layoutSectionWidgets => widgets(layoutSectionWidgets, action))
+            );
 
             // Update children list in parent page and parent ID in drilldown page
             if (action.parentPageId && action.drillDownPageId) {
