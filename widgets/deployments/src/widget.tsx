@@ -1,6 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import { get, isEmpty, isEqual } from 'lodash';
+import { searchAlsoByDeploymentName } from '../../common/src/actions/SearchActions';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import './widget.css';
@@ -81,11 +82,13 @@ Stage.defineWidget({
     },
 
     async fetchData(widget, toolbox, params) {
-        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
-            _include:
-                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
-            ...params
-        });
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments(
+            searchAlsoByDeploymentName({
+                _include:
+                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+                ...params
+            })
+        );
 
         const nodeInstanceDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.id))
@@ -135,7 +138,8 @@ Stage.defineWidget({
                     };
                 }),
                 total: get(deploymentData, 'metadata.pagination.total', 0),
-                blueprintId: params.blueprint_id
+                blueprintId: params.blueprint_id,
+                showFirstUserJourneyButtons: data[1].items.length === 0
             };
         });
     },
@@ -145,13 +149,11 @@ Stage.defineWidget({
         const {
             configuration: { showFirstUserJourneyButtons }
         } = widget;
-        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && isEmpty(data?.items);
-
         if (isEmpty(data)) {
             return <Loading />;
         }
 
-        if (shouldShowFirstUserJourneyButtons) {
+        if (showFirstUserJourneyButtons && data?.showFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 

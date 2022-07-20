@@ -43,7 +43,7 @@ export default class SearchActions {
         return this.doListAll('workflows', filterRules, params);
     }
 }
-function searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {
+export function searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {
     // NOTE: that's how backend properties are named
     /* eslint-disable camelcase, no-underscore-dangle */
     if (!params || params._search_name || !params._search) {
