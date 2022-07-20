@@ -303,10 +303,14 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
         if (page && page.parent) {
             // NOTE: assume page is always found
             const parentPage = pagesMap[page.parent];
-            const parentPageContext = state.drilldownContext?.[state.drilldownContext.length - 2]?.context;
+            const { context, pageName } = state.drilldownContext?.[state.drilldownContext.length - 2];
 
-            dispatch(popDrilldownContext());
-            dispatch(selectPage(parentPage.id, parentPage.isDrillDown, parentPageContext, parentPage.name));
+            // FIXME: selectPage action needs refactoring
+            //  Currently, when parent page is a drilldown page, we need to remove the last 2 entries
+            //  from the drilldown context to make selectPage action setting proper context
+            //  in the URL query string
+            dispatch(popDrilldownContext(2));
+            dispatch(selectPage(parentPage.id, parentPage.isDrillDown, context, pageName));
         }
     };
 }
