@@ -1,17 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
-
 import * as types from './types';
+import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 
-export function setDrilldownContext(drilldownContext) {
+export function setDrilldownContext(drilldownContext: DrilldownContext[]) {
     return {
         type: types.SET_DRILLDOWN_CONTEXT,
         drilldownContext
     };
 }
 
-export function popDrilldownContext() {
+export function popDrilldownContext(count = 1) {
     return {
         type: types.POP_DRILLDOWN_CONTEXT,
-        count: 1
+        count
     };
 }
