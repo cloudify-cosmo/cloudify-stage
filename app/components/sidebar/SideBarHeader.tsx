@@ -22,26 +22,29 @@ const StyledLink = styled(Link)`
 const SideBarHeader: FunctionComponent = () => {
     const productVersion = useSelector((state: ReduxState) => state.manager.version.version)!;
     const theme = useContext(ThemeContext) || {};
+    const { showVersionDetails } = theme;
 
     return (
         <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', flexShrink: 0, borderBottom: '1px white solid' }}>
-            <div style={{ fontFamily: productFont, display: 'inline-block', maxWidth: 10 }}>
-                <LicenseLabel
-                    style={{
-                        marginLeft: -23,
-                        marginRight: -28,
-                        width: 55,
-                        height: 10,
-                        padding: 1,
-                        fontSize: 8,
-                        lineHeight: 'normal',
-                        textAlign: 'center',
-                        borderRadius: 'unset',
-                        textTransform: 'uppercase',
-                        transform: 'rotate(-90deg)'
-                    }}
-                />
-            </div>
+            {showVersionDetails && (
+                <div style={{ fontFamily: productFont, display: 'inline-block', maxWidth: 10, filter: 'blur(0)' }}>
+                    <LicenseLabel
+                        style={{
+                            marginLeft: -23,
+                            marginRight: -28,
+                            width: 55,
+                            height: 10,
+                            padding: 1,
+                            fontSize: 8,
+                            lineHeight: 'normal',
+                            textAlign: 'center',
+                            borderRadius: 'unset',
+                            textTransform: 'uppercase',
+                            transform: 'rotate(-90deg)'
+                        }}
+                    />
+                </div>
+            )}
             <StyledLink color={theme.sidebarTextColor} to={Consts.PAGE_PATH.HOME}>
                 <ProductLogo background="dark" style={{ position: undefined, height: 33, margin: '11px 8px' }} />
                 <div style={{ display: 'inline', fontSize: '1.5em', verticalAlign: 'middle' }}>
@@ -55,8 +58,15 @@ const SideBarHeader: FunctionComponent = () => {
                     >
                         {i18n.t('productName')}
                     </span>
-                    v
-                    <ProductVersion version={productVersion} style={{ color: 'inherit', marginLeft: '-0.3em' }} />
+                    {showVersionDetails && (
+                        <>
+                            v
+                            <ProductVersion
+                                version={productVersion}
+                                style={{ color: 'inherit', marginLeft: '-0.3em' }}
+                            />
+                        </>
+                    )}
                 </div>
             </StyledLink>
         </div>
