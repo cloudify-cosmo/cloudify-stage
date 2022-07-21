@@ -13,6 +13,7 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import type { ReduxState } from 'reducers';
 
 const mockStore = configureMockStore([thunk]);
 
@@ -276,12 +277,13 @@ describe('(Reducer) Pages', () => {
 
     describe('Drilldown to page state', () => {
         async function setUp() {
-            const initialState = {
+            const initialState: Partial<ReduxState> = {
                 widgetDefinitions: [{ id: 'widget1' }],
                 pages: [
                     {
                         id: '0',
                         name: 'page',
+                        type: 'page',
                         layout: [
                             {
                                 type: 'widgets',
