@@ -7,7 +7,7 @@
         {
           "name": "Deployments view",
           "width": 12,
-          "height": 28,
+          "height": 150,
           "x": 0,
           "y": 0,
           "definition": "deploymentsViewDrilledDown",
