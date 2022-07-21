@@ -3,17 +3,20 @@
 import EventsTable from './EventsTable';
 import './widget.css';
 
+const widgetId = 'events';
+const t = Stage.Utils.getT(`widgets.${widgetId}`);
+
 Stage.defineWidget({
-    id: 'events',
-    name: 'Events/logs',
-    description: 'This widget shows events/logs',
+    id: widgetId,
+    name: t('name'),
+    description: t('description'),
     initialWidth: 12,
     initialHeight: 18,
     color: 'green',
     fetchUrl: '[manager]/events[params]',
     isReact: true,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('events'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
 
     initialConfiguration: [
@@ -23,33 +26,23 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
-            items: [
-                'Icon',
-                'Timestamp',
-                'Type',
-                'Blueprint',
-                'Deployment',
-                'Deployment ID',
-                'Workflow',
-                'Operation',
-                'Node ID',
-                'Node instance ID',
-                'Message'
-            ],
-            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message',
+            name: t('configuration.fieldsToShow.name'),
+            placeHolder: t('configuration.fieldsToShow.placeholder'),
+            items: t('configuration.fieldsToShow.items', {
+                returnObjects: true
+            }),
+            default: t('configuration.fieldsToShow.default'),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'colorLogs',
-            name: 'Color message based on type',
+            name: t('configuration.colorLogs.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'maxMessageLength',
-            name: 'Maximum message length before truncation',
+            name: t('configuration.maxMessageLength.name'),
             default: EventsTable.MAX_MESSAGE_LENGTH,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 10
@@ -116,9 +109,6 @@ Stage.defineWidget({
         }
 
         params.type = eventFilter.type;
-
-        // eslint-disable-next-line
-        console.log(params);
 
         return params;
     },

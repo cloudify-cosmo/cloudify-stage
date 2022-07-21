@@ -1264,6 +1264,34 @@
             }
         },
         "events": {
+            "name": "Events/logs",
+            "description": "This widget shows events/logs",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": [
+                        "Icon",
+                        "Timestamp",
+                        "Type",
+                        "Blueprint",
+                        "Deployment",
+                        "Deployment ID",
+                        "Workflow",
+                        "Operation",
+                        "Node ID",
+                        "Node instance ID",
+                        "Message"
+                    ],
+                    "default": "Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message"
+                },
+                "colorLogs": {
+                    "name": "Color message based on type"
+                },
+                "maxMessageLength": {
+                    "name": "Maximum message length before truncation"
+                }
+            },
             "detailsIcon": "Show details",
             "detailsModal": {
                 "header": "Details",
