@@ -37,7 +37,7 @@ const DetailsPaneHeader: FunctionComponent<DetailsPaneHeaderProps> = ({ deployme
             width: 1,
             height: 1,
             definition: 'deploymentActionButtons',
-            configuration: { preventRedirectToParentPageAfterDelete: true },
+            configuration: { pollingTime: 5, preventRedirectToParentPageAfterDelete: true },
             drillDownPages: {},
             maximized: false
         }),
