@@ -24,7 +24,7 @@ describe('Snapshots list widget', () => {
         cy.contains('.snapshotsWidget tr', createdSnapshotName).within(() => {
             cy.contains('creating');
             cy.get('.trash.disabled');
-            waitUntilNotEmpty(`snapshots?_include=id,status&id=${createdSnapshotName}&status=created`);
+            cy.waitUntilNotEmpty(`snapshots?_include=id,status&id=${createdSnapshotName}&status=created`);
             cy.contains('creating').should('not.exist');
             cy.get('.trash').click();
         });

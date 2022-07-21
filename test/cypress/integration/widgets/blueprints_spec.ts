@@ -1,4 +1,3 @@
-import { waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
 describe('Blueprints widget', () => {
@@ -642,7 +641,7 @@ describe('Blueprints widget', () => {
 
             cy.clickButton('Create');
             cy.contains('Uploading Terraform blueprint').should('be.visible');
-            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
 
             secrets.forEach(secret => {
                 cy.getSecret(secret.name).then(response => {
@@ -750,7 +749,7 @@ describe('Blueprints widget', () => {
                 cy.contains('Generating Terraform blueprint').should('be.visible');
                 cy.contains('Uploading Terraform blueprint').should('be.visible');
             });
-            waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+            cy.waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
 
             cy.getSecret(`${blueprintName}.username`).then(response => {
                 expect(response.body.value).to.equal(username);
@@ -781,7 +780,7 @@ describe('Blueprints widget', () => {
                         cy.contains('Uploading Terraform blueprint').should('be.visible');
                     });
 
-                waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
+                cy.waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
 
                 cy.contains('Deploy blueprint')
                     .parent('.modal')
