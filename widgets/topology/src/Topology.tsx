@@ -349,7 +349,10 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     goToDeploymentPage(nodeDeploymentId) {
         const { toolbox } = this.props;
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        // NOTE: Sometimes context may store deploymentId in a form of array.
+        // That's why head function is used here, to make sure that the deploymentId is being stored as a single value
+        const deploymentId = _.head(toolbox.getContext().getValue('deploymentId'));
+
         toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId }, nodeDeploymentId);
     }
 

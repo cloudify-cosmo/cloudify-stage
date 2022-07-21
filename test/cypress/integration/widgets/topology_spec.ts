@@ -191,7 +191,7 @@ describe('Topology', () => {
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
-                { deploymentId: componentDeploymentId },
+                { deploymentId: appDeploymentId },
                 componentDeploymentId
             );
         });
