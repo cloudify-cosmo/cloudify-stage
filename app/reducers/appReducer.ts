@@ -7,7 +7,7 @@ export interface AppData {
     currentPageId: string | null;
 }
 
-const appEmptyState = {
+const appEmptyState: AppData = {
     loading: true,
     error: null,
     currentPageId: null
