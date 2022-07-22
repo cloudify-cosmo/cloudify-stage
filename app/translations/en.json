@@ -1232,6 +1232,10 @@
                         "label": "Details",
                         "title": "Drill down to deployment details"
                     },
+                    "parent": {
+                        "label": "Parent",
+                        "title": "Go to parent deployment"
+                    },
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"

@@ -12,6 +12,17 @@ import type { PageGroup, PageMenuItem } from '../actions/pageMenu';
 import { createPagesMap, InsertPosition } from '../actions/pageMenu';
 import Consts from '../utils/consts';
 
+function updateRelationships(page: PageDefinition, parentPageId: string, drillDownPageId: string) {
+    if (page.id === parentPageId) {
+        page.children = page.children || [];
+        page.children.push(drillDownPageId);
+    } else if (page.id === drillDownPageId) {
+        page.parent = parentPageId;
+    }
+
+    return page;
+}
+
 type TabsAction =
     | ReturnType<typeof addTab>
     | ReturnType<typeof removeTab>
@@ -55,7 +66,7 @@ const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
     }
 };
 
-const pageMenuItemReducer = (state: PageDefinition, action: AnyAction) => {
+const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
     switch (action.type) {
         case types.MINIMIZE_TAB_WIDGETS: {
             const newState = _.cloneDeep(state);
@@ -98,18 +109,26 @@ const pageMenuItemReducer = (state: PageDefinition, action: AnyAction) => {
         case types.REMOVE_LAYOUT_SECTION:
             return { ...state, layout: _.without(state.layout, _.nth(state.layout, action.layoutSection)) };
         case types.ADD_DRILLDOWN_PAGE: {
-            const pageData = _.cloneDeep(state);
-            forAllWidgets(pageData, layoutSectionWidgets => widgets(layoutSectionWidgets, action));
+            let pageMenuItem = _.cloneDeep(state);
 
+            // Update widget that created drilldown page
+            const pagesList: PageDefinition[] = pageMenuItem.type === 'pageGroup' ? pageMenuItem.pages : [pageMenuItem];
+            _.each(pagesList, page =>
+                forAllWidgets(page, layoutSectionWidgets => widgets(layoutSectionWidgets, action))
+            );
+
+            // Update children list in parent page and parent ID in drilldown page
             if (action.parentPageId && action.drillDownPageId) {
-                if (state.id === action.parentPageId) {
-                    pageData.children = pageData.children || [];
-                    pageData.children.push(action.drillDownPageId);
-                } else if (state.id === action.drillDownPageId) {
-                    pageData.parent = action.parentPageId;
+                if (pageMenuItem.type === 'pageGroup') {
+                    pageMenuItem.pages = _.map(pageMenuItem.pages, page =>
+                        updateRelationships(page, action.parentPageId, action.drillDownPageId)
+                    );
+                } else {
+                    pageMenuItem = updateRelationships(pageMenuItem, action.parentPageId, action.drillDownPageId);
                 }
             }
-            return pageData;
+
+            return pageMenuItem;
         }
         case types.CHANGE_PAGE_DESCRIPTION:
             return { ...state, description: action.description };
@@ -201,7 +220,8 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
         case types.ADD_DRILLDOWN_PAGE: {
             // Add drilldown page to children list of this page, and drilldown page parent id
             let parentPageId = null;
-            _.each(state, p =>
+            const pagesList: PageDefinition[] = _.flatMap(state, pageMenuItem => pageMenuItem.pages || pageMenuItem);
+            _.each(pagesList, p =>
                 forEachWidget(p, widget => {
                     if (widget.id === action.widgetId) {
                         parentPageId = p.id;
