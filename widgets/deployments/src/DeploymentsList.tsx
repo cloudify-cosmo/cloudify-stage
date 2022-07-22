@@ -5,29 +5,15 @@ import DeploymentsTable from './DeploymentsTable';
 
 const t = Stage.Utils.getT('widgets.deployments.list');
 
-interface DeploymentsData {
+type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & DeploymentData;
+
+interface DeploymentData {
     blueprintId?: string;
-    items: Deployment[];
-    metedata: {
-        filtered: any;
-        gridParams: {
-            currentPage: number;
-            pageSize: number;
-            sortAscending: boolean | null;
-            sortColumn: string;
-        };
-        pagination: {
-            offset: number;
-            size: number;
-            total: number;
-        };
-    };
     showFirstUserJourneyButtons: boolean;
     total: number;
 }
-
 interface DeploymentsListProps {
-    data: DeploymentsData;
+    data: DeploymentResponse;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
@@ -157,7 +143,6 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
                     onDeploymentAction={this.openActionModal}
                     onWorkflowAction={this.openExecuteModal}
                     onActOnExecution={this.actOnExecution}
-                    onError={this.setError}
                     onSetVisibility={this.setDeploymentVisibility}
                     noDataMessage={t('noDeployments')}
                     showExecutionStatusLabel={showExecutionStatusLabel as boolean}

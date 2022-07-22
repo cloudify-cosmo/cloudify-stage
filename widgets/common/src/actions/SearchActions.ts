@@ -27,12 +27,25 @@ export default class SearchActions {
         return this.toolbox.getManager().doPostFull(`/searches/${resourceName}`, params, { filter_rules: filterRules });
     }
 
+    static searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {
+        // NOTE: that's how backend properties are named
+        /* eslint-disable camelcase, no-underscore-dangle */
+        if (!params || params._search_name || !params._search) {
+            return params;
+        }
+
+        return {
+            ...params,
+            _search_name: params._search
+        };
+    }
+
     doListDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doList('deployments', filterRules, searchAlsoByDeploymentName(params));
+        return this.doList('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
     }
 
     doListAllDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doListAll('deployments', filterRules, searchAlsoByDeploymentName(params));
+        return this.doListAll('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
     }
 
     doListBlueprints(filterRules: FilterRule[], params?: ListBlueprintsParams) {
@@ -42,17 +55,4 @@ export default class SearchActions {
     doListAllWorkflows(filterRules: FilterRule[], params?: Params) {
         return this.doListAll('workflows', filterRules, params);
     }
-}
-export function searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {
-    // NOTE: that's how backend properties are named
-    /* eslint-disable camelcase, no-underscore-dangle */
-    if (!params || params._search_name || !params._search) {
-        return params;
-    }
-
-    return {
-        ...params,
-        _search_name: params._search
-    };
-    /* eslint-enable camelcase, no-underscore-dangle */
 }

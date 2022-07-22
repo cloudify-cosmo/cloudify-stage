@@ -16,7 +16,6 @@ export default function DeploymentsTable({
     onSelectDeployment,
     onWorkflowAction,
     onSetVisibility,
-    onError,
     showExecutionStatusLabel,
     toolbox,
     widget

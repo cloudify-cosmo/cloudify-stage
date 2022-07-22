@@ -1625,7 +1625,7 @@
                 }
             },
             "list": {
-                "noDeployments": "No results found. Please, try a different search."
+                "noDeployments": "No results found."
             },
             "updatedIcon": {
                 "header": "Deployment updated",

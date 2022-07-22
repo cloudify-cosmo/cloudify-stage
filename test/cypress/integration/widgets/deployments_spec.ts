@@ -22,6 +22,8 @@ describe('Deployments widget', () => {
         selectDeploymentActionFromMenu(id, name, '.workflowsMenu', workflow);
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
+    const checkDeploymentNameField = () =>
+        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -39,15 +41,15 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    describe('should be present in Deployments page', () => {
-        it('should be able search by depyloyment ID', () => {
+    describe('should be present in Deployments page and', () => {
+        it('should allow to search by depyloyment ID', () => {
             cy.searchInDeploymentsWidget(deploymentId);
-            cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+            checkDeploymentNameField();
         });
 
-        it('should be able by deployment name', () => {
+        it('should allow to search by deployment name', () => {
             cy.searchInDeploymentsWidget(deploymentName);
-            cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+            checkDeploymentNameField();
         });
     });
 
