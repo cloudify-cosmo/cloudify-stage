@@ -1026,7 +1026,17 @@
         },
         "cloudNum": {
             "name": "Number of clouds",
-            "description": "Displays number of cloud environments fully configured"
+            "description": "Displays number of cloud environments fully configured",
+            "configuration": {
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the left side of the cloud environments count"
+                },
+                "imageSrc": {
+                    "name": "Image URL",
+                    "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
         },
         "deploymentNum": {
             "name": "Number of deployments",
@@ -1221,6 +1231,10 @@
                     "details": {
                         "label": "Details",
                         "title": "Drill down to deployment details"
+                    },
+                    "parent": {
+                        "label": "Parent",
+                        "title": "Go to parent deployment"
                     },
                     "environments": {
                         "label": "Subenvironments",

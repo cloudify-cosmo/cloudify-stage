@@ -1,8 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Reducer } from 'redux';
 import * as types from '../actions/types';
 
-const app = (state = { loading: true, error: null }, action) => {
+export interface AppData {
+    loading: boolean;
+    error: string | null;
+    currentPageId: string | null;
+}
+
+const appEmptyState: AppData = {
+    loading: true,
+    error: null,
+    currentPageId: null
+};
+
+const app: Reducer<AppData> = (state = appEmptyState, action) => {
     switch (action.type) {
         case types.SET_APP_LOADING:
             return { ...state, loading: action.isLoading };
