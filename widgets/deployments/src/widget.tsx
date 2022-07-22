@@ -138,7 +138,8 @@ Stage.defineWidget({
                 }),
                 total: get(deploymentData, 'metadata.pagination.total', 0),
                 blueprintId: params.blueprint_id,
-                showFirstUserJourneyButtons: data[1].items.length === 0
+                // eslint-disable-next-line no-underscore-dangle
+                searchValue: params?._search
             };
         });
     },
@@ -151,8 +152,11 @@ Stage.defineWidget({
         if (isEmpty(data)) {
             return <Loading />;
         }
+        // eslint-disable-next-line no-underscore-dangle
+        const searchValue = data?.searchValue;
+        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && isEmpty(data?.items) && !searchValue;
 
-        if (showFirstUserJourneyButtons && data?.showFirstUserJourneyButtons) {
+        if (shouldShowFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} />;
         }
 
