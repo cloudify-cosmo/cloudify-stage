@@ -182,7 +182,7 @@ describe('Topology', () => {
 
         beforeEach(() => {
             cy.visitTestPage();
-            cy.setDeploymentContext(componentDeploymentId);
+            cy.setDeploymentContext(appDeploymentId);
             waitForTopologyWidgetToBeReadyAfterFetch();
         });
 
@@ -191,7 +191,7 @@ describe('Topology', () => {
 
             cy.verifyLocation(
                 `/console/page/test_page_deployment/${componentDeploymentId}`,
-                { deploymentId: appDeploymentId },
+                { deploymentId: componentDeploymentId },
                 componentDeploymentId
             );
         });
