@@ -1,7 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
 import { get, isEmpty, isEqual } from 'lodash';
-import { searchAlsoByDeploymentName } from '../../common/src/actions/SearchActions';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import './widget.css';
@@ -83,7 +82,7 @@ Stage.defineWidget({
 
     async fetchData(widget, toolbox, params) {
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments(
-            searchAlsoByDeploymentName({
+            Stage.Common.Actions.Search.searchAlsoByDeploymentName({
                 _include:
                     'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
                 ...params
