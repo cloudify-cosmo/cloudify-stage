@@ -182,7 +182,7 @@ describe('Topology', () => {
 
         beforeEach(() => {
             cy.visitTestPage();
-            cy.setDeploymentContext(appDeploymentId);
+            cy.setDeploymentContext(componentDeploymentId);
             waitForTopologyWidgetToBeReadyAfterFetch();
         });
 
