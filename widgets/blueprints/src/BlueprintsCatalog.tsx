@@ -22,7 +22,7 @@ export default function BlueprintsCatalog({
 
     const blueprintsItems = data.items.map(item => {
         return (
-            <Grid.Column key={item.id}>
+            <Grid.Column key={item.id} data-testid={item.id}>
                 <DataSegment.Item
                     selected={item.isSelected}
                     className="fullHeight"
