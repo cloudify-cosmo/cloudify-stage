@@ -1286,8 +1286,7 @@
                         "Node ID",
                         "Node instance ID",
                         "Message"
-                    ],
-                    "default": "Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message"
+                    ]
                 },
                 "colorLogs": {
                     "name": "Color message based on type"

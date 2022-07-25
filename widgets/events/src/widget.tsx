@@ -31,7 +31,7 @@ Stage.defineWidget({
             items: t('configuration.fieldsToShow.items', {
                 returnObjects: true
             }),
-            default: t('configuration.fieldsToShow.default'),
+            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message',
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
