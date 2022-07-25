@@ -21,7 +21,7 @@ interface DeploymentsListProps {
 interface DeploymentsListState {
     activeAction: string | null;
     deployment: Deployment | null;
-    error: Error | null;
+    error: string | null;
     executeModalOpen: boolean;
     workflowName: string | null;
 }
@@ -75,7 +75,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
             .finally(() => toolbox.loading(false));
     };
 
-    setError = (errorMessage: Error) => {
+    setError = (errorMessage: string) => {
         this.setState({ error: errorMessage });
     };
 
@@ -90,8 +90,8 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
         }
     };
 
-    actOnExecution = (_execution: any, _action: any, error: Error) => {
-        this.setError(error);
+    actOnExecution = (_execution: any, _action: any, executionError: any) => {
+        this.setError(executionError);
     };
 
     openExecuteModal = (deployment: Deployment, workflowName: string) => {
