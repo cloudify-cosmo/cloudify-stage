@@ -90,7 +90,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
         }
     };
 
-    actOnExecution = (_execution: any, _action: any, executionError: any) => {
+    actOnExecution = (_execution: any, _action: any, executionError: string) => {
         this.setError(executionError);
     };
 
