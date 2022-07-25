@@ -9,7 +9,7 @@ type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & Deployment
 
 interface DeploymentData {
     blueprintId?: string;
-    showFirstUserJourneyButtons: boolean;
+    searchValue?: string;
     total: number;
 }
 interface DeploymentsListProps {
