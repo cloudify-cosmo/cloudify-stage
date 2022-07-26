@@ -1,5 +1,4 @@
 // @ts-nocheck File not migrated fully to TS
-import { isEmpty } from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import expressStaticGzip from 'express-static-gzip';
@@ -23,6 +22,7 @@ import Auth from './routes/Auth';
 
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
+import Config from './routes/Config';
 import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
@@ -38,8 +38,6 @@ import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
 import Filters from './routes/Filters';
-import { db } from './db/Connection';
-import type { UserAppsInstance } from './db/models/UserAppsModel';
 
 const logger = LoggerHandler.getLogger('App');
 const contextPath = CONTEXT_PATH;
@@ -126,15 +124,6 @@ Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
 
 // API Routes without authentication
 app.use(`${contextPath}/auth`, Auth); // all routes require authentication except `/auth/login`
-const Config = (req, res, next) => {
-    const clientConfig = getClientConfig(getMode());
-    db.UserApps.findAll<UserAppsInstance>()
-        .then(userApp => {
-            clientConfig.app.firstTimeLogin = isEmpty(userApp);
-            res.send(clientConfig);
-        })
-        .catch(next);
-};
 app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // used to proxy requests to Cloudify REST API, some without the token

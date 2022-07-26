@@ -35,7 +35,9 @@ export function setManagerSpecificOptions(options: AxiosRequestConfig, method: s
         });
     }
 
-    options.timeout = timeout || getConfig().app.proxy.timeouts[method.toLowerCase()];
+    // @ts-ignore It's not possible to determine if provided method is defined in timeouts object
+    const customTimeout: number | undefined = getConfig().app.proxy.timeouts[method.toLowerCase()];
+    options.timeout = timeout || customTimeout;
 
     options.headers = _.omit(options.headers, 'host');
 }
