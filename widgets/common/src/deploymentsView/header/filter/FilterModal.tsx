@@ -46,13 +46,7 @@ function useRevertableStates(...revertableStates: Omit<ReturnType<typeof useReve
     };
 }
 
-const FilterModal: FunctionComponent<FilterModalProps> = ({
-    userFilterSelected,
-    open,
-    onCancel,
-    onSubmit,
-    toolbox
-}) => {
+const FilterModal: FunctionComponent<FilterModalProps> = ({ open, onCancel, onSubmit, toolbox }) => {
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Dimmer, Icon, Modal, Form } = Stage.Basic;
     const { useBoolean, useErrors } = Stage.Hooks;
@@ -74,10 +68,6 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
     // Used to initialize RulesForm
     const [initialFilterRules, setInitialFilterRules] = useState<FilterRule[]>([]);
-
-    useEffect(() => {
-        if (!userFilterSelected) modalState.reset();
-    }, [userFilterSelected]);
 
     function handleSubmit() {
         if (!filterRules.value?.length) {
