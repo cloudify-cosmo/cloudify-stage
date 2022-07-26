@@ -218,14 +218,14 @@ export function installWidget(archiveUrl: string, _username: string, req: Reques
                     logger.info('Widget id: ', widgetId);
                     logger.info('Widget path: ', pathlib.resolve(widgetPath));
 
-                    void ArchiveHelper.cleanTempData(widgetTempPath);
+                    ArchiveHelper.cleanTempData(widgetTempPath).catch(logger.warn);
 
                     return Promise.resolve({ id: widgetId, isCustom: true });
                 })
                 .catch(err => {
                     logger.error(`Error during widget ${widgetId} installation: ${err}`);
-                    void deleteWidget(widgetId);
-                    void ArchiveHelper.cleanTempData(widgetTempPath);
+                    deleteWidget(widgetId).catch(logger.error);
+                    ArchiveHelper.cleanTempData(widgetTempPath).catch(logger.warn);
                     throw err;
                 });
         });
@@ -257,16 +257,17 @@ export function updateWidget(updateWidgetId: string, archiveUrl: string, req: Re
                     logger.info('Widget id:', widgetId);
                     logger.info('Widget path:', pathlib.resolve(widgetPath));
 
-                    void ArchiveHelper.cleanTempData(widgetTempPath);
+                    ArchiveHelper.cleanTempData(widgetTempPath).catch(logger.warn);
 
                     return Promise.resolve({ id: widgetId, isCustom: true });
                 })
                 .catch(err => {
                     logger.error(`Error during widget ${widgetId} update: ${err}`);
-                    void restoreBackup(updateWidgetId, widgetTempPath)
+                    restoreBackup(updateWidgetId, widgetTempPath)
                         .then(() => BackendHandler.removeWidgetBackend(widgetId))
                         .then(() => BackendHandler.importWidgetBackend(widgetId))
-                        .then(() => ArchiveHelper.cleanTempData(widgetTempPath));
+                        .then(() => ArchiveHelper.cleanTempData(widgetTempPath))
+                        .catch(logger.warn);
                     throw err;
                 });
         });

@@ -229,7 +229,7 @@ function getBlueprintArchiveContent(request) {
                 decompressData
             }))
             .catch(err => {
-                void ArchiveHelper.cleanTempData(archiveFolder);
+                ArchiveHelper.cleanTempData(archiveFolder).catch(logger.warn);
                 throw err;
             });
     });
