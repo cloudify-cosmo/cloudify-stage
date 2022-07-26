@@ -34,7 +34,7 @@
         "archiver": "^5.3.0",
         "axios": "^0.26.0",
         "body": "^5.1.0",
-        "cloudify-ui-common": "^7.2.1",
+        "cloudify-ui-common": "^7.3.1",
         "cookie": "^0.4.2",
         "cookie-parser": "^1.4.3",
         "cross-env": "^5.2.0",
