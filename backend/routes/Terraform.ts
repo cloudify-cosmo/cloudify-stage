@@ -150,17 +150,13 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
 
     await cloneGitRepo(repositoryPath, url, authHeader);
 
-    // TODO Norbert: see what is a difference between repositoryPath and filePath
-    await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
-        logger.error(repositoryPath);
-        logger.error(filePath);
-        const isInRootDirectory = !filePath.includes('/');
-        // NOTE Norbert: Wonder around the purpose of this if
-        if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
+    await directoryTree(repositoryPath, directoryTreeOptions, (_file, firstDetectedTerraformFilePath) => {
+        const isInRootDirectory = !firstDetectedTerraformFilePath.includes('/');
+        if (isInRootDirectory) {
             return;
         }
 
-        const terraformModulePath = path.dirname(filePath);
+        const terraformModulePath = path.dirname(firstDetectedTerraformFilePath);
 
         fs.readdirSync(terraformModulePath).forEach(fileName => {
             const isTerraformFile = fileName.endsWith('.tf');
