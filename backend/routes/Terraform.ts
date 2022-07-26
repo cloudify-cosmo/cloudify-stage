@@ -91,6 +91,10 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
+const removeGitRepo = (repositoryPath: string) => {
+    fs.rmdirSync(repositoryPath, { recursive: true });
+};
+
 const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
@@ -139,7 +143,7 @@ const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
         }
     });
 
-    fs.rmdirSync(repositoryPath, { recursive: true });
+    removeGitRepo(repositoryPath);
 
     return terraformModuleDirectories.sort();
 };
@@ -156,7 +160,7 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
         files.push(fileBuffer);
     });
 
-    fs.rmdirSync(repositoryPath, { recursive: true });
+    removeGitRepo(repositoryPath);
 
     return files;
 };
