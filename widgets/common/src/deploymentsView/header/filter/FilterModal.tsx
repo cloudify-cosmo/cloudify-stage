@@ -11,7 +11,6 @@ import { tModal } from './common';
 import { useFilterIdFromUrl } from '../common';
 
 interface FilterModalProps {
-    userFilterSelected: boolean;
     open: boolean;
     onSubmit: (filterRules: FilterRule[], filterId?: string) => void;
     onCancel: () => void;
