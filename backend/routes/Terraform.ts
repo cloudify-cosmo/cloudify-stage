@@ -48,6 +48,11 @@ type ResourcesRequest = Request<
     }
 >;
 
+const isTerraformFilePath = (filePath: string, directoryPath: string): boolean => {
+    // TODO Norbert: Think if it would be beneficial to document the regexp below (via variables extraction)
+    return !!filePath.match(`^(${escapeRegExp(directoryPath)})[/]?[^/]+\\.tf$`);
+};
+
 const getTerraformFilePaths = (pathPrefix: string): string[] => {
     return terraformFilesToScan.map(fileName => path.join(pathPrefix, fileName));
 };
@@ -99,9 +104,9 @@ const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
                 .filter({ type: 'directory' })
                 .map('path')
                 .filter(directory =>
-                    files.some(
-                        file => file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
-                    )
+                    files.some(file => {
+                        return file.type === 'file' && isTerraformFilePath(file.path, directory);
+                    })
                 )
                 .map(directory => trimEnd(directory, '/'))
                 .sort()
@@ -153,6 +158,7 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
 
     await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
         const isInRootDirectory = !filePath.includes('/');
+        // NOTE Norbert: Check if any *.tf files exists
         if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
             return;
         }
@@ -289,10 +295,25 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 
 async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
-    const acceptableFilePaths = getTerraformFilePaths(resourceLocationTrimmed);
 
     const files = await decompress(zipBuffer);
-    return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
+    // TODO Norbert: Modify to cover all *.tf files in the specific directory
+    return files
+        .filter(file => {
+            if (file.type !== 'file') {
+                return false;
+            }
+
+            logger.error(file.path);
+            logger.error(resourceLocation);
+            logger.error(resourceLocationTrimmed);
+            return file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed);
+        })
+        .map(file => {
+            logger.error(file.path);
+            return file;
+        })
+        .map(file => file?.data);
 }
 
 function getTerraformJsonMergedFromFileBufferList(files: Buffer[]) {
