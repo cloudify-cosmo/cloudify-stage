@@ -5,6 +5,25 @@ import './widget.css';
 
 const widgetId = 'events';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
+const fieldsToShowItemsTranslationPrefix = 'configuration.fieldsToShow.items';
+
+const fieldsToShowItems = Object.values(
+    t(fieldsToShowTranslationPrefix, {
+        returnObjects: true
+    })
+);
+
+const fieldsToShowDefaultItems = [
+    t(`${fieldsToShowTranslationPrefix}.icon`),
+    t(`${fieldsToShowTranslationPrefix}.timestamp`),
+    t(`${fieldsToShowTranslationPrefix}.blueprint`),
+    t(`${fieldsToShowTranslationPrefix}.deployment`),
+    t(`${fieldsToShowTranslationPrefix}.workflow`),
+    t(`${fieldsToShowTranslationPrefix}.operation`),
+    t(`${fieldsToShowTranslationPrefix}.nodeId`),
+    t(`${fieldsToShowTranslationPrefix}.nodeInstanceId`),
+    t(`${fieldsToShowTranslationPrefix}.message`)
+];
 
 Stage.defineWidget({
     id: widgetId,
@@ -28,10 +47,8 @@ Stage.defineWidget({
             id: 'fieldsToShow',
             name: t('configuration.fieldsToShow.name'),
             placeHolder: t('configuration.fieldsToShow.placeholder'),
-            items: t('configuration.fieldsToShow.items', {
-                returnObjects: true
-            }),
-            default: 'Icon,Timestamp,Blueprint,Deployment,Workflow,Operation,Node ID,Node instance ID,Message',
+            items: fieldsToShowItems,
+            default: fieldsToShowDefaultItems.join(','),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {

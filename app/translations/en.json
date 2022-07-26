@@ -1274,19 +1274,19 @@
                 "fieldsToShow": {
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list",
-                    "items": [
-                        "Icon",
-                        "Timestamp",
-                        "Type",
-                        "Blueprint",
-                        "Deployment",
-                        "Deployment ID",
-                        "Workflow",
-                        "Operation",
-                        "Node ID",
-                        "Node instance ID",
-                        "Message"
-                    ]
+                    "items": {
+                        "icon": "Icon",
+                        "timestamp": "Timestamp",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "workflow": "Workflow",
+                        "operation": "Operation",
+                        "nodeId": "Node ID",
+                        "nodeInstanceId": "Node instance ID",
+                        "message": "Message"
+                    }
                 },
                 "colorLogs": {
                     "name": "Color message based on type"
