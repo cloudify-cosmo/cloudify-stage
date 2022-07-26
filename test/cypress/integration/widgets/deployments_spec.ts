@@ -22,6 +22,8 @@ describe('Deployments widget', () => {
         selectDeploymentActionFromMenu(id, name, '.workflowsMenu', workflow);
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
+    const checkDeploymentNameField = () =>
+        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -39,9 +41,16 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    it('should be present in Deployments page', () => {
-        cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
+    describe('should be present and', () => {
+        it('should allow to search by depyloyment ID', () => {
+            cy.searchInDeploymentsWidget(deploymentId);
+            checkDeploymentNameField();
+        });
+
+        it('should allow to search by deployment name', () => {
+            cy.searchInDeploymentsWidget(deploymentName);
+            checkDeploymentNameField();
+        });
     });
 
     describe('should provide display configuration for', () => {
@@ -77,6 +86,7 @@ describe('Deployments widget', () => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
             });
+            cy.getSearchInput().clear();
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
@@ -103,7 +113,7 @@ describe('Deployments widget', () => {
             const mockDeploymentsResponse = (mockedResponse: any) =>
                 cy.interceptSp('GET', '/deployments*', mockedResponse);
 
-            it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
+            it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
 
@@ -121,7 +131,7 @@ describe('Deployments widget', () => {
                 cy.contains('Blueprint Marketplace').should('be.visible');
             });
 
-            it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
@@ -136,7 +146,6 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
-
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
