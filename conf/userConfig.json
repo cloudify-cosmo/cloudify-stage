@@ -23,6 +23,7 @@
 
     "headerTextColor": "white",
     "showVersionDetails": true,
+    "showFirstLoginHint": true,
 
     "loginPageHeaderColor": "white",
     "loginPageTextColor": "white",
