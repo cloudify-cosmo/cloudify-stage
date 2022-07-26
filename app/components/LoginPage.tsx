@@ -11,31 +11,30 @@ import type { ReduxState } from '../reducers';
 import { login } from '../actions/managers';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import StageUtils from '../utils/stageUtils';
+import renderMultilineText from '../utils/shared/renderMultilineText';
 import LargeLogo from './banner/LargeLogo';
 import LogoLabel from './banner/LogoLabel';
-import { Button, Form, FullScreenSegment, Input, Message } from './basic';
+import { Button, Form, FullScreenSegment, Input, Message, Popup } from './basic';
+import type { ClientConfig } from '../../backend/routes/Config.types';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
-    isSamlEnabled: boolean;
+    isSamlEnabled: ClientConfig['app']['saml']['enabled'];
     onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
         search: string;
     };
     loginError: string | null;
-    samlSsoUrl: string;
+    samlSsoUrl: ClientConfig['app']['saml']['ssoUrl'];
     username: string;
-    whiteLabel: {
-        loginPageHeaderColor: string;
-        loginPageTextColor: string;
-    };
-    firstTimeLogin: boolean;
+    whiteLabel: ClientConfig['app']['whiteLabel'];
 }
 
 interface LoginPageState {
     username: string;
     password: string;
     errors: Errors;
+    isFirstLogin: boolean;
 }
 
 type Errors = {
@@ -62,8 +61,18 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         this.state = {
             username: props.username,
             password: '',
-            errors: {}
+            errors: {},
+            isFirstLogin: false
         };
+    }
+
+    componentDidMount() {
+        fetch(StageUtils.Url.url('/auth/is-first-login'))
+            .then(response => response.json())
+            .then(isFirstLogin => this.setState({ isFirstLogin }))
+            .catch(error => {
+                log.debug('Error fetching first login status', error);
+            });
     }
 
     onSubmit = () => {
@@ -99,14 +108,13 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     };
 
     render() {
-        const { errors, password, username } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError = null, firstTimeLogin } = this.props;
+        const { errors, password, username, isFirstLogin } = this.state;
+        const { isLoggingIn, isSamlEnabled, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = t('header');
-        const loginPageHeaderColor = get(this.props, 'whiteLabel.loginPageHeaderColor');
+        const { loginPageHeaderColor, loginPageTextColor, showFirstLoginHint } = whiteLabel;
         const loginPageText = t('message');
-        const loginPageTextColor = get(this.props, 'whiteLabel.loginPageTextColor');
         const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
 
         return (
@@ -131,34 +139,35 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
                     <Form onSubmit={this.onSubmit}>
                         {!isSamlEnabled && (
-                            <>
-                                <Form.Field required error={errors?.username}>
-                                    <StyledInput
-                                        name="username"
-                                        type="text"
-                                        placeholder={t('username')}
-                                        autoFocus
-                                        value={username}
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-
-                                <Form.Field required error={errors?.password}>
-                                    <StyledInput
-                                        name="password"
-                                        type="password"
-                                        placeholder={t('password')}
-                                        value={password}
-                                        onChange={this.handleInputChange}
-                                    />
-                                </Form.Field>
-                                {firstTimeLogin && (
+                            <Popup
+                                open={showFirstLoginHint && isFirstLogin}
+                                content={renderMultilineText(t('firstLoginHint'))}
+                                position="right center"
+                                style={{ marginLeft: -25 }}
+                                trigger={
                                     <div>
-                                        For the first login please use username: admin password:admin. It’s recommended
-                                        to change the password after login
+                                        <Form.Field required error={errors?.username}>
+                                            <StyledInput
+                                                name="username"
+                                                type="text"
+                                                placeholder={t('username')}
+                                                autoFocus
+                                                value={username}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </Form.Field>
+                                        <Form.Field required error={errors?.password}>
+                                            <StyledInput
+                                                name="password"
+                                                type="password"
+                                                placeholder={t('password')}
+                                                value={password}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </Form.Field>
                                     </div>
-                                )}
-                            </>
+                                }
+                            />
                         )}
 
                         {loginError && (
@@ -191,8 +200,7 @@ const mapStateToProps = (state: ReduxState) => {
         mode: get(config, 'mode'),
         whiteLabel: get(config, 'app.whiteLabel'),
         isSamlEnabled: get(config, 'app.saml.enabled', false),
-        samlSsoUrl: get(config, 'app.saml.ssoUrl', ''),
-        firstTimeLogin: get(config, 'app.firstTimeLogin', false)
+        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
     };
 };
 
