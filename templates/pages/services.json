@@ -29,7 +29,7 @@
           "definition": "deploymentsView",
           "configuration": {
             "filterId": "csys-service-filter",
-            "fieldsToShow": ["status", "id", "name", "blueprintName", "location"]
+            "fieldsToShow": ["status", "id", "name", "blueprintName", "location", "subservicesCount"]
           },
           "x": 0,
           "y": 3
