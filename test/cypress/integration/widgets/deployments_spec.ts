@@ -41,7 +41,7 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    describe('should be present in Deployments page and', () => {
+    describe('should be present and', () => {
         it('should allow to search by depyloyment ID', () => {
             cy.searchInDeploymentsWidget(deploymentId);
             checkDeploymentNameField();

@@ -152,9 +152,8 @@ Stage.defineWidget({
         if (isEmpty(data)) {
             return <Loading />;
         }
-        // eslint-disable-next-line no-underscore-dangle
         const searchValue = data?.searchValue;
-        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && isEmpty(data?.items) && !searchValue;
+        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && !searchValue && isEmpty(data?.items);
 
         if (shouldShowFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} />;
