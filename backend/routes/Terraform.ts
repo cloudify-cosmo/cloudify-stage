@@ -22,10 +22,9 @@ import { getLogger } from '../handler/LoggerHandler';
 import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 
-const directoryTreeOptions = {
+const directoryTreeOptions: directoryTree.DirectoryTreeOptions = {
     extensions: /.tf$/,
-    exclude: /.git/,
-    name: 'main.tf'
+    exclude: /.git/
 };
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
@@ -151,7 +150,10 @@ const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLoca
 
     await cloneGitRepo(repositoryPath, url, authHeader);
 
+    // TODO Norbert: see what is a difference between repositoryPath and filePath
     await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
+        logger.error(repositoryPath);
+        logger.error(filePath);
         const isInRootDirectory = !filePath.includes('/');
         // NOTE Norbert: Wonder around the purpose of this if
         if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
