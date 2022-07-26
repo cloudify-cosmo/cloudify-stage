@@ -1656,7 +1656,7 @@
                 }
             },
             "list": {
-                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+                "noDeployments": "No results found."
             },
             "updatedIcon": {
                 "header": "Deployment updated",
