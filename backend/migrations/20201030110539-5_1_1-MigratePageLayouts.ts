@@ -1,10 +1,10 @@
 import fs from 'fs-extra';
-import path from 'path';
 import _ from 'lodash';
-import { getResourcePath } from '../utils';
+import path from 'path';
 import UserApps from '../db/models/UserAppsModel';
-import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 import type { LayoutSection, LayoutSectionType, PageFileDefinition } from '../routes/Templates.types';
+import { getResourcePath } from '../utils';
+import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
 
 type NewPageData = Partial<PageFileDefinition>;
 type OldPageData = Record<LayoutSectionType, any>;
@@ -14,7 +14,15 @@ const userTemplatesFolder = getResourcePath('templates', true);
 const userPagesFolder = path.resolve(userTemplatesFolder, 'pages');
 
 function migrate(queryInterface: QueryInterface, Sequelize: DataTypes, pageProcessor: (pageData: PageData) => void) {
-    UserApps(queryInterface.sequelize, Sequelize)
+    if (fs.existsSync(userPagesFolder))
+        _.each(fs.readdirSync(userPagesFolder), pageFile => {
+            const pageFilePath = path.resolve(userPagesFolder, pageFile);
+            const pageFileContent = fs.readJsonSync(pageFilePath);
+            pageProcessor(pageFileContent);
+            fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });
+        });
+
+    return UserApps(queryInterface.sequelize, Sequelize)
         .findAll()
         .then(async results => {
             for (let i = 0; i < results.length; i += 1) {
@@ -28,18 +36,11 @@ function migrate(queryInterface: QueryInterface, Sequelize: DataTypes, pageProce
                 await userAppRow.save();
             }
         });
-    if (fs.existsSync(userPagesFolder))
-        _.each(fs.readdirSync(userPagesFolder), pageFile => {
-            const pageFilePath = path.resolve(userPagesFolder, pageFile);
-            const pageFileContent = fs.readJsonSync(pageFilePath);
-            pageProcessor(pageFileContent);
-            fs.writeJsonSync(pageFilePath, pageFileContent, { spaces: 2, EOL: '\n' });
-        });
 }
 
 export const { up, down }: MigrationObject = {
     // @ts-ignore TODO: Function returns void instead of Promise<any>
-    up: (queryInterface, Sequelize) => {
+    up: (queryInterface, Sequelize) =>
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             function migrateLayoutSection(type: LayoutSectionType) {
                 if (pageData[type]) {
@@ -54,10 +55,9 @@ export const { up, down }: MigrationObject = {
 
             migrateLayoutSection('widgets');
             migrateLayoutSection('tabs');
-        });
-    },
+        }),
     // @ts-ignore TODO: Function returns void instead of Promise<any>
-    down: (queryInterface, Sequelize) => {
+    down: (queryInterface, Sequelize) =>
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             if (pageData?.layout?.length) {
                 let layoutSection: LayoutSection | Record<string, never> = pageData.layout![0];
@@ -70,6 +70,5 @@ export const { up, down }: MigrationObject = {
             }
 
             delete pageData.layout;
-        });
-    }
+        })
 };

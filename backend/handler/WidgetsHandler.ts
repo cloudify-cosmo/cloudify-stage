@@ -1,18 +1,18 @@
-import os from 'os';
-import fs from 'fs-extra';
-import pathlib from 'path';
-import mkdirp from 'mkdirp';
-import _ from 'lodash';
 import type { Request } from 'express';
-import { db } from '../db/Connection';
-
-import { getLogger } from './LoggerHandler';
+import fs from 'fs-extra';
+import _ from 'lodash';
+import mkdirp from 'mkdirp';
+import os from 'os';
+import pathlib from 'path';
 
 import { getConfig } from '../config';
+import { db } from '../db/Connection';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
 import { getResourcePath } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
-import type { UserAppsInstance } from '../db/models/UserAppsModel';
+
+import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('WidgetHandler');
 
@@ -218,14 +218,14 @@ export function installWidget(archiveUrl: string, _username: string, req: Reques
                     logger.info('Widget id: ', widgetId);
                     logger.info('Widget path: ', pathlib.resolve(widgetPath));
 
-                    ArchiveHelper.cleanTempData(widgetTempPath);
+                    void ArchiveHelper.cleanTempData(widgetTempPath);
 
                     return Promise.resolve({ id: widgetId, isCustom: true });
                 })
                 .catch(err => {
                     logger.error(`Error during widget ${widgetId} installation: ${err}`);
-                    deleteWidget(widgetId);
-                    ArchiveHelper.cleanTempData(widgetTempPath);
+                    void deleteWidget(widgetId);
+                    void ArchiveHelper.cleanTempData(widgetTempPath);
                     throw err;
                 });
         });
@@ -257,13 +257,13 @@ export function updateWidget(updateWidgetId: string, archiveUrl: string, req: Re
                     logger.info('Widget id:', widgetId);
                     logger.info('Widget path:', pathlib.resolve(widgetPath));
 
-                    ArchiveHelper.cleanTempData(widgetTempPath);
+                    void ArchiveHelper.cleanTempData(widgetTempPath);
 
                     return Promise.resolve({ id: widgetId, isCustom: true });
                 })
                 .catch(err => {
                     logger.error(`Error during widget ${widgetId} update: ${err}`);
-                    restoreBackup(updateWidgetId, widgetTempPath)
+                    void restoreBackup(updateWidgetId, widgetTempPath)
                         .then(() => BackendHandler.removeWidgetBackend(widgetId))
                         .then(() => BackendHandler.importWidgetBackend(widgetId))
                         .then(() => ArchiveHelper.cleanTempData(widgetTempPath));

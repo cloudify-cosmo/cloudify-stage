@@ -1,14 +1,14 @@
+import archiver from 'archiver';
+import type { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
+import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
-import multer from 'multer';
 import yaml from 'js-yaml';
 import _ from 'lodash';
-import axios from 'axios';
-import type { AxiosRequestHeaders } from 'axios';
-import archiver from 'archiver';
-import * as ManagerHandler from '../handler/ManagerHandler';
+import multer from 'multer';
 
 import { getLogger } from '../handler/LoggerHandler';
+import * as ManagerHandler from '../handler/ManagerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 
@@ -62,9 +62,7 @@ function zipFiles(
     }
 
     archive.on('error', onError);
-    archive.finalize();
-
-    return archive;
+    return archive.finalize().then(() => archive);
 }
 
 router.get('/icons/:pluginId', (req, res) => {
@@ -148,10 +146,12 @@ router.post<any, any, any, any, PostUploadQuery>(
         }
 
         Promise.all(promises)
-            .then(([wagonFile, yamlFile, iconFile]) => {
-                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
+            .then(([wagonFile, yamlFile, iconFile]) =>
+                zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
-                );
+                )
+            )
+            .then(zipStream => {
                 ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
                     headers: getHeadersWithAuthenticationTokenFromRequest(req, {
                         tenant: req.headers.tenant as string,

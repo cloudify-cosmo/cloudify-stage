@@ -1,15 +1,15 @@
 // @ts-nocheck File not migrated fully to TS
 
+import fs from 'fs-extra';
+import yaml from 'js-yaml';
 import _ from 'lodash';
 import os from 'os';
-import fs from 'fs-extra';
 import pathlib from 'path';
 import url from 'url';
-import yaml from 'js-yaml';
 
 import { getConfig } from '../config';
-import * as ArchiveHelper from './ArchiveHelper';
 import { getParams, getValuesWithPaths } from '../utils';
+import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
 
@@ -229,7 +229,7 @@ function getBlueprintArchiveContent(request) {
                 decompressData
             }))
             .catch(err => {
-                ArchiveHelper.cleanTempData(archiveFolder);
+                void ArchiveHelper.cleanTempData(archiveFolder);
                 throw err;
             });
     });
