@@ -35,7 +35,6 @@ const templatePath = path.resolve(__dirname, '../templates/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
-const terraformFilesToScan = ['main.tf', 'outputs.tf', 'variables.tf'];
 
 router.use(express.json());
 
@@ -51,10 +50,6 @@ type ResourcesRequest = Request<
 const isTerraformFilePath = (filePath: string, directoryPath: string): boolean => {
     // TODO Norbert: Think if it would be beneficial to document the regexp below (via variables extraction)
     return !!filePath.match(`^(${escapeRegExp(directoryPath)})[/]?[^/]+\\.tf$`);
-};
-
-const getTerraformFilePaths = (pathPrefix: string): string[] => {
-    return terraformFilesToScan.map(fileName => path.join(pathPrefix, fileName));
 };
 
 const throwExceptionIfModuleListEmpty = (modules: string[]) => {
@@ -152,33 +147,33 @@ const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
 
 const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLocation: string, authHeader?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
-    const files: string[] = [];
+    const files: Buffer[] = [];
 
     await cloneGitRepo(repositoryPath, url, authHeader);
 
     await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
         const isInRootDirectory = !filePath.includes('/');
-        // NOTE Norbert: Check if any *.tf files exists
+        // NOTE Norbert: Wonder around the purpose of this if
         if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
             return;
         }
-        const mainPath = path.dirname(filePath);
-        const acceptableFilePaths = getTerraformFilePaths(mainPath);
 
-        acceptableFilePaths.forEach(acceptableFilePath => {
-            if (fs.existsSync(acceptableFilePath)) {
-                files.push(acceptableFilePath);
+        const terraformModulePath = path.dirname(filePath);
+
+        fs.readdirSync(terraformModulePath).forEach(fileName => {
+            const isTerraformFile = fileName.endsWith('.tf');
+
+            if (isTerraformFile) {
+                const terraformFilePath = path.join(terraformModulePath, fileName);
+                const fileBuffer = fs.readFileSync(terraformFilePath);
+                files.push(fileBuffer);
             }
         });
     });
 
-    const fileBufferList = files.map(filePath => {
-        return fs.readFileSync(filePath);
-    });
-
     fs.rmdirSync(repositoryPath, { recursive: true });
 
-    return fileBufferList;
+    return files;
 };
 
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
@@ -297,21 +292,9 @@ async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLoca
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
 
     const files = await decompress(zipBuffer);
-    // TODO Norbert: Modify to cover all *.tf files in the specific directory
     return files
         .filter(file => {
-            if (file.type !== 'file') {
-                return false;
-            }
-
-            logger.error(file.path);
-            logger.error(resourceLocation);
-            logger.error(resourceLocationTrimmed);
             return file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed);
-        })
-        .map(file => {
-            logger.error(file.path);
-            return file;
         })
         .map(file => file?.data);
 }
