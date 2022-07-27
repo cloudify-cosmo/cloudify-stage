@@ -212,6 +212,10 @@ describe('Blueprints widget', () => {
         });
 
         it('as a catalog', () => {
+            function getBlueprintSegment(blueprintName: string) {
+                return cy.getByTestId(blueprintName);
+            }
+
             cy.editWidgetConfiguration('blueprints', () =>
                 cy.get('.dropdown').contains('Catalog').click({ force: true })
             );
@@ -219,100 +223,82 @@ describe('Blueprints widget', () => {
             cy.get('div.blueprintsWidget table.blueprintsTable').should('not.exist');
             cy.get('div.blueprintsWidget .segmentList').should('exist');
 
-            cy.get('.pending')
-                .parent()
-                .within(() => {
-                    cy.contains('Pending');
-                    cy.get('.actionButtons').should('not.exist');
-                    cy.get('.warning').should('not.exist');
-                    cy.get('a').click({ force: true });
-                });
+            getBlueprintSegment('pending').within(() => {
+                cy.contains('Pending');
+                cy.get('.actionButtons').should('not.exist');
+                cy.get('.warning').should('not.exist');
+                cy.get('a').click({ force: true });
+            });
 
-            cy.get('.uploading')
-                .parent()
-                .within(() => {
-                    cy.contains('Uploading');
-                    cy.get('.actionButtons').should('not.exist');
-                    cy.get('.warning').should('not.exist');
-                    cy.get('a').click({ force: true });
-                });
+            getBlueprintSegment('uploading').within(() => {
+                cy.contains('Uploading');
+                cy.get('.actionButtons').should('not.exist');
+                cy.get('.warning').should('not.exist');
+                cy.get('a').click({ force: true });
+            });
 
-            cy.get('.extracting')
-                .parent()
-                .within(() => {
-                    cy.contains('Extracting');
-                    cy.get('.actionButtons').should('not.exist');
-                    cy.get('.warning').should('not.exist');
-                    cy.get('a').click({ force: true });
-                });
+            getBlueprintSegment('extracting').within(() => {
+                cy.contains('Extracting');
+                cy.get('.actionButtons').should('not.exist');
+                cy.get('.warning').should('not.exist');
+                cy.get('a').click({ force: true });
+            });
 
-            cy.get('.parsing')
-                .parent()
-                .within(() => {
-                    cy.contains('Parsing');
-                    cy.get('.actionButtons').should('not.exist');
-                    cy.get('.warning').should('not.exist');
-                    cy.get('a').click({ force: true });
-                });
+            getBlueprintSegment('parsing').within(() => {
+                cy.contains('Parsing');
+                cy.get('.actionButtons').should('not.exist');
+                cy.get('.warning').should('not.exist');
+                cy.get('a').click({ force: true });
+            });
 
-            cy.get('.failed_uploading')
-                .parent()
-                .within(() => {
-                    cy.contains('Failed');
-                    cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash');
-                    cy.get('a').click({ force: true });
-                    cy.get('.warning').trigger('mouseover');
-                });
+            getBlueprintSegment('failed_uploading').within(() => {
+                cy.contains('Failed');
+                cy.get('.actionButtons').children().should('have.length', 1);
+                cy.get('.trash');
+                cy.get('a').click({ force: true });
+                cy.get('.warning').trigger('mouseover');
+            });
             cy.contains('upload error');
             cy.contains('Failed uploading');
 
-            cy.get('.failed_extracting')
-                .parent()
-                .within(() => {
-                    cy.contains('Failed');
-                    cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash').should('exist');
-                    cy.get('a').click({ force: true });
-                    cy.get('.warning').trigger('mouseover');
-                });
+            getBlueprintSegment('failed_extracting').within(() => {
+                cy.contains('Failed');
+                cy.get('.actionButtons').children().should('have.length', 1);
+                cy.get('.trash').should('exist');
+                cy.get('a').click({ force: true });
+                cy.get('.warning').trigger('mouseover');
+            });
             cy.contains('extract error');
             cy.contains('Failed extracting');
 
-            cy.get('.failed_parsing')
-                .parent()
-                .within(() => {
-                    cy.contains('Failed');
-                    cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash').should('exist');
-                    cy.get('a').click({ force: true });
-                    cy.get('.warning').trigger('mouseover');
-                });
+            getBlueprintSegment('failed_parsing').within(() => {
+                cy.contains('Failed');
+                cy.get('.actionButtons').children().should('have.length', 1);
+                cy.get('.trash').should('exist');
+                cy.get('a').click({ force: true });
+                cy.get('.warning').trigger('mouseover');
+            });
             cy.contains('parse error');
             cy.contains('Failed parsing');
 
-            cy.get('.invalid')
-                .parent()
-                .within(() => {
-                    cy.contains('Invalid');
-                    cy.get('.actionButtons').children().should('have.length', 1);
-                    cy.get('.trash').should('exist');
-                    cy.get('a').click({ force: true });
-                    cy.get('.warning').trigger('mouseover');
-                });
+            getBlueprintSegment('invalid').within(() => {
+                cy.contains('Invalid');
+                cy.get('.actionButtons').children().should('have.length', 1);
+                cy.get('.trash').should('exist');
+                cy.get('a').click({ force: true });
+                cy.get('.warning').trigger('mouseover');
+            });
             cy.contains('invalid error');
 
             cy.editWidgetConfiguration('blueprints', () => cy.get('input[name=hideFailedBlueprints]').parent().click());
             cy.wait('@filteredBlueprints');
 
-            cy.get('.uploaded')
-                .parent()
-                .within(() => {
-                    cy.contains('Uploaded');
-                    cy.get('.actionButtons').children().should('have.length', 3);
-                    cy.get('.warning').should('not.exist');
-                    cy.get('a').click({ force: true });
-                });
+            getBlueprintSegment('uploaded').within(() => {
+                cy.contains('Uploaded');
+                cy.get('.actionButtons').children().should('have.length', 3);
+                cy.get('.warning').should('not.exist');
+                cy.get('a').click({ force: true });
+            });
 
             cy.get('div.blueprintsWidget .segmentList').should('not.exist');
             cy.contains('.pageTitle', 'uploaded');

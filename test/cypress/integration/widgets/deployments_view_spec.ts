@@ -710,6 +710,7 @@ describe('Deployments View widget', () => {
         };
         const getSubenvironmentsButton = () => cy.contains('button', 'Subenvironments');
         const getSubservicesButton = () => cy.contains('button', 'Services');
+        const getParentButton = () => cy.contains('button', 'Parent');
         const getBreadcrumbs = () => cy.get('.breadcrumb');
 
         it('should support the drill-down workflow', () => {
@@ -725,6 +726,7 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewDetailsPane().within(() => {
+                getParentButton().should('not.exist');
                 getSubservicesButton().within(() => {
                     cy.containsNumber(1);
                     cy.get('i[aria-label="Requires attention"]').should('exist');
@@ -752,6 +754,7 @@ describe('Deployments View widget', () => {
             verifySubdeploymentsOfAppEnv();
 
             getDeploymentsViewDetailsPane().within(() => {
+                getParentButton().should('exist');
                 getSubenvironmentsButton().should('not.exist');
                 cy.log('Drill down to subservices of db-env');
                 getSubservicesButton().containsNumber(2).click();
@@ -767,17 +770,19 @@ describe('Deployments View widget', () => {
             });
 
             getDeploymentsViewDetailsPane().within(() => {
+                getParentButton().should('exist');
                 getSubenvironmentsButton().should('not.exist');
                 getSubservicesButton().should('not.exist');
             });
 
             cy.log('Go back to the parent environment');
-            getBreadcrumbs().contains('app-env').click();
+            getDeploymentsViewDetailsPane().within(() => getParentButton().click());
             verifySubdeploymentsOfAppEnv();
 
             cy.log('Go back to top-level page');
             getBreadcrumbs().contains(testPageName).click();
             getDeploymentsViewDetailsPane().within(() => {
+                getParentButton().should('not.exist');
                 cy.log('Drill down to subservices of app-env');
                 getSubservicesButton().containsNumber(1).click();
             });
