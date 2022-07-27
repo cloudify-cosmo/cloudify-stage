@@ -40,7 +40,6 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         reinstallList: [],
         skipHeal: false,
         skipDriftCheck: false,
-        emptyUpdate: false,
         force: false
     });
 
@@ -82,12 +81,6 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         }
     }
 
-    useEffect(() => {
-        if (deployment && deployment.blueprint_id) {
-            selectBlueprint(deployment.blueprint_id);
-        }
-    }, [deployment]);
-
     useOpenProp(open, () => {
         setLoading();
         unsetFileLoading();
@@ -104,9 +97,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             .doGet({ id: deploymentId }, { _include: _.join(['id', 'blueprint_id', 'inputs']) })
             .then(setDeployment)
             .catch(error => {
-                unsetLoading();
                 setMessageAsError(error);
-            });
+            })
+            .finally(unsetLoading);
     });
 
     function submitUpdate(preview) {
@@ -119,14 +112,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             reinstallList,
             uninstallWorkflow,
             skipHeal,
-            skipDriftCheck,
-            emptyUpdate
+            skipDriftCheck
         } = inputs;
         const validationErrors = {};
-
-        if (_.isEmpty(blueprint.id)) {
-            validationErrors.blueprintName = 'Please select blueprint';
-        }
 
         if (!_.isEmpty(validationErrors)) {
             setErrors(validationErrors);
@@ -147,6 +135,8 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                 ignoreFailure,
                 automaticReinstall,
                 reinstallList,
+                skipHeal,
+                skipDriftCheck,
                 force,
                 preview
             )
@@ -218,8 +208,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         reinstallList,
         uninstallWorkflow,
         skipHeal,
-        skipDriftCheck,
-        emptyUpdate
+        skipDriftCheck
     } = inputs;
     const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } = Stage.Basic;
 
@@ -244,7 +233,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.blueprintName} label="Blueprint" required>
+                    <Form.Field error={errors.blueprintName} label="Blueprint">
                         <DynamicDropdown
                             value={blueprint.id}
                             placeholder="Select Blueprint"
@@ -348,36 +337,6 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                         />
                     </Form.Field>
 
-                    <Form.Field>
-                        <Form.Checkbox
-                            label="Don't check resource status and attempt to heal before the update"
-                            name="skipHeal"
-                            toggle
-                            checked={skipHeal}
-                            onChange={setInput}
-                        />
-                    </Form.Field>
-
-                    <Form.Field>
-                        <Form.Checkbox
-                            label="Don't Check Drift Before the Update"
-                            name="skipDriftCheck"
-                            toggle
-                            checked={skipDriftCheck}
-                            onChange={setInput}
-                        />
-                    </Form.Field>
-
-                    <Form.Field>
-                        <Form.Checkbox
-                            label="Drift Update"
-                            name="emptyUpdate"
-                            toggle
-                            checked={emptyUpdate}
-                            onChange={setInput}
-                        />
-                    </Form.Field>
-
                     <NodeInstancesFilter
                         name="reinstallList"
                         deploymentId={deploymentId}
@@ -392,6 +351,28 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                                                    is not set'
                         toolbox={toolbox}
                     />
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Skip heal"
+                            name="skipHeal"
+                            toggle
+                            help="Don't attempt to perform heal if a node instance has a bad status"
+                            checked={skipHeal}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Skip drift check"
+                            name="skipDriftCheck"
+                            toggle
+                            help="Drift check will not be performed prior to the update"
+                            checked={skipDriftCheck}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
 
                     <Form.Field>
                         <Form.Checkbox

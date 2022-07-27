@@ -81,16 +81,18 @@ export default class DeploymentActions {
         reinstallList: any,
         skipHeal: boolean,
         skipDriftCheck: boolean,
-        emptyUpdate: boolean,
         forceUpdate: boolean,
         preview: boolean
     ) {
         const body: Record<string, any> = {};
 
-        if (emptyUpdate) {
+        if (!blueprintName) {
             body.blueprint_id = null;
-        } else if (!_.isEmpty(blueprintName)) {
+        } else {
             body.blueprint_id = blueprintName;
+            if (!_.isEmpty(deploymentInputs)) {
+                body.inputs = deploymentInputs;
+            }
         }
 
         body.skip_install = !shouldRunInstallWorkflow;
@@ -103,10 +105,6 @@ export default class DeploymentActions {
         body.skip_drift_check = skipDriftCheck;
         body.force = forceUpdate;
         body.preview = preview;
-
-        if (!_.isEmpty(deploymentInputs)) {
-            body.inputs = deploymentInputs;
-        }
 
         return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
