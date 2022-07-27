@@ -90,7 +90,6 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             </Dropdown>
 
             <FilterModal
-                userFilterSelected={userFilterSelected}
                 open={filterModalOpen}
                 onCancel={closeFilterModal}
                 onSubmit={handleFilterChange}
