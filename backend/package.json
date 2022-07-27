@@ -1,6 +1,6 @@
 {
     "name": "stage-backend",
-    "version": "6.4.0-.dev1",
+    "version": "7.0.0-.dev1",
     "description": "Cloudify Console Backend",
     "repository": "https://github.com/cloudify-cosmo/cloudify-stage/backend",
     "license": "Apache-2.0",
@@ -61,7 +61,7 @@
         "pg-hstore": "^2.3.3",
         "query-string": "^7.0.1",
         "sanitize-filename": "^1.6.1",
-        "sharp": "^0.30.5",
+        "sharp": "^0.30.7",
         "short-uuid": "^4.2.0",
         "simple-git": "^3.5.0",
         "supertest": "^5.0.0",
