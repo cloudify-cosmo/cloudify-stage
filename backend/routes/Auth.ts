@@ -10,7 +10,6 @@ import { getTokenFromCookies } from '../utils';
 import type { AuthUserResponse } from './Auth.types';
 import { db } from '../db/Connection';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
-import { getMode } from '../serverSettings';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -107,7 +106,7 @@ router.get('/RBAC', authenticateWithCookie, (req, res) => {
         });
 });
 
-router.get('/is-first-login', (req, res, next) => {
+router.get('/is-first-login', (_req, res, next) => {
     db.UserApps.findAll<UserAppsInstance>()
         .then(userApp => res.send(_.isEmpty(userApp)))
         .catch(next);
