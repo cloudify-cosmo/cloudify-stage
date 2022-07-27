@@ -10,11 +10,9 @@ import app from '../conf/app.json';
 import logging from '../conf/logging.json';
 import dbOptions from '../conf/db.options.json';
 import manager from '../conf/manager.json';
-import type userConfigBase from '../conf/userConfig.json';
 import type { Mode } from './serverSettings';
-import type { Config } from './routes/Config.types';
+import type { Config, ClientConfig, UserConfig } from './routes/Config.types';
 
-type UserConfig = typeof userConfigBase;
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let userConfig: UserConfig = require('../conf/userConfig.json');
 
@@ -45,7 +43,7 @@ export function loadMeJson() {
 
 loadMeJson();
 
-export function getConfig(mode?: Mode) {
+export function getConfig(mode?: Mode): Config {
     const config = {
         app: _.merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
@@ -58,7 +56,7 @@ export function getConfig(mode?: Mode) {
     return config;
 }
 
-export function getClientConfig(mode: Mode) {
+export function getClientConfig(mode: Mode): ClientConfig {
     const config = getConfig(mode);
 
     // For client only get from app config the relevant part (and not send passwords and shit)
@@ -77,6 +75,6 @@ export function getClientConfig(mode: Mode) {
         manager: {
             ip: config.manager.ip
         },
-        mode: config.mode
+        mode
     };
 }

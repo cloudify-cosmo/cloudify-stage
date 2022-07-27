@@ -1,4 +1,32 @@
-import type { getConfig, getClientConfig } from '../config';
+/* eslint-disable node/no-unpublished-import */
+import type app from '../../conf/app.json';
+import type root from '../../conf/config.json';
+import type logging from '../../conf/logging.json';
+import type dbOptions from '../../conf/db.options.json';
+import type userConfig from '../../conf/userConfig.json';
+import type manager from '../../conf/manager.json';
+import type { Mode } from '../serverSettings';
 
-export type Config = ReturnType<typeof getConfig>;
-export type ClientConfig = ReturnType<typeof getClientConfig>;
+export type UserConfig = typeof userConfig;
+
+export interface Config {
+    app: typeof app & typeof root & typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
+    manager: typeof manager;
+    mode?: Mode;
+    managerUrl: string;
+}
+
+type AppConfig = Config['app'];
+export interface ClientConfig {
+    app: {
+        maintenancePollingInterval: AppConfig['maintenancePollingInterval'];
+        singleManager: AppConfig['singleManager'];
+        whiteLabel: AppConfig['whiteLabel'];
+        saml: Omit<AppConfig['saml'], 'certPath'>;
+        maps: typeof userConfig['maps'];
+    };
+    manager: {
+        ip: Config['manager']['ip'];
+    };
+    mode: Mode;
+}
