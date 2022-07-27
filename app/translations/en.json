@@ -1268,6 +1268,33 @@
             }
         },
         "events": {
+            "name": "Events/logs",
+            "description": "This widget shows events/logs",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "icon": "Icon",
+                        "timestamp": "Timestamp",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "workflow": "Workflow",
+                        "operation": "Operation",
+                        "nodeId": "Node ID",
+                        "nodeInstanceId": "Node instance ID",
+                        "message": "Message"
+                    }
+                },
+                "colorLogs": {
+                    "name": "Color message based on type"
+                },
+                "maxMessageLength": {
+                    "name": "Maximum message length before truncation"
+                }
+            },
             "detailsIcon": "Show details",
             "detailsModal": {
                 "header": "Details",
@@ -1629,7 +1656,7 @@
                 }
             },
             "list": {
-                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+                "noDeployments": "No results found."
             },
             "updatedIcon": {
                 "header": "Deployment updated",

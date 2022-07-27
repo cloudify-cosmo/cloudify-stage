@@ -34,6 +34,7 @@ interface TopologyState {
     // eslint-disable-next-line camelcase
     expandedTerraformNodes: { deployment_id: string; id: string }[];
     saveConfirmationOpen: boolean;
+    isRedirecting: boolean;
 }
 
 export default class Topology extends React.Component<TopologyProps, TopologyState> {
@@ -60,7 +61,12 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
 
-        this.state = { saveConfirmationOpen: false, expandedDeployments: [], expandedTerraformNodes: [] };
+        this.state = {
+            saveConfirmationOpen: false,
+            expandedDeployments: [],
+            expandedTerraformNodes: [],
+            isRedirecting: false
+        };
     }
 
     componentDidMount() {
@@ -132,6 +138,12 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     setSelectedNode(selectedNode) {
         const { deploymentId, blueprintId, toolbox } = this.props;
+        const { isRedirecting } = this.state;
+
+        if (isRedirecting) {
+            return;
+        }
+
         if (deploymentId) {
             toolbox.getContext().setValue('depNodeId', selectedNode.name + deploymentId);
             toolbox.getContext().setValue('nodeId', selectedNode.name);
@@ -349,7 +361,15 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     goToDeploymentPage(nodeDeploymentId) {
         const { toolbox } = this.props;
-        toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
+
+        /*
+            NOTE: isRedirecting flag is being set to block updating context with data provided by setSelectedNode function.
+            More context: it seems that upon clicking 'Go to deployment page' button we are also triggering (via event bubbling) onNodeSelected event handler, which is executing setSelectedNode function.
+        */
+        this.setState({
+            isRedirecting: true
+        });
+
         toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId: nodeDeploymentId }, nodeDeploymentId);
     }
 
