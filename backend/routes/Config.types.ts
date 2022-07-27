@@ -9,14 +9,15 @@ import type { Mode } from '../serverSettings';
 
 export type UserConfig = typeof userConfig;
 
+type AppConfig = typeof app & typeof root & typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
+
 export interface Config {
-    app: typeof app & typeof root & typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
+    app: AppConfig;
     manager: typeof manager;
     mode?: Mode;
     managerUrl: string;
 }
 
-type AppConfig = Config['app'];
 export interface ClientConfig {
     app: {
         maintenancePollingInterval: AppConfig['maintenancePollingInterval'];
