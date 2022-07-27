@@ -62,7 +62,9 @@ function zipFiles(
     }
 
     archive.on('error', onError);
-    return archive.finalize().then(() => archive);
+    archive.finalize().catch(onError);
+
+    return archive;
 }
 
 router.get('/icons/:pluginId', (req, res) => {
@@ -146,12 +148,11 @@ router.post<any, any, any, any, PostUploadQuery>(
         }
 
         Promise.all(promises)
-            .then(([wagonFile, yamlFile, iconFile]) =>
-                zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
+            .then(([wagonFile, yamlFile, iconFile]) => {
+                const zipStream = zipFiles(wagonFile, wagonFilename, yamlFile, iconFile, err =>
                     res.status(500).send({ message: `Failed zipping the plugin. ${err}` })
-                )
-            )
-            .then(zipStream => {
+                );
+
                 ManagerHandler.request('post', `/plugins?visibility=${req.query.visibility}&title=${req.query.title}`, {
                     headers: getHeadersWithAuthenticationTokenFromRequest(req, {
                         tenant: req.headers.tenant as string,
