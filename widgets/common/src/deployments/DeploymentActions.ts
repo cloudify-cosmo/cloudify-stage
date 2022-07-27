@@ -68,6 +68,7 @@ export default class DeploymentActions {
         });
     }
 
+    // TODO: Refactor to use options object
     doUpdate(
         deploymentName: string,
         blueprintName: string,
@@ -78,13 +79,20 @@ export default class DeploymentActions {
         ignoreFailure: boolean,
         shouldRunReinstall: boolean,
         reinstallList: any,
+        skipHeal: boolean,
+        skipDriftCheck: boolean,
         forceUpdate: boolean,
         preview: boolean
     ) {
         const body: Record<string, any> = {};
 
-        if (!_.isEmpty(blueprintName)) {
+        if (!blueprintName) {
+            body.blueprint_id = null;
+        } else {
             body.blueprint_id = blueprintName;
+            if (!_.isEmpty(deploymentInputs)) {
+                body.inputs = deploymentInputs;
+            }
         }
 
         body.skip_install = !shouldRunInstallWorkflow;
@@ -93,12 +101,10 @@ export default class DeploymentActions {
         body.ignore_failure = ignoreFailure;
         body.skip_reinstall = !shouldRunReinstall;
         body.reinstall_list = reinstallList;
+        body.skip_heal = skipHeal;
+        body.skip_drift_check = skipDriftCheck;
         body.force = forceUpdate;
         body.preview = preview;
-
-        if (!_.isEmpty(deploymentInputs)) {
-            body.inputs = deploymentInputs;
-        }
 
         return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
