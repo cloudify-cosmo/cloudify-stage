@@ -67,12 +67,16 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     }
 
     componentDidMount() {
-        fetch(StageUtils.Url.url('/auth/first-login'))
-            .then(response => response.json())
-            .then(isFirstLogin => this.setState({ isFirstLogin }))
-            .catch(error => {
-                log.debug('Error fetching first login status', error);
-            });
+        const { whiteLabel } = this.props;
+
+        if (whiteLabel.showFirstLoginHint) {
+            fetch(StageUtils.Url.url('/auth/first-login'))
+                .then(response => response.json())
+                .then(isFirstLogin => this.setState({ isFirstLogin }))
+                .catch(error => {
+                    log.debug('Error fetching first login status', error);
+                });
+        }
     }
 
     onSubmit = () => {
@@ -113,7 +117,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         SplashLoadingScreen.turnOff();
 
         const loginPageHeader = t('header');
-        const { loginPageHeaderColor, loginPageTextColor, showFirstLoginHint } = whiteLabel;
+        const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
         const loginPageText = t('message');
         const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
 
@@ -140,7 +144,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                     <Form onSubmit={this.onSubmit}>
                         {!isSamlEnabled && (
                             <Popup
-                                open={showFirstLoginHint && isFirstLogin}
+                                open={isFirstLogin}
                                 content={renderMultilineText(t('firstLoginHint'))}
                                 position="right center"
                                 style={{ marginLeft: -25 }}
