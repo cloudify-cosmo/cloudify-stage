@@ -8,21 +8,21 @@ const t = Stage.Utils.getT(`widgets.${widgetId}`);
 const fieldsToShowItemsTranslationPrefix = 'configuration.fieldsToShow.items';
 
 const fieldsToShowItems = Object.values(
-    t(fieldsToShowTranslationPrefix, {
+    t(fieldsToShowItemsTranslationPrefix, {
         returnObjects: true
     })
 );
 
 const fieldsToShowDefaultItems = [
-    t(`${fieldsToShowTranslationPrefix}.icon`),
-    t(`${fieldsToShowTranslationPrefix}.timestamp`),
-    t(`${fieldsToShowTranslationPrefix}.blueprint`),
-    t(`${fieldsToShowTranslationPrefix}.deployment`),
-    t(`${fieldsToShowTranslationPrefix}.workflow`),
-    t(`${fieldsToShowTranslationPrefix}.operation`),
-    t(`${fieldsToShowTranslationPrefix}.nodeId`),
-    t(`${fieldsToShowTranslationPrefix}.nodeInstanceId`),
-    t(`${fieldsToShowTranslationPrefix}.message`)
+    t(`${fieldsToShowItemsTranslationPrefix}.icon`),
+    t(`${fieldsToShowItemsTranslationPrefix}.timestamp`),
+    t(`${fieldsToShowItemsTranslationPrefix}.blueprint`),
+    t(`${fieldsToShowItemsTranslationPrefix}.deployment`),
+    t(`${fieldsToShowItemsTranslationPrefix}.workflow`),
+    t(`${fieldsToShowItemsTranslationPrefix}.operation`),
+    t(`${fieldsToShowItemsTranslationPrefix}.nodeId`),
+    t(`${fieldsToShowItemsTranslationPrefix}.nodeInstanceId`),
+    t(`${fieldsToShowItemsTranslationPrefix}.message`)
 ];
 
 Stage.defineWidget({
