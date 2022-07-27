@@ -68,7 +68,7 @@ export default class DeploymentActions {
         });
     }
 
-    // TODO: Refactor to use options object?
+    // TODO: Refactor to use options object
     doUpdate(
         deploymentName: string,
         blueprintName: string,
