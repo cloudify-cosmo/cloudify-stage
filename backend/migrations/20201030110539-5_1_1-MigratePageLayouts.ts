@@ -39,7 +39,6 @@ function migrate(queryInterface: QueryInterface, Sequelize: DataTypes, pageProce
 }
 
 export const { up, down }: MigrationObject = {
-    // @ts-ignore TODO: Function returns void instead of Promise<any>
     up: (queryInterface, Sequelize) =>
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             function migrateLayoutSection(type: LayoutSectionType) {
@@ -56,7 +55,6 @@ export const { up, down }: MigrationObject = {
             migrateLayoutSection('widgets');
             migrateLayoutSection('tabs');
         }),
-    // @ts-ignore TODO: Function returns void instead of Promise<any>
     down: (queryInterface, Sequelize) =>
         migrate(queryInterface, Sequelize, (pageData: PageData) => {
             if (pageData?.layout?.length) {
