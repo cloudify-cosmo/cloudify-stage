@@ -213,8 +213,8 @@ const commands = {
             }
         });
 
-        cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
-        cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
+        cy.get('.form > div > :nth-child(1) > .ui > input').clear().type(username);
+        cy.get('.form > div > :nth-child(2) > .ui > input').clear().type(password);
         cy.get('.form > button').click();
 
         cy.get('.form > button.loading').should('not.exist');
