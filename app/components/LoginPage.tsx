@@ -67,7 +67,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     }
 
     componentDidMount() {
-        fetch(StageUtils.Url.url('/auth/is-first-login'))
+        fetch(StageUtils.Url.url('/auth/first-login'))
             .then(response => response.json())
             .then(isFirstLogin => this.setState({ isFirstLogin }))
             .catch(error => {

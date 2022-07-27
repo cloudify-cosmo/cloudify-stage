@@ -72,7 +72,7 @@ describe('Login', () => {
     it('provides credentials hint on first time login', () => {
         cy.activate();
 
-        cy.intercept('GET', '/console/auth/is-first-login', { body: true });
+        cy.intercept('GET', '/console/auth/first-login', { body: true });
         cy.visit('/console/login');
 
         cy.contains('For the first login').should('be.visible');

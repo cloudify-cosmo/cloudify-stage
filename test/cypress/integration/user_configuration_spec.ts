@@ -22,7 +22,7 @@ describe('User configuration', () => {
 
     describe('allows to customize Login page', () => {
         before(() => {
-            cy.intercept('GET', '/console/auth/is-first-login', { body: true });
+            cy.intercept('GET', '/console/auth/first-login', { body: true });
             cy.visit('/console/login');
             cy.get('.loginContainer').should('be.visible');
         });

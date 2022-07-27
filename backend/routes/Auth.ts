@@ -106,7 +106,7 @@ router.get('/RBAC', authenticateWithCookie, (req, res) => {
         });
 });
 
-router.get('/is-first-login', (_req, res, next) => {
+router.get('/first-login', (_req, res, next) => {
     db.UserApps.findAll<UserAppsInstance>()
         .then(userApp => res.send(_.isEmpty(userApp)))
         .catch(next);
