@@ -69,6 +69,15 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
+    it('provides credentials hint on first time login', () => {
+        cy.activate();
+
+        cy.intercept('GET', '/console/auth/is-first-login', { body: true });
+        cy.visit('/console/login');
+
+        cy.contains('For the first login').should('be.visible');
+    });
+
     it('provides SSO login button when SAML is enabled', () => {
         cy.activate();
 

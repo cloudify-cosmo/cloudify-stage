@@ -22,6 +22,7 @@ describe('User configuration', () => {
 
     describe('allows to customize Login page', () => {
         before(() => {
+            cy.intercept('GET', '/console/auth/is-first-login', { body: true });
             cy.visit('/console/login');
             cy.get('.loginContainer').should('be.visible');
         });
@@ -41,6 +42,10 @@ describe('User configuration', () => {
                 cy.log('Verifying loginPageTextColor...');
                 cy.get('p').should('have.css', 'color', colors.black);
             });
+        });
+
+        it('first login hint', () => {
+            cy.contains('For the first login').should('not.exist');
         });
     });
 
@@ -64,7 +69,7 @@ describe('User configuration', () => {
             cy.get('.sidebarContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
         });
 
-        it.only('version details', () => {
+        it('version details', () => {
             const majorVersion = String(Consts.APP_VERSION)[0];
             cy.log('Verifying showVersionDetails...');
             cy.get('.sidebar > div > a').should('not.contain.text', `v ${majorVersion}`);
