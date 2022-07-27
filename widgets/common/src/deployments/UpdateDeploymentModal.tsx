@@ -81,6 +81,12 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         }
     }
 
+    useEffect(() => {
+        if (deployment && deployment.blueprint_id) {
+            selectBlueprint(deployment.blueprint_id);
+        }
+    }, [deployment]);
+
     useOpenProp(open, () => {
         setLoading();
         unsetFileLoading();
@@ -97,9 +103,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             .doGet({ id: deploymentId }, { _include: _.join(['id', 'blueprint_id', 'inputs']) })
             .then(setDeployment)
             .catch(error => {
+                unsetLoading();
                 setMessageAsError(error);
-            })
-            .finally(unsetLoading);
+            });
     });
 
     function submitUpdate(preview) {
@@ -116,6 +122,10 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         } = inputs;
         const validationErrors = {};
 
+        if (_.isEmpty(blueprint.id)) {
+            validationErrors.blueprintName = 'Please select blueprint';
+        }
+
         if (!_.isEmpty(validationErrors)) {
             setErrors(validationErrors);
             unsetLoading();
@@ -123,12 +133,15 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         }
 
         const inputsPlanForUpdate = getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
+        const inputsMap = getInputsMap(inputsPlanForUpdate, deploymentInputs);
+        const blueprintId = blueprint.id === deployment.blueprint_id && _.isEmpty(inputsMap) ? null : blueprint.id;
+
         const actions = new DeploymentActions(toolbox);
         actions
             .doUpdate(
                 deployment.id,
-                blueprint.id,
-                getInputsMap(inputsPlanForUpdate, deploymentInputs),
+                blueprintId,
+                inputsMap,
                 installWorkflow,
                 uninstallWorkflow,
                 installWorkflowFirst,
@@ -233,7 +246,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.blueprintName} label="Blueprint">
+                    <Form.Field error={errors.blueprintName} label="Blueprint" required>
                         <DynamicDropdown
                             value={blueprint.id}
                             placeholder="Select Blueprint"
