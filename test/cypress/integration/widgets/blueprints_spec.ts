@@ -21,7 +21,7 @@ describe('Blueprints widget', () => {
             .mockLogin()
     );
 
-    beforeEach(() => cy.refreshTemplate());
+    beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function getBlueprintRow(blueprintName: string) {
         cy.getSearchInput().clear().type(blueprintName);
@@ -381,20 +381,16 @@ describe('Blueprints widget', () => {
         });
     });
 
-    describe('should upload from Marketplace and ', () => {
-        beforeEach(() => {
+    describe('should allow uploading blueprint from', () => {
+        it('Blueprint Marketplace', () => {
             cy.contains('Upload').click();
             cy.contains('Upload from Marketplace').click();
-        });
 
-        it('open Blueprint Marketplace page', () => {
             cy.contains('Blueprint Marketplace');
             cy.containsActiveTab('AWS');
         });
-    });
 
-    describe('should open Composer', () => {
-        it('on "Generate in the Composer" menu item click', () => {
+        it('Composer', () => {
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').click();
 
