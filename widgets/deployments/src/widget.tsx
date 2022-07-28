@@ -81,11 +81,13 @@ Stage.defineWidget({
     },
 
     async fetchData(widget, toolbox, params) {
-        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments({
-            _include:
-                'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
-            ...params
-        });
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments(
+            Stage.Common.Actions.Search.searchAlsoByDeploymentName({
+                _include:
+                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+                ...params
+            })
+        );
 
         const nodeInstanceDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.id))
@@ -135,7 +137,9 @@ Stage.defineWidget({
                     };
                 }),
                 total: get(deploymentData, 'metadata.pagination.total', 0),
-                blueprintId: params.blueprint_id
+                blueprintId: params.blueprint_id,
+                // eslint-disable-next-line no-underscore-dangle
+                searchValue: params?._search
             };
         });
     },
@@ -145,11 +149,11 @@ Stage.defineWidget({
         const {
             configuration: { showFirstUserJourneyButtons }
         } = widget;
-        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && isEmpty(data?.items);
-
         if (isEmpty(data)) {
             return <Loading />;
         }
+        const searchValue = data?.searchValue;
+        const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && !searchValue && isEmpty(data?.items);
 
         if (shouldShowFirstUserJourneyButtons) {
             return <FirstUserJourneyButtons toolbox={toolbox} />;
