@@ -16,25 +16,25 @@
       {
         "id": "terraform_azure_vm",
         "name": "Terraform-Azure-VM",
-        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_azure_vm.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform/terraform_azure_vm.zip",
         "yamlFile": "blueprint.yaml"
       },
       {
         "id": "terraform_gcp_vm",
         "name": "Terraform-Google-Cloud-VM",
-        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_gcp_vm.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform/terraform_gcp_vm.zip",
         "yamlFile": "blueprint.yaml"
       },
       {
         "id": "terraform_openstack_vm",
         "name": "Terraform-OpenStack-VM",
-        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_openstack_vm.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform/terraform_openstack_vm.zip",
         "yamlFile": "blueprint.yaml"
       },
       {
         "id": "terraform_aws_vm",
         "name": "Terraform-AWS-VM",
-        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.3/terraform/terraform_aws_vm.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform/terraform_aws_vm.zip",
         "yamlFile": "blueprint.yaml"
       }
     ]

@@ -227,6 +227,8 @@ describe('Deployments widget', () => {
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
+            cy.contains('Skip heal').click();
+            cy.contains('Skip drift check').click();
             cy.get('button.blue.ok').click();
         });
 
@@ -238,7 +240,22 @@ describe('Deployments widget', () => {
             cy.get('button.ok').click();
         });
 
-        cy.wait('@updateDeployment');
+        cy.wait('@updateDeployment').then(({ request }) => {
+            expect(request.body).to.deep.equal({
+                blueprint_id: blueprintName,
+                force: false,
+                ignore_failure: false,
+                inputs: { webserver_port: 9321 },
+                install_first: false,
+                preview: true,
+                reinstall_list: [],
+                skip_drift_check: true,
+                skip_heal: true,
+                skip_install: false,
+                skip_reinstall: false,
+                skip_uninstall: false
+            });
+        });
         cy.get('.updateDetailsModal').should('not.exist');
         verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
         cy.contains('div.row', deploymentId)
