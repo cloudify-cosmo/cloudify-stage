@@ -391,10 +391,14 @@ describe('Blueprints widget', () => {
         });
 
         it('Composer', () => {
+            cy.window().then(win => {
+                cy.stub(win, 'open').as('open');
+            });
+
             cy.contains('Upload').click();
             cy.contains('Generate in the Composer').click();
 
-            cy.window().its('open').should('be.calledWith', '/composer/');
+            cy.get('@open').should('be.calledWith', '/composer/');
         });
     });
 
