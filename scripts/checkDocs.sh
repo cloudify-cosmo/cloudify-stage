@@ -8,7 +8,7 @@ else
   CURL_OPTIONS=
 fi
 
-DOCS_BRANCH="master"
+DOCS_BRANCH="6.4.0-build"
 if [[ $STAGE_BRANCH =~ [0-9].[0-9]{1,2}-build ]]; then
   DOCS_BRANCH=STAGE_BRANCH
 fi
