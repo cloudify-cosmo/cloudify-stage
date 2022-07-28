@@ -1,26 +1,26 @@
-import _, { escapeRegExp, trimEnd, merge, trimStart } from 'lodash';
-import type { File } from 'decompress';
-import decompress from 'decompress';
-import ejs from 'ejs';
-import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
-import axios from 'axios';
-import { STATUS_CODES } from 'http';
-import uniqueDirectoryName from 'short-uuid';
-import directoryTree from 'directory-tree';
-import simpleGit from 'simple-git';
-import type { GitError } from 'simple-git';
-import multer from 'multer';
-import archiver from 'archiver';
 // @ts-ignore-next-line typing doesn't exist for this library
 import tfParser from '@evops/hcl-terraform-parser';
+import archiver from 'archiver';
+import axios from 'axios';
+import type { File } from 'decompress';
+import decompress from 'decompress';
+import directoryTree from 'directory-tree';
+import ejs from 'ejs';
+import type { NextFunction, Request, Response } from 'express';
+import express from 'express';
+import fs from 'fs';
+import { STATUS_CODES } from 'http';
+import _, { escapeRegExp, merge, trimEnd, trimStart } from 'lodash';
+import multer from 'multer';
+import os from 'os';
+import path from 'path';
+import uniqueDirectoryName from 'short-uuid';
+import type { GitError } from 'simple-git';
+import simpleGit from 'simple-git';
 
 import { getLogger } from '../handler/LoggerHandler';
-import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
+import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 
 const directoryTreeOptions = {
     extensions: /.tf$/,
@@ -337,7 +337,7 @@ router.post('/blueprint', (req, res) => {
     res.send(result);
 });
 
-router.post('/blueprint/archive', fileDebase64, (req, res) => {
+router.post('/blueprint/archive', fileDebase64, (req, res, next) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
@@ -355,7 +355,7 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
 
     archive.append(result, { name: 'blueprint/blueprint.yaml' });
     archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
-    archive.finalize();
+    archive.finalize().catch(next);
 });
 
 export default router;
