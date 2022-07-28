@@ -9,19 +9,22 @@ describe('User configuration', () => {
         lightgrey: 'rgb(211, 211, 211)',
         white: 'rgb(255, 255, 255)'
     };
-    before(() => {
-        cy.activate();
-        cy.intercept('GET', '/console/config', req => {
+
+    function mockConfigResponse() {
+        cy.intercept('/console/config', req => {
             req.on('response', res => {
                 const responseBody = res.body;
                 responseBody.app.whiteLabel = userConfig.whiteLabel;
                 res.send(responseBody);
             });
         });
-    });
+    }
+
+    before(cy.activate);
 
     describe('allows to customize Login page', () => {
         before(() => {
+            mockConfigResponse();
             cy.intercept('GET', '/console/auth/first-login', { body: true });
             cy.visit('/console/login');
             cy.get('.loginContainer').should('be.visible');
@@ -50,7 +53,10 @@ describe('User configuration', () => {
     });
 
     describe('allows to customize page', () => {
-        before(cy.mockLogin);
+        before(() => {
+            mockConfigResponse();
+            cy.mockLogin();
+        });
 
         it('sidebar', () => {
             cy.log('Verifying headerTextColor...');
