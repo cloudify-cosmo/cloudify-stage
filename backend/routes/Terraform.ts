@@ -99,14 +99,12 @@ const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)
-                .filter({ type: 'directory' })
-                .map('path')
-                .filter(directory =>
-                    files.some(file => {
-                        return file.type === 'file' && isTerraformFilePath(file.path, directory);
-                    })
-                )
-                .map(directory => trimEnd(directory, '/'))
+                .filter(file => file.type === 'file')
+                .map(file => {
+                    const parentPath = path.dirname(file.path);
+                    return parentPath;
+                })
+                .uniq()
                 .sort()
                 .value()
         )
