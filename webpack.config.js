@@ -298,6 +298,11 @@ module.exports = (env, argv) => {
                             {
                                 from: 'templates',
                                 to: 'appData/templates'
+                            },
+                            {
+                                context: 'node_modules/cloudify-blueprint-topology/dist/icons',
+                                from: '**/*',
+                                to: 'static/images/topology'
                             }
                         ]
                     }),
