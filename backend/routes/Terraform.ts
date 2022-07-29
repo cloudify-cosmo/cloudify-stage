@@ -47,7 +47,6 @@ type ResourcesRequest = Request<
 >;
 
 const isTerraformFilePath = (filePath: string, directoryPath: string): boolean => {
-    // TODO Norbert: Think if it would be beneficial to document the regexp below (via variables extraction)
     return !!filePath.match(`^(${escapeRegExp(directoryPath)})[/]?[^/]+\\.tf$`);
 };
 
@@ -99,7 +98,7 @@ const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)
-                .filter(file => file.type === 'file')
+                .filter(file => file.type === 'file' && file.path.endsWith('.tf'))
                 .map(file => {
                     const parentPath = path.dirname(file.path);
                     return parentPath;
