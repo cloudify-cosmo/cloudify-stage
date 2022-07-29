@@ -409,6 +409,80 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             });
     }
 
+    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        setUrlAuthentication(checked);
+        if (!checked) {
+            clearUsername();
+            clearPassword();
+        }
+    }
+
+    function reloadTemplateModules(loadedTemplateModules: any) {
+        setTemplateModules(loadedTemplateModules);
+        setResourceLocation(
+            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
+        );
+
+        setFieldError('template');
+    }
+
+    function catchTemplateModulesLoadingError(err: any) {
+        if (err.status === 401) {
+            if (!urlAuthentication) {
+                setUrlAuthentication(true);
+            } else {
+                setFieldError('template', tError('terraformTemplateUnauthorized'));
+            }
+        } else {
+            setFieldError('template', err.message);
+        }
+        clearTemplateModules();
+        clearResourceLocation();
+    }
+
+    function handleTemplateUrlBlur() {
+        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
+        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
+            return;
+        }
+
+        setTemplateModulesLoading();
+        new TerraformActions(toolbox)
+            .doGetTemplateModulesByUrl(templateUrl, username, password)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
+            .finally(unsetTemplateModulesLoading);
+    }
+
+    const onTerraformTemplatePackageChange = (file: File) => {
+        setTemplateModulesLoading();
+        setTerraformTemplatePackage(file);
+        if (!file) {
+            setTerraformTemplatePackageBase64('');
+            clearTemplateModules();
+            unsetTemplateModulesLoading();
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function onloadend() {
+            setTerraformTemplatePackageBase64(reader.result?.toString());
+        };
+        new TerraformActions(toolbox)
+            .doGetTemplateModulesByFile(file)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
+            .finally(unsetTemplateModulesLoading);
+    };
+
+    function handleVariablesChange(modifiedVariables: Variable[]) {
+        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
+    }
+
+    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
+        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
+    }
+
     async function handleSubmit() {
         cleanFormErrors();
 
@@ -498,80 +572,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             setFieldError('template', e.message);
             stopProcess();
         }
-    }
-
-    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
-        setUrlAuthentication(checked);
-        if (!checked) {
-            clearUsername();
-            clearPassword();
-        }
-    }
-
-    function reloadTemplateModules(loadedTemplateModules: any) {
-        setTemplateModules(loadedTemplateModules);
-        setResourceLocation(
-            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-        );
-
-        setFieldError('template');
-    }
-
-    function catchTemplateModulesLoadingError(err: any) {
-        if (err.status === 401) {
-            if (!urlAuthentication) {
-                setUrlAuthentication(true);
-            } else {
-                setFieldError('template', tError('terraformTemplateUnauthorized'));
-            }
-        } else {
-            setFieldError('template', err.message);
-        }
-        clearTemplateModules();
-        clearResourceLocation();
-    }
-
-    function handleTemplateUrlBlur() {
-        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
-        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
-            return;
-        }
-
-        setTemplateModulesLoading();
-        new TerraformActions(toolbox)
-            .doGetTemplateModulesByUrl(templateUrl, username, password)
-            .then(reloadTemplateModules)
-            .catch(catchTemplateModulesLoadingError)
-            .finally(unsetTemplateModulesLoading);
-    }
-
-    const onTerraformTemplatePackageChange = (file: File) => {
-        setTemplateModulesLoading();
-        setTerraformTemplatePackage(file);
-        if (!file) {
-            setTerraformTemplatePackageBase64('');
-            clearTemplateModules();
-            unsetTemplateModulesLoading();
-            return;
-        }
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function onloadend() {
-            setTerraformTemplatePackageBase64(reader.result?.toString());
-        };
-        new TerraformActions(toolbox)
-            .doGetTemplateModulesByFile(file)
-            .then(reloadTemplateModules)
-            .catch(catchTemplateModulesLoadingError)
-            .finally(unsetTemplateModulesLoading);
-    };
-
-    function handleVariablesChange(modifiedVariables: Variable[]) {
-        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
-    }
-
-    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
-        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
     }
 
     useEffect(
