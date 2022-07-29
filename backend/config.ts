@@ -10,14 +10,16 @@ import app from '../conf/app.json';
 import logging from '../conf/logging.json';
 import dbOptions from '../conf/db.options.json';
 import manager from '../conf/manager.json';
+import type { Mode } from './serverSettings';
+import type { Config, ClientConfig, UserConfig } from './routes/Config.types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-let userConfig = require('../conf/userConfig.json');
+let userConfig: UserConfig = require('../conf/userConfig.json');
 
 try {
     const userDataConfigPath = getResourcePath('userConfig.json', true);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    let userDataConfig = require(userDataConfigPath);
+    let userDataConfig: Partial<UserConfig> = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, { safe: true }))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
 } catch (err) {
@@ -26,7 +28,7 @@ try {
     }
 }
 
-let me = null;
+let me: Partial<Config> | null = null;
 
 export function loadMeJson() {
     try {
@@ -41,7 +43,7 @@ export function loadMeJson() {
 
 loadMeJson();
 
-export function getConfig(mode?) {
+export function getConfig(mode?: Mode): Config {
     const config = {
         app: _.merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
@@ -54,13 +56,12 @@ export function getConfig(mode?) {
     return config;
 }
 
-export function getClientConfig(mode) {
+export function getClientConfig(mode: Mode): ClientConfig {
     const config = getConfig(mode);
 
     // For client only get from app config the relevant part (and not send passwords and shit)
     return {
         app: {
-            initialTemplate: config.app.initialTemplate,
             maintenancePollingInterval: config.app.maintenancePollingInterval,
             singleManager: config.app.singleManager,
             whiteLabel: userConfig.whiteLabel,
@@ -74,6 +75,6 @@ export function getClientConfig(mode) {
         manager: {
             ip: config.manager.ip
         },
-        mode: config.mode
+        mode
     };
 }

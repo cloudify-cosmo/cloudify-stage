@@ -6,10 +6,10 @@ import type { History } from 'history';
 
 import throttle from 'lodash/throttle';
 import ManagerStatePersister from './utils/ManagerStatePersister';
-import type { ClientConfig } from './utils/ConfigLoader';
 
 import type { ReduxState } from './reducers';
 import createRootReducer from './reducers';
+import type { ClientConfig } from '../backend/routes/Config.types';
 
 export default (history: History, config: ClientConfig) => {
     const managerState = ManagerStatePersister.load(config.mode);
