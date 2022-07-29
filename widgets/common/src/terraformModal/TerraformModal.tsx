@@ -340,132 +340,123 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
     }
 
+    function validateBlueprintName() {
+        if (!blueprintName) {
+            setFieldError('blueprintName', tError('noBlueprintName'));
+        } else if (!blueprintName.match(validationStrictRegExp)) {
+            setFieldError('blueprintName', tError('invalidBlueprintName'));
+        }
+    }
+
+    function validateBlueprintDescription() {
+        const descriptionValidationRegexp = /^[ -~\s]*$/;
+
+        if (!blueprintDescription.match(descriptionValidationRegexp)) {
+            setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
+        }
+    }
+
+    function validateTemplate() {
+        if (!terraformTemplatePackage) {
+            if (!templateUrl) {
+                setFieldError('template', tError('noTerraformTemplate'));
+            } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
+                setFieldError('template', tError('invalidTerraformTemplate'));
+            }
+        }
+    }
+
+    function validateResourceLocation() {
+        if (!resourceLocation) {
+            setFieldError('resource', tError('noResourceLocation'));
+        }
+    }
+
+    function validateUrlAuthentication() {
+        if (urlAuthentication) {
+            if (!username) {
+                setFieldError('username', tError('noUsername'));
+            }
+            if (!password) {
+                setFieldError('password', tError('noPassword'));
+            }
+        }
+    }
+
+    function validateIDs(entities: Record<string, any>[], type: string, IDkey: 'variable' | 'name' = 'variable'): void {
+        const tNameError = Stage.Utils.composeT(tError, type);
+
+        entities.forEach((variable, index) => {
+            if (isEmpty(variable[IDkey])) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
+            } else if (!variable[IDkey].match(validationRegExp)) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
+            } else if (
+                some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
+            ) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
+            }
+        });
+    }
+
+    // TODO Norbert: Create a type for the `type` argument ('variables' | 'environmentVariables')
+    function validateVariables(variablesList: Variable[], type: string) {
+        validateIDs(variablesList, type);
+
+        const tVariableError = Stage.Utils.composeT(tError, type);
+
+        variablesList.forEach((variable, index) => {
+            if (isEmpty(variable.source)) {
+                // TODO Norbert: Extract field translatio key to const
+                setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
+            } else if (variable.source !== 'static') {
+                if (isEmpty(variable.name)) {
+                    setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
+                } else if (!variable.name.match(validationStrictRegExp)) {
+                    setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
+                }
+            }
+        });
+    }
+
+    function validateOutputs() {
+        validateIDs(outputs, 'outputs', 'name');
+
+        const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+        outputs.forEach((output: Output, index: number) => {
+            if (isEmpty(output.type)) {
+                // TODO Norbert: Extract field translatio key to const
+                setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
+            }
+
+            if (isEmpty(output.terraformOutput)) {
+                setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
+            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
+                setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
+            }
+        });
+    }
+
+    async function createSecretsFromVariables() {
+        const secretActions = new SecretActions(toolbox);
+        const { defaultVisibility } = Consts;
+        const allSecretVariables: Variable[] = [...variables, ...environment].filter(
+            variable => variable.source === 'secret'
+        );
+
+        await allSecretVariables
+            .filter(secretVar => !secretVar.duplicated)
+            .forEach(async secretVariable => {
+                // add secret if not exist
+                await secretActions.doGet(secretVariable.name).catch(async () => {
+                    await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
+                });
+            });
+    }
+
     async function handleSubmit() {
         cleanFormErrors();
-
-        function validateBlueprintName() {
-            if (!blueprintName) {
-                setFieldError('blueprintName', tError('noBlueprintName'));
-            } else if (!blueprintName.match(validationStrictRegExp)) {
-                setFieldError('blueprintName', tError('invalidBlueprintName'));
-            }
-        }
-
-        function validateBlueprintDescription() {
-            const descriptionValidationRegexp = /^[ -~\s]*$/;
-
-            if (!blueprintDescription.match(descriptionValidationRegexp)) {
-                setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
-            }
-        }
-
-        function validateTemplate() {
-            if (!terraformTemplatePackage) {
-                if (!templateUrl) {
-                    setFieldError('template', tError('noTerraformTemplate'));
-                } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                    setFieldError('template', tError('invalidTerraformTemplate'));
-                }
-            }
-        }
-
-        function validateResourceLocation() {
-            if (!resourceLocation) {
-                setFieldError('resource', tError('noResourceLocation'));
-            }
-        }
-
-        function validateUrlAuthentication() {
-            if (urlAuthentication) {
-                if (!username) {
-                    setFieldError('username', tError('noUsername'));
-                }
-                if (!password) {
-                    setFieldError('password', tError('noPassword'));
-                }
-            }
-        }
-
-        function validateIDs(
-            entities: Record<string, any>[],
-            type: string,
-            IDkey: 'variable' | 'name' = 'variable'
-        ): void {
-            const tNameError = Stage.Utils.composeT(tError, type);
-
-            entities.forEach((variable, index) => {
-                if (isEmpty(variable[IDkey])) {
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-                } else if (!variable[IDkey].match(validationRegExp)) {
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
-                } else if (
-                    some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
-                ) {
-                    setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
-                }
-            });
-        }
-
-        // TODO Norbert: Create a type for the `type` argument ('variables' | 'environmentVariables')
-        function validateVariables(variablesList: Variable[], type: string) {
-            validateIDs(variablesList, type);
-
-            const tVariableError = Stage.Utils.composeT(tError, type);
-
-            variablesList.forEach((variable, index) => {
-                if (isEmpty(variable.source)) {
-                    // TODO Norbert: Extract field translatio key to const
-                    setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
-                } else if (variable.source !== 'static') {
-                    if (isEmpty(variable.name)) {
-                        setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
-                    } else if (!variable.name.match(validationStrictRegExp)) {
-                        setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
-                    }
-                }
-            });
-        }
-
-        function validateOutputs() {
-            validateIDs(outputs, 'outputs', 'name');
-
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            outputs.forEach((output: Output, index: number) => {
-                if (isEmpty(output.type)) {
-                    // TODO Norbert: Extract field translatio key to const
-                    setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
-                }
-
-                if (isEmpty(output.terraformOutput)) {
-                    setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
-                } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                    setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
-                }
-            });
-        }
-
-        async function createSecretsFromVariables() {
-            const secretActions = new SecretActions(toolbox);
-            const { defaultVisibility } = Consts;
-            const allSecretVariables: Variable[] = [...variables, ...environment].filter(
-                variable => variable.source === 'secret'
-            );
-
-            await allSecretVariables
-                .filter(secretVar => !secretVar.duplicated)
-                .forEach(async secretVariable => {
-                    // add secret if not exist
-                    await secretActions.doGet(secretVariable.name).catch(async () => {
-                        await secretActions.doCreate(
-                            secretVariable.name,
-                            secretVariable.value,
-                            defaultVisibility,
-                            false
-                        );
-                    });
-                });
-        }
 
         validateBlueprintName();
         validateBlueprintDescription();
