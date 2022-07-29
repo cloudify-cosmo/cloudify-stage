@@ -82,6 +82,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
   * `mainColor` - string, main color (CSS color)  
   * `headerTextColor` - string, color of text in page header (CSS color)
   * `showVersionDetails` - boolean, if set to true, then version and license label will be shown in page header
+  * `showFirstLoginHint` - boolean, if set to true, then default credentials hint will be shown on first login 
   * `loginPageHeaderColor` - string, login page header color (CSS color)
   * `loginPageTextColor` - string, login page text under header color (CSS color) 
   * `sidebarColor` - string, menu sidebar color (CSS color)
