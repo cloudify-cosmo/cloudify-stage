@@ -10,7 +10,7 @@ import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
 import fs from 'fs';
 import { STATUS_CODES } from 'http';
-import _, { escapeRegExp, merge, trimEnd, trimStart } from 'lodash';
+import _, { escapeRegExp, merge, trimStart } from 'lodash';
 import multer from 'multer';
 import os from 'os';
 import path from 'path';
