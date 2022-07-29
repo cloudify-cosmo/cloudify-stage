@@ -272,7 +272,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
-
+    const formHasErrors = useMemo(() => !isEmpty(fieldErrors), [fieldErrors]);
     const formHeaderErrors = useMemo(() => (fieldErrors ? [] : undefined), [fieldErrors]);
 
     const handleOnHideModal = useCallback(() => {
@@ -343,14 +343,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     async function handleSubmit() {
         cleanFormErrors();
 
-        let formErrors = false;
-
         function validateBlueprintName() {
             if (!blueprintName) {
-                formErrors = true;
                 setFieldError('blueprintName', tError('noBlueprintName'));
             } else if (!blueprintName.match(validationStrictRegExp)) {
-                formErrors = true;
                 setFieldError('blueprintName', tError('invalidBlueprintName'));
             }
         }
@@ -359,7 +355,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             const descriptionValidationRegexp = /^[ -~\s]*$/;
 
             if (!blueprintDescription.match(descriptionValidationRegexp)) {
-                formErrors = true;
                 setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
             }
         }
@@ -367,10 +362,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         function validateTemplate() {
             if (!terraformTemplatePackage) {
                 if (!templateUrl) {
-                    formErrors = true;
                     setFieldError('template', tError('noTerraformTemplate'));
                 } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                    formErrors = true;
                     setFieldError('template', tError('invalidTerraformTemplate'));
                 }
             }
@@ -378,7 +371,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         function validateResourceLocation() {
             if (!resourceLocation) {
-                formErrors = true;
                 setFieldError('resource', tError('noResourceLocation'));
             }
         }
@@ -386,11 +378,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         function validateUrlAuthentication() {
             if (urlAuthentication) {
                 if (!username) {
-                    formErrors = true;
                     setFieldError('username', tError('noUsername'));
                 }
                 if (!password) {
-                    formErrors = true;
                     setFieldError('password', tError('noPassword'));
                 }
             }
@@ -405,20 +395,18 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             entities.forEach((variable, index) => {
                 if (isEmpty(variable[IDkey])) {
-                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
                 } else if (!variable[IDkey].match(validationRegExp)) {
-                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
                 } else if (
                     some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
                 ) {
-                    formErrors = true;
                     setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
                 }
             });
         }
 
+        // TODO Norbert: Create a type for the `type` argument ('variables' | 'environmentVariables')
         function validateVariables(variablesList: Variable[], type: string) {
             validateIDs(variablesList, type);
 
@@ -426,14 +414,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             variablesList.forEach((variable, index) => {
                 if (isEmpty(variable.source)) {
-                    formErrors = true;
+                    // TODO Norbert: Extract field translatio key to const
                     setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
                 } else if (variable.source !== 'static') {
                     if (isEmpty(variable.name)) {
-                        formErrors = true;
                         setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
                     } else if (!variable.name.match(validationStrictRegExp)) {
-                        formErrors = true;
                         setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
                     }
                 }
@@ -447,15 +433,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             outputs.forEach((output: Output, index: number) => {
                 if (isEmpty(output.type)) {
-                    formErrors = true;
+                    // TODO Norbert: Extract field translatio key to const
                     setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
                 }
 
                 if (isEmpty(output.terraformOutput)) {
-                    formErrors = true;
                     setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
                 } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                    formErrors = true;
                     setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
                 }
             });
@@ -492,7 +476,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateVariables(environment, 'environmentVariables');
         validateOutputs();
 
-        if (formErrors) {
+        if (formHasErrors) {
             return;
         }
 
