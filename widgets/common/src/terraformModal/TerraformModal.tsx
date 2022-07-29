@@ -280,55 +280,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         onHide();
     }, [onHide, cleanFormErrors]);
 
-    useEffect(
-        function setFocusOnUsernameInput() {
-            if (urlAuthentication && !username) {
-                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
-            }
-        },
-        [urlAuthentication, username]
-    );
-
-    useEffect(
-        function getVariablesAndOutputsOnSourceChange() {
-            if (!resourceLocation) {
-                return;
-            }
-            setFieldError('resource');
-
-            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
-                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
-                    name: outputObj.name,
-                    type: 'capability',
-                    terraformOutput: outputObj.name
-                }));
-                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
-                    variable: key,
-                    name: variableObj.name,
-                    source: 'input',
-                    value: '',
-                    duplicated: false
-                }));
-
-                setOutputsDeferred(outputsTmp);
-                setVariablesDeferred(variablesTmp);
-                unsetTemplateModulesLoading();
-            }
-
-            setTemplateModulesLoading();
-            if (terraformTemplatePackageBase64) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
-                    .then(setOutputsAndVariables);
-            } else if (templateUrl) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
-                    .then(setOutputsAndVariables);
-            }
-        },
-        [resourceLocation]
-    );
-
     function assignDeferredVariablesAndOutputs() {
         if (outputsDeferred.length) {
             setOutputs(outputsDeferred);
@@ -399,7 +350,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         });
     }
 
-    // TODO Norbert: Create a type for the `type` argument ('variables' | 'environmentVariables')
     function validateVariables(variablesList: Variable[], type: string) {
         validateIDs(variablesList, type);
 
@@ -407,7 +357,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         variablesList.forEach((variable, index) => {
             if (isEmpty(variable.source)) {
-                // TODO Norbert: Extract field translatio key to const
                 setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
             } else if (variable.source !== 'static') {
                 if (isEmpty(variable.name)) {
@@ -426,7 +375,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         outputs.forEach((output: Output, index: number) => {
             if (isEmpty(output.type)) {
-                // TODO Norbert: Extract field translatio key to const
                 setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
             }
 
@@ -436,6 +384,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
             }
         });
+    }
+
+    function validateOutputsAndVariables() {
+        validateOutputs();
+        validateVariables(variables, 'variables');
+        validateVariables(environment, 'environmentVariables');
     }
 
     async function createSecretsFromVariables() {
@@ -463,9 +417,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateTemplate();
         validateUrlAuthentication();
         validateResourceLocation();
-        validateVariables(variables, 'variables');
-        validateVariables(environment, 'environmentVariables');
-        validateOutputs();
+        validateOutputsAndVariables();
 
         if (formHasErrors) {
             return;
@@ -621,6 +573,55 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
         return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
     }
+
+    useEffect(
+        function setFocusOnUsernameInput() {
+            if (urlAuthentication && !username) {
+                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
+            }
+        },
+        [urlAuthentication, username]
+    );
+
+    useEffect(
+        function getVariablesAndOutputsOnSourceChange() {
+            if (!resourceLocation) {
+                return;
+            }
+            setFieldError('resource');
+
+            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
+                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
+                    name: outputObj.name,
+                    type: 'capability',
+                    terraformOutput: outputObj.name
+                }));
+                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
+                    variable: key,
+                    name: variableObj.name,
+                    source: 'input',
+                    value: '',
+                    duplicated: false
+                }));
+
+                setOutputsDeferred(outputsTmp);
+                setVariablesDeferred(variablesTmp);
+                unsetTemplateModulesLoading();
+            }
+
+            setTemplateModulesLoading();
+            if (terraformTemplatePackageBase64) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
+                    .then(setOutputsAndVariables);
+            } else if (templateUrl) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                    .then(setOutputsAndVariables);
+            }
+        },
+        [resourceLocation]
+    );
 
     return (
         <Modal open onClose={handleOnHideModal} id="terraformModal">
