@@ -5,6 +5,7 @@
 
     "headerTextColor": "black",
     "showVersionDetails": false,
+    "showFirstLoginHint": false,
 
     "loginPageHeaderColor": "lightgrey",
     "loginPageTextColor": "black",

@@ -22,6 +22,7 @@ import Auth from './routes/Auth';
 
 import BlueprintAdditions from './routes/BlueprintAdditions';
 import BlueprintUserData from './routes/BlueprintUserData';
+import Config from './routes/Config';
 import ContactDetails from './routes/ContactDetails';
 import External from './routes/External';
 import File from './routes/File';
@@ -123,9 +124,6 @@ Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
 
 // API Routes without authentication
 app.use(`${contextPath}/auth`, Auth); // all routes require authentication except `/auth/login`
-const Config = (req, res) => {
-    res.send(getClientConfig(getMode()));
-};
 app.use(`${contextPath}/config`, Config); // used to get white-labelling configuration required e.g. in Login page
 app.use(`${contextPath}/style`, Style); // used to get stylesheet, e.g. in Login page
 app.use(`${contextPath}/sp`, ServerProxy); // used to proxy requests to Cloudify REST API, some without the token

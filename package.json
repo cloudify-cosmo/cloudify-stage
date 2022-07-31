@@ -1,6 +1,6 @@
 {
     "name": "cloudify-stage",
-    "version": "6.4.0-.dev1",
+    "version": "7.0.0-.dev1",
     "description": "Cloudify Console",
     "homepage": "https://github.com/cloudify-cosmo/cloudify-stage#readme",
     "repository": "https://github.com/cloudify-cosmo/cloudify-stage",
@@ -56,7 +56,7 @@
         "axios": "^0.26.0",
         "better-console": "^0.2.4",
         "blueimp-md5": "^2.7.0",
-        "cloudify-blueprint-topology": "^2.5.5",
+        "cloudify-blueprint-topology": "^4.0.1",
         "cloudify-ui-common": "^7.3.1",
         "cloudify-ui-components": "^2.17.1",
         "connected-react-router": "^6.5.2",

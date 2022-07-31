@@ -275,6 +275,7 @@
     "login": {
         "header": "CLOUDIFY",
         "message": "Welcome to the Cloudify Management Console, Please log in",
+        "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
@@ -733,7 +734,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.3/examples.json",
+                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -1656,7 +1657,7 @@
                 }
             },
             "list": {
-                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+                "noDeployments": "No results found."
             },
             "updatedIcon": {
                 "header": "Deployment updated",
