@@ -314,12 +314,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             unsetTemplateModulesLoading();
         }
 
-        setTemplateModulesLoading();
         if (terraformTemplatePackageBase64) {
+            setTemplateModulesLoading();
             new TerraformActions(toolbox)
                 .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
                 .then(setOutputsAndVariables);
         } else if (templateUrl) {
+            setTemplateModulesLoading();
             new TerraformActions(toolbox)
                 .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
                 .then(setOutputsAndVariables);
