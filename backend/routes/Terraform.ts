@@ -276,9 +276,7 @@ async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLoca
 
     const files = await decompress(zipBuffer);
     return files
-        .filter(file => {
-            return file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed);
-        })
+        .filter(file => file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed))
         .map(file => file?.data);
 }
 
