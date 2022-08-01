@@ -518,12 +518,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateVariables(variables, 'variables');
         validateVariables(environment, 'environmentVariables');
 
-        const smth = true;
-
-        if (smth) {
-            return;
-        }
-
         if (formHasErrors) {
             return;
         }
