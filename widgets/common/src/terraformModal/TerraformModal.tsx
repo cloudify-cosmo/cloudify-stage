@@ -280,6 +280,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         onHide();
     }, [onHide, cleanFormErrors]);
 
+    function clearFieldError(fieldName: string) {
+        setFieldError(fieldName);
+    }
+
     function validateBlueprintName() {
         if (!blueprintName) {
             setFieldError('blueprintName', tError('noBlueprintName'));
@@ -348,8 +352,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (isEmpty(variable.source)) {
                 setFieldError(variableIndex, tVariableError('sourceMissing'));
             } else if (hasError) {
-                // TODO Norbert: Create a separate function for clearing errors from field
-                setFieldError(variableIndex);
+                clearFieldError(variableIndex);
             }
         });
     }
@@ -365,7 +368,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             } else if (!variable.name.match(validationStrictRegExp)) {
                 setFieldError(variableIndex, tVariableError('nameInvalid'));
             } else if (hasError) {
-                setFieldError(variableIndex);
+                clearFieldError(variableIndex);
             }
         });
     }
@@ -385,7 +388,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (isEmpty(output.type)) {
                 setFieldError(outputIndex, tOutputError('typeMissing'));
             } else if (hasError) {
-                setFieldError(outputIndex);
+                clearFieldError(outputIndex);
             }
         });
     }
@@ -401,7 +404,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             } else if (!output.terraformOutput.match(validationStrictRegExp)) {
                 setFieldError(outputIndex, tOutputError('outputInvalid'));
             } else if (hasError) {
-                setFieldError(outputIndex);
+                clearFieldError(outputIndex);
             }
         });
     }
@@ -443,7 +446,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
         );
 
-        setFieldError('template');
+        clearFieldError('template');
     }
 
     function catchTemplateModulesLoadingError(err: any) {
@@ -629,7 +632,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             if (!resourceLocation) {
                 return;
             }
-            setFieldError('resource');
+            clearFieldError('resource');
 
             function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
                 const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
