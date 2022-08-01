@@ -213,11 +213,12 @@ const commands = {
             }
         });
 
-        cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
-        cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
-        cy.get('.form > button').click();
-
-        cy.get('.form > button.loading').should('not.exist');
+        cy.get('form').within(() => {
+            cy.get('input').eq(0).clear().type(username);
+            cy.get('input').eq(1).clear().type(password);
+            cy.get('button').click();
+            cy.get('button.loading').should('not.exist');
+        });
 
         if (expectSuccessfulLogin) {
             cy.getCookies()
