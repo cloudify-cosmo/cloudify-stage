@@ -99,10 +99,7 @@ const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
         .then((files: File[]) =>
             _(files)
                 .filter(file => file.type === 'file' && file.path.endsWith('.tf'))
-                .map(file => {
-                    const parentPath = path.dirname(file.path);
-                    return parentPath;
-                })
+                .map(file => path.dirname(file.path))
                 .uniq()
                 .sort()
                 .value()
