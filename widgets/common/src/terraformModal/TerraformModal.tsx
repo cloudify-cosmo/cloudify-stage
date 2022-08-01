@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { FormEvent } from 'react';
-import { flushSync } from 'react-dom';
 import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
 import { chain, find, some, isEmpty, entries } from 'lodash';
@@ -281,17 +280,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         onHide();
     }, [onHide, cleanFormErrors]);
 
-    function assignDeferredVariablesAndOutputs() {
-        if (outputsDeferred.length) {
-            setOutputs(outputsDeferred);
-            setOutputsDeferred([]);
-        }
-        if (variablesDeferred.length) {
-            setVariables(variablesDeferred);
-            setVariablesDeferred([]);
-        }
-    }
-
     function validateBlueprintName() {
         if (!blueprintName) {
             setFieldError('blueprintName', tError('noBlueprintName'));
@@ -354,12 +342,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     function validateVariablesSource(variablesList: Variable[], variableType: string) {
         variablesList.forEach((variable, index) => {
             const variableIndex = `${variableType}_${index}_source`;
+            const hasError = getFieldError(variableIndex);
             const tVariableError = Stage.Utils.composeT(tError, variableType);
 
             if (isEmpty(variable.source)) {
                 setFieldError(variableIndex, tVariableError('sourceMissing'));
-            } else {
-                setFieldError(variableIndex, undefined);
+            } else if (hasError) {
+                // TODO Norbert: Create a separate function for clearing errors from field
+                setFieldError(variableIndex);
             }
         });
     }
@@ -367,47 +357,59 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     function validateVariablesName(variablesList: Variable[], variableType: string) {
         variablesList.forEach((variable, index) => {
             const variableIndex = `${variableType}_${index}_name`;
+            const hasError = getFieldError(variableIndex);
             const tVariableError = Stage.Utils.composeT(tError, variableType);
 
             if (isEmpty(variable.name)) {
                 setFieldError(variableIndex, tVariableError('nameMissing'));
             } else if (!variable.name.match(validationStrictRegExp)) {
                 setFieldError(variableIndex, tVariableError('nameInvalid'));
-            } else {
-                setFieldError(variableIndex, undefined);
+            } else if (hasError) {
+                setFieldError(variableIndex);
             }
         });
     }
 
     function validateVariables(variablesList: Variable[], variableType: string) {
         validateIDs(variablesList, variableType);
-
         validateVariablesSource(variablesList, variableType);
         validateVariablesName(variablesList, variableType);
     }
 
-    function validateOutputs() {
-        validateIDs(outputs, 'outputs', 'name');
+    function validateOutputsType(outputsList: Output[]) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_type`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
 
-        const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-        outputs.forEach((output: Output, index: number) => {
             if (isEmpty(output.type)) {
-                setFieldError(`outputs_${index}_type`, tOutputError('typeMissing'));
-            }
-
-            if (isEmpty(output.terraformOutput)) {
-                setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputMissing'));
-            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                setFieldError(`outputs_${index}_terraformOutput`, tOutputError('outputInvalid'));
+                setFieldError(outputIndex, tOutputError('typeMissing'));
+            } else if (hasError) {
+                setFieldError(outputIndex);
             }
         });
     }
 
-    function validateOutputsAndVariables() {
-        validateOutputs();
-        validateVariables(variables, 'variables');
-        validateVariables(environment, 'environmentVariables');
+    function validateOutputsTerraformOutput(outputsList: Output[]) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_terraformOutput`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+            if (isEmpty(output.terraformOutput)) {
+                setFieldError(outputIndex, tOutputError('outputMissing'));
+            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
+                setFieldError(outputIndex, tOutputError('outputInvalid'));
+            } else if (hasError) {
+                setFieldError(outputIndex);
+            }
+        });
+    }
+
+    function validateOutputs(outputsList = outputs) {
+        validateIDs(outputs, 'outputs', 'name');
+        validateOutputsType(outputsList);
+        validateOutputsTerraformOutput(outputsList);
     }
 
     async function createSecretsFromVariables() {
@@ -509,7 +511,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateTemplate();
         validateUrlAuthentication();
         validateResourceLocation();
-        validateOutputsAndVariables();
+        validateOutputs();
+        validateVariables(variables, 'variables');
+        validateVariables(environment, 'environmentVariables');
 
         const smth = true;
 
@@ -598,6 +602,19 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
     }
 
+    function assignDeferredVariablesAndOutputs() {
+        if (outputsDeferred.length) {
+            setOutputs(outputsDeferred);
+            setOutputsDeferred([]);
+            validateOutputs(outputsDeferred);
+        }
+        if (variablesDeferred.length) {
+            setVariables(variablesDeferred);
+            setVariablesDeferred([]);
+            validateVariables(variablesDeferred, 'variables');
+        }
+    }
+
     useEffect(
         function setFocusOnUsernameInput() {
             if (urlAuthentication && !username) {
@@ -628,12 +645,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     duplicated: false
                 }));
 
-                flushSync(() => {
-                    setOutputsDeferred(outputsTmp);
-                    setVariablesDeferred(variablesTmp);
-                    validateOutputsAndVariables();
-                    unsetTemplateModulesLoading();
-                });
+                setOutputsDeferred(outputsTmp);
+                setVariablesDeferred(variablesTmp);
+                unsetTemplateModulesLoading();
             }
 
             setTemplateModulesLoading();
