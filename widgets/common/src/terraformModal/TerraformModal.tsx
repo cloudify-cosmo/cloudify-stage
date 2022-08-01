@@ -289,45 +289,43 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         [urlAuthentication, username]
     );
 
-    useEffect(
-        function getVariablesAndOutputsOnSourceChange() {
-            if (!resourceLocation) {
-                return;
-            }
-            setFieldError('resource');
+    useEffect(() => {
+        if (!resourceLocation) {
+            return;
+        }
+        setFieldError('resource');
 
-            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
-                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
-                    name: outputObj.name,
-                    type: 'capability',
-                    terraformOutput: outputObj.name
-                }));
-                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
-                    variable: key,
-                    name: variableObj.name,
-                    source: 'input',
-                    value: '',
-                    duplicated: false
-                }));
+        function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
+            const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
+                name: outputObj.name,
+                type: 'capability',
+                terraformOutput: outputObj.name
+            }));
+            const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
+                variable: key,
+                name: variableObj.name,
+                source: 'input',
+                value: '',
+                duplicated: false
+            }));
 
-                setOutputsDeferred(outputsTmp);
-                setVariablesDeferred(variablesTmp);
-                unsetTemplateModulesLoading();
-            }
+            setOutputsDeferred(outputsTmp);
+            setVariablesDeferred(variablesTmp);
+            unsetTemplateModulesLoading();
+        }
 
+        if (terraformTemplatePackageBase64) {
             setTemplateModulesLoading();
-            if (terraformTemplatePackageBase64) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
-                    .then(setOutputsAndVariables);
-            } else if (templateUrl) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
-                    .then(setOutputsAndVariables);
-            }
-        },
-        [resourceLocation]
-    );
+            new TerraformActions(toolbox)
+                .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
+                .then(setOutputsAndVariables);
+        } else if (templateUrl) {
+            setTemplateModulesLoading();
+            new TerraformActions(toolbox)
+                .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                .then(setOutputsAndVariables);
+        }
+    }, [terraformTemplatePackageBase64, resourceLocation]);
 
     function assignDeferredVariablesAndOutputs() {
         if (outputsDeferred.length) {

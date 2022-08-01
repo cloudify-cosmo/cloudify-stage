@@ -10,7 +10,7 @@ import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
 import fs from 'fs';
 import { STATUS_CODES } from 'http';
-import _, { escapeRegExp, merge, trimEnd, trimStart } from 'lodash';
+import _, { escapeRegExp, merge, trimStart } from 'lodash';
 import multer from 'multer';
 import os from 'os';
 import path from 'path';
@@ -22,10 +22,9 @@ import { getLogger } from '../handler/LoggerHandler';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
 import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 
-const directoryTreeOptions = {
+const directoryTreeOptions: directoryTree.DirectoryTreeOptions = {
     extensions: /.tf$/,
-    exclude: /.git/,
-    name: 'main.tf'
+    exclude: /.git/
 };
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
@@ -35,7 +34,6 @@ const templatePath = path.resolve(__dirname, '../templates/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
-const terraformFilesToScan = ['main.tf', 'outputs.tf', 'variables.tf'];
 
 router.use(express.json());
 
@@ -48,8 +46,8 @@ type ResourcesRequest = Request<
     }
 >;
 
-const getTerraformFilePaths = (pathPrefix: string): string[] => {
-    return terraformFilesToScan.map(fileName => path.join(pathPrefix, fileName));
+const isTerraformFilePath = (filePath: string, directoryPath: string): boolean => {
+    return !!filePath.match(`^(${escapeRegExp(directoryPath)})[/]?[^/]+\\.tf$`);
 };
 
 const throwExceptionIfModuleListEmpty = (modules: string[]) => {
@@ -92,18 +90,17 @@ const cloneGitRepo = async (repositoryPath: string, url: string, authHeader?: st
     }
 };
 
+const removeGitRepo = (repositoryPath: string) => {
+    fs.rmdirSync(repositoryPath, { recursive: true });
+};
+
 const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)
-                .filter({ type: 'directory' })
-                .map('path')
-                .filter(directory =>
-                    files.some(
-                        file => file.type === 'file' && file.path.match(`^${escapeRegExp(directory)}[^/]+\\.tf$`)
-                    )
-                )
-                .map(directory => trimEnd(directory, '/'))
+                .filter(file => file.type === 'file' && file.path.endsWith('.tf'))
+                .map(file => path.dirname(file.path))
+                .uniq()
                 .sort()
                 .value()
         )
@@ -140,39 +137,26 @@ const getModuleListForGitUrl = async (url: string, authHeader?: string) => {
         }
     });
 
-    fs.rmdirSync(repositoryPath, { recursive: true });
+    removeGitRepo(repositoryPath);
 
     return terraformModuleDirectories.sort();
 };
 
 const getTfFileBufferListFromGitRepositoryUrl = async (url: string, resourceLocation: string, authHeader?: string) => {
     const repositoryPath = getUniqNotExistingTemporaryDirectory();
-    const files: string[] = [];
+    const terraformModulePath = path.join(repositoryPath, resourceLocation);
+    const files: Buffer[] = [];
 
     await cloneGitRepo(repositoryPath, url, authHeader);
 
-    await directoryTree(repositoryPath, directoryTreeOptions, (_file, filePath) => {
-        const isInRootDirectory = !filePath.includes('/');
-        if (isInRootDirectory || filePath.indexOf(`${resourceLocation}/main.tf`) > -1) {
-            return;
-        }
-        const mainPath = path.dirname(filePath);
-        const acceptableFilePaths = getTerraformFilePaths(mainPath);
-
-        acceptableFilePaths.forEach(acceptableFilePath => {
-            if (fs.existsSync(acceptableFilePath)) {
-                files.push(acceptableFilePath);
-            }
-        });
+    await directoryTree(terraformModulePath, directoryTreeOptions, (_terraformFile, terraformFilePath) => {
+        const fileBuffer = fs.readFileSync(terraformFilePath);
+        files.push(fileBuffer);
     });
 
-    const fileBufferList = files.map(filePath => {
-        return fs.readFileSync(filePath);
-    });
+    removeGitRepo(repositoryPath);
 
-    fs.rmdirSync(repositoryPath, { recursive: true });
-
-    return fileBufferList;
+    return files;
 };
 
 const getModuleListForUrl = async (templateUrl: string, authHeader?: string) => {
@@ -289,10 +273,11 @@ router.post('/resources', async (req: ResourcesRequest, res) => {
 
 async function getTerraformFileBufferListFromZip(zipBuffer: Buffer, resourceLocation: string) {
     const resourceLocationTrimmed = trimStart(resourceLocation, '/');
-    const acceptableFilePaths = getTerraformFilePaths(resourceLocationTrimmed);
 
     const files = await decompress(zipBuffer);
-    return files.filter(file => acceptableFilePaths.includes(`${file.path}`)).map(file => file?.data);
+    return files
+        .filter(file => file.type === 'file' && isTerraformFilePath(file.path, resourceLocationTrimmed))
+        .map(file => file?.data);
 }
 
 function getTerraformJsonMergedFromFileBufferList(files: Buffer[]) {
