@@ -509,6 +509,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     async function handleSubmit() {
         cleanFormErrors();
 
+        // TODO Norbert: Double check if the submitting function is working as expected
+
         validateBlueprintName();
         validateBlueprintDescription();
         validateTemplate();

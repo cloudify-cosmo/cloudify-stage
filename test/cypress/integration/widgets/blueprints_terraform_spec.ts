@@ -1,6 +1,8 @@
 import { waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
 import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprints/src/types';
 
+// TODO Norbert: Create a test scenario for redeclaring outputs/variables
+
 describe('Blueprints widget should open upload from Terraform module modal and', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
