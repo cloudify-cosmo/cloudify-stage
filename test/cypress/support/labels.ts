@@ -23,14 +23,6 @@ const commands = {
 
         cy.wait('@fetchLabel');
         cy.contains('a.label', `${key} ${value}`).should('exist');
-    },
-    typeLabelInput: (inputType: LabelInputType, text: string) => {
-        if (inputType === 'key') {
-            cy.typeLabelKey(text);
-        } else {
-            cy.typeLabelKey('a');
-            cy.typeLabelValue(text);
-        }
     }
 };
 

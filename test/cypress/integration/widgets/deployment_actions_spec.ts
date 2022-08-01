@@ -5,6 +5,15 @@ describe('Deployment Action Buttons widget', () => {
     const deploymentId = 'deployment_action_buttons_test';
     const deploymentName = `${deploymentId}_name`;
 
+    const typeLabelInput = (inputType: LabelInputType, text: string) => {
+        if (inputType === 'key') {
+            cy.typeLabelKey(text);
+        } else {
+            cy.typeLabelKey('a');
+            cy.typeLabelValue(text);
+        }
+    };
+
     before(() =>
         cy
             .usePageMock('deploymentActionButtons')
@@ -77,11 +86,11 @@ describe('Deployment Action Buttons widget', () => {
 
     describe('should allow to manage deployment labels', () => {
         function checkIfPopupIsDisplayed(inputType: LabelInputType, text: string, popupContent: string) {
-            cy.typeLabelInput(inputType, text);
+            typeLabelInput(inputType, text);
             cy.contains('.popup', popupContent).should('be.visible');
         }
         function checkIfPopupIsNotDisplayed(inputType: LabelInputType, text: string) {
-            cy.typeLabelInput(inputType, text);
+            typeLabelInput(inputType, text);
             cy.get('.popup').should('not.exist');
         }
         function toggleLabelsInput() {
