@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { FormEvent } from 'react';
+import { flushSync } from 'react-dom';
 import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
 import { chain, find, some, isEmpty, entries } from 'lodash';
@@ -350,22 +351,39 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         });
     }
 
-    function validateVariables(variablesList: Variable[], type: string) {
-        validateIDs(variablesList, type);
-
-        const tVariableError = Stage.Utils.composeT(tError, type);
-
+    function validateVariablesSource(variablesList: Variable[], variableType: string) {
         variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_source`;
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
             if (isEmpty(variable.source)) {
-                setFieldError(`${type}_${index}_source`, tVariableError('sourceMissing'));
-            } else if (variable.source !== 'static') {
-                if (isEmpty(variable.name)) {
-                    setFieldError(`${type}_${index}_name`, tVariableError('nameMissing'));
-                } else if (!variable.name.match(validationStrictRegExp)) {
-                    setFieldError(`${type}_${index}_name`, tVariableError('nameInvalid'));
-                }
+                setFieldError(variableIndex, tVariableError('sourceMissing'));
+            } else {
+                setFieldError(variableIndex, undefined);
             }
         });
+    }
+
+    function validateVariablesName(variablesList: Variable[], variableType: string) {
+        variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_name`;
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
+            if (isEmpty(variable.name)) {
+                setFieldError(variableIndex, tVariableError('nameMissing'));
+            } else if (!variable.name.match(validationStrictRegExp)) {
+                setFieldError(variableIndex, tVariableError('nameInvalid'));
+            } else {
+                setFieldError(variableIndex, undefined);
+            }
+        });
+    }
+
+    function validateVariables(variablesList: Variable[], variableType: string) {
+        validateIDs(variablesList, variableType);
+
+        validateVariablesSource(variablesList, variableType);
+        validateVariablesName(variablesList, variableType);
     }
 
     function validateOutputs() {
@@ -493,6 +511,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateResourceLocation();
         validateOutputsAndVariables();
 
+        const smth = true;
+
+        if (smth) {
+            return;
+        }
+
         if (formHasErrors) {
             return;
         }
@@ -604,9 +628,12 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     duplicated: false
                 }));
 
-                setOutputsDeferred(outputsTmp);
-                setVariablesDeferred(variablesTmp);
-                unsetTemplateModulesLoading();
+                flushSync(() => {
+                    setOutputsDeferred(outputsTmp);
+                    setVariablesDeferred(variablesTmp);
+                    validateOutputsAndVariables();
+                    unsetTemplateModulesLoading();
+                });
             }
 
             setTemplateModulesLoading();
