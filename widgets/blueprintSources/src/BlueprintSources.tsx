@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
-import { isYamlFile } from '../../../backend/utils';
+import { isYamlFile } from '../../../backend/sharedUtils';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;

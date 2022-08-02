@@ -8,7 +8,8 @@ import pathlib from 'path';
 import url from 'url';
 
 import { getConfig } from '../config';
-import { getParams, getValuesWithPaths, isYamlFile } from '../utils';
+import { isYamlFile } from '../sharedUtils';
+import { getParams, getValuesWithPaths } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';

@@ -52,8 +52,3 @@ export function getHeadersWithAuthenticationTokenFromRequest(req: Request, heade
 export function getHeadersWithAuthenticationToken(token: string, headers: AxiosRequestHeaders = {}) {
     return { ...headers, ...getAuthenticationTokenHeader(token) };
 }
-
-export function isYamlFile(filename: string) {
-    const lowercaseFilename = filename.toLowerCase();
-    return lowercaseFilename.endsWith('.yaml') || lowercaseFilename.endsWith('.yml');
-}

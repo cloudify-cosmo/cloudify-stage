@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { isYamlFile } from '../../../../backend/utils';
+import { isYamlFile } from '../../../../backend/sharedUtils';
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
