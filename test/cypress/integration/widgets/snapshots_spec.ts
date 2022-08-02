@@ -1,5 +1,3 @@
-import { waitUntilNotEmpty } from 'test/cypress/support/resource_commons';
-
 describe('Snapshots list widget', () => {
     const createdSnapshotName = 'snapshots_test_created';
     const uploadedSnapshotName = 'snapshots_test_uploaded';

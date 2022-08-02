@@ -1,6 +1,5 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
-import type { LabelInputType } from '../../../widgets/common/src/labels/types';
 
 declare global {
     namespace Cypress {
