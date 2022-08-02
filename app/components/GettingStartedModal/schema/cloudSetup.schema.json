@@ -28,21 +28,21 @@
        ],
        "blueprints": [
           {
-             "id": "AWS-VM-Setup",
-             "name": "AWS-Basics-VM-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
-             "yamlFile": "aws.yaml"
+             "id": "EC2_WITH_EBS",
+             "name": "EC2_WITH_EBS",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws/EC2_WITH_EBS.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
              "id": "AWS-VM-Setup-CloudFormation",
              "name": "AWS-VM-Setup-using-CloudFormation",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws/EC2_CloudFormation",
              "yamlFile": "aws-cloudformation.yaml"
           },
           {
              "id": "Kubernetes-AWS-EKS",
              "name": "Kubernetes-AWS-EKS",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-aws-eks.zip",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_AWS_EKS.zip",
              "yamlFile": "blueprint.yaml"
           }
        ]
@@ -106,19 +106,19 @@
           {
              "id": "GCP-VM-Setup",
              "name": "GCP-Basics-VM-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp/gcp_vm.zip",
              "yamlFile": "gcp.yaml"
           },
           {
-             "id": "GCP-Simple-Services-Setup",
-             "name": "GCP-Basics-Simple-Service-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
-             "yamlFile": "gcp.yaml"
+             "id": "VM-Centos-GCP-CFY-Ansible",
+             "name": "VM-Centos-GCP-CFY-Ansible",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp/gcp_simple_service.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
              "id": "Kubernetes-GCP-GKE",
              "name": "Kubernetes-GCP-GKE",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-gcp-gke.zip",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_GCP_GKE.zip",
              "yamlFile": "blueprint.yaml"
           }
        ]
@@ -183,16 +183,16 @@
        ],
        "blueprints": [
           {
-             "id": "OpenStack-VM-Setup",
+             "id": "OpenStack-Basics-VM-Setup",
              "name": "OpenStack-Basics-VM-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
-             "yamlFile": "openstack.yaml"
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other/openstack/openstack_basic_vm.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
-             "id": "OpenStack-Simple-Services-Setup",
+             "id": "OpenStack-Basics-Simple-Service-Setup",
              "name": "OpenStack-Basics-Simple-Service-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
-             "yamlFile": "openstack.yaml"
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other/openstack/openstack_basic_service.zip",
+             "yamlFile": "blueprint.yaml"
           }
        ]
     },
@@ -206,9 +206,6 @@
           },
           {
              "name": "cloudify-utilities-plugin"
-          },
-          {
-             "name": "cloudify-ansible-plugin"
           },
           {
              "name": "cloudify-kubernetes-plugin"
@@ -238,27 +235,21 @@
        ],
        "blueprints": [
           {
-             "id": "Azure-VM-Setup",
-             "name": "Azure-Basics-VM-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
-             "yamlFile": "azure.yaml"
+             "id": "VM-Ubuntu-Azure-CFY",
+             "name": "VM-Ubuntu-Azure-CFY",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure/instance-Ubuntu-Azure-Plugin.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
-             "id": "Azure-Simple-Services-Setup",
-             "name": "Azure-Basics-Simple-Service-Setup",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/hello-world-example.zip",
-             "yamlFile": "azure.yaml"
-          },
-          {
-             "id": "Azure-VM-Setup-ARM",
-             "name": "Azure-VM-Setup-using-ARM",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/virtual-machine.zip",
-             "yamlFile": "azure-arm.yaml"
+             "id": "VM-Ubuntu-Azure-ARM",
+             "name": "VM-Ubuntu-Azure-ARM",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure/Instance-Ubuntu-Arm.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
              "id": "Kubernetes-Azure-AKS",
              "name": "Kubernetes-Azure-AKS",
-             "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/download/latest/kubernetes-azure-aks.zip",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_Azure_AKS.zip",
              "yamlFile": "blueprint.yaml"
           }
        ]
@@ -270,6 +261,9 @@
        "plugins": [
           {
              "name": "cloudify-vcloud-plugin"
+          },
+          {
+             "name": "cloudify-utilities-plugin"
           }
        ],
        "secrets": [
@@ -294,6 +288,11 @@
              "type": "text"
           },
           {
+             "name": "vcloud_allow_insecure",
+             "label": "vCloud Allow insecure",
+             "type": "text"
+          },
+          {
              "name": "vcloud_vdc",
              "label": "vCloud Virtual Data Center (vDC)",
              "type": "text"
@@ -305,7 +304,12 @@
           }
        ],
        "blueprints": [
-
+          {
+             "id": "VM-vCloud-CFY",
+             "name": "VM-vCloud-CFY",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vcloud/vcloud_vm.zip",
+             "yamlFile": "blueprint.yaml"
+          }
        ]
     },
     {
@@ -334,6 +338,16 @@
              "type": "text"
           },
           {
+             "name": "vsphere_port",
+             "label": "vSphere Port",
+             "type": "text"
+          },
+          {
+             "name": "vsphere_allow_insecure",
+             "label": "vSphere Allow Insecure",
+             "type": "text"
+          },
+          {
              "name": "vsphere_datacenter_name",
              "label": "vSphere Datacenter Name",
              "type": "text"
@@ -350,7 +364,12 @@
           }
        ],
        "blueprints": [
-
+          {
+             "id": "VM-vSphere-CFY",
+             "name": "VM-vSphere-CFY",
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vsphere/vsphere_vm.zip",
+             "yamlFile": "blueprint.yaml"
+          }
        ]
     }
  ]
