@@ -28,7 +28,6 @@ import './filters';
 import './getting_started';
 import './plugins';
 import './labels';
-import './resource_commons';
 
 import { secondsToMs } from './resource_commons';
 import './secrets';
