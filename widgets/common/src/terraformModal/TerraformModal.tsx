@@ -345,10 +345,116 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
     }
 
+    function validateIDs(
+        entities: Record<string, any>[],
+        type: string,
+        IDkey: 'variable' | 'name' = 'variable',
+        setFormError: typeof setFieldError
+    ): void {
+        const tNameError = Stage.Utils.composeT(tError, type);
+
+        entities.forEach((variable, index) => {
+            if (isEmpty(variable[IDkey])) {
+                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
+            } else if (!variable[IDkey].match(validationRegExp)) {
+                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
+            } else if (
+                some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
+            ) {
+                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
+            }
+        });
+    }
+
+    function validateVariablesSource(
+        variablesList: Variable[],
+        variableType: string,
+        setFormError: typeof setFieldError
+    ) {
+        variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_source`;
+            const hasError = getFieldError(variableIndex);
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
+            if (isEmpty(variable.source)) {
+                setFormError(variableIndex, tVariableError('sourceMissing'));
+            } else if (hasError) {
+                clearFieldError(variableIndex);
+            }
+        });
+    }
+
+    function validateVariablesName(
+        variablesList: Variable[],
+        variableType: string,
+        setFormError: typeof setFieldError
+    ) {
+        variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_name`;
+            const hasError = getFieldError(variableIndex);
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
+            if (isEmpty(variable.name)) {
+                setFormError(variableIndex, tVariableError('nameMissing'));
+            } else if (!variable.name.match(validationStrictRegExp)) {
+                setFormError(variableIndex, tVariableError('nameInvalid'));
+            } else if (hasError) {
+                clearFieldError(variableIndex);
+            }
+        });
+    }
+
+    function validateVariables(variablesList: Variable[], variableType: string, setFormError = setFieldError) {
+        validateIDs(variablesList, variableType, undefined, setFormError);
+        validateVariablesSource(variablesList, variableType, setFormError);
+        validateVariablesName(variablesList, variableType, setFormError);
+    }
+
+    function validateOutputsType(outputsList: Output[], setFormError: typeof setFieldError) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_type`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+            if (isEmpty(output.type)) {
+                setFormError(outputIndex, tOutputError('typeMissing'));
+            } else if (hasError) {
+                clearFieldError(outputIndex);
+            }
+        });
+    }
+
+    function validateOutputsTerraformOutput(outputsList: Output[], setFormError: typeof setFieldError) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_terraformOutput`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+            if (isEmpty(output.terraformOutput)) {
+                setFormError(outputIndex, tOutputError('outputMissing'));
+            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
+                setFormError(outputIndex, tOutputError('outputInvalid'));
+            } else if (hasError) {
+                clearFieldError(outputIndex);
+            }
+        });
+    }
+
+    function validateOutputs(outputsList = outputs, setFormError = setFieldError) {
+        validateIDs(outputs, 'outputs', 'name', setFormError);
+        validateOutputsType(outputsList, setFormError);
+        validateOutputsTerraformOutput(outputsList, setFormError);
+    }
+
     async function handleSubmit() {
         cleanFormErrors();
 
         let formHasErrors = false;
+
+        const setFormError: typeof setFieldError = (...setFieldErrorArguments) => {
+            formHasErrors = true;
+            return setFieldError(...setFieldErrorArguments);
+        };
 
         function validateBlueprintName() {
             if (!blueprintName) {
@@ -428,9 +534,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateTemplate();
         validateUrlAuthentication();
         validateResourceLocation();
-        validateOutputs();
-        validateVariables(variables, 'variables');
-        validateVariables(environment, 'environmentVariables');
+        validateOutputs(undefined, setFormError);
+        validateVariables(variables, 'variables', setFormError);
+        validateVariables(environment, 'environmentVariables', setFormError);
 
         if (formHasErrors) {
             return;
@@ -511,94 +617,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             setFieldError('template', e.message);
             stopProcess();
         }
-    }
-
-    function validateIDs(entities: Record<string, any>[], type: string, IDkey: 'variable' | 'name' = 'variable'): void {
-        const tNameError = Stage.Utils.composeT(tError, type);
-
-        entities.forEach((variable, index) => {
-            if (isEmpty(variable[IDkey])) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-            } else if (!variable[IDkey].match(validationRegExp)) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
-            } else if (
-                some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
-            ) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
-            }
-        });
-    }
-
-    function validateVariablesSource(variablesList: Variable[], variableType: string) {
-        variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_source`;
-            const hasError = getFieldError(variableIndex);
-            const tVariableError = Stage.Utils.composeT(tError, variableType);
-
-            if (isEmpty(variable.source)) {
-                setFieldError(variableIndex, tVariableError('sourceMissing'));
-            } else if (hasError) {
-                clearFieldError(variableIndex);
-            }
-        });
-    }
-
-    function validateVariablesName(variablesList: Variable[], variableType: string) {
-        variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_name`;
-            const hasError = getFieldError(variableIndex);
-            const tVariableError = Stage.Utils.composeT(tError, variableType);
-
-            if (isEmpty(variable.name)) {
-                setFieldError(variableIndex, tVariableError('nameMissing'));
-            } else if (!variable.name.match(validationStrictRegExp)) {
-                setFieldError(variableIndex, tVariableError('nameInvalid'));
-            } else if (hasError) {
-                clearFieldError(variableIndex);
-            }
-        });
-    }
-
-    function validateVariables(variablesList: Variable[], variableType: string) {
-        validateIDs(variablesList, variableType);
-        validateVariablesSource(variablesList, variableType);
-        validateVariablesName(variablesList, variableType);
-    }
-
-    function validateOutputsType(outputsList: Output[]) {
-        outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_type`;
-            const hasError = getFieldError(outputIndex);
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            if (isEmpty(output.type)) {
-                setFieldError(outputIndex, tOutputError('typeMissing'));
-            } else if (hasError) {
-                clearFieldError(outputIndex);
-            }
-        });
-    }
-
-    function validateOutputsTerraformOutput(outputsList: Output[]) {
-        outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_terraformOutput`;
-            const hasError = getFieldError(outputIndex);
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            if (isEmpty(output.terraformOutput)) {
-                setFieldError(outputIndex, tOutputError('outputMissing'));
-            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                setFieldError(outputIndex, tOutputError('outputInvalid'));
-            } else if (hasError) {
-                clearFieldError(outputIndex);
-            }
-        });
-    }
-
-    function validateOutputs(outputsList = outputs) {
-        validateIDs(outputs, 'outputs', 'name');
-        validateOutputsType(outputsList);
-        validateOutputsTerraformOutput(outputsList);
     }
 
     function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
