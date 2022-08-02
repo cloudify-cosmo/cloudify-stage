@@ -8,7 +8,7 @@ import pathlib from 'path';
 import url from 'url';
 
 import { getConfig } from '../config';
-import { getParams, getValuesWithPaths } from '../utils';
+import { getParams, getValuesWithPaths, isYamlFile } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
@@ -215,9 +215,8 @@ function getBlueprintArchiveContent(request) {
                     throw new Error('No archive file provided');
                 } else {
                     const archivePath = pathlib.join(archiveFolder, archiveFile);
-                    const archiveExtension = pathlib.parse(archiveFile).ext.toLowerCase(); // file extension
 
-                    if (archiveExtension === '.yml' || archiveExtension === '.yaml') {
+                    if (isYamlFile(archiveFile)) {
                         return ArchiveHelper.storeSingleYamlFile(archivePath, archiveFile, extractedDir);
                     }
                     return ArchiveHelper.decompressArchive(archivePath, extractedDir);

@@ -1,6 +1,6 @@
-import pathlib from 'path';
-import type { Request } from 'express';
 import type { AxiosRequestHeaders } from 'axios';
+import type { Request } from 'express';
+import pathlib from 'path';
 import * as Consts from './consts';
 import { TOKEN_COOKIE_NAME } from './consts';
 
@@ -51,4 +51,9 @@ export function getHeadersWithAuthenticationTokenFromRequest(req: Request, heade
 
 export function getHeadersWithAuthenticationToken(token: string, headers: AxiosRequestHeaders = {}) {
     return { ...headers, ...getAuthenticationTokenHeader(token) };
+}
+
+export function isYamlFile(filename: string) {
+    const lowercaseFilename = filename.toLowerCase();
+    return lowercaseFilename.endsWith('.yaml') || lowercaseFilename.endsWith('.yml');
 }
