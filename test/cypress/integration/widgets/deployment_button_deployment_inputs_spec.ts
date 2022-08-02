@@ -411,6 +411,8 @@ describe('Create Deployment modal handles deployment inputs of type', () => {
         });
     });
 
+    // TODO: Add tests for 4 input types which requires deployment_id constraint to be set
+
     it('capability_value', () => {
         const capabilitiesBlueprintId = `${resourcePrefix}capabilities`;
         const testDeploymentId = `${capabilitiesBlueprintId}_dep`;

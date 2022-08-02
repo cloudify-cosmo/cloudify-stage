@@ -1,4 +1,4 @@
-describe('Execute Workflow modal handles parameters of type', () => {
+describe('Deployment Action Buttons widget provides Execute Workflow modal and handles parameters of type', () => {
     const resourcePrefix = 'workflow_parameters_test_';
 
     const types = ['node_id', 'node_type', 'node_instance', 'scaling_group', 'node_id_list', 'node_instance_list'];
@@ -115,4 +115,6 @@ describe('Execute Workflow modal handles parameters of type', () => {
             verifyMultipleDropdown();
         });
     });
+
+    // TODO: Add/Update tests?
 });
