@@ -456,11 +456,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
         function validateBlueprintName() {
             if (!blueprintName) {
-                formHasErrors = true;
-                setFieldError('blueprintName', tError('noBlueprintName'));
+                setFormError('blueprintName', tError('noBlueprintName'));
             } else if (!blueprintName.match(validationStrictRegExp)) {
-                formHasErrors = true;
-                setFieldError('blueprintName', tError('invalidBlueprintName'));
+                setFormError('blueprintName', tError('invalidBlueprintName'));
             }
         }
 
@@ -468,39 +466,33 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             const descriptionValidationRegexp = /^[ -~\s]*$/;
 
             if (!blueprintDescription.match(descriptionValidationRegexp)) {
-                formHasErrors = true;
-                setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
+                setFormError('blueprintDescription', tError('invalidBlueprintDescription'));
             }
         }
 
         function validateTemplate() {
             if (!terraformTemplatePackage) {
                 if (!templateUrl) {
-                    formHasErrors = true;
-                    setFieldError('template', tError('noTerraformTemplate'));
+                    setFormError('template', tError('noTerraformTemplate'));
                 } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                    formHasErrors = true;
-                    setFieldError('template', tError('invalidTerraformTemplate'));
+                    setFormError('template', tError('invalidTerraformTemplate'));
                 }
             }
         }
 
         function validateResourceLocation() {
             if (!resourceLocation) {
-                formHasErrors = true;
-                setFieldError('resource', tError('noResourceLocation'));
+                setFormError('resource', tError('noResourceLocation'));
             }
         }
 
         function validateUrlAuthentication() {
             if (urlAuthentication) {
                 if (!username) {
-                    formHasErrors = true;
-                    setFieldError('username', tError('noUsername'));
+                    setFormError('username', tError('noUsername'));
                 }
                 if (!password) {
-                    formHasErrors = true;
-                    setFieldError('password', tError('noPassword'));
+                    setFormError('password', tError('noPassword'));
                 }
             }
         }
