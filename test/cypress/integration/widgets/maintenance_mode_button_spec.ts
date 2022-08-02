@@ -1,5 +1,4 @@
 import Consts from 'app/utils/consts';
-import { waitUntil } from '../../support/resource_commons';
 
 describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
     before(() => cy.activate('valid_trial_license'));
@@ -13,7 +12,7 @@ describe('Maintenance mode button widget', { retries: { runMode: 2 } }, () => {
             .cfyRequest('/maintenance/deactivate', 'POST', null, null, { useAdminAuthorization: true })
             .then(() => waitForMaintenanceModeStatus('deactivated'));
     const waitForMaintenanceModeStatus = (status: 'activated' | 'deactivated') =>
-        waitUntil('maintenance', response => response.body.status === status, { useAdminAuthorization: true });
+        cy.waitUntil('maintenance', response => response.body.status === status, { useAdminAuthorization: true });
 
     it('should enter maintenance mode on click', () => {
         cy.killRunningExecutions();

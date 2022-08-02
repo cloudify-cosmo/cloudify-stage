@@ -1,5 +1,3 @@
-import { addLabel } from '../../support/labels';
-
 describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
@@ -22,7 +20,7 @@ describe('Labels widget', () => {
         cy.get('.modal').within(() => {
             getCreatedLabel().should('not.exist');
             cy.contains('button', 'Add').should('have.attr', 'disabled');
-            addLabel('sample_key', 'sample_value');
+            cy.addLabel('sample_key', 'sample_value');
             getCreatedLabel().should('be.visible');
             cy.contains('button', 'Add').click();
         });
