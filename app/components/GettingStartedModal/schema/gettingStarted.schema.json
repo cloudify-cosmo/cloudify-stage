@@ -65,19 +65,19 @@
       {
         "id": "Kubernetes-AWS-EKS",
         "name": "Kubernetes-AWS-EKS",
-        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-aws-eks.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_AWS_EKS.zip",
         "yamlFile": "blueprint.yaml"
       },
       {
         "id": "Kubernetes-Azure-AKS",
         "name": "Kubernetes-Azure-AKS",
-        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-azure-aks.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_Azure_AKS.zip",
         "yamlFile": "blueprint.yaml"
       },
       {
         "id": "Kubernetes-GCP-GKE",
         "name": "Kubernetes-GCP-GKE",
-        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/kubernetes-gcp-gke.zip",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/kubernetes/Kubernetes_GCP_GKE.zip",
         "yamlFile": "blueprint.yaml"
       }
     ]
@@ -107,14 +107,10 @@
     "blueprints": [
       {
         "id": "Multi-Cloud-NodeJS-Application-Server",
-        "name": "Multi-Cloud-NodeJS-Application-Server-Setup",
-        "zipUrl": "https://github.com/cloudify-community/blueprint-examples/releases/latest/download/getting-started.zip",
-        "yamlFile": "mc-nodejs.yaml"
+        "name": "Multi-Cloud-NodeJS-Application-Server",
+        "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other/multicloud/multicloud_nodejs_app.zip",
+        "yamlFile": "blueprint.yaml"
       }
     ]
   }
 ]
-
-
-
-
