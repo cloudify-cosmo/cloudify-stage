@@ -272,7 +272,6 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
-    const formHasErrors = useMemo(() => !isEmpty(fieldErrors), [fieldErrors]);
     const formHeaderErrors = useMemo(() => (fieldErrors ? [] : undefined), [fieldErrors]);
 
     const handleOnHideModal = useCallback(() => {
@@ -284,232 +283,145 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         setFieldError(fieldName);
     }
 
-    function validateBlueprintName() {
-        if (!blueprintName) {
-            setFieldError('blueprintName', tError('noBlueprintName'));
-        } else if (!blueprintName.match(validationStrictRegExp)) {
-            setFieldError('blueprintName', tError('invalidBlueprintName'));
-        }
-    }
-
-    function validateBlueprintDescription() {
-        const descriptionValidationRegexp = /^[ -~\s]*$/;
-
-        if (!blueprintDescription.match(descriptionValidationRegexp)) {
-            setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
-        }
-    }
-
-    function validateTemplate() {
-        if (!terraformTemplatePackage) {
-            if (!templateUrl) {
-                setFieldError('template', tError('noTerraformTemplate'));
-            } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
-                setFieldError('template', tError('invalidTerraformTemplate'));
+    useEffect(
+        function setFocusOnUsernameInput() {
+            if (urlAuthentication && !username) {
+                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
             }
+        },
+        [urlAuthentication, username]
+    );
+
+    useEffect(
+        function getVariablesAndOutputsOnSourceChange() {
+            if (!resourceLocation) {
+                return;
+            }
+            clearFieldError('resource');
+
+            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
+                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
+                    name: outputObj.name,
+                    type: 'capability',
+                    terraformOutput: outputObj.name
+                }));
+                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
+                    variable: key,
+                    name: variableObj.name,
+                    source: 'input',
+                    value: '',
+                    duplicated: false
+                }));
+
+                setOutputsDeferred(outputsTmp);
+                setVariablesDeferred(variablesTmp);
+                unsetTemplateModulesLoading();
+            }
+
+            setTemplateModulesLoading();
+            if (terraformTemplatePackageBase64) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
+                    .then(setOutputsAndVariables);
+            } else if (templateUrl) {
+                new TerraformActions(toolbox)
+                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
+                    .then(setOutputsAndVariables);
+            }
+        },
+        [resourceLocation]
+    );
+
+    function assignDeferredVariablesAndOutputs() {
+        if (outputsDeferred.length) {
+            setOutputs(outputsDeferred);
+            setOutputsDeferred([]);
+            validateOutputs(outputsDeferred);
         }
-    }
-
-    function validateResourceLocation() {
-        if (!resourceLocation) {
-            setFieldError('resource', tError('noResourceLocation'));
+        if (variablesDeferred.length) {
+            setVariables(variablesDeferred);
+            setVariablesDeferred([]);
+            validateVariables(variablesDeferred, 'variables');
         }
-    }
-
-    function validateUrlAuthentication() {
-        if (urlAuthentication) {
-            if (!username) {
-                setFieldError('username', tError('noUsername'));
-            }
-            if (!password) {
-                setFieldError('password', tError('noPassword'));
-            }
-        }
-    }
-
-    function validateIDs(entities: Record<string, any>[], type: string, IDkey: 'variable' | 'name' = 'variable'): void {
-        const tNameError = Stage.Utils.composeT(tError, type);
-
-        entities.forEach((variable, index) => {
-            if (isEmpty(variable[IDkey])) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-            } else if (!variable[IDkey].match(validationRegExp)) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
-            } else if (
-                some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
-            ) {
-                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
-            }
-        });
-    }
-
-    function validateVariablesSource(variablesList: Variable[], variableType: string) {
-        variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_source`;
-            const hasError = getFieldError(variableIndex);
-            const tVariableError = Stage.Utils.composeT(tError, variableType);
-
-            if (isEmpty(variable.source)) {
-                setFieldError(variableIndex, tVariableError('sourceMissing'));
-            } else if (hasError) {
-                clearFieldError(variableIndex);
-            }
-        });
-    }
-
-    function validateVariablesName(variablesList: Variable[], variableType: string) {
-        variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_name`;
-            const hasError = getFieldError(variableIndex);
-            const tVariableError = Stage.Utils.composeT(tError, variableType);
-
-            if (isEmpty(variable.name)) {
-                setFieldError(variableIndex, tVariableError('nameMissing'));
-            } else if (!variable.name.match(validationStrictRegExp)) {
-                setFieldError(variableIndex, tVariableError('nameInvalid'));
-            } else if (hasError) {
-                clearFieldError(variableIndex);
-            }
-        });
-    }
-
-    function validateVariables(variablesList: Variable[], variableType: string) {
-        validateIDs(variablesList, variableType);
-        validateVariablesSource(variablesList, variableType);
-        validateVariablesName(variablesList, variableType);
-    }
-
-    function validateOutputsType(outputsList: Output[]) {
-        outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_type`;
-            const hasError = getFieldError(outputIndex);
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            if (isEmpty(output.type)) {
-                setFieldError(outputIndex, tOutputError('typeMissing'));
-            } else if (hasError) {
-                clearFieldError(outputIndex);
-            }
-        });
-    }
-
-    function validateOutputsTerraformOutput(outputsList: Output[]) {
-        outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_terraformOutput`;
-            const hasError = getFieldError(outputIndex);
-            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
-
-            if (isEmpty(output.terraformOutput)) {
-                setFieldError(outputIndex, tOutputError('outputMissing'));
-            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                setFieldError(outputIndex, tOutputError('outputInvalid'));
-            } else if (hasError) {
-                clearFieldError(outputIndex);
-            }
-        });
-    }
-
-    function validateOutputs(outputsList = outputs) {
-        validateIDs(outputs, 'outputs', 'name');
-        validateOutputsType(outputsList);
-        validateOutputsTerraformOutput(outputsList);
-    }
-
-    async function createSecretsFromVariables() {
-        const secretActions = new SecretActions(toolbox);
-        const { defaultVisibility } = Consts;
-        const allSecretVariables: Variable[] = [...variables, ...environment].filter(
-            variable => variable.source === 'secret'
-        );
-
-        await allSecretVariables
-            .filter(secretVar => !secretVar.duplicated)
-            .forEach(async secretVariable => {
-                // add secret if not exist
-                await secretActions.doGet(secretVariable.name).catch(async () => {
-                    await secretActions.doCreate(secretVariable.name, secretVariable.value, defaultVisibility, false);
-                });
-            });
-    }
-
-    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
-        setUrlAuthentication(checked);
-        if (!checked) {
-            clearUsername();
-            clearPassword();
-        }
-    }
-
-    function reloadTemplateModules(loadedTemplateModules: any) {
-        setTemplateModules(loadedTemplateModules);
-        setResourceLocation(
-            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-        );
-
-        clearFieldError('template');
-    }
-
-    function catchTemplateModulesLoadingError(err: any) {
-        if (err.status === 401) {
-            if (!urlAuthentication) {
-                setUrlAuthentication(true);
-            } else {
-                setFieldError('template', tError('terraformTemplateUnauthorized'));
-            }
-        } else {
-            setFieldError('template', err.message);
-        }
-        clearTemplateModules();
-        clearResourceLocation();
-    }
-
-    function handleTemplateUrlBlur() {
-        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
-        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
-            return;
-        }
-
-        setTemplateModulesLoading();
-        new TerraformActions(toolbox)
-            .doGetTemplateModulesByUrl(templateUrl, username, password)
-            .then(reloadTemplateModules)
-            .catch(catchTemplateModulesLoadingError)
-            .finally(unsetTemplateModulesLoading);
-    }
-
-    const onTerraformTemplatePackageChange = (file: File) => {
-        setTemplateModulesLoading();
-        setTerraformTemplatePackage(file);
-        if (!file) {
-            setTerraformTemplatePackageBase64('');
-            clearTemplateModules();
-            unsetTemplateModulesLoading();
-            return;
-        }
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function onloadend() {
-            setTerraformTemplatePackageBase64(reader.result?.toString());
-        };
-        new TerraformActions(toolbox)
-            .doGetTemplateModulesByFile(file)
-            .then(reloadTemplateModules)
-            .catch(catchTemplateModulesLoadingError)
-            .finally(unsetTemplateModulesLoading);
-    };
-
-    function handleVariablesChange(modifiedVariables: Variable[]) {
-        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
-    }
-
-    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
-        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
     }
 
     async function handleSubmit() {
         cleanFormErrors();
 
-        // TODO Norbert: Double check if the submitting function is working as expected
+        let formHasErrors = false;
+
+        function validateBlueprintName() {
+            if (!blueprintName) {
+                formHasErrors = true;
+                setFieldError('blueprintName', tError('noBlueprintName'));
+            } else if (!blueprintName.match(validationStrictRegExp)) {
+                formHasErrors = true;
+                setFieldError('blueprintName', tError('invalidBlueprintName'));
+            }
+        }
+
+        function validateBlueprintDescription() {
+            const descriptionValidationRegexp = /^[ -~\s]*$/;
+
+            if (!blueprintDescription.match(descriptionValidationRegexp)) {
+                formHasErrors = true;
+                setFieldError('blueprintDescription', tError('invalidBlueprintDescription'));
+            }
+        }
+
+        function validateTemplate() {
+            if (!terraformTemplatePackage) {
+                if (!templateUrl) {
+                    formHasErrors = true;
+                    setFieldError('template', tError('noTerraformTemplate'));
+                } else if (!Stage.Utils.Url.isUrl(templateUrl)) {
+                    formHasErrors = true;
+                    setFieldError('template', tError('invalidTerraformTemplate'));
+                }
+            }
+        }
+
+        function validateResourceLocation() {
+            if (!resourceLocation) {
+                formHasErrors = true;
+                setFieldError('resource', tError('noResourceLocation'));
+            }
+        }
+
+        function validateUrlAuthentication() {
+            if (urlAuthentication) {
+                if (!username) {
+                    formHasErrors = true;
+                    setFieldError('username', tError('noUsername'));
+                }
+                if (!password) {
+                    formHasErrors = true;
+                    setFieldError('password', tError('noPassword'));
+                }
+            }
+        }
+
+        async function createSecretsFromVariables() {
+            const secretActions = new SecretActions(toolbox);
+            const { defaultVisibility } = Consts;
+            const allSecretVariables: Variable[] = [...variables, ...environment].filter(
+                variable => variable.source === 'secret'
+            );
+
+            await allSecretVariables
+                .filter(secretVar => !secretVar.duplicated)
+                .forEach(async secretVariable => {
+                    // add secret if not exist
+                    await secretActions.doGet(secretVariable.name).catch(async () => {
+                        await secretActions.doCreate(
+                            secretVariable.name,
+                            secretVariable.value,
+                            defaultVisibility,
+                            false
+                        );
+                    });
+                });
+        }
 
         validateBlueprintName();
         validateBlueprintDescription();
@@ -601,67 +513,167 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
     }
 
-    function assignDeferredVariablesAndOutputs() {
-        if (outputsDeferred.length) {
-            setOutputs(outputsDeferred);
-            setOutputsDeferred([]);
-            validateOutputs(outputsDeferred);
-        }
-        if (variablesDeferred.length) {
-            setVariables(variablesDeferred);
-            setVariablesDeferred([]);
-            validateVariables(variablesDeferred, 'variables');
+    function validateIDs(entities: Record<string, any>[], type: string, IDkey: 'variable' | 'name' = 'variable'): void {
+        const tNameError = Stage.Utils.composeT(tError, type);
+
+        entities.forEach((variable, index) => {
+            if (isEmpty(variable[IDkey])) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
+            } else if (!variable[IDkey].match(validationRegExp)) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
+            } else if (
+                some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
+            ) {
+                setFieldError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
+            }
+        });
+    }
+
+    function validateVariablesSource(variablesList: Variable[], variableType: string) {
+        variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_source`;
+            const hasError = getFieldError(variableIndex);
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
+            if (isEmpty(variable.source)) {
+                setFieldError(variableIndex, tVariableError('sourceMissing'));
+            } else if (hasError) {
+                clearFieldError(variableIndex);
+            }
+        });
+    }
+
+    function validateVariablesName(variablesList: Variable[], variableType: string) {
+        variablesList.forEach((variable, index) => {
+            const variableIndex = `${variableType}_${index}_name`;
+            const hasError = getFieldError(variableIndex);
+            const tVariableError = Stage.Utils.composeT(tError, variableType);
+
+            if (isEmpty(variable.name)) {
+                setFieldError(variableIndex, tVariableError('nameMissing'));
+            } else if (!variable.name.match(validationStrictRegExp)) {
+                setFieldError(variableIndex, tVariableError('nameInvalid'));
+            } else if (hasError) {
+                clearFieldError(variableIndex);
+            }
+        });
+    }
+
+    function validateVariables(variablesList: Variable[], variableType: string) {
+        validateIDs(variablesList, variableType);
+        validateVariablesSource(variablesList, variableType);
+        validateVariablesName(variablesList, variableType);
+    }
+
+    function validateOutputsType(outputsList: Output[]) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_type`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+            if (isEmpty(output.type)) {
+                setFieldError(outputIndex, tOutputError('typeMissing'));
+            } else if (hasError) {
+                clearFieldError(outputIndex);
+            }
+        });
+    }
+
+    function validateOutputsTerraformOutput(outputsList: Output[]) {
+        outputsList.forEach((output, index) => {
+            const outputIndex = `outputs_${index}_terraformOutput`;
+            const hasError = getFieldError(outputIndex);
+            const tOutputError = Stage.Utils.composeT(tError, 'outputs');
+
+            if (isEmpty(output.terraformOutput)) {
+                setFieldError(outputIndex, tOutputError('outputMissing'));
+            } else if (!output.terraformOutput.match(validationStrictRegExp)) {
+                setFieldError(outputIndex, tOutputError('outputInvalid'));
+            } else if (hasError) {
+                clearFieldError(outputIndex);
+            }
+        });
+    }
+
+    function validateOutputs(outputsList = outputs) {
+        validateIDs(outputs, 'outputs', 'name');
+        validateOutputsType(outputsList);
+        validateOutputsTerraformOutput(outputsList);
+    }
+
+    function handleUrlAuthenticationChange(_event: FormEvent<HTMLInputElement>, { checked }: CheckboxProps) {
+        setUrlAuthentication(checked);
+        if (!checked) {
+            clearUsername();
+            clearPassword();
         }
     }
 
-    useEffect(
-        function setFocusOnUsernameInput() {
-            if (urlAuthentication && !username) {
-                usernameInputRef.current?.getElementsByTagName('input')[0].focus();
-            }
-        },
-        [urlAuthentication, username]
-    );
+    function reloadTemplateModules(loadedTemplateModules: any) {
+        setTemplateModules(loadedTemplateModules);
+        setResourceLocation(
+            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
+        );
 
-    useEffect(
-        function getVariablesAndOutputsOnSourceChange() {
-            if (!resourceLocation) {
-                return;
-            }
-            clearFieldError('resource');
+        clearFieldError('template');
+    }
 
-            function setOutputsAndVariables({ outputs: outputsResponse, variables: variablesResponse }: any) {
-                const outputsTmp: Output[] = entries(outputsResponse).map(([, outputObj]: any) => ({
-                    name: outputObj.name,
-                    type: 'capability',
-                    terraformOutput: outputObj.name
-                }));
-                const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
-                    variable: key,
-                    name: variableObj.name,
-                    source: 'input',
-                    value: '',
-                    duplicated: false
-                }));
-
-                setOutputsDeferred(outputsTmp);
-                setVariablesDeferred(variablesTmp);
-                unsetTemplateModulesLoading();
+    function catchTemplateModulesLoadingError(err: any) {
+        if (err.status === 401) {
+            if (!urlAuthentication) {
+                setUrlAuthentication(true);
+            } else {
+                setFieldError('template', tError('terraformTemplateUnauthorized'));
             }
+        } else {
+            setFieldError('template', err.message);
+        }
+        clearTemplateModules();
+        clearResourceLocation();
+    }
 
-            setTemplateModulesLoading();
-            if (terraformTemplatePackageBase64) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByFile(terraformTemplatePackageBase64, resourceLocation)
-                    .then(setOutputsAndVariables);
-            } else if (templateUrl) {
-                new TerraformActions(toolbox)
-                    .doGetOutputsAndVariablesByURL(templateUrl, resourceLocation, username, password)
-                    .then(setOutputsAndVariables);
-            }
-        },
-        [resourceLocation]
-    );
+    function handleTemplateUrlBlur() {
+        const authenticationDataIncomplete = urlAuthentication && (!username || !password);
+        if (!Stage.Utils.Url.isUrl(templateUrl) || authenticationDataIncomplete) {
+            return;
+        }
+
+        setTemplateModulesLoading();
+        new TerraformActions(toolbox)
+            .doGetTemplateModulesByUrl(templateUrl, username, password)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
+            .finally(unsetTemplateModulesLoading);
+    }
+
+    const onTerraformTemplatePackageChange = (file: File) => {
+        setTemplateModulesLoading();
+        setTerraformTemplatePackage(file);
+        if (!file) {
+            setTerraformTemplatePackageBase64('');
+            clearTemplateModules();
+            unsetTemplateModulesLoading();
+            return;
+        }
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function onloadend() {
+            setTerraformTemplatePackageBase64(reader.result?.toString());
+        };
+        new TerraformActions(toolbox)
+            .doGetTemplateModulesByFile(file)
+            .then(reloadTemplateModules)
+            .catch(catchTemplateModulesLoadingError)
+            .finally(unsetTemplateModulesLoading);
+    };
+
+    function handleVariablesChange(modifiedVariables: Variable[]) {
+        return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
+    }
+
+    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
+        return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
+    }
 
     return (
         <Modal open onClose={handleOnHideModal} id="terraformModal">
