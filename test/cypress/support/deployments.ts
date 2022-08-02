@@ -1,6 +1,5 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
-import { waitUntilEmpty } from './resource_commons';
 
 declare global {
     namespace Cypress {
@@ -64,7 +63,7 @@ const commands = {
         cy
             .cfyRequest(`/deployments?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
-            .then(() => waitUntilEmpty('deployments', { search })),
+            .then(() => cy.waitUntilEmpty('deployments', { search })),
     searchInDeploymentsWidget: (deploymentId: string) =>
         cy.get('.deploymentsWidget').within(() => {
             cy.getSearchInput().clear().type(deploymentId);
