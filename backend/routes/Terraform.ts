@@ -19,8 +19,8 @@ import type { GitError } from 'simple-git';
 import simpleGit from 'simple-git';
 
 import { getLogger } from '../handler/LoggerHandler';
-import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 import checkIfFileUploaded from '../middleware/checkIfFileUploadedMiddleware';
+import type { RequestArchiveBody, RequestBody, RequestFetchDataBody } from './Terraform.types';
 
 const directoryTreeOptions: directoryTree.DirectoryTreeOptions = {
     extensions: /.tf$/,
@@ -322,7 +322,7 @@ router.post('/blueprint', (req, res) => {
     res.send(result);
 });
 
-router.post('/blueprint/archive', fileDebase64, (req, res) => {
+router.post('/blueprint/archive', fileDebase64, (req, res, next) => {
     const terraformTemplate = path.join('tf_module', 'terraform.zip');
     const { terraformVersion, resourceLocation }: RequestArchiveBody = req.body;
 
@@ -340,7 +340,7 @@ router.post('/blueprint/archive', fileDebase64, (req, res) => {
 
     archive.append(result, { name: 'blueprint/blueprint.yaml' });
     archive.append(req.body.file, { name: 'blueprint/tf_module/terraform.zip' });
-    archive.finalize();
+    archive.finalize().catch(next);
 });
 
 export default router;
