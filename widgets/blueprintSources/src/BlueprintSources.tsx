@@ -1,7 +1,6 @@
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
-import { isYamlFile } from '../../../backend/sharedUtils';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
@@ -80,7 +79,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             .then(setContent)
             .then(() => {
                 let fileType: FileType = 'json';
-                if (isYamlFile(path)) {
+                if (Stage.Utils.isYamlFile(path)) {
                     fileType = 'yaml';
                 } else if (_.endsWith(path.toLowerCase(), '.py')) {
                     fileType = 'python';

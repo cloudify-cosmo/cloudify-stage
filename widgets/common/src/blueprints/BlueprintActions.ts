@@ -1,5 +1,4 @@
 // eslint-disable-next-line max-classes-per-file
-import { isYamlFile } from '../../../../backend/sharedUtils';
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
@@ -258,7 +257,7 @@ export default class BlueprintActions {
         }
 
         if (file) {
-            const compressFile = isYamlFile(file.name);
+            const compressFile = Stage.Utils.isYamlFile(file.name);
             await this.toolbox
                 .getManager()
                 .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
