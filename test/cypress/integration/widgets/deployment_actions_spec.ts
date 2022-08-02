@@ -1,10 +1,18 @@
 import type { LabelInputType } from '../../../../widgets/common/src/labels/types';
-import { addLabel, typeLabelInput, typeLabelKey, typeLabelValue } from '../../support/labels';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
     const deploymentId = 'deployment_action_buttons_test';
     const deploymentName = `${deploymentId}_name`;
+
+    const typeLabelInput = (inputType: LabelInputType, text: string) => {
+        if (inputType === 'key') {
+            cy.typeLabelKey(text);
+        } else {
+            cy.typeLabelKey('a');
+            cy.typeLabelValue(text);
+        }
+    };
 
     before(() =>
         cy
@@ -111,7 +119,7 @@ describe('Deployment Action Buttons widget', () => {
 
         it('adds new label by typing', () => {
             cy.get('.modal').within(() => {
-                addLabel('sample_key', 'sample_value');
+                cy.addLabel('sample_key', 'sample_value');
             });
         });
 
@@ -126,12 +134,12 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.get('div[name=labelKey]').click();
-                typeLabelKey('exist');
+                cy.typeLabelKey('exist');
                 cy.wait('@fetchFilteredKeys');
                 cy.get('div[option-value=existing_key]').click();
                 cy.wait('@fetchValues');
 
-                typeLabelValue('sample_value');
+                cy.typeLabelValue('sample_value');
                 cy.get('button[aria-label=Add]').click();
                 cy.wait('@checkIfLabelExists');
 
@@ -141,8 +149,8 @@ describe('Deployment Action Buttons widget', () => {
 
         it('prevents adding existing label', () => {
             cy.get('.modal').within(() => {
-                typeLabelKey('existing_key');
-                typeLabelValue('existing_value');
+                cy.typeLabelKey('existing_key');
+                cy.typeLabelValue('existing_value');
 
                 cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
             });
@@ -170,12 +178,12 @@ describe('Deployment Action Buttons widget', () => {
         it('prevents adding label with not permitted key', () => {
             function checkIfInternalKeyIsNotPermitted(key: string) {
                 checkIfPopupIsDisplayed('key', key, 'All labels starting with `csys-` are reserved for internal usage');
-                typeLabelValue('a');
+                cy.typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('have.attr', 'disabled');
             }
             function checkIfInternalKeyIsPermitted(key: string) {
                 checkIfPopupIsNotDisplayed('key', key);
-                typeLabelValue('a');
+                cy.typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
             cy.getReservedLabelKeys().then(reservedKeys => {
@@ -196,7 +204,7 @@ describe('Deployment Action Buttons widget', () => {
 
         it('allows to revert to initial value', () => {
             cy.get('.modal').within(() => {
-                addLabel('my_key', 'my_value');
+                cy.addLabel('my_key', 'my_value');
 
                 cy.revertToDefaultValue();
                 cy.contains('a.label', 'existing_key existing_value').should('be.visible');
