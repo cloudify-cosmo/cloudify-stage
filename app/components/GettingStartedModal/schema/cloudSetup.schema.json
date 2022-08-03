@@ -164,6 +164,21 @@
              "name": "openstack_tenant_name",
              "label": "Openstack Tenant Name",
              "type": "text"
+          },
+          {
+            "name": "openstack_region",
+            "label": "Openstack Region",
+            "type": "text"
+          },
+          {
+            "name": "openstack_project_domain_name",
+            "label": "Openstack Project Domain Name",
+            "type": "text"
+          },
+          {
+            "name": "openstack_user_domain_name",
+            "label": "Openstack User Domain Name",
+            "type": "text"
           }
        ],
        "blueprints": [
