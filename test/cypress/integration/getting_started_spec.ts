@@ -1,13 +1,13 @@
 import Consts from 'app/utils/consts';
+import PluginUtils from 'app/utils/shared/PluginUtils';
 import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
-import PluginUtils from 'app/utils/shared/PluginUtils';
 import { minutesToMs } from '../support/resource_commons';
 
 const pluginsCatalogUrl = 'https://marketplace.cloudify.co/plugins/catalog';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
-const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
+const awsBlueprints = ['EC2_WITH_EBS', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
 
 const gcpSecrets = [
     'gcp_client_x509_cert_url',
@@ -138,7 +138,8 @@ function verifyHeader(headerContent: string) {
 }
 
 function resetAwsEnvironmentData() {
-    cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+    cy.deletePlugins().deleteSecrets('aws_');
+    awsBlueprints.forEach(blueprint => cy.deleteBlueprint(blueprint, true));
 }
 
 describe('Getting started modal', () => {
