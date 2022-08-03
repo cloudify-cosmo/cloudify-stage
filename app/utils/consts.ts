@@ -1,3 +1,11 @@
+import {
+    APP_DATA_PATH,
+    CONTEXT_PATH,
+    EDITION,
+    TOKEN_COOKIE_NAME,
+    USER_DATA_PATH,
+    WIDGET_ID_HEADER
+} from '../../backend/consts';
 import appPackage from '../../package.json';
 
 const convertVersionStringToNumber = (versionString: string) => Number(versionString.replace(/[^\d]/g, ''));
@@ -5,17 +13,14 @@ const convertVersionStringToNumber = (versionString: string) => Number(versionSt
 export default {
     APP_VERSION: convertVersionStringToNumber(appPackage.version),
 
-    CONTEXT_PATH: '/console',
+    CONTEXT_PATH,
 
-    USER_DATA_PATH: '/userData',
-    APP_DATA_PATH: '/appData',
+    USER_DATA_PATH,
+    APP_DATA_PATH,
 
-    TOKEN_COOKIE_NAME: 'XSRF-TOKEN',
+    TOKEN_COOKIE_NAME,
 
-    EDITION: {
-        PREMIUM: 'premium',
-        COMMUNITY: 'community'
-    },
+    EDITION,
 
     LICENSE: {
         EMPTY: 'no_license',
@@ -59,7 +64,7 @@ export default {
     PAGE_MANAGEMENT_VIEW: 'view',
     PAGE_MANAGEMENT_EDIT: 'edit',
     PRIVATE_RESOURCE: 'private',
-    WIDGET_ID_HEADER: 'widget-id',
+    WIDGET_ID_HEADER,
 
     LAYOUT_TYPE: {
         WIDGETS: 'widgets',
