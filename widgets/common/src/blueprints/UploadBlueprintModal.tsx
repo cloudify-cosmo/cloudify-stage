@@ -105,9 +105,9 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
                 onStateChanged: setUploadState
             })
             .then(() => {
+                const widget = toolbox.getWidget();
                 clearErrors();
-                onHide();
-                toolbox.refresh();
+                toolbox.drillDown(widget, 'blueprint', { blueprintId: blueprintName }, blueprintName);
             })
             .catch(e => {
                 setMessageAsError(e);
