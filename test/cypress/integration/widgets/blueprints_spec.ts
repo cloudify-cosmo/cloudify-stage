@@ -24,7 +24,6 @@ describe('Blueprints widget', () => {
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function getBlueprintRow(blueprintName: string) {
-        cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
         cy.getSearchInput().clear().type(blueprintName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         return cy.get(`#blueprintsTable_${blueprintName}`);
@@ -344,7 +343,9 @@ describe('Blueprints widget', () => {
                 cy.contains('2/5: Uploading blueprint...');
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
-
+                cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
+                cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
+                cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
                 getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
             });
 
@@ -356,6 +357,9 @@ describe('Blueprints widget', () => {
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
 
+                cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
+                cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
+                cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
                 getBlueprintRow(blueprintName).contains(blueprintFileName);
             });
 
