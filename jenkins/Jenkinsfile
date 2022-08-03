@@ -43,6 +43,14 @@ pipeline {
   }
 
   stages {
+    stage('Fix directory ownership'){
+      // workaround for https://github.com/cypress-io/cypress/issues/20286
+      steps {
+        container('node'){
+          sh "chown `whoami` ."
+        }
+      }
+    }
     stage('Prepare & Audit main branch'){
       parallel{
         stage('Audit'){
