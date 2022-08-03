@@ -107,7 +107,12 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
             .then(() => {
                 const widget = toolbox.getWidget();
                 clearErrors();
-                toolbox.drillDown(widget, 'blueprint', { blueprintId: blueprintName }, blueprintName);
+                toolbox.drillDown(
+                    widget,
+                    'blueprint',
+                    { blueprintId: blueprintName, openDeploymentModal: true },
+                    blueprintName
+                );
             })
             .catch(e => {
                 setMessageAsError(e);
