@@ -6,7 +6,6 @@ import Actions from './actions';
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
-<<<<<<< Updated upstream
 type FileType = ComponentProps<typeof HighlightText>['language'];
 
 interface NodeTreeItem {
@@ -50,9 +49,7 @@ interface BlueprintSourcesProps {
 }
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
-=======
     const [imageUrl, setImageUrl, clearImageUrl] = useResettableState('');
->>>>>>> Stashed changes
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
