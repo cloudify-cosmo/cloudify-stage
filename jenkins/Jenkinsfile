@@ -46,7 +46,9 @@ pipeline {
     stage('Fix directory ownership'){
       steps {
         container('node'){
-          sh "chown `whoami` ."
+          dir("${STAGE_DIR}") {
+            sh "chown `whoami` ."
+          }
         }
       }
     }
