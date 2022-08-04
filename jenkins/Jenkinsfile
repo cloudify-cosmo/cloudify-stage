@@ -84,14 +84,13 @@ pipeline {
         stage('Prepare & Run first test group'){
           steps {
             container('node'){
-                dir("${STAGE_DIR}") {
-                  restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Install dependencies"
-                  sh 'npm run beforebuild'
-                  archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Build application"
-                  sh 'npm run build'
-                }
+              dir("${STAGE_DIR}") {
+                restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+                echo "Install dependencies"
+                sh 'npm run beforebuild'
+                archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+                echo "Build application"
+                sh 'npm run build'
               }
               echo 'Prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
