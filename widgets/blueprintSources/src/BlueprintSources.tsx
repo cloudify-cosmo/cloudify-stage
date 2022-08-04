@@ -6,6 +6,7 @@ import Actions from './actions';
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
+<<<<<<< Updated upstream
 type FileType = ComponentProps<typeof HighlightText>['language'];
 
 interface NodeTreeItem {
@@ -49,6 +50,9 @@ interface BlueprintSourcesProps {
 }
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
+=======
+    const [imageUrl, setImageUrl, clearImageUrl] = useResettableState('');
+>>>>>>> Stashed changes
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
@@ -71,12 +75,25 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
 
         const path = selectedKeys[0];
 
+        console.log(path);
+        if (_.endsWith(path.toLowerCase(), '.png') || _.endsWith(path.toLowerCase(), '.jpg')) {
+            setImageUrl(`http://localhost:4000/console/source/browse/${path}`);
+        }
+
         toolbox.loading(true);
 
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then(setContent)
+            // .then(setContent)
+            .then(res => {
+                if (_.endsWith(path.toLowerCase(), '.png')) {
+                    console.log(res);
+                    console.log(new Blob([res]));
+                    console.log(URL.createObjectURL(new Blob([res])));
+                }
+                setContent(res);
+            })
             .then(() => {
                 let fileType: FileType = 'json';
                 if (Stage.Utils.isYamlFile(path)) {
@@ -85,6 +102,9 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     fileType = 'python';
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
+                } else if (_.endsWith(path.toLowerCase(), '.png')) {
+                    fileType = 'png';
+                    // setContent(new Blob([res.data]));
                 }
 
                 setFilename(info.node.props.title.props.children[1]);
@@ -202,6 +222,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </div>
                     {content ? (
                         <div className="alignHighlight">
+                            {imageUrl && <img src={imageUrl} alt="image in a blueprint" />}
                             <HighlightText language={type}>{content}</HighlightText>
                             <Label attached="top right" size="small" onClick={maximize}>
                                 <Icon name="expand" link />
