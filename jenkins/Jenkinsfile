@@ -47,7 +47,7 @@ pipeline {
       steps {
         container('node'){
           dir("${STAGE_DIR}") {
-            sh "chown `whoami` ."
+            sh "chown -R `whoami` ."
           }
         }
       }
