@@ -60,6 +60,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         cy.getField('node2').within(() => {
             verifyDropdownNumberOfOptions(2);
         });
+        cy.getField('node_from_deployment').within(() => {
+            verifyNumberOfOptions(4);
+        });
     });
 
     it('node_type', () => {
@@ -69,6 +72,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
         cy.getField('node_type_with_constraints').within(() => {
             verifyDropdownNumberOfOptions(2);
+        });
+        cy.getField('node_type_from_deployment').within(() => {
+            verifyNumberOfOptions(1);
         });
     });
 
@@ -80,6 +86,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         cy.getField('node_instance_starts_With_node1').within(() => {
             verifyNumberOfOptions(2);
         });
+        cy.getField('node_instance_from_deployment').within(() => {
+            verifyNumberOfOptions(4);
+        });
     });
 
     it('scaling_group', () => {
@@ -89,6 +98,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
         cy.getField('scaling_group_contains_node1').within(() => {
             verifyNumberOfOptions(2);
+        });
+        cy.getField('scaling_group_from_deployment').within(() => {
+            verifyNumberOfOptions(3);
         });
     });
 
@@ -115,6 +127,4 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
             verifyMultipleDropdown();
         });
     });
-
-    // TODO: Add/Update tests?
 });
