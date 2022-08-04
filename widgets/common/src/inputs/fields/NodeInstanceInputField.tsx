@@ -1,5 +1,6 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
+import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
 
 export default function NodeInstanceInputField({
     name,
@@ -7,7 +8,7 @@ export default function NodeInstanceInputField({
     toolbox,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = `/searches/node-instances?deployment_id=${toolbox.getContext().getValue('deploymentId')}`;
+    const fetchUrl = useFetchUrlWithDeploymentId('/searches/node-instances', restProps.constraints);
 
     return (
         <DynamicDropdown
