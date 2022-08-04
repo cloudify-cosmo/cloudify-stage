@@ -7,7 +7,7 @@ const modalContentLayout: { type: 'widgets'; content: any } = {
             id: 'pluginsCatalog',
             name: t('upload.catalog'),
             height: 24,
-            maximized: true,
+            width: 12,
             definition: 'pluginsCatalog',
             configuration: { jsonPath: Stage.i18n.t('urls.pluginsCatalog') }
         }

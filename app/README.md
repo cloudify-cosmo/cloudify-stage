@@ -16,3 +16,8 @@ log.setLevel(log.levels.DEBUG);
 ```
 
 For more details see [loglevel](https://github.com/pimterry/loglevel) package web page.
+
+## Referencing backend source files
+
+See `tsconfig.json` for the list of backend files that are included in frontend code base.
+These files can be directly imported. 

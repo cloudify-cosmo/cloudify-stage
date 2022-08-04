@@ -1,16 +1,29 @@
+import { isEqual } from 'lodash';
 import { useState } from 'react';
 import { flushSync } from 'react-dom';
 import { translationPath } from '../widget.consts';
 import { tableRefreshEvent } from '../TokensTable.consts';
 import { RequestStatus } from '../types';
 import CreatedToken from './CreatedToken';
-import type { ReceivedToken } from './CreateTokenModal.types';
+import type { ReceivedToken, TokensPostRequestBody } from './CreateTokenModal.types';
 
-const { useInput } = Stage.Hooks;
+const { useInput, useErrors } = Stage.Hooks;
 const { getT } = Stage.Utils;
-const { Modal, Icon, CancelButton, ApproveButton, Input, Form, LoadingOverlay, Message } = Stage.Basic;
+const { Modal, Icon, CancelButton, ApproveButton, DateInput, Input, Form, LoadingOverlay, Message } = Stage.Basic;
 
 const t = getT(`${translationPath}.createModal`);
+const expirationDateFormat = 'YYYY-MM-DD HH:mm';
+
+function formatRequestExpirationDate(expirationDate: string) {
+    return moment.utc(moment(expirationDate)).format(expirationDateFormat);
+}
+
+function getTokensPostRequestBody(description: string, expirationDate: string): TokensPostRequestBody {
+    const body: TokensPostRequestBody = {};
+    if (description) body.description = description;
+    if (expirationDate) body.expiration_date = formatRequestExpirationDate(expirationDate);
+    return body;
+}
 
 interface CreateTokenModalProps {
     onClose: () => void;
@@ -18,20 +31,39 @@ interface CreateTokenModalProps {
 }
 
 const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
+    const { setErrors, getContextError, clearErrors } = useErrors();
     const [description, setDescription] = useInput('');
+    const [expirationDate, setExpirationDate] = useInput('');
     const [submittingStatus, setSubmittingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const [receivedToken, setReceivedToken] = useState<ReceivedToken>();
     const showCreateForm = submittingStatus !== RequestStatus.SUBMITTED;
     const manager = toolbox.getManager();
 
     const handleSubmit = () => {
+        clearErrors();
+
+        if (expirationDate) {
+            const expirationDateMoment = moment(expirationDate);
+            const expirationDateHasInvalidFormat =
+                !expirationDateMoment.isValid() ||
+                !isEqual(expirationDateMoment.format(expirationDateFormat), expirationDate);
+            const expirationDateInPast = expirationDateMoment.isBefore(moment());
+
+            if (expirationDateHasInvalidFormat) {
+                setErrors({ expirationDate: t('errors.expirationDateInvalidFormat') });
+                return;
+            }
+
+            if (expirationDateInPast) {
+                setErrors({ expirationDate: t('errors.expirationDateInPast') });
+                return;
+            }
+        }
+
         setSubmittingStatus(RequestStatus.SUBMITTING);
         manager
             .doPost('/tokens', {
-                body: {
-                    description,
-                    expiration_date: null
-                }
+                body: getTokensPostRequestBody(description, expirationDate)
             })
             .then((token: ReceivedToken) => {
                 toolbox.getEventBus().trigger(tableRefreshEvent);
@@ -52,11 +84,21 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {t('header')}
             </Modal.Header>
             <Modal.Content>
-                {submittingStatus === RequestStatus.ERROR && <Message error content={t('error')} />}
+                {submittingStatus === RequestStatus.ERROR && <Message error content={t('errors.createError')} />}
                 {showCreateForm ? (
                     <Form>
                         <Form.Field label={t('inputs.description')}>
                             <Input value={description} onChange={setDescription} name="description" />
+                        </Form.Field>
+
+                        <Form.Field label={t('inputs.expirationDate')} error={getContextError('expirationDate')}>
+                            <DateInput
+                                name="expirationDate"
+                                value={expirationDate}
+                                defaultValue=""
+                                minDate={moment()}
+                                onChange={setExpirationDate}
+                            />
                         </Form.Field>
                     </Form>
                 ) : (
@@ -68,7 +110,7 @@ const CreateTokenModal = ({ onClose, toolbox }: CreateTokenModalProps) => {
                 {showCreateForm ? (
                     <>
                         <CancelButton content={t('buttons.cancel')} onClick={onClose} />
-                        <ApproveButton content={t('buttons.create')} color="green" icon="plus" onClick={handleSubmit} />
+                        <ApproveButton content={t('buttons.create')} icon="plus" onClick={handleSubmit} />
                     </>
                 ) : (
                     <CancelButton content={t('buttons.close')} onClick={onClose} />

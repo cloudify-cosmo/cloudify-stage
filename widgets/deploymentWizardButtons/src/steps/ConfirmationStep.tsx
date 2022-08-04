@@ -182,7 +182,7 @@ class ConfirmationStepContent extends React.Component {
 
     addSecretsTasks(secrets, tasks) {
         const { toolbox } = this.props;
-        const secretActions = new Stage.Common.SecretActions(toolbox);
+        const secretActions = new Stage.Common.Secrets.Actions(toolbox);
 
         _.forEach(_.keys(secrets), secret => {
             const secretValue = secrets[secret].value;

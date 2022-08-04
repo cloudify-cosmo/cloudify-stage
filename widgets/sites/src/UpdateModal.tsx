@@ -56,13 +56,7 @@ export default function UpdateModal({ onHide, open, site, toolbox }) {
 
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
-                    <ApproveButton
-                        onClick={updateSite}
-                        disabled={isLoading}
-                        content="Update"
-                        icon="edit"
-                        color="green"
-                    />
+                    <ApproveButton onClick={updateSite} disabled={isLoading} content="Update" icon="edit" />
                 </Modal.Actions>
             </Modal>
         </div>

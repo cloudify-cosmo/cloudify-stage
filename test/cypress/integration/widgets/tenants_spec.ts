@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Tenants management widget', () => {
     const tenant = 'tenants_management_test_tenant';
     const group = 'tenants_management_test_group';
@@ -23,14 +22,14 @@ describe('Tenants management widget', () => {
             .deleteTenant(tenant)
             .deleteUser(user)
             .addUserGroup(group)
-            .addUser(user, 'admin')
+            .addUser(user, 'admin', false)
     );
 
     it('should allow to manage tenants', () => {
         cy.log('Creating new tenant');
         cy.get('.tenantsWidget .add').click();
         cy.get('.modal input').type(tenant);
-        cy.get('button.green').click();
+        cy.get('button.positive').click();
 
         cy.log('Verifying tenant users can be edited');
         cy.contains('tr', tenant).find('.content').click();

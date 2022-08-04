@@ -90,7 +90,7 @@ const FilterModal: FunctionComponent<FilterModalProps> = ({
 
             <Modal.Actions>
                 <CancelButton onClick={onCancel} />
-                <ApproveButton onClick={handleSubmit} color="green" />
+                <ApproveButton onClick={handleSubmit} />
             </Modal.Actions>
         </Modal>
     );

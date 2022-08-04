@@ -4,7 +4,7 @@ describe('Events/logs widget', () => {
     before(() => {
         cy.activate()
             .usePageMock(widgetId, {
-                fieldsToShow: ['Message', 'Workflow', 'Deployment', 'Deployment Id'],
+                fieldsToShow: ['Message', 'Workflow', 'Deployment', 'Deployment ID'],
                 pageSize: 15
             })
             .interceptSp(
@@ -20,7 +20,7 @@ describe('Events/logs widget', () => {
             .getTable()
             .should(tableData => {
                 expect(tableData[0].Deployment).to.eq('Mustafar Env Deployment');
-                expect(tableData[0]['Deployment Id']).to.eq('c0d7be2f-15cf-4dac-a53c-c0ebade023c5');
+                expect(tableData[0]['Deployment ID']).to.eq('c0d7be2f-15cf-4dac-a53c-c0ebade023c5');
             });
     });
 

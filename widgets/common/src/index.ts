@@ -1,5 +1,4 @@
 import Actions from './actions';
-import BlueprintMarketplace from './blueprintMarketplace';
 import Blueprints from './blueprints';
 import Components from './components';
 import Consts from './Consts';
@@ -17,14 +16,13 @@ import NodeInstancesConsts from './nodes/NodeInstancesConsts';
 import Plugins from './plugins';
 import StagePropTypes from './props';
 import Roles from './roles';
-import SecretActions from './secrets/SecretActions';
 import TerraformModal from './terraformModal';
+import Secrets from './secrets';
 import Tenants from './tenants';
 import EventUtils from './utils/EventUtils';
 
 const StageCommon = {
     Actions,
-    BlueprintMarketplace,
     Blueprints,
     Components,
     Deployments,
@@ -39,7 +37,7 @@ const StageCommon = {
     NodeInstancesConsts,
     Plugins,
     Roles,
-    SecretActions,
+    Secrets,
     TerraformModal,
     Tenants,
     EventUtils,

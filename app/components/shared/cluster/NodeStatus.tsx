@@ -1,12 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { FunctionComponent } from 'react';
 
 import NodeServices from './NodeServices';
-import { clusterNodeStatusEnum, clusterNodeStatuses } from './consts';
+import { clusterNodeStatusEnum } from './consts';
 import { Icon, Popup } from '../../basic';
+import type { NodeServicesProps } from './NodeServices';
+import type { ClusterNodeStatus } from './types';
 
-export default function NodeStatus({ name, type, status, services }) {
+interface NodeStatusProps extends NodeServicesProps {
+    status: ClusterNodeStatus;
+}
+
+const NodeStatus: FunctionComponent<NodeStatusProps> = ({ name, type, status, services = {} }) => {
     const icon = {
         [clusterNodeStatusEnum.OK]: <Icon name="checkmark" color="green" link />,
         [clusterNodeStatusEnum.Fail]: <Icon name="remove" color="red" link />
@@ -19,12 +24,5 @@ export default function NodeStatus({ name, type, status, services }) {
             </div>
         </Popup>
     );
-}
-
-NodeStatus.propTypes = {
-    ...NodeServices.propTypes,
-    status: PropTypes.oneOf(clusterNodeStatuses).isRequired
 };
-NodeStatus.defaultProps = {
-    ...NodeServices.defaultProps
-};
+export default NodeStatus;

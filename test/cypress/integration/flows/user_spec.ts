@@ -12,7 +12,7 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
             cy.get('textarea').type(secretName);
-            cy.get('button.green').click();
+            cy.get('button.positive').click();
         });
     }
 
@@ -76,6 +76,7 @@ describe('User flow', () => {
         cy.contains('Create new Deployment').click();
 
         cy.contains('Blueprint Marketplace');
+        cy.containsActiveTab('Getting Started');
         cy.get(uploadBlueprintButtonSelector).first().click();
         cy.contains('Uploading');
 

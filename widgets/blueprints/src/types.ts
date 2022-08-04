@@ -1,19 +1,12 @@
-import type { MarketplaceDisplayStyle, MarketplaceTab } from '../../common/src/blueprintMarketplace/types';
 import type { FilterRule } from '../../common/src/filters/types';
+import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
-export interface BlueprintsWidgetConfiguration {
-    pollingTime: number;
-    pageSize: number;
-    sortColumn: string;
-    sortAscending: string;
+export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration, DataTableConfiguration {
     clickToDrillDown: boolean;
     displayStyle: 'table' | 'catalog';
     hideFailedBlueprints: boolean;
     showComposerOptions: boolean;
     filterRules: FilterRule[];
-    marketplaceTabs: MarketplaceTab[];
-    marketplaceDisplayStyle: MarketplaceDisplayStyle;
-    marketplaceColumnsToShow: string[];
     fieldsToShow: string;
 }
 

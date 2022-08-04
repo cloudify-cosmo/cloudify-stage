@@ -38,6 +38,8 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         ignoreFailure: false,
         automaticReinstall: true,
         reinstallList: [],
+        skipHeal: false,
+        skipDriftCheck: false,
         force: false
     });
 
@@ -114,7 +116,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             installWorkflow,
             installWorkflowFirst,
             reinstallList,
-            uninstallWorkflow
+            uninstallWorkflow,
+            skipHeal,
+            skipDriftCheck
         } = inputs;
         const validationErrors = {};
 
@@ -129,18 +133,23 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         }
 
         const inputsPlanForUpdate = getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
+        const inputsMap = getInputsMap(inputsPlanForUpdate, deploymentInputs);
+        const blueprintId = blueprint.id === deployment.blueprint_id && _.isEmpty(inputsMap) ? null : blueprint.id;
+
         const actions = new DeploymentActions(toolbox);
         actions
             .doUpdate(
                 deployment.id,
-                blueprint.id,
-                getInputsMap(inputsPlanForUpdate, deploymentInputs),
+                blueprintId,
+                inputsMap,
                 installWorkflow,
                 uninstallWorkflow,
                 installWorkflowFirst,
                 ignoreFailure,
                 automaticReinstall,
                 reinstallList,
+                skipHeal,
+                skipDriftCheck,
                 force,
                 preview
             )
@@ -210,7 +219,9 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         installWorkflow,
         installWorkflowFirst,
         reinstallList,
-        uninstallWorkflow
+        uninstallWorkflow,
+        skipHeal,
+        skipDriftCheck
     } = inputs;
     const { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } = Stage.Basic;
 
@@ -356,6 +367,28 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 
                     <Form.Field>
                         <Form.Checkbox
+                            label="Skip heal"
+                            name="skipHeal"
+                            toggle
+                            help="Don't attempt to perform heal if a node instance has a bad status"
+                            checked={skipHeal}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
+                            label="Skip drift check"
+                            name="skipDriftCheck"
+                            toggle
+                            help="Drift check will not be performed prior to the update"
+                            checked={skipDriftCheck}
+                            onChange={setInput}
+                        />
+                    </Form.Field>
+
+                    <Form.Field>
+                        <Form.Checkbox
                             label="Force update"
                             name="force"
                             toggle
@@ -382,7 +415,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
                 <ApproveButton onClick={onPreview} disabled={isLoading} content="Preview" icon="zoom" color="blue" />
-                <ApproveButton onClick={onUpdate} disabled={isLoading} content="Update" icon="edit" color="green" />
+                <ApproveButton onClick={onUpdate} disabled={isLoading} content="Update" icon="edit" />
             </Modal.Actions>
         </Modal>
     );

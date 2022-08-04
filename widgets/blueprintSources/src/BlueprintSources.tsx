@@ -1,15 +1,58 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ComponentProps } from 'react';
+import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import Actions from './actions';
 
-export default function BlueprintSources({ data, toolbox, widget }) {
-    const { useResettableState, useBoolean } = Stage.Hooks;
-    const { useEffect } = React;
+const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
+const { useResettableState, useBoolean } = Stage.Hooks;
 
+type FileType = ComponentProps<typeof HighlightText>['language'];
+
+interface NodeTreeItem {
+    children?: NodeTreeItem[];
+    key: string;
+    title: string;
+    isDir: boolean;
+}
+
+interface FileInfo {
+    node: {
+        props: {
+            children: any;
+            title: {
+                props: {
+                    children: React.SetStateAction<string>[];
+                };
+            };
+        };
+    };
+}
+
+interface BlueprintTree {
+    children: NodeTreeItem[];
+    key: string;
+    title: string;
+    isDir: boolean;
+    timestamp: number;
+}
+
+interface BlueprintSourcesProps {
+    data: {
+        blueprintId: string;
+        blueprintTree: BlueprintTree;
+        importedBlueprintIds: string[];
+        importedBlueprintTrees: BlueprintTree[];
+        yamlFileName: string;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
-    const [error, setError, clearError] = useResettableState('');
-    const [type, setType, resetType] = useResettableState('json');
+    const [error, setError, clearError] = useResettableState<string | null>(null);
+    const [type, setType, resetType] = useResettableState<FileType>('json');
     const [isMaximized, maximize, minimize] = useBoolean();
 
     useEffect(() => {
@@ -19,7 +62,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
         resetType();
     }, [data]);
 
-    function selectFile(selectedKeys, info) {
+    function selectFile(selectedKeys: string[], info: FileInfo) {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
             clearContent();
             clearFilename();
@@ -35,8 +78,8 @@ export default function BlueprintSources({ data, toolbox, widget }) {
             .doGetFileContent(path)
             .then(setContent)
             .then(() => {
-                let fileType = 'json';
-                if (_.endsWith(path.toLowerCase(), '.yaml') || _.endsWith(path.toLowerCase(), '.yml')) {
+                let fileType: FileType = 'json';
+                if (Stage.Utils.isYamlFile(path)) {
                     fileType = 'yaml';
                 } else if (_.endsWith(path.toLowerCase(), '.py')) {
                     fileType = 'python';
@@ -48,7 +91,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 setType(fileType);
                 clearError();
             })
-            .catch(err => {
+            .catch((err: Error) => {
                 setError(err.message);
                 clearContent();
                 clearFilename();
@@ -56,13 +99,12 @@ export default function BlueprintSources({ data, toolbox, widget }) {
             .finally(() => toolbox.loading(false));
     }
 
-    const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
-
-    const loop = (blueprintId, timestamp, items) => {
+    const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
+                    // @ts-ignore NodesTree.Node is not migrated to typescript
                     <NodesTree.Node
                         key={key}
                         title={
@@ -76,8 +118,10 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                     </NodesTree.Node>
                 );
             }
+            const blueprintRootDirectory = data.blueprintTree.children[0].key;
+            const mainYamlFilePath = `${blueprintRootDirectory}/${data.yamlFileName}`;
             const label =
-                data.yamlFileName === item.title ? (
+                mainYamlFilePath === item.key ? (
                     <strong>
                         {item.title}
                         <Label color="blue" size="mini" style={{ marginLeft: 8 }}>
@@ -88,6 +132,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                     item.title
                 );
             return (
+                // @ts-ignore NodesTree.Node is not migrated to typescript
                 <NodesTree.Node
                     key={key}
                     title={
@@ -107,10 +152,11 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                 <SplitterLayout
                     primaryIndex={0}
                     percentage
-                    secondaryInitialSize={widget.configuration.contentPaneWidth}
+                    secondaryInitialSize={widget.configuration.contentPaneWidth as number}
                 >
                     <div>
                         <NodesTree className="nodes-tree" showLine selectable defaultExpandAll onSelect={selectFile}>
+                            {/* @ts-ignore NodesTree.Node is not migrated to typescript */}
                             <NodesTree.Node
                                 key="blueprint"
                                 disabled
@@ -123,6 +169,7 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                 {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
+                                // @ts-ignore NodesTree.Node is not migrated to typescript
                                 <NodesTree.Node
                                     key="imported"
                                     style={{ marginTop: '5px' }}
@@ -134,7 +181,8 @@ export default function BlueprintSources({ data, toolbox, widget }) {
                                         </Label>
                                     }
                                 >
-                                    {_.map(data.importedBlueprintTrees, (tree, index) => (
+                                    {_.map(data.importedBlueprintTrees, (tree, index: number) => (
+                                        // @ts-ignore NodesTree.Node is not migrated to typescript
                                         <NodesTree.Node
                                             key={data.importedBlueprintIds[index]}
                                             style={{ marginTop: '3px' }}
@@ -185,18 +233,3 @@ export default function BlueprintSources({ data, toolbox, widget }) {
         </div>
     );
 }
-
-BlueprintSources.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: PropTypes.string,
-        blueprintTree: PropTypes.shape({
-            children: PropTypes.arrayOf(PropTypes.shape({})),
-            timestamp: PropTypes.number
-        }),
-        importedBlueprintIds: PropTypes.arrayOf(PropTypes.string),
-        importedBlueprintTrees: PropTypes.arrayOf(PropTypes.shape({})),
-        yamlFileName: PropTypes.string
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

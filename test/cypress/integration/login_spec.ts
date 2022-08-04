@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
@@ -69,18 +70,27 @@ describe('Login', () => {
         cy.location('pathname').should('be.equal', '/console/');
     });
 
+    it('provides credentials hint on first time login', () => {
+        cy.activate();
+
+        cy.intercept('GET', '/console/auth/first-login', { body: true });
+        cy.visit('/console/login');
+
+        cy.contains('For the first login').should('be.visible');
+    });
+
     it('provides SSO login button when SAML is enabled', () => {
         cy.activate();
 
         const ssoUrl = '/sso-redirect';
         cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.intercept('/console/config', {
-            app: {
-                saml: {
-                    enabled: true,
-                    ssoUrl
-                }
-            }
+        cy.intercept('GET', '/console/config', req => {
+            req.on('response', res => {
+                const responseBody = res.body as ClientConfig;
+                responseBody.app.saml.enabled = true;
+                responseBody.app.saml.ssoUrl = ssoUrl;
+                res.send(responseBody);
+            });
         });
 
         cy.visit('/console/login').waitUntilAppLoaded();

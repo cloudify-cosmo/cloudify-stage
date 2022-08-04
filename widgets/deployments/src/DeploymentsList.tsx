@@ -1,11 +1,39 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Deployment } from '../../common/src/deploymentsView/types';
+import type { Visibility } from '../../common/src/secrets/SecretActions';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
 const t = Stage.Utils.getT('widgets.deployments.list');
 
-export default class DeploymentsList extends React.Component {
-    constructor(props, context) {
+type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & DeploymentData;
+
+interface DeploymentData {
+    blueprintId?: string;
+    searchValue?: string;
+    total: number;
+}
+interface DeploymentsListProps {
+    data: DeploymentResponse;
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
+
+interface DeploymentsListState {
+    activeAction: string | null;
+    deployment: Deployment | null;
+    error: string | null;
+    executeModalOpen: boolean;
+    workflowName: string | null;
+}
+
+interface SelectedDeployment {
+    id: string | string[] | null | undefined;
+    // eslint-disable-next-line camelcase
+    display_name: string;
+}
+
+export default class DeploymentsList extends React.Component<DeploymentsListProps, DeploymentsListState> {
+    constructor(props: DeploymentsListProps, context: any) {
         super(props, context);
 
         this.state = {
@@ -22,7 +50,7 @@ export default class DeploymentsList extends React.Component {
         toolbox.getEventBus().on('deployments:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: DeploymentsListProps, nextState: DeploymentsListState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -36,7 +64,7 @@ export default class DeploymentsList extends React.Component {
         toolbox.getEventBus().off('deployments:refresh', this.refreshData);
     }
 
-    setDeploymentVisibility = (deploymentId, visibility) => {
+    setDeploymentVisibility = (deploymentId: string, visibility: Visibility) => {
         const { toolbox } = this.props;
         const actions = new Stage.Common.Deployments.Actions(toolbox);
         toolbox.loading(true);
@@ -47,25 +75,26 @@ export default class DeploymentsList extends React.Component {
             .finally(() => toolbox.loading(false));
     };
 
-    setError = errorMessage => {
+    setError = (errorMessage: string) => {
         this.setState({ error: errorMessage });
     };
 
-    selectDeployment = item => {
+    // eslint-disable-next-line camelcase
+    selectDeployment = ({ id, display_name }: SelectedDeployment) => {
         const { toolbox, widget } = this.props;
         if (widget.configuration.clickToDrillDown) {
-            toolbox.drillDown(widget, 'deployment', { deploymentId: item.id }, item.display_name);
+            toolbox.drillDown(widget, 'deployment', { deploymentId: id }, display_name);
         } else {
             const oldSelectedDeploymentId = toolbox.getContext().getValue('deploymentId');
-            toolbox.getContext().setValue('deploymentId', item.id === oldSelectedDeploymentId ? null : item.id);
+            toolbox.getContext().setValue('deploymentId', id === oldSelectedDeploymentId ? null : id);
         }
     };
 
-    actOnExecution = (execution, action, error) => {
-        this.setError(error);
+    actOnExecution = (_execution: any, _action: any, executionError: string) => {
+        this.setError(executionError);
     };
 
-    openExecuteModal = (deployment, workflowName) => {
+    openExecuteModal = (deployment: Deployment, workflowName: string) => {
         this.setState({ deployment, executeModalOpen: true, workflowName });
     };
 
@@ -73,7 +102,7 @@ export default class DeploymentsList extends React.Component {
         this.setState({ executeModalOpen: false, workflowName: null });
     };
 
-    openActionModal = (deployment, actionName) => {
+    openActionModal = (deployment: Deployment, actionName: string) => {
         this.setState({ deployment, activeAction: actionName });
     };
 
@@ -81,7 +110,7 @@ export default class DeploymentsList extends React.Component {
         this.setState({ activeAction: null });
     };
 
-    fetchData = fetchParams => {
+    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -104,7 +133,7 @@ export default class DeploymentsList extends React.Component {
         const DeploymentsView = showTableComponent ? DeploymentsTable : DeploymentsSegment;
 
         return (
-            <div>
+            <>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
                 <DeploymentsView
                     widget={widget}
@@ -114,10 +143,9 @@ export default class DeploymentsList extends React.Component {
                     onDeploymentAction={this.openActionModal}
                     onWorkflowAction={this.openExecuteModal}
                     onActOnExecution={this.actOnExecution}
-                    onError={this.setError}
                     onSetVisibility={this.setDeploymentVisibility}
                     noDataMessage={t('noDeployments')}
-                    showExecutionStatusLabel={showExecutionStatusLabel}
+                    showExecutionStatusLabel={showExecutionStatusLabel as boolean}
                     toolbox={toolbox}
                 />
                 {deployment && workflowName && (
@@ -140,13 +168,7 @@ export default class DeploymentsList extends React.Component {
                         redirectToParentPageAfterDelete={false}
                     />
                 )}
-            </div>
+            </>
         );
     }
 }
-
-DeploymentsList.propTypes = {
-    data: PropTypes.shape({}).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

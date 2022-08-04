@@ -296,7 +296,6 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
     return (dispatch, getState) => {
         const state = getState();
 
-        // @ts-expect-error Missing type definitions for app reducer
         const pageId = state.app.currentPageId || state.pages[0].id;
 
         const pagesMap = createPagesMap(state.pages);
@@ -304,8 +303,14 @@ export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyActi
         if (page && page.parent) {
             // NOTE: assume page is always found
             const parentPage = pagesMap[page.parent];
-            dispatch(popDrilldownContext());
-            dispatch(selectPage(parentPage.id, parentPage.isDrillDown));
+            const { context, pageName } = state.drilldownContext?.[state.drilldownContext.length - 2];
+
+            // FIXME: selectPage action needs refactoring
+            //  Currently, when parent page is a drilldown page, we need to remove the last 2 entries
+            //  from the drilldown context to make selectPage action setting proper context
+            //  in the URL query string
+            dispatch(popDrilldownContext(2));
+            dispatch(selectPage(parentPage.id, parentPage.isDrillDown, context, pageName));
         }
     };
 }

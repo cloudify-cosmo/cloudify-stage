@@ -130,13 +130,7 @@ export default class CreateModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    <ApproveButton
-                        onClick={this.onApprove}
-                        disabled={loading}
-                        content="Create"
-                        icon="add"
-                        color="green"
-                    />
+                    <ApproveButton onClick={this.onApprove} disabled={loading} content="Create" icon="add" />
                 </Modal.Actions>
             </Modal>
         );

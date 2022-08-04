@@ -14,11 +14,11 @@
             "noServices": "No services available"
         },
         "servicesList": {
-            "modeName": "Node Name",
+            "nodeName": "Node name",
             "noServices": "There are no Cluster Services available.",
             "privateIp": "Private IP",
             "publicIp": "Public IP / LB IP",
-            "serviceType": "Service Type",
+            "serviceType": "Service type",
             "status": "Status",
             "version": "Version"
         },
@@ -120,7 +120,8 @@
             "blueprintUploadError": "{{blueprintName}} blueprint upload error:\n{{uploadError}}",
             "timeoutExceededError": "Timeout exceeded.",
             "progressMessage": "Installation in progress...",
-            "doneMessage": "Installation completed! (you can now close this window)"
+            "doneMessage": "Installation completed! (you can now close this window)",
+            "failureMessage": "Installation failed."
         }
     },
     "editMode": {
@@ -274,6 +275,7 @@
     "login": {
         "header": "CLOUDIFY",
         "message": "Welcome to the Cloudify Management Console, Please log in",
+        "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
@@ -732,7 +734,7 @@
             },
             "revertToDefault": "Revert to default value",
             "urls": {
-                "blueprintsCatalog": "http://repository.cloudifysource.org/cloudify/blueprints/6.3/examples.json",
+                "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
                 "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
@@ -791,19 +793,24 @@
                     "generateInComposer": "Generate in the Composer"
                 }
             },
-            "blueprintMarketplace": {
-                "modal": {
-                    "header": "Blueprint marketplace",
-                    "blueprintCatalogName": "Blueprints Catalog",
-                    "cancelButton": "Close"
-                }
-            },
             "executions": {
                 "noErrorDetails": "No error details available"
             },
             "rolesPicker": {
                 "label": "Choose a role for {{resourceName}} {{resource}}:",
                 "placeholder": "Choose a role"
+            }
+        },
+        "agents": {
+            "columns": {
+                "id": "ID",
+                "ip": "IP",
+                "deployment": "Deployment",
+                "node": "Node",
+                "system": "System",
+                "version": "Version",
+                "installMethod": "Install method",
+                "actions": "Actions"
             }
         },
         "blueprintActionButtons": {
@@ -842,78 +849,6 @@
                 },
                 "hideFailedBlueprints": "Hide failed blueprints",
                 "showComposerOptions": "Show Composer options",
-                "marketplaceTabs": {
-                    "name": "Marketplace tabs",
-                    "columns": {
-                        "tabNameLabel": "Tab name",
-                        "urlNameLabel": "URL to marketplace",
-                        "defaultValues": [
-                            {
-                                "name": "Getting Started",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json"
-                            },
-                            {
-                                "name": "AWS",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws_services.json"
-                            },
-                            {
-                                "name": "Azure",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure_services.json"
-                            },
-                            {
-                                "name": "GCP",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp_services.json"
-                            },
-                            {
-                                "name": "Terraform",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json"
-                            },
-                            {
-                                "name": "Helm",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/helm_services.json"
-                            },
-                            {
-                                "name": "Kubernetes",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json"
-                            },
-                            {
-                                "name": "K8S Discovery",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json"
-                            },
-                            {
-                                "name": "Docker",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/docker_services.json"
-                            },
-                            {
-                                "name": "Ansible",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/ansible_services.json"
-                            },
-                            {
-                                "name": "VMWare",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vmware_services.json"
-                            },
-                            {
-                                "name": "Certified Environments",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/certified_environments.json"
-                            },
-                            {
-                                "name": "Other",
-                                "url": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other_services.json"
-                            }
-                        ]
-                    }
-                },
-                "marketplaceDisplayStyle": {
-                    "label": "Marketplace display style",
-                    "items": {
-                        "table": "Table",
-                        "catalog": "Catalog"
-                    }
-                },
-                "marketplaceColumnsToShow": {
-                    "label": "List of fields to show in the marketplace table",
-                    "placeholder": "Select fields from the list"
-                },
                 "labelFilterRules": "Label filter rules"
             },
             "terraformModal": {
@@ -922,7 +857,7 @@
                 "blueprintName": "Blueprint name",
                 "blueprintDescription": "Blueprint description",
                 "terraformVersion": "Terraform version",
-                "blueprintInformation": "Blueprint main information",
+                "terraformModuleDetails": "Terraform module details",
                 "template": "Terraform module source (ZIP archive URL, Git repository URL or local ZIP archive)",
                 "resourceLocation": "Terraform module folder",
                 "urlAuthentication": "URL authentication",
@@ -958,7 +893,7 @@
                     "upload": "2/2: Uploading Terraform blueprint..."
                 },
                 "cancelConfirm": "Are you sure to close the modal and discard provided Terraform data?",
-                "assignOutputsVariablesConfirm": "Detected {{variablesAmount}} variables and {{outputAmount}} outputs in the selected terraform module. Would you like to define the detected inputs and outputs in the blueprint?",
+                "assignOutputsVariablesConfirm": "In the selected Terraform module the following parameters were detected\n- {{variablesAmount}} Variables\n- {{outputAmount}} Outputs\nWould you like to define the detected variables and outputs in the blueprint?",
                 "default": "Default",
                 "errors": {
                     "noBlueprintName": "Please provide blueprint name",
@@ -1092,7 +1027,17 @@
         },
         "cloudNum": {
             "name": "Number of clouds",
-            "description": "Displays number of cloud environments fully configured"
+            "description": "Displays number of cloud environments fully configured",
+            "configuration": {
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the left side of the cloud environments count"
+                },
+                "imageSrc": {
+                    "name": "Image URL",
+                    "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
         },
         "deploymentNum": {
             "name": "Number of deployments",
@@ -1247,10 +1192,10 @@
                     "name": "Name"
                 },
                 "blueprintName": {
-                    "name": "Blueprint Name"
+                    "name": "Blueprint name"
                 },
                 "environmentType": {
-                    "name": "Environment Type"
+                    "name": "Environment type"
                 },
                 "location": {
                     "name": "Location"
@@ -1288,6 +1233,10 @@
                         "label": "Details",
                         "title": "Drill down to deployment details"
                     },
+                    "parent": {
+                        "label": "Parent",
+                        "title": "Go to parent deployment"
+                    },
                     "environments": {
                         "label": "Subenvironments",
                         "title": "Drill down to subenvironments"
@@ -1320,6 +1269,33 @@
             }
         },
         "events": {
+            "name": "Events/logs",
+            "description": "This widget shows events/logs",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "icon": "Icon",
+                        "timestamp": "Timestamp",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "workflow": "Workflow",
+                        "operation": "Operation",
+                        "nodeId": "Node ID",
+                        "nodeInstanceId": "Node instance ID",
+                        "message": "Message"
+                    }
+                },
+                "colorLogs": {
+                    "name": "Color message based on type"
+                },
+                "maxMessageLength": {
+                    "name": "Maximum message length before truncation"
+                }
+            },
             "detailsIcon": "Show details",
             "detailsModal": {
                 "header": "Details",
@@ -1331,6 +1307,18 @@
                 "traceback": "Traceback",
                 "copyCauses": "Copy Error Causes",
                 "close": "Close"
+            },
+            "columns": {
+                "timestamp": "Timestamp",
+                "type": "Type",
+                "blueprint": "Blueprint",
+                "deployment": "Deployment",
+                "deploymentId": "Deployment ID",
+                "nodeId": "Node ID",
+                "nodeInstanceId": "Node instance ID",
+                "workflow": "Workflow",
+                "operation": "Operation",
+                "message": "Message"
             }
         },
         "executions": {
@@ -1354,6 +1342,18 @@
             "activating": "Maintenance Mode is being activated"
         },
         "pluginsCatalog": {
+            "name": "Plugins Catalog",
+            "description": "Shows plugins catalog",
+            "configuration": {
+                "jsonPath": {
+                    "name": "Plugins Catalog JSON Source",
+                    "placeholder": "Type JSON Path"
+                },
+                "sortByName": {
+                    "name": "Sort by name",
+                    "description": "If set to true, then plugins will be sorted by name."
+                }
+            },
             "uploadButton": {
                 "enabled": "Upload plugin",
                 "disabled": "Latest version is already uploaded",
@@ -1393,6 +1393,17 @@
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
+        "secrets": {
+            "columns": {
+                "key": "Key",
+                "value": "Value",
+                "hiddenValue": "Hidden value",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "tenant": "Tenant"
+            }
+        },
         "serviceButton": {
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
@@ -1414,6 +1425,10 @@
                     "name": "Icon",
                     "description": "Icon displayed on the button",
                     "default": "add"
+                },
+                "defaultMarketplaceTab": {
+                    "name": "Default marketplace tab",
+                    "description": "Name of the initially activated tab on Blueprint Marketplace page"
                 }
             }
         },
@@ -1449,7 +1464,7 @@
                 "lastLoginAt": "Last login",
                 "isAdmin": "Admin",
                 "active": "Active",
-                "showGettingStarted": "Getting\nstarted",
+                "showGettingStarted": "Getting started",
                 "groupCount": "# Groups",
                 "tenantCount": "# Tenants"
             }
@@ -1642,7 +1657,7 @@
                 }
             },
             "list": {
-                "noDeployments": "There are no Deployments available. Click \"Create deployment\" to add deployments."
+                "noDeployments": "No results found."
             },
             "updatedIcon": {
                 "header": "Deployment updated",
@@ -1710,7 +1725,8 @@
             "createModal": {
                 "header": "Create token",
                 "inputs": {
-                    "description": "Description"
+                    "description": "Description",
+                    "expirationDate": "Expiration date"
                 },
                 "buttons": {
                     "cancel": "Cancel",
@@ -1721,7 +1737,11 @@
                     "content": "New token has been created: {{token}}",
                     "warning": "You won't be able to show or copy the token value after closing this modal"
                 },
-                "error": "Couldn't create a Token, please try to submit the Token data again."
+                "errors": {
+                    "createError": "Couldn't create a Token, please try to submit the Token data again.",
+                    "expirationDateInvalidFormat": "Please provide a date in 'YYYY-MM-DD HH:mm' format",
+                    "expirationDateInPast": "Please provide a date later than the current date"
+                }
             }
         },
         "deploymentInfo": {

@@ -27,6 +27,7 @@ import './executions';
 import './filters';
 import './getting_started';
 import './plugins';
+import './labels';
 
 import { secondsToMs } from './resource_commons';
 import './secrets';
@@ -46,8 +47,14 @@ const getCommonHeaders = () => ({
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptSp('GET', `/users/*`, {
-        body: { show_getting_started: modalEnabled }
+    cy.intercept('GET', '/console/auth/user', req => {
+        req.on('response', res => {
+            const responseBody = {
+                ...res.body,
+                showGettingStarted: modalEnabled
+            };
+            res.send(responseBody);
+        });
     });
 
 const collapseSidebar = () => cy.get('.breadcrumb').click();
@@ -207,11 +214,12 @@ const commands = {
             }
         });
 
-        cy.get('.form > :nth-child(1) > .ui > input').clear().type(username);
-        cy.get('.form > :nth-child(2) > .ui > input').clear().type(password);
-        cy.get('.form > button').click();
-
-        cy.get('.form > button.loading').should('not.exist');
+        cy.get('form').within(() => {
+            cy.get('input').eq(0).clear().type(username);
+            cy.get('input').eq(1).clear().type(password);
+            cy.get('button').click();
+            cy.get('button.loading').should('not.exist');
+        });
 
         if (expectSuccessfulLogin) {
             cy.getCookies()
@@ -245,7 +253,11 @@ const commands = {
             Authorization: `Basic ${btoa(`${username}:${password}`)}`
         }).then(response => {
             const { role } = response.body;
-            cy.initLocalStorage({ username, role, mode: isCommunity ? 'community' : 'main' });
+            cy.initLocalStorage({
+                username,
+                role,
+                mode: isCommunity ? 'community' : 'main'
+            });
             if (disableGettingStarted) mockGettingStarted(false);
         });
         return cy.visit(visitPage);
@@ -253,17 +265,19 @@ const commands = {
     initLocalStorage: ({
         username = 'admin',
         role = 'sys_admin',
-        mode = 'main'
+        mode = 'main',
+        showGettingStarted = false
     }: {
         username?: string;
         role?: string;
         mode?: Mode;
+        showGettingStarted?: boolean;
     } = {}) =>
         cy.setLocalStorage(
             `manager-state-${mode}`,
             JSON.stringify({
                 ...emptyState,
-                auth: { ...emptyState.auth, role, username, state: 'loggedIn' }
+                auth: { ...emptyState.auth, role, username, state: 'loggedIn', showGettingStarted }
             } as ManagerData)
         ),
     clickPageMenuItem: (name: string, expectedPageId: string | null = null) => {
@@ -355,13 +369,11 @@ const commands = {
             // In order to load default configuration for widget widget edit configuration modal should be opened
             // and configuration saved without making any changes
             .editWidgetConfiguration(widgetId, noop),
-    refreshPage: (disableGettingStarted = true) => {
-        mockGettingStarted(!disableGettingStarted);
+    refreshPage: () => {
         cy.get('.pageMenuItem.active').click({ force: true });
         return collapseSidebar();
     },
-    refreshTemplate: (disableGettingStarted = true) => {
-        mockGettingStarted(!disableGettingStarted);
+    refreshTemplate: () => {
         return cy.contains('.text', Consts.DEFAULT_TENANT).click({ force: true });
     },
     setBlueprintContext: (value: string) => setContext('blueprint', value),
@@ -450,10 +462,8 @@ const commands = {
             .click(),
     clearMultipleDropdown: (fieldName: string) => cy.getField(fieldName).find('.delete.icon').click({ multiple: true }),
 
+    containsActiveTab: (tabName: string) => cy.get('.tabular.menu .active.item').contains(tabName),
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
-    mockEnabledGettingStarted: () => mockGettingStarted(true),
-
-    mockDisabledGettingStarted: () => mockGettingStarted(false),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
     clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()

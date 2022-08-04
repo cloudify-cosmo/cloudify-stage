@@ -1,22 +1,24 @@
 import md5 from 'blueimp-md5';
-import _ from 'lodash';
-import log from 'loglevel';
 import { saveAs } from 'file-saver';
-import { marked } from 'marked';
-import { v4 } from 'uuid';
 import type { TFunction } from 'i18next';
 import i18n from 'i18next';
+import _ from 'lodash';
+import log from 'loglevel';
+import { marked } from 'marked';
+import { v4 } from 'uuid';
+import { isYamlFile } from '../../backend/sharedUtils';
 import { GenericField } from '../components/basic';
 import type { ManagerData } from '../reducers/managerReducer';
+import combineClassNames from './shared/combineClassNames';
 
 import ExecutionUtils from './shared/ExecutionUtils';
 import IdpUtils from './shared/IdpUtils';
 import JsonUtils from './shared/JsonUtils';
+import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
 import PluginUtils from './shared/PluginUtils';
+import renderMultilineText from './shared/renderMultilineText';
 import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
-import combineClassNames from './shared/combineClassNames';
-import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
 import type { WidgetDefinition } from './StageAPI';
 import { isEmptyWidgetData } from './StageAPI';
 
@@ -38,6 +40,8 @@ export default class StageUtils {
     static mapGridParamsToManagerGridParams = mapGridParamsToManagerGridParams;
 
     static parseMarkdown = marked;
+
+    static renderMultilineText = renderMultilineText;
 
     static saveAs = saveAs;
 
@@ -213,6 +217,8 @@ export default class StageUtils {
     }
 
     static isEmptyWidgetData = isEmptyWidgetData;
+
+    static isYamlFile = isYamlFile;
 
     static uuid = v4;
 

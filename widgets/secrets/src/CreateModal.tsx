@@ -1,5 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 
+const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
+const { MultilineInput } = Stage.Common.Secrets;
+
 export default function CreateModal({ toolbox }) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;
 
@@ -39,7 +42,7 @@ export default function CreateModal({ toolbox }) {
         // Disable the form
         setLoading();
 
-        const actions = new Stage.Common.SecretActions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox);
         actions
             .doCreate(secretKey, secretValue, visibility, isHiddenValue)
             .then(() => {
@@ -74,7 +77,6 @@ export default function CreateModal({ toolbox }) {
     }
 
     const { isHiddenValue, secretKey, secretValue } = inputs;
-    const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
     const createButton = <Button content="Create" icon="add" labelPosition="left" />;
 
     return (
@@ -90,10 +92,9 @@ export default function CreateModal({ toolbox }) {
                         <Form.Input name="secretKey" placeholder="Secret key" value={secretKey} onChange={setInput} />
                     </Form.Field>
                     <Form.Field error={errors.secretValue}>
-                        <Form.TextArea
+                        <MultilineInput
                             name="secretValue"
                             placeholder="Secret value"
-                            autoHeight
                             value={secretValue}
                             onChange={setInput}
                         />
@@ -120,7 +121,7 @@ export default function CreateModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={createSecret} disabled={isLoading} content="Create" icon="add" color="green" />
+                <ApproveButton onClick={createSecret} disabled={isLoading} content="Create" icon="add" />
             </Modal.Actions>
         </Modal>
     );

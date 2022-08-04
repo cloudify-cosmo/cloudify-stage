@@ -1,7 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
-import { waitUntilEmpty } from './resource_commons';
 
 declare global {
     namespace Cypress {
@@ -35,7 +33,7 @@ const commands = {
         cy
             .cfyRequest(`/deployments?blueprint_id=${blueprintId}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteDeployment(id, force)))
-            .then(() => waitUntilEmpty(`deployments?blueprint_id=${blueprintId}`))
+            .then(() => cy.waitUntilEmpty(`deployments?blueprint_id=${blueprintId}`))
             .then(() =>
                 cy.cfyRequest(`/blueprints/${blueprintId}?force=${force}`, 'DELETE', null, null, {
                     failOnStatusCode: false
@@ -45,7 +43,7 @@ const commands = {
         cy
             .cfyRequest(`/blueprints?_search=${search}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.deleteBlueprint(id, force)))
-            .then(() => waitUntilEmpty('blueprints', { search }))
+            .then(() => cy.waitUntilEmpty('blueprints', { search }))
 };
 
 addCommands(commands);

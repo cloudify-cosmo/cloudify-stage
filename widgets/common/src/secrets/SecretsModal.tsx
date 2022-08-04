@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
+import SinglelineInput from './SinglelineInput';
 import type { Visibility } from './SecretActions';
 
 interface SecretsModalProps {
@@ -66,7 +67,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {secretKeys.map(field => (
                         <Form.Field key={field} required label={field}>
-                            <Form.Input type="password" name={field} onChange={setSecretInputs} />
+                            <SinglelineInput name={field} onChange={setSecretInputs} />
                         </Form.Field>
                     ))}
                 </Form>
@@ -74,13 +75,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
             <Modal.Actions>
                 <CancelButton onClick={onClose} disabled={isLoading} />
-                <ApproveButton
-                    onClick={onSave}
-                    disabled={isLoading}
-                    content={t('buttons.add')}
-                    icon="plus"
-                    color="green"
-                />
+                <ApproveButton onClick={onSave} disabled={isLoading} content={t('buttons.add')} icon="plus" />
             </Modal.Actions>
         </Modal>
     );

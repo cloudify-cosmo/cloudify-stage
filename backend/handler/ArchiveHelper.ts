@@ -1,15 +1,15 @@
 // @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import decompress from 'decompress';
 import fs from 'fs-extra';
+import _ from 'lodash';
+import multer from 'multer';
 import pathlib from 'path';
 import sanitize from 'sanitize-filename';
-import decompress from 'decompress';
-import multer from 'multer';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
+import { getLogger } from './LoggerHandler';
 import * as ManagerHandler from './ManagerHandler';
 import * as RequestHandler from './RequestHandler';
-import { getLogger } from './LoggerHandler';
-import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 
 const logger = getLogger('ArchiveHelper');
 
@@ -189,20 +189,22 @@ export function cleanTempData(tempPath) {
     logger.debug('Removing temporary data from', tempPath);
 
     return new Promise((resolve, reject) => {
-        fs.pathExists(tempPath).then(exists => {
-            if (exists) {
-                fs.remove(tempPath, err => {
-                    if (err) {
-                        const errorMessage = `Error removing temporary path ${tempPath}: ${err}`;
-                        logger.error(errorMessage);
-                        reject(errorMessage);
-                    } else {
-                        resolve();
-                    }
-                });
-            } else {
-                resolve();
-            }
-        });
+        fs.pathExists(tempPath)
+            .then(exists => {
+                if (exists) {
+                    fs.remove(tempPath, err => {
+                        if (err) {
+                            const errorMessage = `Error removing temporary path ${tempPath}: ${err}`;
+                            logger.error(errorMessage);
+                            reject(errorMessage);
+                        } else {
+                            resolve();
+                        }
+                    });
+                } else {
+                    resolve();
+                }
+            })
+            .catch(reject);
     });
 }

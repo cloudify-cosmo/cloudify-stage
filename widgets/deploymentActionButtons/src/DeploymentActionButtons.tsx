@@ -1,9 +1,10 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
+import type { Workflow } from '../../common/src/executeWorkflow';
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase
-    | { status: 'success'; data: { display_name: string; workflows: any[] } }
+    | { status: 'success'; data: { display_name: string; workflows: Workflow[] } }
     | { status: 'loading' }
     | { status: 'error'; error: Error };
 
@@ -33,7 +34,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
 
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
-    const [workflow, setWorkflow, resetWorkflow] = useResettableState('');
+    const [workflow, setWorkflow, resetWorkflow] = useResettableState<Workflow | null>(null);
 
     useEffect(() => {
         if (fetchedDeploymentState.status === 'error') {
@@ -42,11 +43,12 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     }, [fetchedDeploymentState]);
 
     const buttonsDisabled = !deploymentId || ['error', 'loading'].includes(fetchedDeploymentState.status);
+    const workflows = isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.workflows : [];
 
     return (
         <div>
             <WorkflowsMenu
-                workflows={isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.workflows : []}
+                workflows={workflows}
                 trigger={
                     <Button
                         className="executeWorkflowButton labeled icon"
@@ -71,6 +73,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                         content="Deployment actions"
                     />
                 }
+                workflows={workflows}
             />
 
             {isDeploymentFetched(fetchedDeploymentState) && deploymentId && workflow && (

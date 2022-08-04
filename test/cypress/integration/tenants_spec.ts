@@ -1,7 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
 import Consts from 'app/utils/consts';
 import _ from 'lodash';
 
+interface Tenant {
+    name: string;
+    role: string;
+    pages: { id: string; name: string }[];
+}
 describe('Tenants menu', () => {
     const user = {
         username: 'default',
@@ -25,7 +29,7 @@ describe('Tenants menu', () => {
                     { id: 'blueprints', name: 'Blueprints' }
                 ]
             }
-        ]
+        ] as Tenant[]
     };
 
     before(() => {
@@ -44,7 +48,7 @@ describe('Tenants menu', () => {
     });
 
     it('should switch template on tenant change', () => {
-        function installTemplate(id, tenant) {
+        function installTemplate(id: string, tenant: Tenant) {
             cy.stageRequest('/console/templates', 'POST', {
                 body: {
                     id,
@@ -60,7 +64,7 @@ describe('Tenants menu', () => {
 
         cy.mockLoginWithoutWaiting({ username: user.username, password: user.password });
 
-        function verifyTemplate(tenant) {
+        function verifyTemplate(tenant: Tenant) {
             cy.contains('.dropdown', Consts.DEFAULT_TENANT).click();
             cy.get('.menu').contains(tenant.name).click();
             tenant.pages.forEach(page => cy.get('.sidebar > .pages').contains(page.name));

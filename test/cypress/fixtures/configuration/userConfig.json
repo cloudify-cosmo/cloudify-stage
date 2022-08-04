@@ -1,0 +1,20 @@
+{
+  "whiteLabel": {
+    "logoUrl": "http://test.com/logo.png",
+    "mainColor": "blue",
+
+    "headerTextColor": "black",
+    "showVersionDetails": false,
+    "showFirstLoginHint": false,
+
+    "loginPageHeaderColor": "lightgrey",
+    "loginPageTextColor": "black",
+
+    "sidebarColor": "grey",
+    "sidebarTextColor" : "black",
+    "sidebarHoverActiveColor": "lightgrey",
+    "sidebarHoverActiveTextColor": "black",
+
+    "customCssPath": ""
+  }
+}

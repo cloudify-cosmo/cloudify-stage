@@ -10,18 +10,20 @@ describe('Deployments widget', () => {
     const site = { name: siteName };
     const blueprintUrl = exampleBlueprintUrl;
 
-    const selectDeploymentActionFromMenu = (id: string, menuClassName: string, action: string) => {
+    const selectDeploymentActionFromMenu = (id: string, name: string, menuClassName: string, action: string) => {
         cy.searchInDeploymentsWidget(id);
-        cy.contains('div.row', id).find(menuClassName).click();
+        cy.contains('div.row', name).find(menuClassName).click();
         cy.get('.popupMenu > .menu').contains(action).click();
     };
-    const executeDeploymentAction = (id: string, action: string) => {
-        selectDeploymentActionFromMenu(id, '.deploymentActionsMenu', action);
+    const executeDeploymentAction = (id: string, name: string, action: string) => {
+        selectDeploymentActionFromMenu(id, name, '.deploymentActionsMenu', action);
     };
-    const executeDeploymentWorkflow = (id: string, workflow: string) => {
-        selectDeploymentActionFromMenu(id, '.workflowsMenu', workflow);
+    const executeDeploymentWorkflow = (id: string, name: string, workflow: string) => {
+        selectDeploymentActionFromMenu(id, name, '.workflowsMenu', workflow);
     };
     const verifyExecutionHasEnded = (workflow: string) => cy.waitForExecutionToEnd(workflow, { deploymentId });
+    const checkDeploymentNameField = () =>
+        cy.get('.deploymentSegment h3 [aria-label="Deployment name"]').should('have.text', deploymentName);
 
     before(() => {
         cy.activate('valid_trial_license')
@@ -39,9 +41,16 @@ describe('Deployments widget', () => {
             .mockLogin();
     });
 
-    it('should be present in Deployments page', () => {
-        cy.searchInDeploymentsWidget(deploymentId);
-        cy.get('.deploymentSegment h3').should('have.text', `${deploymentName} (${deploymentId})`);
+    describe('should be present and', () => {
+        it('should allow to search by depyloyment ID', () => {
+            cy.searchInDeploymentsWidget(deploymentId);
+            checkDeploymentNameField();
+        });
+
+        it('should allow to search by deployment name', () => {
+            cy.searchInDeploymentsWidget(deploymentName);
+            checkDeploymentNameField();
+        });
     });
 
     describe('should provide display configuration for', () => {
@@ -49,14 +58,14 @@ describe('Deployments widget', () => {
 
         it('clickToDrillDown option', () => {
             cy.searchInDeploymentsWidget(deploymentId);
-            cy.get('.deploymentsWidget').contains(deploymentId).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click({ force: true });
             cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
             cy.contains('.breadcrumb', 'deployments_test_hw_dep');
 
             cy.refreshPage();
             cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', false);
 
-            cy.get('.deploymentsWidget').contains(deploymentId).click();
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
             cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
             cy.get('.deploymentsWidget');
         });
@@ -77,6 +86,7 @@ describe('Deployments widget', () => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
             });
+            cy.getSearchInput().clear();
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
@@ -103,7 +113,7 @@ describe('Deployments widget', () => {
             const mockDeploymentsResponse = (mockedResponse: any) =>
                 cy.interceptSp('GET', '/deployments*', mockedResponse);
 
-            it('should display showFirstUserJourneyButtons view when there are not installed deployments', () => {
+            it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
 
@@ -121,7 +131,7 @@ describe('Deployments widget', () => {
                 cy.contains('Blueprint Marketplace').should('be.visible');
             });
 
-            it("should hide showFirstUserJourneyButtons view when there's at least one deployment installed", () => {
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
@@ -136,7 +146,6 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
-
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
@@ -179,12 +188,12 @@ describe('Deployments widget', () => {
         };
 
         it('install workflow from deployment actions menu', () => {
-            executeDeploymentAction(deploymentId, 'Install');
+            executeDeploymentAction(deploymentId, deploymentName, 'Install');
             startAndVerifyWorkflowExecution('install');
         });
 
         it('a workflow from workflows menu', () => {
-            executeDeploymentWorkflow(deploymentId, 'Restart');
+            executeDeploymentWorkflow(deploymentId, deploymentName, 'Restart');
             startAndVerifyWorkflowExecution('restart');
         });
     });
@@ -192,7 +201,7 @@ describe('Deployments widget', () => {
     it('should allow to set site for deployment', () => {
         cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setDeploymentSite');
 
-        executeDeploymentAction(deploymentId, 'Set Site');
+        executeDeploymentAction(deploymentId, deploymentName, 'Set Site');
 
         cy.get('.modal').within(() => {
             cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
@@ -211,13 +220,15 @@ describe('Deployments widget', () => {
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
-        executeDeploymentAction(deploymentId, 'Update');
+        executeDeploymentAction(deploymentId, deploymentName, 'Update');
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
+            cy.contains('Skip heal').click();
+            cy.contains('Skip drift check').click();
             cy.get('button.blue.ok').click();
         });
 
@@ -229,7 +240,22 @@ describe('Deployments widget', () => {
             cy.get('button.ok').click();
         });
 
-        cy.wait('@updateDeployment');
+        cy.wait('@updateDeployment').then(({ request }) => {
+            expect(request.body).to.deep.equal({
+                blueprint_id: blueprintName,
+                force: false,
+                ignore_failure: false,
+                inputs: { webserver_port: 9321 },
+                install_first: false,
+                preview: true,
+                reinstall_list: [],
+                skip_drift_check: true,
+                skip_heal: true,
+                skip_install: false,
+                skip_reinstall: false,
+                skip_uninstall: false
+            });
+        });
         cy.get('.updateDetailsModal').should('not.exist');
         verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
         cy.contains('div.row', deploymentId)
@@ -250,7 +276,7 @@ describe('Deployments widget', () => {
             cy.get(`div[name=${name}]`).click();
             cy.get(`div[name=${name}] input`).type(value);
         };
-        executeDeploymentAction(deploymentId, 'Manage Labels');
+        executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
         cy.get('.modal').within(() => {
             cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
             cy.wait('@fetchLabels');
@@ -287,7 +313,7 @@ describe('Deployments widget', () => {
         cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
         cy.interceptSp('DELETE', { path: `/deployments/${testDeploymentId}?force=true` }).as('deleteDeployment');
 
-        executeDeploymentAction(testDeploymentId, 'Force Delete');
+        executeDeploymentAction(testDeploymentId, testDeploymentName, 'Force Delete');
 
         cy.contains(
             `Are you sure you want to ignore the live nodes and delete the deployment ${testDeploymentName} (${testDeploymentId})?`

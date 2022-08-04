@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Filter', () => {
     before(() => {
         cy.activate('valid_trial_license')
@@ -82,6 +81,10 @@ describe('Filter', () => {
     describe('refreshes dropdown data on', () => {
         const blueprintName = 'filter-test';
 
+        function getBlueprintSegment(bpName: string) {
+            return cy.getByTestId(bpName);
+        }
+
         before(() =>
             cy
                 .deleteDeployments(blueprintName)
@@ -95,7 +98,7 @@ describe('Filter', () => {
         it('deployment creation and removal', () => {
             cy.get('.blueprintsWidget').within(() => {
                 cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
-                cy.get(`.${blueprintName}`).parent().find('.rocket').click();
+                getBlueprintSegment(blueprintName).find('.rocket').click();
             });
             const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
@@ -125,7 +128,7 @@ describe('Filter', () => {
         it('blueprint upload and removal', () => {
             cy.get('.blueprintsWidget').within(() => {
                 cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
-                cy.get(`.${blueprintName}`).parent().find('.trash').click();
+                getBlueprintSegment(blueprintName).find('.trash').click();
             });
             cy.contains('Yes').click();
 

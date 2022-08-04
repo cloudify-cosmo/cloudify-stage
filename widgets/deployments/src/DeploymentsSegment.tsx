@@ -12,6 +12,11 @@ const DeploymentName = styled.span`
     overflow: hidden;
 `;
 
+const DeploymentIdAndName = styled.span`
+    display: inline-flex;
+    align-items: center;
+`;
+
 export default function DeploymentsSegment({
     data,
     fetchData,
@@ -26,9 +31,12 @@ export default function DeploymentsSegment({
     widget
 }) {
     const { DataSegment, Divider, Header } = Stage.Basic;
+    const { IdPopup } = Stage.Shared;
+    const { useResettableState } = Stage.Hooks;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
     const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
+    const [hoveredDeploymentId, setHoveredDeploymentId, clearHoveredDeploymentId] = useResettableState(null);
 
     return (
         <DataSegment
@@ -44,6 +52,9 @@ export default function DeploymentsSegment({
                     selected={item.isSelected}
                     className={`${item.id} deploymentSegment`}
                     onClick={() => onSelectDeployment(item)}
+                    onMouseOver={setHoveredDeploymentId}
+                    onFocus={setHoveredDeploymentId}
+                    onMouseOut={clearHoveredDeploymentId}
                 >
                     <DeploymentDetails
                         customName={
@@ -60,7 +71,12 @@ export default function DeploymentsSegment({
                                     textAlign="center"
                                     style={showExecutionStatusLabel ? {} : { marginTop: 5 }}
                                 >
-                                    <DeploymentName title={formatName(item)}>{formatName(item)}</DeploymentName>
+                                    <DeploymentIdAndName>
+                                        <DeploymentName title={formatName(item)} aria-label="Deployment name">
+                                            {item.display_name}
+                                        </DeploymentName>
+                                        <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
+                                    </DeploymentIdAndName>
                                 </Header>
                             </div>
                         }
@@ -81,7 +97,7 @@ export default function DeploymentsSegment({
                         onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
                     />
 
-                    <ExecutionProgress execution={item.lastExecution} />
+                    {item.lastExecution && <ExecutionProgress execution={item.lastExecution} />}
                 </DataSegment.Item>
             ))}
         </DataSegment>

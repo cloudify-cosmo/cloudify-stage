@@ -1,13 +1,13 @@
 import Consts from 'app/utils/consts';
+import PluginUtils from 'app/utils/shared/PluginUtils';
 import { escapeRegExp, find } from 'lodash';
 import type { PluginDescription } from 'widgets/pluginsCatalog/src/types';
-import PluginUtils from 'app/utils/shared/PluginUtils';
 import { minutesToMs } from '../support/resource_commons';
 
 const pluginsCatalogUrl = 'https://marketplace.cloudify.co/plugins/catalog';
 const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
-const awsBlueprints = ['AWS-Basics-VM-Setup', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
+const awsBlueprints = ['EC2_WITH_EBS', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
 
 const gcpSecrets = [
     'gcp_client_x509_cert_url',
@@ -137,6 +137,11 @@ function verifyHeader(headerContent: string) {
     cy.contains('.header', headerContent).should('be.visible');
 }
 
+function resetAwsEnvironmentData() {
+    cy.deletePlugins().deleteSecrets('aws_');
+    awsBlueprints.forEach(blueprint => cy.deleteBlueprint(blueprint, true));
+}
+
 describe('Getting started modal', () => {
     before(() => cy.activate());
 
@@ -145,13 +150,25 @@ describe('Getting started modal', () => {
             cy.cfyRequest('/users/admin', 'POST', null, {
                 show_getting_started: true
             });
+            cy.intercept('POST', '/console/ua').as('updateUserApps');
         });
 
         beforeEach(() => {
             cy.mockLoginWithoutWaiting({ disableGettingStarted: false }).waitUntilAppLoaded();
         });
 
+        /**
+         * Waits until application is fully initialized with all templates data
+         * after calling `cy.activate` custom command (as it triggers templates reset)
+         */
+        function waitUntilAppReadyAfterActivation() {
+            cy.wait('@updateUserApps');
+            cy.url().should('contain', 'console/');
+        }
+
         it('should redirect to the dashboard page upon canceling the modal process', () => {
+            waitUntilAppReadyAfterActivation();
+
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'Close').click();
@@ -190,7 +207,7 @@ describe('Getting started modal', () => {
         );
 
         it('should install selected environment', () => {
-            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+            resetAwsEnvironmentData();
 
             cy.get('.modal').within(() => {
                 goToNextStep();
@@ -262,7 +279,7 @@ describe('Getting started modal', () => {
         });
 
         it('should group common plugins', () => {
-            cy.deletePlugins().deleteSecrets('aws_').deleteBlueprints('AWS-', true);
+            resetAwsEnvironmentData();
 
             cy.get('.modal').within(() => {
                 goToNextStep();
@@ -407,6 +424,30 @@ describe('Getting started modal', () => {
             cy.contains('button', 'Yes').click();
 
             cy.wait('@disableRequest').its('request.body.show_getting_started').should('be.false');
+        });
+
+        it('should display information about the failure in the installation process', () => {
+            const errorProgressBarSelector = '.error > .bar';
+            const blockPluginsUpload = () => {
+                cy.intercept('post', '/console/plugins/upload?*', {
+                    forceNetworkError: true
+                });
+            };
+
+            resetAwsEnvironmentData();
+            cy.get('.modal').within(() => {
+                goToNextStep();
+
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+                goToNextStep();
+
+                blockPluginsUpload();
+                goToFinishStep();
+
+                cy.get(errorProgressBarSelector).should('exist');
+                cy.contains('Installation failed.');
+            });
         });
     });
 });

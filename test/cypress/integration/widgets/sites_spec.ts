@@ -1,11 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
 import Consts from 'app/utils/consts';
+import type { Site } from 'test/cypress/support/sites';
+
+interface SiteWithError extends Site {
+    error: string;
+}
 
 describe('Sites Management', () => {
     const widgetId = 'sites';
-    const siteWithLocation = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
-    const siteWithNoLocation = { name: 'London' };
-    const siteWithPrivateVisibility = {
+    const siteWithLocation: Site = { name: 'Tel-Aviv', location: '32.079991, 34.767291' };
+    const siteWithNoLocation: Site = { name: 'London' };
+    const siteWithPrivateVisibility: Site = {
         name: 'Rome',
         location: '41.910385, 12.476267',
         visibility: 'private'
@@ -31,13 +35,13 @@ describe('Sites Management', () => {
         cy.get('.sitesWidget .ui.text.loader').should('not.exist');
     };
 
-    const createSite = site => {
+    const createSite = (site: Site) => {
         cy.get('.actionField > .ui').as('createSiteButton');
         cy.get('@createSiteButton').click();
 
         cy.get('.required > .field > .ui > input').as('name');
         cy.get('form :nth-child(2) > .field > .ui > input').as('location');
-        cy.get('.actions > .green').as('createButton');
+        cy.get('.actions > .positive').as('createButton');
         cy.get('.modal > :nth-child(1) > .green').as('visibility');
 
         cy.get('@name').type(site.name).should('have.value', site.name);
@@ -49,12 +53,12 @@ describe('Sites Management', () => {
         cy.get('@createButton').click();
     };
 
-    const createValidSite = site => {
+    const createValidSite = (site: Site) => {
         createSite(site);
         cy.get('.modal').should('not.exist');
     };
 
-    const createInvalidSite = site => {
+    const createInvalidSite = (site: SiteWithError) => {
         if (site.error === 'already exists') {
             cy.createSite(siteWithLocation);
         }
@@ -69,7 +73,7 @@ describe('Sites Management', () => {
         cy.get('@cancelButton').click();
     };
 
-    const verifySiteRow = (index, site) => {
+    const verifySiteRow = (index: number, site: Site) => {
         const siteRow = `tbody > tr:nth-child(${index})`;
         let visibilityColor = 'green';
         if (site.visibility === 'private') {
@@ -106,7 +110,7 @@ describe('Sites Management', () => {
         });
     };
 
-    const deleteSite = index => {
+    const deleteSite = (index: number) => {
         const deleteButton = `:nth-child(${index}) > .center > .trash`;
         cy.get(deleteButton).click();
 
@@ -146,7 +150,7 @@ describe('Sites Management', () => {
         cy.get('.modal > :nth-child(1) > .green').click();
 
         // submit
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name, location: '0.0, -0.87890625', visibility: 'private' });
     });
@@ -179,7 +183,7 @@ describe('Sites Management', () => {
         cy.get('.modal form :nth-child(2) > .field > .ui > input').clear();
 
         // Click update
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name: newName, location: '' });
     });
@@ -199,7 +203,7 @@ describe('Sites Management', () => {
         );
 
         // Click update
-        cy.get('.actions > .green').click();
+        cy.get('.actions > .positive').click();
 
         verifySiteRow(1, { name: siteWithLocation.name, location: '32.1011897323209, 33.92578125' });
     });

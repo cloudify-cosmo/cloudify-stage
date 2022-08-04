@@ -9,19 +9,7 @@ import TerraformDetailsModal from './TerraformDetailsModal';
 const saveConfirmationTimeout = 2500;
 
 function isNodesChanged(topologyNodes, newNodes) {
-    // compare # of nodes
-    if (topologyNodes.length !== newNodes.length) {
-        return true;
-    }
-
-    // compare node names, and if in the same order
-    for (let i = 0; i < topologyNodes.length; i += 1) {
-        if (topologyNodes[i].name !== newNodes[i].name) {
-            return true;
-        }
-    }
-
-    return false;
+    return !_.isEqual(topologyNodes, newNodes);
 }
 
 interface TopologyProps {
@@ -30,6 +18,7 @@ interface TopologyProps {
     configuration: unknown;
     data: {
         blueprintDeploymentData: unknown;
+        componentDeploymentsData: unknown;
         icons: Record<string, string>;
         layout: unknown;
     };
@@ -45,6 +34,7 @@ interface TopologyState {
     // eslint-disable-next-line camelcase
     expandedTerraformNodes: { deployment_id: string; id: string }[];
     saveConfirmationOpen: boolean;
+    isRedirecting: boolean;
 }
 
 export default class Topology extends React.Component<TopologyProps, TopologyState> {
@@ -71,7 +61,12 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         this.processedTopologyData = null;
         this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
 
-        this.state = { saveConfirmationOpen: false, expandedDeployments: [], expandedTerraformNodes: [] };
+        this.state = {
+            saveConfirmationOpen: false,
+            expandedDeployments: [],
+            expandedTerraformNodes: [],
+            isRedirecting: false
+        };
     }
 
     componentDidMount() {
@@ -80,6 +75,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         toolbox.getEventBus().on('blueprints:refresh', toolbox.refresh, this);
         toolbox.getEventBus().on('deployments:refresh', toolbox.refresh, this);
         this.startTopology();
+        this.updateTopology();
     }
 
     shouldComponentUpdate(nextProps: TopologyProps, nextState: TopologyState) {
@@ -97,34 +93,19 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         const { blueprintId, configuration, data } = this.props;
         const { expandedDeployments, expandedTerraformNodes } = this.state;
 
-        if (
+        const topologyRestartRequired =
             configuration !== prevProps.configuration ||
             blueprintId !== prevProps.blueprintId ||
-            !_.isEqual(data.icons, prevProps.data.icons)
-        ) {
-            this.startTopology();
-        }
+            !_.isEqual(data.icons, prevProps.data.icons);
 
-        if (
-            data.blueprintDeploymentData !== prevProps.data.blueprintDeploymentData ||
+        const topologyUpdateRequired =
+            topologyRestartRequired ||
+            !_.isEqual(data.blueprintDeploymentData, prevProps.data.blueprintDeploymentData) ||
             expandedDeployments !== prevState.expandedDeployments ||
-            expandedTerraformNodes !== prevState.expandedTerraformNodes
-        ) {
-            const isFirstTimeLoading = this.topologyData === null;
-            const oldTopologyData = this.topologyData;
-            this.topologyData = this.buildTopologyData();
-            this.topology.setLoading(false);
+            expandedTerraformNodes !== prevState.expandedTerraformNodes;
 
-            if (_.isEmpty(data.blueprintDeploymentData)) {
-                this.topology.setTopology(this.topologyData, {});
-            } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
-                const { layout } = data;
-                this.topology.setTopology(this.topologyData, layout);
-                if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
-            } else {
-                this.topology.refreshTopologyDeploymentStatus(this.topologyData);
-            }
-        }
+        if (topologyRestartRequired) this.startTopology();
+        if (topologyUpdateRequired) this.updateTopology();
     }
 
     componentWillUnmount() {
@@ -157,12 +138,36 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     setSelectedNode(selectedNode) {
         const { deploymentId, blueprintId, toolbox } = this.props;
+        const { isRedirecting } = this.state;
+
+        if (isRedirecting) {
+            return;
+        }
+
         if (deploymentId) {
             toolbox.getContext().setValue('depNodeId', selectedNode.name + deploymentId);
             toolbox.getContext().setValue('nodeId', selectedNode.name);
         } else if (blueprintId) {
             toolbox.getContext().setValue('nodeId', selectedNode.name);
         }
+    }
+
+    updateTopology() {
+        const { data } = this.props;
+        const isFirstTimeLoading = this.topologyData === null;
+        const oldTopologyData = this.topologyData;
+        this.topologyData = this.buildTopologyData();
+
+        if (_.isEmpty(data.blueprintDeploymentData)) {
+            this.topology.setTopology(this.topologyData, {});
+        } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
+            const { layout } = data;
+            this.topology.setTopology(this.topologyData, layout);
+            if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
+        } else {
+            this.topology.refreshTopologyDeploymentStatus(this.topologyData);
+        }
+        this.topology.setLoading(false);
     }
 
     startTopology() {
@@ -356,7 +361,15 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     goToDeploymentPage(nodeDeploymentId) {
         const { toolbox } = this.props;
-        toolbox.getContext().setValue('deploymentId', nodeDeploymentId);
+
+        /*
+            NOTE: isRedirecting flag is being set to block updating context with data provided by setSelectedNode function.
+            More context: it seems that upon clicking 'Go to deployment page' button we are also triggering (via event bubbling) onNodeSelected event handler, which is executing setSelectedNode function.
+        */
+        this.setState({
+            isRedirecting: true
+        });
+
         toolbox.drillDown(toolbox.getWidget(), 'deployment', { deploymentId: nodeDeploymentId }, nodeDeploymentId);
     }
 
@@ -394,11 +407,11 @@ Topology.propTypes = {
     blueprintId: PropTypes.string,
     deploymentId: PropTypes.string,
     configuration: PropTypes.shape({
-        showToolbar: PropTypes.boolean,
-        enableGroupClick: PropTypes.boolean,
-        enableNodeClick: PropTypes.boolean,
-        enableZoom: PropTypes.boolean,
-        enableDrag: PropTypes.boolean
+        showToolbar: PropTypes.bool,
+        enableGroupClick: PropTypes.bool,
+        enableNodeClick: PropTypes.bool,
+        enableZoom: PropTypes.bool,
+        enableDrag: PropTypes.bool
     }),
     data: PropTypes.shape({
         blueprintDeploymentData: PropTypes.shape({}),

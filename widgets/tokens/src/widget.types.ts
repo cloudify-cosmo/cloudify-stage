@@ -1,3 +1,5 @@
+import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
+
 export declare namespace TokensWidget {
     export interface DataItem {
         id: string;
@@ -13,9 +15,8 @@ export declare namespace TokensWidget {
 
     export type DataSortingKeys = 'created_at' | 'id' | 'secret_hash' | 'description' | 'last_used' | 'expiration_date';
 
-    export interface Configuration {
+    export interface Configuration extends PollingTimeConfiguration, DataTableConfiguration {
         showExpiredTokens: boolean;
-        pollingTime: number;
     }
 
     export type Data = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;

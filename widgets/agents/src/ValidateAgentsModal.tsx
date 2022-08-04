@@ -172,13 +172,7 @@ export default function ValidateAgentsModal({
             <Modal.Actions>
                 <CancelButton content={executionStarted ? 'Close' : undefined} onClick={onCancel} disabled={loading} />
                 {!executionStarted && (
-                    <ApproveButton
-                        onClick={onApprove}
-                        disabled={loading}
-                        content="Validate"
-                        icon="checkmark"
-                        color="green"
-                    />
+                    <ApproveButton onClick={onApprove} disabled={loading} content="Validate" icon="checkmark" />
                 )}
                 {executionStarted && (
                     <Button

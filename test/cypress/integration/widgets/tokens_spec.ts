@@ -2,7 +2,8 @@ describe('Tokens widget', () => {
     const widgetId = 'tokens';
     const widgetSelector = `.${widgetId}Widget`;
     const widgetConfiguration = {
-        pollingTime: 3
+        pollingTime: 3,
+        pageSize: 0 // NOTE: Setting page size to 0 to list all tokens and be able to find the one created in test
     };
 
     const mockUserRole = (role: string) => {
@@ -23,6 +24,7 @@ describe('Tokens widget', () => {
 
     it('should allow to create and remove token', () => {
         const tokenDescription = 'tokens-widget-test';
+        const tokenExpirationDate = '2030-03-20 20:30';
         const createTokenRequest = 'createToken';
         const deleteTokenRequest = 'deleteToken';
         cy.interceptSp('POST', '/tokens').as(createTokenRequest);
@@ -35,7 +37,8 @@ describe('Tokens widget', () => {
         cy.contains('Create token')
             .parent()
             .within(() => {
-                cy.get('input[name="description"]').type(tokenDescription);
+                cy.getField('Description').find('input').type(tokenDescription);
+                cy.getField('Expiration date').find('input').type(tokenExpirationDate);
                 cy.clickButton('Create');
                 cy.clickButton('Close');
             });
@@ -46,6 +49,7 @@ describe('Tokens widget', () => {
             .parent()
             .closest('tr')
             .within(() => {
+                cy.contains('20-03-2030 20:30').scrollIntoView().should('be.visible');
                 cy.get('[title="Delete token"]').click();
             });
 
@@ -54,6 +58,31 @@ describe('Tokens widget', () => {
             .within(() => {
                 cy.clickButton('Yes');
                 cy.wait(`@${deleteTokenRequest}`);
+            });
+    });
+
+    it('should validate token expiration date when creating a token', () => {
+        const typeInExpirationDateInput = (value: string) =>
+            cy.getField('Expiration date').find('input').clear().type(value);
+        const submitAndVerifyError = (expectedError: string) => {
+            cy.clickButton('Create');
+            cy.get('[role=alert]').should('have.text', expectedError);
+        };
+
+        cy.get(widgetSelector).within(() => {
+            cy.clickButton('Create');
+        });
+
+        cy.contains('Create token')
+            .parent()
+            .within(() => {
+                typeInExpirationDateInput('blabla');
+                submitAndVerifyError("Please provide a date in 'YYYY-MM-DD HH:mm' format");
+
+                typeInExpirationDateInput('2020-01-01 00:00');
+                submitAndVerifyError('Please provide a date later than the current date');
+
+                cy.clickButton('Cancel');
             });
     });
 

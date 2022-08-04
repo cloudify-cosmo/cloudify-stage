@@ -1,11 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
 describe('Outputs/Capabilities', () => {
     const blueprintName = 'outputs_capabilities_test';
     const deploymentName = 'outputs_capabilities_test';
 
     before(() => cy.activate('valid_trial_license').usePageMock('outputs', { showCapabilities: true }).mockLogin());
 
-    function setUpBlueprint(blueprintPackage) {
+    function setUpBlueprint(blueprintPackage: string) {
         cy.deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint(`blueprints/${blueprintPackage}.zip`, blueprintName);

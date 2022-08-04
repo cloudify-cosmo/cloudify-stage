@@ -1,6 +1,6 @@
-import pathlib from 'path';
-import type { Request } from 'express';
 import type { AxiosRequestHeaders } from 'axios';
+import type { Request } from 'express';
+import pathlib from 'path';
 import * as Consts from './consts';
 import { TOKEN_COOKIE_NAME } from './consts';
 

@@ -313,8 +313,6 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    renderMultilineText = text => <span style={{ whiteSpace: 'pre' }}>{text}</span>;
-
     render() {
         const {
             error,
@@ -329,7 +327,7 @@ export default class UsersTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
-        const { PasswordModal } = Stage.Shared;
+        const { PasswordModal, TextEllipsis } = Stage.Shared;
         const tableName = 'usersTable';
 
         return (
@@ -351,8 +349,9 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label={columnT('isAdmin')} width="10%" />
                     <DataTable.Column label={columnT('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={this.renderMultilineText(columnT('showGettingStarted'))}
+                        label={columnT('showGettingStarted')}
                         name="show_getting_started"
+                        style={{ whiteSpace: 'normal' }}
                         width="10%"
                     />
                     <DataTable.Column label={columnT('groupCount')} width="10%" />
@@ -366,7 +365,9 @@ export default class UsersTable extends React.Component {
                                 selected={item.isSelected}
                                 onClick={() => this.selectUser(item.username)}
                             >
-                                <DataTable.Data>{item.username}</DataTable.Data>
+                                <DataTable.Data>
+                                    <TextEllipsis maxWidth="450px">{item.username}</TextEllipsis>
+                                </DataTable.Data>
                                 <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
                                     <EnhancedIsAdminCheckbox
