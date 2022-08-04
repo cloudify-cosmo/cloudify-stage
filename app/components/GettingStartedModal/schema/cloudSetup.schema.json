@@ -36,8 +36,8 @@
           {
              "id": "AWS-VM-Setup-CloudFormation",
              "name": "AWS-VM-Setup-using-CloudFormation",
-             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws/EC2_CloudFormation",
-             "yamlFile": "aws-cloudformation.yaml"
+             "zipUrl": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws/EC2_CloudFormation.zip",
+             "yamlFile": "blueprint.yaml"
           },
           {
              "id": "Kubernetes-AWS-EKS",
@@ -164,6 +164,21 @@
              "name": "openstack_tenant_name",
              "label": "Openstack Tenant Name",
              "type": "text"
+          },
+          {
+            "name": "openstack_region",
+            "label": "Openstack Region",
+            "type": "text"
+          },
+          {
+            "name": "openstack_project_domain_name",
+            "label": "Openstack Project Domain Name",
+            "type": "text"
+          },
+          {
+            "name": "openstack_user_domain_name",
+            "label": "Openstack User Domain Name",
+            "type": "text"
           }
        ],
        "blueprints": [
