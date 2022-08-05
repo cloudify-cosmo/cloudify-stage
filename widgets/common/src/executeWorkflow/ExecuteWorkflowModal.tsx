@@ -3,6 +3,7 @@ import FileActions from '../actions/FileActions';
 import DeploymentActions from '../deployments/DeploymentActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
 import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
+import DeploymentIdContext from '../inputs/utils/deploymentIdContext';
 import type { OnChange } from '../inputs/types';
 
 import { executeWorkflow, getWorkflowName } from './common';
@@ -120,6 +121,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     }, [dryRun, force, schedule, scheduledTime]);
 
     const deploymentsList: string[] = _.isEmpty(deployments) ? _.compact([deploymentId]) : deployments;
+    const contextDeploymentId = _.head(deploymentsList);
 
     function onApprove() {
         clearErrors();
@@ -228,7 +230,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
                 {t(headerKey, {
                     workflowName,
                     deploymentId: Stage.Utils.formatDisplayName({
-                        id: _.head(deploymentsList),
+                        id: contextDeploymentId,
                         displayName: deploymentName
                     })
                 })}
@@ -236,26 +238,28 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
-                    <ExecuteWorkflowInputs
-                        toolbox={toolbox}
-                        baseWorkflowInputs={baseWorkflowParams}
-                        userWorkflowInputsState={userWorkflowParams}
-                        onYamlFileChange={handleYamlFileChange}
-                        onWorkflowInputChange={onWorkflowInputChange}
-                        fileLoading={isFileLoading}
-                        errors={errors}
-                        showInstallOptions={!hideOptions}
-                        force={force}
-                        dryRun={dryRun}
-                        queue={queue}
-                        schedule={schedule}
-                        scheduledTime={scheduledTime}
-                        onForceChange={onForceChange}
-                        onDryRunChange={onDryRunChange}
-                        onQueueChange={onQueueChange}
-                        onScheduleChange={onScheduleChange}
-                        onScheduledTimeChange={onScheduledTimeChange}
-                    />
+                    <DeploymentIdContext.Provider value={contextDeploymentId}>
+                        <ExecuteWorkflowInputs
+                            toolbox={toolbox}
+                            baseWorkflowInputs={baseWorkflowParams}
+                            userWorkflowInputsState={userWorkflowParams}
+                            onYamlFileChange={handleYamlFileChange}
+                            onWorkflowInputChange={onWorkflowInputChange}
+                            fileLoading={isFileLoading}
+                            errors={errors}
+                            showInstallOptions={!hideOptions}
+                            force={force}
+                            dryRun={dryRun}
+                            queue={queue}
+                            schedule={schedule}
+                            scheduledTime={scheduledTime}
+                            onForceChange={onForceChange}
+                            onDryRunChange={onDryRunChange}
+                            onQueueChange={onQueueChange}
+                            onScheduleChange={onScheduleChange}
+                            onScheduledTimeChange={onScheduledTimeChange}
+                        />
+                    </DeploymentIdContext.Provider>
                 </Form>
             </Modal.Content>
 
