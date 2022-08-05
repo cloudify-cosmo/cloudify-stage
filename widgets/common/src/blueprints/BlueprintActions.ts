@@ -257,8 +257,7 @@ export default class BlueprintActions {
         }
 
         if (file) {
-            const compressFile =
-                _.endsWith(file.name.toLowerCase(), '.yaml') || _.endsWith(file.name.toLowerCase(), '.yml');
+            const compressFile = Stage.Utils.isYamlFile(file.name);
             await this.toolbox
                 .getManager()
                 .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
