@@ -2,7 +2,7 @@
 import './styles/style.scss';
 import 'cloudify-ui-common/styles/font-cloudify.css';
 
-// eslint-disable-next-line
+// Import semantic ui styles and themes
 import 'semantic-ui-less/semantic.less';
 
 // Import react grid

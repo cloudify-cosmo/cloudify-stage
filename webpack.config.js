@@ -288,6 +288,8 @@ module.exports = (env, argv) => {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
                     react: `${__dirname}/node_modules/react`,
+                    // TODO Norbert: Provide a comment regarding purpose of those imports
+                    // TODO Norbert: Align __dirname with lines which are implementing similar functionality
                     themes: path.join(__dirname, '/semantic-ui/themes'),
                     '../../theme.config$': path.join(__dirname, '/semantic-ui/theme.config')
                 },
