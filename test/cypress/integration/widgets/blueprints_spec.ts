@@ -23,6 +23,12 @@ describe('Blueprints widget', () => {
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
+    function redirectBack() {
+        cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
+        cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
+        cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
+    }
+
     function getBlueprintRow(blueprintName: string) {
         cy.getSearchInput().clear().type(blueprintName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
@@ -311,7 +317,7 @@ describe('Blueprints widget', () => {
             cy.contains('Cancel').click();
         });
 
-        describe('should upload a blueprint', () => {
+        describe.only('should upload a blueprint', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
 
@@ -343,9 +349,7 @@ describe('Blueprints widget', () => {
                 cy.contains('2/5: Uploading blueprint...');
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
-                cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
-                cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
-                cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
+                redirectBack();
                 getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
             });
 
@@ -357,9 +361,7 @@ describe('Blueprints widget', () => {
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
 
-                cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
-                cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
-                cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
+                redirectBack();
                 getBlueprintRow(blueprintName).contains(blueprintFileName);
             });
 
