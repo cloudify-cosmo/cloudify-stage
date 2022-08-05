@@ -1,11 +1,14 @@
 import type { MapOptions } from 'leaflet';
+import appConsts from '../../../app/utils/consts';
+
+const defaultVisibility = 'tenant';
 
 const consts = {
-    defaultVisibility: 'tenant',
+    defaultVisibility,
     defaultBlueprintYamlFileName: 'blueprint.yaml',
-    sysAdminRole: 'sys_admin',
-    defaultUserRole: 'default',
-    adminUsername: 'admin',
+    sysAdminRole: appConsts.ROLE.SYS_ADMIN,
+    defaultUserRole: appConsts.ROLE.DEFAULT,
+    adminUsername: appConsts.DEFAULT_ADMIN_USERNAME,
     licenseEdition: {
         premium: 'Premium',
         spire: 'Spire'
@@ -23,7 +26,7 @@ const consts = {
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
-    allowedVisibilitySettings: ['tenant', 'global'] as string[],
+    allowedVisibilitySettings: [defaultVisibility, appConsts.GLOBAL_VISIBILITY] as string[],
     drilldownPage: {
         blueprintMarketplace: 'blueprintMarketplace'
     }

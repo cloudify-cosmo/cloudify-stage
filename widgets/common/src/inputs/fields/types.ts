@@ -1,6 +1,6 @@
 import type { InputProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
-import type { OnChange } from '../types';
+import type { Constraint, OnChange } from '../types';
 
 export interface InputFieldProps {
     name: string;
@@ -16,5 +16,7 @@ export interface ErrorAwareInputFieldProps extends InputFieldProps {
     error: InputProps['error'];
 }
 
-export type DynamicDropdownInputFieldProps = ErrorAwareInputFieldProps &
-    Pick<DynamicDropdownProps, 'toolbox' | 'constraints' | 'multiple'>;
+export type DynamicDropdownInputFieldProps = ErrorAwareInputFieldProps & { constraints: Constraint[] } & Pick<
+        DynamicDropdownProps,
+        'toolbox' | 'multiple'
+    >;

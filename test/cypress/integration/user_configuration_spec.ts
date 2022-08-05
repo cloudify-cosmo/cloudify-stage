@@ -9,19 +9,23 @@ describe('User configuration', () => {
         lightgrey: 'rgb(211, 211, 211)',
         white: 'rgb(255, 255, 255)'
     };
-    before(() => {
-        cy.activate();
-        cy.intercept('GET', '/console/config', req => {
+
+    function mockConfigResponse() {
+        cy.intercept('/console/config', req => {
             req.on('response', res => {
                 const responseBody = res.body;
                 responseBody.app.whiteLabel = userConfig.whiteLabel;
                 res.send(responseBody);
             });
         });
-    });
+    }
+
+    before(cy.activate);
 
     describe('allows to customize Login page', () => {
         before(() => {
+            mockConfigResponse();
+            cy.intercept('GET', '/console/auth/first-login', { body: true });
             cy.visit('/console/login');
             cy.get('.loginContainer').should('be.visible');
         });
@@ -42,10 +46,17 @@ describe('User configuration', () => {
                 cy.get('p').should('have.css', 'color', colors.black);
             });
         });
+
+        it('first login hint', () => {
+            cy.contains('For the first login').should('not.exist');
+        });
     });
 
     describe('allows to customize page', () => {
-        before(cy.mockLogin);
+        before(() => {
+            mockConfigResponse();
+            cy.mockLogin();
+        });
 
         it('sidebar', () => {
             cy.log('Verifying headerTextColor...');
@@ -64,7 +75,7 @@ describe('User configuration', () => {
             cy.get('.sidebarContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
         });
 
-        it.only('version details', () => {
+        it('version details', () => {
             const majorVersion = String(Consts.APP_VERSION)[0];
             cy.log('Verifying showVersionDetails...');
             cy.get('.sidebar > div > a').should('not.contain.text', `v ${majorVersion}`);
