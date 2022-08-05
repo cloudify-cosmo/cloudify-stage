@@ -288,8 +288,8 @@ module.exports = (env, argv) => {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
                     react: `${__dirname}/node_modules/react`,
-                    '../../theme.config$': path.join(__dirname, '/semantic-ui/theme.config'),
-                    '../semantic-ui/site': path.join(__dirname, '/semantic-ui/site')
+                    themes: path.join(__dirname, '/semantic-ui/themes'),
+                    '../../theme.config$': path.join(__dirname, '/semantic-ui/theme.config')
                 },
                 fallback: {
                     // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default
