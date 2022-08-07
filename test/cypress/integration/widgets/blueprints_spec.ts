@@ -23,10 +23,9 @@ describe('Blueprints widget', () => {
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
-    function redirectBack() {
+    function closeDeployModal() {
         cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
         cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
-        cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate();
     }
 
     function getBlueprintRow(blueprintName: string) {
@@ -349,8 +348,8 @@ describe('Blueprints widget', () => {
                 cy.contains('2/5: Uploading blueprint...');
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
-                redirectBack();
-                getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
+                closeDeployModal();
+                cy.get('[role="treeitem"]').contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -361,8 +360,8 @@ describe('Blueprints widget', () => {
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
 
-                redirectBack();
-                getBlueprintRow(blueprintName).contains(blueprintFileName);
+                closeDeployModal();
+                cy.get('[role="treeitem"]').contains('read-secret-blueprint.yaml');
             });
 
             it('and handle upload errors', () => {
