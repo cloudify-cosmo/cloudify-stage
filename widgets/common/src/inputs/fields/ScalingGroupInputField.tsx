@@ -1,5 +1,6 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
+import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
 
 export default function ScalingGroupInputField({
     name,
@@ -7,9 +8,7 @@ export default function ScalingGroupInputField({
     toolbox,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = `/searches/scaling-groups?_include=name&deployment_id=${toolbox
-        .getContext()
-        .getValue('deploymentId')}`;
+    const fetchUrl = useFetchUrlWithDeploymentId('/searches/scaling-groups?_include=name', restProps.constraints);
 
     return (
         <DynamicDropdown
