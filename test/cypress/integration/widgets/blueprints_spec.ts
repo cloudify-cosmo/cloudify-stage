@@ -24,8 +24,9 @@ describe('Blueprints widget', () => {
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
     function closeDeployModal() {
-        cy.get('.deployBlueprintModal > .header').should('contain.text', 'Deploy blueprint');
-        cy.get('.deployBlueprintModal').within(() => cy.contains('Cancel').click());
+        cy.contains('Deploy blueprint')
+            .parent('.modal')
+            .within(() => cy.contains('Cancel').click());
     }
 
     function getBlueprintRow(blueprintName: string) {
