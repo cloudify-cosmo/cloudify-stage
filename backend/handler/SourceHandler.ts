@@ -6,6 +6,7 @@ import _ from 'lodash';
 import os from 'os';
 import pathlib from 'path';
 import url from 'url';
+import { execSync } from 'child_process';
 
 import { getConfig } from '../config';
 import { isYamlFile } from '../sharedUtils';
@@ -126,7 +127,6 @@ export async function browseArchiveFile(req, timestamp, path) {
 export function getMimeType(req, timestamp, path) {
     const { blueprintId } = req.params;
     const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
-    const execSync = require('child_process').execSync;
     const mimeType = execSync('file --mime-type -b "' + absolutePath + '"').toString();
     return mimeType.trim();
 }
