@@ -209,7 +209,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     {content ? (
                         <div className="alignHighlight">
                             {imageUrl ? (
-                                <img src={imageUrl} alt="in a blueprint" />
+                                <img src={imageUrl} alt={filename} />
                             ) : (
                                 <>
                                     <HighlightText language={type}>{content}</HighlightText>
