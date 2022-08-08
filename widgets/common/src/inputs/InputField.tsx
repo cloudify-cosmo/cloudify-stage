@@ -13,21 +13,12 @@ import StringInputField from './fields/StringInputField';
 import TextareaInputField from './fields/TextareaInputField';
 import ValueListInputField from './fields/ValueListInputField';
 import NodeIdInputField from './fields/NodeIdInputField';
+import getConstraintValueFunction from './utils/getConstraintValueFunction';
 
-import type { Constraint, Input, OnChange } from './types';
+import type { Input, OnChange } from './types';
 
 function isListComponentInputType(input: Input): boolean {
     return !!(input.item_type && input.type === 'list');
-}
-
-function getConstraintValueFunction(constraints: Constraint[]) {
-    return (constraintName: string) => {
-        if (_.isEmpty(constraints)) {
-            return undefined;
-        }
-        const index = _.findIndex(constraints, constraintName);
-        return index >= 0 ? constraints[index][constraintName] : null;
-    };
 }
 
 function InputField({
