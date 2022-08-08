@@ -362,7 +362,7 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 closeDeployModal();
-                cy.get('[role="treeitem"]').contains('read-secret-blueprint.yaml');
+                cy.get('[role="treeitem"]').contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
