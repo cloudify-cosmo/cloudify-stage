@@ -35,6 +35,10 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
+    function blueprintSourceMainFile() {
+        return cy.getWidget('blueprintSources').contains('Main').parent();
+    }
+
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -350,7 +354,7 @@ describe('Blueprints widget', () => {
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
                 closeDeployModal();
-                cy.getWidget('blueprintSources').contains('Main').parent().contains('read-secret-blueprint.yaml');
+                blueprintSourceMainFile().contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -362,7 +366,7 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 closeDeployModal();
-                cy.getWidget('blueprintSources').contains('Main').parent().contains(blueprintFileName);
+                blueprintSourceMainFile().contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
