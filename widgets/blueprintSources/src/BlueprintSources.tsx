@@ -82,7 +82,11 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then(setContent)
+            .then((content: string) => {
+                if (!path.match(/.(jpg|jpeg|png|gif)$/i)) {
+                    setContent(content);
+                }
+            })
             .then(() => {
                 let fileType: FileType = 'json';
                 if (Stage.Utils.isYamlFile(path)) {
@@ -206,28 +210,26 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                             )}
                         </NodesTree>
                     </div>
-                    {content ? (
+                    {imageUrl ? (
+                        <div className="verticalCenter centeredIcon">
+                            <img src={imageUrl} alt={filename} />
+                        </div>
+                    ) : content ? (
                         <div className="alignHighlight">
-                            {imageUrl ? (
-                                <img src={imageUrl} alt={filename} />
-                            ) : (
-                                <>
+                            <HighlightText language={type}>{content}</HighlightText>
+                            <Label attached="top right" size="small" onClick={maximize}>
+                                <Icon name="expand" link />
+                                {filename}
+                            </Label>
+                            <Modal open={isMaximized} onClose={minimize}>
+                                <Modal.Header>{filename}</Modal.Header>
+                                <Modal.Content>
                                     <HighlightText language={type}>{content}</HighlightText>
-                                    <Label attached="top right" size="small" onClick={maximize}>
-                                        <Icon name="expand" link />
-                                        {filename}
-                                    </Label>
-                                    <Modal open={isMaximized} onClose={minimize}>
-                                        <Modal.Header>{filename}</Modal.Header>
-                                        <Modal.Content>
-                                            <HighlightText language={type}>{content}</HighlightText>
-                                        </Modal.Content>
-                                        <Modal.Actions>
-                                            <CancelButton content="Close" onClick={minimize} />
-                                        </Modal.Actions>
-                                    </Modal>
-                                </>
-                            )}
+                                </Modal.Content>
+                                <Modal.Actions>
+                                    <CancelButton content="Close" onClick={minimize} />
+                                </Modal.Actions>
+                            </Modal>
                         </div>
                     ) : (
                         <div className="verticalCenter centeredIcon">
