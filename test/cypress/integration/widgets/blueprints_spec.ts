@@ -35,7 +35,7 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
-    function blueprintSourceMainFile() {
+    function getBlueprintMainFile() {
         return cy.getWidget('blueprintSources').contains('Main').parent();
     }
 
@@ -354,7 +354,7 @@ describe('Blueprints widget', () => {
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
                 closeDeployModal();
-                blueprintSourceMainFile().contains('read-secret-blueprint.yaml');
+                getBlueprintMainFile().contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -366,7 +366,7 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 closeDeployModal();
-                blueprintSourceMainFile().contains(blueprintFileName);
+                getBlueprintMainFile().contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
