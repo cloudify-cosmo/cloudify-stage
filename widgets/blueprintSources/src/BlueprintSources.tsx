@@ -72,9 +72,9 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
 
         const path = selectedKeys[0];
 
-        console.log(path);
-        if (_.endsWith(path.toLowerCase(), '.png') || _.endsWith(path.toLowerCase(), '.jpg')) {
-            setImageUrl(`http://localhost:4000/console/source/browse/${path}`);
+        clearImageUrl();
+        if (path.match(/.(jpg|jpeg|png|gif)$/i)) {
+            setImageUrl(`/console/source/browse/${path}`);
         }
 
         toolbox.loading(true);
@@ -83,12 +83,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         actions
             .doGetFileContent(path)
             // .then(setContent)
-            .then(res => {
-                if (_.endsWith(path.toLowerCase(), '.png')) {
-                    console.log(res);
-                    console.log(new Blob([res]));
-                    console.log(URL.createObjectURL(new Blob([res])));
-                }
+            .then((res: string) => {
                 setContent(res);
             })
             .then(() => {
@@ -99,9 +94,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     fileType = 'python';
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
-                } else if (_.endsWith(path.toLowerCase(), '.png')) {
-                    fileType = 'png';
-                    // setContent(new Blob([res.data]));
                 }
 
                 setFilename(info.node.props.title.props.children[1]);
@@ -219,21 +211,26 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     </div>
                     {content ? (
                         <div className="alignHighlight">
-                            {imageUrl && <img src={imageUrl} alt="image in a blueprint" />}
-                            <HighlightText language={type}>{content}</HighlightText>
-                            <Label attached="top right" size="small" onClick={maximize}>
-                                <Icon name="expand" link />
-                                {filename}
-                            </Label>
-                            <Modal open={isMaximized} onClose={minimize}>
-                                <Modal.Header>{filename}</Modal.Header>
-                                <Modal.Content>
+                            {imageUrl ? (
+                                <img src={imageUrl} alt="in a blueprint" />
+                            ) : (
+                                <>
                                     <HighlightText language={type}>{content}</HighlightText>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    <CancelButton content="Close" onClick={minimize} />
-                                </Modal.Actions>
-                            </Modal>
+                                    <Label attached="top right" size="small" onClick={maximize}>
+                                        <Icon name="expand" link />
+                                        {filename}
+                                    </Label>
+                                    <Modal open={isMaximized} onClose={minimize}>
+                                        <Modal.Header>{filename}</Modal.Header>
+                                        <Modal.Content>
+                                            <HighlightText language={type}>{content}</HighlightText>
+                                        </Modal.Content>
+                                        <Modal.Actions>
+                                            <CancelButton content="Close" onClick={minimize} />
+                                        </Modal.Actions>
+                                    </Modal>
+                                </>
+                            )}
                         </div>
                     ) : (
                         <div className="verticalCenter centeredIcon">

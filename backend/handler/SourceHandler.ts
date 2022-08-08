@@ -116,7 +116,11 @@ export async function browseArchiveFile(req, timestamp, path) {
         await browseArchiveTree(req, timestamp);
     }
 
-    return fs.readFile(absolutePath, 'utf-8');
+    const mimeType = getMimeType(req, timestamp, path);
+    if (mimeType.startsWith('text/')) {
+        return fs.readFile(absolutePath, 'utf-8');
+    }
+    return fs.readFile(absolutePath, '');
 }
 
 export function getMimeType(req, timestamp, path) {
