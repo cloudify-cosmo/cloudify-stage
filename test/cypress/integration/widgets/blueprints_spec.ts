@@ -23,10 +23,20 @@ describe('Blueprints widget', () => {
 
     beforeEach(() => cy.usePageMock('blueprints', blueprintsWidgetConfiguration).refreshTemplate());
 
+    function closeDeployModal() {
+        cy.contains('Deploy blueprint')
+            .parent('.modal')
+            .within(() => cy.contains('Cancel').click());
+    }
+
     function getBlueprintRow(blueprintName: string) {
         cy.getSearchInput().clear().type(blueprintName);
         cy.get('.blueprintsTable > tbody > tr').should('have.length', 1);
         return cy.get(`#blueprintsTable_${blueprintName}`);
+    }
+
+    function getBlueprintMainFile() {
+        return cy.getWidget('blueprintSources').contains('Main').parent();
     }
 
     describe('for specific blueprint', () => {
@@ -343,8 +353,8 @@ describe('Blueprints widget', () => {
                 cy.contains('2/5: Uploading blueprint...');
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
-
-                getBlueprintRow(blueprintName).contains('read-secret-blueprint.yaml');
+                closeDeployModal();
+                getBlueprintMainFile().contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -355,7 +365,8 @@ describe('Blueprints widget', () => {
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
                 cy.get('.button.ok').click();
 
-                getBlueprintRow(blueprintName).contains(blueprintFileName);
+                closeDeployModal();
+                getBlueprintMainFile().contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
