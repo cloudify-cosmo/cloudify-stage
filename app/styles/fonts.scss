@@ -1,15 +1,8 @@
 // NOTE: Upon finalising theming changes, font faces below should be extracted to cloudify-ui-common
 @font-face {
     font-family: 'Roboto';
-    src: url('../../node_modules/cloudify-ui-common/fonts/Roboto/Roboto-Medium.ttf');
+    src: url('../../node_modules/cloudify-ui-common/fonts/Roboto/Roboto-Regular.ttf');
     font-weight: normal;
-}
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('../../node_modules/cloudify-ui-common/fonts/Roboto/Roboto-MediumItalic.ttf');
-    font-weight: normal;
-    font-style: italic;
 }
 
 @font-face {
