@@ -350,7 +350,7 @@ describe('Blueprints widget', () => {
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
                 closeDeployModal();
-                cy.get('[role="treeitem"]').contains('read-secret-blueprint.yaml');
+                cy.getWidget('blueprintSources').contains('Main').parent().contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -362,7 +362,7 @@ describe('Blueprints widget', () => {
                 cy.get('.button.ok').click();
 
                 closeDeployModal();
-                cy.get('[role="treeitem"]').contains(blueprintFileName);
+                cy.getWidget('blueprintSources').contains('Main').parent().contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
