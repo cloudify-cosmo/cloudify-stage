@@ -55,6 +55,7 @@ pipeline {
               '''
             }
           }
+          // Workaround for https://github.com/cypress-io/cypress/issues/20286
           echo "Fix directory ownership"
           dir("${STAGE_DIR}") {
             sh "chown -R `whoami` ."
