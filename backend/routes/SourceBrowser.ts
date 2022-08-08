@@ -22,7 +22,6 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
         const mimeType = getMimeType(req, timestamp, path);
         browseArchiveFile(req, timestamp, path)
             .then(content => {
-                console.log('LEON DEBUG', mimeType, typeof mimeType);
                 res.contentType(mimeType).send(content);
             })
             .catch(next);
