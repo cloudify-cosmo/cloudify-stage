@@ -317,7 +317,7 @@ describe('Blueprints widget', () => {
             cy.contains('Cancel').click();
         });
 
-        describe.only('should upload a blueprint', () => {
+        describe('should upload a blueprint', () => {
             const url =
                 'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-65/utilities-examples-cloudify_secrets.zip';
 
