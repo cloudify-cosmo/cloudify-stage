@@ -82,10 +82,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            // .then(setContent)
-            .then((res: string) => {
-                setContent(res);
-            })
+            .then(setContent)
             .then(() => {
                 let fileType: FileType = 'json';
                 if (Stage.Utils.isYamlFile(path)) {
