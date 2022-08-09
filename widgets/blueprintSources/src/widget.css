@@ -2,10 +2,6 @@
     color: rgba(0, 0, 0, 0.6);
 }
 
-.centeredIcon {
-    text-align: center;
-}
-
 .alignHighlight > .label {
     cursor: pointer;
 }
