@@ -22,7 +22,7 @@ spec:
         cpu: 0.3
         memory: 256Mi
   - name: node
-    image: cypress/browsers:node14.15.0-chrome96-ff94
+    image: cypress/browsers:node16.14.2-slim-chrome103-ff102
     resources:
       requests:
         cpu: 2.5
