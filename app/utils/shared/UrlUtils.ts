@@ -1,9 +1,15 @@
 import _ from 'lodash';
+import { stringify as stringifyQueryString } from 'query-string';
 import Const from '../consts';
 
 export default class UrlUtils {
-    static appendQueryParam(url: string, param: string, value: string | number) {
-        return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
+    static appendQueryParam(url: string, data?: Record<string, any>) {
+        const prefix = url.includes('?') ? '&' : '?';
+        let queryString = '';
+        if (data) {
+            queryString = prefix + stringifyQueryString(data, { sort: false });
+        }
+        return `${url}${queryString}`;
     }
 
     static url(path: string) {

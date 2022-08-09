@@ -2,8 +2,8 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import _ from 'lodash';
-import { stringify as stringifyQueryString } from 'query-string';
 
+import UrlUtils from './shared/UrlUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -30,7 +30,7 @@ export default class Manager extends Internal {
     }
 
     getManagerUrl(url, data?) {
-        return this.buildActualUrl(url, data);
+        return UrlUtils.appendQueryParam(url, data);
     }
 
     getSelectedTenant() {
@@ -40,15 +40,6 @@ export default class Manager extends Internal {
     getSystemRoles() {
         const roles = this.managerData?.roles ?? null;
         return _.filter(roles, role => role.type === 'system_role');
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data?) {
-        const queryString = data
-            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
-            : '';
-
-        return StageUtils.Url.url(`/sp${url}${queryString}`);
     }
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {

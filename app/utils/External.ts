@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import JSZip from 'jszip';
 import _ from 'lodash';
 import log from 'loglevel';
-import { stringify as stringifyQueryString } from 'query-string';
+import UrlUtils from './shared/UrlUtils';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
 import Interceptor from './Interceptor';
 
@@ -300,10 +300,7 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
-        const queryString = data
-            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
-            : '';
-        return `${url}${queryString}`;
+        return UrlUtils.appendQueryParam(url, data);
     }
 
     protected buildHeaders(): Record<string, string> {
