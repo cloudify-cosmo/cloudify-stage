@@ -1,0 +1,7 @@
+/*******************************
+         Theme Overrides
+*******************************/
+
+.ui.menu {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
