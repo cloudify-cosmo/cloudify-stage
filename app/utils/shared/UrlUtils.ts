@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { stringify as stringifyQueryString } from 'query-string';
+import { stringify } from 'query-string';
 import Const from '../consts';
 
 export default class UrlUtils {
@@ -7,7 +7,7 @@ export default class UrlUtils {
         const prefix = url.includes('?') ? '&' : '?';
         let queryString = '';
         if (data) {
-            queryString = prefix + stringifyQueryString(data, { sort: false });
+            queryString = prefix + stringify(data, { sort: false });
         }
         return `${url}${queryString}`;
     }
