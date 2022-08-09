@@ -30,7 +30,7 @@ export default class Manager extends Internal {
     }
 
     getManagerUrl(url, data?) {
-        return UrlUtils.appendQueryParam(url, data);
+        return this.buildActualUrl(url, data);
     }
 
     getSelectedTenant() {
@@ -40,6 +40,12 @@ export default class Manager extends Internal {
     getSystemRoles() {
         const roles = this.managerData?.roles ?? null;
         return _.filter(roles, role => role.type === 'system_role');
+    }
+
+    // eslint-disable-next-line class-methods-use-this
+    buildActualUrl(url, data?) {
+        const path = `/sp${UrlUtils.appendQueryParam(url, data)}`;
+        return StageUtils.Url.url(path);
     }
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
