@@ -48,7 +48,7 @@ interface RightPaneProps {
     imageUrl: string;
     content: string;
     filename: string;
-    type: 'yaml' | 'python' | 'bash';
+    type: 'json' | 'python' | 'bash' | 'javascript' | 'yaml';
     maximize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     isMaximized: boolean;
     minimize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
