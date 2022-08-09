@@ -36,6 +36,53 @@ interface BlueprintTree {
     timestamp: number;
 }
 
+interface RightPaneProps {
+    imageUrl: string;
+    content: string;
+    filename: string;
+    type: 'yaml' | 'python' | 'bash';
+    maximize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    isMaximized: boolean;
+    minimize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}
+
+const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, minimize }: RightPaneProps) => {
+    if (imageUrl) {
+        return (
+            <div className="verticalCenter centeredIcon">
+                <img src={imageUrl} alt={filename} />
+            </div>
+        );
+    }
+
+    if (content) {
+        return (
+            <div className="alignHighlight">
+                <HighlightText language={type}>{content}</HighlightText>
+                <Label attached="top right" size="small" onClick={maximize}>
+                    <Icon name="expand" link />
+                    {filename}
+                </Label>
+                <Modal open={isMaximized} onClose={minimize}>
+                    <Modal.Header>{filename}</Modal.Header>
+                    <Modal.Content>
+                        <HighlightText language={type}>{content}</HighlightText>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <CancelButton content="Close" onClick={minimize} />
+                    </Modal.Actions>
+                </Modal>
+            </div>
+        );
+    }
+
+    return (
+        <div className="verticalCenter centeredIcon">
+            <Icon name="file outline" size="big" color="grey" />
+        </div>
+    );
+};
+
 interface BlueprintSourcesProps {
     data: {
         blueprintId: string;
@@ -83,9 +130,11 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then((content: string) => {
-                if (!isImage) {
-                    setContent(content);
+            .then((responseBody: string) => {
+                if (isImage) {
+                    clearContent();
+                } else {
+                    setContent(responseBody);
                 }
             })
             .then(() => {
@@ -211,39 +260,13 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                             )}
                         </NodesTree>
                     </div>
-                    {imageUrl ? (
-                        <div className="verticalCenter centeredIcon">
-                            <img src={imageUrl} alt={filename} />
-                        </div>
-                    ) : content ? (
-                        <div className="alignHighlight">
-                            <HighlightText language={type}>{content}</HighlightText>
-                            <Label attached="top right" size="small" onClick={maximize}>
-                                <Icon name="expand" link />
-                                {filename}
-                            </Label>
-                            <Modal open={isMaximized} onClose={minimize}>
-                                <Modal.Header>{filename}</Modal.Header>
-                                <Modal.Content>
-                                    <HighlightText language={type}>{content}</HighlightText>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    <CancelButton content="Close" onClick={minimize} />
-                                </Modal.Actions>
-                            </Modal>
-                        </div>
-                    ) : (
-                        <div className="verticalCenter centeredIcon">
-                            <Icon name="file outline" size="big" color="grey" />
-                        </div>
-                    )}
+                    <RightPane {...{ imageUrl, content, filename, type, maximize, isMaximized, minimize }} />
                 </SplitterLayout>
             ) : (
                 <div>
                     <Message content="Please select blueprint to display source files" info />
                 </div>
             )}
-
             <ErrorMessage error={error} onDismiss={() => setError(null)} autoHide />
         </div>
     );
