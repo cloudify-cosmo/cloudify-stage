@@ -582,7 +582,7 @@
                     "updateButton": "Update"
                 },
                 "secretsModal": {
-                    "header": "Add Secrets",
+                    "header": "Add secret",
                     "buttons": {
                         "add": "Add"
                     },

@@ -1,7 +1,10 @@
 import type { FunctionComponent } from 'react';
+import { useState } from 'react';
+import { Grid } from 'semantic-ui-react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
 import SinglelineInput from './SinglelineInput';
+import MultilineInput from './MultilineInput';
 import type { Visibility } from './SecretActions';
 
 interface SecretsModalProps {
@@ -23,13 +26,26 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
-    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, Modal, Checkbox } = Stage.Basic;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [secretInputs, setSecretInputs] = useInputs(initialInputs);
+
+    const secretKeysWithCheckbox = secretKeys.map(field => ({ field, isChecked: false }));
+    const [secretKeysWithCheckboxState, setSecretKeysWithCheckboxState] = useState(secretKeysWithCheckbox);
+
+    const toggleCheckbox = (secretKey: string) => {
+        const newSecretKeysWithCheckboxState = secretKeysWithCheckboxState.map(secretKeyWithCheckbox => {
+            if (secretKeyWithCheckbox.field === secretKey) {
+                return { ...secretKeyWithCheckbox, isChecked: !secretKeyWithCheckbox.isChecked };
+            }
+            return secretKeyWithCheckbox;
+        });
+        setSecretKeysWithCheckboxState(newSecretKeysWithCheckboxState);
+    };
 
     const onSave = () => {
         const keys = Object.keys(secretInputs);
@@ -58,16 +74,48 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     };
     return (
         <Modal open={open} onClose={onClose} className="secretsModal">
-            <Modal.Header>
-                <Icon name="plus" />
-                {t('header')}
-            </Modal.Header>
+            <Modal.Header>{t('header')}</Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    {secretKeys.map(field => (
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column width={14} />
+                            <Grid.Column width={2} style={{ marginBottom: '-20px' }}>
+                                <p>Multiline</p>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+
+                    {secretKeysWithCheckboxState.map(({ field, isChecked }) => (
                         <Form.Field key={field} required label={field}>
-                            <SinglelineInput name={field} onChange={setSecretInputs} />
+                            <Grid>
+                                <Grid.Row>
+                                    <Grid.Column width={14}>
+                                        {isChecked ? (
+                                            <MultilineInput
+                                                name={field}
+                                                value={secretInputs[field]}
+                                                placeholder="Secret value"
+                                                onChange={setSecretInputs}
+                                            />
+                                        ) : (
+                                            <SinglelineInput
+                                                name={field}
+                                                value={secretInputs[field]}
+                                                onChange={setSecretInputs}
+                                            />
+                                        )}
+                                    </Grid.Column>
+                                    <Grid.Column width={2}>
+                                        <Checkbox
+                                            style={{ marginTop: '10px' }}
+                                            checked={isChecked}
+                                            onChange={() => toggleCheckbox(field)}
+                                        />
+                                    </Grid.Column>
+                                </Grid.Row>
+                            </Grid>
                         </Form.Field>
                     ))}
                 </Form>
