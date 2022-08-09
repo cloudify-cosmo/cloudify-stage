@@ -3,7 +3,7 @@ import { stringify } from 'query-string';
 import type { QueryStringParams } from '../../types';
 
 export function getUrlWithQueryString(url: string, params: QueryStringParams = {}) {
-    const prefix = url.includes('?') ? '&' : '?';
+    const prefix = url?.includes('?') ? '&' : '?';
     let result = url;
 
     if (!isEmpty(params)) {
