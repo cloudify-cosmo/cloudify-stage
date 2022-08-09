@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
+import styled from 'styled-components';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
@@ -36,6 +37,13 @@ interface BlueprintTree {
     timestamp: number;
 }
 
+const Center = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+`;
+
 interface RightPaneProps {
     imageUrl: string;
     content: string;
@@ -49,9 +57,9 @@ interface RightPaneProps {
 const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, minimize }: RightPaneProps) => {
     if (imageUrl) {
         return (
-            <div className="verticalCenter centeredIcon">
+            <Center>
                 <img src={imageUrl} alt={filename} />
-            </div>
+            </Center>
         );
     }
 
@@ -77,9 +85,9 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
     }
 
     return (
-        <div className="verticalCenter centeredIcon">
+        <Center>
             <Icon name="file outline" size="big" color="grey" />
-        </div>
+        </Center>
     );
 };
 
