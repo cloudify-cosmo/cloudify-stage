@@ -71,9 +71,10 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         }
 
         const path = selectedKeys[0];
+        const isImage = path.match(/.(jpg|jpeg|png|gif)$/i);
 
         clearImageUrl();
-        if (path.match(/.(jpg|jpeg|png|gif)$/i)) {
+        if (isImage) {
             setImageUrl(`/console/source/browse/${path}`);
         }
 
@@ -83,7 +84,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         actions
             .doGetFileContent(path)
             .then((content: string) => {
-                if (!path.match(/.(jpg|jpeg|png|gif)$/i)) {
+                if (!isImage) {
                     setContent(content);
                 }
             })
