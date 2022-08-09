@@ -1,8 +1,9 @@
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
+import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
 
 export default function NodeIdInputField({ name, onChange, toolbox, ...restProps }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = `/searches/nodes?_include=id&deployment_id=${toolbox.getContext().getValue('deploymentId')}`;
+    const fetchUrl = useFetchUrlWithDeploymentId('/searches/nodes?_include=id', restProps.constraints);
 
     return (
         <DynamicDropdown

@@ -53,8 +53,6 @@ describe('User flow', () => {
         });
         cy.get('.modal', { timeout: minutesToMs(1) }).should('not.exist');
 
-        cy.getSearchInput().clear().type(resourceName);
-        cy.clickButton('Deploy');
         cy.get('input[name=deploymentName]').type(resourceName);
         cy.clickButton('Install');
 
