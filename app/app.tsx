@@ -2,7 +2,7 @@
 import './styles/style.scss';
 
 // Import semantic ui styles and themes
-import '../semantic-ui/semantic.less';
+import 'semantic-ui-less/semantic.less';
 
 // Import react grid
 import 'react-grid-layout/css/styles.css';
