@@ -2,4 +2,16 @@
      User Global Variables
 *******************************/
 
-@fontName: 'Roboto';
+@fontName : 'Roboto';
+@importGoogleFonts: false;
+
+/*-------------------
+      Site Colors
+--------------------*/
+
+/*---  Colors  ---*/
+@red              : #EF5350;
+@yellow           : #FEE584;
+@blue             : #65ADFF;
+@grey             : #5F6368;
+@black            : #050229;
