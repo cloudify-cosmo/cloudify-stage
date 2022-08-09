@@ -1,5 +1,6 @@
 import _ from 'lodash';
-import UrlUtils from 'app/utils/shared/UrlUtils';
+// TODO: check the following line
+// import UrlUtils from 'app/utils/shared/UrlUtils';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 
@@ -9,6 +10,12 @@ declare global {
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
     }
+}
+
+// TODO: check here:
+function appendQueryParam(url: string, param: string, value: string) {
+    const prefix = url.includes('?') ? '&' : '?';
+    return `${url}${prefix}${param}=${encodeURIComponent(value)}`;
 }
 
 export type WaitUntilOptions = {
@@ -43,7 +50,9 @@ const commands = {
 
         let url = `/${resource}`;
         if (search) {
-            url = UrlUtils.appendQueryParam(url, { _search: search });
+            //TODO: check the following lines:
+            url = appendQueryParam(url, `_search`, search);
+            // url = UrlUtils.appendQueryParam(url, { _search: search });
         }
         cy.cfyRequest(url, 'GET', null, null, { useAdminAuthorization }).then(response => {
             if (predicate(response)) {
