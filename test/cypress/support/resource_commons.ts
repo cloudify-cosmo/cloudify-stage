@@ -1,6 +1,4 @@
 import _ from 'lodash';
-// TODO: check the following line
-// import UrlUtils from 'app/utils/shared/UrlUtils';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 
@@ -12,7 +10,6 @@ declare global {
     }
 }
 
-// TODO: check here:
 function appendQueryParam(url: string, param: string, value: string) {
     const prefix = url.includes('?') ? '&' : '?';
     return `${url}${prefix}${param}=${encodeURIComponent(value)}`;
@@ -50,9 +47,7 @@ const commands = {
 
         let url = `/${resource}`;
         if (search) {
-            //TODO: check the following lines:
             url = appendQueryParam(url, `_search`, search);
-            // url = UrlUtils.appendQueryParam(url, { _search: search });
         }
         cy.cfyRequest(url, 'GET', null, null, { useAdminAuthorization }).then(response => {
             if (predicate(response)) {
