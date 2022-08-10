@@ -37,10 +37,12 @@ interface BlueprintTree {
     timestamp: number;
 }
 
-const highlightTextStyle = {
-    marginTop: '2rem',
-    marginBottom: '0rem'
-};
+const StyledHighlightText = styled(HighlightText)`
+    & > pre {
+        margin-top: 2rem;
+        margin-bottom: 0rem;
+    }
+`;
 
 const Center = styled.div`
     display: flex;
@@ -71,9 +73,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
     if (content) {
         return (
             <div>
-                <HighlightText language={type} style={highlightTextStyle}>
-                    {content}
-                </HighlightText>
+                <StyledHighlightText language={type}>{content}</StyledHighlightText>
                 <Label attached="top right" size="small" onClick={maximize} style={{ cursor: 'pointer' }}>
                     <Icon name="expand" link />
                     {filename}
@@ -81,9 +81,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
                 <Modal open={isMaximized} onClose={minimize}>
                     <Modal.Header>{filename}</Modal.Header>
                     <Modal.Content>
-                        <HighlightText language={type} style={highlightTextStyle}>
-                            {content}
-                        </HighlightText>
+                        <StyledHighlightText language={type}>{content}</StyledHighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CancelButton content="Close" onClick={minimize} />
