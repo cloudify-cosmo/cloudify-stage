@@ -44,6 +44,17 @@ const Center = styled.div`
     height: 100%;
 `;
 
+const AlignHighlight = styled.div`
+    & > .label {
+        cursor: pointer;
+    }
+
+    & > pre {
+        margin-top: 2rem;
+        margin-bottom: 0rem;
+    }
+`;
+
 interface RightPaneProps {
     imageUrl: string;
     content: string;
@@ -65,7 +76,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
 
     if (content) {
         return (
-            <div className="alignHighlight">
+            <AlignHighlight>
                 <HighlightText language={type}>{content}</HighlightText>
                 <Label attached="top right" size="small" onClick={maximize}>
                     <Icon name="expand" link />
@@ -80,7 +91,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
                         <CancelButton content="Close" onClick={minimize} />
                     </Modal.Actions>
                 </Modal>
-            </div>
+            </AlignHighlight>
         );
     }
 
