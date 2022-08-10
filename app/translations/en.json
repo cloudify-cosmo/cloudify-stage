@@ -588,7 +588,8 @@
                     },
                     "errors": {
                         "noSecretValues": "Please provide values for secrets"
-                    }
+                    },
+                    "placeholder": "Secret value"
                 },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",

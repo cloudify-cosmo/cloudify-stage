@@ -96,7 +96,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                                             <MultilineInput
                                                 name={field}
                                                 value={secretInputs[field]}
-                                                placeholder="Secret value"
+                                                placeholder={t('placeholder')}
                                                 onChange={setSecretInputs}
                                             />
                                         ) : (
