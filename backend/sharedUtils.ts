@@ -15,12 +15,9 @@ export function isYamlFile(filename: string) {
 export type QueryStringParams = Record<string, any>;
 
 export function getUrlWithQueryString(url: string, params?: QueryStringParams) {
+    if (!params || isEmpty(params)) return url;
+
     const prefix = url?.includes('?') ? '&' : '?';
-    let result = url;
-
-    if (params && !isEmpty(params)) {
-        result += prefix + stringify(params, { sort: false });
-    }
-
-    return result;
+    const queryString = prefix + stringify(params, { sort: false });
+    return `${url}${queryString}`;
 }
