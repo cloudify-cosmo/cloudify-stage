@@ -3,7 +3,7 @@
 
 import _ from 'lodash';
 
-import UrlUtils from './shared/UrlUtils';
+import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -44,7 +44,7 @@ export default class Manager extends Internal {
 
     // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data?) {
-        const path = `/sp${UrlUtils.appendQueryParam(url, data)}`;
+        const path = `/sp${getUrlWithQueryString(url, data)}`;
         return StageUtils.Url.url(path);
     }
 
