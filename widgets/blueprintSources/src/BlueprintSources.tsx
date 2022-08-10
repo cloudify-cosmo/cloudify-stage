@@ -38,10 +38,8 @@ interface BlueprintTree {
 }
 
 const StyledHighlightText = styled(HighlightText)`
-    & > pre {
-        margin-top: 2rem;
-        margin-bottom: 0rem;
-    }
+    margin-top: 2rem;
+    margin-bottom: 0rem;
 `;
 
 const Center = styled.div`
