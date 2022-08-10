@@ -118,7 +118,7 @@ export async function browseArchiveFile(req, timestamp, path) {
     }
 
     const mimeType = getMimeType(req, timestamp, path);
-    if (mimeType.startsWith('text/')) {
+    if (!mimeType || mimeType.startsWith('text/')) {
         return fs.readFile(absolutePath, 'utf-8');
     }
     return fs.readFile(absolutePath, '');
