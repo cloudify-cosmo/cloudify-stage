@@ -1,13 +1,10 @@
 import _ from 'lodash';
-import { stringify } from 'query-string';
 import Const from '../consts';
+import { getUrlWithQueryString } from '../../../backend/sharedUtils';
 
 export default class UrlUtils {
     static appendQueryParam(url: string, data?: Record<string, any>) {
-        if (!data) return url;
-        const prefix = url.includes('?') ? '&' : '?';
-        const queryString = prefix + stringify(data, { sort: false });
-        return `${url}${queryString}`;
+        return getUrlWithQueryString(url, data);
     }
 
     static url(path: string) {
