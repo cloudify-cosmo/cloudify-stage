@@ -4,11 +4,9 @@ import Const from '../consts';
 
 export default class UrlUtils {
     static appendQueryParam(url: string, data?: Record<string, any>) {
+        if (!data) return url;
         const prefix = url.includes('?') ? '&' : '?';
-        let queryString = '';
-        if (data) {
-            queryString = prefix + stringify(data, { sort: false });
-        }
+        const queryString = prefix + stringify(data, { sort: false });
         return `${url}${queryString}`;
     }
 
