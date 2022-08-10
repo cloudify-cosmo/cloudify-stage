@@ -14,11 +14,11 @@ export function isYamlFile(filename: string) {
 
 export type QueryStringParams = Record<string, any>;
 
-export function getUrlWithQueryString(url: string, params: QueryStringParams) {
+export function getUrlWithQueryString(url: string, params?: QueryStringParams) {
     const prefix = url?.includes('?') ? '&' : '?';
     let result = url;
 
-    if (!isEmpty(params)) {
+    if (params && !isEmpty(params)) {
         result += prefix + stringify(params, { sort: false });
     }
 
