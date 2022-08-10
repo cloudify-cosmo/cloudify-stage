@@ -3,11 +3,11 @@ import 'isomorphic-fetch';
 import JSZip from 'jszip';
 import _ from 'lodash';
 import log from 'loglevel';
-import UrlUtils from './shared/UrlUtils';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
 import Interceptor from './Interceptor';
 
 import StageUtils from './stageUtils';
+import { getUrlWithQueryString } from '../../backend/sharedUtils';
 
 /*
 Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofunky/class/draw
@@ -300,7 +300,7 @@ export default class External {
 
     // eslint-disable-next-line class-methods-use-this
     protected buildActualUrl(url: string, data?: Record<string, any>) {
-        return UrlUtils.appendQueryParam(url, data);
+        return getUrlWithQueryString(url, data);
     }
 
     protected buildHeaders(): Record<string, string> {
