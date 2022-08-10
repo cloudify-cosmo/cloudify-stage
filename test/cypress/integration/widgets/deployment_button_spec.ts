@@ -270,6 +270,7 @@ describe('Create Deployment Button widget', () => {
                     cy.get('.header').should('have.text', 'Errors in the form');
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
+
                 cy.get('.ui > input').eq(0).type('aaa');
                 cy.contains('button', 'Add').click();
                 cy.wait('@addSecrets');
