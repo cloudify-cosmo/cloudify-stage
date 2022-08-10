@@ -1,6 +1,5 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
-import { Grid } from 'semantic-ui-react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
 import SinglelineInput from './SinglelineInput';
@@ -26,7 +25,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
-    const { ApproveButton, CancelButton, Form, Modal, Checkbox } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, Modal, Checkbox, Grid } = Stage.Basic;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
