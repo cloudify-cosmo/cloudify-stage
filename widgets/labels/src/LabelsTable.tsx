@@ -4,12 +4,10 @@ import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
+import type { LabelsData } from './widget';
 
 interface LabelsTableProps {
-    data: {
-        deploymentId: string;
-        labels: Stage.Types.Label[];
-    };
+    data: LabelsData;
     toolbox: Stage.Types.Toolbox;
 }
 

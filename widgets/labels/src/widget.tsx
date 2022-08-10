@@ -1,7 +1,13 @@
+import type { Label } from '../../common/src/labels/types';
 import LabelsTable from './LabelsTable';
 import './widget.css';
 
 const { i18n } = Stage;
+
+export type LabelsData = {
+    deploymentId: string;
+    labels: Label[];
+};
 
 Stage.defineWidget({
     id: 'labels',
@@ -24,7 +30,13 @@ Stage.defineWidget({
         };
     },
 
-    fetchData(_widget, toolbox, params) {
+    fetchData(
+        _widget,
+        toolbox,
+        params: {
+            deploymentId: string | string[] | null | undefined;
+        }
+    ) {
         const { deploymentId } = params;
         if (deploymentId) {
             const DeploymentActions = Stage.Common.Deployments.Actions;
@@ -46,7 +58,7 @@ Stage.defineWidget({
         }
 
         const { Labels } = Stage.Common;
-        const formattedData = {
+        const formattedData: LabelsData = {
             labels: Labels.sortLabels(_.map(data, item => _.pick(item, 'key', 'value'))),
             deploymentId: deploymentId as string
         };
