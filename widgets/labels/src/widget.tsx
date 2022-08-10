@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import LabelsTable from './LabelsTable';
 import './widget.css';
 
@@ -19,22 +18,22 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
     // ensures data refetch on deploymentId change
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         return {
             deploymentId: toolbox.getContext().getValue('deploymentId')
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const { deploymentId } = params;
         if (deploymentId) {
             const DeploymentActions = Stage.Common.Deployments.Actions;
-            return new DeploymentActions(toolbox).doGetLabels(deploymentId);
+            return new DeploymentActions(toolbox).doGetLabels(deploymentId as string);
         }
         return Promise.resolve([]);
     },
 
-    render(widget, data, error, toolbox) {
+    render(_widget, data, _error, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         if (!deploymentId) {
             const { Message } = Stage.Basic;
@@ -49,7 +48,7 @@ Stage.defineWidget({
         const { Labels } = Stage.Common;
         const formattedData = {
             labels: Labels.sortLabels(_.map(data, item => _.pick(item, 'key', 'value'))),
-            deploymentId
+            deploymentId: deploymentId as string
         };
 
         return <LabelsTable data={formattedData} toolbox={toolbox} />;

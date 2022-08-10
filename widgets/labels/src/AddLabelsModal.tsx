@@ -1,5 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-export default function AddLabelsModal(props) {
+interface AddLabelsModalProps {
+    deploymentId: string;
+    open: boolean;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function AddLabelsModal(props: AddLabelsModalProps) {
     const { Modal } = Stage.Common.Labels;
     return (
         <Modal

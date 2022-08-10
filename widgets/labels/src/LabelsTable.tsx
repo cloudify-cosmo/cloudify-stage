@@ -5,7 +5,15 @@ import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
 
-export default function LabelsTable({ data, toolbox }) {
+interface LabelsTableProps {
+    data: {
+        deploymentId: string;
+        labels: Stage.Types.Label[];
+    };
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function LabelsTable({ data, toolbox }: LabelsTableProps) {
     const { Button, DataTable, Icon } = Stage.Basic;
     const { Labels } = Stage.Common;
     const DeploymentActions = Stage.Common.Deployments.Actions;
@@ -13,9 +21,9 @@ export default function LabelsTable({ data, toolbox }) {
     const { i18n } = Stage;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
-    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState();
+    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState(null);
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
-    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
+    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState(null);
     const [labels, setLabels] = useState(data.labels);
 
     useRefreshEvent(toolbox, 'labels:refresh');
