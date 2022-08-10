@@ -125,14 +125,9 @@ export async function browseArchiveFile(req, timestamp, path) {
 }
 
 export function getMimeType(req, timestamp, path) {
-    try {
-        const { blueprintId } = req.params;
-        const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
-        const mimeType = mime.lookup(absolutePath);
-        return mimeType;
-    } catch (error) {
-        return 'text/plain';
-    }
+    const { blueprintId } = req.params;
+    const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
+    return mime.lookup(absolutePath);
 }
 
 function saveMultipartData(req) {

@@ -19,9 +19,9 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     if (!path) {
         next('no file path passed [path]');
     } else {
-        const mimeType = getMimeType(req, timestamp, path);
+        const mimeType = getMimeType(req, timestamp, path) || 'text/plain';
         browseArchiveFile(req, timestamp, path)
-            .then(content => res.contentType('text/plain').send(content))
+            .then(content => res.contentType(mimeType).send(content))
             .catch(next);
     }
 });
