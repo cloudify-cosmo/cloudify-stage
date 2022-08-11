@@ -2,9 +2,8 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
-import SinglelineInput from './SinglelineInput';
-import MultilineInput from './MultilineInput';
 import type { Visibility } from './SecretActions';
+import TogglableSecretsInput from './ToggleSecretsInput';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -16,6 +15,10 @@ interface SecretsModalProps {
 
 type secretInputsType = {
     [key: string]: string;
+};
+
+type SecretCheckboxes = {
+    [key: string]: boolean;
 };
 
 const t = Stage.Utils.getT('widgets.common.deployments.secretsModal');
@@ -33,17 +36,21 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [secretInputs, setSecretInputs] = useInputs(initialInputs);
 
-    const secretKeysWithCheckbox = secretKeys.map(field => ({ field, isChecked: false }));
-    const [secretKeysWithCheckboxState, setSecretKeysWithCheckboxState] = useState(secretKeysWithCheckbox);
+    const initializeSecretCheckboxes = (): SecretCheckboxes => {
+        return secretKeys.reduce((checkboxes: SecretCheckboxes, secretKey) => {
+            checkboxes[secretKey] = false;
+            return checkboxes;
+        }, {});
+    };
+
+    const [secretCheckboxes, setSecretCheckboxes] = useState<SecretCheckboxes>(initializeSecretCheckboxes);
 
     const toggleCheckbox = (secretKey: string) => {
-        const newSecretKeysWithCheckboxState = secretKeysWithCheckboxState.map(secretKeyWithCheckbox => {
-            if (secretKeyWithCheckbox.field === secretKey) {
-                return { ...secretKeyWithCheckbox, isChecked: !secretKeyWithCheckbox.isChecked };
-            }
-            return secretKeyWithCheckbox;
+        const checkboxState = secretCheckboxes[secretKey];
+        setSecretCheckboxes({
+            ...secretCheckboxes,
+            [secretKey]: !checkboxState
         });
-        setSecretKeysWithCheckboxState(newSecretKeysWithCheckboxState);
     };
 
     const onSave = () => {
@@ -81,35 +88,28 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                         <Grid.Row>
                             <Grid.Column width={14} />
                             <Grid.Column width={2} style={{ marginBottom: '-20px' }}>
-                                <p>Multiline</p>
+                                <p>{t('checkboxLabel')}</p>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
 
-                    {secretKeysWithCheckboxState.map(({ field, isChecked }) => (
+                    {secretKeys.map(field => (
                         <Form.Field key={field} required label={field}>
                             <Grid>
                                 <Grid.Row>
                                     <Grid.Column width={14}>
-                                        {isChecked ? (
-                                            <MultilineInput
-                                                name={field}
-                                                value={secretInputs[field]}
-                                                placeholder={t('placeholder')}
-                                                onChange={setSecretInputs}
-                                            />
-                                        ) : (
-                                            <SinglelineInput
-                                                name={field}
-                                                value={secretInputs[field]}
-                                                onChange={setSecretInputs}
-                                            />
-                                        )}
+                                        <TogglableSecretsInput
+                                            showMultilineInput={secretCheckboxes[field]}
+                                            name={field}
+                                            value={secretInputs[field]}
+                                            placeholder={t('placeholder')}
+                                            onChange={setSecretInputs}
+                                        />
                                     </Grid.Column>
                                     <Grid.Column width={2}>
                                         <Checkbox
                                             style={{ marginTop: '10px' }}
-                                            checked={isChecked}
+                                            checked={secretCheckboxes[field]}
                                             onChange={() => toggleCheckbox(field)}
                                         />
                                     </Grid.Column>

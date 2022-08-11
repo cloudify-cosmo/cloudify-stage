@@ -589,7 +589,8 @@
                     "errors": {
                         "noSecretValues": "Please provide values for secrets"
                     },
-                    "placeholder": "Secret value"
+                    "placeholder": "Secret value",
+                    "checkboxLabel": "Multiline"
                 },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",

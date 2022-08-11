@@ -1,6 +1,6 @@
 import type { FormTextAreaProps } from 'semantic-ui-react';
 
-type MultilineInputProps = Pick<FormTextAreaProps, 'name' | 'placeholder' | 'value' | 'onChange'>;
+export type MultilineInputProps = Pick<FormTextAreaProps, 'name' | 'placeholder' | 'value' | 'onChange'>;
 
 const { Form } = Stage.Basic;
 const minFieldRows = 10;
