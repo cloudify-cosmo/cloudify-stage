@@ -184,6 +184,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     toolbox={toolbox}
                     onFilterChange={setUserFilterRules}
                     filterRules={finalFilterRules}
+                    deployments={deploymentsResult.data.items}
                 />
             </DeploymentsViewHeaderContainer>
 
