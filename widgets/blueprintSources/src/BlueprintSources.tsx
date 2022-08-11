@@ -79,7 +79,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
                 <Modal open={isMaximized} onClose={minimize}>
                     <Modal.Header>{filename}</Modal.Header>
                     <Modal.Content>
-                        <StyledHighlightText language={type}>{content}</StyledHighlightText>
+                        <HighlightText language={type}>{content}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
                         <CancelButton content="Close" onClick={minimize} />
