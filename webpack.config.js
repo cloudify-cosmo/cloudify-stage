@@ -290,8 +290,8 @@ module.exports = (env, argv) => {
                     react: `${__dirname}/node_modules/react`,
                     // Necessary to map semantic react ui theming paths
                     // @see "Configuring Webpack for theming" https://react.semantic-ui.com/theming/
-                    themes: `${__dirname}/semantic-ui/themes`,
-                    '../../theme.config$': `${__dirname}/semantic-ui/theme.config`
+                    '../../theme.config$': `${__dirname}/semantic-ui/theme.config`,
+                    '../semantic-ui/site': `${__dirname}/semantic-ui/site`
                 },
                 fallback: {
                     // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default
