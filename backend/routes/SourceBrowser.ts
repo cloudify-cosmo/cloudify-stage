@@ -2,7 +2,13 @@
 
 import express from 'express';
 import passport from 'passport';
-import { browseArchiveFile, browseArchiveTree, listYamlFiles, getBlueprintResources } from '../handler/SourceHandler';
+import {
+    browseArchiveFile,
+    getMimeType,
+    browseArchiveTree,
+    listYamlFiles,
+    getBlueprintResources
+} from '../handler/SourceHandler';
 
 const router = express.Router();
 
@@ -13,8 +19,9 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     if (!path) {
         next('no file path passed [path]');
     } else {
+        const mimeType = getMimeType(req, timestamp, path) || 'text/plain';
         browseArchiveFile(req, timestamp, path)
-            .then(content => res.contentType('application/text').send(content))
+            .then(content => res.contentType(mimeType).send(content))
             .catch(next);
     }
 });
