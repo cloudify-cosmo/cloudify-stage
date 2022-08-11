@@ -9,7 +9,7 @@ describe('Blueprint Sources widget', () => {
             .mockLogin()
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
-            .uploadBlueprint('blueprints/empty.zip', blueprintName)
+            .uploadBlueprint('blueprints/blueprint_with_image.zip', blueprintName)
             .deployBlueprint(blueprintName, deploymentName)
     );
 
@@ -31,13 +31,20 @@ describe('Blueprint Sources widget', () => {
 
                     cy.get('@leftPane').within(() => {
                         cy.contains(blueprintName).should('be.visible');
-                        cy.contains('empty').should('be.visible');
+                        cy.contains('blueprint_with_image').should('be.visible');
                         cy.contains('blueprint.yaml').should('be.visible');
                         cy.contains('Main').should('be.visible');
                     });
                     cy.get('@rightPane').within(() => {
                         cy.get('pre').should('not.exist');
                         cy.get('i.grey.file.icon').should('be.visible');
+                    });
+
+                    cy.get('@leftPane').within(() => {
+                        cy.contains('cloudify_logo.png').click();
+                    });
+                    cy.get('@rightPane').within(() => {
+                        cy.get('img').should('have.attr', 'src').should('include', 'cloudify_logo.png');
                     });
 
                     cy.get('@leftPane').within(() => {

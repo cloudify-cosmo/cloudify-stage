@@ -6,6 +6,7 @@ import _ from 'lodash';
 import os from 'os';
 import pathlib from 'path';
 import url from 'url';
+import mime from 'mime-types';
 
 import { getConfig } from '../config';
 import { isYamlFile } from '../sharedUtils';
@@ -116,7 +117,17 @@ export async function browseArchiveFile(req, timestamp, path) {
         await browseArchiveTree(req, timestamp);
     }
 
-    return fs.readFile(absolutePath, 'utf-8');
+    const mimeType = getMimeType(req, timestamp, path);
+    if (!mimeType || mimeType.startsWith('text/')) {
+        return fs.readFile(absolutePath, 'utf-8');
+    }
+    return fs.readFile(absolutePath, '');
+}
+
+export function getMimeType(req, timestamp, path) {
+    const { blueprintId } = req.params;
+    const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
+    return mime.lookup(absolutePath);
 }
 
 function saveMultipartData(req) {
