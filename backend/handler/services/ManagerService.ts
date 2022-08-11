@@ -4,8 +4,9 @@ import _ from 'lodash';
 import cookie from 'cookie';
 import { jsonRequest } from '../ManagerHandler';
 import { ALLOWED_METHODS_OBJECT, TOKEN_COOKIE_NAME } from '../../consts';
-import { getUrlWithQueryString } from './common';
-import type { AllowedRequestMethod, QueryStringParams } from '../../types';
+import { getUrlWithQueryString } from '../../sharedUtils';
+import type { QueryStringParams } from '../../sharedUtils';
+import type { AllowedRequestMethod } from '../../types';
 import { getHeadersWithAuthenticationToken } from '../../utils';
 
 type ManagerResponse = { items: any[] };

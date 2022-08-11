@@ -8,7 +8,6 @@ export type AllowedRequestMethod =
     | typeof ALLOWED_METHODS_OBJECT.patch
     | typeof ALLOWED_METHODS_OBJECT.post
     | typeof ALLOWED_METHODS_OBJECT.put;
-export type QueryStringParams = Record<string, any>;
 
 export interface PaginatedResponse<ResponseItem> {
     items: ResponseItem[];

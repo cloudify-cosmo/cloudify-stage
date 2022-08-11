@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import Const from '../consts';
+import { getUrlWithQueryString } from '../../../backend/sharedUtils';
 
 export default class UrlUtils {
-    static appendQueryParam(url: string, param: string, value: string | number) {
-        return `${url}${url.indexOf('?') > 0 ? '&' : '?'}${param}=${value}`;
+    static appendQueryParam(url: string, data?: Record<string, any>) {
+        return getUrlWithQueryString(url, data);
     }
 
     static url(path: string) {
