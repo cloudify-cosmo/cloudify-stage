@@ -2,18 +2,6 @@
     color: rgba(0, 0, 0, 0.6);
 }
 
-.centeredIcon {
-    text-align: center;
-}
-
-.alignHighlight > .label {
-    cursor: pointer;
-}
-
-.alignHighlight > pre {
-    margin-top: 2rem;
-    margin-bottom: 0rem;
-}
 
 .rc-tree-treenode-disabled>a, .rc-tree-treenode-disabled>a span, .rc-tree-treenode-disabled>span:not(.rc-tree-switcher) {
     cursor: default;
