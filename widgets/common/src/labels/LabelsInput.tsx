@@ -74,7 +74,12 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
     })();
     const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
-        !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel || newLabelKeyIsNotPermitted;
+        !newLabelIsProvided ||
+        newLabelIsAlreadyPresent ||
+        addingLabel ||
+        newLabelKeyIsNotPermitted ||
+        newLabelKey === 'csys-obj-parent' ||
+        newLabelKey === 'csys-consumer-id';
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
