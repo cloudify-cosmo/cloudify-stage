@@ -2,8 +2,8 @@
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import _ from 'lodash';
-import { stringify as stringifyQueryString } from 'query-string';
 
+import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
@@ -44,11 +44,8 @@ export default class Manager extends Internal {
 
     // eslint-disable-next-line class-methods-use-this
     buildActualUrl(url, data?) {
-        const queryString = data
-            ? (url.indexOf('?') > 0 ? '&' : '?') + stringifyQueryString(data, { sort: false })
-            : '';
-
-        return StageUtils.Url.url(`/sp${url}${queryString}`);
+        const path = `/sp${getUrlWithQueryString(url, data)}`;
+        return StageUtils.Url.url(path);
     }
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {

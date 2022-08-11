@@ -165,15 +165,13 @@ export default class Filter extends React.Component {
                     <Form.Field key={entityName}>
                         <DynamicDropdown
                             multiple={configuration.allowMultipleSelection}
-                            fetchUrl={appendQueryParam(
-                                url,
-                                '_include',
-                                _(filter)
+                            fetchUrl={appendQueryParam(url, {
+                                _include: _(filter)
                                     .keys()
                                     .concat(valueProp || 'id')
                                     .concat(fetchIncludeExtra || [])
                                     .join()
-                            )}
+                            })}
                             searchParams={searchParams}
                             onChange={this[`select${joinedEntityName}`]}
                             toolbox={toolbox}

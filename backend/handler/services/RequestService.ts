@@ -3,8 +3,9 @@ import _ from 'lodash';
 import https from 'https';
 import { request } from '../RequestHandler';
 import { ALLOWED_METHODS_OBJECT } from '../../consts';
-import { getUrlWithQueryString } from './common';
-import type { AllowedRequestMethod, QueryStringParams } from '../../types';
+import { getUrlWithQueryString } from '../../sharedUtils';
+import type { QueryStringParams } from '../../sharedUtils';
+import type { AllowedRequestMethod } from '../../types';
 
 interface RequestOptions {
     body?: any;
