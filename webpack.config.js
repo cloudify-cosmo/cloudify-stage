@@ -86,6 +86,25 @@ module.exports = (env, argv) => {
                 ]
             },
             {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader'
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            lessOptions: {
+                                math: 'always'
+                            }
+                        }
+                    }
+                ]
+            },
+            {
                 // eslint-disable-next-line security/detect-unsafe-regex
                 test: /\.(eot|woff|woff2|ttf)(\?\S*)?$/,
                 use: [
@@ -268,7 +287,11 @@ module.exports = (env, argv) => {
                 alias: {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
-                    react: `${__dirname}/node_modules/react`
+                    react: `${__dirname}/node_modules/react`,
+                    // Necessary to map semantic react ui theming paths
+                    // @see "Configuring Webpack for theming" https://react.semantic-ui.com/theming/
+                    '../../theme.config$': `${__dirname}/semantic-ui/theme.config`,
+                    '../semantic-ui/site': `${__dirname}/semantic-ui/site`
                 },
                 fallback: {
                     // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default

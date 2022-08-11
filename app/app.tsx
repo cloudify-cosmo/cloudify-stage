@@ -1,9 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 import './styles/style.scss';
-import 'cloudify-ui-common/styles/font-cloudify.css';
 
-// Import semantic
-import 'semantic-ui-css-offline/semantic.min.css';
+// Import semantic ui styles and themes
+import 'semantic-ui-less/semantic.less';
 
 // Import react grid
 import 'react-grid-layout/css/styles.css';
