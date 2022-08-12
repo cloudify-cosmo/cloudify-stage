@@ -17,12 +17,13 @@ const TogglableSecretsInput = ({
     placeholder,
     value,
     onChange,
-    showMultilineInput
+    showMultilineInput,
+    width
 }: TogglableSecretsInputProps) => {
     return showMultilineInput ? (
-        <MultilineInput name={name} placeholder={placeholder} value={value} onChange={onChange} />
+        <MultilineInput name={name} placeholder={placeholder} value={value} onChange={onChange} width={width} />
     ) : (
-        <SinglelineInput name={name} value={value} onChange={onChange} />
+        <SinglelineInput name={name} value={value} onChange={onChange} width={width} />
     );
 };
 

@@ -87,7 +87,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                     <Grid>
                         <Grid.Row>
                             <Grid.Column width={14} />
-                            <Grid.Column width={2} style={{ marginBottom: '-20px' }}>
+                            <Grid.Column width={2} style={{ paddingLeft: '50px', marginBottom: '-20px' }}>
                                 <p>{t('checkboxLabel')}</p>
                             </Grid.Column>
                         </Grid.Row>
@@ -95,26 +95,21 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
                     {secretKeys.map(field => (
                         <Form.Field key={field} required label={field}>
-                            <Grid>
-                                <Grid.Row>
-                                    <Grid.Column width={14}>
-                                        <TogglableSecretsInput
-                                            showMultilineInput={secretCheckboxes[field]}
-                                            name={field}
-                                            value={secretInputs[field]}
-                                            placeholder={t('placeholder')}
-                                            onChange={setSecretInputs}
-                                        />
-                                    </Grid.Column>
-                                    <Grid.Column width={2}>
-                                        <Checkbox
-                                            style={{ marginTop: '10px' }}
-                                            checked={secretCheckboxes[field]}
-                                            onChange={() => toggleCheckbox(field)}
-                                        />
-                                    </Grid.Column>
-                                </Grid.Row>
-                            </Grid>
+                            <Form.Group>
+                                <TogglableSecretsInput
+                                    showMultilineInput={secretCheckboxes[field]}
+                                    name={field}
+                                    value={secretInputs[field]}
+                                    placeholder={t('placeholder')}
+                                    onChange={setSecretInputs}
+                                    width={15}
+                                />
+                                <Checkbox
+                                    style={{ marginTop: '10px' }}
+                                    checked={secretCheckboxes[field]}
+                                    onChange={() => toggleCheckbox(field)}
+                                />
+                            </Form.Group>
                         </Form.Field>
                     ))}
                 </Form>

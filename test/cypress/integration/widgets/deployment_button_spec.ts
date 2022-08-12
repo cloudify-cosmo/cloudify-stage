@@ -246,8 +246,8 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('should handle missing secrets error', () => {
-            const secretName = 'test';
-            cy.deleteSecrets(secretName);
+            const secretNames = ['test', 'test_multiline'];
+            secretNames.map(secretName => cy.deleteSecrets(secretName));
 
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
@@ -256,22 +256,27 @@ describe('Create Deployment Button widget', () => {
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
-                    cy.get('.item').should('have.text', secretName);
-                });
+                    secretNames.forEach(secretName => {
+                        cy.contains('.item', secretName);
+                    });
 
                 cy.contains('button', 'Add Missing Secrets').click();
             });
 
             cy.get('.secretsModal').within(() => {
-                cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets');
+                secretNames.map(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets'));
 
                 cy.contains('button', 'Add').click();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Errors in the form');
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
+                secretNames.map(secretName => cy.get(`input[name=${secretName}]`).type('aaa'));
 
-                cy.get(`input[name=${secretName}]`).type('aaa');
+                cy.contains('test_multiline')
+                    .siblings('.fields')
+                    .within(() => cy.get('.checkbox').click());
+                cy.get('textarea[name="test_multiline"]').should('be.visible');
                 cy.contains('button', 'Add').click();
                 cy.wait('@addSecrets');
             });
