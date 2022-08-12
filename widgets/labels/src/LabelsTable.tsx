@@ -93,6 +93,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
+                                    disabled={item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id'}
                                 />
                                 <Icon
                                     name="trash"
@@ -100,7 +101,9 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
+                                    disabled={item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id'}
                                 />
+                                {item.value}
                             </DataTable.Data>
                         )}
                         {_.isEqual(item, labelInEdit) && (
