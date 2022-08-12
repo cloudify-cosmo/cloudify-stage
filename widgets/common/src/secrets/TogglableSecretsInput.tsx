@@ -1,10 +1,15 @@
+import type { ChangeEvent } from 'react';
+import type { InputOnChangeData, TextAreaProps } from 'semantic-ui-react';
 import type { MultilineInputProps } from './MultilineInput';
 import MultilineInput from './MultilineInput';
 import SinglelineInput from './SinglelineInput';
 
 interface TogglableSecretsInputProps extends Omit<MultilineInputProps, 'onChange'> {
     showMultilineInput?: boolean;
-    onChange: (values: any, field?: any) => void;
+    onChange: (
+        event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
+        data: TextAreaProps | InputOnChangeData
+    ) => void;
 }
 
 const TogglableSecretsInput = ({
