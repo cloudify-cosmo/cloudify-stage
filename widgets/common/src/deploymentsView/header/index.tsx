@@ -88,7 +88,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 button
                 text={headerT('bulkActions.button')}
                 style={{ marginLeft: '0.25em' }}
-                disabled={deployments === undefined || deployments.length === 0}
+                disabled={!deployments.length}
             >
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
