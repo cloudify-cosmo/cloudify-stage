@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
+import { useReservedKeys } from '../../common/src/labels/LabelsInput';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
@@ -17,6 +18,7 @@ export default function LabelsTable({ data, toolbox }) {
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.labels);
+    const { reservedKeys, fetchingReservedKeys } = useReservedKeys(toolbox);
 
     useRefreshEvent(toolbox, 'labels:refresh');
 
@@ -93,7 +95,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
-                                    disabled={item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id'}
+                                    disabled={reservedKeys.includes(item.key)}
                                 />
                                 <Icon
                                     name="trash"
@@ -101,7 +103,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
-                                    disabled={item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id'}
+                                    disabled={reservedKeys.includes(item.key)}
                                 />
                                 {item.value}
                             </DataTable.Data>
