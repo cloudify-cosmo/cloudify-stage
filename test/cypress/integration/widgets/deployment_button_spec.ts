@@ -259,7 +259,7 @@ describe('Create Deployment Button widget', () => {
                     secretNames.forEach(secretName => {
                         cy.contains('.item', secretName);
                     });
-
+                });
                 cy.contains('button', 'Add Missing Secrets').click();
             });
 
