@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Consts from '../Consts';
 import SecretActions from './SecretActions';
 import type { Visibility } from './SecretActions';
-import TogglableSecretsInput from './ToggleSecretsInput';
+import TogglableSecretsInput from './TogglableSecretsInput';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
