@@ -105,7 +105,6 @@ export default function LabelsTable({ data, toolbox }) {
                                     onClick={() => setLabelToDelete(item)}
                                     disabled={reservedKeys.includes(item.key)}
                                 />
-                                {item.value}
                             </DataTable.Data>
                         )}
                         {_.isEqual(item, labelInEdit) && (
