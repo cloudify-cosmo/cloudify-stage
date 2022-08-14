@@ -19,6 +19,7 @@ export default function LabelsTable({ data, toolbox }) {
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.labels);
     const { reservedKeys, fetchingReservedKeys } = useReservedKeys(toolbox);
+    const isDisabled = item => item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id';
 
     useRefreshEvent(toolbox, 'labels:refresh');
 
@@ -95,7 +96,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
-                                    disabled={reservedKeys.includes(item.key)}
+                                    disabled={isDisabled(item)}
                                 />
                                 <Icon
                                     name="trash"
@@ -103,7 +104,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
-                                    disabled={reservedKeys.includes(item.key)}
+                                    disabled={isDisabled(item)}
                                 />
                             </DataTable.Data>
                         )}
