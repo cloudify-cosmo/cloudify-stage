@@ -186,7 +186,10 @@ describe('Deployment Action Buttons widget', () => {
                 cy.typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
-            cy.getReservedLabelKeys().then(reservedKeys => {
+            cy.getReservedLabelKeys().then(reservedLabelKeys => {
+                const reservedKeys = reservedLabelKeys.filter(
+                    key => key !== 'csys-consumer-id' && key !== 'csys-obj-parent'
+                );
                 reservedKeys.forEach(checkIfInternalKeyIsPermitted);
             });
             checkIfInternalKeyIsNotPermitted('csys-');

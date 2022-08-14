@@ -30,7 +30,9 @@ export function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(setReservedKeys)
+            .then(keys => {
+                setReservedKeys(keys.filter((key: string) => key !== 'csys-consumer-id' && key !== 'csys-parent-id'));
+            })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);

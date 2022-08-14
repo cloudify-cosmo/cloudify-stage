@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
-import { useReservedKeys } from '../../common/src/labels/LabelsInput';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
@@ -18,7 +17,6 @@ export default function LabelsTable({ data, toolbox }) {
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.labels);
-    const { reservedKeys, fetchingReservedKeys } = useReservedKeys(toolbox);
     const isDisabled = item => item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id';
 
     useRefreshEvent(toolbox, 'labels:refresh');
