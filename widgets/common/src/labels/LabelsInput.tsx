@@ -16,7 +16,7 @@ const iconStyle = {
 } as CSSProperties;
 const internalKeyPrefix = 'csys-';
 
-export function useReservedKeys(toolbox: Stage.Types.Toolbox) {
+function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     const { useState, useEffect } = React;
     const {
         Hooks: { useBoolean }
