@@ -28,6 +28,7 @@ type Props = {
     onInstallationStarted: () => void;
     onInstallationFinished: () => void;
     onInstallationCanceled: () => void;
+    handleNextClick: () => void;
 };
 
 const ModalContent = ({
@@ -42,7 +43,8 @@ const ModalContent = ({
     onSecretsStepChange,
     onInstallationStarted,
     onInstallationFinished,
-    onInstallationCanceled
+    onInstallationCanceled,
+    handleNextClick
 }: Props) => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
@@ -55,6 +57,7 @@ const ModalContent = ({
                     schema={schema}
                     selectedEnvironment={environmentsStepData}
                     onChange={onEnvironmentsStepChange}
+                    handleNextClick={handleNextClick}
                 />
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
