@@ -6,7 +6,6 @@ import RunWorkflowModal from './RunWorkflowModal';
 import DeployOnModal from './DeployOnModal';
 import type { FilterRule } from '../../filters/types';
 import { useFilterIdFromUrl } from './common';
-import type { Deployment } from '../types';
 
 interface DeploymentsViewHeaderProps {
     filterRules: FilterRule[];
@@ -14,7 +13,7 @@ interface DeploymentsViewHeaderProps {
     toggleMap: () => void;
     onFilterChange: (filterRules?: FilterRule[]) => void;
     toolbox: Stage.Types.Toolbox;
-    deployments: Deployment[];
+    deployOnEnabled: boolean;
 }
 
 const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
@@ -26,7 +25,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     onFilterChange,
     toolbox,
     filterRules,
-    deployments
+    deployOnEnabled
 }) => {
     const { useBoolean } = Stage.Hooks;
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
@@ -88,7 +87,7 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 button
                 text={headerT('bulkActions.button')}
                 style={{ marginLeft: '0.25em' }}
-                disabled={!deployments.length}
+                disabled={!deployOnEnabled}
             >
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
