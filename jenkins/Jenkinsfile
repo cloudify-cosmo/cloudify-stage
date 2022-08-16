@@ -229,7 +229,7 @@ pipeline {
         }
         stage('Run Stage-UI System-tests') {
           when {
-            branch pattern: ".+-build|master/.+", comparator: "REGEXP"
+            branch pattern: ".+-build|master.+", comparator: "REGEXP"
           }
           steps {
             echo 'Trigger Stage-UI System-tests'
