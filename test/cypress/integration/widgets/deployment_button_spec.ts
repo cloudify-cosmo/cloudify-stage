@@ -247,7 +247,7 @@ describe('Create Deployment Button widget', () => {
 
         it('should handle missing secrets error', () => {
             const secretNames = ['test', 'test_multiline'];
-            secretNames.map(secretName => cy.deleteSecrets(secretName));
+            secretNames.forEach(secretName => cy.deleteSecrets(secretName));
 
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
@@ -264,14 +264,14 @@ describe('Create Deployment Button widget', () => {
             });
 
             cy.get('.secretsModal').within(() => {
-                secretNames.map(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets'));
+                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets'));
 
                 cy.contains('button', 'Add').click();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Errors in the form');
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
-                secretNames.map(secretName => cy.get(`input[name=${secretName}]`).type('aaa'));
+                secretNames.forEach(secretName => cy.get(`input[name=${secretName}]`).type('aaa'));
 
                 cy.contains('test_multiline')
                     .siblings('.fields')
