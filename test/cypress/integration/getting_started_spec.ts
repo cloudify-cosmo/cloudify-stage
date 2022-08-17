@@ -189,7 +189,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 clickFirstEnvironment();
-                goToNextStep();
 
                 goToFinishStep();
                 closeModal();
@@ -212,7 +211,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -256,7 +254,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -285,7 +282,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -319,7 +315,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -356,7 +351,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
                 cy.contains('button.active', 'AWS');
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -366,20 +360,17 @@ describe('Getting started modal', () => {
                 cy.contains('button.active', 'AWS');
                 cy.contains('button', 'GCP').click();
                 cy.contains('button.active', 'GCP');
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 setSecretValues(gcpSecrets);
                 goToBackStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
                 goToBackStep();
 
                 cy.contains('button', 'GCP').click();
-                goToNextStep();
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             });
@@ -390,7 +381,6 @@ describe('Getting started modal', () => {
 
             goToNextStep();
             cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').click();
             setSecretValues(awsSecrets.filter(awsSecret => awsSecret !== secretToSkip));
 
             cy.contains('button', 'Next').click();
@@ -439,7 +429,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
                 goToNextStep();
 
                 blockPluginsUpload();
