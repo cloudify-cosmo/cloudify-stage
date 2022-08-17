@@ -5,8 +5,8 @@ import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import KeyDropdown from './KeyDropdown';
-import ValueDropdown from './ValueDropdown';
 import type { Label } from './types';
+import ValueDropdown from './ValueDropdown';
 import { isLabelModifiable } from './common';
 
 const iconStyle = {
