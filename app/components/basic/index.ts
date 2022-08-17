@@ -5,6 +5,48 @@
  * whenever you change list of exported components in this file.
  */
 
+import {
+    Alert,
+    ApproveButton,
+    CancelButton,
+    Checkmark,
+    Confirm,
+    CopyToClipboardButton,
+    DataSegment,
+    DataTable,
+    DateInput,
+    DateRangeInput,
+    Dropdown,
+    EditableLabel,
+    ErrorMessage,
+    Form,
+    FullScreenSegment,
+    GenericField,
+    HighlightText,
+    KeyIndicator,
+    LabelsList,
+    Loading,
+    LoadingOverlay,
+    Logo,
+    Menu,
+    MessageContainer,
+    Modal,
+    NodesTree,
+    Popup,
+    PopupConfirm,
+    PopupHelp,
+    PopupMenu,
+    ProductVersion,
+    ReadmeModal,
+    ResourceVisibility,
+    VisibilityField,
+    VisibilityIcon
+} from 'cloudify-ui-components';
+import type { InferProps } from 'prop-types';
+import type { ComponentType } from 'react';
+
+import { CircleMarker, FeatureGroup, Map, Marker, Popup as LeafletPopup, TileLayer, Tooltip } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import type { StrictConfirmProps } from 'semantic-ui-react';
 import {
     Accordion,
@@ -35,48 +77,6 @@ import {
     Tab,
     Table
 } from 'semantic-ui-react';
-
-import {
-    Alert,
-    ApproveButton,
-    CancelButton,
-    Checkmark,
-    CopyToClipboardButton,
-    Confirm,
-    DateInput,
-    DateRangeInput,
-    DataSegment,
-    DataTable,
-    Dropdown,
-    EditableLabel,
-    ErrorMessage,
-    Form,
-    FullScreenSegment,
-    GenericField,
-    HighlightText,
-    KeyIndicator,
-    Loading,
-    LoadingOverlay,
-    Logo,
-    Menu,
-    MessageContainer,
-    Modal,
-    NodesTree,
-    Popup,
-    PopupConfirm,
-    PopupHelp,
-    PopupMenu,
-    ProductVersion,
-    ReadmeModal,
-    ResourceVisibility,
-    VisibilityField,
-    VisibilityIcon
-} from 'cloudify-ui-components';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
-
-import { Map, TileLayer, Marker, Popup as LeafletPopup, Tooltip, FeatureGroup, CircleMarker } from 'react-leaflet';
-import type { ComponentType } from 'react';
-import type { InferProps } from 'prop-types';
 
 Modal.defaultProps = {
     ...Modal.defaultProps,
@@ -144,6 +144,7 @@ export {
     Item,
     KeyIndicator,
     Label,
+    LabelsList,
     Leaflet,
     List,
     Loader,
