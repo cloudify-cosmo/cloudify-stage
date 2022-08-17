@@ -245,9 +245,9 @@ describe('Create Deployment Button widget', () => {
             cy.get('@string_constraint_pattern').should('have.class', 'error');
         });
 
-        it('should handle missing secrets error', () => {
-            const secretNames = ['test', 'test_multiline'];
-            secretNames.forEach(secretName => cy.deleteSecrets(secretName));
+        it.only('should handle missing secrets error', () => {
+            const secretNames = [`${resourcePrefix}test`, `${resourcePrefix}test_multiline`];
+            cy.deleteSecrets(resourcePrefix);
 
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
@@ -256,6 +256,7 @@ describe('Create Deployment Button widget', () => {
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
+                    // cy.get('.item').should('have.length', secretNames.length);
                     secretNames.forEach(secretName => {
                         cy.contains('.item', secretName);
                     });
