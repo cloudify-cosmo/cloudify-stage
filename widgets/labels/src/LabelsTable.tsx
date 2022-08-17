@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
+import { isLabelModifiable } from '../../common/src/labels/common';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
@@ -17,7 +18,6 @@ export default function LabelsTable({ data, toolbox }) {
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
     const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
     const [labels, setLabels] = useState(data.labels);
-    const isDisabled = item => item.key === 'csys-obj-parent' || item.key === 'csys-consumer-id';
 
     useRefreshEvent(toolbox, 'labels:refresh');
 
@@ -94,7 +94,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
-                                    disabled={isDisabled(item)}
+                                    disabled={isLabelModifiable(item.key)}
                                 />
                                 <Icon
                                     name="trash"
@@ -102,7 +102,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
-                                    disabled={isDisabled(item)}
+                                    disabled={isLabelModifiable(item.key)}
                                 />
                             </DataTable.Data>
                         )}

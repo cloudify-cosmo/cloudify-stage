@@ -1,5 +1,9 @@
 import type { LabelInputType } from '../../../../widgets/common/src/labels/types';
 
+function isLabelModifiable(key: string) {
+    return key !== 'csys-consumer-id' && key !== 'csys-obj-parent';
+}
+
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
     const deploymentId = 'deployment_action_buttons_test';
@@ -187,9 +191,7 @@ describe('Deployment Action Buttons widget', () => {
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
             cy.getReservedLabelKeys().then(reservedLabelKeys => {
-                const reservedKeys = reservedLabelKeys.filter(
-                    key => key !== 'csys-consumer-id' && key !== 'csys-obj-parent'
-                );
+                const reservedKeys = reservedLabelKeys.filter(isLabelModifiable);
                 reservedKeys.forEach(checkIfInternalKeyIsPermitted);
             });
             checkIfInternalKeyIsNotPermitted('csys-');

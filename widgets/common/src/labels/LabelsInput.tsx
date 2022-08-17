@@ -8,6 +8,7 @@ import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
 import ValueDropdown from './ValueDropdown';
 import type { Label } from './types';
+import { isLabelModifiable } from './common';
 
 const iconStyle = {
     position: 'absolute',
@@ -31,7 +32,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         actions
             .doGetReservedLabelKeys()
             .then(keys => {
-                setReservedKeys(keys.filter((key: string) => key !== 'csys-consumer-id' && key !== 'csys-parent-id'));
+                setReservedKeys(keys.filter(isLabelModifiable));
             })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
