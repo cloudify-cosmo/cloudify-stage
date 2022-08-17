@@ -31,13 +31,14 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [secretInputs, setSecretInputs] = useInputs(initialInputs);
-    const initializeSecretCheckboxes = secretKeys.reduce(
+    const initializeSecretCheckboxesState = secretKeys.reduce(
         (prev, secretKey) => ({ ...prev, [secretKey]: { value: secretKey, isMultiline: false } }),
         {}
     );
 
-    const [secretMultiline, setSecretMultiline] =
-        useState<Record<string, { value: string; isMultiline: boolean }>>(initializeSecretCheckboxes);
+    const [secretMultiline, setSecretMultiline] = useState<Record<string, { value: string; isMultiline: boolean }>>(
+        initializeSecretCheckboxesState
+    );
     const toggleCheckbox = (secretKey: string) => {
         setSecretMultiline(prev => ({
             ...prev,
