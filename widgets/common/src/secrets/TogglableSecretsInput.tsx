@@ -12,19 +12,9 @@ interface TogglableSecretsInputProps extends Omit<MultilineInputProps, 'onChange
     ) => void;
 }
 
-const TogglableSecretsInput = ({
-    name,
-    value,
-    onChange,
-    showMultilineInput,
-    placeholder,
-    width
-}: TogglableSecretsInputProps) => {
-    return showMultilineInput ? (
-        <MultilineInput name={name} placeholder={placeholder} value={value} onChange={onChange} width={width} />
-    ) : (
-        <SinglelineInput name={name} placeholder={placeholder} value={value} onChange={onChange} width={width} />
-    );
+const TogglableSecretsInput = (props: TogglableSecretsInputProps) => {
+    const { showMultilineInput } = props;
+    return showMultilineInput ? <MultilineInput {...props} /> : <SinglelineInput {...props} />;
 };
 
 export default TogglableSecretsInput;
