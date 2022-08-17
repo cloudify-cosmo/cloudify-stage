@@ -43,13 +43,17 @@ describe('Topology', () => {
             cy.interceptSp('GET', '/summary').as('getSummary');
         });
 
+        function verifyTopology() {
+            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > text', 'terra...');
+            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
+        }
+
         it('blueprint', () => {
             cy.setBlueprintContext(blueprintId);
 
             cy.log('Check Topology widget');
             cy.get('.widgetItem > div > .widgetContent > div > .scrollGlass').click();
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
+            verifyTopology();
         });
 
         it('deployment', () => {
@@ -58,14 +62,12 @@ describe('Topology', () => {
             cy.setDeploymentContext(deploymentId);
 
             cy.log('Check Topology widget');
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
+            verifyTopology();
 
             cy.log('Check terraform module details');
             waitForDeploymentToBeInstalled(deploymentId);
             cy.clearBlueprintContext().clearDeploymentContext().setDeploymentContext(deploymentId);
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'terraform');
-            cy.contains('#gridContainer > #gridSvg > #gridContent > .nodeContainer > .title', 'cloud_resources');
+            verifyTopology();
             getTerraformDetailsButton().should('not.have.css', 'visibility', 'hidden').click({ force: true });
             cy.get('.modal td:eq(0)').should('have.text', 'null_resource');
             cy.get('.modal td:eq(2)').should('have.text', 'provider["registry.terraform.io/hashicorp/null"]');

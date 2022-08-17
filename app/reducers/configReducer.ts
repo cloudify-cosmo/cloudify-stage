@@ -1,7 +1,7 @@
 import type { Reducer } from 'redux';
 
 import * as types from '../actions/types';
-import type { ClientConfig } from '../utils/ConfigLoader';
+import type { ClientConfig } from '../../backend/routes/Config.types';
 
 export interface ConfigState extends ClientConfig {
     isEditMode?: boolean;

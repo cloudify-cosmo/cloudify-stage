@@ -2,20 +2,7 @@ import log from 'loglevel';
 import fetch from 'isomorphic-fetch';
 
 import StageUtils from './stageUtils';
-
-export interface ClientConfig {
-    app: {
-        maintenancePollingInterval: number;
-        maps: any;
-        saml: any;
-        singleManager: boolean;
-        whiteLabel: any;
-    };
-    manager: {
-        ip: string;
-    };
-    mode: string;
-}
+import type { ClientConfig } from '../../backend/routes/Config.types';
 
 export default class ConfigLoader {
     static load(): Promise<ClientConfig> {
