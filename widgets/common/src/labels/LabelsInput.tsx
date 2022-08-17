@@ -4,10 +4,9 @@ import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
-import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
-import ValueDropdown from './ValueDropdown';
 import type { Label } from './types';
+import ValueDropdown from './ValueDropdown';
 
 const iconStyle = {
     position: 'absolute',
@@ -53,7 +52,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 }) => {
     const { useEffect, useRef } = React;
     const {
-        Basic: { Divider, Form, Icon, Segment },
+        Basic: { Divider, Form, Icon, LabelsList, Segment },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
         Utils: { combineClassNames }
     } = Stage;
