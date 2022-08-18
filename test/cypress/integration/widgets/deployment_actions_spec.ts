@@ -1,8 +1,5 @@
 import type { LabelInputType } from '../../../../widgets/common/src/labels/types';
-
-function isLabelModifiable(key: string) {
-    return key !== 'csys-consumer-id' && key !== 'csys-obj-parent';
-}
+import { isLabelModifiable } from '../../../../widgets/common/src/labels/common';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';

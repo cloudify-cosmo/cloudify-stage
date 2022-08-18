@@ -1,4 +1,4 @@
-import { sortLabels, isLabelModifiable } from './common';
+import { sortLabels } from './common';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import Input from './LabelsInput';
 import Modal from './LabelsModal';
@@ -11,6 +11,5 @@ export default {
     Modal,
     ManageModal,
     ValidationErrorPopup,
-    sortLabels,
-    isLabelModifiable
+    sortLabels
 };
