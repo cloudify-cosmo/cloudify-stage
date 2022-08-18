@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
-import { isLabelModifiable } from '../../common/src/labels/common';
 
 export default function LabelsTable({ data, toolbox }) {
     const { Button, DataTable, Icon } = Stage.Basic;
@@ -94,7 +93,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
-                                    disabled={isLabelModifiable(item.key)}
+                                    disabled={Labels.isLabelModifiable(item.key)}
                                 />
                                 <Icon
                                     name="trash"
@@ -102,7 +101,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
-                                    disabled={isLabelModifiable(item.key)}
+                                    disabled={Labels.isLabelModifiable(item.key)}
                                 />
                             </DataTable.Data>
                         )}
