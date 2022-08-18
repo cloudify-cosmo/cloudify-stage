@@ -95,6 +95,7 @@ const GettingStartedModal = () => {
 
     const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
+        handleNextClick();
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
@@ -214,7 +215,6 @@ const GettingStartedModal = () => {
                 onInstallationStarted={handleInstallationStarted}
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
                 onInstallationCanceled={handleInstallationFinishedOrCanceled}
-                handleNextClick={handleNextClick}
             />
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>

@@ -10,10 +10,9 @@ type Props = {
     schema: GettingStartedSchema;
     selectedEnvironment?: GettingStartedEnvironmentsData;
     onChange?: (environment: GettingStartedEnvironmentsData) => void;
-    handleNextClick: () => void;
 };
 
-const EnvironmentsStep = ({ schema, selectedEnvironment, onChange, handleNextClick }: Props) => {
+const EnvironmentsStep = ({ schema, selectedEnvironment, onChange }: Props) => {
     const [localSelectedEnvironment, setLocalSelectedEnvironment, resetLocalSelectedEnvironment] = useResettableState(
         selectedEnvironment ?? {}
     );
@@ -26,7 +25,6 @@ const EnvironmentsStep = ({ schema, selectedEnvironment, onChange, handleNextCli
                     const newLocalSelectedEnvironment = { [name]: value };
                     setLocalSelectedEnvironment(newLocalSelectedEnvironment);
                     onChange?.(newLocalSelectedEnvironment);
-                    handleNextClick();
                 };
 
                 return (
