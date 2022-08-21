@@ -7,7 +7,7 @@ import Actions from './actions';
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
-type FileType = ComponentProps<typeof HighlightText>['language'];
+type FileType = ComponentProps<typeof HighlightText>['language'] & 'binary';
 
 interface NodeTreeItem {
     children?: NodeTreeItem[];
@@ -53,7 +53,7 @@ interface RightPaneProps {
     imageUrl: string;
     content: string;
     filename: string;
-    type: 'json' | 'python' | 'bash' | 'javascript' | 'yaml';
+    type: FileType;
     maximize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
     isMaximized: boolean;
     minimize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
@@ -66,6 +66,10 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
                 <img src={imageUrl} alt={filename} />
             </Center>
         );
+    }
+
+    if (type === 'binary') {
+        return <Center>File cannot be displayed.</Center>;
     }
 
     if (content) {
@@ -158,6 +162,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     fileType = 'python';
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
+                } else if (_.endsWith(path.toLowerCase(), '.pyc')) {
+                    fileType = 'binary';
                 }
 
                 setFilename(info.node.props.title.props.children[1]);
