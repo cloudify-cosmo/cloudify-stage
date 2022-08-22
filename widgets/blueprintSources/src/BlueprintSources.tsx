@@ -7,7 +7,7 @@ import Actions from './actions';
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
-type FileType = ComponentProps<typeof HighlightText>['language'] & 'binary';
+type FileType = ComponentProps<typeof HighlightText>['language'] | 'binary';
 
 interface NodeTreeItem {
     children?: NodeTreeItem[];
