@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import './styles/style.scss';
+import './fontello/css/fontello.css';
 
 // Import semantic ui styles and themes
 import 'semantic-ui-less/semantic.less';
