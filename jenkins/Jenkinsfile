@@ -35,7 +35,7 @@ pipeline {
     STAGE_DIR = "cloudify-stage"
     VERSION = getVersion("cloudify-manager","${env.BRANCH}").trim()
     PRERELEASE = getPreRelease("cloudify-manager","${env.BRANCH}").trim()
-    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-14.18.1-1nodesource.x86_64.rpm'
+    CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     S3_BASE_URL = "${env.VERSION}/${env.PRERELEASE}-build/${env.STAGE_DIR}/${env.BRANCH}"
     S3_BUILD_PATH = "${env.S3_BASE_URL}/${env.BUILD_NUMBER}"
@@ -43,6 +43,26 @@ pipeline {
   }
 
   stages {
+    stage('Install required packages'){
+      steps {
+        container('node'){
+          sh "rm -rf /var/lib/apt/lists/* &&  rm /etc/apt/sources.list.d/google-chrome.list && ls -la /usr/share/keyrings/ && sed -i '/dl.google.com/d' /etc/apt/sources.list && echo 'deb [trusted=yes] https://dl.google.com/linux/chrome/deb/ stable main' | tee -a /etc/apt/sources.list && apt update && apt-get -y install postgresql-client jq git"
+          echo "Set maps access token"
+          dir("${STAGE_DIR}/conf") {
+            withVault([configuration: configuration, vaultSecrets: secrets]) {
+              sh '''
+                jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
+              '''
+            }
+          }
+          // Workaround for https://github.com/cypress-io/cypress/issues/20286
+          echo "Fix directory ownership"
+          dir("${STAGE_DIR}") {
+            sh "chown -R `whoami` ."
+          }
+        }
+      }
+    }
     stage('Prepare & Audit main branch'){
       parallel{
         stage('Audit'){
@@ -60,22 +80,13 @@ pipeline {
         stage('Prepare & Run first test group'){
           steps {
             container('node'){
-              echo "Install required packages"
-              sh "rm -rf /var/lib/apt/lists/* &&  rm /etc/apt/sources.list.d/google-chrome.list && ls -la /usr/share/keyrings/ && sed -i '/dl.google.com/d' /etc/apt/sources.list && echo 'deb [trusted=yes] https://dl.google.com/linux/chrome/deb/ stable main' | tee -a /etc/apt/sources.list && apt update && apt-get -y install postgresql-client && apt-get -y install jq"
-              dir("${STAGE_DIR}/conf") {
-                withVault([configuration: configuration, vaultSecrets: secrets]) {
-                  sh '''
-                    jq ".maps.accessToken = \\"$MAPS_ACCESS_TOKEN\\"" app.json > app.json.tmp && mv app.json.tmp app.json
-                  '''
-                }
-                dir("${STAGE_DIR}") {
-                  restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Install dependencies"
-                  sh 'npm run beforebuild'
-                  archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
-                  echo "Build application"
-                  sh 'npm run build'
-                }
+              dir("${STAGE_DIR}") {
+                restoreArchiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+                echo "Install dependencies"
+                sh 'npm run beforebuild'
+                archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+                echo "Build application"
+                sh 'npm run build'
               }
               echo 'Prepare test folder'
               sh "mkdir -p ${WORKSPACE}/test && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/test"
@@ -218,7 +229,7 @@ pipeline {
         }
         stage('Run Stage-UI System-tests') {
           when {
-            branch pattern: ".+-build|master|dependabot/.+", comparator: "REGEXP"
+            branch pattern: ".+-build|master", comparator: "REGEXP"
           }
           steps {
             echo 'Trigger Stage-UI System-tests'

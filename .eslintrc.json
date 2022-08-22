@@ -143,6 +143,17 @@
             }
         },
         {
+            "files": "./backend/**/*.ts",
+            "excludedFiles": ["./backend/test/**", "./backend/**/__mocks__/*"],
+            "parser": "@typescript-eslint/parser",
+            "rules": {
+                "@typescript-eslint/no-floating-promises": "error"
+            },
+            "parserOptions": {
+                "project": "./backend/tsconfig.json"
+            }
+        },
+        {
             "files": "./backend/test/**/*.ts",
             "extends": [
                 "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",

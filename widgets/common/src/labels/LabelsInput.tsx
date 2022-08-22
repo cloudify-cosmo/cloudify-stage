@@ -4,10 +4,10 @@ import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
-import LabelsList from './LabelsList';
 import KeyDropdown from './KeyDropdown';
-import ValueDropdown from './ValueDropdown';
 import type { Label } from './types';
+import ValueDropdown from './ValueDropdown';
+import { isLabelModifiable } from './common';
 
 const iconStyle = {
     position: 'absolute',
@@ -30,7 +30,9 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(setReservedKeys)
+            .then(keys => {
+                setReservedKeys(keys.filter(isLabelModifiable));
+            })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);
@@ -53,7 +55,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 }) => {
     const { useEffect, useRef } = React;
     const {
-        Basic: { Divider, Form, Icon, Segment },
+        Basic: { Divider, Form, Icon, LabelsList, Segment },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
         Utils: { combineClassNames }
     } = Stage;
