@@ -1,5 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { Visibility } from '../../../widgets/common/src/types';
 
 declare global {
     namespace Cypress {
@@ -11,7 +12,7 @@ declare global {
 
 interface UploadBlueprintOptions {
     yamlFile?: string;
-    visibility?: 'tenant' | 'global';
+    visibility?: Visibility;
     timeout?: number;
 }
 
