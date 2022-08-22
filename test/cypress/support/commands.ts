@@ -26,8 +26,8 @@ import './editMode';
 import './executions';
 import './filters';
 import './getting_started';
-import './plugins';
 import './labels';
+import './plugins';
 
 import { secondsToMs } from './resource_commons';
 import './secrets';
@@ -155,24 +155,24 @@ const commands = {
             body,
             ...options
         }),
-    cfyFileRequest: (filePath: string, isBinaryFile: boolean, url: string, method = 'PUT', headers: any = null) => {
+    cfyFileRequest: (filePath: string, isBinaryFile: boolean, url: string, timeout?: number) => {
         const filePromise: Cypress.Chainable<string | Blob> = isBinaryFile
             ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
             : cy.fixture(filePath);
 
         return filePromise.then(fileContent =>
             cy.window().then(
+                { timeout },
                 window =>
                     new Promise((resolve, reject) => {
                         const xhr = new window.XMLHttpRequest();
-                        xhr.open(method, `/console/sp${url}`);
+                        xhr.open('PUT', `/console/sp${url}`);
                         xhr.onload = resolve;
                         xhr.onerror = reject;
                         // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
                         Object.entries({
                             ...getCommonHeaders(),
-                            ...getAdminAuthorizationHeader(),
-                            ...headers
+                            ...getAdminAuthorizationHeader()
                         }).forEach(([name, value]) => xhr.setRequestHeader(name, value as string));
                         if (isBinaryFile) {
                             xhr.setRequestHeader('Content-type', 'application/octet-stream');

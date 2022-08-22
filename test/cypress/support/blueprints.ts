@@ -9,12 +9,17 @@ declare global {
     }
 }
 
+interface UploadBlueprintOptions {
+    yamlFile?: string;
+    visibility?: 'tenant' | 'global';
+    timeout?: number;
+}
+
 const commands = {
     uploadBlueprint: (
         pathOrUrl: string,
         id: string,
-        yamlFile = 'blueprint.yaml',
-        visibility = 'tenant'
+        { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
         if (pathOrUrl.startsWith('http')) {
             return cy.cfyRequest(
@@ -25,7 +30,8 @@ const commands = {
         return cy.cfyFileRequest(
             pathOrUrl,
             true,
-            `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`
+            `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`,
+            timeout
         );
     },
     getBlueprint: (blueprintId: string) => cy.cfyRequest(`/blueprints?id=${blueprintId}`, 'GET'),
