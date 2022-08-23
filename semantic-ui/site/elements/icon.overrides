@@ -1,3 +1,30 @@
 /*******************************
          Site Overrides
 *******************************/
+
+/* NOTE: This styling is required for custom cloudify icons */
+
+[class^='cloudify-']:before,
+[class*=' cloudify-']:before {
+    font-family: 'cloudify-icons';
+    font-style: normal;
+    font-weight: normal;
+    speak: never;
+    display: inline-block;
+    text-decoration: inherit;
+    width: 1em;
+    margin-right: 0.2em;
+    text-align: center;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1em;
+    margin-left: 0.2em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.cloudify-blueprints:before { content: '\e800'; } /* '' */
+.cloudify-dashboard:before { content: '\e801'; } /* '' */
+.cloudify-environments:before { content: '\e802'; } /* '' */
+.cloudify-system-logs:before { content: '\e803'; } /* '' */
+.cloudify-tenant:before { content: '\e804'; } /* '' */
