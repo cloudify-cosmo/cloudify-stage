@@ -7,7 +7,7 @@ describe('Executions', () => {
             .deleteDeployments(blueprintName, true)
             .deleteBlueprints(blueprintName, true)
             .deleteSites()
-            .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
+            .uploadBlueprint('blueprints/simple.zip', blueprintName, { visibility: 'global' })
             .deployBlueprint(blueprintName, blueprintName, { server_ip: 'localhost' })
             .usePageMock(widgetId, {
                 fieldsToShow: ['Deployment', 'Deployment ID', 'Status', 'Workflow'],
