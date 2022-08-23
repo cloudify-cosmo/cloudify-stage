@@ -3,8 +3,8 @@
 <svg xmlns="http://www.w3.org/2000/svg">
 <metadata>Copyright (C) 2022 by original authors @ fontello.com</metadata>
 <defs>
-<font id="fontello" horiz-adv-x="1000" >
-<font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<font id="cloudify-icons" horiz-adv-x="1000" >
+<font-face font-family="cloudify-icons" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
 <missing-glyph horiz-adv-x="1000" />
 <glyph glyph-name="blueprints" unicode="&#xe800;" d="M110 589l529-201 529 201-529 202-529-202z m529-261a30 30 0 0 0-11 2l-609 233a29 29 0 0 0-19 26 29 29 0 0 0 19 27l609 232a30 30 0 0 0 21 0l610-232a29 29 0 0 0 19-27 29 29 0 0 0-19-26l-610-233a30 30 0 0 0-10-2z m0-261a30 30 0 0 0-11 2l-609 224a28 28 0 0 0-19 26 28 28 0 0 0 19 26l305 112a30 30 0 0 0 37-16 27 27 0 0 0-16-36l-235-86 529-194 529 194-235 86a27 27 0 0 0-16 36 30 30 0 0 0 37 16l305-112a28 28 0 0 0 19-26 28 28 0 0 0-19-26l-610-224a30 30 0 0 0-10-2m0-217a30 30 0 0 0-11 2l-609 227a28 28 0 0 0-19 26c0 12 7 22 19 26l290 108a29 29 0 0 0 38-16 28 28 0 0 0-17-36l-220-82 529-197 529 197-220 82a28 28 0 0 0-17 36 29 29 0 0 0 38 16l290-108c11-4 19-14 19-26a28 28 0 0 0-19-26l-610-227a30 30 0 0 0-10-2" horiz-adv-x="1318" />
 

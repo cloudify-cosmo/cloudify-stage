@@ -46,7 +46,8 @@
         "test:frontend:coverage": "npm run test:frontend:unit -- --coverage && npm run test:frontend:components",
         "test:backend": "cd backend && npm test",
         "upload": "scripts/uploadPackage.sh",
-        "zip": "scripts/createPackage.sh"
+        "zip": "scripts/createPackage.sh",
+        "generate:cloudify-icons-font": "fontello-cli open --config ./fontello.config.json"
     },
     "dependencies": {
         "@dnd-kit/core": "^4.0.0",
@@ -126,6 +127,7 @@
         "cross-env": "^7.0.3",
         "css-loader": "^3.2.0",
         "file-loader": "^1.1.11",
+        "fontello-cli": "^0.6.2",
         "fork-ts-checker-webpack-plugin": "^6.1.0",
         "glob": "^7.1.2",
         "html-webpack-plugin": "^5.5.0",

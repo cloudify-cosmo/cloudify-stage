@@ -23,6 +23,7 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* NOTE: While updating custom cloudify icons, override classes below with the content of the generated cloudify-icons-codes.css file */
 .cloudify-blueprints:before { content: '\e800'; } /* '' */
 .cloudify-dashboard:before { content: '\e801'; } /* '' */
 .cloudify-environments:before { content: '\e802'; } /* '' */
