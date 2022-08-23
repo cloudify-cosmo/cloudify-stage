@@ -326,17 +326,6 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should allow to click "Next" button when an environment is being selected', () => {
-            goToNextStep();
-            cy.contains('button', 'Next').should('to.be.disabled');
-
-            cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').should('not.to.be.disabled');
-
-            cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').should('to.be.disabled');
-        });
-
         it('should keep button and field states when navigating between steps', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
