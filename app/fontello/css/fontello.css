@@ -18,8 +18,8 @@
   }
 }
 */
-[class^='cloudify-icon-']:before,
-[class*=' cloudify-icon-']:before {
+[class^='cloudify-']:before,
+[class*=' cloudify-']:before {
     font-family: 'fontello';
     font-style: normal;
     font-weight: normal;
@@ -54,18 +54,18 @@
     /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
 
-.icon.cloudify-icon-blueprints:before {
+.cloudify-blueprints:before {
     content: '\e800';
 } /* '' */
-.icon.cloudify-icon-dashboard:before {
+.cloudify-dashboard:before {
     content: '\e801';
 } /* '' */
-.icon.cloudify-icon-environments:before {
+.cloudify-environments:before {
     content: '\e802';
 } /* '' */
-.icon.cloudify-icon-system-logs:before {
+.cloudify-system-logs:before {
     content: '\e803';
 } /* '' */
-.icon.cloudify-icon-tenant:before {
+.cloudify-tenant:before {
     content: '\e804';
 } /* '' */
