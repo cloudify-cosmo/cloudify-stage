@@ -97,7 +97,7 @@ const GettingStartedModal = () => {
         dispatch(push(redirectPath));
     };
 
-    const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
+    const handleEnvironmentClick = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
         goToNextStep();
         setSecretsStepIndex(0);
@@ -211,7 +211,7 @@ const GettingStartedModal = () => {
                 secretsStepIndex={secretsStepIndex}
                 summaryStepSchemas={summaryStepSchemas}
                 schema={schema}
-                onEnvironmentsStepChange={handleEnvironmentsStepChange}
+                onEnvironmentsStepChange={handleEnvironmentClick}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
