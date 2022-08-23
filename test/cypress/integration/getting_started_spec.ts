@@ -330,7 +330,9 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
+                goToBackStep();
                 cy.contains('button.active', 'AWS');
+                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -339,7 +341,9 @@ describe('Getting started modal', () => {
                 verifyHeader(StaticHeaders.Environments);
                 cy.contains('button.active', 'AWS');
                 cy.contains('button', 'GCP').click();
+                goToBackStep();
                 cy.contains('button.active', 'GCP');
+                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 setSecretValues(gcpSecrets);
