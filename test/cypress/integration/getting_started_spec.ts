@@ -326,16 +326,6 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should allow only one environment to be selected at a time', () => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            cy.contains('button.active', 'AWS');
-
-            cy.contains('button', 'GCP').click();
-            cy.contains('button.active', 'AWS').should('not.exist');
-            cy.contains('button.active', 'GCP');
-        });
-
         it('should allow to click "Next" button when an environment is being selected', () => {
             goToNextStep();
             cy.contains('button', 'Next').should('to.be.disabled');
