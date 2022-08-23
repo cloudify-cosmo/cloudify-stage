@@ -7,20 +7,6 @@
 [class^='cloudify-']:before,
 [class*=' cloudify-']:before {
     font-family: 'cloudify-icons';
-    font-style: normal;
-    font-weight: normal;
-    speak: never;
-    display: inline-block;
-    text-decoration: inherit;
-    width: 1em;
-    margin-right: 0.2em;
-    text-align: center;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1em;
-    margin-left: 0.2em;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 /* NOTE: While updating custom cloudify icons, override classes below with the content of the generated cloudify-icons-codes.css file */
