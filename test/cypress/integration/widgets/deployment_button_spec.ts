@@ -247,7 +247,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('@string_constraint_pattern').should('have.class', 'error');
         });
 
-        it.only('should handle missing secrets error', () => {
+        it('should handle missing secrets error', () => {
             const secretNames = [`${resourcePrefix}secret`, `${resourcePrefix}secret_multiline`];
             cy.deleteSecrets(resourcePrefix);
 
@@ -258,7 +258,6 @@ describe('Create Deployment Button widget', () => {
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
-                    // cy.get('.item').should('have.length', secretNames.length);
                     secretNames.forEach(secretName => {
                         cy.contains('.item', secretName);
                     });
@@ -279,7 +278,7 @@ describe('Create Deployment Button widget', () => {
                 cy.contains('secret_multiline')
                     .siblings('.fields')
                     .within(() => cy.get('.checkbox').click());
-                cy.get('textarea[name="secret_multiline"]').should('be.visible');
+                cy.get(`textarea[name="${resourcePrefix}secret_multiline"]`).should('be.visible');
                 cy.contains('button', 'Add').click();
                 cy.wait('@addSecrets');
             });
