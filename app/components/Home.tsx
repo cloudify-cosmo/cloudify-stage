@@ -20,25 +20,19 @@ import Page from './Page';
 import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 
 class Home extends Component {
-    // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
-    // eslint-disable-next-line camelcase
-    UNSAFE_componentWillMount() {
+    componentDidMount() {
         const { contextParams, onStorePageId, pageId } = this.props;
         onStorePageId(pageId);
         this.handleContext(contextParams);
     }
 
-    // TODO: Context handling should not be here. Currently necessary to use deprecated methods.
-    // eslint-disable-next-line camelcase
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        const { onStorePageId, pageId } = this.props;
-        if (nextProps.pageId !== pageId) {
-            onStorePageId(nextProps.pageId);
-            this.handleContext(nextProps.contextParams);
+    componentDidUpdate(prevProps) {
+        const { contextParams, onStorePageId, pageId } = this.props;
+        if (prevProps.pageId !== pageId) {
+            onStorePageId(pageId);
+            this.handleContext(contextParams);
         }
-    }
 
-    componentDidUpdate() {
         const { emptyPages, isMaintenance, navigateTo404, navigateToError, navigateToMaintenancePage, selectedPage } =
             this.props;
         if (isMaintenance) {
