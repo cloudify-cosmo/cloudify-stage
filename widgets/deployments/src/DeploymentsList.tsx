@@ -1,5 +1,5 @@
 import type { Deployment } from '../../common/src/deploymentsView/types';
-import type { Visibility } from '../../common/src/secrets/SecretActions';
+import type { Visibility } from '../../common/src/types';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 

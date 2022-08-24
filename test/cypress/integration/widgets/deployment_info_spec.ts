@@ -10,7 +10,7 @@ describe('Deployment Info', () => {
             .deleteDeployments(deploymentName, true)
             .deleteBlueprints(blueprintName, true)
             .deleteSites()
-            .uploadBlueprint('blueprints/simple.zip', blueprintName, 'blueprint.yaml', 'global')
+            .uploadBlueprint('blueprints/simple.zip', blueprintName, { visibility: 'global' })
             .deployBlueprint(blueprintName, deploymentName, { server_ip: 'localhost' })
             .createSite({ name: siteName, visibility: 'global' })
             .setDeploymentContext(deploymentName);

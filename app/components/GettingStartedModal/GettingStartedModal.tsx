@@ -86,6 +86,10 @@ const GettingStartedModal = () => {
         return null;
     }
 
+    function goToNextStep() {
+        setStepName(stepName + 1);
+    }
+
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
 
     const redirectUponModalClosing = (completedProcess?: boolean) => {
@@ -93,8 +97,10 @@ const GettingStartedModal = () => {
         dispatch(push(redirectPath));
     };
 
-    const handleEnvironmentsStepChange = (selectedEnvironments: GettingStartedEnvironmentsData) => {
+    const handleEnvironmentClick = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
+        goToNextStep();
+        setSecretsStepIndex(0);
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
@@ -161,10 +167,6 @@ const GettingStartedModal = () => {
     };
 
     const handleNextClick = () => {
-        function goToNextStep() {
-            setStepName(stepName + 1);
-        }
-
         switch (stepName) {
             case StepName.Environments:
                 if (secretsStepsSchemas.length > 0) {
@@ -209,7 +211,7 @@ const GettingStartedModal = () => {
                 secretsStepIndex={secretsStepIndex}
                 summaryStepSchemas={summaryStepSchemas}
                 schema={schema}
-                onEnvironmentsStepChange={handleEnvironmentsStepChange}
+                onEnvironmentsStepChange={handleEnvironmentClick}
                 onSecretsStepChange={handleSecretsStepChange}
                 onInstallationStarted={handleInstallationStarted}
                 onInstallationFinished={handleInstallationFinishedOrCanceled}

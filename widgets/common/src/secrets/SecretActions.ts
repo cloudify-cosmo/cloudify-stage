@@ -1,4 +1,4 @@
-export type Visibility = 'private' | 'tenant' | 'global';
+import type { Visibility } from '../types';
 
 export default class SecretActions {
     private toolbox;
