@@ -266,7 +266,7 @@ describe('Create Deployment Button widget', () => {
             });
 
             cy.get('.secretsModal').within(() => {
-                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`));
+                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as(secretName));
 
                 cy.contains('button', 'Add').click();
                 cy.get('.error.message').within(() => {
@@ -283,6 +283,7 @@ describe('Create Deployment Button widget', () => {
             });
 
             cy.get('.error.message').should('not.exist');
+            cy.wait(secretNames.map(secretName => `@${secretName}`));
         });
 
         it('should open the relevant accordion section on error', () => {
