@@ -7,6 +7,7 @@ import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import KeyDropdown from './KeyDropdown';
 import type { Label } from './types';
 import ValueDropdown from './ValueDropdown';
+import { isLabelModifiable } from './common';
 
 const iconStyle = {
     position: 'absolute',
@@ -29,7 +30,9 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(setReservedKeys)
+            .then(keys => {
+                setReservedKeys(keys.filter(isLabelModifiable));
+            })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);

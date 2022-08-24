@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import Consts from '../Consts';
+import type { Visibility } from '../types';
 import SecretActions from './SecretActions';
-import type { Visibility } from './SecretActions';
 import TogglableSecretsInput from './TogglableSecretsInput';
 
 interface SecretsModalProps {

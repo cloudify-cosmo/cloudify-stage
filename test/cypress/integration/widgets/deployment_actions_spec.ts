@@ -1,4 +1,5 @@
 import type { LabelInputType } from '../../../../widgets/common/src/labels/types';
+import { isLabelModifiable } from '../../../../widgets/common/src/labels/common';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
@@ -186,7 +187,8 @@ describe('Deployment Action Buttons widget', () => {
                 cy.typeLabelValue('a');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
-            cy.getReservedLabelKeys().then(reservedKeys => {
+            cy.getReservedLabelKeys().then(reservedLabelKeys => {
+                const reservedKeys = reservedLabelKeys.filter(isLabelModifiable);
                 reservedKeys.forEach(checkIfInternalKeyIsPermitted);
             });
             checkIfInternalKeyIsNotPermitted('csys-');

@@ -87,7 +87,9 @@ describe('Create Deployment modal handles deployment inputs', () => {
         cy.deleteDeployments(resourcePrefix, true).deleteBlueprints(resourcePrefix, true);
 
         types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
+                yamlFile: `${type}_type.yaml`
+            })
         );
     });
 
@@ -460,7 +462,9 @@ describe('Create Deployment modal handles deployment inputs', () => {
             const testBlueprintId = `${resourcePrefix}contraint_test`;
             const testDeploymentId = `${testBlueprintId}_dep`;
 
-            cy.uploadBlueprint('blueprints/workflow_parameters.zip', testBlueprintId, 'scaling_group_type.yaml')
+            cy.uploadBlueprint('blueprints/workflow_parameters.zip', testBlueprintId, {
+                yamlFile: 'scaling_group_type.yaml'
+            })
                 .deployBlueprint(testBlueprintId, testDeploymentId)
                 .waitForExecutionToEnd('create_deployment_environment', { deploymentId: testDeploymentId });
 

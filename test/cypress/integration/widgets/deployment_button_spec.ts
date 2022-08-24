@@ -17,7 +17,9 @@ describe('Create Deployment Button widget', () => {
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
+                yamlFile: `${type}_type.yaml`
+            })
         );
     });
 
