@@ -10,8 +10,9 @@
 }
 
 /* NOTE: While updating custom cloudify icons, override classes below with the content of the generated cloudify-icons-codes.css file */
-.cloudify-blueprints:before { content: '\e800'; } /* '' */
+
+.cloudify-stack:before { content: '\e800'; } /* '' */
 .cloudify-dashboard:before { content: '\e801'; } /* '' */
-.cloudify-environments:before { content: '\e802'; } /* '' */
-.cloudify-system-logs:before { content: '\e803'; } /* '' */
-.cloudify-tenant:before { content: '\e804'; } /* '' */
+.cloudify-cogs-connected:before { content: '\e802'; } /* '' */
+.cloudify-file-logs:before { content: '\e803'; } /* '' */
+.cloudify-user-cog:before { content: '\e804'; } /* '' */
