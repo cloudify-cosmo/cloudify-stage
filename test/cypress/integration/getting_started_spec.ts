@@ -212,7 +212,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -256,7 +255,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -285,7 +283,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -319,7 +316,6 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
@@ -330,31 +326,11 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should allow only one environment to be selected at a time', () => {
-            goToNextStep();
-            cy.contains('button', 'AWS').click();
-            cy.contains('button.active', 'AWS');
-
-            cy.contains('button', 'GCP').click();
-            cy.contains('button.active', 'AWS').should('not.exist');
-            cy.contains('button.active', 'GCP');
-        });
-
-        it('should allow to click "Next" button when an environment is being selected', () => {
-            goToNextStep();
-            cy.contains('button', 'Next').should('to.be.disabled');
-
-            cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').should('not.to.be.disabled');
-
-            cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').should('to.be.disabled');
-        });
-
         it('should keep button and field states when navigating between steps', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
+                goToBackStep();
                 cy.contains('button.active', 'AWS');
                 goToNextStep();
 
@@ -365,6 +341,7 @@ describe('Getting started modal', () => {
                 verifyHeader(StaticHeaders.Environments);
                 cy.contains('button.active', 'AWS');
                 cy.contains('button', 'GCP').click();
+                goToBackStep();
                 cy.contains('button.active', 'GCP');
                 goToNextStep();
 
@@ -373,13 +350,11 @@ describe('Getting started modal', () => {
                 goToBackStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
                 goToBackStep();
 
                 cy.contains('button', 'GCP').click();
-                goToNextStep();
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             });
@@ -390,7 +365,6 @@ describe('Getting started modal', () => {
 
             goToNextStep();
             cy.contains('button', 'AWS').click();
-            cy.contains('button', 'Next').click();
             setSecretValues(awsSecrets.filter(awsSecret => awsSecret !== secretToSkip));
 
             cy.contains('button', 'Next').click();
@@ -439,7 +413,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 cy.contains('button', 'AWS').click();
-                goToNextStep();
                 goToNextStep();
 
                 blockPluginsUpload();
