@@ -36,6 +36,7 @@
         "docCheck": "scripts/checkDocs.sh",
         "docWidgets": "node scripts/updateReadmes.js",
         "e2e": "cypress run -C node_modules/cloudify-ui-common/cypress/cypress.json",
+        "generate:icons-font": "fontello-cli open --config ./fontello.config.json",
         "lint": "eslint --cache --ignore-path .gitignore --ext js,jsx,ts,tsx .",
         "size": "[ -d \"dist\" ] && size-limit",
         "test": "npm run test:frontend && npm run test:backend",
@@ -46,8 +47,7 @@
         "test:frontend:coverage": "npm run test:frontend:unit -- --coverage && npm run test:frontend:components",
         "test:backend": "cd backend && npm test",
         "upload": "scripts/uploadPackage.sh",
-        "zip": "scripts/createPackage.sh",
-        "generate:cloudify-icons-font": "fontello-cli open --config ./fontello.config.json"
+        "zip": "scripts/createPackage.sh"
     },
     "dependencies": {
         "@dnd-kit/core": "^4.0.0",
