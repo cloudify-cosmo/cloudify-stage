@@ -266,7 +266,7 @@ describe('Create Deployment Button widget', () => {
             });
 
             cy.get('.secretsModal').within(() => {
-                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets'));
+                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`));
 
                 cy.contains('button', 'Add').click();
                 cy.get('.error.message').within(() => {
@@ -280,7 +280,6 @@ describe('Create Deployment Button widget', () => {
                     .within(() => cy.get('.checkbox').click());
                 cy.get(`textarea[name="${resourcePrefix}secret_multiline"]`).should('be.visible');
                 cy.contains('button', 'Add').click();
-                cy.wait('@addSecrets');
             });
 
             cy.get('.error.message').should('not.exist');
