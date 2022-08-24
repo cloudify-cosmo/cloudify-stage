@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import Consts from '../Consts';
+import type { Visibility } from '../types';
 import SecretActions from './SecretActions';
 import SinglelineInput from './SinglelineInput';
-import type { Visibility } from './SecretActions';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;

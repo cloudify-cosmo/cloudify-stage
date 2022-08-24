@@ -34,7 +34,7 @@ describe('Topology', () => {
                 .deletePlugins()
                 .deleteDeployments(resourcePrefix, true)
                 .deleteBlueprints(resourcePrefix, true)
-                .uploadBlueprint(blueprintFile, blueprintId)
+                .uploadBlueprint(blueprintFile, blueprintId, { timeout: secondsToMs(20) })
                 .deployBlueprint(blueprintId, deploymentId)
                 .executeWorkflow(deploymentId, 'install');
         });
@@ -175,8 +175,8 @@ describe('Topology', () => {
             cy.login()
                 .deleteBlueprint(componentBlueprintId, true)
                 .deleteBlueprint(appBlueprintId, true)
-                .uploadBlueprint(blueprintFile, componentBlueprintId, componentBlueprintYamlFile)
-                .uploadBlueprint(blueprintFile, appBlueprintId, appBlueprintYamlFile)
+                .uploadBlueprint(blueprintFile, componentBlueprintId, { yamlFile: componentBlueprintYamlFile })
+                .uploadBlueprint(blueprintFile, appBlueprintId, { yamlFile: appBlueprintYamlFile })
                 .deployBlueprint(appBlueprintId, appDeploymentId)
                 .executeWorkflow(appDeploymentId, 'install');
             waitForDeploymentToBeInstalled(appDeploymentId);
