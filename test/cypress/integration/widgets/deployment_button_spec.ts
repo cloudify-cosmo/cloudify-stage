@@ -16,11 +16,11 @@ describe('Create Deployment Button widget', () => {
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
-        types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
-                yamlFile: `${type}_type.yaml`
-            })
-        );
+        // types.forEach(type =>
+        //     cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
+        //         yamlFile: `${type}_type.yaml`
+        //     })
+        // );
     });
 
     beforeEach(() => {
@@ -248,7 +248,7 @@ describe('Create Deployment Button widget', () => {
         });
 
         it.only('should handle missing secrets error', () => {
-            const secretNames = [`${resourcePrefix}test`, `${resourcePrefix}test_multiline`];
+            const secretNames = [`${resourcePrefix}secret`, `${resourcePrefix}secret_multiline`];
             cy.deleteSecrets(resourcePrefix);
 
             selectBlueprintInModal('required_secrets');
@@ -276,10 +276,10 @@ describe('Create Deployment Button widget', () => {
                 });
                 secretNames.forEach(secretName => cy.get(`input[name=${secretName}]`).type('aaa'));
 
-                cy.contains('test_multiline')
+                cy.contains('secret_multiline')
                     .siblings('.fields')
                     .within(() => cy.get('.checkbox').click());
-                cy.get('textarea[name="test_multiline"]').should('be.visible');
+                cy.get('textarea[name="secret_multiline"]').should('be.visible');
                 cy.contains('button', 'Add').click();
                 cy.wait('@addSecrets');
             });
