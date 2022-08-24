@@ -16,11 +16,11 @@ describe('Create Deployment Button widget', () => {
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
-        // types.forEach(type =>
-        //     cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
-        //         yamlFile: `${type}_type.yaml`
-        //     })
-        // );
+        types.forEach(type =>
+            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
+                yamlFile: `${type}_type.yaml`
+            })
+        );
     });
 
     beforeEach(() => {
