@@ -98,7 +98,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                                     width={15}
                                 />
                                 <Checkbox
-                                    style={{ marginTop: '10px' }}
+                                    style={{ marginTop: '10px', marginLeft: '19px' }}
                                     checked={secretInputWithCheckbox[field].isMultiline}
                                     onChange={() => toggleCheckbox(field)}
                                 />
