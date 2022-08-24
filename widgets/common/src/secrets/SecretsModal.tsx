@@ -36,11 +36,11 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         {}
     );
 
-    const [secretMultiline, setSecretMultiline] = useState<Record<string, { value: string; isMultiline: boolean }>>(
-        initializeSecretCheckboxesState
-    );
+    const [secretInputWithCheckbox, setSecretInputWithCheckbox] = useState<
+        Record<string, { value: string; isMultiline: boolean }>
+    >(initializeSecretCheckboxesState);
     const toggleCheckbox = (secretKey: string) => {
-        setSecretMultiline(prev => ({
+        setSecretInputWithCheckbox(prev => ({
             ...prev,
             [secretKey]: { value: prev[secretKey].value, isMultiline: !prev[secretKey].isMultiline }
         }));
@@ -90,7 +90,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                         <Form.Field key={field} required label={field}>
                             <Form.Group>
                                 <TogglableSecretsInput
-                                    showMultilineInput={secretMultiline[field].isMultiline}
+                                    showMultilineInput={secretInputWithCheckbox[field].isMultiline}
                                     name={field}
                                     value={secretInputs[field]}
                                     placeholder={t('placeholder')}
@@ -99,7 +99,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
                                 />
                                 <Checkbox
                                     style={{ marginTop: '10px' }}
-                                    checked={secretMultiline[field].isMultiline}
+                                    checked={secretInputWithCheckbox[field].isMultiline}
                                     onChange={() => toggleCheckbox(field)}
                                 />
                             </Form.Group>
