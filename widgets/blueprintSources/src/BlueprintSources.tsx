@@ -135,7 +135,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         }
 
         const path = selectedKeys[0];
-        const isImage = path.match(/.(jpg|jpeg|png|gif)$/i);
+        const isImage = path.match(/.(jpg|jpeg|png|gif|ico)$/i);
+        const isNonImageBinary = path.match(/.(pyc|jar|bin)$/i);
 
         clearImageUrl();
         if (isImage) {
@@ -162,7 +163,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     fileType = 'python';
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
-                } else if (_.endsWith(path.toLowerCase(), '.pyc')) {
+                } else if (isNonImageBinary) {
                     fileType = 'binary';
                 }
 
