@@ -61,7 +61,7 @@ We can defer the usage of custom icons, depending on the used component
 1. (Optional) Change icon name, if needed  
    To do that, hover over the icon and click appeared pen icon
 
-    > Good practice: Icon name should uniquely convey its purpose. <br /> It shouldn't be related to a specific use case. <br /> E.g. icon looking like an envelope should be named `envelope`, not `email`.
+    > **_Good practice:_** Icon name should uniquely convey its purpose. <br /> It shouldn't be related to a specific use case. <br /> E.g. icon looking like an envelope should be named `envelope`, not `email`.
 
 1. Download updated icons font, by clicking `Download webfont` button
 1. Unzip downloaded file
@@ -70,3 +70,5 @@ We can defer the usage of custom icons, depending on the used component
 1. Copy `<DOWNLOADED_FILE_PATH>/css/cloudify-icons-codes.css` file content and insert it into `./site/elements/icon.overrides`
 
 After project recompilation, newly added icons should be available to use.
+
+> **_NOTE:_** During the process all icons will be prefixed with `cloudify-`. <br /> So if you added a `plant` icon, it will be available under the `cloudify-plant` name
