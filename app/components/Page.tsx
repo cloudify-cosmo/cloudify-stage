@@ -1,16 +1,14 @@
+import i18n from 'i18next';
 import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
-import i18n from 'i18next';
 import type { ConnectedProps } from 'react-redux';
 import { connect } from 'react-redux';
-import type { ThunkDispatch } from 'redux-thunk';
 import type { AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
 
 import styled from 'styled-components';
-import Breadcrumbs from './Breadcrumbs';
-import EditModeBubble from './EditModeBubble';
-import { Button, EditableLabel } from './basic';
-import { PageContent } from './shared/widgets';
+import { setEditMode } from '../actions/config';
+import { setDrilldownContext } from '../actions/drilldownContext';
 import type { LayoutSection, PageDefinition } from '../actions/page';
 import {
     addLayoutSectionToPage,
@@ -23,12 +21,14 @@ import {
 } from '../actions/page';
 import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
-import { setDrilldownContext } from '../actions/drilldownContext';
-import { setEditMode } from '../actions/config';
 import type { ReduxState } from '../reducers';
-import type { WidgetDefinition } from '../utils/StageAPI';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
+import type { WidgetDefinition } from '../utils/StageAPI';
 import StageUtils from '../utils/stageUtils';
+import { Button, EditableLabel } from './basic';
+import Breadcrumbs from './Breadcrumbs';
+import EditModeBubble from './EditModeBubble';
+import { PageContent } from './shared/widgets';
 import { collapsedSidebarWidth } from './sidebar/SideBar';
 
 export interface PageOwnProps {
@@ -46,8 +46,7 @@ const StyledContainer = styled.div`
 
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
-        const { isEditMode, page } = this.props;
-        return !isEqual(page, nextProps.page) || isEditMode !== nextProps.isEditMode;
+        return !isEqual(this.props, nextProps);
     }
 
     render() {
