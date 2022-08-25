@@ -174,6 +174,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
 
     const mapOpen = !!(toolboxContext.getValue(mapOpenContextKey) as boolean | undefined);
     const toggleMap = () => toolboxContext.setValue(mapOpenContextKey, !mapOpen);
+    const disableBulkActions = !deploymentsResult.data.items.length;
 
     return (
         <DeploymentsViewContainer>
@@ -184,6 +185,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     toolbox={toolbox}
                     onFilterChange={setUserFilterRules}
                     filterRules={finalFilterRules}
+                    disableBulkActions={disableBulkActions}
                 />
             </DeploymentsViewHeaderContainer>
 
