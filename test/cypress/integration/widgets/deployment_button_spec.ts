@@ -249,6 +249,8 @@ describe('Create Deployment Button widget', () => {
 
         it('should handle missing secrets error', () => {
             const secretNames = [`${resourcePrefix}secret`, `${resourcePrefix}secret_multiline`];
+            const secretValue = 'aaa';
+
             cy.deleteSecrets(resourcePrefix);
 
             selectBlueprintInModal('required_secrets');
@@ -273,12 +275,10 @@ describe('Create Deployment Button widget', () => {
                     cy.get('.header').should('have.text', 'Errors in the form');
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
-                secretNames.forEach(secretName => cy.get(`input[name=${secretName}]`).type('aaa'));
+                secretNames.forEach(secretName => cy.get(`input[name=${secretName}]`).type(secretValue));
 
-                cy.contains('secret_multiline')
-                    .siblings('.fields')
-                    .within(() => cy.get('.checkbox').click());
-                cy.get(`textarea[name="${resourcePrefix}secret_multiline"]`).should('be.visible');
+                cy.contains('secret_multiline').siblings('.fields').find('.checkbox').click();
+                cy.get(`textarea[name="${secretNames[1]}"]`).should('be.visible').should('have.value', secretValue);
                 cy.contains('button', 'Add').click();
             });
 
