@@ -54,3 +54,19 @@ We can defer the usage of custom icons, depending on the used component
     ```
 
 ### Adding new icon
+
+1. Execute `npm run generate:icons-font` command, which will open preconfigured [fontello website](https://fontello.com/)
+1. Drag and drop new icon on the [fontello website](https://fontello.com/)
+1. Select newly added icon, by clicking it
+1. (Optional) Change icon name, if needed  
+   To do that, hover over the icon and click appeared pen icon
+
+    > Good practice: Icon name should uniquely convey its purpose. <br /> It shouldn't be related to a specific use case. <br /> E.g. icon looking like an envelope should be named `envelope`, not `email`.
+
+1. Download updated icons font, by clicking `Download webfont` button
+1. Unzip downloaded file
+1. Copy `<DOWNLOADED_FILE_PATH>/fontello.config.json` to the root project directory
+1. Copy all files from `<DOWNLOADED_FILE_PATH>/font/` to the `./fonts/cloudify-icons/` directory
+1. Copy `<DOWNLOADED_FILE_PATH>/css/cloudify-icons-codes.css` file content and insert it into `./site/elements/icon.overrides`
+
+After project recompilation, newly added icons should be available to use.
