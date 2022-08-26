@@ -10,3 +10,10 @@
     src: url('../../node_modules/cloudify-ui-common/fonts/Roboto/Roboto-Bold.ttf');
     font-weight: bold;
 }
+
+@font-face {
+    font-family: 'cloudify-icons';
+    src: url('../../semantic-ui/fonts/cloudify-icons/cloudify-icons.ttf?75470793') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
