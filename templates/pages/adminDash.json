@@ -1,6 +1,6 @@
 {
     "name": "Dashboard",
-    "icon": "dashboard",
+    "icon": "cloudify-dashboard",
     "layout": [
         {
             "type": "widgets",
