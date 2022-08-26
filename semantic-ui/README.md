@@ -5,7 +5,7 @@ It enables us to use newly created icons within the application framework
 
 ### Using custom icons
 
-We can defer the usage of custom icons, depending on the used component
+We can use custom icons in a different way, depending on the used component
 
 1. Using `Icon` component with `name` prop
 
