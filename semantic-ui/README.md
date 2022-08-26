@@ -66,7 +66,7 @@ We can use custom icons in a different way, depending on the used component
 1. Download updated icons font, by clicking `Download webfont` button
 1. Unzip downloaded file
 1. Copy `<DOWNLOADED_FILE_PATH>/fontello.config.json` to the root project directory
-1. Copy all files from `<DOWNLOADED_FILE_PATH>/font/` to the `./fonts/cloudify-icons/` directory
+1. Copy `<DOWNLOADED_FILE_PATH>/font/cloudify-icons.ttf` to the `./fonts/cloudify-icons/` directory
 1. Copy `<DOWNLOADED_FILE_PATH>/css/cloudify-icons-codes.css` file content and insert it into `./site/elements/icon.overrides`
 
 After project recompilation, newly added icons should be available to use.
