@@ -79,7 +79,7 @@ export default {
         ERROR: '/error',
         HOME: '/',
         LOGIN: '/login',
-        SAML_LOGIN: '/saml-login',
+        EXTERNAL_LOGIN: '/external-login',
         LOGOUT: '/logout',
         MAINTENANCE: '/maintenance',
         LICENSE: '/license'
