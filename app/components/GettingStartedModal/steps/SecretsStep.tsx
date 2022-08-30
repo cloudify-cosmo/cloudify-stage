@@ -49,6 +49,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
             {selectedEnvironment.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
                     onChange(secretInputs);
+                    clearErrors();
                     if (
                         secretInputs.hasOwnProperty('gcp_client_email') &&
                         secretInputs.gcp_client_email &&
