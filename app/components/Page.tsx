@@ -44,6 +44,10 @@ const StyledContainer = styled.div`
     }
 `;
 
+const StyledWrapper = styled.div`
+    padding-left: 10px;
+`;
+
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
         const { isEditMode, page } = this.props;
@@ -80,23 +84,25 @@ class Page extends Component<PageProps, never> {
             <StyledContainer
                 className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}
             >
-                <Breadcrumbs
-                    pagesList={pagesList}
-                    onPageNameChange={onPageNameChange}
-                    isEditMode={isEditMode}
-                    onPageSelected={onPageSelected}
-                />
-                <div>
-                    <EditableLabel
-                        value={page.description}
-                        placeholder={i18n.t('page.description', 'Page description')}
-                        className="pageDescription"
-                        enabled={isEditMode}
-                        onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
-                        inputSize="mini"
+                <StyledWrapper>
+                    <Breadcrumbs
+                        pagesList={pagesList}
+                        onPageNameChange={onPageNameChange}
+                        isEditMode={isEditMode}
+                        onPageSelected={onPageSelected}
                     />
-                </div>
-                <div className="ui divider" />
+
+                    {(page.description || isEditMode) && (
+                        <EditableLabel
+                            value={page.description}
+                            placeholder={i18n.t('page.description')}
+                            className="pageDescription"
+                            enabled={isEditMode}
+                            onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
+                            inputSize="mini"
+                        />
+                    )}
+                </StyledWrapper>
                 <PageContent
                     page={page}
                     onWidgetUpdated={onWidgetUpdated}
@@ -112,12 +118,7 @@ class Page extends Component<PageProps, never> {
                 />
                 {isEditMode && (
                     <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
-                        <Button
-                            basic
-                            content={i18n.t('editMode.exit', 'Exit')}
-                            icon="sign out"
-                            onClick={onEditModeExit}
-                        />
+                        <Button basic content={i18n.t('editMode.exit')} icon="sign out" onClick={onEditModeExit} />
                     </EditModeBubble>
                 )}
             </StyledContainer>

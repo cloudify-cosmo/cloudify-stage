@@ -1,3 +1,19 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.main {
+    .page {
+        .pageDescription {
+            font-size: 14px;
+            padding: 0;
+            color: @grey;
+            font-weight: normal;
+            opacity: 1
+        }
+    }
+}
+
+.ui.breadcrumb .active.section {
+    font-weight: 600;
+}
