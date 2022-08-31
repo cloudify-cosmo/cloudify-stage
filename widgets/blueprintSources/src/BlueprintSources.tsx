@@ -60,6 +60,8 @@ interface RightPaneProps {
 }
 
 const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, minimize }: RightPaneProps) => {
+    const t = Stage.Utils.getT('widgets.blueprintSources');
+
     if (imageUrl) {
         return (
             <Center>
@@ -69,7 +71,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
     }
 
     if (type === 'binary') {
-        return <Center>File cannot be displayed.</Center>;
+        return <Center>{t('binaryFile')}</Center>;
     }
 
     if (content) {
