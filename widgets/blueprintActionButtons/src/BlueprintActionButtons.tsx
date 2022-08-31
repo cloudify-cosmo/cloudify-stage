@@ -15,6 +15,7 @@ interface BlueprintActionButtonsProps {
     blueprintId: string;
     toolbox: Stage.Types.Toolbox;
     showEditCopyInComposerButton: boolean;
+    openDeploymentModal: boolean;
 }
 
 interface BlueprintActionButtonsState {
@@ -40,17 +41,17 @@ export default class BlueprintActionButtons extends React.Component<
         };
     }
 
-    componentDidMount() {
-        const { toolbox } = this.props;
-        const openDeploymentModal = toolbox.getContext().getValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL);
+    shouldComponentUpdate(nextProps: BlueprintActionButtonsProps, nextState: BlueprintActionButtonsState) {
+        return !_.isEqual(this.state, nextState) || !_.isEqual(this.props, _.omit(nextProps, 'toolbox'));
+    }
+
+    componentDidUpdate() {
+        const { openDeploymentModal, toolbox } = this.props;
 
         if (openDeploymentModal) {
             this.showDeployModal();
+            toolbox.getContext().setValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL, false);
         }
-    }
-
-    shouldComponentUpdate(nextProps: BlueprintActionButtonsProps, nextState: BlueprintActionButtonsState) {
-        return !_.isEqual(this.state, nextState) || !_.isMatch(this.props, _.omit(nextProps, 'toolbox'));
     }
 
     hideModal = () => {
