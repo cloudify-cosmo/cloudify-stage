@@ -77,6 +77,7 @@ class Page extends Component<PageProps, never> {
             _(page.layout).flatMap('content').find({ maximized: true }) ||
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
+        const showPageDescription = page.description || isEditMode;
         document.body.style.overflow = hasMaximizedWidget ? 'hidden' : 'inherit';
         window.scroll(0, 0);
 
@@ -92,7 +93,7 @@ class Page extends Component<PageProps, never> {
                         onPageSelected={onPageSelected}
                     />
 
-                    {(page.description || isEditMode) && (
+                    {showPageDescription && (
                         <EditableLabel
                             value={page.description}
                             placeholder={i18n.t('page.description')}
