@@ -85,6 +85,9 @@
             "secretsLoadingError": "Secrets information loading error.",
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
+        "secrets": {
+            "invalidEmail": "Please enter a valid email address"
+        },
         "summary": {
             "taskListTitle": "Task List",
             "plugin": {

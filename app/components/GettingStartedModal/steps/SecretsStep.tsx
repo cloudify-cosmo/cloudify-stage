@@ -2,8 +2,11 @@ import React, { memo, useEffect, useMemo } from 'react';
 
 import { Form } from '../../basic';
 import { useInputs, useResettableState } from '../../../utils/hooks';
+import StageUtils from '../../../utils/stageUtils';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
+
+const t = StageUtils.getT('gettingStartedModal.secrets');
 
 const validateEmail = (email: string) => {
     return email
@@ -58,7 +61,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                         setErrors({
                             ...errors,
                             gcp_client_email: {
-                                content: 'Please enter a valid email address'
+                                content: t('invalidEmail')
                             }
                         });
                     }
