@@ -423,8 +423,15 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should validate email in secrets step', () => {
-            // TODO
+        it.only('should validate email in secrets step', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'GCP').click();
+                cy.get(`[name=gcp_client_email]`).type(`aaa`);
+                // TODO: expect validation error
+                cy.get(`[name=gcp_client_email]`).type(`aaa@aaa.com`);
+                // TODO: chack that error removed
+            });
         });
     });
 });

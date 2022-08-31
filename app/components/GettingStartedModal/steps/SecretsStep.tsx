@@ -55,7 +55,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                 const handleBlur = () => {
                     onChange(secretInputs);
                     clearErrors();
-                    if (type === 'email') {
+                    if (type === 'email' && !isEmailValid(secretInputs[name])) {
                         setErrors({
                             ...errors,
                             [name]: {
