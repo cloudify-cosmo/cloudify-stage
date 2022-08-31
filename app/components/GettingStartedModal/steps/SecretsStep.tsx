@@ -8,7 +8,7 @@ import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../mod
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
-const validateEmail = (email: string) => {
+const isEmailValid = (email: string) => {
     return email
         .toLowerCase()
         .match(
@@ -55,7 +55,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                 const handleBlur = () => {
                     onChange(secretInputs);
                     clearErrors();
-                    if (secretInputs?.gcp_client_email && !validateEmail(secretInputs.gcp_client_email)) {
+                    if (secretInputs?.gcp_client_email && !isEmailValid(secretInputs.gcp_client_email)) {
                         setErrors({
                             ...errors,
                             gcp_client_email: {
