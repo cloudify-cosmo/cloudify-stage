@@ -6,17 +6,13 @@ type Props = {
     logo: string;
     label: string;
     value?: boolean;
-    onChange?: () => void;
+    onClick?: () => void;
 };
 
-const EnvironmentButton = memo(({ logo, label, onChange }: Props) => {
-    const handleClick = () => {
-        onChange?.();
-    };
-
+const EnvironmentButton = memo(({ logo, label, onClick }: Props) => {
     return (
         <Form.Field>
-            <Button fluid basic size="huge" style={{ height: 70 }} onClick={handleClick}>
+            <Button fluid basic size="huge" style={{ height: 70 }} onClick={onClick}>
                 <Image src={logo} inline style={{ maxHeight: '100%', cursor: 'pointer' }} />
                 <span style={{ marginLeft: 10 }}>{label}</span>
             </Button>

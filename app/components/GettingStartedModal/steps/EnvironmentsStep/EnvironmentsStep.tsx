@@ -15,12 +15,12 @@ const EnvironmentsStep = ({ schema, onChange }: Props) => {
     return (
         <Form>
             {schema.map(({ name, logo, label }) => {
-                const handleChange = () => {
+                const handleClick = () => {
                     const newLocalSelectedEnvironment = { [name]: true };
                     onChange?.(newLocalSelectedEnvironment);
                 };
 
-                return <EnvironmentButton key={name} logo={logo} label={label} onChange={handleChange} />;
+                return <EnvironmentButton key={name} logo={logo} label={label} onClick={handleClick} />;
             })}
         </Form>
     );
