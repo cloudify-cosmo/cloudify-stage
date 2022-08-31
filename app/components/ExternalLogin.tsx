@@ -7,7 +7,7 @@ import Auth from '../utils/auth';
 import type { ReduxState } from '../reducers';
 import Consts from '../utils/consts';
 
-const SamlLogin: FunctionComponent = () => {
+const ExternalLogin: FunctionComponent = () => {
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
     const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
@@ -21,4 +21,4 @@ const SamlLogin: FunctionComponent = () => {
     return null;
 };
 
-export default SamlLogin;
+export default ExternalLogin;

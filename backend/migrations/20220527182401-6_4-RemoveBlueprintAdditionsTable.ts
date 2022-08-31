@@ -13,16 +13,23 @@ export const iconFilename = 'icon.png';
 export const { up, down }: MigrationObject = {
     up: async (queryInterface, Sequelize, logger) => {
         const blueprintAdditions = await BlueprintAdditions(queryInterface.sequelize, Sequelize).findAll();
+        const externalContentPrefix = '/console/external/content?url=';
 
         /* eslint-disable no-await-in-loop */
         for (let i = 0; i < blueprintAdditions.length; i += 1) {
-            const { blueprintId, image, imageUrl } = blueprintAdditions[i];
+            const { blueprintId, image } = blueprintAdditions[i];
+            let { imageUrl } = blueprintAdditions[i];
             const iconPath = getResourcePath(path.join(iconsDirectory, blueprintId), true);
 
             logger.info(`Migrating icon for '${blueprintId}' blueprint...`);
             try {
                 let imageBuffer: Buffer = image;
                 if (imageUrl) {
+                    // NOTE: In old Cloudify versions `imageUrl` was defined as relative URL
+                    //       using `/console/external` endpoint
+                    if (imageUrl.startsWith(externalContentPrefix)) {
+                        imageUrl = decodeURIComponent(imageUrl.replace(externalContentPrefix, ''));
+                    }
                     logger.info(`Fetching icon from URL: ${imageUrl}...`);
                     imageBuffer = (await axios.get(imageUrl, { responseType: 'arraybuffer' })).data;
                 }

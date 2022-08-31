@@ -6,7 +6,7 @@ export const ALLOWED_METHODS_OBJECT = allowedMethods;
 export const ALLOWED_METHODS_ARRAY = _.values(allowedMethods);
 
 export const CONTEXT_PATH = '/console';
-export const SAML_LOGIN_PATH = `${CONTEXT_PATH}/saml-login`;
+export const EXTERNAL_LOGIN_PATH = '/external-login';
 
 export const USER_DATA_PATH = '/userData';
 export const APP_DATA_PATH = '/appData';

@@ -4,7 +4,7 @@ import type { CookieOptions, Request } from 'express';
 
 import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
-import { SAML_LOGIN_PATH, TOKEN_COOKIE_NAME } from '../consts';
+import { CONTEXT_PATH, EXTERNAL_LOGIN_PATH, TOKEN_COOKIE_NAME } from '../consts';
 import { getLogger } from '../handler/LoggerHandler';
 import { getTokenFromCookies } from '../utils';
 import type { AuthUserResponse } from './Auth.types';
@@ -50,7 +50,7 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
         AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
             .then(token => {
                 res.cookie(TOKEN_COOKIE_NAME, token.value, getCookieOptions(req));
-                res.redirect(SAML_LOGIN_PATH);
+                res.redirect(`${CONTEXT_PATH}${EXTERNAL_LOGIN_PATH}`);
             })
             .catch(err => {
                 logger.error(err);

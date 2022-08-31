@@ -582,13 +582,15 @@
                     "updateButton": "Update"
                 },
                 "secretsModal": {
-                    "header": "Add Secrets",
+                    "header": "Add secrets",
                     "buttons": {
                         "add": "Add"
                     },
                     "errors": {
                         "noSecretValues": "Please provide values for secrets"
-                    }
+                    },
+                    "placeholder": "Secret value",
+                    "checkboxLabel": "Multiline"
                 },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
