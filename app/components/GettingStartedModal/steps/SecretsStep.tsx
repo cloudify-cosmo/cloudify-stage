@@ -9,11 +9,8 @@ import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../mod
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
 const isEmailValid = (email: string) => {
-    return email
-        .toLowerCase()
-        .match(
-            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
 };
 
 type Props = {
