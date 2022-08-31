@@ -422,5 +422,9 @@ describe('Getting started modal', () => {
                 cy.contains('Installation failed.');
             });
         });
+
+        it('should validate email in secrets step', () => {
+            // TODO
+        });
     });
 });
