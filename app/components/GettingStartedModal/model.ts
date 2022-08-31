@@ -26,7 +26,7 @@ export type GettingStartedSchemaPlugin = {
 export type GettingStartedSchemaSecret = {
     label: string;
     name: string;
-    type: 'text' | 'password';
+    type: 'text' | 'password' | 'email';
 };
 
 export type GettingStartedSchemaBlueprint = {

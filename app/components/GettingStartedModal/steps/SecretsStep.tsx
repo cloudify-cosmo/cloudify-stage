@@ -55,10 +55,10 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                 const handleBlur = () => {
                     onChange(secretInputs);
                     clearErrors();
-                    if (secretInputs?.gcp_client_email && !isEmailValid(secretInputs.gcp_client_email)) {
+                    if (type === 'email') {
                         setErrors({
                             ...errors,
-                            gcp_client_email: {
+                            [name]: {
                                 content: t('invalidEmail')
                             }
                         });
