@@ -1,3 +1,8 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@borderRadius: 5px;
+@verticalPadding: 0.75em;
+@horizontalPadding: 0.5em;
+@iconDistance: @relative4px;
