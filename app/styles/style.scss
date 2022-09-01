@@ -42,10 +42,10 @@ a:hover {
         $input-padding: 4.85px 9px !important;
         $input-left: -10px;
         .pageDescription {
-            $font-size: 12px;
-            opacity: 0.6;
+            $font-size: 14px;
             font-size: $font-size;
-            padding-left: 0;
+            padding: 0;
+            font-weight: normal;
 
             &.editPlaceholder {
                 font-style: italic;

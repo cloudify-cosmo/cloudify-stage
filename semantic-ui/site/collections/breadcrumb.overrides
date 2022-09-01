@@ -5,15 +5,22 @@
 .main {
     .page {
         .pageDescription {
-            font-size: 14px;
-            padding: 0;
             color: @grey;
-            font-weight: normal;
-            opacity: 1
         }
     }
 }
 
-.ui.breadcrumb .active.section {
-    font-weight: 600;
+.ui.breadcrumb {
+    a {
+        color: @blue;
+    }
+    .active.section {
+        font-weight: 600;
+        color: @grey;
+    }
+    .divider {
+        color: @grey;
+        font-size: 14px;
+        opacity: 1;
+    }
 }
