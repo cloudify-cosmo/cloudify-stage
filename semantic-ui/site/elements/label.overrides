@@ -1,3 +1,7 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.label.pageDescription {
+    color: @grey;
+}

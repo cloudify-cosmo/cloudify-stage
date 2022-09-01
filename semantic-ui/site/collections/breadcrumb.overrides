@@ -2,14 +2,6 @@
          Site Overrides
 *******************************/
 
-.main {
-    .page {
-        .pageDescription {
-            color: @grey;
-        }
-    }
-}
-
 .ui.breadcrumb {
     a {
         color: @blue;
