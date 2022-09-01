@@ -5,7 +5,6 @@ import { Form, Button, Image } from '../../../basic';
 type Props = {
     logo: string;
     label: string;
-    value?: boolean;
     onClick?: () => void;
 };
 

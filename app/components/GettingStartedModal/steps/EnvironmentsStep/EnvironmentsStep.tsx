@@ -7,7 +7,6 @@ import type { GettingStartedSchema, GettingStartedEnvironmentsData } from '../..
 
 type Props = {
     schema: GettingStartedSchema;
-    selectedEnvironment?: GettingStartedEnvironmentsData;
     onChange?: (environment: GettingStartedEnvironmentsData) => void;
 };
 
