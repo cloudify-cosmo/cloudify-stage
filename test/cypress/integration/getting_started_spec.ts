@@ -326,40 +326,6 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should keep button and field states when navigating between steps', () => {
-            cy.get('.modal').within(() => {
-                goToNextStep();
-                cy.contains('button', 'AWS').click();
-                goToBackStep();
-                cy.contains('button.active', 'AWS');
-                goToNextStep();
-
-                verifyHeader(getExpectedSecretsHeader('AWS'));
-                setSecretValues(awsSecrets);
-                goToBackStep();
-
-                verifyHeader(StaticHeaders.Environments);
-                cy.contains('button.active', 'AWS');
-                cy.contains('button', 'GCP').click();
-                goToBackStep();
-                cy.contains('button.active', 'GCP');
-                goToNextStep();
-
-                verifyHeader(getExpectedSecretsHeader('GCP'));
-                setSecretValues(gcpSecrets);
-                goToBackStep();
-
-                cy.contains('button', 'AWS').click();
-                verifyHeader(getExpectedSecretsHeader('AWS'));
-                awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
-                goToBackStep();
-
-                cy.contains('button', 'GCP').click();
-                verifyHeader(getExpectedSecretsHeader('GCP'));
-                gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
-            });
-        });
-
         it('should allow to not provide every environment secret', () => {
             const secretToSkip = awsSecrets[0];
 
