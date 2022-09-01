@@ -24,7 +24,7 @@ type Props = {
     summaryStepSchemas: GettingStartedSchemaItem[];
     schema: GettingStartedSchema;
     onEnvironmentsStepChange: (environments: GettingStartedEnvironmentsData) => void;
-    onSecretsStepChange: (secrets: GettingStartedSecretsData) => void;
+    onSecretsStepChange: (secrets: GettingStartedSecretsData, validationErrors: boolean) => void;
     onInstallationStarted: () => void;
     onInstallationFinished: () => void;
     onInstallationCanceled: () => void;

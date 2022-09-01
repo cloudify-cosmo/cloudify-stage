@@ -47,6 +47,7 @@ const GettingStartedModal = () => {
     const [cancelConfirmOpen, openCancelConfirm, closeCancelConfirm] = useBoolean();
     const [schema, setSchema] = useState(gettingStartedSchema);
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
+    const [secretValidationErrors, setSecretValidationErrors] = useState(false);
 
     const commonStepsSchemas = useMemo(
         () => schema.filter(item => environmentsStepData[item.name]),
@@ -102,7 +103,8 @@ const GettingStartedModal = () => {
         goToNextStep();
         setSecretsStepIndex(0);
     };
-    const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
+    const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData, validationErrors: boolean) => {
+        setSecretValidationErrors(validationErrors);
         if (secretsStepSchema) {
             setSecretsStepsData({ ...secretsStepsData, [secretsStepSchema.name]: typedSecrets });
         }
@@ -236,6 +238,7 @@ const GettingStartedModal = () => {
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
                 environmentsStepData={environmentsStepData}
+                secretValidationErrors={secretValidationErrors}
             />
             <Confirm
                 open={cancelConfirmOpen}

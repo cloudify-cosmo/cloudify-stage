@@ -16,7 +16,7 @@ const isEmailValid = (email: string) => {
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
-    onChange: (typedSecrets: GettingStartedSecretsData) => void;
+    onChange: (typedSecrets: GettingStartedSecretsData, validationErrors: boolean) => void;
 };
 
 const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
@@ -43,16 +43,16 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
-        if (!typedSecrets) onChange(defaultSecretInputs);
+        if (!typedSecrets) onChange(defaultSecretInputs, false);
     }, []);
 
     return (
         <Form>
             {selectedEnvironment.secrets.map(({ name, label, type }) => {
                 const handleBlur = () => {
-                    onChange(secretInputs);
                     clearErrors();
                     if (type === 'email' && !isEmailValid(secretInputs[name])) {
+                        onChange(secretInputs, true);
                         setErrors({
                             ...errors,
                             [name]: {
@@ -60,6 +60,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                             }
                         });
                     }
+                    onChange(secretInputs, false);
                 };
                 return (
                     <Form.Field key={name}>
