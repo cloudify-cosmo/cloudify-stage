@@ -23,7 +23,6 @@ const StyledLabel = styled(Label)`
 `;
 
 const StyledEditableLabel = styled(EditableLabel)`
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     max-width: 450px;

@@ -54,9 +54,12 @@ a:hover {
             input {
                 padding: $input-padding;
                 font-size: $font-size !important;
-                font-weight: 700;
+                font-weight: normal;
                 width: 260px;
                 margin-left: $input-left;
+                padding-bottom: 0 !important;
+                margin-left: -8px;
+                margin-top: -5px;
             }
         }
         .pageTitle {

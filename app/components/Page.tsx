@@ -44,7 +44,7 @@ const StyledContainer = styled.div`
     }
 `;
 
-const PageHeader = styled.div`
+const StyledPageHeader = styled.div`
     padding-left: 10px;
 `;
 
@@ -85,7 +85,7 @@ class Page extends Component<PageProps, never> {
             <StyledContainer
                 className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}
             >
-                <PageHeader>
+                <StyledPageHeader>
                     <Breadcrumbs
                         pagesList={pagesList}
                         onPageNameChange={onPageNameChange}
@@ -103,7 +103,7 @@ class Page extends Component<PageProps, never> {
                             inputSize="mini"
                         />
                     )}
-                </PageHeader>
+                </StyledPageHeader>
                 <PageContent
                     page={page}
                     onWidgetUpdated={onWidgetUpdated}
