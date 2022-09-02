@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-export default samlConfig => {
+import type { Config } from './routes/Config.types';
+
+export default (samlConfig: Config['app']['saml']) => {
     if (!samlConfig.certPath) {
         throw new Error('SAML is enabled, yet certificate path was not configured. [saml.certPath]');
     }
