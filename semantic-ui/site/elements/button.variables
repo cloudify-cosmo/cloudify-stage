@@ -6,3 +6,4 @@
 @verticalPadding: 0.75em;
 @horizontalPadding: 0.5em;
 @iconDistance: @relative4px;
+@iconOpacity: 1;

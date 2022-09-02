@@ -4,4 +4,14 @@
 
 .ui.button {
     min-width: 90px;
+
+    &:not(.icon) > .icon:not(.button):not(.dropdown) {
+        // NOTE: Previously icon had 14px height, so after changing it to 17px we have to realign it
+        // We can't do it automatically, as it would result in modifying height of the icon buttons 
+        @additionalIconOffset: unit(1.5 / 17, em);
+
+        position: relative;
+        font-size: @relative17px;
+        top: @additionalIconOffset;
+    }
 }
