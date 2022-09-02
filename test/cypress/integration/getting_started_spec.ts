@@ -371,6 +371,12 @@ describe('Getting started modal', () => {
             verifySecretSkipSummaryItem(secretToSkip);
         });
 
+        it('should have help icon visible next to form field', () => {
+            goToNextStep();
+            cy.contains('button', 'AWS').click();
+            cy.get('.help.circle.icon').should('be.visible');
+        });
+
         it('should show different content depending on cloudSetup parameter presence', () => {
             // cloudSetup parameter present (see beforeEach)
             goToNextStep();
