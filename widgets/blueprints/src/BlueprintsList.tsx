@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+import { Button } from 'semantic-ui-react';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -147,6 +148,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         return (
             <div>
+                <Button>hey</Button>
+                <Button color="blue" icon="rocket" content="Hey" />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
