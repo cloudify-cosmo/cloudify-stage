@@ -4,12 +4,15 @@ import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
+import StageUtils from '../../../utils/stageUtils';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
     onChange: (typedSecrets: GettingStartedSecretsData) => void;
 };
+
+const t = StageUtils.getT('gettingStartedModal');
 
 const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
     const defaultSecretInputs: Record<string, any> = useMemo(
@@ -25,6 +28,8 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
     );
 
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
+    const secretDescription = t('secretsDescription');
+    const hasSecretDescrtiption = secretDescription;
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
@@ -38,11 +43,10 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                     onChange(secretInputs);
                 };
                 return (
-                    <Form.Field key={name}>
+                    <Form.Field key={name} label={label} help={hasSecretDescrtiption ? secretDescription : undefined}>
                         <Form.Input
                             type={type}
                             name={name}
-                            label={label}
                             value={secretInputs[name]}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}

@@ -74,6 +74,7 @@
             "statusStep": "Status"
         },
         "secretsSubtitle": "Now, please fill in the fields below (and click ‘Next’)",
+        "secretsDescription": "Secret description",
         "buttons": {
             "closeModal": "Close",
             "stepBack": "Back",
