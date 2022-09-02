@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
@@ -16,7 +14,7 @@ const logger = getLogger('Style');
 
 const styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
-router.get('/', (req, res) => {
+router.get('/', (_req, res) => {
     const { whiteLabel } = getConfig().app;
     const stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 
