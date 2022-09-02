@@ -3,9 +3,6 @@
 *******************************/
 
 .ui.breadcrumb {
-    a {
-        color: @blue;
-    }
     .active.section {
         font-weight: 600;
         color: @grey;
