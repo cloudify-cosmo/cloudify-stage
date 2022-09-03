@@ -51,11 +51,7 @@ const ModalContent = ({
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
-                <EnvironmentsStep
-                    schema={schema}
-                    selectedEnvironment={environmentsStepData}
-                    onChange={onEnvironmentsStepChange}
-                />
+                <EnvironmentsStep schema={schema} onChange={onEnvironmentsStepChange} />
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep
