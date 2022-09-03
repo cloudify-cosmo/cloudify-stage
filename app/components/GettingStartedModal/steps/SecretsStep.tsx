@@ -8,10 +8,8 @@ import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../mod
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
-const isEmailValid = (email: string) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-};
+const emailRegex = /\S+@\S+\.\S+/;
+const isEmailValid = (email: string) => emailRegex.test(email);
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
