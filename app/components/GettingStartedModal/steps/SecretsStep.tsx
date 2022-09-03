@@ -33,12 +33,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
     );
 
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
-
-    const defaultErrors = { ...secretInputs };
-    Object.keys(defaultErrors).forEach(v => {
-        defaultErrors[v] = false;
-    });
-
+    const defaultErrors = _.mapValues(secretInputs, () => false);
     const [errors, setErrors, clearErrors] = useResettableState(defaultErrors);
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
