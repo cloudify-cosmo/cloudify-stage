@@ -17,7 +17,6 @@ import type {
 
 type Props = {
     stepName: StepName;
-    environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
@@ -32,7 +31,6 @@ type Props = {
 
 const ModalContent = ({
     stepName,
-    environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
