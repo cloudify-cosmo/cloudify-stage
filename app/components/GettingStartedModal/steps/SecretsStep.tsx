@@ -33,16 +33,15 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
 
     return (
         <Form>
-            {selectedEnvironment.secrets.map(({ name, label, type }) => {
+            {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                 const handleBlur = () => {
                     onChange(secretInputs);
                 };
                 return (
-                    <Form.Field key={name}>
+                    <Form.Field key={name} label={label} help={description}>
                         <Form.Input
                             type={type}
                             name={name}
-                            label={label}
                             value={secretInputs[name]}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
