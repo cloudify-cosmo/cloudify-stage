@@ -9,6 +9,16 @@ const awsSecrets = ['aws_access_key_id', 'aws_secret_access_key'];
 const awsPlugins = ['cloudify-utilities-plugin', 'cloudify-kubernetes-plugin', 'cloudify-aws-plugin'];
 const awsBlueprints = ['EC2_WITH_EBS', 'AWS-VM-Setup-using-CloudFormation', 'Kubernetes-AWS-EKS'];
 
+const gcpSecrets = [
+    'gcp_client_x509_cert_url',
+    'gcp_client_email',
+    'gcp_client_id',
+    'gcp_project_id',
+    'gcp_private_key_id',
+    'gcp_private_key',
+    'gcp_zone'
+];
+
 const goToBackStep = () => cy.contains('button', 'Back').click();
 const goToNextStep = () => cy.contains('button', 'Next').click();
 const goToFinishStep = () => cy.contains('button', 'Finish').click();
@@ -313,6 +323,32 @@ describe('Getting started modal', () => {
 
                 verifyHeader(StaticHeaders.Summary);
                 awsPlugins.forEach(verifyPluginNotAvailableSummaryItem);
+            });
+        });
+
+        it('should keep field states when navigating between steps', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                goToNextStep();
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                setSecretValues(awsSecrets);
+
+                goToBackStep();
+                verifyHeader(StaticHeaders.Environments);
+                cy.contains('button', 'GCP').click();
+                verifyHeader(getExpectedSecretsHeader('GCP'));
+                setSecretValues(gcpSecrets);
+
+                goToBackStep();
+                cy.contains('button', 'AWS').click();
+                verifyHeader(getExpectedSecretsHeader('AWS'));
+                awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
+                goToBackStep();
+
+                cy.contains('button', 'GCP').click();
+                verifyHeader(getExpectedSecretsHeader('GCP'));
+                gcpSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
             });
         });
 
