@@ -61,7 +61,6 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                             type={type}
                             name={name}
                             error={errors[name]}
-                            label={label}
                             value={secretInputs[name]}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
