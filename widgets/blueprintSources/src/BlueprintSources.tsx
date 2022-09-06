@@ -1,6 +1,7 @@
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
+import styled from 'styled-components';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
@@ -36,6 +37,65 @@ interface BlueprintTree {
     timestamp: number;
 }
 
+const StyledHighlightText = styled(HighlightText)`
+    margin-top: 2rem;
+    margin-bottom: 0rem;
+`;
+
+const Center = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+`;
+
+interface RightPaneProps {
+    imageUrl: string;
+    content: string;
+    filename: string;
+    type: 'json' | 'python' | 'bash' | 'javascript' | 'yaml';
+    maximize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+    isMaximized: boolean;
+    minimize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+}
+
+const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, minimize }: RightPaneProps) => {
+    if (imageUrl) {
+        return (
+            <Center>
+                <img src={imageUrl} alt={filename} />
+            </Center>
+        );
+    }
+
+    if (content) {
+        return (
+            <div>
+                <StyledHighlightText language={type}>{content}</StyledHighlightText>
+                <Label attached="top right" size="small" onClick={maximize} style={{ cursor: 'pointer' }}>
+                    <Icon name="expand" link />
+                    {filename}
+                </Label>
+                <Modal open={isMaximized} onClose={minimize}>
+                    <Modal.Header>{filename}</Modal.Header>
+                    <Modal.Content>
+                        <HighlightText language={type}>{content}</HighlightText>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <CancelButton content="Close" onClick={minimize} />
+                    </Modal.Actions>
+                </Modal>
+            </div>
+        );
+    }
+
+    return (
+        <Center>
+            <Icon name="file outline" size="big" color="grey" />
+        </Center>
+    );
+};
+
 interface BlueprintSourcesProps {
     data: {
         blueprintId: string;
@@ -49,6 +109,7 @@ interface BlueprintSourcesProps {
 }
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
+    const [imageUrl, setImageUrl, clearImageUrl] = useResettableState('');
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
@@ -70,13 +131,25 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         }
 
         const path = selectedKeys[0];
+        const isImage = path.match(/.(jpg|jpeg|png|gif)$/i);
+
+        clearImageUrl();
+        if (isImage) {
+            setImageUrl(`/console/source/browse/${path}`);
+        }
 
         toolbox.loading(true);
 
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then(setContent)
+            .then((responseBody: string) => {
+                if (isImage) {
+                    clearContent();
+                } else {
+                    setContent(responseBody);
+                }
+            })
             .then(() => {
                 let fileType: FileType = 'json';
                 if (Stage.Utils.isYamlFile(path)) {
@@ -200,35 +273,13 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                             )}
                         </NodesTree>
                     </div>
-                    {content ? (
-                        <div className="alignHighlight">
-                            <HighlightText language={type}>{content}</HighlightText>
-                            <Label attached="top right" size="small" onClick={maximize}>
-                                <Icon name="expand" link />
-                                {filename}
-                            </Label>
-                            <Modal open={isMaximized} onClose={minimize}>
-                                <Modal.Header>{filename}</Modal.Header>
-                                <Modal.Content>
-                                    <HighlightText language={type}>{content}</HighlightText>
-                                </Modal.Content>
-                                <Modal.Actions>
-                                    <CancelButton content="Close" onClick={minimize} />
-                                </Modal.Actions>
-                            </Modal>
-                        </div>
-                    ) : (
-                        <div className="verticalCenter centeredIcon">
-                            <Icon name="file outline" size="big" color="grey" />
-                        </div>
-                    )}
+                    <RightPane {...{ imageUrl, content, filename, type, maximize, isMaximized, minimize }} />
                 </SplitterLayout>
             ) : (
                 <div>
                     <Message content="Please select blueprint to display source files" info />
                 </div>
             )}
-
             <ErrorMessage error={error} onDismiss={() => setError(null)} autoHide />
         </div>
     );

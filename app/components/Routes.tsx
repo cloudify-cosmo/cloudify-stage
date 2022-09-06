@@ -10,7 +10,7 @@ import LoginPage from './LoginPage';
 import ExternalRedirect from './ExternalRedirect';
 import AuthRoutes from './AuthRoutes';
 import type { ReduxState } from '../reducers';
-import SamlLogin from './SamlLogin';
+import ExternalLogin from './ExternalLogin';
 
 const Routes: FunctionComponent = () => {
     const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
@@ -22,7 +22,7 @@ const Routes: FunctionComponent = () => {
         <ThemeProvider theme={theme}>
             <Switch>
                 <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
-                {isSamlEnabled && <Route exact path={Consts.PAGE_PATH.SAML_LOGIN} component={SamlLogin} />}
+                <Route exact path={Consts.PAGE_PATH.EXTERNAL_LOGIN} component={ExternalLogin} />
                 <Route
                     exact
                     path={Consts.PAGE_PATH.LOGOUT}

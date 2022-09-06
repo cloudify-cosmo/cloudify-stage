@@ -20,10 +20,10 @@ const fileContent = 'fileContent';
 describe('/source endpoint', () => {
     it('allows to get blueprint file', () => {
         return request(app)
-            .get('/console/source/browse/blueprintId/file/timestamp/path/to/file')
+            .get('/console/source/browse/blueprintId/file/timestamp/path/to/file.yaml')
             .then(response => {
                 const blueprintDir = path.join(os.tmpdir(), 'cloudifyBrowseSources', 'blueprintIdtimestamp');
-                const absoluteFilePath = path.join(blueprintDir, 'extracted', 'path', 'to', 'file');
+                const absoluteFilePath = path.join(blueprintDir, 'extracted', 'path', 'to', 'file.yaml');
                 expect(existsSync).toHaveBeenCalledWith(absoluteFilePath);
                 expect(removeOldExtracts).toHaveBeenCalled();
                 expect(saveDataFromUrl).toHaveBeenCalledWith(

@@ -2,6 +2,7 @@ import {
     APP_DATA_PATH,
     CONTEXT_PATH,
     EDITION,
+    EXTERNAL_LOGIN_PATH,
     TOKEN_COOKIE_NAME,
     USER_DATA_PATH,
     WIDGET_ID_HEADER
@@ -79,7 +80,7 @@ export default {
         ERROR: '/error',
         HOME: '/',
         LOGIN: '/login',
-        SAML_LOGIN: '/saml-login',
+        EXTERNAL_LOGIN: EXTERNAL_LOGIN_PATH,
         LOGOUT: '/logout',
         MAINTENANCE: '/maintenance',
         LICENSE: '/license'

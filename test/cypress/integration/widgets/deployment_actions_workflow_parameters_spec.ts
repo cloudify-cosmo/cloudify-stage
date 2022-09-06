@@ -39,11 +39,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
 
         types.forEach(type =>
             cy
-                .uploadBlueprint(
-                    'blueprints/workflow_parameters.zip',
-                    `${resourcePrefix}${type}_type`,
-                    `${type}_type.yaml`
-                )
+                .uploadBlueprint('blueprints/workflow_parameters.zip', `${resourcePrefix}${type}_type`, {
+                    yamlFile: `${type}_type.yaml`
+                })
                 .deployBlueprint(`${resourcePrefix}${type}_type`, `${resourcePrefix}${type}_type_deployment`)
         );
     });

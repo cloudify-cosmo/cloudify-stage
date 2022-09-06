@@ -11,7 +11,7 @@ export default function useFetchUrlWithDeploymentId(fetchUrl: string, constraint
 
         if (!deploymentIdFromConstraints && deploymentIdFromContext) {
             const { appendQueryParam } = Stage.Utils.Url;
-            return appendQueryParam(fetchUrl, 'deployment_id', deploymentIdFromContext);
+            return appendQueryParam(fetchUrl, { deployment_id: deploymentIdFromContext });
         }
 
         return fetchUrl;
