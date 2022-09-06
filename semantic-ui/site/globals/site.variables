@@ -22,24 +22,20 @@
 @redHover: #CE4341;
 @blueHover: #0077FF;
 @yellowHover: #EFB408;
-@greyHover: #E5E5E5;
 @brownHover: #9D623C;
 @greenHover: #1CA43C;
 @tealHover: #00ACA5;
 
-// TODO Norbert: reference other variables instead of duplicating their values
 @redDown: #B13836;
 @blueDown: #0066DA;
 @yellowDown: #E6AD08;
-@greyHover: #D6D6D6;
 @brownDown: #8F5936;
 @greenDown: #199436;
 @tealDown: #00A59F;
 
-@redFocus: #B13836;
-@blueFocus: #0066DA;
-@yellowFocus: #E6AD08;
-@greyHover: #D6D6D6;
-@brownFocus: #8F5936;
-@greenFocus: #199436;
-@tealFocus: #00A59F;
+@redFocus: @redDown;
+@blueFocus: @blueDown;
+@yellowFocus: @yellowDown;
+@brownFocus: @brownDown;
+@greenFocus: @greenDown;
+@tealFocus: @tealDown;
