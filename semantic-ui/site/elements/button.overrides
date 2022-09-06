@@ -5,15 +5,15 @@
 @buttonDisabledBackgroundColor: #efefef;
 @buttonDisabledTextColor: #fff;
 
-@buttonBasicDisabledBackgroundColor: #ebebeb;
 @buttonBasicDisabledTextColor: #ebebeb;
+@buttonBasicDisabledBoxShadowColor: @buttonBasicDisabledTextColor;
 
 .ui.button {
     min-width: 90px;
 
     &:not(.icon) > .icon:not(.button):not(.dropdown) {
         // NOTE: Previously icon had 14px height, so after changing it to 17px we have to realign it
-        // We can't do it automatically, as it would result in modifying height of the icon buttons 
+        // We can't do it automatically, as it would result in modifying height of the icon buttons
         @additionalIconOffset: unit(1.5 / 17, em);
 
         position: relative;
@@ -29,10 +29,49 @@
     }
 
     &.basic {
-        &.disabled,
-        &:disabled {
-            color: @buttonBasicDisabledTextColor !important;
-            box-shadow: 0 0 0 @borderBoxShadowWidth @buttonBasicDisabledTextColor !important;
+        &.green {
+            box-shadow: 0 0 0 @borderBoxShadowWidth @green inset !important;
+
+            &:hover {
+                background-color: rgba(34, 186, 70, 0.1) !important;
+            }
+
+            &:active,
+            &:focus {
+                background-color: rgba(34, 186, 70, 0.2) !important;
+            }
         }
+
+        &.red {
+            box-shadow: 0 0 0 @borderBoxShadowWidth @red inset !important;
+
+            &:hover {
+                background-color: rgba(239, 83, 80, 0.1) !important;
+            }
+
+            &:active,
+            &:focus {
+                background-color: rgba(239, 83, 80, 0.2) !important;
+            }
+        }
+
+        &.blue {
+            box-shadow: 0 0 0 @borderBoxShadowWidth @blue inset !important;
+
+            &:hover {
+                background-color: rgba(101, 173, 255, 0.1) !important;
+            }
+
+            &:active,
+            &:focus {
+                background-color: rgba(101, 173, 255, 0.2) !important;
+            }
+        }
+    }
+
+    &.disabled,
+    &:disabled {
+        color: @buttonBasicDisabledTextColor !important;
+        box-shadow: 0 0 0 @borderBoxShadowWidth @buttonBasicDisabledBoxShadowColor !important;
     }
 }
