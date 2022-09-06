@@ -17,6 +17,10 @@ type Props = {
     onChange: (typedSecrets: GettingStartedSecretsData, validationErrors: boolean) => void;
 };
 
+type Errors = {
+    [x: string]: boolean | { content: string };
+};
+
 const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
     const defaultSecretInputs: Record<string, any> = useMemo(
         () =>
@@ -31,7 +35,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
     );
 
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
-    const defaultErrors = _.mapValues(secretInputs, () => false);
+    const defaultErrors: Errors = _.mapValues(secretInputs, () => false);
     const [errors, setErrors, clearErrors] = useResettableState(defaultErrors);
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
