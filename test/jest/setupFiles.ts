@@ -1,5 +1,17 @@
-import { TextEncoder, TextDecoder } from 'util';
+export {};
 
-// NOTE: Workaround from https://github.com/inrupt/solid-client-authn-js/issues/1676
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace NodeJS {
+        interface Global {
+            TextEncoder: typeof TextEncoder;
+            TextDecoder: typeof TextDecoder;
+        }
+    }
+}
+
+// NOTE: Workaround for https://github.com/jsdom/jsdom/issues/2524
+if (typeof TextEncoder !== 'undefined' && typeof TextDecoder !== 'undefined') {
+    global.TextEncoder = TextEncoder;
+    global.TextDecoder = TextDecoder;
+}
