@@ -149,6 +149,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         return (
             <div>
                 <h1>Basic</h1>
+                <Button content="Hey" />
                 <Button color="blue" content="Hey" />
                 <Button color="yellow" content="Hey" />
                 <Button color="red" content="Hey" />
@@ -157,6 +158,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <Button color="grey" content="Hey" />
                 <Button color="teal" content="Hey" />
                 <h1>Hollow</h1>
+                <Button content="Hey" basic />
                 <Button color="blue" content="Hey" basic />
                 <Button color="red" content="Hey" basic />
                 <Button color="green" content="Hey" basic />

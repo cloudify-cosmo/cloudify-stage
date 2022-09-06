@@ -7,3 +7,11 @@
 @horizontalPadding: 0.5em;
 @iconDistance: @relative4px;
 @iconOpacity: 1;
+
+@backgroundColor: #EBEBEB;
+@hoverBackgroundColor: #E5E5E5;
+@focusBackgroundColor: #D6D6D6;
+@downBackgroundColor: #D6D6D6;
+
+@textColor: @grey;
+@fontWeight: @normal;
