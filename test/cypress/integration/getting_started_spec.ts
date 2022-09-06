@@ -326,7 +326,7 @@ describe('Getting started modal', () => {
             });
         });
 
-        it.only('should keep field states when navigating between steps', () => {
+        it('should keep field states when navigating between steps', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
