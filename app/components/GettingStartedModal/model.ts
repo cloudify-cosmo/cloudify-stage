@@ -27,6 +27,7 @@ export type GettingStartedSchemaSecret = {
     label: string;
     name: string;
     type: 'text' | 'password';
+    description?: string;
 };
 
 export type GettingStartedSchemaBlueprint = {
