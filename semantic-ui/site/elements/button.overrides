@@ -32,46 +32,52 @@
         &.green {
             box-shadow: 0 0 0 @borderBoxShadowWidth @green inset !important;
 
-            &:hover {
-                background-color: rgba(34, 186, 70, 0.1) !important;
-            }
+            &:not(:disabled) {
+                &:hover {
+                    background-color: rgba(34, 186, 70, 0.1) !important;
+                }
 
-            &:active,
-            &:focus {
-                background-color: rgba(34, 186, 70, 0.2) !important;
+                &:active,
+                &:focus {
+                    background-color: rgba(34, 186, 70, 0.2) !important;
+                }
             }
         }
 
         &.red {
             box-shadow: 0 0 0 @borderBoxShadowWidth @red inset !important;
 
-            &:hover {
-                background-color: rgba(239, 83, 80, 0.1) !important;
-            }
+            &:not(:disabled) {
+                &:hover {
+                    background-color: rgba(239, 83, 80, 0.1) !important;
+                }
 
-            &:active,
-            &:focus {
-                background-color: rgba(239, 83, 80, 0.2) !important;
+                &:active,
+                &:focus {
+                    background-color: rgba(239, 83, 80, 0.2) !important;
+                }
             }
         }
 
         &.blue {
             box-shadow: 0 0 0 @borderBoxShadowWidth @blue inset !important;
 
-            &:hover {
-                background-color: rgba(101, 173, 255, 0.1) !important;
-            }
+            &:not(:disabled) {
+                &:hover {
+                    background-color: rgba(101, 173, 255, 0.1) !important;
+                }
 
-            &:active,
-            &:focus {
-                background-color: rgba(101, 173, 255, 0.2) !important;
+                &:active,
+                &:focus {
+                    background-color: rgba(101, 173, 255, 0.2) !important;
+                }
             }
         }
-    }
 
-    &.disabled,
-    &:disabled {
-        color: @buttonBasicDisabledTextColor !important;
-        box-shadow: 0 0 0 @borderBoxShadowWidth @buttonBasicDisabledBoxShadowColor !important;
+        &.disabled,
+        &:disabled {
+            color: @buttonBasicDisabledTextColor !important;
+            box-shadow: 0 0 0 @borderBoxShadowWidth @buttonBasicDisabledBoxShadowColor !important;
+        }
     }
 }
