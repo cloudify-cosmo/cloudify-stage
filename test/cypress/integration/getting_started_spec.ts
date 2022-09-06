@@ -326,13 +326,12 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should keep field states when navigating between steps', () => {
+        it.only('should keep field states when navigating between steps', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
                 cy.get('[name="aws_access_key_id"]').should('exist');
                 cy.get('[name="aws_secret_access_key"]').should('exist');
-                goToNextStep();
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
 
