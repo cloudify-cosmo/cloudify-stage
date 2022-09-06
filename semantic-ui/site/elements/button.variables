@@ -18,7 +18,7 @@
 @borderColor: @grey;
 
 @basicHoverBackground: rgba(95, 99, 104, 0.1);
-@basicHoverBoxShadow: 0px 0px 0px 0px @borderColor inset;
+@basicHoverBoxShadow: 0px 0px 0px @basicBorderSize @borderColor inset;
 
 @basicDownBackground: rgba(95, 99, 104, 0.2);
 @basicDownBoxShadow: @basicHoverBoxShadow;
