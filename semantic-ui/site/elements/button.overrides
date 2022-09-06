@@ -34,11 +34,13 @@
 
             &:not(:disabled) {
                 &:hover {
+                    color: @green !important;
                     background-color: rgba(34, 186, 70, 0.1) !important;
                 }
 
                 &:active,
                 &:focus {
+                    color: #199436 !important;
                     background-color: rgba(34, 186, 70, 0.2) !important;
                 }
             }
@@ -49,11 +51,13 @@
 
             &:not(:disabled) {
                 &:hover {
+                    color: @red !important;
                     background-color: rgba(239, 83, 80, 0.1) !important;
                 }
 
                 &:active,
                 &:focus {
+                    color: #b13836 !important;
                     background-color: rgba(239, 83, 80, 0.2) !important;
                 }
             }
@@ -64,11 +68,13 @@
 
             &:not(:disabled) {
                 &:hover {
+                    color: @blue !important;
                     background-color: rgba(101, 173, 255, 0.1) !important;
                 }
 
                 &:active,
                 &:focus {
+                    color: #0066da !important;
                     background-color: rgba(101, 173, 255, 0.2) !important;
                 }
             }
