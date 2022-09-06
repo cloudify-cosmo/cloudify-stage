@@ -330,8 +330,8 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                cy.get('[name="aws_access_key_id"]').should('exist');
-                cy.get('[name="aws_secret_access_key"]').should('exist');
+                cy.contains('AWS Access Key ID').should('exist');
+                cy.contains('AWS Secret Access Key').should('exist');
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
 
@@ -343,8 +343,8 @@ describe('Getting started modal', () => {
 
                 goToBackStep();
                 cy.contains('button', 'AWS').click();
-                cy.get('[name="aws_access_key_id"]').should('exist');
-                cy.get('[name="aws_secret_access_key"]').should('exist');
+                cy.contains('AWS Access Key ID').should('exist');
+                cy.contains('AWS Secret Access Key').should('exist');
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
                 goToBackStep();
