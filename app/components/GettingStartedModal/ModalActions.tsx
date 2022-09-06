@@ -30,8 +30,7 @@ const ModalActions = ({
     const disableNextButton = useMemo(() => {
         if (secretValidationErrors) return false;
         const isEnvironmentsStep = stepName === StepName.Environments;
-        const anyEnvironmentHasBeenSelected = Object.values(environmentsStepData).some(Boolean);
-        return isEnvironmentsStep && !anyEnvironmentHasBeenSelected;
+        return isEnvironmentsStep;
     }, [stepName, environmentsStepData]);
 
     return (
