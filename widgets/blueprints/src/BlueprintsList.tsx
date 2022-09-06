@@ -156,11 +156,24 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <Button color="brown" content="Hey" />
                 <Button color="green" content="Hey" />
                 <Button color="teal" content="Hey" />
+                <h1>Basic disabled</h1>
+                <Button content="Hey" disabled />
+                <Button color="blue" content="Hey" disabled />
+                <Button color="yellow" content="Hey" disabled />
+                <Button color="red" content="Hey" disabled />
+                <Button color="brown" content="Hey" disabled />
+                <Button color="green" content="Hey" disabled />
+                <Button color="teal" content="Hey" disabled />
                 <h1>Hollow</h1>
                 <Button content="Hey" basic />
                 <Button color="blue" content="Hey" basic />
                 <Button color="red" content="Hey" basic />
                 <Button color="green" content="Hey" basic />
+                <h1>Hollow Disabled</h1>
+                <Button content="Hey" basic disabled />
+                <Button color="blue" content="Hey" basic disabled />
+                <Button color="red" content="Hey" basic disabled />
+                <Button color="green" content="Hey" basic disabled />
                 {/* TODO: Add disabled colors */}
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 

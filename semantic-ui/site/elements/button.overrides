@@ -2,6 +2,12 @@
          Site Overrides
 *******************************/
 
+@buttonDisabledBackgroundColor: #efefef;
+@buttonDisabledTextColor: #fff;
+
+@buttonBasicDisabledBackgroundColor: #ebebeb;
+@buttonBasicDisabledTextColor: #ebebeb;
+
 .ui.button {
     min-width: 90px;
 
@@ -13,5 +19,20 @@
         position: relative;
         font-size: @relative17px;
         top: @additionalIconOffset;
+    }
+
+    &.disabled,
+    &:disabled {
+        background-color: @buttonDisabledBackgroundColor;
+        color: @buttonDisabledTextColor;
+        opacity: 1 !important;
+    }
+
+    &.basic {
+        &.disabled,
+        &:disabled {
+            color: @buttonBasicDisabledTextColor !important;
+            box-shadow: 0 0 0 @borderBoxShadowWidth @buttonBasicDisabledTextColor !important;
+        }
     }
 }

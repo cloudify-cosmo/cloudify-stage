@@ -39,3 +39,5 @@
 @brownFocus: @brownDown;
 @greenFocus: @greenDown;
 @tealFocus: @tealDown;
+
+@disabledTextColor: #ff0;
