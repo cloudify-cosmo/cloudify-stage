@@ -1,8 +1,9 @@
 import type { FunctionComponent } from 'react';
+import { useState } from 'react';
 import Consts from '../Consts';
+import type { Visibility } from '../types';
 import SecretActions from './SecretActions';
-import SinglelineInput from './SinglelineInput';
-import type { Visibility } from './SecretActions';
+import TogglableSecretsInput from './TogglableSecretsInput';
 
 interface SecretsModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -23,13 +24,32 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
         return null;
     }
     const { useBoolean, useInputs, useErrors } = Stage.Hooks;
-    const { ApproveButton, CancelButton, Form, Icon, Modal } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, Modal, Checkbox, Grid } = Stage.Basic;
 
     const initialInputs: secretInputsType = secretKeys.reduce((prev, secretKey) => ({ ...prev, [secretKey]: '' }), {});
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [secretInputs, setSecretInputs] = useInputs(initialInputs);
+
+    type SecretCheckboxes = Record<string, boolean>;
+
+    const initializeSecretCheckboxesState = (): SecretCheckboxes => {
+        return secretKeys.reduce((checkboxes: SecretCheckboxes, secretKey) => {
+            checkboxes[secretKey] = false;
+            return checkboxes;
+        }, {});
+    };
+
+    const [secretCheckboxes, setSecretCheckboxes] = useState<SecretCheckboxes>(initializeSecretCheckboxesState);
+
+    const toggleCheckbox = (secretKey: string) => {
+        const checkboxState = secretCheckboxes[secretKey];
+        setSecretCheckboxes({
+            ...secretCheckboxes,
+            [secretKey]: !checkboxState
+        });
+    };
 
     const onSave = () => {
         const keys = Object.keys(secretInputs);
@@ -58,16 +78,36 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
     };
     return (
         <Modal open={open} onClose={onClose} className="secretsModal">
-            <Modal.Header>
-                <Icon name="plus" />
-                {t('header')}
-            </Modal.Header>
+            <Modal.Header>{t('header')}</Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
+                    <Grid>
+                        <Grid.Row>
+                            <Grid.Column width={14} />
+                            <Grid.Column width={2} style={{ paddingLeft: '50px', marginBottom: '-20px' }}>
+                                <p>{t('checkboxLabel')}</p>
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+
                     {secretKeys.map(field => (
                         <Form.Field key={field} required label={field}>
-                            <SinglelineInput name={field} onChange={setSecretInputs} />
+                            <Form.Group>
+                                <TogglableSecretsInput
+                                    showMultilineInput={secretCheckboxes[field]}
+                                    name={field}
+                                    value={secretInputs[field]}
+                                    placeholder={t('placeholder')}
+                                    onChange={setSecretInputs}
+                                    width={15}
+                                />
+                                <Checkbox
+                                    style={{ marginTop: '10px', marginLeft: '19px' }}
+                                    checked={secretCheckboxes[field]}
+                                    onChange={() => toggleCheckbox(field)}
+                                />
+                            </Form.Group>
                         </Form.Field>
                     ))}
                 </Form>

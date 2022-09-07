@@ -17,7 +17,9 @@ describe('Create Deployment Button widget', () => {
             .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
 
         types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, `${type}_type.yaml`)
+            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
+                yamlFile: `${type}_type.yaml`
+            })
         );
     });
 
@@ -246,8 +248,10 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('should handle missing secrets error', () => {
-            const secretName = 'test';
-            cy.deleteSecrets(secretName);
+            const secretNames = [`${resourcePrefix}secret`, `${resourcePrefix}secret_multiline`];
+            const secretValue = 'aaa';
+
+            cy.deleteSecrets(resourcePrefix);
 
             selectBlueprintInModal('required_secrets');
             cy.get('.modal').within(() => {
@@ -256,27 +260,30 @@ describe('Create Deployment Button widget', () => {
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Missing Secrets Error');
                     cy.get('p').should('have.text', 'The following required secrets are missing in this tenant:');
-                    cy.get('.item').should('have.text', secretName);
+                    secretNames.forEach(secretName => {
+                        cy.contains('.item', secretName);
+                    });
                 });
-
                 cy.contains('button', 'Add Missing Secrets').click();
             });
 
             cy.get('.secretsModal').within(() => {
-                cy.interceptSp('PUT', `/secrets/${secretName}`).as('addSecrets');
+                secretNames.forEach(secretName => cy.interceptSp('PUT', `/secrets/${secretName}`).as(secretName));
 
                 cy.contains('button', 'Add').click();
                 cy.get('.error.message').within(() => {
                     cy.get('.header').should('have.text', 'Errors in the form');
                     cy.get('li').should('have.text', 'Please provide values for secrets');
                 });
+                secretNames.forEach(secretName => cy.get(`input[name=${secretName}]`).type(secretValue));
 
-                cy.typeToFieldInput(secretName, 'aaa');
+                cy.contains('secret_multiline').siblings('.fields').find('.checkbox').click();
+                cy.get(`textarea[name="${secretNames[1]}"]`).should('be.visible').should('have.value', secretValue);
                 cy.contains('button', 'Add').click();
-                cy.wait('@addSecrets');
             });
 
             cy.get('.error.message').should('not.exist');
+            cy.wait(secretNames.map(secretName => `@${secretName}`));
         });
 
         it('should open the relevant accordion section on error', () => {

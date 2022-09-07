@@ -9,7 +9,7 @@ import {
     getLicense
 } from 'handler/AuthHandler';
 import { getConfig } from 'config';
-import { SAML_LOGIN_PATH } from '../../consts';
+import { CONTEXT_PATH, EXTERNAL_LOGIN_PATH } from '../../consts';
 
 jest.mock('handler/AuthHandler');
 jest.mock('handler/ManagerHandler');
@@ -164,7 +164,7 @@ describe('/auth endpoint', () => {
                 .expect(302)
                 .then(response => {
                     const { location, 'set-cookie': setCookie } = response.headers;
-                    expect(location).toEqual(SAML_LOGIN_PATH);
+                    expect(location).toEqual(`${CONTEXT_PATH}${EXTERNAL_LOGIN_PATH}`);
                     expect(setCookie).toEqual(['XSRF-TOKEN=token-content; Path=/; HttpOnly; SameSite=Strict']);
                 });
         });

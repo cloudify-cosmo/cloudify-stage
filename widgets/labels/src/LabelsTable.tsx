@@ -93,6 +93,7 @@ export default function LabelsTable({ data, toolbox }) {
                                         setLabelInEdit(item);
                                         setCurrentLabelValue(item.value);
                                     }}
+                                    disabled={!Labels.isLabelModifiable(item.key)}
                                 />
                                 <Icon
                                     name="trash"
@@ -100,6 +101,7 @@ export default function LabelsTable({ data, toolbox }) {
                                     bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
+                                    disabled={!Labels.isLabelModifiable(item.key)}
                                 />
                             </DataTable.Data>
                         )}

@@ -1,6 +1,5 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 
-import { useResettableState } from '../../../../utils/hooks';
 import { Form } from '../../../basic';
 import EnvironmentButton from './EnvironmentButton';
 
@@ -8,34 +7,19 @@ import type { GettingStartedSchema, GettingStartedEnvironmentsData } from '../..
 
 type Props = {
     schema: GettingStartedSchema;
-    selectedEnvironment?: GettingStartedEnvironmentsData;
     onChange?: (environment: GettingStartedEnvironmentsData) => void;
 };
 
-const EnvironmentsStep = ({ schema, selectedEnvironment, onChange }: Props) => {
-    const [localSelectedEnvironment, setLocalSelectedEnvironment, resetLocalSelectedEnvironment] = useResettableState(
-        selectedEnvironment ?? {}
-    );
-    useEffect(() => resetLocalSelectedEnvironment(), [selectedEnvironment]);
-
+const EnvironmentsStep = ({ schema, onChange }: Props) => {
     return (
         <Form>
             {schema.map(({ name, logo, label }) => {
-                const handleChange = (value: boolean) => {
-                    const newLocalSelectedEnvironment = { [name]: value };
-                    setLocalSelectedEnvironment(newLocalSelectedEnvironment);
+                const handleClick = () => {
+                    const newLocalSelectedEnvironment = { [name]: true };
                     onChange?.(newLocalSelectedEnvironment);
                 };
 
-                return (
-                    <EnvironmentButton
-                        key={name}
-                        logo={logo}
-                        label={label}
-                        value={localSelectedEnvironment[name]}
-                        onChange={handleChange}
-                    />
-                );
+                return <EnvironmentButton key={name} logo={logo} label={label} onClick={handleClick} />;
             })}
         </Form>
     );
