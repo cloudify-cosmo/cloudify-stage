@@ -5,7 +5,7 @@
 @borderRadius: 5px;
 @verticalPadding: 0.75em;
 @horizontalPadding: 0.5em;
-@iconDistance: @relative4px;
+@iconDistance: unit(4 / 17, em);
 @iconOpacity: 1;
 
 @backgroundColor: #EBEBEB;
