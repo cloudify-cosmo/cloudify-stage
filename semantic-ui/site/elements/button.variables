@@ -3,7 +3,7 @@
 *******************************/
 
 @verticalPadding: 0.75em;
-@horizontalPadding: 0.5em;
+@horizontalPadding: @relative10px;
 
 @textColor: @grey;
 @fontWeight: @normal;
