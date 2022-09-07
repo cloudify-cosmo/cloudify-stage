@@ -138,7 +138,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage } = Stage.Basic;
+        const { ErrorMessage, Dropdown } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -178,7 +178,22 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <Button color="red" content="Hey" basic disabled />
                 <Button color="green" content="Hey" basic disabled />
                 <Button color="blue" content="Hey" basic disabled icon="rocket" />
-                {/* TODO: Add disabled colors */}
+                <h1>Dropdown</h1>
+                <Dropdown button text="Hey">
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
+                <h1>Dropdown disabled</h1>
+                <Dropdown button text="Hey" disabled>
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
