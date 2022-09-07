@@ -7,7 +7,7 @@
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "4.17 MB",
+        "limit": "4.80 MB",
         "gzip": false,
         "path": "dist/static/js/vendor.bundle.js"
     },
@@ -23,7 +23,7 @@
     },
     {
         "name": "Application package",
-        "limit": "14.08 MB",
+        "limit": "10.00 MB",
         "gzip": false,
         "running": false,
         "path": [
