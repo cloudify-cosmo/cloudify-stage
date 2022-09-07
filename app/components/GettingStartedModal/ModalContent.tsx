@@ -17,7 +17,6 @@ import type {
 
 type Props = {
     stepName: StepName;
-    environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
@@ -32,7 +31,6 @@ type Props = {
 
 const ModalContent = ({
     stepName,
-    environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
@@ -55,11 +53,7 @@ const ModalContent = ({
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
-                <EnvironmentsStep
-                    schema={schema}
-                    selectedEnvironment={environmentsStepData}
-                    onChange={onEnvironmentsStepChange}
-                />
+                <EnvironmentsStep schema={schema} onChange={onEnvironmentsStepChange} />
             )}
             {stepName === StepName.Secrets && secretsStepPageDescription && (
                 <Message>{secretsStepPageDescription}</Message>

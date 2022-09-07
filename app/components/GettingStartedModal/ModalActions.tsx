@@ -27,8 +27,7 @@ const ModalActions = ({
     const statusStepActive = stepName === StepName.Status;
     const disableNextButton = useMemo(() => {
         const isEnvironmentsStep = stepName === StepName.Environments;
-        const anyEnvironmentHasBeenSelected = Object.values(environmentsStepData).some(Boolean);
-        return isEnvironmentsStep && !anyEnvironmentHasBeenSelected;
+        return isEnvironmentsStep;
     }, [stepName, environmentsStepData]);
 
     return (
