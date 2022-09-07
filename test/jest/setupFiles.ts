@@ -1,3 +1,5 @@
+import { TextDecoder, TextEncoder } from 'util';
+
 export {};
 
 declare global {
