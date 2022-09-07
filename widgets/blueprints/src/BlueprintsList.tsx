@@ -194,6 +194,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         <Dropdown.Item text="test_3" key="test_3" />
                     </Dropdown.Menu>
                 </Dropdown>
+                <br />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
