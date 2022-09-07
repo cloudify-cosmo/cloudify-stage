@@ -2,20 +2,22 @@
     User Variable Overrides
 *******************************/
 
-@borderRadius: 5px;
 @verticalPadding: 0.75em;
 @horizontalPadding: 0.5em;
+
+@textColor: @grey;
+@fontWeight: @normal;
+
 @iconDistance: unit(4 / 17, em);
 @iconOpacity: 1;
+
+@borderRadius: 5px;
+@borderColor: @grey;
 
 @backgroundColor: #EBEBEB;
 @hoverBackgroundColor: #E5E5E5;
 @focusBackgroundColor: #D6D6D6;
-@downBackgroundColor: #D6D6D6;
-
-@textColor: @grey;
-@fontWeight: @normal;
-@borderColor: @grey;
+@downBackgroundColor: @focusBackgroundColor;
 
 @basicHoverBackground: rgba(95, 99, 104, 0.1);
 @basicHoverBoxShadow: 0px 0px 0px @basicBorderSize @borderColor inset;

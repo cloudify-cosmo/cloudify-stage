@@ -186,8 +186,36 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         <Dropdown.Item text="test_3" key="test_3" />
                     </Dropdown.Menu>
                 </Dropdown>
+                <Dropdown button text="Hey" className="red">
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown button text="Hey" className="blue">
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
                 <h1>Dropdown disabled</h1>
                 <Dropdown button text="Hey" disabled>
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown button text="Hey" className="red" disabled>
+                    <Dropdown.Menu>
+                        <Dropdown.Item text="test_1" key="test_1" />
+                        <Dropdown.Item text="test_2" key="test_2" />
+                        <Dropdown.Item text="test_3" key="test_3" />
+                    </Dropdown.Menu>
+                </Dropdown>
+                <Dropdown button text="Hey" className="blue" disabled>
                     <Dropdown.Menu>
                         <Dropdown.Item text="test_1" key="test_1" />
                         <Dropdown.Item text="test_2" key="test_2" />
