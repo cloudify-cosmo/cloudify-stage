@@ -4,7 +4,7 @@ import { Form } from '../../basic';
 import { useInputs, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
 
-import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
+import type { GettingStartedSecretsData, GettingStartedSchemaItem, GettingStartedSchemaSecretType } from '../model';
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
@@ -43,20 +43,24 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
         if (!typedSecrets) onChange(defaultSecretInputs, false);
     }, []);
 
+    const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
+        clearErrors();
+        if (type === 'email' && !isEmailValid(secretInputs[name])) {
+            onChange(secretInputs, true);
+            setErrors({
+                ...errors,
+                [name]: {
+                    content: t('invalidEmail')
+                }
+            });
+        }
+    };
+
     return (
         <Form>
             {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                 const handleBlur = () => {
-                    clearErrors();
-                    if (type === 'email' && !isEmailValid(secretInputs[name])) {
-                        onChange(secretInputs, true);
-                        setErrors({
-                            ...errors,
-                            [name]: {
-                                content: t('invalidEmail')
-                            }
-                        });
-                    }
+                    validateInputs(name, type);
                     onChange(secretInputs, false);
                 };
                 return (
