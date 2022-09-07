@@ -156,7 +156,7 @@
         "@types/isomorphic-fetch": "0.0.35",
         "@types/jest": "^29.0.0",
         "@types/js-cookie": "^2.2.6",
-        "@types/jsdom": "^20.0.0",
+        "@types/jsdom": "^16.2.15",
         "@types/leaflet": "^1.7.0",
         "@types/lodash": "^4.14.168",
         "@types/marked": "^4.0.1",
