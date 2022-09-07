@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import type { TabContent } from '../actions/page';
 import type { ReduxState } from '../reducers';
@@ -26,7 +26,13 @@ const getDefaultTabIndex = (tabs: TabContent[], defaultTab?: string): number => 
 
 const useDefaultTabIndex = (tabs: TabContent[]) => {
     const { defaultTab } = useSelector((state: ReduxState) => state.context as TabsContext);
-    return useState(() => getDefaultTabIndex(tabs, defaultTab));
+    const [tabIndex, setTabIndex] = useState(() => getDefaultTabIndex(tabs, defaultTab));
+
+    useEffect(() => {
+        setTabIndex(getDefaultTabIndex(tabs, defaultTab));
+    }, [defaultTab]);
+
+    return [tabIndex, setTabIndex] as const;
 };
 
 export default useDefaultTabIndex;

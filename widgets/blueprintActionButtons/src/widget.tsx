@@ -31,12 +31,14 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
 
     render(widget, _data, _error, toolbox) {
         const blueprintId = toolbox.getContext().getValue(Consts.CONTEXT_KEY.BLUEPRINT_ID);
+        const openDeploymentModal = toolbox.getContext().getValue(Consts.CONTEXT_KEY.OPEN_DEPLOYMENT_MODAL);
 
         return (
             <BlueprintActionButtons
                 blueprintId={blueprintId}
                 toolbox={toolbox}
                 showEditCopyInComposerButton={widget.configuration.showEditCopyInComposerButton}
+                openDeploymentModal={openDeploymentModal}
             />
         );
     }

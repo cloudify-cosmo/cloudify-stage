@@ -582,13 +582,15 @@
                     "updateButton": "Update"
                 },
                 "secretsModal": {
-                    "header": "Add Secrets",
+                    "header": "Add secrets",
                     "buttons": {
                         "add": "Add"
                     },
                     "errors": {
                         "noSecretValues": "Please provide values for secrets"
-                    }
+                    },
+                    "placeholder": "Secret value",
+                    "checkboxLabel": "Multiline"
                 },
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
@@ -671,7 +673,7 @@
                 "valuePlaceholder": "Select or type in a value",
                 "keyValidationError": "Only letters, digits and the characters \"-\", \".\" and \"_\" are allowed.",
                 "valueValidationError": "The \" character and control characters are not allowed.",
-                "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override default functionality. The following labels are allowed for such override: {{ reservedKeys }}.",
+                "invalidKeyError": "All labels starting with `{{ keyPrefix }}` are reserved for internal usage and should not be used unless there is a need to override the default functionality. The system will prevent overdoing labels that can sacrifice consistency. List of reserved lables: {{ reservedKeys }}.",
                 "input": {
                     "label": "Labels",
                     "help": "A list of labels - key-value pairs - that can be assigned with a deployment"

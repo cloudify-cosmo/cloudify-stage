@@ -77,6 +77,8 @@ describe('Migration script', () => {
         expect(existsSync(join(iconsPath, 'local_gif', iconFilename))).toEqual(true);
         expect(existsSync(join(iconsPath, 'local_jpg', iconFilename))).toEqual(true);
         expect(existsSync(join(iconsPath, 'local_png', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'external_jpeg_relative_url', iconFilename))).toEqual(true);
+        expect(existsSync(join(iconsPath, 'invalid_url', iconFilename))).toEqual(false);
         /* eslint-enable jest/no-standalone-expect */
     });
 });

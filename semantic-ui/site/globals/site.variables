@@ -39,3 +39,9 @@
 @brownFocus: @brownDown;
 @greenFocus: @greenDown;
 @tealFocus: @tealDown;
+
+/*-------------------
+       Links
+--------------------*/
+
+@linkColor: @blue;
