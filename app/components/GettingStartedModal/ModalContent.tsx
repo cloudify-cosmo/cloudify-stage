@@ -47,6 +47,10 @@ const ModalContent = ({
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const statusStepActive = stepName === StepName.Status;
+    const secretsStepPageDescription = secretsStepSchema?.secretsPageDescription;
+
+    const { Message } = Stage.Basic;
+
     return (
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {stepName === StepName.Welcome && <WelcomeStep />}
@@ -56,6 +60,9 @@ const ModalContent = ({
                     selectedEnvironment={environmentsStepData}
                     onChange={onEnvironmentsStepChange}
                 />
+            )}
+            {stepName === StepName.Secrets && secretsStepPageDescription && (
+                <Message>{secretsStepPageDescription}</Message>
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep
