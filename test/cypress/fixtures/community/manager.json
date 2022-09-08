@@ -191,7 +191,6 @@
       "widget_deploymentInfo": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_deploymentNum": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_deployments": ["sys_admin", "manager", "user", "operations", "viewer"],
-      "widget_deploymentWizardButtons": ["sys_admin", "manager", "user"],
       "widget_events": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_eventsFilter": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_executions": ["sys_admin", "manager", "user", "operations", "viewer"],
