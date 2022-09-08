@@ -68,7 +68,7 @@ const Grid: FunctionComponent<GridProps> = ({ children, isEditMode, onGridDataCh
                     onLayoutChange={saveChangedItems}
                     isDraggable={isEditMode}
                     isResizable={isEditMode}
-                    useCSSTransforms={false}
+                    useCSSTransforms
                     style={style}
                     width={width}
                 >
