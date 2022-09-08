@@ -1,0 +1,64 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@defaultButtonBackgroundColor: @backgroundColor;
+@defaultButtonTextColor: @textColor;
+
+.basicButtonStyling(@hoverTextColor; @hoverBackgroundColor; @focusTextColor; @focusBackgroundColor) {
+    box-shadow: 0 0 0 @borderBoxShadowWidth @hoverTextColor inset !important;
+
+    &:not(:disabled) {
+        &:hover {
+            color: @hoverTextColor !important;
+            background-color: @hoverBackgroundColor !important;
+        }
+
+        &:active,
+        &:focus {
+            color: @focusTextColor !important;
+            background-color: @focusBackgroundColor !important;
+        }
+    }
+}
+
+.ui.button {
+    min-width: 90px;
+
+    &:not(.icon) > .icon:not(.button):not(.dropdown) {
+        // NOTE: Previously icon had 14px height, so after changing it to 17px we have to realign it
+        // We can't do it automatically, as it would result in modifying height of the icon buttons
+        @additionalIconOffset: unit(1.5 / 17, em);
+
+        position: relative;
+        font-size: @relative17px;
+        top: @additionalIconOffset;
+        margin-top: @additionalIconOffset * -2;
+    }
+
+    &.disabled,
+    &:disabled {
+        background-color: @defaultButtonBackgroundColor;
+        color: @defaultButtonTextColor;
+    }
+
+    &.basic {
+        &.green {
+            .basicButtonStyling(@green, rgba(34, 186, 70, 0.1), #199436, rgba(34, 186, 70, 0.2));
+        }
+
+        &.red {
+            .basicButtonStyling(@red, rgba(239, 83, 80, 0.1), #b13836, rgba(239, 83, 80, 0.2));
+        }
+
+        &.blue {
+            .basicButtonStyling(@blue, rgba(101, 173, 255, 0.1), #0066da, rgba(101, 173, 255, 0.2));
+        }
+
+        &.disabled,
+        &:disabled {
+            color: @defaultButtonTextColor !important;
+            box-shadow: 0 0 0 @borderBoxShadowWidth @defaultButtonTextColor !important;
+        }
+    }
+}
