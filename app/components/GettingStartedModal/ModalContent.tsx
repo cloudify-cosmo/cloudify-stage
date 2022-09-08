@@ -56,7 +56,14 @@ const ModalContent = ({
                 <EnvironmentsStep schema={schema} onChange={onEnvironmentsStepChange} />
             )}
             {stepName === StepName.Secrets && secretsStepPageDescription && (
-                <Message>{secretsStepPageDescription}</Message>
+                <Message>
+                    <span
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                            __html: secretsStepPageDescription
+                        }}
+                    />
+                </Message>
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep
