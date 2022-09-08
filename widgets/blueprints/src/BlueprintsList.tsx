@@ -1,5 +1,4 @@
 import type { ComponentProps } from 'react';
-import { Button } from 'semantic-ui-react';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -138,7 +137,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage, Dropdown } = Stage.Basic;
+        const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -148,81 +147,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         return (
             <div>
-                <h1>Basic</h1>
-                <Button content="Hey" />
-                <Button color="blue" content="Hey" />
-                <Button color="yellow" content="Hey" />
-                <Button color="red" content="Hey" />
-                <Button color="brown" content="Hey" />
-                <Button color="green" content="Hey" />
-                <Button color="teal" content="Hey" />
-                <Button color="blue" content="Hey" icon="rocket" />
-                <h1>Basic disabled</h1>
-                <Button content="Hey" disabled />
-                <Button color="blue" content="Hey" disabled />
-                <Button color="yellow" content="Hey" disabled />
-                <Button color="red" content="Hey" disabled />
-                <Button color="brown" content="Hey" disabled />
-                <Button color="green" content="Hey" disabled />
-                <Button color="teal" content="Hey" disabled />
-                <Button color="blue" content="Hey" disabled icon="rocket" />
-                <h1>Hollow</h1>
-                <Button content="Hey" basic />
-                <Button color="blue" content="Hey" basic />
-                <Button color="red" content="Hey" basic />
-                <Button color="green" content="Hey" basic />
-                <Button color="blue" content="Hey" basic icon="rocket" />
-                <h1>Hollow Disabled</h1>
-                <Button content="Hey" basic disabled />
-                <Button color="blue" content="Hey" basic disabled />
-                <Button color="red" content="Hey" basic disabled />
-                <Button color="green" content="Hey" basic disabled />
-                <Button color="blue" content="Hey" basic disabled icon="rocket" />
-                <h1>Dropdown</h1>
-                <Dropdown button text="Hey">
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown button text="Hey" className="red">
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown button text="Hey" className="blue">
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <h1>Dropdown disabled</h1>
-                <Dropdown button text="Hey" disabled>
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown button text="Hey" className="red" disabled>
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown button text="Hey" className="blue" disabled>
-                    <Dropdown.Menu>
-                        <Dropdown.Item text="test_1" key="test_1" />
-                        <Dropdown.Item text="test_2" key="test_2" />
-                        <Dropdown.Item text="test_3" key="test_3" />
-                    </Dropdown.Menu>
-                </Dropdown>
-                <br />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
