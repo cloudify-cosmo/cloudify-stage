@@ -3,6 +3,7 @@
 *******************************/
 
 .ui.checkbox {
+    // TODO: Maybe modify it to be .checked -> it would be worth to check checkbox labels after that change
     input:checked {
         ~ label::after {
             color: @blue;
@@ -53,4 +54,66 @@
             }
         }
     }
+
+    &.toggle {
+        label {
+            &::before {
+                border: 1px solid #ebebeb;
+            }
+
+            &::after {
+                top: 1px;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            label {
+                &::before {
+                    border: 1px solid #bdbdbd;
+                }
+            }
+        }
+
+        &.checked {
+            input:checked ~ label {
+                &::before {
+                    border: 1px solid @blue;
+                    background-color: rgba(101, 173, 255, 0.1) !important;
+                }
+
+                &::after {
+                    background-color: @blue !important;
+                }
+            }
+
+            &:hover {
+                input:checked ~ label {
+                    &::before {
+                        border: 1px solid #0077ff;
+                    }
+
+                    &::after {
+                        background-color: #0077ff !important;
+                    }
+                }
+            }
+        }
+
+        &.disabled {
+            input:disabled ~ label {
+                &::before {
+                    background-color: rgba(235, 235, 235, 0.51) !important;
+                    border: 1px solid #ebebeb !important;
+                }
+
+                // TODO: Adjust while hovering over disabled toggle
+                &::after {
+                    background-color: rgba(235, 235, 235, 0.9) !important;
+                }
+            }
+        }
+    }
 }
+
+// TODO: Check the case if you: click toggle, click it once more, click page background -> toggle border is flicking for a brief duration

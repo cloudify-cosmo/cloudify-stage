@@ -157,6 +157,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <h1>Checkbox</h1>
                 <DemoRow>
                     <Checkbox />
+                    <Checkbox defaultIndeterminate />
                     <Checkbox defaultChecked />
 
                     <Checkbox disabled />
