@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import fs from 'fs';
 import path from 'path';
 import expressStaticGzip from 'express-static-gzip';
@@ -6,12 +5,11 @@ import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import type { Router } from 'express';
+import type { ErrorRequestHandler, Router } from 'express';
 
-import { getConfig, getClientConfig } from './config';
+import { getConfig } from './config';
 import { CONTEXT_PATH } from './consts';
 import LoggerHandler from './handler/LoggerHandler';
-import { getMode } from './serverSettings';
 import { getResourcePath } from './utils';
 
 import getCookieStrategy from './auth/CookieStrategy';
@@ -46,13 +44,13 @@ const app = express();
 
 app.use(morgan('short', { stream: LoggerHandler.getStream('Express') }));
 
-app.all('/', (request, response) => {
+app.all('/', (_request, response) => {
     logger.info(`Redirecting to "${contextPath}".`);
     response.redirect(contextPath);
 });
 
 // For dev purposes
-app.use(contextPath, (req, res, next) => {
+app.use(contextPath, (_req, res, next) => {
     // Setting access control allow origin headers
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4000');
     // Request methods you wish to allow
@@ -64,7 +62,7 @@ app.use(contextPath, (req, res, next) => {
     );
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     next();
 });
@@ -72,7 +70,7 @@ app.use(contextPath, (req, res, next) => {
 const samlConfig = getConfig().app.saml;
 if (samlConfig.enabled) {
     validateSamlConfig(samlConfig);
-    passport.use(getSamlStrategy());
+    passport.use(<passport.Strategy>getSamlStrategy());
 }
 
 passport.use(getCookieStrategy());
@@ -83,11 +81,11 @@ app.use(passport.initialize());
 app.use(
     `${contextPath}/appData`,
     authenticateWithCookie,
-    expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { indexFromEmptyFile: false })
+    expressStaticGzip(path.resolve(__dirname, '../dist/appData'), { index: false })
 );
 
 const translationsOverrides = 'overrides.json';
-app.use(`${contextPath}/userData/${translationsOverrides}`, (req, res) => {
+app.use(`${contextPath}/userData/${translationsOverrides}`, (_req, res) => {
     const overridesPath = getResourcePath(translationsOverrides, true);
     if (fs.existsSync(overridesPath)) res.sendFile(overridesPath);
     else res.send({});
@@ -97,7 +95,7 @@ app.use(
     `${contextPath}/userData`,
     authenticateWithCookie,
     expressStaticGzip(getResourcePath('', true), {
-        indexFromEmptyFile: false
+        index: false
     })
 );
 // API Routes with authentication
@@ -149,8 +147,7 @@ app.get('*', (request, response) => {
  * NOTE: error handlers must have 4 parameters, even if the last one is unused
  * @see https://expressjs.com/en/guide/error-handling.html
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     logger.error('Error has occured ', err);
 
     let { message } = err;
@@ -159,6 +156,7 @@ app.use((err, req, res, next) => {
     }
 
     res.status(err.status || 404).send({ message: message || err });
-});
+};
+app.use(errorHandler);
 
 export default app;
