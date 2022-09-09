@@ -1,11 +1,3 @@
 /*******************************
         User Overrides
 *******************************/
-
-.ui.dropdown {
-    text-align: center;
-
-    .dropdown.icon {
-        margin-left: 0.5em;
-    }
-}

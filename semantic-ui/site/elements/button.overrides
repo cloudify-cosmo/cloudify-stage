@@ -61,4 +61,12 @@
             box-shadow: 0 0 0 @borderBoxShadowWidth @defaultButtonTextColor !important;
         }
     }
+
+    &.dropdown {
+        text-align: center;
+
+        .dropdown.icon {
+            margin-left: 0.5em;
+        }
+    }
 }
