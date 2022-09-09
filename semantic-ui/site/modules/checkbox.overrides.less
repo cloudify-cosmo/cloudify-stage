@@ -21,6 +21,16 @@
                 }
             }
         }
+
+        &.radio {
+            input:checked {
+                ~ label {
+                    &::after {
+                        background-color: #0077ff;
+                    }
+                }
+            }
+        }
     }
 
     &.disabled {
@@ -32,6 +42,14 @@
 
             &::after {
                 color: rgba(235, 235, 235, 0.9) !important;
+            }
+        }
+
+        &.radio {
+            label {
+                &::after {
+                    background-color: rgba(235, 235, 235, 0.9) !important;
+                }
             }
         }
     }
