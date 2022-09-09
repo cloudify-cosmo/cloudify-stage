@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import express from 'express';
-import passport from 'passport';
+
 import {
     browseArchiveFile,
     getMimeType,
