@@ -1,3 +1,38 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.checkbox {
+    input:checked {
+        ~ label::after {
+            color: @blue;
+        }
+    }
+
+    &:hover {
+        input:checked {
+            ~ label {
+                &::before {
+                    border-color: #0077ff;
+                }
+
+                &::after {
+                    color: #0077ff;
+                }
+            }
+        }
+    }
+
+    &.disabled {
+        label {
+            &::before {
+                background: @white;
+                border-color: rgba(235, 235, 235, 0.9) !important;
+            }
+
+            &::after {
+                color: rgba(235, 235, 235, 0.9) !important;
+            }
+        }
+    }
+}
