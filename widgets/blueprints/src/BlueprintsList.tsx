@@ -1,9 +1,16 @@
 import type { ComponentProps } from 'react';
+import { Checkbox } from 'semantic-ui-react';
+import styled from 'styled-components';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
+
+const DemoRow = styled.div`
+    display: flex;
+    gap: 24px;
+`;
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;
@@ -147,6 +154,31 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         return (
             <div>
+                <h1>Checkbox</h1>
+                <DemoRow>
+                    <Checkbox />
+                    <Checkbox defaultChecked />
+
+                    <Checkbox disabled />
+                    <Checkbox defaultChecked disabled />
+                </DemoRow>
+                <h1>Radio</h1>
+                <DemoRow>
+                    <Checkbox radio />
+                    <Checkbox radio defaultChecked />
+
+                    <Checkbox radio disabled />
+                    <Checkbox radio defaultChecked disabled />
+                </DemoRow>
+                <h1>Toggle</h1>
+                <DemoRow>
+                    <Checkbox toggle />
+                    <Checkbox toggle defaultChecked />
+
+                    <Checkbox toggle disabled />
+                    <Checkbox toggle defaultChecked disabled />
+                </DemoRow>
+                <div style={{ height: '500px' }} />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
