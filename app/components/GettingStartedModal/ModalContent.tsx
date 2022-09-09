@@ -17,7 +17,6 @@ import type {
 
 type Props = {
     stepName: StepName;
-    environmentsStepData?: GettingStartedEnvironmentsData;
     secretsStepsSchemas: GettingStartedSchemaItem[];
     secretsStepsData: GettingStartedData;
     secretsStepIndex: number;
@@ -32,7 +31,6 @@ type Props = {
 
 const ModalContent = ({
     stepName,
-    environmentsStepData,
     secretsStepsSchemas,
     secretsStepsData,
     secretsStepIndex,
@@ -47,15 +45,25 @@ const ModalContent = ({
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const statusStepActive = stepName === StepName.Status;
+    const secretsStepPageDescription = secretsStepSchema?.secretsPageDescription;
+
+    const { Message } = Stage.Basic;
+
     return (
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
             {stepName === StepName.Welcome && <WelcomeStep />}
             {stepName === StepName.Environments && (
-                <EnvironmentsStep
-                    schema={schema}
-                    selectedEnvironment={environmentsStepData}
-                    onChange={onEnvironmentsStepChange}
-                />
+                <EnvironmentsStep schema={schema} onChange={onEnvironmentsStepChange} />
+            )}
+            {stepName === StepName.Secrets && secretsStepPageDescription && (
+                <Message>
+                    <span
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                            __html: secretsStepPageDescription
+                        }}
+                    />
+                </Message>
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep

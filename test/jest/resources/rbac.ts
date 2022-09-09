@@ -146,7 +146,6 @@ export default {
         administrators: ['sys_admin', 'manager'],
         cluster_start_or_join: ['sys_admin'],
         manager_rest_config_get: ['sys_admin'],
-        widget_deploymentWizardButtons: ['sys_admin', 'manager', 'user'],
         deployment_modification_get: ['sys_admin', 'manager', 'user', 'operations', 'viewer'],
         widget_agents: ['sys_admin', 'manager', 'user', 'operations', 'viewer'],
         secret_create: ['sys_admin', 'manager', 'user'],
