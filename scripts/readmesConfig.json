@@ -19,7 +19,6 @@
     {"widget": "deployments", "link": "/content/working_with/console/widgets/deployments.md"},
     {"widget": "deploymentsView", "link": "/content/working_with/console/widgets/deploymentsView.md"},
     {"widget": "deploymentsViewDrilledDown", "link": "/content/working_with/console/widgets/deploymentsViewDrilledDown.md"},
-    {"widget": "deploymentWizardButtons", "link": "/content/working_with/console/widgets/deploymentWizardButtons.md"},
     {"widget": "events", "link": "/content/working_with/console/widgets/events.md"},
     {"widget": "eventsFilter", "link": "/content/working_with/console/widgets/eventsFilter.md"},
     {"widget": "executionNum", "link": "/content/working_with/console/widgets/executionNum.md"},
