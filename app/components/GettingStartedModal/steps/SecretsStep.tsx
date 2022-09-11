@@ -1,27 +1,19 @@
 import React, { memo, useEffect, useMemo } from 'react';
 
 import { Form } from '../../basic';
-import { useInputs, useResettableState } from '../../../utils/hooks';
-import StageUtils from '../../../utils/stageUtils';
+import { useInputs } from '../../../utils/hooks';
 
-import type { GettingStartedSecretsData, GettingStartedSchemaItem, GettingStartedSchemaSecretType } from '../model';
-
-const t = StageUtils.getT('gettingStartedModal.secrets');
-
-const emailRegex = /\S+@\S+\.\S+/;
-const isEmailValid = (email: string) => emailRegex.test(email);
+import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
+import { Errors } from '../GettingStartedModal';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
-    onChange: (typedSecrets: GettingStartedSecretsData, validationErrors: boolean) => void;
+    onChange: (typedSecrets: GettingStartedSecretsData) => void;
+    errors: Errors;
 };
 
-type Errors = {
-    [x: string]: boolean | { content: string };
-};
-
-const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
+const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Props) => {
     const defaultSecretInputs: Record<string, any> = useMemo(
         () =>
             selectedEnvironment.secrets.reduce(
@@ -35,33 +27,17 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
     );
 
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
-    const defaultErrors: Errors = _.mapValues(secretInputs, () => false);
-    const [errors, setErrors, clearErrors] = useResettableState(defaultErrors);
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
-        if (!typedSecrets) onChange(defaultSecretInputs, false);
+        if (!typedSecrets) onChange(defaultSecretInputs);
     }, []);
-
-    const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
-        clearErrors();
-        if (type === 'email' && !isEmailValid(secretInputs[name])) {
-            onChange(secretInputs, true);
-            setErrors({
-                ...errors,
-                [name]: {
-                    content: t('invalidEmail')
-                }
-            });
-        }
-    };
 
     return (
         <Form>
             {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                 const handleBlur = () => {
-                    validateInputs(name, type);
-                    onChange(secretInputs, false);
+                    onChange(secretInputs);
                 };
                 return (
                     <Form.Field key={name} label={label} help={description}>

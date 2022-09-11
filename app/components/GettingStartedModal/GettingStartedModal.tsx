@@ -18,7 +18,8 @@ import type {
     GettingStartedEnvironmentsData,
     GettingStartedSchema,
     GettingStartedSecretsData,
-    GettingStartedSchemaItem
+    GettingStartedSchemaItem,
+    GettingStartedSchemaSecretType
 } from './model';
 import { StepName } from './model';
 import ModalHeader from './ModalHeader';
@@ -28,6 +29,16 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
+import StageUtils from '../../utils/stageUtils';
+
+export type Errors = {
+    [x: string]: boolean | { content: string };
+};
+
+const t = StageUtils.getT('gettingStartedModal.secrets');
+
+const emailRegex = /\S+@\S+\.\S+/;
+const isEmailValid = (email: string) => emailRegex.test(email);
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -92,6 +103,20 @@ const GettingStartedModal = () => {
     }
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
+    const defaultErrors: Errors = secretsStepSchema
+        ? useMemo(
+              () =>
+                  secretsStepSchema.secrets.reduce(
+                      (finalObject, secret) => ({
+                          ...finalObject,
+                          [secret.name]: false
+                      }),
+                      {}
+                  ),
+              [secretsStepSchema]
+          )
+        : {};
+    const [errors, setErrors, clearErrors] = useResettableState(defaultErrors);
 
     const redirectUponModalClosing = (completedProcess?: boolean) => {
         const redirectPath = completedProcess ? Consts.PAGE_PATH.BLUEPRINTS : Consts.PAGE_PATH.DASHBOARD;
@@ -103,8 +128,7 @@ const GettingStartedModal = () => {
         goToNextStep();
         setSecretsStepIndex(0);
     };
-    const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData, validationErrors: boolean) => {
-        setSecretValidationErrors(validationErrors);
+    const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
             setSecretsStepsData({ ...secretsStepsData, [secretsStepSchema.name]: typedSecrets });
         }
@@ -133,6 +157,21 @@ const GettingStartedModal = () => {
         closeModal();
     };
 
+    const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
+        clearErrors();
+
+        const secrets = secretsStepsData[name] as GettingStartedSecretsData;
+
+        if (type === 'email' && !isEmailValid(secrets)) {
+            setErrors({
+                ...errors,
+                [name]: {
+                    content: t('invalidEmail')
+                }
+            });
+        }
+    };
+
     const handleBackClick = () => {
         function goToPreviousStep() {
             setStepName(stepName - 1);
@@ -155,6 +194,9 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
+                // selectedEnvironment.secrets.map(({ name, label, type, description }) => {
+                //     validateInputs(name, type);
+                // });
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
@@ -217,6 +259,7 @@ const GettingStartedModal = () => {
                 onInstallationStarted={handleInstallationStarted}
                 onInstallationFinished={handleInstallationFinishedOrCanceled}
                 onInstallationCanceled={handleInstallationFinishedOrCanceled}
+                errors={errors}
             />
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
