@@ -14,7 +14,6 @@ type Props = {
     onNextClick: () => void;
     onModalClose: () => void;
     environmentsStepData: GettingStartedEnvironmentsData;
-    secretValidationErrors: boolean;
 };
 
 const ModalActions = ({
@@ -23,12 +22,10 @@ const ModalActions = ({
     environmentsStepData,
     onBackClick,
     onNextClick,
-    onModalClose,
-    secretValidationErrors
+    onModalClose
 }: Props) => {
     const statusStepActive = stepName === StepName.Status;
     const disableNextButton = useMemo(() => {
-        if (secretValidationErrors) return false;
         const isEnvironmentsStep = stepName === StepName.Environments;
         return isEnvironmentsStep;
     }, [stepName, environmentsStepData]);

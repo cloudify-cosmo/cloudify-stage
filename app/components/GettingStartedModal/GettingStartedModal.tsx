@@ -58,7 +58,6 @@ const GettingStartedModal = () => {
     const [cancelConfirmOpen, openCancelConfirm, closeCancelConfirm] = useBoolean();
     const [schema, setSchema] = useState(gettingStartedSchema);
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
-    const [secretValidationErrors, setSecretValidationErrors] = useState(false);
 
     const commonStepsSchemas = useMemo(
         () => schema.filter(item => environmentsStepData[item.name]),
@@ -104,16 +103,12 @@ const GettingStartedModal = () => {
 
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex] as GettingStartedSchemaItem | undefined;
     const defaultErrors: Errors = secretsStepSchema
-        ? useMemo(
-              () =>
-                  secretsStepSchema.secrets.reduce(
-                      (finalObject, secret) => ({
-                          ...finalObject,
-                          [secret.name]: false
-                      }),
-                      {}
-                  ),
-              [secretsStepSchema]
+        ? secretsStepSchema.secrets.reduce(
+              (finalObject, secret) => ({
+                  ...finalObject,
+                  [secret.name]: false
+              }),
+              {}
           )
         : {};
     const [errors, setErrors, clearErrors] = useResettableState(defaultErrors);
@@ -158,11 +153,11 @@ const GettingStartedModal = () => {
     };
 
     const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
-        clearErrors();
+        const key = secretsStepSchema?.name;
+        const allData = key && secretsStepsData[key];
+        const data = allData && allData[name];
 
-        const secrets = secretsStepsData[name] as GettingStartedSecretsData;
-
-        if (type === 'email' && !isEmailValid(secrets)) {
+        if (type === 'email' && data && !isEmailValid(data)) {
             setErrors({
                 ...errors,
                 [name]: {
@@ -194,9 +189,6 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                // selectedEnvironment.secrets.map(({ name, label, type, description }) => {
-                //     validateInputs(name, type);
-                // });
                 if (secretsStepIndex > 0) {
                     setSecretsStepIndex(secretsStepIndex - 1);
                 } else {
@@ -222,11 +214,17 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                if (secretsStepIndex < secretsStepsSchemas.length - 1) {
-                    setSecretsStepIndex(secretsStepIndex + 1);
-                } else {
-                    goToNextStep();
+                clearErrors();
+                if (secretsStepSchema) {
+                    secretsStepSchema.secrets.forEach(({ name, type }) => {
+                        validateInputs(name, type);
+                    });
                 }
+                // if (secretsStepIndex < secretsStepsSchemas.length - 1) {
+                //     setSecretsStepIndex(secretsStepIndex + 1);
+                // } else {
+                //     goToNextStep();
+                // }
                 break;
 
             case StepName.Welcome:
@@ -280,7 +278,6 @@ const GettingStartedModal = () => {
                 onNextClick={handleNextClick}
                 onModalClose={handleModalClose}
                 environmentsStepData={environmentsStepData}
-                secretValidationErrors={secretValidationErrors}
             />
             <Confirm
                 open={cancelConfirmOpen}
