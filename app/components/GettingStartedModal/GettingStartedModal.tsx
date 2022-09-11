@@ -164,7 +164,9 @@ const GettingStartedModal = () => {
                     content: t('invalidEmail')
                 }
             });
+            return false;
         }
+        return true;
     };
 
     const handleBackClick = () => {
@@ -215,16 +217,16 @@ const GettingStartedModal = () => {
 
             case StepName.Secrets:
                 clearErrors();
-                if (secretsStepSchema) {
-                    secretsStepSchema.secrets.forEach(({ name, type }) => {
-                        validateInputs(name, type);
-                    });
+                const validSecrets =
+                    secretsStepSchema && secretsStepSchema.secrets.map(({ name, type }) => validateInputs(name, type));
+                const isValid = validSecrets && validSecrets.every((v: boolean) => v);
+                if (isValid) {
+                    if (secretsStepIndex < secretsStepsSchemas.length - 1) {
+                        setSecretsStepIndex(secretsStepIndex + 1);
+                    } else {
+                        goToNextStep();
+                    }
                 }
-                // if (secretsStepIndex < secretsStepsSchemas.length - 1) {
-                //     setSecretsStepIndex(secretsStepIndex + 1);
-                // } else {
-                //     goToNextStep();
-                // }
                 break;
 
             case StepName.Welcome:
