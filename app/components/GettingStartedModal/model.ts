@@ -45,6 +45,7 @@ export type GettingStartedSchemaItem = {
     label: string;
     plugins: GettingStartedSchemaPlugin[];
     secrets: GettingStartedSchemaSecret[];
+    secretsPageDescription?: string;
     blueprints: GettingStartedSchemaBlueprint[];
 };
 
