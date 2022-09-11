@@ -4,7 +4,7 @@ import log from 'loglevel';
 import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 
-import stageUtils from '../../utils/stageUtils';
+import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
@@ -29,7 +29,6 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
-import StageUtils from '../../utils/stageUtils';
 
 export type Errors = {
     [x: string]: boolean | { content: string };
@@ -93,7 +92,7 @@ const GettingStartedModal = () => {
         setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
     }, [cloudSetupUrlParam]);
 
-    if (!stageUtils.isUserAuthorized('getting_started', manager)) {
+    if (!StageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
     }
 
@@ -205,6 +204,9 @@ const GettingStartedModal = () => {
     };
 
     const handleNextClick = () => {
+        const secretsValid = secretsStepSchema?.secrets
+            .map(({ name, type }) => validateInputs(name, type))
+            .every((v: boolean) => v);
         switch (stepName) {
             case StepName.Environments:
                 if (secretsStepsSchemas.length > 0) {
@@ -217,10 +219,7 @@ const GettingStartedModal = () => {
 
             case StepName.Secrets:
                 clearErrors();
-                const validSecrets =
-                    secretsStepSchema && secretsStepSchema.secrets.map(({ name, type }) => validateInputs(name, type));
-                const isValid = validSecrets && validSecrets.every((v: boolean) => v);
-                if (isValid) {
+                if (secretsValid) {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
                     } else {

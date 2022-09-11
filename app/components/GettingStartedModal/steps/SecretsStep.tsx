@@ -4,7 +4,7 @@ import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
-import { Errors } from '../GettingStartedModal';
+import type { Errors } from '../GettingStartedModal';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;

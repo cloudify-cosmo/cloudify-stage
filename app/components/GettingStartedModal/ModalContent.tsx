@@ -14,7 +14,7 @@ import type {
     GettingStartedEnvironmentsData,
     GettingStartedSchemaItem
 } from './model';
-import { Errors } from './GettingStartedModal';
+import type { Errors } from './GettingStartedModal';
 
 type Props = {
     stepName: StepName;
