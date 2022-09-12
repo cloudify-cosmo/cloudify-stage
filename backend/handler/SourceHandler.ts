@@ -1,6 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
 
-import fs from 'fs';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import _ from 'lodash';
