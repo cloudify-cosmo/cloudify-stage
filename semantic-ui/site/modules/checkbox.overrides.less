@@ -55,8 +55,17 @@
         }
     }
 
+    &.radio {
+        label {
+            padding-top: @relative2px;
+        }
+    }
+
     &.toggle {
         label {
+            padding-left: 48px;
+            padding-top: @relative1px;
+
             &::before {
                 border: 1px solid #ebebeb;
             }
@@ -121,5 +130,3 @@
         }
     }
 }
-
-// TODO: Check the case if you: click toggle, click it once more, click page background -> toggle border is flicking for a brief duration
