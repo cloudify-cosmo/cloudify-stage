@@ -121,7 +121,6 @@ export async function browseArchiveFile(req, timestamp, path) {
     const data = fs.readFileSync(absolutePath);
     const size = fs.lstatSync(absolutePath).size;
     const isBinaryFile = isBinaryFileSync(data, size);
-    console.log('LEON DEBUG', isBinaryFile);
     if (!isBinaryFile) {
         return fs.readFile(absolutePath, 'utf-8');
     }
