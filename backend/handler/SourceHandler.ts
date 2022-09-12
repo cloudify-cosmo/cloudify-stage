@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
+import fs from 'fs';
 import fs from 'fs-extra';
 import yaml from 'js-yaml';
 import _ from 'lodash';
@@ -7,6 +8,7 @@ import os from 'os';
 import pathlib from 'path';
 import url from 'url';
 import mime from 'mime-types';
+import { isBinaryFileSync } from 'isbinaryfile';
 
 import { getConfig } from '../config';
 import { isYamlFile } from '../sharedUtils';
@@ -117,8 +119,11 @@ export async function browseArchiveFile(req, timestamp, path) {
         await browseArchiveTree(req, timestamp);
     }
 
-    const mimeType = getMimeType(req, timestamp, path);
-    if (!mimeType || mimeType.startsWith('text/')) {
+    const data = fs.readFileSync(absolutePath);
+    const size = fs.lstatSync(absolutePath).size;
+    const isBinaryFile = isBinaryFileSync(data, size);
+    console.log(isBinaryFile);
+    if (isBinaryFile) {
         return fs.readFile(absolutePath, 'utf-8');
     }
     return fs.readFile(absolutePath, '');
