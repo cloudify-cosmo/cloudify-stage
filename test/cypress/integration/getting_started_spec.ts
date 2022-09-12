@@ -418,7 +418,7 @@ describe('Getting started modal', () => {
             });
         });
 
-        it.only('should validate email in secrets step', () => {
+        it('should validate email in secrets step', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'GCP').click();
