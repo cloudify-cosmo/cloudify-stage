@@ -19,9 +19,18 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     if (!path) {
         next('no file path passed [path]');
     } else {
-        const mimeType = getMimeType(req, timestamp, path) || 'text/plain';
-        browseArchiveFile(req, timestamp, path)
-            .then(content => res.contentType(mimeType).send(content))
+        const mimeType = getMimeType(req, timestamp, path);
+
+        browseArchiveFileType(req, timestamp, path)
+            .then(({ file, isBinaryFile }) => {
+                if (mimeType) {
+                    return res.contentType(mimeType).send(file);
+                } else if (isBinaryFile) {
+                    return res.contentType('application/octet-stream').send(file);
+                } else {
+                    return res.contentType('text/plain').send(file);
+                }
+            })
             .catch(next);
     }
 });

@@ -105,7 +105,7 @@ function checkPrefix(absCandidate, absPrefix) {
     return absCandidate.substring(0, absPrefix.length) === absPrefix;
 }
 
-export async function browseArchiveFile(req, timestamp, path) {
+export async function browseArchiveFileType(req, timestamp, path) {
     const { blueprintId } = req.params;
     const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
 
@@ -122,9 +122,13 @@ export async function browseArchiveFile(req, timestamp, path) {
     const size = fs.lstatSync(absolutePath).size;
     const isBinaryFile = isBinaryFileSync(data, size);
     if (!isBinaryFile) {
-        return fs.readFile(absolutePath, 'utf-8');
+        return { file: fs.readFile(absolutePath, 'utf-8'), isBinaryFile };
     }
-    return fs.readFile(absolutePath, '');
+    return { file: fs.readFile(absolutePath, ''), isBinaryFile };
+}
+
+export async function browseArchiveFile(req, timestamp, path) {
+    return (await browseArchiveFileType(req, timestamp, path)).file;
 }
 
 export function getMimeType(req, timestamp, path) {
