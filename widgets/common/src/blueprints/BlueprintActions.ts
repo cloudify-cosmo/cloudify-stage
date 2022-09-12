@@ -260,9 +260,9 @@ export default class BlueprintActions {
             const compressFile = Stage.Utils.isYamlFile(file.name);
             await this.toolbox
                 .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
+                .doUpload(`/blueprints/${blueprintName}`, { body: params, files: file, parseResponse: false, compressFile });
         } else {
-            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
+            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { body: params });
         }
 
         await this.waitUntilUploaded(blueprintName, onStateChanged);
