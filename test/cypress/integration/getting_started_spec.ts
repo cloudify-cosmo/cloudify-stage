@@ -418,13 +418,15 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should validate email in secrets step', () => {
+        it.only('should validate email in secrets step', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'GCP').click();
-                cy.contains('GCP Client E-mail').type(`aaa`).blur();
+                cy.typeToFieldInput('GCP Client E-mail', 'aaa');
+                goToNextStep();
                 cy.get('.error .label').should('have.text', 'Please enter a valid email address');
-                cy.contains('GCP Client E-mail').type(`aaa@aaa.com`).blur();
+                cy.typeToFieldInput('GCP Client E-mail', 'aaa@aaa.com');
+                goToNextStep();
                 cy.get('.error .label').should('not.exist');
             });
         });
