@@ -205,7 +205,6 @@ const GettingStartedModal = () => {
             />
             <ModalContent
                 stepName={stepName}
-                environmentsStepData={environmentsStepData}
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}

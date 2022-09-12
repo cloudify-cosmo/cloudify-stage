@@ -16,5 +16,7 @@ module.exports = {
      */
     moduleFileExtensions: defaults.moduleFileExtensions,
     transformIgnorePatterns: ['node_modules/(?!cloudify-ui-components|react-syntax-highlighter)'],
-    setupFiles: ['<rootDir>/test/jest/setup.ts']
+    setupFiles: ['<rootDir>/test/jest/setupFiles.ts'],
+    setupFilesAfterEnv: ['<rootDir>/test/jest/setupAfterEnv.ts'],
+    testEnvironment: 'jsdom'
 };

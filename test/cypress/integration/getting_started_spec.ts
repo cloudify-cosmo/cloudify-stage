@@ -326,30 +326,25 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should keep button and field states when navigating between steps', () => {
+        it('should keep field states when navigating between steps', () => {
             cy.get('.modal').within(() => {
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                goToBackStep();
-                cy.contains('button.active', 'AWS');
-                goToNextStep();
-
+                cy.contains('AWS Access Key ID').should('exist');
+                cy.contains('AWS Secret Access Key').should('exist');
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 setSecretValues(awsSecrets);
-                goToBackStep();
 
+                goToBackStep();
                 verifyHeader(StaticHeaders.Environments);
-                cy.contains('button.active', 'AWS');
                 cy.contains('button', 'GCP').click();
-                goToBackStep();
-                cy.contains('button.active', 'GCP');
-                goToNextStep();
-
                 verifyHeader(getExpectedSecretsHeader('GCP'));
                 setSecretValues(gcpSecrets);
-                goToBackStep();
 
+                goToBackStep();
                 cy.contains('button', 'AWS').click();
+                cy.contains('AWS Access Key ID').should('exist');
+                cy.contains('AWS Secret Access Key').should('exist');
                 verifyHeader(getExpectedSecretsHeader('AWS'));
                 awsSecrets.forEach(secret => cy.get(`[name=${secret}]`).should('have.value', `${secret}_value`));
                 goToBackStep();

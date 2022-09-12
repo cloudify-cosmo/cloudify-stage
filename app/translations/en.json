@@ -737,7 +737,6 @@
             "revertToDefault": "Revert to default value",
             "urls": {
                 "blueprintsCatalog": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
-                "helloWorldBlueprint": "https://github.com/cloudify-cosmo/cloudify-hello-world-example/archive/master.zip",
                 "linkParameterExample": "https://cloudify.co"
             },
             "noDataMessage": {
