@@ -31,6 +31,6 @@ module.exports = {
         elkjs: '<rootDir>/node_modules/elkjs'
     },
     coverageReporters: ['text'],
-    moduleDirectories: ['node_modules', '..'],
+    moduleDirectories: ['node_modules', '<rootDir>'],
     testEnvironment: 'node'
 };

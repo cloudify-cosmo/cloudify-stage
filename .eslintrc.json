@@ -116,6 +116,12 @@
             }
         },
         {
+            "files": "./test/jest/setupFiles.ts",
+            "settings": {
+                "import/resolver": { "node": { "moduleDirectory": ["./node_modules", "."] } }
+            }
+        },
+        {
             "files": "./test/cypress/**/*.{js,ts,tsx}",
             "extends": [
                 "./node_modules/cloudify-ui-common/configs/eslint-common-cypress.json",
