@@ -30,8 +30,10 @@ import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
 
+type Error = boolean | { content: string };
+
 export type Errors = {
-    [x: string]: boolean | { content: string };
+    [x: string]: Error;
 };
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
@@ -204,9 +206,10 @@ const GettingStartedModal = () => {
     };
 
     const handleNextClick = () => {
+        clearErrors();
         const secretsValid = secretsStepSchema?.secrets
             .map(({ name, type }) => validateInputs(name, type))
-            .every((v: boolean) => v);
+            .every((isValid: Error) => isValid);
         switch (stepName) {
             case StepName.Environments:
                 if (secretsStepsSchemas.length > 0) {
@@ -218,7 +221,6 @@ const GettingStartedModal = () => {
                 break;
 
             case StepName.Secrets:
-                clearErrors();
                 if (secretsValid) {
                     if (secretsStepIndex < secretsStepsSchemas.length - 1) {
                         setSecretsStepIndex(secretsStepIndex + 1);
