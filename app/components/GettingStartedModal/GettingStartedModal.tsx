@@ -158,7 +158,7 @@ const GettingStartedModal = () => {
         const allData = key && secretsStepsData[key];
         const data = allData && allData[name];
 
-        if (type === 'email' && data && !isEmailValid(data)) {
+        if (type === 'email' && !isEmailValid(data as string)) {
             setErrors({
                 ...errors,
                 [name]: {
