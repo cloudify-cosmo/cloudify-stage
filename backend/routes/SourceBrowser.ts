@@ -27,9 +27,8 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
                     return res.contentType(mimeType).send(file);
                 } else if (isBinaryFile) {
                     return res.contentType('application/octet-stream').send(file);
-                } else {
-                    return res.contentType('text/plain').send(file);
                 }
+                return res.contentType('text/plain').send(file);
             })
             .catch(next);
     }
