@@ -154,18 +154,19 @@ const GettingStartedModal = () => {
     };
 
     const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
-        const key = secretsStepSchema?.name;
-        const allData = key && secretsStepsData[key];
-        const data = allData && allData[name];
-
-        if (type === 'email' && !isEmailValid(data as string)) {
-            setErrors({
-                ...errors,
-                [name]: {
-                    content: t('invalidEmail')
-                }
-            });
-            return false;
+        if (type === 'email') {
+            const key = secretsStepSchema?.name;
+            const allData = key && secretsStepsData[key];
+            const data = allData && allData[name];
+            if (data && !isEmailValid(data)) {
+                setErrors({
+                    ...errors,
+                    [name]: {
+                        content: t('invalidEmail')
+                    }
+                });
+                return false;
+            }
         }
         return true;
     };
