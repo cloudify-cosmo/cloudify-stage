@@ -15,7 +15,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/getting_started.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -31,7 +30,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/aws_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -48,7 +46,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/azure_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -64,7 +61,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/gcp_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -80,7 +76,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/terraform_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -96,7 +91,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/helm_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -112,7 +106,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/k8s_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -128,7 +121,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/K8S_Discovery.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -144,7 +136,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/docker_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -160,7 +151,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/ansible_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -176,7 +166,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/vmware_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -192,7 +181,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/certified_environments.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
@@ -208,7 +196,6 @@
                             "definition": "blueprintCatalog",
                             "configuration": {
                                 "jsonPath": "https://repository.cloudifysource.org/cloudify/blueprints/6.4/other_services.json",
-                                "displayStyle": "catalog",
                                 "fieldsToShow": ["Name", "Description"]
                             }
                         }
