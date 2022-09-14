@@ -7,7 +7,7 @@ import Actions from './actions';
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
 
-type FileType = ComponentProps<typeof HighlightText>['language'] | 'binary';
+type FileType = ComponentProps<typeof HighlightText>['language'];
 
 interface NodeTreeItem {
     children?: NodeTreeItem[];
@@ -51,6 +51,7 @@ const Center = styled.div`
 
 interface RightPaneProps {
     imageUrl: string;
+    isBinary: boolean;
     content: string;
     filename: string;
     type: FileType;
@@ -59,7 +60,16 @@ interface RightPaneProps {
     minimize: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
-const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, minimize }: RightPaneProps) => {
+const RightPane = ({
+    imageUrl,
+    isBinary,
+    content,
+    filename,
+    type,
+    maximize,
+    isMaximized,
+    minimize
+}: RightPaneProps) => {
     const t = Stage.Utils.getT('widgets.blueprintSources');
 
     if (imageUrl) {
@@ -70,7 +80,7 @@ const RightPane = ({ imageUrl, content, filename, type, maximize, isMaximized, m
         );
     }
 
-    if (type === 'binary') {
+    if (isBinary) {
         return <Center>{t('binaryFile')}</Center>;
     }
 
@@ -116,6 +126,7 @@ interface BlueprintSourcesProps {
 
 export default function BlueprintSources({ data, toolbox, widget }: BlueprintSourcesProps) {
     const [imageUrl, setImageUrl, clearImageUrl] = useResettableState('');
+    const [isBinary, setBinary, unsetBinary] = useBoolean(false);
     const [content, setContent, clearContent] = useResettableState('');
     const [filename, setFilename, clearFilename] = useResettableState('');
     const [error, setError, clearError] = useResettableState<string | null>(null);
@@ -138,8 +149,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
 
         const path = selectedKeys[0];
         const isImage = path.match(/.(jpg|jpeg|png|gif|ico)$/i);
-        const isNonImageBinary = path.match(/.(pyc|jar|bin)$/i);
 
+        unsetBinary();
         clearImageUrl();
         if (isImage) {
             setImageUrl(`/console/source/browse/${path}`);
@@ -150,11 +161,13 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then((responseBody: string) => {
+            .then((response: string | Response) => {
                 if (isImage) {
                     clearContent();
+                } else if (typeof response === 'string') {
+                    setContent(response as string);
                 } else {
-                    setContent(responseBody);
+                    setBinary();
                 }
             })
             .then(() => {
@@ -165,8 +178,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     fileType = 'python';
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
-                } else if (isNonImageBinary) {
-                    fileType = 'binary';
                 }
 
                 setFilename(info.node.props.title.props.children[1]);
@@ -282,7 +293,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                             )}
                         </NodesTree>
                     </div>
-                    <RightPane {...{ imageUrl, content, filename, type, maximize, isMaximized, minimize }} />
+                    <RightPane {...{ imageUrl, isBinary, content, filename, type, maximize, isMaximized, minimize }} />
                 </SplitterLayout>
             ) : (
                 <div>
