@@ -32,7 +32,7 @@
         "@evops/hcl-terraform-parser": "^1.0.0",
         "@tsconfig/node14": "^1.0.1",
         "archiver": "^5.3.0",
-        "axios": "^0.26.0",
+        "axios": "^0.27.2",
         "body": "^5.1.0",
         "cloudify-ui-common": "^7.3.1",
         "cookie": "^0.4.2",
@@ -94,6 +94,9 @@
         "nodemon": "^2.0.15",
         "sequelize": "^6.17.0",
         "sequelize-cli": "^6.4.1"
+    },
+    "overrides": {
+        "follow-redirects": "^1.15.2"
     },
     "engines": {
         "node": "16.x"
