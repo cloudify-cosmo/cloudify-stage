@@ -98,7 +98,7 @@ const Leaflet = {
  * NOTE: buttons have limited props defined in their propTypes, making it hard to use in TypeScript.
  * TODO(RD-1563): remove assertions after adding missing prop types
  */
-const ApproveButtonWithCorrectProps = ApproveButton as unknown as typeof Button;
+
 const CancelButtonWithCorrectProps = CancelButton as unknown as typeof Button;
 const ConfirmWithCorrectProps = Confirm as unknown as ComponentType<StrictConfirmProps>;
 const ErrorMessageWithCorrectReturnType = ErrorMessage as unknown as ComponentType<
@@ -113,7 +113,7 @@ const UnsafelyTypedFormGroup = Form.Group;
 export {
     Accordion,
     Alert,
-    ApproveButtonWithCorrectProps as ApproveButton,
+    ApproveButton,
     Breadcrumb,
     Button,
     CancelButtonWithCorrectProps as CancelButton,
