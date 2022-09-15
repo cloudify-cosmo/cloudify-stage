@@ -70,6 +70,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
     * `post` - integer, POST request timeout (milliseconds)
     * `put` - integer, PUT request timeout (milliseconds)
     * `delete` - integer, DELETE request timeout (milliseconds)
+  * `maxBodySize` - string, maximum body size to handle (number + unit, see https://www.npmjs.com/package/bytes)
 
 * `saml` - object, SAML configuration
   * `enabled` - boolean, if set to true SAML will be enabled
