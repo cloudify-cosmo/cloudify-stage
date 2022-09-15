@@ -1,9 +1,8 @@
-import express from 'express';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
-import type { AxiosResponse, AxiosRequestConfig } from 'axios';
-import type { Response, Router } from 'express';
-import { getLogger } from './LoggerHandler';
+import type { Response } from 'express';
 import type { AllowedRequestMethod } from '../types';
+import { getLogger } from './LoggerHandler';
 
 const logger = getLogger('RequestHandler');
 
@@ -16,10 +15,6 @@ export function request(method: AllowedRequestMethod, requestUrl: string, option
 
 export function requestAndForwardResponse(url: string, response: Response, options?: AxiosRequestConfig) {
     return axios(url, { responseType: 'stream', ...options }).then(getResponseForwarder(response));
-}
-
-export function setUpRequestForwarding(router: Router) {
-    router.use(express.raw({ inflate: false, type: () => true }));
 }
 
 export function forward(axiosResponse: AxiosResponse, expressResponse: Response) {

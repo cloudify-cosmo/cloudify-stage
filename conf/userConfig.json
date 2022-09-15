@@ -9,7 +9,8 @@
       "post": 30000,
       "put": 30000,
       "delete": 10000
-    }
+    },
+    "maxBodySize": "2gb"
   },
   "saml":{
     "enabled": false,
