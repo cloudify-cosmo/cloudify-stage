@@ -3,7 +3,7 @@
 import express from 'express';
 import passport from 'passport';
 import {
-    browseArchiveFileType,
+    getArchiveFileContentType,
     getMimeType,
     browseArchiveTree,
     listYamlFiles,
@@ -21,7 +21,7 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     } else {
         const mimeType = getMimeType(req, timestamp, path);
 
-        browseArchiveFileType(req, timestamp, path)
+        getArchiveFileContentType(req, timestamp, path)
             .then(({ file, isBinaryFile }) => {
                 if (mimeType) {
                     return res.contentType(mimeType).send(file);

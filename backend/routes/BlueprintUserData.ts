@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { db } from '../db/Connection';
 import type { BlueprintUserDataInstance } from '../db/models/BlueprintUserDataModel';
 
-import { browseArchiveFile, browseArchiveTree } from '../handler/SourceHandler';
+import { getArchiveFileContent, browseArchiveTree } from '../handler/SourceHandler';
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.get('/layout/:blueprintId', (req, res, next) => {
                     .get('key')
                     .value();
                 if (layoutFilePath) {
-                    return browseArchiveFile(req, data.timestamp, layoutFilePath)
+                    return getArchiveFileContent(req, data.timestamp, layoutFilePath)
                         .then(yaml.load)
                         .then(layout => res.send(layout));
                 }
