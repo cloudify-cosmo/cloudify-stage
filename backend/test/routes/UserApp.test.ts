@@ -1,7 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 import request from 'supertest';
 import app from 'app';
-import { mockDb } from 'db/Connection';
+import mockDb from '../mockDb';
 
 jest.mock('db/Connection');
 jest.mock('handler/ManagerHandler');
