@@ -2,24 +2,16 @@ import express from 'express';
 import { getLogger } from '../handler/LoggerHandler';
 import { getHeadersWithAuthenticationToken, getTokenFromCookies } from '../utils';
 import { jsonRequest } from '../handler/ManagerHandler';
+import type {
+    ContactDetails,
+    HubspotResponse,
+    GetContactDetailsResponse,
+    PostContactDetailsResponse,
+    PostContactDetailsRequestBody
+} from './ContactDetails.types';
 
 const logger = getLogger('ContactDetails');
 const router = express.Router();
-
-/* eslint-disable camelcase */
-interface ContactDetails {
-    first_name: string;
-    last_name: string;
-    email: string;
-    phone: string;
-    is_eula: boolean;
-    is_send_services_details?: boolean;
-}
-
-interface HubspotResponse {
-    customer_id: string;
-}
-/* eslint-enable camelcase */
 
 const sendDataToHubspot = (contactDetails: ContactDetails, token: string): Promise<HubspotResponse> => {
     return jsonRequest('post', '/contacts', getHeadersWithAuthenticationToken(token), contactDetails);
@@ -40,7 +32,7 @@ const submitContactDetails = async (contactDetails: ContactDetails, token: strin
 
 router.use(express.json());
 
-router.get('/', async (req, res) => {
+router.get<never, GetContactDetailsResponse>('/', async (req, res) => {
     const token = getTokenFromCookies(req);
 
     try {
@@ -57,9 +49,9 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res): Promise<void> => {
+router.post<never, PostContactDetailsResponse, PostContactDetailsRequestBody>('/', async (req, res): Promise<void> => {
     const token = getTokenFromCookies(req);
-    const contactDetails: ContactDetails = req.body;
+    const contactDetails = req.body;
 
     try {
         await submitContactDetails(contactDetails, token);
