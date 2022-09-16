@@ -23,7 +23,7 @@ export interface ConfigResponse {
             type: string;
             description: string;
         }[];
-        permissions: Record<string, string[]>[];
+        permissions: Record<string, string[]>;
     };
 }
 
@@ -64,10 +64,34 @@ export interface LicenseResponse {
 }
 /* eslint-enable camelcase */
 
-export interface AuthUserResponse {
+interface AuthErrorResponse {
+    message: string;
+}
+
+export type PostAuthLoginResponse =
+    | {
+          role: string;
+      }
+    | AuthErrorResponse;
+
+export type PostAuthSamlCallbackResponse = AuthErrorResponse;
+
+export type GetAuthManagerResponse =
+    | {
+          license: LicenseResponse | null;
+          version: VersionResponse;
+          rbac: ConfigResponse['authorization'];
+      }
+    | AuthErrorResponse;
+
+export interface GetAuthUserResponse {
     username: UserResponse['username'];
     role: UserResponse['role'];
     groupSystemRoles: UserResponse['group_system_roles'];
     tenantsRoles: UserResponse['tenants'];
     showGettingStarted: UserResponse['show_getting_started'];
 }
+
+export type GetAuthRBACResponse = ConfigResponse['authorization'] | AuthErrorResponse;
+
+export type GetAuthFirstLoginResponse = boolean;

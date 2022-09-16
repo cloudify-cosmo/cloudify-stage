@@ -7,7 +7,15 @@ import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, EXTERNAL_LOGIN_PATH, TOKEN_COOKIE_NAME } from '../consts';
 import { getLogger } from '../handler/LoggerHandler';
 import { getTokenFromCookies } from '../utils';
-import type { AuthUserResponse } from './Auth.types';
+import type {
+    GetAuthUserResponse,
+    GetAuthManagerResponse,
+    LicenseResponse,
+    GetAuthRBACResponse,
+    GetAuthFirstLoginResponse,
+    PostAuthLoginResponse,
+    PostAuthSamlCallbackResponse
+} from './Auth.types';
 import { db } from '../db/Connection';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
 
@@ -23,7 +31,7 @@ function getCookieOptions(req: Request, httpOnly = true) {
 }
 
 // This path is used during logging in, so it should not require authentication
-router.post('/login', (req, res) =>
+router.post<never, PostAuthLoginResponse>('/login', (req, res) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
             const tokenCookieOptions = getCookieOptions(req);
@@ -42,7 +50,7 @@ router.post('/login', (req, res) =>
         })
 );
 
-router.post('/saml/callback', authenticateWithSaml, (req, res) => {
+router.post<never, PostAuthSamlCallbackResponse>('/saml/callback', authenticateWithSaml, (req, res) => {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
@@ -59,13 +67,13 @@ router.post('/saml/callback', authenticateWithSaml, (req, res) => {
     }
 });
 
-router.get('/manager', authenticateWithCookie, (req, res) => {
+router.get<never, GetAuthManagerResponse>('/manager', authenticateWithCookie, (req, res) => {
     const token = getTokenFromCookies(req);
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
             AuthHandler.isProductLicensed(version)
                 ? AuthHandler.getLicense(token).then(data => ({
-                      license: _.get(data, 'items[0]', {}),
+                      license: _.get(data, 'items[0]', {}) as LicenseResponse | null,
                       version,
                       rbac
                   }))
@@ -82,14 +90,14 @@ router.get('/manager', authenticateWithCookie, (req, res) => {
         });
 });
 
-router.get('/user', authenticateWithCookie, (req, res) => {
+router.get<never, GetAuthUserResponse>('/user', authenticateWithCookie, (req, res) => {
     res.send({
         username: req.user!.username,
         role: req.user!.role,
         groupSystemRoles: req.user!.group_system_roles,
         tenantsRoles: req.user!.tenants,
         showGettingStarted: req.user!.show_getting_started
-    } as AuthUserResponse);
+    });
 });
 
 router.post('/logout', authenticateWithCookie, (_req, res) => {
@@ -97,16 +105,16 @@ router.post('/logout', authenticateWithCookie, (_req, res) => {
     res.end();
 });
 
-router.get('/RBAC', authenticateWithCookie, (req, res) => {
+router.get<never, GetAuthRBACResponse>('/RBAC', authenticateWithCookie, (req, res) => {
     AuthHandler.getRBAC(getTokenFromCookies(req))
         .then(res.send)
         .catch(err => {
             logger.error(err);
-            res.status(500).send({ message: 'Failed to get RBAC configuration', error: err });
+            res.status(500).send({ message: 'Failed to get RBAC configuration' });
         });
 });
 
-router.get('/first-login', (_req, res, next) => {
+router.get<never, GetAuthFirstLoginResponse>('/first-login', (_req, res, next) => {
     db.UserApps.findAll<UserAppsInstance>()
         .then(userApp => res.send(_.isEmpty(userApp)))
         .catch(next);
