@@ -1,1 +1,1 @@
-export interface GetStyleResponse = string;
+export type GetStyleResponse = string;
