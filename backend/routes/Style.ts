@@ -8,13 +8,14 @@ import { getConfig } from '../config';
 import { getResourcePath } from '../utils';
 
 import { getLogger } from '../handler/LoggerHandler';
+import type { GetStyleResponse } from './Style.types';
 
 const router = express.Router();
 const logger = getLogger('Style');
 
 const styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
-router.get('/', (_req, res) => {
+router.get<never, GetStyleResponse>('/', (_req, res) => {
     const { whiteLabel } = getConfig().app;
     const stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 
