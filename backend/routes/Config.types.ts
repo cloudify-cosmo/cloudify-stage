@@ -31,3 +31,5 @@ export interface ClientConfig {
     };
     mode: Mode;
 }
+
+export type GetConfigResponse = ClientConfig;
