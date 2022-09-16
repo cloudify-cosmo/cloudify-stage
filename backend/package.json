@@ -97,9 +97,6 @@
         "sequelize": "^6.17.0",
         "sequelize-cli": "^6.4.1"
     },
-    "overrides": {
-        "follow-redirects": "^1.15.2"
-    },
     "engines": {
         "node": "16.x"
     },
