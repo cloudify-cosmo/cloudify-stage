@@ -161,7 +161,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         const actions = new Actions(toolbox);
         actions
             .doGetFileContent(path)
-            .then((response: string | Response) => {
+            .then((response: string | null) => {
                 if (isImage) {
                     clearContent();
                 } else if (typeof response === 'string') {

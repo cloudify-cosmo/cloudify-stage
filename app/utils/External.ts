@@ -243,7 +243,7 @@ export default class External {
                 }
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
-                    if (contentType.includes('application/octet-stream')) return response;
+                    if (contentType.includes('application/octet-stream')) return null;
                     return response.status !== 204 && contentType.indexOf('application/json') >= 0
                         ? response.json()
                         : response.text();
