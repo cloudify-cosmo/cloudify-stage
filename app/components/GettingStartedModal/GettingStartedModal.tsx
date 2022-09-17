@@ -157,7 +157,7 @@ const GettingStartedModal = () => {
         if (type === 'email') {
             const key = secretsStepSchema?.name;
             const allData = key && secretsStepsData[key];
-            const data = allData && allData[name];
+            const data = allData?.[name];
             if (data && !isEmailValid(data)) {
                 setErrors({
                     ...errors,
