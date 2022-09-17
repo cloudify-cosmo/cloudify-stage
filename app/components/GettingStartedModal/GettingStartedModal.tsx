@@ -19,7 +19,7 @@ import type {
     GettingStartedSchema,
     GettingStartedSecretsData,
     GettingStartedSchemaItem,
-    GettingStartedSchemaSecretType
+    GettingStartedSchemaSecret
 } from './model';
 import { StepName } from './model';
 import ModalHeader from './ModalHeader';
@@ -153,22 +153,26 @@ const GettingStartedModal = () => {
         closeModal();
     };
 
-    const validateInputs = (name: string, type: GettingStartedSchemaSecretType) => {
-        if (type === 'email') {
-            const key = secretsStepSchema?.name;
-            const allData = key && secretsStepsData[key];
-            const data = allData?.[name];
-            if (data && !isEmailValid(data)) {
-                setErrors({
-                    ...errors,
-                    [name]: {
-                        content: t('invalidEmail')
+    const validateInputs = (secrets: GettingStartedSchemaSecret[], key: string) => {
+        clearErrors();
+        return secrets
+            .map(({ name, type }) => {
+                if (type === 'email') {
+                    const allData = secretsStepsData[key];
+                    const data = allData?.[name as keyof GettingStartedSecretsData];
+                    if (data && !isEmailValid(data)) {
+                        setErrors({
+                            ...errors,
+                            [name]: {
+                                content: t('invalidEmail')
+                            }
+                        });
+                        return false;
                     }
-                });
-                return false;
-            }
-        }
-        return true;
+                }
+                return true;
+            })
+            .every((isValid: Error) => isValid);
     };
 
     const handleBackClick = () => {
@@ -207,10 +211,11 @@ const GettingStartedModal = () => {
     };
 
     const handleNextClick = () => {
-        clearErrors();
-        const secretsValid = secretsStepSchema?.secrets
-            .map(({ name, type }) => validateInputs(name, type))
-            .every((isValid: Error) => isValid);
+        let secretsValid = true;
+        if (secretsStepSchema) {
+            const { secrets, name } = secretsStepSchema;
+            secretsValid = validateInputs(secrets, name);
+        }
         switch (stepName) {
             case StepName.Environments:
                 if (secretsStepsSchemas.length > 0) {
