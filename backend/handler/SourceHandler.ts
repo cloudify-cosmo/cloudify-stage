@@ -119,8 +119,7 @@ export async function getArchiveFile(req, timestamp, path) {
     }
 
     const data = fs.readFileSync(absolutePath);
-    const { size } = fs.lstatSync(absolutePath);
-    const isBinaryFile = isBinaryFileSync(data, size);
+    const isBinaryFile = isBinaryFileSync(data, fs.lstatSync(absolutePath).size);
     return { file: await fs.readFile(absolutePath, isBinaryFile ? '' : 'utf-8'), isBinaryFile };
 }
 
