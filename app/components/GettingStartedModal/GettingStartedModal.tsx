@@ -159,7 +159,7 @@ const GettingStartedModal = () => {
             .map(({ name, type }) => {
                 if (type === 'email') {
                     const allData = secretsStepsData[key];
-                    const data = allData?.[name as keyof GettingStartedSecretsData];
+                    const data = allData?.[name];
                     if (data && !isEmailValid(data)) {
                         setErrors({
                             ...errors,
