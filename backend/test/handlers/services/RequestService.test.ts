@@ -10,7 +10,7 @@ jest.mock('handler/RequestHandler', () => ({
 describe('RequestService', () => {
     it('performs GET request', () => {
         return doGet('', {}).then(response => {
-            expect(request).toHaveBeenCalledWith('GET', undefined, { headers: {} });
+            expect(request).toHaveBeenCalledWith('GET', '', { headers: {} });
             expect(response).toEqual('responseData');
         });
     });
