@@ -5,4 +5,4 @@ export interface BlueprintUserData {
     username: string;
     layout: any;
 }
-export interface BlueprintUserDataAttributes extends CommonAttributes, BlueprintUserData {}
+export type BlueprintUserDataAttributes = CommonAttributes & BlueprintUserData;

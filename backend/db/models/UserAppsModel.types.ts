@@ -10,4 +10,4 @@ export interface UserAppsData {
     appData: { pages: PageFileDefinition[] };
 }
 
-export interface UserAppsAttributes extends CommonAttributes, UserAppsData {}
+export type UserAppsAttributes = CommonAttributes & UserAppsData;

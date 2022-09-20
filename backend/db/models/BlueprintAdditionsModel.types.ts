@@ -6,4 +6,4 @@ export interface BlueprintAdditionsData {
     imageUrl: string;
 }
 
-export interface BlueprintAdditionsAttributes extends CommonAttributes, BlueprintAdditionsData {}
+export type BlueprintAdditionsAttributes = CommonAttributes & BlueprintAdditionsData;

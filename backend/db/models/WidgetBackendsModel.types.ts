@@ -7,4 +7,4 @@ export interface WidgetBackendsData {
     script: string;
 }
 
-export interface WidgetBackendsAttributes extends CommonAttributes, WidgetBackendsData {}
+export type WidgetBackendsAttributes = CommonAttributes & WidgetBackendsData;
