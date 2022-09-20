@@ -6,17 +6,17 @@ import { getTokenFromCookies } from '../utils';
 import type {
     GetWidgetsListResponse,
     GetWidgetsUsedResponse,
-    PutWidgetsInstallQueryParams,
-    PutWidgetsInstallResponse,
-    PutWidgetsUpdateQueryParams,
-    PutWidgetsUpdateResponse
+    PostWidgetsQueryParams,
+    PostWidgetsResponse,
+    PutWidgetsQueryParams,
+    PutWidgetsResponse
 } from './Widgets.types';
 
 const router = express.Router();
 
 router.use(express.json());
 
-router.get('/list', (_req, res: Response<GetWidgetsListResponse>, next) => {
+router.get('/', (_req, res: Response<GetWidgetsListResponse>, next) => {
     WidgetsHandler.listWidgets()
         .then(widgets => res.send(widgets))
         .catch(next);
@@ -32,8 +32,8 @@ const validateInstallWidgetsPermission: RequestHandler = async (req, res, next) 
     next();
 };
 
-router.put<never, PutWidgetsInstallResponse, any, PutWidgetsInstallQueryParams>(
-    '/install',
+router.post<never, PostWidgetsResponse, any, PostWidgetsQueryParams>(
+    '/',
     validateInstallWidgetsPermission,
     (req, res, next) => {
         WidgetsHandler.installWidget(req.query.url, req.user!.username, req)
@@ -42,8 +42,8 @@ router.put<never, PutWidgetsInstallResponse, any, PutWidgetsInstallQueryParams>(
     }
 );
 
-router.put<never, PutWidgetsUpdateResponse, any, PutWidgetsUpdateQueryParams>(
-    '/update',
+router.put<never, PutWidgetsResponse, any, PutWidgetsQueryParams>(
+    '/',
     validateInstallWidgetsPermission,
     (req, res, next) => {
         WidgetsHandler.updateWidget(req.query.id, req.query.url, req)

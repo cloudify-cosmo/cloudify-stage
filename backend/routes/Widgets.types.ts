@@ -15,14 +15,14 @@ export type GetWidgetsListResponse = WidgetData[];
 
 export type GetWidgetsUsedResponse = WidgetUsage[];
 
-export type PutWidgetsInstallResponse = WidgetData;
+export type PostWidgetsResponse = WidgetData;
 
-export interface PutWidgetsInstallQueryParams extends Query {
+export interface PostWidgetsQueryParams extends Query {
     url?: string;
 }
 
-export type PutWidgetsUpdateResponse = WidgetData;
+export type PutWidgetsResponse = WidgetData;
 
-export interface PutWidgetsUpdateQueryParams extends PutWidgetsInstallQueryParams, Query {
+export interface PutWidgetsQueryParams extends PostWidgetsQueryParams, Query {
     id: string;
 }
