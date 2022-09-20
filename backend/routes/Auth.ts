@@ -1,6 +1,6 @@
 import express from 'express';
+import type { Response, CookieOptions, Request } from 'express';
 import _ from 'lodash';
-import type { CookieOptions, Request } from 'express';
 
 import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
 import * as AuthHandler from '../handler/AuthHandler';
@@ -31,7 +31,7 @@ function getCookieOptions(req: Request, httpOnly = true) {
 }
 
 // This path is used during logging in, so it should not require authentication
-router.post<never, PostAuthLoginResponse>('/login', (req, res) =>
+router.post('/login', (req, res: Response<PostAuthLoginResponse>) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
             const tokenCookieOptions = getCookieOptions(req);
@@ -50,7 +50,7 @@ router.post<never, PostAuthLoginResponse>('/login', (req, res) =>
         })
 );
 
-router.post<never, PostAuthSamlCallbackResponse>('/saml/callback', authenticateWithSaml, (req, res) => {
+router.post('/saml/callback', authenticateWithSaml, (req, res: Response<PostAuthSamlCallbackResponse>) => {
     if (!req.body || !req.body.SAMLResponse || !req.user) {
         res.status(401).send({ message: 'Invalid Request' });
     } else {
@@ -67,7 +67,7 @@ router.post<never, PostAuthSamlCallbackResponse>('/saml/callback', authenticateW
     }
 });
 
-router.get<never, GetAuthManagerResponse>('/manager', authenticateWithCookie, (req, res) => {
+router.get('/manager', authenticateWithCookie, (req, res: Response<GetAuthManagerResponse>) => {
     const token = getTokenFromCookies(req);
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
@@ -90,7 +90,7 @@ router.get<never, GetAuthManagerResponse>('/manager', authenticateWithCookie, (r
         });
 });
 
-router.get<never, GetAuthUserResponse>('/user', authenticateWithCookie, (req, res) => {
+router.get('/user', authenticateWithCookie, (req, res: Response<GetAuthUserResponse>) => {
     res.send({
         username: req.user!.username,
         role: req.user!.role,
@@ -105,7 +105,7 @@ router.post('/logout', authenticateWithCookie, (_req, res) => {
     res.end();
 });
 
-router.get<never, GetAuthRBACResponse>('/RBAC', authenticateWithCookie, (req, res) => {
+router.get('/RBAC', authenticateWithCookie, (req, res: Response<GetAuthRBACResponse>) => {
     AuthHandler.getRBAC(getTokenFromCookies(req))
         .then(res.send)
         .catch(err => {
@@ -114,7 +114,7 @@ router.get<never, GetAuthRBACResponse>('/RBAC', authenticateWithCookie, (req, re
         });
 });
 
-router.get<never, GetAuthFirstLoginResponse>('/first-login', (_req, res, next) => {
+router.get('/first-login', (_req, res: Response<GetAuthFirstLoginResponse>, next) => {
     db.UserApps.findAll<UserAppsInstance>()
         .then(userApp => res.send(_.isEmpty(userApp)))
         .catch(next);

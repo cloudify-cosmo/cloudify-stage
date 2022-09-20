@@ -1,5 +1,5 @@
 import express from 'express';
-import type { RequestHandler } from 'express';
+import type { RequestHandler, Response } from 'express';
 import * as WidgetsHandler from '../handler/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 import { getTokenFromCookies } from '../utils';
@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.get<never, GetWidgetsListResponse>('/list', (_req, res, next) => {
+router.get('/list', (_req, res: Response<GetWidgetsListResponse>, next) => {
     WidgetsHandler.listWidgets()
         .then(widgets => res.send(widgets))
         .catch(next);
@@ -52,7 +52,7 @@ router.put<never, PutWidgetsUpdateResponse, any, PutWidgetsUpdateQueryParams>(
     }
 );
 
-router.get<{ widgetId: string }, GetWidgetsUsedResponse>('/:widgetId/used', (req, res, next) => {
+router.get('/:widgetId/used', (req, res: Response<GetWidgetsUsedResponse>, next) => {
     WidgetsHandler.isWidgetUsed(req.params.widgetId)
         .then(result => res.send(result))
         .catch(next);

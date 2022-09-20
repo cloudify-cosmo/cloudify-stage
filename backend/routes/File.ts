@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Response } from 'express';
 import multer from 'multer';
 import yaml from 'js-yaml';
 import { getLogger } from '../handler/LoggerHandler';
@@ -9,14 +10,14 @@ const router = express.Router();
 const upload = multer({ limits: { fileSize: 1024 * 50 } }); // 1024 bytes * 50 = 50 kB
 const logger = getLogger('File');
 
-router.post<never, PostFileTextResponse>('/text', upload.single('file'), checkIfFileUploaded(logger), (req, res) => {
+router.post('/text', upload.single('file'), checkIfFileUploaded(logger), (req, res: Response<PostFileTextResponse>) => {
     const file = req.file as Express.Multer.File;
     logger.debug(`Text file uploaded, name: ${file.originalname}, size: ${file.size}`);
     const data = file.buffer.toString();
     res.contentType('application/text').send(data);
 });
 
-router.post<never, PostFileYamlResponse>('/yaml', upload.single('file'), checkIfFileUploaded(logger), (req, res) => {
+router.post('/yaml', upload.single('file'), checkIfFileUploaded(logger), (req, res: Response<PostFileYamlResponse>) => {
     const file = req.file as Express.Multer.File;
     logger.debug(`YAML file uploaded, name: ${file.originalname}, size: ${file.size}`);
     const yamlString = file.buffer.toString();

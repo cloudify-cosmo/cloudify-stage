@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import ejs from 'ejs';
@@ -15,7 +16,7 @@ const logger = getLogger('Style');
 
 const styleTemplateFile = path.resolve(__dirname, '../templates', 'style.ejs');
 
-router.get<never, GetStyleResponse>('/', (_req, res) => {
+router.get('/', (_req, res: Response<GetStyleResponse>) => {
     const { whiteLabel } = getConfig().app;
     const stylesheetTemplate = fs.readFileSync(styleTemplateFile, 'utf8');
 

@@ -68,7 +68,7 @@ function zipFiles(
     return archive;
 }
 
-router.get<{ pluginId: string }>('/icons/:pluginId', (req, res) => {
+router.get('/icons/:pluginId', (req, res) => {
     const options = {
         headers: getHeadersWithAuthenticationTokenFromRequest(req, req.headers as AxiosRequestHeaders)
     };
@@ -89,10 +89,10 @@ router.get<{ pluginId: string }>('/icons/:pluginId', (req, res) => {
     });
 });
 
-router.put<never, PutPluginsTitleResponse>(
+router.put(
     '/title',
     upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))),
-    (req, res) => {
+    (req, res: Response<PutPluginsTitleResponse>) => {
         let getPluginYaml: Promise<any>;
         if (typeof req.query.yamlUrl === 'string') {
             getPluginYaml = downloadFile(req.query.yamlUrl);

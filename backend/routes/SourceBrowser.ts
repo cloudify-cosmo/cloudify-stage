@@ -1,5 +1,5 @@
 import express from 'express';
-
+import type { Response } from 'express';
 import { browseArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
 import type {
     PutSourceListYamlQueryParams,
@@ -24,7 +24,7 @@ router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/fi
     }
 });
 
-router.get<never, GetSourceBrowseBlueprintArchiveResponse>('/browse/:blueprintId/archive', (req, res, next) => {
+router.get('/browse/:blueprintId/archive', (req, res: Response<GetSourceBrowseBlueprintArchiveResponse>, next) => {
     browseArchiveTree(req)
         .then(data => res.send(data))
         .catch(next);

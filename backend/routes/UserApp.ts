@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Response } from 'express';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';
@@ -18,7 +19,7 @@ router.use(express.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get<never, GetUserAppResponse>('/', (req, res, next) => {
+router.get('/', (req, res: Response<GetUserAppResponse>, next) => {
     db.UserApps.findOne<UserAppsInstance>({
         where: {
             username: req.user!.username,

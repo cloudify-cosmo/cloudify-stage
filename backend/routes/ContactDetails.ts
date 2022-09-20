@@ -1,4 +1,5 @@
 import express from 'express';
+import type { Response } from 'express';
 import { getLogger } from '../handler/LoggerHandler';
 import { getHeadersWithAuthenticationToken, getTokenFromCookies } from '../utils';
 import { jsonRequest } from '../handler/ManagerHandler';
@@ -32,7 +33,7 @@ const submitContactDetails = async (contactDetails: ContactDetails, token: strin
 
 router.use(express.json());
 
-router.get<never, GetContactDetailsResponse>('/', async (req, res) => {
+router.get('/', async (req, res: Response<GetContactDetailsResponse>) => {
     const token = getTokenFromCookies(req);
 
     try {
