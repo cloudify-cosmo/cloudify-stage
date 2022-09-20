@@ -4,14 +4,16 @@ import { Form } from '../../basic';
 import { useInputs } from '../../../utils/hooks';
 
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
+import type { Errors } from '../GettingStartedModal';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
     typedSecrets?: GettingStartedSecretsData;
     onChange: (typedSecrets: GettingStartedSecretsData) => void;
+    errors: Errors;
 };
 
-const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => {
+const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Props) => {
     const defaultSecretInputs: Record<string, any> = useMemo(
         () =>
             selectedEnvironment.secrets.reduce(
@@ -42,6 +44,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange }: Props) => 
                         <Form.Input
                             type={type}
                             name={name}
+                            error={errors[name]}
                             value={secretInputs[name]}
                             onChange={setSecretInputs}
                             onBlur={handleBlur}
