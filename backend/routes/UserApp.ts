@@ -28,7 +28,7 @@ router.get('/', (req, res: Response<GetUserAppResponse>, next) => {
         }
     })
         .then(userApp => {
-            res.send(userApp || ({} as UserAppsInstance));
+            res.send(userApp);
         })
         .catch(next);
 });
