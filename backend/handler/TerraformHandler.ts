@@ -75,7 +75,7 @@ const removeGitRepo = (repositoryPath: string) => {
     fs.rmdirSync(repositoryPath, { recursive: true });
 };
 
-const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
+export const getModuleListForZipBuffer = async (content: Buffer): Promise<string[]> =>
     decompress(content)
         .then((files: File[]) =>
             _(files)

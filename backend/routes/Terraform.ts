@@ -12,6 +12,7 @@ import {
     fileDebase64,
     getBufferFromUrl,
     getModuleListForUrl,
+    getModuleListForZipBuffer,
     getTerraformFileBufferListFromZip,
     getTerraformJsonMergedFromFileBufferList,
     getTfFileBufferListFromGitRepositoryUrl,
@@ -74,8 +75,7 @@ router.post(
     checkIfFileBuffer,
     async (req, res: Response<PostTerraformResourcesFileResponse>) => {
         try {
-            // @ts-ignore: checkIfFileBuffer middleware function ensures us that req.file.buffer is not undefined
-            res.send(await getModuleListForZipBuffer(req.file.buffer));
+            res.send(await getModuleListForZipBuffer(req.file!.buffer));
         } catch (e: any) {
             res.status(400).send({ message: e.message });
         }
