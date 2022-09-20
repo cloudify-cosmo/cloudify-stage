@@ -3,7 +3,6 @@ import type { AnyAction } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
-    PageFileDefinition,
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
     WidgetsSection as BackendWidgetsSection
@@ -14,6 +13,7 @@ import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
 import * as types from './types';
 import { addWidget } from './widgets';
+import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
@@ -40,7 +40,7 @@ export function isTabsSection(layoutSection: LayoutSection): layoutSection is Ta
     return layoutSection.type === 'tabs';
 }
 
-export interface PageDefinition extends Omit<PageFileDefinition, 'icon' | 'layout'> {
+export interface PageDefinition extends Omit<AppDataPage, 'icon' | 'layout'> {
     icon?: SemanticICONS;
     isDrillDown: boolean;
     parent?: string;
