@@ -13,7 +13,7 @@
 ## Checklist
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 - [ ] My code follows the [UI Code Style](https://cloudifysource.atlassian.net/l/c/x8fq902p).
-- [ ] I verified that all tests and checks have passed.
+- [ ] I followed the [UI Testing Guidelines](https://cloudifysource.atlassian.net/l/cp/udCVfvrx) and verified that all tests/checks have passed.
 - [ ] I verified if that change requires any update in the [documentation](https://cloudifysource.atlassian.net/l/c/4XKtPocy).
 - [ ] I added proper labels to this PR.
 
