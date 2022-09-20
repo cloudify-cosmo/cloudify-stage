@@ -102,12 +102,12 @@ router.put(
         }
 
         // eslint-disable-next-line camelcase
-        type PluginYaml = { plugins: Record<string, { package_name: string }> };
+        type PluginYaml = { plugins: Record<string, { package_name?: string }> };
         getPluginYaml
             .then(pluginYamlString => yaml.load(pluginYamlString) as PluginYaml)
             .then(pluginYaml =>
                 res.status(200).send({
-                    title: _.chain(pluginYaml.plugins).values().head().get('package_name', '') as unknown as string
+                    title: _.chain(pluginYaml.plugins).values().head().value()?.package_name || ''
                 })
             )
             .catch(() => res.status(200).send({ title: '' }));
