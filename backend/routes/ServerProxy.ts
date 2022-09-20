@@ -1,14 +1,18 @@
-import express from 'express';
-import type { Request, Response } from 'express';
 import type { AxiosRequestConfig, AxiosRequestHeaders, Method } from 'axios';
-import { isRbacInCache, getAndCacheConfig } from '../handler/AuthHandler';
+import bytes from 'bytes';
+import type { Request, Response } from 'express';
+import express from 'express';
+import { getConfig } from '../config';
+import { getAndCacheConfig, isRbacInCache } from '../handler/AuthHandler';
 import { getApiUrl, setManagerSpecificOptions } from '../handler/ManagerHandler';
-
-import { forward, requestAndForwardResponse, setUpRequestForwarding } from '../handler/RequestHandler';
+import { forward, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest, getTokenFromCookies } from '../utils';
 
+const { maxBodySize } = getConfig().app.proxy;
+
 const router = express.Router();
-setUpRequestForwarding(router);
+
+router.use(express.raw({ inflate: false, type: () => true, limit: maxBodySize }));
 
 async function proxyRequest(req: Request, res: Response) {
     const serverUrl = req.originalUrl.substring(req.baseUrl.length);
@@ -26,7 +30,8 @@ async function proxyRequest(req: Request, res: Response) {
     const options: AxiosRequestConfig = {
         headers,
         method: req.method as Method,
-        data: req.body
+        data: req.body,
+        maxBodyLength: bytes(maxBodySize)
     };
     setManagerSpecificOptions(options, req.method);
 
