@@ -12,7 +12,52 @@ export interface Output {
     terraformOutput: string;
 }
 
-export interface RequestBody {
+export interface TerraformParserOutputDefinition {
+    name: string;
+    pos: { filename: string; line: number };
+}
+export interface TerraformParserVariableDefinition extends TerraformParserOutputDefinition {
+    default: any;
+    description?: string;
+    required: boolean;
+    type: string;
+}
+export interface TerraformParserResult {
+    outputs: Record<string, TerraformParserOutputDefinition>;
+    variables: Record<string, TerraformParserVariableDefinition>;
+
+    /* eslint-disable camelcase */
+    data_resources: any;
+    managed_resources: any;
+    module_calls: any;
+    provider_configs: any;
+    required_providers: any;
+    /* eslint-enable camelcase */
+}
+
+export type PostTerraformResourcesResponse = string[] | { message: string };
+
+export interface PostTerraformResourcesQueryParams {
+    templateUrl: string;
+}
+
+export type PostTerraformResourcesFileResponse = PostTerraformResourcesResponse;
+
+export interface PostTerraformFetchDataRequestBody {
+    templateUrl: string;
+    resourceLocation: string;
+}
+
+export type PostTerraformFetchDataResponse = TerraformParserResult;
+
+export interface PostTerraformFetchDataFileRequestBody {
+    file: Buffer;
+    resourceLocation: string;
+}
+
+export type PostTerraformFetchDataFileResponse = TerraformParserResult;
+
+export interface PostTerraformBlueprintRequestBody {
     blueprintName: string;
     blueprintDescription: string;
     terraformVersion: string;
@@ -24,11 +69,11 @@ export interface RequestBody {
     outputs?: Output[];
 }
 
-export interface RequestArchiveBody extends Omit<RequestBody, 'terraformTemplate'> {
+export type PostTerraformBlueprintResponse = string;
+
+export interface PostTerraformBlueprintArchiveRequestBody
+    extends Omit<PostTerraformBlueprintRequestBody, 'terraformTemplate'> {
     file?: string;
 }
 
-export interface RequestFetchDataBody {
-    templateUrl: string;
-    resourceLocation: string;
-}
+export type PostTerraformBlueprintArchiveResponse = Buffer;
