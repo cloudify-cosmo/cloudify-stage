@@ -1,6 +1,6 @@
 import type { Config } from './routes/Config.types';
 
-export default (samlConfig: Config['app']['saml']) => {
+export default (samlConfig: Partial<Config['app']['saml']>) => {
     if (!samlConfig.certPath) {
         throw new Error('SAML is enabled, yet certificate path was not configured. [saml.certPath]');
     }
