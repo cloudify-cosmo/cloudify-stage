@@ -28,11 +28,102 @@ export type LayoutSectionType = 'tabs' | 'widgets';
 
 export type LayoutSection = WidgetsSection | TabsSection;
 
-export interface PageFileDefinition {
+export interface PageItem {
+    id: string;
+    type: 'page' | 'pageGroup';
+}
+
+export interface CommonFileContent {
+    updatedBy?: string;
+    updatedAt?: string;
+}
+
+export interface CommonIdentityData {
+    id: string;
+    custom: boolean;
+}
+
+export interface TemplateFileContent extends CommonFileContent {
+    roles: string[];
+    tenants: string[];
+    pages: PageItem[];
+}
+
+export interface TemplateData {
+    roles: TemplateFileContent['roles'];
+    tenants: TemplateFileContent['tenants'];
+}
+
+export interface Template extends Required<CommonFileContent>, CommonIdentityData {
+    data: TemplateData & {
+        pages: TemplateFileContent['pages'];
+    };
+}
+
+export interface PageGroupFileContent extends CommonFileContent {
+    name: string;
+    icon: string;
+    pages: string[];
+}
+
+export type PageGroup = Required<PageGroupFileContent>;
+
+export interface PageFileContent extends CommonFileContent {
+    name: string;
+    icon?: string;
+    layout: LayoutSection[];
+}
+
+export interface Page extends Required<CommonFileContent>, CommonIdentityData {
+    data: {
+        icon: PageFileContent['icon'];
+        layout: PageFileContent['layout'];
+    };
+}
+
+export interface TemplatesGenericReponse {
+    status: 'ok';
+}
+
+export type GetTemplatesResponse = Template[];
+
+export interface PostTemplatesRequestBody {
+    id: string;
+    data: TemplateData;
+    pages: PageItem[];
+}
+
+export interface PutTemplatesRequestBody extends PostTemplatesRequestBody {
+    oldId: string;
+}
+
+export type GetSelectTemplateResponse = string;
+
+export interface GetSelectTemplateQueryParams {
+    tenant: string;
+}
+
+export type GetPageGroupsResponse = PageGroup[];
+
+export interface PostPageGroupsRequestBody {
+    id: string;
+    icon: string;
+    name: string;
+    pages: string[];
+}
+
+export type PutPageGroupsRequestBody = PostPageGroupsRequestBody;
+
+export type GetPagesResponse = (Page | null)[];
+
+export interface PostPagesRequestBody {
     id: string;
     name: string;
-    type: 'page';
+    layout: [];
+}
+
+export interface PutPagesRequestBody extends Omit<PostPagesRequestBody, 'layout'> {
+    oldId: string;
     icon?: string;
-    description?: string;
     layout: LayoutSection[];
 }
