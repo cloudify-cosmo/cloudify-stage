@@ -70,7 +70,7 @@ app.use(contextPath, (_req, res, next) => {
 const samlConfig = getConfig().app.saml;
 if (samlConfig.enabled) {
     validateSamlConfig(samlConfig);
-    passport.use(<passport.Strategy>getSamlStrategy());
+    passport.use(getSamlStrategy());
 }
 
 passport.use(getCookieStrategy());
