@@ -81,10 +81,6 @@ export interface Page extends Required<CommonFileContent>, CommonIdentityData {
     };
 }
 
-export interface TemplatesGenericReponse {
-    status: 'ok';
-}
-
 export type GetTemplatesResponse = Template[];
 
 export interface PostTemplatesRequestBody {

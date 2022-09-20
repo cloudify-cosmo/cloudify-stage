@@ -14,8 +14,7 @@ import type {
     PostPagesRequestBody,
     PostTemplatesRequestBody,
     PutPagesRequestBody,
-    PutTemplatesRequestBody,
-    TemplatesGenericReponse
+    PutTemplatesRequestBody
 } from './Templates.types';
 
 const router = express.Router();
@@ -28,21 +27,21 @@ router.get('/', (_req, res: Response<GetTemplatesResponse>, next) => {
         .catch(next);
 });
 
-router.post<never, TemplatesGenericReponse, PostTemplatesRequestBody>('/', (req, res, next) => {
+router.post<never, never, PostTemplatesRequestBody>('/', (req, res, next) => {
     TemplatesHandler.createTemplate(req.user!.username, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.put<never, TemplatesGenericReponse, PutTemplatesRequestBody>('/', (req, res, next) => {
+router.put<never, never, PutTemplatesRequestBody>('/', (req, res, next) => {
     TemplatesHandler.updateTemplate(req.user!.username, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.delete('/:templateId', (req, res: Response<TemplatesGenericReponse>, next) => {
+router.delete('/:templateId', (req, res, next) => {
     TemplatesHandler.deleteTemplate(req.params.templateId)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
@@ -66,21 +65,21 @@ router.get('/page-groups', (_req, res: Response<GetPageGroupsResponse>, next) =>
     }
 });
 
-router.post<never, TemplatesGenericReponse, PostPageGroupsRequestBody>('/page-groups', (req, res, next) => {
+router.post<never, never, PostPageGroupsRequestBody>('/page-groups', (req, res, next) => {
     PageGroupsHandler.createPageGroup(req.user!.username, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.put('/page-groups/:groupId', (req, res: Response<TemplatesGenericReponse>, next) => {
+router.put('/page-groups/:groupId', (req, res, next) => {
     PageGroupsHandler.updatePageGroup(req.user!.username, req.params.groupId, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.delete('/page-groups/:groupId', (req, res: Response<TemplatesGenericReponse>, next) => {
+router.delete('/page-groups/:groupId', (req, res, next) => {
     PageGroupsHandler.deletePageGroup(req.params.groupId)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
@@ -90,21 +89,21 @@ router.get('/pages', (_req, res: Response<GetPagesResponse>, next) => {
         .catch(next);
 });
 
-router.post<never, TemplatesGenericReponse, PostPagesRequestBody>('/pages', (req, res, next) => {
+router.post<never, never, PostPagesRequestBody>('/pages', (req, res, next) => {
     PagesHandler.createPage(req.user!.username, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.put<never, TemplatesGenericReponse, PutPagesRequestBody>('/pages', (req, res, next) => {
+router.put<never, never, PutPagesRequestBody>('/pages', (req, res, next) => {
     PagesHandler.updatePage(req.user!.username, req.body)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
-router.delete('/pages/:pageId', (req, res: Response<TemplatesGenericReponse>, next) => {
+router.delete('/pages/:pageId', (req, res, next) => {
     PagesHandler.deletePage(req.params.pageId)
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 
