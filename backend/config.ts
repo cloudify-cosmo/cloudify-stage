@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint-disable node/no-unpublished-import,global-require,import/no-dynamic-require */
 import _ from 'lodash';
 import flatten from 'flat';
@@ -22,7 +21,7 @@ try {
     let userDataConfig: Partial<UserConfig> = require(userDataConfigPath);
     userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, { safe: true }))); // Security reason - get only allowed parameters
     userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
-} catch (err) {
+} catch (err: any) {
     if (err.code !== 'MODULE_NOT_FOUND') {
         throw err;
     }
@@ -34,7 +33,7 @@ export function loadMeJson() {
     try {
         // eslint-disable-next-line import/no-unresolved
         me = require('../conf/me.json');
-    } catch (err) {
+    } catch (err: any) {
         if (err.code !== 'MODULE_NOT_FOUND') {
             throw err;
         }
