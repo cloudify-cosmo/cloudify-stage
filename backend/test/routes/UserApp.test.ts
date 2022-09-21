@@ -22,23 +22,6 @@ describe('/ua endpoint', () => {
                 expect(response.body).toStrictEqual(userAppRow);
             });
     });
-
-    it('responds with error when trying to get not existing user layout', () => {
-        mockDb({
-            UserApps: {
-                findOne: () => Promise.reject()
-            }
-        });
-
-        return request(app)
-            .get('/console/ua')
-            .then(response => {
-                expect(response.statusCode).toBe(404);
-                expect(response.body).toStrictEqual({
-                    message: 'Not Found'
-                });
-            });
-    });
 });
 
 describe('/ua/clear-pages endpoint', () => {
