@@ -27,7 +27,7 @@ router.post(
         logger.debug(`YAML file uploaded, name: ${file.originalname}, size: ${file.size}`);
         const yamlString = file.buffer.toString();
         try {
-            const json = yaml.load(yamlString);
+            const json = <PostFileYamlResponse>yaml.load(yamlString);
             res.contentType('application/json').send(json);
         } catch (error) {
             const errorMessage = `Cannot parse YAML file. Error: ${error}`;
