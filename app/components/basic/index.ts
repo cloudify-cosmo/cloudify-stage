@@ -94,21 +94,35 @@ const Leaflet = {
     MarkerClusterGroup
 };
 
-/**
- * NOTE: buttons have limited props defined in their propTypes, making it hard to use in TypeScript.
- * TODO(RD-1563): remove assertions after adding missing prop types
- */
-
-const CancelButtonWithCorrectProps = CancelButton as unknown as typeof Button;
+// TODO(RD-5712) Remove once Confirm component is fully migrated to TypeScript
 const ConfirmWithCorrectProps = Confirm as unknown as ComponentType<StrictConfirmProps>;
+
+// TODO(RD-5716) Remove once ErrorMessage component is fully migrated to TypeScript
 const ErrorMessageWithCorrectReturnType = ErrorMessage as unknown as ComponentType<
     InferProps<typeof ErrorMessage['propTypes']>
 >;
 
-// DEPRECIATED
-// NOTE: It can be safely removed with the major version change
-const UnsafelyTypedFormField = Form.Field;
-const UnsafelyTypedFormGroup = Form.Group;
+type AnyProps = Record<string, any>;
+
+// TODO(RD-5720) Remove once DataTable component is fully migrated to TypeScript
+const DateInputWithTemporaryProps = DateInput as unknown as ComponentType<AnyProps>;
+
+// TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
+const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyProps> & {
+    Row: React.FC<AnyProps>;
+    Column: React.FC<AnyProps>;
+    Data: React.FC<AnyProps>;
+    Action: React.FC<AnyProps>;
+    Filter: React.FC<AnyProps>;
+    RowExpandable: React.FC<AnyProps>;
+    DataExpandable: React.FC<AnyProps>;
+};
+
+// TODO(RD-5718) Remove once DataTable component is fully migrated to TypeScript
+const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {
+    Item: React.FC<AnyProps>;
+    Action: React.FC<AnyProps>;
+};
 
 export {
     Accordion,
@@ -116,17 +130,17 @@ export {
     ApproveButton,
     Breadcrumb,
     Button,
-    CancelButtonWithCorrectProps as CancelButton,
+    CancelButton,
     Card,
     Checkbox,
     Checkmark,
     ConfirmWithCorrectProps as Confirm,
     Container,
     CopyToClipboardButton,
-    DateInput,
+    DateInputWithTemporaryProps as DateInput,
     DateRangeInput,
-    DataSegment,
-    DataTable,
+    DataSegmentWithTemporaryProps as DataSegment,
+    DataTableWithTemporaryProps as DataTable,
     Dimmer,
     Divider,
     Dropdown,
@@ -172,8 +186,6 @@ export {
     Step,
     Tab,
     Table,
-    UnsafelyTypedFormField,
-    UnsafelyTypedFormGroup,
     VisibilityIcon,
     VisibilityField
 };
