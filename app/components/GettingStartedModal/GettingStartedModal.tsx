@@ -40,6 +40,7 @@ const t = StageUtils.getT('gettingStartedModal.secrets');
 
 const emailRegex = /\S+@\S+\.\S+/;
 const isEmailValid = (email: string) => emailRegex.test(email);
+const isPortValid = (port: string) => true;
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -157,14 +158,23 @@ const GettingStartedModal = () => {
         clearErrors();
         return secrets
             .map(({ name, type }) => {
-                if (type === 'email') {
-                    const allData = secretsStepsData[key];
-                    const data = allData?.[name];
-                    if (data && !isEmailValid(data)) {
+                const allData = secretsStepsData[key];
+                const data = allData?.[name];
+                if (data && !isEmailValid(data)) {
+                    if (type === 'email') {
                         setErrors({
                             ...errors,
                             [name]: {
                                 content: t('invalidEmail')
+                            }
+                        });
+                        return false;
+                    }
+                    if (type === 'port') {
+                        setErrors({
+                            ...errors,
+                            [name]: {
+                                content: t('invalidPort')
                             }
                         });
                         return false;
