@@ -1,10 +1,8 @@
-import type { CommonAttributes, Model, ModelFactory } from './types';
+// eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
+import type { Model } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend/db';
+import type { BlueprintUserDataAttributes } from './BlueprintUserDataModel.types';
 
-interface BlueprintUserDataAttributes extends CommonAttributes {
-    blueprintId: string;
-    username: string;
-    layout: any;
-}
 type BlueprintUserDataCreationAttributes = BlueprintUserDataAttributes;
 export type BlueprintUserDataInstance = Model<BlueprintUserDataAttributes, BlueprintUserDataCreationAttributes> &
     BlueprintUserDataAttributes;
