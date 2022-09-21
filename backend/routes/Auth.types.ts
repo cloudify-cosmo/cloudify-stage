@@ -64,25 +64,17 @@ export interface LicenseResponse {
 }
 /* eslint-enable camelcase */
 
-interface AuthErrorResponse {
-    message: string;
+export interface PostAuthLoginResponse {
+    role: string;
 }
 
-export type PostAuthLoginResponse =
-    | {
-          role: string;
-      }
-    | AuthErrorResponse;
+export type PostAuthSamlCallbackResponse = never;
 
-export type PostAuthSamlCallbackResponse = AuthErrorResponse;
-
-export type GetAuthManagerResponse =
-    | {
-          license: LicenseResponse | null;
-          version: VersionResponse;
-          rbac: ConfigResponse['authorization'];
-      }
-    | AuthErrorResponse;
+export interface GetAuthManagerResponse {
+    license: LicenseResponse | null;
+    version: VersionResponse;
+    rbac: ConfigResponse['authorization'];
+}
 
 export interface GetAuthUserResponse {
     username: UserResponse['username'];
@@ -92,6 +84,6 @@ export interface GetAuthUserResponse {
     showGettingStarted: UserResponse['show_getting_started'];
 }
 
-export type GetAuthRBACResponse = ConfigResponse['authorization'] | AuthErrorResponse;
+export type GetAuthRBACResponse = ConfigResponse['authorization'];
 
 export type GetAuthFirstLoginResponse = boolean;

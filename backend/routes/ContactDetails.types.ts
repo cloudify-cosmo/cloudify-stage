@@ -17,10 +17,8 @@ export interface GetContactDetailsResponse {
     contactDetailsReceived: boolean;
 }
 
-export type PostContactDetailsResponse =
-    | {
-          status: 'ok';
-      }
-    | { message: string };
+export type PostContactDetailsResponse = {
+    status: 'ok';
+};
 
 export type PostContactDetailsRequestBody = ContactDetails;

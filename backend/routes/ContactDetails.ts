@@ -10,6 +10,7 @@ import type {
     PostContactDetailsResponse,
     PostContactDetailsRequestBody
 } from './ContactDetails.types';
+import type { GenericErrorResponse } from '../types';
 
 const logger = getLogger('ContactDetails');
 const router = express.Router();
@@ -50,20 +51,23 @@ router.get('/', async (req, res: Response<GetContactDetailsResponse>) => {
     }
 });
 
-router.post<never, PostContactDetailsResponse, PostContactDetailsRequestBody>('/', async (req, res): Promise<void> => {
-    const token = getTokenFromCookies(req);
-    const contactDetails = req.body;
+router.post<never, PostContactDetailsResponse | GenericErrorResponse, PostContactDetailsRequestBody>(
+    '/',
+    async (req, res): Promise<void> => {
+        const token = getTokenFromCookies(req);
+        const contactDetails = req.body;
 
-    try {
-        await submitContactDetails(contactDetails, token);
-        res.send({
-            status: 'ok'
-        });
-    } catch (error: any) {
-        const errorMessage = `Cannot submit contact details. Error: ${error.message}`;
-        logger.error(errorMessage);
-        res.status(400).send({ message: errorMessage });
+        try {
+            await submitContactDetails(contactDetails, token);
+            res.send({
+                status: 'ok'
+            });
+        } catch (error: any) {
+            const errorMessage = `Cannot submit contact details. Error: ${error.message}`;
+            logger.error(errorMessage);
+            res.status(400).send({ message: errorMessage });
+        }
     }
-});
+);
 
 export default router;

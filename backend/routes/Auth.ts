@@ -18,6 +18,7 @@ import type {
 } from './Auth.types';
 import { db } from '../db/Connection';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
+import type { GenericErrorResponse } from '../types';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -31,7 +32,7 @@ function getCookieOptions(req: Request, httpOnly = true) {
 }
 
 // This path is used during logging in, so it should not require authentication
-router.post('/login', (req, res: Response<PostAuthLoginResponse>) =>
+router.post('/login', (req, res: Response<PostAuthLoginResponse | GenericErrorResponse>) =>
     AuthHandler.getToken(req.headers.authorization as string)
         .then(token => {
             const tokenCookieOptions = getCookieOptions(req);
@@ -50,24 +51,28 @@ router.post('/login', (req, res: Response<PostAuthLoginResponse>) =>
         })
 );
 
-router.post('/saml/callback', authenticateWithSaml, (req, res: Response<PostAuthSamlCallbackResponse>) => {
-    if (!req.body || !req.body.SAMLResponse || !req.user) {
-        res.status(401).send({ message: 'Invalid Request' });
-    } else {
-        logger.debug('Received SAML Response for user', req.user);
-        AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
-            .then(token => {
-                res.cookie(TOKEN_COOKIE_NAME, token.value, getCookieOptions(req));
-                res.redirect(`${CONTEXT_PATH}${EXTERNAL_LOGIN_PATH}`);
-            })
-            .catch(err => {
-                logger.error(err);
-                res.status(500).send({ message: 'Failed to authenticate with manager' });
-            });
+router.post(
+    '/saml/callback',
+    authenticateWithSaml,
+    (req, res: Response<PostAuthSamlCallbackResponse | GenericErrorResponse>) => {
+        if (!req.body || !req.body.SAMLResponse || !req.user) {
+            res.status(401).send({ message: 'Invalid Request' });
+        } else {
+            logger.debug('Received SAML Response for user', req.user);
+            AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
+                .then(token => {
+                    res.cookie(TOKEN_COOKIE_NAME, token.value, getCookieOptions(req));
+                    res.redirect(`${CONTEXT_PATH}${EXTERNAL_LOGIN_PATH}`);
+                })
+                .catch(err => {
+                    logger.error(err);
+                    res.status(500).send({ message: 'Failed to authenticate with manager' });
+                });
+        }
     }
-});
+);
 
-router.get('/manager', authenticateWithCookie, (req, res: Response<GetAuthManagerResponse>) => {
+router.get('/manager', authenticateWithCookie, (req, res: Response<GetAuthManagerResponse | GenericErrorResponse>) => {
     const token = getTokenFromCookies(req);
     Promise.all([AuthHandler.getManagerVersion(token), AuthHandler.getAndCacheConfig(token)])
         .then(([version, rbac]) =>
@@ -105,7 +110,7 @@ router.post('/logout', authenticateWithCookie, (_req, res) => {
     res.end();
 });
 
-router.get('/RBAC', authenticateWithCookie, (req, res: Response<GetAuthRBACResponse>) => {
+router.get('/RBAC', authenticateWithCookie, (req, res: Response<GetAuthRBACResponse | GenericErrorResponse>) => {
     AuthHandler.getRBAC(getTokenFromCookies(req))
         .then(res.send)
         .catch(err => {
