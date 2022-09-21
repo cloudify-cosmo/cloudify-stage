@@ -35,7 +35,7 @@ export interface TerraformParserResult {
     /* eslint-enable camelcase */
 }
 
-export type PostTerraformResourcesResponse = string[] | { message: string };
+export type PostTerraformResourcesResponse = string[];
 
 export interface PostTerraformResourcesQueryParams {
     templateUrl: string;

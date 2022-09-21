@@ -6,6 +6,7 @@ import { jsonRequest } from './ManagerHandler';
 import { getLogger } from './LoggerHandler';
 import { getConfig } from '../config';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
+import type { GenericErrorResponse } from '../types';
 
 const logger = getLogger('GitHub');
 const params = getConfig().app.github;
@@ -21,7 +22,7 @@ function getSecretName(secretName: string) {
 
 export function pipeRequest<T>(
     req: Request,
-    res: ResponseWithData<T | { message: string }>,
+    res: ResponseWithData<T | GenericErrorResponse>,
     next: NextFunction,
     url: string,
     isMiddleware = false

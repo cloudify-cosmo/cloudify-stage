@@ -31,6 +31,7 @@ import type {
     PostTerraformBlueprintArchiveRequestBody,
     PostTerraformBlueprintArchiveResponse
 } from './Terraform.types';
+import type { GenericErrorResponse } from '../types';
 
 const upload = multer({ limits: { fileSize: 1024 * 1024 } }); // 1024 Bytes * 1024 = 1 MB
 const logger = getLogger('Terraform');
@@ -38,7 +39,7 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.post<never, PostTerraformResourcesResponse, any, PostTerraformResourcesQueryParams>(
+router.post<never, PostTerraformResourcesResponse | GenericErrorResponse, any, PostTerraformResourcesQueryParams>(
     '/resources',
     async (req, res) => {
         const { templateUrl } = req.query;
@@ -73,7 +74,7 @@ router.post(
     upload.single('file'),
     checkIfFileUploaded(logger),
     checkIfFileBuffer,
-    async (req, res: Response<PostTerraformResourcesFileResponse>) => {
+    async (req, res: Response<PostTerraformResourcesFileResponse | GenericErrorResponse>) => {
         try {
             res.send(await getModuleListForZipBuffer(req.file!.buffer));
         } catch (e: any) {
@@ -105,7 +106,7 @@ router.post<never, PostTerraformFetchDataResponse, PostTerraformFetchDataRequest
     }
 );
 
-router.post<never, PostTerraformFetchDataFileResponse, PostTerraformFetchDataFileRequestBody>(
+router.post<never, PostTerraformFetchDataFileResponse | GenericErrorResponse, PostTerraformFetchDataFileRequestBody>(
     '/fetch-data/file',
     fileDebase64,
     async (req, res) => {
@@ -128,29 +129,29 @@ router.post<never, PostTerraformBlueprintResponse, PostTerraformBlueprintRequest
     res.send(result);
 });
 
-router.post<never, PostTerraformBlueprintArchiveResponse, PostTerraformBlueprintArchiveRequestBody>(
-    '/blueprint/archive',
-    fileDebase64,
-    (req, res, next) => {
-        const terraformTemplate = path.join('tf_module', 'terraform.zip');
-        const { terraformVersion, resourceLocation } = req.body;
+router.post<
+    never,
+    PostTerraformBlueprintArchiveResponse | GenericErrorResponse,
+    PostTerraformBlueprintArchiveRequestBody
+>('/blueprint/archive', fileDebase64, (req, res, next) => {
+    const terraformTemplate = path.join('tf_module', 'terraform.zip');
+    const { terraformVersion, resourceLocation } = req.body;
 
-        logger.debug(
-            `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
-        );
+    logger.debug(
+        `Generating Terraform blueprint archive using: version=${terraformVersion}, template=${terraformTemplate}, location=${resourceLocation}.`
+    );
 
-        const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
+    const result = renderBlueprint({ ...req.body, terraformTemplate }, res);
 
-        const archive = archiver('zip');
+    const archive = archiver('zip');
 
-        res.setHeader('Content-Type', 'application/zip');
-        res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
-        archive.pipe(res);
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Disposition', 'attachment; filename=blueprint.zip');
+    archive.pipe(res);
 
-        archive.append(result, { name: 'blueprint/blueprint.yaml' });
-        archive.append(req.body.file!, { name: 'blueprint/tf_module/terraform.zip' });
-        archive.finalize().catch(next);
-    }
-);
+    archive.append(result, { name: 'blueprint/blueprint.yaml' });
+    archive.append(req.body.file!, { name: 'blueprint/tf_module/terraform.zip' });
+    archive.finalize().catch(next);
+});
 
 export default router;
