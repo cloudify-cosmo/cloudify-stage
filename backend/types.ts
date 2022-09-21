@@ -9,6 +9,10 @@ export type AllowedRequestMethod =
     | typeof ALLOWED_METHODS_OBJECT.post
     | typeof ALLOWED_METHODS_OBJECT.put;
 
+export interface GenericErrorResponse {
+    message: string;
+}
+
 export interface PaginatedResponse<ResponseItem> {
     items: ResponseItem[];
     metadata: {

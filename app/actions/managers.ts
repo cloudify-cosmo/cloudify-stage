@@ -13,7 +13,7 @@ import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
 import type { ReduxState } from '../reducers';
-import type { AuthUserResponse } from '../../backend/routes/Auth.types';
+import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
 
 function requestLogin() {
     return {
@@ -77,7 +77,7 @@ export function login(
     };
 }
 
-function responseUserData({ username, role, groupSystemRoles, tenantsRoles, showGettingStarted }: AuthUserResponse) {
+function responseUserData({ username, role, groupSystemRoles, tenantsRoles, showGettingStarted }: GetAuthUserResponse) {
     return {
         type: types.SET_USER_DATA,
         username,

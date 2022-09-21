@@ -1,16 +1,11 @@
-import type { CommonAttributes, Model, ModelFactory } from './types';
-import type { Mode } from '../../serverSettings';
-import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN } from '../../serverSettings';
-import type { PageFileDefinition } from '../../routes/Templates.types';
+// eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
+import type { Model } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend/db';
 
-interface UserAppsAttributes extends CommonAttributes {
-    username: string;
-    appDataVersion: number;
-    mode: Mode;
-    tenant: string;
-    appData: { pages: PageFileDefinition[] };
-}
-type UserAppsCreationAttributes = UserAppsAttributes;
+import { MODE_COMMUNITY, MODE_CUSTOMER, MODE_MAIN } from '../../serverSettings';
+import type { UserAppsAttributes } from './UserAppsModel.types';
+
+export type UserAppsCreationAttributes = UserAppsAttributes;
 export type UserAppsInstance = Model<UserAppsAttributes, UserAppsCreationAttributes> & UserAppsAttributes;
 
 const UserAppsModelFactory: ModelFactory<UserAppsInstance> = (sequelize, dataTypes) =>
