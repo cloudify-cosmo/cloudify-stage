@@ -26,7 +26,7 @@ function saveMultipartData(req: Request) {
     return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
 }
 
-function saveDataFromUrl(archiveUrl: string): Promise<any> {
+function saveDataFromUrl(archiveUrl: string) {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
 }

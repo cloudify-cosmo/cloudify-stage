@@ -1,11 +1,15 @@
-import type { AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
-import type { Request, Response } from 'express';
 import decompress from 'decompress';
 import fs from 'fs-extra';
 import _ from 'lodash';
 import multer from 'multer';
 import pathlib from 'path';
 import sanitize from 'sanitize-filename';
+
+import type { AxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from 'axios';
+import type { Request, Response } from 'express';
+// eslint-disable-next-line import/no-unresolved,node/no-missing-import
+import type { ParamsDictionary, Query } from 'express-serve-static-core';
+
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 import { getLogger } from './LoggerHandler';
 import * as ManagerHandler from './ManagerHandler';
@@ -22,34 +26,31 @@ interface ArchiveFromUrl extends ArchiveFromMultipartData {
     archivePath: string;
 }
 
-declare global {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace Express {
-        export interface Request {
-            archiveFolder?: string;
-            archiveFile?: string;
-        }
-    }
+type ArchiveParamsLocals = Partial<ArchiveFromMultipartData>;
+type ArchiveRequest = Request<ParamsDictionary, any, any, Query, ArchiveParamsLocals>;
+
+function getResponseLocalsFrom(req: Request) {
+    return req.res!.locals;
 }
 
 export function saveMultipartData(
-    req: Request,
+    req: ArchiveRequest,
     targetDir: string,
     multipartId: string
 ): Promise<ArchiveFromMultipartData> {
     const storage = multer.diskStorage({
-        destination(request: Request, file, cb) {
+        destination(request: ArchiveRequest, file, cb) {
             logger.debug('Saving file on disk');
 
             const archiveFolder = _.isFunction(targetDir) ? targetDir(file.originalname) : targetDir;
 
             fs.mkdirsSync(archiveFolder);
 
-            request.archiveFolder = archiveFolder;
+            getResponseLocalsFrom(request).archiveFolder = archiveFolder;
             cb(null, archiveFolder);
         },
-        filename(request: Request, file, cb) {
-            request.archiveFile = file.originalname;
+        filename(request: ArchiveRequest, file, cb) {
+            getResponseLocalsFrom(request).archiveFile = file.originalname;
             cb(null, file.originalname);
         }
     });
@@ -58,16 +59,17 @@ export function saveMultipartData(
 
     return new Promise<ArchiveFromMultipartData>((resolve, reject) => {
         upload(req, {} as Response, err => {
+            const { archiveFolder, archiveFile } = getResponseLocalsFrom(req) as ArchiveFromMultipartData;
             if (err) {
                 reject(err);
             } else {
                 logger.debug(
                     'Archive saved from multipart data, archiveFolder:',
-                    req.archiveFolder,
+                    archiveFolder,
                     'archiveFile:',
-                    req.archiveFile
+                    archiveFile
                 );
-                resolve({ archiveFolder: req.archiveFolder!, archiveFile: req.archiveFile! });
+                resolve({ archiveFolder, archiveFile });
             }
         });
     });
