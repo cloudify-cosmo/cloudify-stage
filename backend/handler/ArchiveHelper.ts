@@ -29,7 +29,7 @@ interface ArchiveFromUrl extends ArchiveFromMultipartData {
 type ArchiveParamsLocals = Partial<ArchiveFromMultipartData>;
 type ArchiveRequest = Request<ParamsDictionary, any, any, Query, ArchiveParamsLocals>;
 
-function getResponseLocalsFrom(req: Request) {
+function getResponseLocalsFrom(req: ArchiveRequest) {
     return req.res!.locals;
 }
 
@@ -59,7 +59,7 @@ export function saveMultipartData(
 
     return new Promise<ArchiveFromMultipartData>((resolve, reject) => {
         upload(req, {} as Response, err => {
-            const { archiveFolder, archiveFile } = getResponseLocalsFrom(req) as ArchiveFromMultipartData;
+            const { archiveFolder, archiveFile } = getResponseLocalsFrom(req);
             if (err) {
                 reject(err);
             } else {
@@ -69,7 +69,14 @@ export function saveMultipartData(
                     'archiveFile:',
                     archiveFile
                 );
-                resolve({ archiveFolder, archiveFile });
+
+                // NOTE: At this point we are sure that archiveFolder and archiveFile are not undefined
+                const archiveData: ArchiveFromMultipartData = {
+                    archiveFolder: archiveFolder!,
+                    archiveFile: archiveFile!
+                };
+
+                resolve(archiveData);
             }
         });
     });
