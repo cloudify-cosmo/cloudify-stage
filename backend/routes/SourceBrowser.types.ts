@@ -1,9 +1,4 @@
-export interface ScanningItem {
-    key: string;
-    title: string;
-    isDir: boolean;
-    children?: ScanningItem[];
-}
+import type { ScanningItem } from '../handler/SourceHandler.types';
 
 export type GetSourceBrowseBlueprintFileResponse = string;
 

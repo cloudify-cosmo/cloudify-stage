@@ -6,7 +6,7 @@ import pathlib from 'path';
 import { getLogger } from '../LoggerHandler';
 import { defaultUpdater } from './consts';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
-import type { Page, PageFileContent, PostPagesRequestBody, PutPagesRequestBody } from '../../routes/Templates.types';
+import type { CreatePageData, Page, PageFileContent, UpdatePageData } from './types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -49,7 +49,7 @@ function getBuiltInPages() {
     return getPages(builtInPagesFolder, false);
 }
 
-export function createPage(username: string, page: PostPagesRequestBody) {
+export function createPage(username: string, page: CreatePageData) {
     const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Page id "${page.id}" already exists`);
@@ -64,7 +64,7 @@ export function createPage(username: string, page: PostPagesRequestBody) {
     return fs.writeJson(path, content, { spaces: '  ' });
 }
 
-export function updatePage(username: string, page: PutPagesRequestBody) {
+export function updatePage(username: string, page: UpdatePageData) {
     const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
 
     const content: PageFileContent = {

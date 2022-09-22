@@ -14,7 +14,7 @@ import TerraformVariableNameInput from './TerraformVariableNameInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
-import type { Variable, Output } from '../../../../backend/routes/Terraform.types';
+import type { Variable, Output } from '../../../../backend/handler/TerraformHandler.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
 import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';

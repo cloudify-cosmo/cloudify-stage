@@ -13,7 +13,7 @@ import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
 
 import { getLogger } from './LoggerHandler';
-import type { WidgetData, WidgetUsage } from '../routes/Widgets.types';
+import type { WidgetData, WidgetUsage } from './WidgetsHandler.types';
 
 const logger = getLogger('WidgetHandler');
 

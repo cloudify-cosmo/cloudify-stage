@@ -10,13 +10,7 @@ import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
 import { defaultUpdater } from './consts';
-import type {
-    Template,
-    PostTemplatesRequestBody,
-    TemplateData,
-    PutTemplatesRequestBody,
-    TemplateFileContent
-} from '../../routes/Templates.types';
+import type { CreateTemplateData, Template, TemplateData, TemplateFileContent, UpdateTemplateData } from './types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -159,7 +153,7 @@ function checkTemplateExistence(data: TemplateData, excludeTemplateId?: string) 
     return Promise.resolve();
 }
 
-export function createTemplate(username: string, template: PostTemplatesRequestBody) {
+export function createTemplate(username: string, template: CreateTemplateData) {
     const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Template name "${template.id}" already exists`);
@@ -190,7 +184,7 @@ export function deleteTemplate(templateId: string) {
     });
 }
 
-export function updateTemplate(username: string, templateUpdate: PutTemplatesRequestBody) {
+export function updateTemplate(username: string, templateUpdate: UpdateTemplateData) {
     const path = pathlib.resolve(userTemplatesFolder, `${templateUpdate.id}.json`);
 
     const content: TemplateFileContent = {

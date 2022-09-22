@@ -14,7 +14,7 @@ import type { File } from 'decompress';
 import type { NextFunction, Request, Response } from 'express';
 import type { GitError } from 'simple-git';
 import { getLogger } from './LoggerHandler';
-import type { PostTerraformBlueprintRequestBody, TerraformParserResult } from '../routes/Terraform.types';
+import type { TerraformBlueprintData, TerraformParserResult } from './TerraformHandler.types';
 
 const logger = getLogger('Terraform');
 const templatePath = path.resolve(__dirname, '../templates/terraform');
@@ -164,7 +164,7 @@ export const renderBlueprint = (
         variables = [],
         environmentVariables = [],
         outputs = []
-    }: PostTerraformBlueprintRequestBody,
+    }: TerraformBlueprintData,
     res: Response
 ) => {
     let result = '';

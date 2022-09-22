@@ -1,6 +1,6 @@
 import type { CommonAttributes } from './types';
 import type { Mode } from '../../serverSettings';
-import type { LayoutSection } from '../../routes/Templates.types';
+import type { LayoutSection } from '../../handler/templates/types';
 
 export interface AppDataPage {
     id: string;

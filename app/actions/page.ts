@@ -6,7 +6,7 @@ import type {
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
     WidgetsSection as BackendWidgetsSection
-} from '../../backend/routes/Templates.types';
+} from '../../backend/handler/templates/types';
 import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';

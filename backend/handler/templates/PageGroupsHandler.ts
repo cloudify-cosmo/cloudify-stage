@@ -5,12 +5,7 @@ import fs, { readdirSync, readJsonSync } from 'fs-extra';
 import moment from 'moment';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
 import { getLogger } from '../LoggerHandler';
-import type {
-    PageGroup,
-    PageGroupFileContent,
-    PostPageGroupsRequestBody,
-    PutPageGroupsRequestBody
-} from '../../routes/Templates.types';
+import type { PageGroup, PageGroupFileContent, CreatePageGroupData } from './types';
 
 const logger = getLogger('PageGroupsHandler');
 
@@ -45,7 +40,7 @@ export function listPageGroups() {
     return [...getPageGroups(builtInPageGroupsDir, false), ...getPageGroups(userPageGroupsFolder, true)];
 }
 
-export function createPageGroup(username: string, pageGroup: PostPageGroupsRequestBody) {
+export function createPageGroup(username: string, pageGroup: CreatePageGroupData) {
     const path = pathlib.resolve(userPageGroupsFolder, `${pageGroup.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Page group id "${pageGroup.id}" already exists`);
@@ -66,7 +61,7 @@ export function deletePageGroup(pageGroupId: string) {
     return fs.remove(path);
 }
 
-export function updatePageGroup(username: string, id: string, pageGroup: PutPageGroupsRequestBody) {
+export function updatePageGroup(username: string, id: string, pageGroup: CreatePageGroupData) {
     const existingFilePath = pathlib.resolve(userPageGroupsFolder, `${id}.json`);
     const newFilePath = pathlib.resolve(userPageGroupsFolder, `${pageGroup.id}.json`);
 
