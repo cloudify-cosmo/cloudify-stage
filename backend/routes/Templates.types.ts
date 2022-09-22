@@ -40,6 +40,7 @@ export interface CommonFileContent {
 
 export interface CommonIdentityData {
     id: string;
+    name: string;
     custom: boolean;
 }
 

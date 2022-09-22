@@ -51,14 +51,15 @@ function getTemplates(folder: string, custom: boolean, filter: (fileName: string
                 const name = id;
                 const { updatedBy = custom ? '' : defaultUpdater, updatedAt = '', ...data } = templateFileContent;
 
-                return {
+                const template: Template = {
                     id,
                     name,
                     custom,
                     data,
                     updatedBy,
                     updatedAt
-                } as Template;
+                };
+                return template;
             } catch (error) {
                 logger.error(`Error when trying to parse ${templateFilePath} file to JSON.`, error);
 

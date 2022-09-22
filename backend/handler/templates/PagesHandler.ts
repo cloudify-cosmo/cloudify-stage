@@ -29,7 +29,8 @@ function getPages(folder: string, custom: boolean) {
                     ...data
                 } = pageFileContent;
 
-                return { id, name, custom, updatedBy, updatedAt, data } as Page;
+                const page: Page = { id, name, custom, updatedBy, updatedAt, data };
+                return page;
             } catch (error) {
                 logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
 
