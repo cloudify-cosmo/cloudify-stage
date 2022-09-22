@@ -307,6 +307,10 @@ export default function DynamicDropdown({
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
                 }}
+                onFocus={(event, data) => {
+                    setSearchQuery('');
+                    if (isFunction(onSearchChange)) onSearchChange(event, { ...data, searchQuery: '' });
+                }}
                 multiple={multiple}
                 loading={isLoading}
                 options={((): DropdownItemProps[] => {
