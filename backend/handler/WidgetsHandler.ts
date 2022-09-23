@@ -13,6 +13,7 @@ import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
 
 import { getLogger } from './LoggerHandler';
+import type { WidgetData, WidgetUsage } from '../routes/Widgets.types';
 
 const logger = getLogger('WidgetHandler');
 
@@ -194,7 +195,7 @@ export function deleteWidget(widgetId: string) {
     }).then(() => BackendHandler.removeWidgetBackend(widgetId));
 }
 
-export function installWidget(archiveUrl: string, _username: string, req: Request) {
+export function installWidget(archiveUrl: string | undefined, _username: string, req: Request): Promise<WidgetData> {
     logger.debug('Installing widget from', archiveUrl || 'file');
 
     return ArchiveHelper.removeOldExtracts(widgetTempDir)
@@ -231,7 +232,11 @@ export function installWidget(archiveUrl: string, _username: string, req: Reques
         });
 }
 
-export function updateWidget(updateWidgetId: string, archiveUrl: string, req: Request) {
+export function updateWidget(
+    updateWidgetId: string,
+    archiveUrl: string | undefined,
+    req: Request
+): Promise<WidgetData> {
     logger.debug('Updating widget', updateWidgetId, 'from', archiveUrl || 'file');
 
     return ArchiveHelper.removeOldExtracts(widgetTempDir)
@@ -272,16 +277,15 @@ export function updateWidget(updateWidgetId: string, archiveUrl: string, req: Re
                 });
         });
 }
-export function listWidgets() {
+export function listWidgets(): Promise<WidgetData[]> {
     const builtInWidgets = _.map(getBuiltInWidgets(), widget => ({ id: widget, isCustom: false }));
     const userWidgets = _.map(getUserWidgets(), widget => ({ id: widget, isCustom: true }));
 
     return Promise.resolve(_.concat(builtInWidgets, userWidgets));
 }
 
-export function isWidgetUsed(widgetId: string) {
+export function isWidgetUsed(widgetId: string): Promise<WidgetUsage[]> {
     return db.UserApps.findAll<UserAppsInstance>({ attributes: ['appData', 'username'] }).then(userApp => {
-        type WidgetUsage = { username: string; managerIp: string };
         const result: WidgetUsage[] = [];
         _.forEach(userApp, row => {
             const filter = _.filter(row.appData.pages, { widgets: [{ definition: widgetId }] });

@@ -1,4 +1,5 @@
 import { Strategy } from 'passport-saml';
+import type { Strategy as PassportStrategy } from 'passport';
 import type { VerifyWithoutRequest } from 'passport-saml';
 import fs from 'fs';
 import { getConfig } from '../config';
@@ -18,5 +19,5 @@ export default () => {
             cert
         },
         ((user, done) => done(null, user!)) as VerifyWithoutRequest
-    );
+    ) as PassportStrategy;
 };

@@ -1,20 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
-import passport from 'passport';
-import {
-    browseArchiveFile,
-    getMimeType,
-    browseArchiveTree,
-    listYamlFiles,
-    getBlueprintResources
-} from '../handler/SourceHandler';
+import type { Response } from 'express';
+import { browseArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
+import type {
+    PutSourceListYamlQueryParams,
+    PutSourceListYamlResponse,
+    GetSourceBrowseBlueprintFileResponse,
+    GetSourceBrowseBlueprintArchiveResponse
+} from './SourceBrowser.types';
 
 const router = express.Router();
 
-router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
-    const { timestamp } = req.params;
+router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     const path = req.params[0];
+    const { timestamp } = req.params;
 
     if (!path) {
         next('no file path passed [path]');
@@ -26,20 +24,14 @@ router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     }
 });
 
-router.get('/browse/:blueprintId/archive', (req, res, next) => {
+router.get('/browse/:blueprintId/archive', (req, res: Response<GetSourceBrowseBlueprintArchiveResponse>, next) => {
     browseArchiveTree(req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/list/yaml', (req, res, next) => {
+router.put<never, PutSourceListYamlResponse, never, PutSourceListYamlQueryParams>('/list/yaml', (req, res, next) => {
     listYamlFiles(req)
-        .then(data => res.send(data))
-        .catch(next);
-});
-
-router.put('/list/resources', (req, res, next) => {
-    getBlueprintResources(req)
         .then(data => res.send(data))
         .catch(next);
 });

@@ -2,16 +2,13 @@ import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { getLogger } from '../handler/LoggerHandler';
 import { requestAndForwardResponse } from '../handler/RequestHandler';
+import type { GetExternalContentQueryParams } from './External.types';
 
 const router = express.Router();
 const logger = getLogger('External');
 
-interface GetContentQuery extends Record<string, string> {
-    url: string;
-}
-
 function pipeRequest(
-    _req: Request<any, any, any, GetContentQuery>,
+    _req: Request<never, any, any, GetExternalContentQueryParams>,
     res: Response,
     _next: NextFunction,
     url: string,
@@ -24,7 +21,7 @@ function pipeRequest(
     );
 }
 
-router.get<any, any, any, any, GetContentQuery>('/content', (req, res, next) => {
+router.get<never, any, any, GetExternalContentQueryParams>('/content', (req, res, next) => {
     const { url, ...queryString } = req.query;
     pipeRequest(req, res, next, url, queryString);
 });

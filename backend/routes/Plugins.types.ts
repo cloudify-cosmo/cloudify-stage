@@ -28,3 +28,15 @@ export interface PluginEntry {
     package_name: string;
     package_version: string;
 }
+
+export interface PutPluginsTitleResponse {
+    title: string;
+}
+
+export interface PostPluginsUploadQueryParams {
+    iconUrl?: string;
+    title: string;
+    visibility: string;
+    wagonUrl?: string;
+    yamlUrl?: string;
+}

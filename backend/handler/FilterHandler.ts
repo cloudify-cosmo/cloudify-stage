@@ -3,13 +3,12 @@ import { db } from '../db/Connection';
 import { getLogger } from './LoggerHandler';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
 import type { TabContent, WidgetDefinition } from '../routes/Templates.types';
+import type { FilterUses } from '../routes/Filters.types';
 
 const logger = getLogger('FilterHandler');
 
 export async function getFilterUsage(filterId: string) {
     const userAppsArr = await db.UserApps.findAll<UserAppsInstance>({ attributes: ['appData', 'username'] });
-
-    type FilterUses = { pageName: string; widgetName: string; username: string };
 
     const filterUses: FilterUses[] = [];
     _.forEach(userAppsArr, ({ appData, username }) => {
