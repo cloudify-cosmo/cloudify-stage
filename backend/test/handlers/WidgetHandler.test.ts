@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import mkdirp from 'mkdirp';
 import { getResourcePath } from 'utils';
 import { listWidgets } from 'handler/WidgetsHandler';
