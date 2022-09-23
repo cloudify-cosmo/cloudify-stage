@@ -1,7 +1,3 @@
-export interface FilterUses {
-    pageName: string;
-    widgetName: string;
-    username: string;
-}
+import type { FilterUses } from '../handler/FilterHandler.types';
 
 export type GetFiltersUsageResponse = FilterUses[];

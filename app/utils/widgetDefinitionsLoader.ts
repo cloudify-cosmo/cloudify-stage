@@ -117,7 +117,7 @@ export default class WidgetDefinitionsLoader {
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
-            internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
+            internal.doGet('/widgets') // We can load the list of widgets in the meanwhile
         ]).then(results => results[1].map((widget: WidgetListItem) => ({ ...widget, loaded: false })));
     }
 
@@ -126,14 +126,14 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug('Install widget from url', widgetUrl);
-            return internal.doPut('/widgets/install', {
+            return internal.doPost('/widgets', {
                 params: {
                     url: widgetUrl
                 }
             });
         }
         log.debug('Install widget from file');
-        return internal.doUpload('/widgets/install', { files: { widget: widgetFile } });
+        return internal.doUpload('/widgets', { method: 'post', files: { widget: widgetFile } });
     }
 
     private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any): Promise<WidgetListItem> {
@@ -141,10 +141,10 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug(`Update widget ${widgetId} from url`, widgetUrl);
-            return internal.doPut('/widgets/update', { params: { url: widgetUrl, id: widgetId } });
+            return internal.doPut('/widgets', { params: { url: widgetUrl, id: widgetId } });
         }
         log.debug(`Update widget ${widgetId} from file`);
-        return internal.doUpload('/widgets/update', { params: { id: widgetId }, files: { widget: widgetFile } });
+        return internal.doUpload('/widgets', { params: { id: widgetId }, files: { widget: widgetFile } });
     }
 
     private static validateWidget(widgetId: any, manager: any) {

@@ -10,12 +10,12 @@ import { getTokenFromCookies } from '../utils';
 import type {
     GetAuthUserResponse,
     GetAuthManagerResponse,
-    LicenseResponse,
     GetAuthRBACResponse,
     GetAuthFirstLoginResponse,
     PostAuthLoginResponse,
     PostAuthSamlCallbackResponse
 } from './Auth.types';
+import type { LicenseResponse } from '../handler/AuthHandler.types';
 import { db } from '../db/Connection';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
 import type { GenericErrorResponse } from '../types';

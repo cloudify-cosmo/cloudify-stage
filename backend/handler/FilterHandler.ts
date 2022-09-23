@@ -2,8 +2,8 @@ import _ from 'lodash';
 import { db } from '../db/Connection';
 import { getLogger } from './LoggerHandler';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
-import type { TabContent, WidgetDefinition } from '../routes/Templates.types';
-import type { FilterUses } from '../routes/Filters.types';
+import type { TabContent, WidgetDefinition } from './templates/types';
+import type { FilterUses } from './FilterHandler.types';
 
 const logger = getLogger('FilterHandler');
 

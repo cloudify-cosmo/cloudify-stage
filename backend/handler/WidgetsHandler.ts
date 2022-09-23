@@ -13,7 +13,7 @@ import * as ArchiveHelper from './ArchiveHelper';
 import * as BackendHandler from './BackendHandler';
 
 import { getLogger } from './LoggerHandler';
-import type { WidgetData, WidgetUsage } from '../routes/Widgets.types';
+import type { WidgetData, WidgetUsage } from './WidgetsHandler.types';
 
 const logger = getLogger('WidgetHandler');
 
@@ -26,7 +26,7 @@ function saveMultipartData(req: Request) {
     return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
 }
 
-function saveDataFromUrl(archiveUrl: string): Promise<any> {
+function saveDataFromUrl(archiveUrl: string) {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
 }

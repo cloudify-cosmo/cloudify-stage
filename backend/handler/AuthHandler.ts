@@ -11,7 +11,7 @@ import type {
     TokenResponse,
     UserResponse,
     VersionResponse
-} from '../routes/Auth.types';
+} from './AuthHandler.types';
 import type { PaginatedResponse } from '../types';
 
 const logger = getLogger('AuthHandler');
