@@ -4,7 +4,9 @@ import Actions from './actions';
 import type { User } from './widget.types';
 import type { Role } from '../../common/src/roles/RolesPicker';
 import type { RolesAssignment } from '../../common/src/tenants/utils';
+import getWidgetT from './getWidgetT';
 
+const t = getWidgetT();
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
@@ -90,14 +92,14 @@ const TenantModal: FunctionComponent<TenantModalProps> = ({ onHide, open, user, 
     return (
         <Modal open={open} onClose={() => onHide()} className="editTenantsModal">
             <Modal.Header>
-                <Icon name="user" /> Edit tenants for {user.username}
+                <Icon name="user" /> {t('editTenantsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field>
                         <Form.Dropdown
-                            placeholder="Tenants"
+                            placeholder={t('details.tenants')}
                             multiple
                             selection
                             options={options}

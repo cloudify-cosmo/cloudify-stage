@@ -1,5 +1,8 @@
 import Actions from './actions';
 import type { User } from './widget.types';
+import getWidgetT from './getWidgetT';
+
+const detailsT = (key: string) => getWidgetT()(`details.${key}`);
 
 interface UserDetailsProps {
     toolbox: Stage.Types.Toolbox;
@@ -67,7 +70,7 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
         return (
             <Segment.Group horizontal>
                 <Segment>
-                    <Icon name="users" /> Groups
+                    <Icon name="users" /> {detailsT('groups')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.groups.map(item => {
@@ -87,14 +90,14 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                             );
                         })}
 
-                        {_.isEmpty(data.groups) && <Message content="No groups available" />}
+                        {_.isEmpty(data.groups) && <Message content={detailsT('noGroups')} />}
                     </List>
                 </Segment>
 
                 <Popup>
                     <Popup.Trigger>
                         <Segment>
-                            <Icon name="user" /> Tenants
+                            <Icon name="user" /> {detailsT('tenants')}
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
                                 {_.map(_.keys(data.tenants), item => {
@@ -118,14 +121,11 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                                     );
                                 })}
 
-                                {_.isEmpty(data.tenants) && <Message content="No tenants available" />}
+                                {_.isEmpty(data.tenants) && <Message content={detailsT('noTenants')} />}
                             </List>
                         </Segment>
                     </Popup.Trigger>
-                    <Popup.Content>
-                        The tenants that this user is assigned to, and the assigned roles. When the roles are inherited
-                        from a user group, the name of the user group is also shown, for example: viewer (Viewers)
-                    </Popup.Content>
+                    <Popup.Content>{detailsT('assignedTenantsNote')}</Popup.Content>
                 </Popup>
             </Segment.Group>
         );

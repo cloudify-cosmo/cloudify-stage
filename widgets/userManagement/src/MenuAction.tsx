@@ -1,6 +1,9 @@
 import type { MenuItemProps } from 'semantic-ui-react';
 import type { User } from './widget.types';
 import type { ReduxState } from '../../../app/reducers';
+import getWidgetT from './getWidgetT';
+
+const actionT = (key: string) => getWidgetT()(`actions.${key}`);
 
 export enum MenuActions {
     CHANGE_PASSWORD_ACTION = 'CHANGE_PASSWORD_ACTION',
@@ -38,26 +41,26 @@ class MenuAction extends React.Component<MenuActionProps> {
                     {canChangePassword && (
                         <Menu.Item
                             icon="lock"
-                            content="Change password"
+                            content={actionT('changePassword')}
                             name={MenuActions.CHANGE_PASSWORD_ACTION}
                             onClick={this.actionClick}
                         />
                     )}
                     <Menu.Item
                         icon="users"
-                        content="Edit user's groups"
+                        content={actionT('editGroups')}
                         name={MenuActions.EDIT_GROUPS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="user"
-                        content="Edit user's tenants"
+                        content={actionT('editTenants')}
                         name={MenuActions.EDIT_TENANTS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="trash"
-                        content="Delete"
+                        content={actionT('delete')}
                         name={MenuActions.DELETE_ACTION}
                         onClick={this.actionClick}
                     />

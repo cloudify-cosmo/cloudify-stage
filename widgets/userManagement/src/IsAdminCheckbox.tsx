@@ -1,5 +1,8 @@
 import type { FunctionComponent } from 'react';
 import type { ExtendedUser } from './widget';
+import getWidgetT from './getWidgetT';
+
+const t = getWidgetT();
 
 interface BasicIsAdminCheckboxProps {
     user: ExtendedUser;
@@ -53,10 +56,7 @@ const IsAdminCheckbox: FunctionComponent<IsAdminCheckboxProps> = ({
                         onDefaultUserChange={onDefaultUserChange}
                     />
                 </Popup.Trigger>
-                <Popup.Content>
-                    To remove the administrator privileges for this user, remove the user from the group that is
-                    assigned administrator privileges.
-                </Popup.Content>
+                <Popup.Content>{t('removeAdminPrivilagesNote')}</Popup.Content>
             </Popup>
         );
     }

@@ -8,8 +8,10 @@ import UserDetails from './UserDetails';
 import type { ExtendedUser } from './widget';
 import IsAdminCheckbox from './IsAdminCheckbox';
 import type { User, UserManagementWidget } from './widget.types';
+import getWidgetT from './getWidgetT';
 
-const columnT = (key: string) => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
+const t = getWidgetT();
+const columnT = (key: string) => t(`columns.${key}`);
 
 interface UsersTableProps {
     data: { items: ExtendedUser[]; total: number };
@@ -279,7 +281,6 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             usernameDuringRoleSetting
         } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Users available in manager. Click "Add" to add Users.';
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
         const { PasswordModal, TextEllipsis } = Stage.Shared;
         const tableName = 'usersTable';
@@ -296,7 +297,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className={tableName}
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={t('noUsers')}
                 >
                     <DataTable.Column label={columnT('username')} name="username" width="37%" />
                     <DataTable.Column label={columnT('lastLoginAt')} name="last_login_at" width="18%" />
@@ -423,24 +424,21 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                         />
 
                         <Confirm
-                            content={`Are you sure you want to remove user ${user.username}?`}
+                            content={t('deleteConfirm', { username: user.username })}
                             open={modalType === MenuActions.DELETE_ACTION && showModal}
                             onConfirm={this.deleteUser}
                             onCancel={this.hideModal}
                         />
 
                         <Confirm
-                            content={
-                                'Are you sure you want to remove your administrator privileges? ' +
-                                'You will be logged out of the system so the changes take effect.'
-                            }
+                            content={t('removeAdminPrivilagesConfirm')}
                             open={modalType === MenuActions.SET_DEFAULT_USER_ROLE_ACTION && showModal}
                             onConfirm={() => this.setRole(user, false)}
                             onCancel={this.hideModal}
                         />
 
                         <Confirm
-                            content="Are you sure you want to deactivate current user and log out?"
+                            content={t('deactivateConfirm')}
                             open={modalType === MenuActions.DEACTIVATE_ACTION && showModal}
                             onConfirm={() => this.deactivateUser(user)}
                             onCancel={this.hideModal}

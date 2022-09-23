@@ -1,5 +1,6 @@
 import UsersTable from './UsersTable';
 import type { User, UserManagementWidget } from './widget.types';
+import getWidgetT from './getWidgetT';
 
 export interface ExtendedUser extends User {
     groupCount: number;
@@ -13,10 +14,12 @@ export interface FormattedUsers {
     total: number;
 }
 
+const t = getWidgetT();
+
 Stage.defineWidget<UserManagementWidget.Params, UserManagementWidget.Data, UserManagementWidget.Configuration>({
     id: 'userManagement',
-    name: 'User management',
-    description: 'This widget shows a list of available users and allow managing them',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     color: 'brown',

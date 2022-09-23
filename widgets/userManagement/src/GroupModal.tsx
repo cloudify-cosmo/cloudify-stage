@@ -1,6 +1,9 @@
 import type { FunctionComponent } from 'react';
 import Actions from './actions';
 import type { User } from './widget.types';
+import getWidgetT from './getWidgetT';
+
+const t = getWidgetT();
 
 interface GroupModalProps {
     groups: { items: { name: string }[] };
@@ -58,14 +61,14 @@ const GroupModal: FunctionComponent<GroupModalProps> = ({ onHide, open, user, to
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> Edit user groups for {user.username}
+                <Icon name="user" /> {t('editGroupsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field>
                         <Form.Dropdown
-                            placeholder="Groups"
+                            placeholder={t('details.groups')}
                             multiple
                             selection
                             options={options}
