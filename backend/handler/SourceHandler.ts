@@ -13,7 +13,7 @@ import { isYamlFile } from '../sharedUtils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
-import type { ScanningItem } from '../routes/SourceBrowser.types';
+import type { ScanningItem } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 

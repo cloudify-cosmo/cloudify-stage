@@ -117,7 +117,7 @@ describe('Edit mode', () => {
 
     describe('should open widget install modal and', () => {
         beforeEach(() => {
-            cy.intercept('PUT', '/console/widgets/install*').as('installWidget');
+            cy.intercept('POST', '/console/widgets').as('installWidget');
             cy.intercept('DELETE', '/console/widgets/*').as('deleteWidget');
             cy.get('.addWidgetBtn').click();
             cy.contains('Install new widget').click();

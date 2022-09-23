@@ -6,6 +6,7 @@ import pathlib from 'path';
 import { getLogger } from '../LoggerHandler';
 import { defaultUpdater } from './consts';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
+import type { CreatePageData, Page, PageFileContent, UpdatePageData } from './types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -28,7 +29,8 @@ function getPages(folder: string, custom: boolean) {
                     ...data
                 } = pageFileContent;
 
-                return { id, name, custom, updatedBy, updatedAt, data };
+                const page: Page = { id, name, custom, updatedBy, updatedAt, data };
+                return page;
             } catch (error) {
                 logger.error(`Error when trying to parse ${pageFilePath} file to JSON.`, error);
 
@@ -47,13 +49,13 @@ function getBuiltInPages() {
     return getPages(builtInPagesFolder, false);
 }
 
-export function createPage(username: string, page: Record<string, any>) {
+export function createPage(username: string, page: CreatePageData) {
     const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Page id "${page.id}" already exists`);
     }
 
-    const content = {
+    const content: PageFileContent = {
         ..._.pick(page, 'name', 'layout'),
         updatedBy: username,
         updatedAt: moment().format()
@@ -62,10 +64,10 @@ export function createPage(username: string, page: Record<string, any>) {
     return fs.writeJson(path, content, { spaces: '  ' });
 }
 
-export function updatePage(username: string, page: Record<string, any>) {
+export function updatePage(username: string, page: UpdatePageData) {
     const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
 
-    const content = {
+    const content: PageFileContent = {
         ..._.omit(page, 'id'),
         updatedBy: username,
         updatedAt: moment().format()

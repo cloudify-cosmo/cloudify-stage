@@ -5,7 +5,7 @@ import type { FunctionComponent } from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../utils/stageUtils';
 import { Icon, Header, Segment, Table } from '../basic';
-import type { LicenseResponse } from '../../../backend/routes/Auth.types';
+import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 
 interface CurrentLicenseProps {
     license?: LicenseResponse;

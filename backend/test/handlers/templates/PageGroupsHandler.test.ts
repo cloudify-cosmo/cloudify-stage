@@ -33,11 +33,11 @@ describe('PageGroupsHandler', () => {
     });
 
     it('should create page group', () => {
-        PageGroupsHandler.createPageGroup('admin', { id: 'pg' });
+        PageGroupsHandler.createPageGroup('admin', { id: 'pg', name: 'pg', icon: 'stop', pages: [] });
 
         expect(writeJson).toHaveBeenCalledWith(
             pathlib.resolve(userTemplatesFolder, 'page-groups', 'pg.json'),
-            { updatedAt: 'timestamp', updatedBy: 'admin' },
+            { name: 'pg', icon: 'stop', pages: [], updatedAt: 'timestamp', updatedBy: 'admin' },
             { spaces: '  ' }
         );
     });
