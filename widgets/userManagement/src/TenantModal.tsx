@@ -13,9 +13,7 @@ const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 export interface TenantModalProps {
     onHide: () => void;
     open: boolean;
-    tenants: {
-        items: { name: string }[];
-    };
+    tenants: string[];
     toolbox: Stage.Types.Toolbox;
     user: User;
 }
@@ -85,8 +83,8 @@ const TenantModal: FunctionComponent<TenantModalProps> = ({ onHide, open, user, 
 
     const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-    const options = _.map(tenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
+    const options = _.map(tenants, tenant => {
+        return { text: tenant, value: tenant, key: tenant };
     });
 
     return (

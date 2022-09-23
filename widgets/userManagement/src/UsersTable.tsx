@@ -24,16 +24,16 @@ interface UsersTableState {
     showModal: boolean;
     modalType: MenuActions | null;
     user: User | null;
-    tenants: NamedResourceResponse;
-    groups: NamedResourceResponse;
+    tenants: string[];
+    groups: string[];
     usernameDuringActivation: string;
     usernameDuringRoleSetting: string;
 }
 
-const emptyResponse: NamedResourceResponse = {
-    items: [],
-    metadata: { pagination: { offset: 0, size: 0, total: 0 } }
-};
+function getNames(response: NamedResourceResponse) {
+    return response.items.map(item => item.name);
+}
+
 export default class UsersTable extends React.Component<UsersTableProps, UsersTableState> {
     constructor(props: UsersTableProps) {
         super(props);
@@ -43,8 +43,8 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             showModal: false,
             modalType: null,
             user: null,
-            tenants: emptyResponse,
-            groups: emptyResponse,
+            tenants: [],
+            groups: [],
             usernameDuringActivation: '',
             usernameDuringRoleSetting: ''
         };
@@ -79,7 +79,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             .then(tenants => {
                 this.setState({
                     error: null,
-                    tenants,
+                    tenants: getNames(tenants),
                     user: showModal ? user : null,
                     modalType: showModal ? value : null,
                     showModal
@@ -100,7 +100,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
         actions
             .doGetGroups()
             .then(groups => {
-                this.setState({ error: null, user, groups, modalType: value, showModal: true });
+                this.setState({ error: null, user, groups: getNames(groups), modalType: value, showModal: true });
                 toolbox.loading(false);
             })
             .catch(err => {

@@ -6,7 +6,7 @@ import getWidgetT from './getWidgetT';
 const t = getWidgetT();
 
 interface GroupModalProps {
-    groups: { items: { name: string }[] };
+    groups: string[];
     onHide: () => void;
     open: boolean;
     toolbox: Stage.Types.Toolbox;
@@ -54,8 +54,8 @@ const GroupModal: FunctionComponent<GroupModalProps> = ({ onHide, open, user, to
 
     const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-    const options = _.map(groups.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
+    const options = _.map(groups, group => {
+        return { text: group, value: group, key: group };
     });
 
     return (
