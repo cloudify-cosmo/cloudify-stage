@@ -15,7 +15,7 @@ import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type { AuthUserResponse } from '../../backend/routes/Auth.types';
+import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
 
 class NoTenantsError extends Error {}
 
@@ -34,7 +34,7 @@ const AuthRoutes: FunctionComponent = () => {
         dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
             .then(() => dispatch(getUserData()))
-            .then(({ tenantsRoles, role }: AuthUserResponse) => {
+            .then(({ tenantsRoles, role }: GetAuthUserResponse) => {
                 if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) throw new NoTenantsError();
                 setManagerDataFetched();
             })

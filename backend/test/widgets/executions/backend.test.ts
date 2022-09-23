@@ -1,9 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint-disable import/no-dynamic-require */
 import _ from 'lodash';
 import widgetBackend from '../../../../widgets/executions/src/backend';
 
-function getDataFor(test) {
+function getDataFor(test: string) {
     const referencesDirectory = './references';
 
     return {
@@ -13,12 +12,13 @@ function getDataFor(test) {
     };
 }
 
+type MiddlewareMock = (_req: any, _res: any, _next: any, _helper: any) => void;
 function getRegisterArguments() {
     let name = '';
     let method = '';
-    let middleware = () => {};
+    let middleware = (_req: any, _res: any, _next: any, _helper: any) => {};
 
-    const register = (arg1, arg2, arg3) => {
+    const register = (arg1: string, arg2: string, arg3: MiddlewareMock) => {
         name = arg1;
         method = arg2;
         middleware = arg3;
@@ -28,12 +28,12 @@ function getRegisterArguments() {
     return { name, method, middleware };
 }
 
-function getElkGraph(middleware, taskGraphResponse, operationsResponse) {
+function getElkGraph(middleware: MiddlewareMock, taskGraphResponse: any, operationsResponse: any) {
     return new Promise(resolve =>
         middleware(
             { query: '', headers: {} },
             {
-                send: data => {
+                send: (data: any) => {
                     resolve(data);
                 }
             },
@@ -41,7 +41,7 @@ function getElkGraph(middleware, taskGraphResponse, operationsResponse) {
             {
                 Logger: () => console,
                 Manager: {
-                    doGet: url => {
+                    doGet: (url: string) => {
                         if (url === '/tasks_graphs') {
                             return Promise.resolve(taskGraphResponse);
                         }

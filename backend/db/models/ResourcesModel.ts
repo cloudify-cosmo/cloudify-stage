@@ -1,6 +1,10 @@
-import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
+// eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
+import type { Model, Optional } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend/db';
+
 import type { ResourceType } from '../types/ResourceTypes';
 import ResourceTypes from '../types/ResourceTypes';
+import type { CommonAttributes } from './types';
 
 interface ResourcesAttributes extends CommonAttributes {
     resourceId: string;
