@@ -5,7 +5,7 @@ module.exports = {
         '.': {
             statements: 52,
             branches: 37,
-            lines: 53,
+            lines: 52,
             functions: 44
         },
         '**/*': {
