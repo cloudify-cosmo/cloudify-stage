@@ -3,6 +3,7 @@ import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
+import type { CancelablePromise } from '../../../../app/utils/types';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -37,7 +38,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     const [autoFocus, setAutoFocus] = useState();
 
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const cancelablePromise = useRef<ReturnType<typeof Stage.Utils['makeCancelable']> | null>(null);
+    const cancelablePromise = useRef<CancelablePromise | null>(null);
     const modal = useRef();
 
     const [wrapperRef, getWrapperWidth] = useWidthObserver();
