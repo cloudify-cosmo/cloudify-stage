@@ -1,10 +1,8 @@
-import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
+// eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
+import type { Model, Optional } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common/backend/db';
+import type { BlueprintAdditionsAttributes } from './BlueprintAdditionsModel.types';
 
-interface BlueprintAdditionsAttributes extends CommonAttributes {
-    blueprintId: string;
-    image: any;
-    imageUrl: string;
-}
 type BlueprintAdditionsCreationAttributes = Optional<BlueprintAdditionsAttributes, 'image' | 'imageUrl'>;
 export type BlueprintAdditionsInstance = Model<BlueprintAdditionsAttributes, BlueprintAdditionsCreationAttributes> &
     BlueprintAdditionsAttributes;

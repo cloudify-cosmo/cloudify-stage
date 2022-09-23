@@ -6,7 +6,7 @@ import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
 import type { ManagerData, LicenseData, LicenseStatus } from '../reducers/managerReducer';
-import type { AuthUserResponse, LicenseResponse } from '../../backend/routes/Auth.types';
+import type { GetAuthUserResponse, LicenseResponse } from '../../backend/routes/Auth.types';
 
 export default class Auth {
     static login(username: string, password: string) {
@@ -21,7 +21,7 @@ export default class Auth {
 
     static getUserData(managerData: ManagerData) {
         const internal = new Internal(managerData);
-        return internal.doGet('/auth/user') as Promise<AuthUserResponse>;
+        return internal.doGet('/auth/user') as Promise<GetAuthUserResponse>;
     }
 
     static logout(managerData: ManagerData) {
