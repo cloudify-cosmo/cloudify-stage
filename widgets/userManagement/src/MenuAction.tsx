@@ -1,30 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
-import UserPropType from './props/UserPropType';
+import type { MenuItemProps } from 'semantic-ui-react';
+import type { User } from './widget.types';
+import type { ReduxState } from '../../../app/reducers';
 
-class MenuAction extends React.Component {
-    static CHANGE_PASSWORD_ACTION = 'password';
+export enum MenuActions {
+    CHANGE_PASSWORD_ACTION = 'CHANGE_PASSWORD_ACTION',
+    EDIT_TENANTS_ACTION = 'EDIT_TENANTS_ACTION',
+    EDIT_GROUPS_ACTION = 'EDIT_GROUPS_ACTION',
+    DELETE_ACTION = 'DELETE_ACTION',
+    DEACTIVATE_ACTION = 'DEACTIVATE_ACTION',
+    ACTIVATE_ACTION = 'ACTIVATE_ACTION',
+    SET_DEFAULT_USER_ROLE_ACTION = 'SET_DEFAULT_USER_ROLE_ACTION',
+    SET_ADMIN_USER_ROLE_ACTION = 'SET_ADMIN_USER_ROLE_ACTION',
+    ENABLE_GETTING_STARTED_MODAL_ACTION = 'ENABLE_GETTING_STARTED_MODAL_ACTION',
+    DISABLE_GETTING_STARTED_MODAL_ACTION = 'DISABLE_GETTING_STARTED_MODAL_ACTION'
+}
 
-    static EDIT_TENANTS_ACTION = 'tenants';
+interface MenuActionProps {
+    item: User;
+    onSelectAction: (value: MenuActions, user: User) => void;
+    isLocalIdp: boolean;
+}
 
-    static EDIT_GROUPS_ACTION = 'groups';
-
-    static DELETE_ACTION = 'delete';
-
-    static DEACTIVATE_ACTION = 'deactivate';
-
-    static ACTIVATE_ACTION = 'activate';
-
-    static SET_DEFAULT_USER_ROLE_ACTION = 'set-default-role';
-
-    static SET_ADMIN_USER_ROLE_ACTION = 'set-admin-role';
-
-    static ENABLE_GETTING_STARTED_MODAL_ACTION = 'enable-getting-started-modal';
-
-    static DISABLE_GETTING_STARTED_MODAL_ACTION = 'disable-getting-started-modal';
-
-    actionClick = (proxy, { name }) => {
+class MenuAction extends React.Component<MenuActionProps> {
+    actionClick: MenuItemProps['onClick'] = (_event, { name }) => {
         const { item, onSelectAction } = this.props;
-        onSelectAction(name, item);
+        onSelectAction(name as MenuActions, item);
     };
 
     render() {
@@ -39,26 +39,26 @@ class MenuAction extends React.Component {
                         <Menu.Item
                             icon="lock"
                             content="Change password"
-                            name={MenuAction.CHANGE_PASSWORD_ACTION}
+                            name={MenuActions.CHANGE_PASSWORD_ACTION}
                             onClick={this.actionClick}
                         />
                     )}
                     <Menu.Item
                         icon="users"
                         content="Edit user's groups"
-                        name={MenuAction.EDIT_GROUPS_ACTION}
+                        name={MenuActions.EDIT_GROUPS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="user"
                         content="Edit user's tenants"
-                        name={MenuAction.EDIT_TENANTS_ACTION}
+                        name={MenuActions.EDIT_TENANTS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="trash"
                         content="Delete"
-                        name={MenuAction.DELETE_ACTION}
+                        name={MenuActions.DELETE_ACTION}
                         onClick={this.actionClick}
                     />
                 </Menu>
@@ -67,14 +67,8 @@ class MenuAction extends React.Component {
     }
 }
 
-MenuAction.propTypes = {
-    item: UserPropType.isRequired,
-    onSelectAction: PropTypes.func.isRequired,
-    isLocalIdp: PropTypes.bool.isRequired
-};
-
 export default connectToStore(
-    state => ({
+    (state: ReduxState) => ({
         isLocalIdp: Stage.Utils.Idp.isLocal(state.manager)
     }),
     {}

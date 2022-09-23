@@ -1,14 +1,24 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import Actions from './actions';
-import { mapTenantsToRoles } from '../../common/src/tenants/utils';
+import type { CancelablePromise } from '../../../app/utils/types';
+import type { RolesPickerProps } from '../../common/src/roles/RolesPicker';
+import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
 
-export default function CreateModal({ toolbox }) {
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
+interface CreateModalInputs {
+    username: string;
+    password: string;
+    confirmPassword: string;
+    isAdmin: boolean;
+}
+const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
     const { useEffect, useState, useRef } = React;
     const { useOpen, useErrors, useBoolean, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [inputs, setInput, clearInputs] = useInputs({
+    const [inputs, setInput, clearInputs] = useInputs<CreateModalInputs>({
         username: '',
         password: '',
         confirmPassword: '',
@@ -16,9 +26,10 @@ export default function CreateModal({ toolbox }) {
     });
     const [tenants, setTenants] = useState({});
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
-    const [availableTenants, setAvailableTenants] = useState({});
+    const [availableTenants, setAvailableTenants] = useState<TenantItem[]>([]);
 
-    const availableTenantsPromise = useRef(null);
+    type Tenants = Stage.Types.PaginatedResponse<{ name: string }>;
+    const availableTenantsPromise = useRef<CancelablePromise<Tenants> | null>(null);
 
     const [isOpen, doOpen, doClose] = useOpen(() => {
         setLoading();
@@ -34,7 +45,7 @@ export default function CreateModal({ toolbox }) {
                 unsetLoading();
                 setAvailableTenants(resolvedTenants.items);
             })
-            .catch(err => {
+            .catch((err: any) => {
                 if (!err.isCanceled) {
                     unsetLoading();
                     setAvailableTenants([]);
@@ -51,7 +62,7 @@ export default function CreateModal({ toolbox }) {
     }, []);
 
     function submitCreate() {
-        const submitErrors = {};
+        const submitErrors: Partial<Record<keyof CreateModalInputs, string>> = {};
 
         if (_.isEmpty(inputs.username)) {
             submitErrors.username = 'Please provide username';
@@ -84,7 +95,7 @@ export default function CreateModal({ toolbox }) {
         const actions = new Actions(toolbox);
         actions
             .doCreate(inputs.username, inputs.password, Stage.Common.Roles.Utils.getSystemRole(inputs.isAdmin))
-            .then(() => actions.doHandleTenants(inputs.username, tenants, [], []))
+            .then(() => actions.doHandleTenants(inputs.username, tenants, [], {}))
             .then(() => {
                 clearErrors();
                 doClose();
@@ -100,15 +111,15 @@ export default function CreateModal({ toolbox }) {
         return false;
     }
 
-    function handleTenantChange(proxy, field) {
-        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
+    const handleTenantChange: TenantsDropdownProps['onChange'] = (_event, { value }: { value?: string[] }) => {
+        const newTenants = Stage.Common.Tenants.mapTenantsToRoles(value, tenants, toolbox);
         setTenants(newTenants);
-    }
+    };
 
-    function handleRoleChange(tenant, role) {
+    const handleRoleChange: RolesPickerProps['onUpdate'] = (tenant, role) => {
         const newTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
-    }
+    };
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
@@ -169,6 +180,5 @@ export default function CreateModal({ toolbox }) {
             </Modal.Actions>
         </Modal>
     );
-}
-
-CreateModal.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };
+};
+export default CreateModal;

@@ -1,94 +1,48 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ResourceWithNameResponse } from './actions';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupModal from './GroupModal';
-import MenuAction from './MenuAction';
+import MenuAction, { MenuActions } from './MenuAction';
 import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
-import UserPropType from './props/UserPropType';
+import type { ExtendedUser } from './widget';
+import IsAdminCheckbox from './IsAdminCheckbox';
+import type { User, UserManagementWidget } from './widget.types';
 
-const columnT = key => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
+const columnT = (key: string) => Stage.i18n.t(`widgets.userManagement.columns.${key}`);
 
-function IsAdminCheckbox({ user, disabled, onAdminUserChange, onDefaultUserChange }) {
-    const { Checkbox } = Stage.Basic;
-    return (
-        <Checkbox
-            checked={user.isAdmin}
-            disabled={disabled || user.username === Stage.Common.Consts.adminUsername}
-            onChange={() => (user.isAdmin ? onDefaultUserChange() : onAdminUserChange())}
-            onClick={e => e.stopPropagation()}
-        />
-    );
+interface UsersTableProps {
+    data: { items: ExtendedUser[]; total: number };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<UserManagementWidget.Configuration>;
 }
 
-IsAdminCheckbox.propTypes = {
-    user: PropTypes.shape({
-        username: PropTypes.string,
-        isAdmin: PropTypes.bool
-    }).isRequired,
-    onAdminUserChange: PropTypes.func.isRequired,
-    onDefaultUserChange: PropTypes.func.isRequired,
-    disabled: PropTypes.bool
-};
-IsAdminCheckbox.defaultProps = {
-    disabled: false
-};
-
-function EnhancedIsAdminCheckbox({ user, usernameDuringRoleSetting, onAdminUserChange, onDefaultUserChange }) {
-    const { Loader, Popup } = Stage.Basic;
-    const isUserInAdminGroup = _.has(user.group_system_roles, Stage.Common.Consts.sysAdminRole);
-    const isUserAnAdminUser = user.username === Stage.Common.Consts.adminUsername;
-
-    if (usernameDuringRoleSetting === user.username) {
-        return <Loader active inline size="mini" />;
-    }
-    if (isUserInAdminGroup && !isUserAnAdminUser) {
-        return (
-            <Popup>
-                <Popup.Trigger>
-                    <IsAdminCheckbox
-                        disabled
-                        user={user}
-                        onAdminUserChange={onAdminUserChange}
-                        onDefaultUserChange={onDefaultUserChange}
-                    />
-                </Popup.Trigger>
-                <Popup.Content>
-                    To remove the administrator privileges for this user, remove the user from the group that is
-                    assigned administrator privileges.
-                </Popup.Content>
-            </Popup>
-        );
-    }
-    return (
-        <IsAdminCheckbox user={user} onAdminUserChange={onAdminUserChange} onDefaultUserChange={onDefaultUserChange} />
-    );
+interface UsersTableState {
+    error: string | null;
+    showModal: boolean;
+    modalType: MenuActions | null;
+    user: User | null;
+    tenants: ResourceWithNameResponse;
+    groups: ResourceWithNameResponse;
+    usernameDuringActivation: string;
+    usernameDuringRoleSetting: string;
 }
 
-EnhancedIsAdminCheckbox.propTypes = {
-    user: PropTypes.shape({
-        username: PropTypes.string,
-        group_system_roles: PropTypes.shape({}),
-        isAdmin: PropTypes.bool
-    }).isRequired,
-    usernameDuringRoleSetting: PropTypes.string.isRequired,
-    onAdminUserChange: PropTypes.func.isRequired,
-    onDefaultUserChange: PropTypes.func.isRequired
+const emptyResponse: ResourceWithNameResponse = {
+    items: [],
+    metadata: { pagination: { offset: 0, size: 0, total: 0 } }
 };
-
-export default class UsersTable extends React.Component {
-    static EMPTY_USER = { username: '' };
-
-    constructor(props, context) {
-        super(props, context);
+export default class UsersTable extends React.Component<UsersTableProps, UsersTableState> {
+    constructor(props: UsersTableProps) {
+        super(props);
 
         this.state = {
             error: null,
             showModal: false,
-            modalType: '',
-            user: UsersTable.EMPTY_USER,
-            tenants: {},
-            groups: {},
+            modalType: null,
+            user: null,
+            tenants: emptyResponse,
+            groups: emptyResponse,
             usernameDuringActivation: '',
             usernameDuringRoleSetting: ''
         };
@@ -99,7 +53,7 @@ export default class UsersTable extends React.Component {
         toolbox.getEventBus().on('users:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: UsersTableProps, nextState: UsersTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -113,7 +67,7 @@ export default class UsersTable extends React.Component {
         toolbox.getEventBus().off('users:refresh', this.refreshData);
     }
 
-    getAvailableTenants(value, user, showModal = true) {
+    getAvailableTenants(value: MenuActions, user: User, showModal = true) {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -124,8 +78,8 @@ export default class UsersTable extends React.Component {
                 this.setState({
                     error: null,
                     tenants,
-                    user: showModal ? user : UsersTable.EMPTY_USER,
-                    modalType: showModal ? value : '',
+                    user: showModal ? user : null,
+                    modalType: showModal ? value : null,
                     showModal
                 });
                 toolbox.loading(false);
@@ -136,7 +90,7 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    getAvailableGroups(value, user) {
+    getAvailableGroups(value: any, user: any) {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -153,7 +107,7 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    setRole(user, isAdmin) {
+    setRole(user: User, isAdmin: boolean) {
         const { toolbox } = this.props;
         toolbox.loading(true);
         this.setState({ usernameDuringRoleSetting: user.username });
@@ -176,7 +130,7 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    setGettingStartedModalEnabled(user, modalEnabled) {
+    setGettingStartedModalEnabled(user: User, modalEnabled: boolean) {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -193,27 +147,27 @@ export default class UsersTable extends React.Component {
             });
     }
 
-    fetchData = fetchParams => {
+    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    invokeAction = (value, user) => {
-        if (value === MenuAction.EDIT_TENANTS_ACTION) {
+    invokeAction = (value: MenuActions, user: User) => {
+        if (value === MenuActions.EDIT_TENANTS_ACTION) {
             this.getAvailableTenants(value, user);
-        } else if (value === MenuAction.EDIT_GROUPS_ACTION) {
+        } else if (value === MenuActions.EDIT_GROUPS_ACTION) {
             this.getAvailableGroups(value, user);
-        } else if (value === MenuAction.ACTIVATE_ACTION) {
+        } else if (value === MenuActions.ACTIVATE_ACTION) {
             this.activateUser(user);
-        } else if (value === MenuAction.DEACTIVATE_ACTION && !this.isCurrentUser(user)) {
+        } else if (value === MenuActions.DEACTIVATE_ACTION && !this.isCurrentUser(user)) {
             this.deactivateUser(user);
-        } else if (value === MenuAction.SET_ADMIN_USER_ROLE_ACTION) {
+        } else if (value === MenuActions.SET_ADMIN_USER_ROLE_ACTION) {
             this.setRole(user, true);
-        } else if (value === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && !this.isCurrentUser(user)) {
+        } else if (value === MenuActions.SET_DEFAULT_USER_ROLE_ACTION && !this.isCurrentUser(user)) {
             this.setRole(user, false);
-        } else if (value === MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION) {
+        } else if (value === MenuActions.ENABLE_GETTING_STARTED_MODAL_ACTION) {
             this.setGettingStartedModalEnabled(user, true);
-        } else if (value === MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION) {
+        } else if (value === MenuActions.DISABLE_GETTING_STARTED_MODAL_ACTION) {
             this.setGettingStartedModalEnabled(user, false);
         } else {
             this.setState({ user, modalType: value, showModal: true });
@@ -224,7 +178,7 @@ export default class UsersTable extends React.Component {
         this.setState({ showModal: false });
     };
 
-    handleError = message => {
+    handleError = (message: string) => {
         this.setState({ error: message });
     };
 
@@ -235,7 +189,7 @@ export default class UsersTable extends React.Component {
 
         const actions = new Actions(toolbox);
         actions
-            .doDelete(user.username)
+            .doDelete(user!.username)
             .then(() => {
                 this.hideModal();
                 this.setState({ error: null });
@@ -249,13 +203,13 @@ export default class UsersTable extends React.Component {
             });
     };
 
-    selectUser(userName) {
+    selectUser(userName: string) {
         const { toolbox } = this.props;
         const selectedUserName = toolbox.getContext().getValue('userName');
         toolbox.getContext().setValue('userName', userName === selectedUserName ? null : userName);
     }
 
-    deactivateUser(user) {
+    deactivateUser(user: User) {
         const { toolbox } = this.props;
         toolbox.loading(true);
         this.setState({ usernameDuringActivation: user.username });
@@ -284,7 +238,7 @@ export default class UsersTable extends React.Component {
         toolbox.refresh();
     }
 
-    isCurrentUser(user) {
+    isCurrentUser(user: User) {
         const { toolbox } = this.props;
         return toolbox.getManager().getCurrentUsername() === user.username;
     }
@@ -294,7 +248,7 @@ export default class UsersTable extends React.Component {
         return toolbox.getManager().getCurrentUserRole() === Stage.Common.Consts.sysAdminRole;
     }
 
-    activateUser(user) {
+    activateUser(user: User) {
         const { toolbox } = this.props;
         toolbox.loading(true);
         this.setState({ usernameDuringActivation: user.username });
@@ -358,6 +312,7 @@ export default class UsersTable extends React.Component {
                     <DataTable.Column label={columnT('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
+                        /* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                             <DataTable.Row
                                 id={`${tableName}_${item.username}`}
@@ -370,12 +325,12 @@ export default class UsersTable extends React.Component {
                                 </DataTable.Data>
                                 <DataTable.Data>{item.last_login_at}</DataTable.Data>
                                 <DataTable.Data className="center aligned">
-                                    <EnhancedIsAdminCheckbox
+                                    <IsAdminCheckbox
                                         onAdminUserChange={() =>
-                                            this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuActions.SET_ADMIN_USER_ROLE_ACTION, item)
                                         }
                                         onDefaultUserChange={() =>
-                                            this.invokeAction(MenuAction.SET_DEFAULT_USER_ROLE_ACTION, item)
+                                            this.invokeAction(MenuActions.SET_DEFAULT_USER_ROLE_ACTION, item)
                                         }
                                         user={item}
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
@@ -390,8 +345,8 @@ export default class UsersTable extends React.Component {
                                             checked={item.active}
                                             onChange={() =>
                                                 item.active
-                                                    ? this.invokeAction(MenuAction.DEACTIVATE_ACTION, item)
-                                                    : this.invokeAction(MenuAction.ACTIVATE_ACTION, item)
+                                                    ? this.invokeAction(MenuActions.DEACTIVATE_ACTION, item)
+                                                    : this.invokeAction(MenuActions.ACTIVATE_ACTION, item)
                                             }
                                             // stop propagation call required to prevent row expanding/collapsing on click to checkbox
                                             onClick={e => e.stopPropagation()}
@@ -406,11 +361,11 @@ export default class UsersTable extends React.Component {
                                         onChange={() =>
                                             item.show_getting_started
                                                 ? this.invokeAction(
-                                                      MenuAction.DISABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      MenuActions.DISABLE_GETTING_STARTED_MODAL_ACTION,
                                                       item
                                                   )
                                                 : this.invokeAction(
-                                                      MenuAction.ENABLE_GETTING_STARTED_MODAL_ACTION,
+                                                      MenuActions.ENABLE_GETTING_STARTED_MODAL_ACTION,
                                                       item
                                                   )
                                         }
@@ -432,6 +387,7 @@ export default class UsersTable extends React.Component {
                                     <MenuAction item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
+                            {/* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */}
                             <DataTable.DataExpandable key={item.username}>
                                 <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
                             </DataTable.DataExpandable>
@@ -442,58 +398,56 @@ export default class UsersTable extends React.Component {
                     </DataTable.Action>
                 </DataTable>
 
-                <PasswordModal
-                    open={modalType === MenuAction.CHANGE_PASSWORD_ACTION && showModal}
-                    onHide={this.hideModal}
-                    username={user.username}
-                />
+                {user && (
+                    <>
+                        <PasswordModal
+                            open={modalType === MenuActions.CHANGE_PASSWORD_ACTION && showModal}
+                            onHide={this.hideModal}
+                            username={user.username}
+                        />
 
-                <TenantModal
-                    open={modalType === MenuAction.EDIT_TENANTS_ACTION && showModal}
-                    user={user}
-                    tenants={tenants}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                        <TenantModal
+                            open={modalType === MenuActions.EDIT_TENANTS_ACTION && showModal}
+                            user={user}
+                            tenants={tenants}
+                            onHide={this.hideModal}
+                            toolbox={toolbox}
+                        />
 
-                <GroupModal
-                    open={modalType === MenuAction.EDIT_GROUPS_ACTION && showModal}
-                    user={user}
-                    groups={groups}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                        <GroupModal
+                            open={modalType === MenuActions.EDIT_GROUPS_ACTION && showModal}
+                            user={user}
+                            groups={groups}
+                            onHide={this.hideModal}
+                            toolbox={toolbox}
+                        />
 
-                <Confirm
-                    content={`Are you sure you want to remove user ${user.username}?`}
-                    open={modalType === MenuAction.DELETE_ACTION && showModal}
-                    onConfirm={this.deleteUser}
-                    onCancel={this.hideModal}
-                />
+                        <Confirm
+                            content={`Are you sure you want to remove user ${user.username}?`}
+                            open={modalType === MenuActions.DELETE_ACTION && showModal}
+                            onConfirm={this.deleteUser}
+                            onCancel={this.hideModal}
+                        />
 
-                <Confirm
-                    content={
-                        'Are you sure you want to remove your administrator privileges? ' +
-                        'You will be logged out of the system so the changes take effect.'
-                    }
-                    open={modalType === MenuAction.SET_DEFAULT_USER_ROLE_ACTION && showModal}
-                    onConfirm={() => this.setRole(user, false)}
-                    onCancel={this.hideModal}
-                />
+                        <Confirm
+                            content={
+                                'Are you sure you want to remove your administrator privileges? ' +
+                                'You will be logged out of the system so the changes take effect.'
+                            }
+                            open={modalType === MenuActions.SET_DEFAULT_USER_ROLE_ACTION && showModal}
+                            onConfirm={() => this.setRole(user, false)}
+                            onCancel={this.hideModal}
+                        />
 
-                <Confirm
-                    content="Are you sure you want to deactivate current user and log out?"
-                    open={modalType === MenuAction.DEACTIVATE_ACTION && showModal}
-                    onConfirm={() => this.deactivateUser(user)}
-                    onCancel={this.hideModal}
-                />
+                        <Confirm
+                            content="Are you sure you want to deactivate current user and log out?"
+                            open={modalType === MenuActions.DEACTIVATE_ACTION && showModal}
+                            onConfirm={() => this.deactivateUser(user)}
+                            onCancel={this.hideModal}
+                        />
+                    </>
+                )}
             </div>
         );
     }
 }
-
-UsersTable.propTypes = {
-    data: PropTypes.shape({ items: PropTypes.arrayOf(UserPropType), total: PropTypes.number }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

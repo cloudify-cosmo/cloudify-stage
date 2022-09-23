@@ -1,11 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
-import UserPropType from './props/UserPropType';
+import type { User } from './widget.types';
 
-export default class UserDetails extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface UserDetailsProps {
+    toolbox: Stage.Types.Toolbox;
+    data: User;
+    onError: (error: string) => void;
+}
+
+interface UserDetailsState {
+    processing: boolean;
+    processItem: string;
+}
+
+export default class UserDetails extends React.Component<UserDetailsProps, UserDetailsState> {
+    constructor(props: UserDetailsProps) {
+        super(props);
 
         this.state = {
             processing: false,
@@ -13,7 +22,7 @@ export default class UserDetails extends React.Component {
         };
     }
 
-    removeTenant(tenant) {
+    removeTenant(tenant: string) {
         const { data, onError, toolbox } = this.props;
         this.setState({ processItem: tenant, processing: true });
 
@@ -31,7 +40,7 @@ export default class UserDetails extends React.Component {
             });
     }
 
-    removeGroup(group) {
+    removeGroup(group: string) {
         const { data, onError, toolbox } = this.props;
         this.setState({ processItem: group, processing: true });
 
@@ -69,7 +78,7 @@ export default class UserDetails extends React.Component {
                                     {item}
                                     <Icon
                                         link
-                                        name={processing ? 'notched circle' : 'remove'}
+                                        name={processing ? 'circle notched' : 'remove'}
                                         loading={processing}
                                         className="right floated"
                                         onClick={() => this.removeGroup(item)}
@@ -100,7 +109,7 @@ export default class UserDetails extends React.Component {
                                             />
                                             <Icon
                                                 link
-                                                name={processing ? 'notched circle' : 'remove'}
+                                                name={processing ? 'circle notched' : 'remove'}
                                                 loading={processing}
                                                 className="right floated"
                                                 onClick={() => this.removeTenant(item)}
@@ -122,9 +131,3 @@ export default class UserDetails extends React.Component {
         );
     }
 }
-
-UserDetails.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    data: UserPropType.isRequired,
-    onError: PropTypes.func.isRequired
-};
