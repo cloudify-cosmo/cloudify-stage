@@ -1,11 +1,11 @@
 import type { FunctionComponent } from 'react';
-import type { ExtendedUser } from './widget';
+import type { UserViewItem } from './widget';
 import getWidgetT from './getWidgetT';
 
 const t = getWidgetT();
 
 interface BasicIsAdminCheckboxProps {
-    user: ExtendedUser;
+    user: UserViewItem;
     onAdminUserChange: () => void;
     onDefaultUserChange: () => void;
     disabled?: boolean;

@@ -1,11 +1,11 @@
-import type { ResourceWithNameResponse } from './actions';
+import type { NamedResourceResponse } from './actions';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupModal from './GroupModal';
 import MenuAction, { MenuActions } from './MenuAction';
 import TenantModal from './TenantModal';
 import UserDetails from './UserDetails';
-import type { ExtendedUser } from './widget';
+import type { UserViewItem } from './widget';
 import IsAdminCheckbox from './IsAdminCheckbox';
 import type { User, UserManagementWidget } from './widget.types';
 import getWidgetT from './getWidgetT';
@@ -14,7 +14,7 @@ const t = getWidgetT();
 const tColumn = (key: string) => t(`columns.${key}`);
 
 interface UsersTableProps {
-    data: { items: ExtendedUser[]; total: number };
+    data: { items: UserViewItem[]; total: number };
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget<UserManagementWidget.Configuration>;
 }
@@ -24,13 +24,13 @@ interface UsersTableState {
     showModal: boolean;
     modalType: MenuActions | null;
     user: User | null;
-    tenants: ResourceWithNameResponse;
-    groups: ResourceWithNameResponse;
+    tenants: NamedResourceResponse;
+    groups: NamedResourceResponse;
     usernameDuringActivation: string;
     usernameDuringRoleSetting: string;
 }
 
-const emptyResponse: ResourceWithNameResponse = {
+const emptyResponse: NamedResourceResponse = {
     items: [],
     metadata: { pagination: { offset: 0, size: 0, total: 0 } }
 };

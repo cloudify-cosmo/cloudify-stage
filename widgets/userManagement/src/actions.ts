@@ -2,7 +2,7 @@ import type { SystemRole } from '../../common/src/roles/types';
 import type { Toolbox } from '../../../app/utils/StageAPI';
 import type { RolesAssignment } from '../../common/src/tenants/utils';
 
-export type ResourceWithNameResponse = Stage.Types.PaginatedResponse<{ name: string }>;
+export type NamedResourceResponse = Stage.Types.PaginatedResponse<{ name: string }>;
 
 export default class Actions {
     toolbox: Toolbox;
@@ -23,7 +23,7 @@ export default class Actions {
         return this.toolbox.getManager().doPost(`/users/${username}`, { body: { role } });
     }
 
-    doGetTenants(): Promise<ResourceWithNameResponse> {
+    doGetTenants(): Promise<NamedResourceResponse> {
         return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
@@ -50,7 +50,7 @@ export default class Actions {
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
 
-    doGetGroups(): Promise<ResourceWithNameResponse> {
+    doGetGroups(): Promise<NamedResourceResponse> {
         return this.toolbox.getManager().doGet('/user-groups?_include=name');
     }
 

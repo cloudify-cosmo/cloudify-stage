@@ -2,7 +2,7 @@ import UsersTable from './UsersTable';
 import type { User, UserManagementWidget } from './widget.types';
 import getWidgetT from './getWidgetT';
 
-export interface ExtendedUser extends User {
+export interface UserViewItem extends User {
     groupCount: number;
     tenantCount: number;
     isSelected: boolean;
@@ -10,7 +10,7 @@ export interface ExtendedUser extends User {
 }
 
 export interface FormattedUsers {
-    items: ExtendedUser[];
+    items: UserViewItem[];
     total: number;
 }
 
