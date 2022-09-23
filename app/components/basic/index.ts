@@ -104,7 +104,7 @@ const ErrorMessageWithCorrectReturnType = ErrorMessage as unknown as ComponentTy
 
 type AnyProps = Record<string, any>;
 
-// TODO(RD-5720) Remove once DataTable component is fully migrated to TypeScript
+// TODO(RD-5720) Remove once DataInput component is fully migrated to TypeScript
 const DateInputWithTemporaryProps = DateInput as unknown as ComponentType<AnyProps>;
 
 // TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
@@ -118,7 +118,7 @@ const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyPro
     DataExpandable: React.FC<AnyProps>;
 };
 
-// TODO(RD-5718) Remove once DataTable component is fully migrated to TypeScript
+// TODO(RD-5718) Remove once DataSegment component is fully migrated to TypeScript
 const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {
     Item: React.FC<AnyProps>;
     Action: React.FC<AnyProps>;
