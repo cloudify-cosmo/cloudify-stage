@@ -307,9 +307,9 @@ export default function DynamicDropdown({
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
                 }}
-                onFocus={(event, data) => {
-                    setSearchQuery('');
-                    if (isFunction(onSearchChange)) onSearchChange(event, { ...data, searchQuery: '' });
+                onBlur={(event, data) => {
+                    if (!isFunction(onSearchChange)) setSearchQuery('');
+                    if (isFunction(rest.onBlur)) rest.onBlur(event, data);
                 }}
                 multiple={multiple}
                 loading={isLoading}
