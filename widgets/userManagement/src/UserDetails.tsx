@@ -2,7 +2,7 @@ import Actions from './actions';
 import type { User } from './widget.types';
 import getWidgetT from './getWidgetT';
 
-const detailsT = (key: string) => getWidgetT()(`details.${key}`);
+const tDetails = (key: string) => getWidgetT()(`details.${key}`);
 
 interface UserDetailsProps {
     toolbox: Stage.Types.Toolbox;
@@ -70,7 +70,7 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
         return (
             <Segment.Group horizontal>
                 <Segment>
-                    <Icon name="users" /> {detailsT('groups')}
+                    <Icon name="users" /> {tDetails('groups')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.groups.map(item => {
@@ -90,14 +90,14 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                             );
                         })}
 
-                        {_.isEmpty(data.groups) && <Message content={detailsT('noGroups')} />}
+                        {_.isEmpty(data.groups) && <Message content={tDetails('noGroups')} />}
                     </List>
                 </Segment>
 
                 <Popup>
                     <Popup.Trigger>
                         <Segment>
-                            <Icon name="user" /> {detailsT('tenants')}
+                            <Icon name="user" /> {tDetails('tenants')}
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
                                 {_.map(_.keys(data.tenants), item => {
@@ -121,11 +121,11 @@ export default class UserDetails extends React.Component<UserDetailsProps, UserD
                                     );
                                 })}
 
-                                {_.isEmpty(data.tenants) && <Message content={detailsT('noTenants')} />}
+                                {_.isEmpty(data.tenants) && <Message content={tDetails('noTenants')} />}
                             </List>
                         </Segment>
                     </Popup.Trigger>
-                    <Popup.Content>{detailsT('assignedTenantsNote')}</Popup.Content>
+                    <Popup.Content>{tDetails('assignedTenantsNote')}</Popup.Content>
                 </Popup>
             </Segment.Group>
         );

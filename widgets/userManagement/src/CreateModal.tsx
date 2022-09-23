@@ -5,7 +5,7 @@ import type { RolesPickerProps } from '../../common/src/roles/RolesPicker';
 import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
 import getWidgetT from './getWidgetT';
 
-const modalT = (key: string) => getWidgetT()(`createModal.${key}`);
+const tModal = (key: string) => getWidgetT()(`createModal.${key}`);
 
 interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -68,15 +68,15 @@ const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
         const submitErrors: Partial<Record<keyof CreateModalInputs, string>> = {};
 
         if (_.isEmpty(inputs.username)) {
-            submitErrors.username = modalT('inputs.username.error');
+            submitErrors.username = tModal('inputs.username.error');
         }
 
         if (_.isEmpty(inputs.password)) {
-            submitErrors.password = modalT('inputs.password.error');
+            submitErrors.password = tModal('inputs.password.error');
         }
 
         if (_.isEmpty(inputs.confirmPassword)) {
-            submitErrors.confirmPassword = modalT('inputs.confirmPassword.error');
+            submitErrors.confirmPassword = tModal('inputs.confirmPassword.error');
         }
 
         if (
@@ -84,7 +84,7 @@ const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
             !_.isEmpty(inputs.confirmPassword) &&
             inputs.password !== inputs.confirmPassword
         ) {
-            submitErrors.confirmPassword = modalT('inputs.confirmPassword.notMatchError');
+            submitErrors.confirmPassword = tModal('inputs.confirmPassword.notMatchError');
         }
 
         if (!_.isEmpty(submitErrors)) {
@@ -129,26 +129,26 @@ const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
     const { TenantsDropdown } = Stage.Common.Tenants;
 
     const addButton = (
-        <Button content={modalT('button')} icon="add user" labelPosition="left" className="addUserButton" />
+        <Button content={tModal('button')} icon="add user" labelPosition="left" className="addUserButton" />
     );
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose} className="addUserModal">
             <Modal.Header>
-                <Icon name="add user" /> {modalT('header')}
+                <Icon name="add user" /> {tModal('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={modalT('inputs.username.label')} error={errors.username} required>
+                    <Form.Field label={tModal('inputs.username.label')} error={errors.username} required>
                         <Form.Input name="username" value={inputs.username} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field label={modalT('inputs.password.label')} error={errors.password} required>
+                    <Form.Field label={tModal('inputs.password.label')} error={errors.password} required>
                         <Form.Input name="password" type="password" value={inputs.password} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field label={modalT('inputs.confirmPassword.label')} error={errors.confirmPassword} required>
+                    <Form.Field label={tModal('inputs.confirmPassword.label')} error={errors.confirmPassword} required>
                         <Form.Input
                             name="confirmPassword"
                             type="password"
@@ -159,14 +159,14 @@ const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
 
                     <Form.Field error={errors.isAdmin}>
                         <Form.Checkbox
-                            label={modalT('inputs.isAdmin.label')}
+                            label={tModal('inputs.isAdmin.label')}
                             name="isAdmin"
                             checked={inputs.isAdmin}
                             onChange={setInput}
                         />
                     </Form.Field>
 
-                    {inputs.isAdmin && <Message>{modalT('inputs.isAdmin.note')}</Message>}
+                    {inputs.isAdmin && <Message>{tModal('inputs.isAdmin.note')}</Message>}
 
                     <TenantsDropdown
                         value={Object.keys(tenants)}
@@ -184,7 +184,7 @@ const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={onApprove} disabled={isLoading} content={modalT('button')} icon="add user" />
+                <ApproveButton onClick={onApprove} disabled={isLoading} content={tModal('button')} icon="add user" />
             </Modal.Actions>
         </Modal>
     );

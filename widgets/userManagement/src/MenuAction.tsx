@@ -3,7 +3,7 @@ import type { User } from './widget.types';
 import type { ReduxState } from '../../../app/reducers';
 import getWidgetT from './getWidgetT';
 
-const actionT = (key: string) => getWidgetT()(`actions.${key}`);
+const tAction = (key: string) => getWidgetT()(`actions.${key}`);
 
 export enum MenuActions {
     CHANGE_PASSWORD_ACTION = 'CHANGE_PASSWORD_ACTION',
@@ -41,26 +41,26 @@ class MenuAction extends React.Component<MenuActionProps> {
                     {canChangePassword && (
                         <Menu.Item
                             icon="lock"
-                            content={actionT('changePassword')}
+                            content={tAction('changePassword')}
                             name={MenuActions.CHANGE_PASSWORD_ACTION}
                             onClick={this.actionClick}
                         />
                     )}
                     <Menu.Item
                         icon="users"
-                        content={actionT('editGroups')}
+                        content={tAction('editGroups')}
                         name={MenuActions.EDIT_GROUPS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="user"
-                        content={actionT('editTenants')}
+                        content={tAction('editTenants')}
                         name={MenuActions.EDIT_TENANTS_ACTION}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="trash"
-                        content={actionT('delete')}
+                        content={tAction('delete')}
                         name={MenuActions.DELETE_ACTION}
                         onClick={this.actionClick}
                     />

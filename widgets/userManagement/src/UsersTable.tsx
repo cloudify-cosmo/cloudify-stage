@@ -11,7 +11,7 @@ import type { User, UserManagementWidget } from './widget.types';
 import getWidgetT from './getWidgetT';
 
 const t = getWidgetT();
-const columnT = (key: string) => t(`columns.${key}`);
+const tColumn = (key: string) => t(`columns.${key}`);
 
 interface UsersTableProps {
     data: { items: ExtendedUser[]; total: number };
@@ -299,18 +299,18 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     className={tableName}
                     noDataMessage={t('noUsers')}
                 >
-                    <DataTable.Column label={columnT('username')} name="username" width="37%" />
-                    <DataTable.Column label={columnT('lastLoginAt')} name="last_login_at" width="18%" />
-                    <DataTable.Column label={columnT('isAdmin')} width="10%" />
-                    <DataTable.Column label={columnT('active')} name="active" width="10%" />
+                    <DataTable.Column label={tColumn('username')} name="username" width="37%" />
+                    <DataTable.Column label={tColumn('lastLoginAt')} name="last_login_at" width="18%" />
+                    <DataTable.Column label={tColumn('isAdmin')} width="10%" />
+                    <DataTable.Column label={tColumn('active')} name="active" width="10%" />
                     <DataTable.Column
-                        label={columnT('showGettingStarted')}
+                        label={tColumn('showGettingStarted')}
                         name="show_getting_started"
                         style={{ whiteSpace: 'normal' }}
                         width="10%"
                     />
-                    <DataTable.Column label={columnT('groupCount')} width="10%" />
-                    <DataTable.Column label={columnT('tenantCount')} width="10%" />
+                    <DataTable.Column label={tColumn('groupCount')} width="10%" />
+                    <DataTable.Column label={tColumn('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
                         /* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */
