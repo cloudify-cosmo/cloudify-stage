@@ -40,15 +40,18 @@ export interface VersionResponse {
 
 /* eslint-disable camelcase */
 export interface UserResponse {
-    username: string;
-    tenants: TenantsRoles;
-    tenant_roles: any;
-    groups: any;
     role: string;
-    group_system_roles: GroupSystemRoles;
     active: boolean;
-    first_login_at: string;
-    last_login_at: string;
+    username: string;
+
+    groups: string[];
+    group_system_roles: GroupSystemRoles;
+
+    tenants: TenantsRoles;
+    tenant_roles: { direct: Record<string, string>; groups: any };
+
+    first_login_at: string | null;
+    last_login_at: string | null;
     is_locked: boolean;
     show_getting_started: boolean;
 }

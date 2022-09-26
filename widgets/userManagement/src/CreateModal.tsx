@@ -1,14 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import Actions from './actions';
-import { mapTenantsToRoles } from '../../common/src/tenants/utils';
+import type { CancelablePromise } from '../../../app/utils/types';
+import type { RolesPickerProps } from '../../common/src/roles/RolesPicker';
+import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
+import getWidgetT from './getWidgetT';
 
-export default function CreateModal({ toolbox }) {
+const tModal = (key: string) => getWidgetT()(`createModal.${key}`);
+
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
+interface CreateModalInputs {
+    username: string;
+    password: string;
+    confirmPassword: string;
+    isAdmin: boolean;
+}
+const CreateModal: FunctionComponent<CreateModalProps> = ({ toolbox }) => {
     const { useEffect, useState, useRef } = React;
     const { useOpen, useErrors, useBoolean, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [inputs, setInput, clearInputs] = useInputs({
+    const [inputs, setInput, clearInputs] = useInputs<CreateModalInputs>({
         username: '',
         password: '',
         confirmPassword: '',
@@ -16,9 +29,10 @@ export default function CreateModal({ toolbox }) {
     });
     const [tenants, setTenants] = useState({});
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
-    const [availableTenants, setAvailableTenants] = useState({});
+    const [availableTenants, setAvailableTenants] = useState<TenantItem[]>([]);
 
-    const availableTenantsPromise = useRef(null);
+    type Tenants = Stage.Types.PaginatedResponse<{ name: string }>;
+    const availableTenantsPromise = useRef<CancelablePromise<Tenants> | null>(null);
 
     const [isOpen, doOpen, doClose] = useOpen(() => {
         setLoading();
@@ -34,7 +48,7 @@ export default function CreateModal({ toolbox }) {
                 unsetLoading();
                 setAvailableTenants(resolvedTenants.items);
             })
-            .catch(err => {
+            .catch((err: any) => {
                 if (!err.isCanceled) {
                     unsetLoading();
                     setAvailableTenants([]);
@@ -51,18 +65,18 @@ export default function CreateModal({ toolbox }) {
     }, []);
 
     function submitCreate() {
-        const submitErrors = {};
+        const submitErrors: Partial<Record<keyof CreateModalInputs, string>> = {};
 
         if (_.isEmpty(inputs.username)) {
-            submitErrors.username = 'Please provide username';
+            submitErrors.username = tModal('inputs.username.error');
         }
 
         if (_.isEmpty(inputs.password)) {
-            submitErrors.password = 'Please provide user password';
+            submitErrors.password = tModal('inputs.password.error');
         }
 
         if (_.isEmpty(inputs.confirmPassword)) {
-            submitErrors.confirmPassword = 'Please provide password confirmation';
+            submitErrors.confirmPassword = tModal('inputs.confirmPassword.error');
         }
 
         if (
@@ -70,7 +84,7 @@ export default function CreateModal({ toolbox }) {
             !_.isEmpty(inputs.confirmPassword) &&
             inputs.password !== inputs.confirmPassword
         ) {
-            submitErrors.confirmPassword = 'Passwords do not match';
+            submitErrors.confirmPassword = tModal('inputs.confirmPassword.notMatchError');
         }
 
         if (!_.isEmpty(submitErrors)) {
@@ -84,7 +98,7 @@ export default function CreateModal({ toolbox }) {
         const actions = new Actions(toolbox);
         actions
             .doCreate(inputs.username, inputs.password, Stage.Common.Roles.Utils.getSystemRole(inputs.isAdmin))
-            .then(() => actions.doHandleTenants(inputs.username, tenants, [], []))
+            .then(() => actions.doHandleTenants(inputs.username, tenants, [], {}))
             .then(() => {
                 clearErrors();
                 doClose();
@@ -100,39 +114,41 @@ export default function CreateModal({ toolbox }) {
         return false;
     }
 
-    function handleTenantChange(proxy, field) {
-        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
+    const handleTenantChange: TenantsDropdownProps['onChange'] = (_event, { value }: { value?: string[] }) => {
+        const newTenants = Stage.Common.Tenants.mapTenantsToRoles(value, tenants, toolbox);
         setTenants(newTenants);
-    }
+    };
 
-    function handleRoleChange(tenant, role) {
+    const handleRoleChange: RolesPickerProps['onUpdate'] = (tenant, role) => {
         const newTenants = { ...tenants, [tenant]: role };
         setTenants(newTenants);
-    }
+    };
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Message, Modal } = Stage.Basic;
     const RolesPicker = Stage.Common.Roles.Picker;
     const { TenantsDropdown } = Stage.Common.Tenants;
 
-    const addButton = <Button content="Add" icon="add user" labelPosition="left" className="addUserButton" />;
+    const addButton = (
+        <Button content={tModal('button')} icon="add user" labelPosition="left" className="addUserButton" />
+    );
 
     return (
         <Modal trigger={addButton} open={isOpen} onOpen={doOpen} onClose={doClose} className="addUserModal">
             <Modal.Header>
-                <Icon name="add user" /> Add user
+                <Icon name="add user" /> {tModal('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Username" error={errors.username} required>
+                    <Form.Field label={tModal('inputs.username.label')} error={errors.username} required>
                         <Form.Input name="username" value={inputs.username} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field label="Password" error={errors.password} required>
+                    <Form.Field label={tModal('inputs.password.label')} error={errors.password} required>
                         <Form.Input name="password" type="password" value={inputs.password} onChange={setInput} />
                     </Form.Field>
 
-                    <Form.Field label="Confirm password" error={errors.confirmPassword} required>
+                    <Form.Field label={tModal('inputs.confirmPassword.label')} error={errors.confirmPassword} required>
                         <Form.Input
                             name="confirmPassword"
                             type="password"
@@ -142,12 +158,15 @@ export default function CreateModal({ toolbox }) {
                     </Form.Field>
 
                     <Form.Field error={errors.isAdmin}>
-                        <Form.Checkbox label="Admin" name="isAdmin" checked={inputs.isAdmin} onChange={setInput} />
+                        <Form.Checkbox
+                            label={tModal('inputs.isAdmin.label')}
+                            name="isAdmin"
+                            checked={inputs.isAdmin}
+                            onChange={setInput}
+                        />
                     </Form.Field>
 
-                    {inputs.isAdmin && (
-                        <Message>Admin users have full permissions to all tenants on the manager.</Message>
-                    )}
+                    {inputs.isAdmin && <Message>{tModal('inputs.isAdmin.note')}</Message>}
 
                     <TenantsDropdown
                         value={Object.keys(tenants)}
@@ -165,10 +184,9 @@ export default function CreateModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={onApprove} disabled={isLoading} content="Add" icon="add user" />
+                <ApproveButton onClick={onApprove} disabled={isLoading} content={tModal('button')} icon="add user" />
             </Modal.Actions>
         </Modal>
     );
-}
-
-CreateModal.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };
+};
+export default CreateModal;
