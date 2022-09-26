@@ -2,8 +2,9 @@
          Site Overrides
 *******************************/
 
+// TODO Norbert: Extract duplicated colors as a variables
+
 .ui.checkbox {
-    // TODO: Maybe modify it to be .checked -> it would be worth to check checkbox labels after that change
     input:checked {
         ~ label::after {
             color: @blue;
@@ -67,7 +68,7 @@
             padding-top: @relative1px;
 
             &::before {
-                border: 1px solid #ebebeb;
+                border: 1px solid @checkboxBorderColor;
             }
 
             &::after {
