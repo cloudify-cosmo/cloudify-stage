@@ -14,7 +14,7 @@ export function getResourcePath(path: string, isUserData: boolean) {
     return pathlib.resolve(`../dist/${isUserData ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`);
 }
 
-export function getTokenFromCookies(req: Request) {
+export function getTokenFromCookies(req: Request<any, any, any, any, Record<string, any>>) {
     return req.cookies[TOKEN_COOKIE_NAME] as string;
 }
 

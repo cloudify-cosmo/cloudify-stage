@@ -1,13 +1,16 @@
-import type { RequestArchiveBody, RequestBody } from '../../../../backend/routes/Terraform.types';
+import type {
+    PostTerraformBlueprintArchiveRequestBody,
+    PostTerraformBlueprintRequestBody
+} from '../../../../backend/routes/Terraform.types';
 
 export default class TerraformActions {
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
 
-    doGenerateBlueprint(body: RequestBody) {
+    doGenerateBlueprint(body: PostTerraformBlueprintRequestBody) {
         return this.toolbox.getInternal().doPost('/terraform/blueprint', { body });
     }
 
-    doGenerateBlueprintArchive(body: RequestArchiveBody) {
+    doGenerateBlueprintArchive(body: PostTerraformBlueprintArchiveRequestBody) {
         return this.toolbox.getInternal().doPost('/terraform/blueprint/archive', { body, parseResponse: false });
     }
 

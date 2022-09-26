@@ -1,28 +1,19 @@
 // eslint-disable-next-line import/no-unresolved,node/no-missing-import
 import type { Query } from 'express-serve-static-core';
-
-export interface WidgetData {
-    id: string;
-    isCustom: boolean;
-}
-
-export interface WidgetUsage {
-    username: string;
-    managerIp: string;
-}
+import type { WidgetData, WidgetUsage } from '../handler/WidgetsHandler.types';
 
 export type GetWidgetsListResponse = WidgetData[];
 
 export type GetWidgetsUsedResponse = WidgetUsage[];
 
-export type PutWidgetsInstallResponse = WidgetData;
+export type PostWidgetsResponse = WidgetData;
 
-export interface PutWidgetsInstallQueryParams extends Query {
+export interface PostWidgetsQueryParams extends Query {
     url?: string;
 }
 
-export type PutWidgetsUpdateResponse = WidgetData;
+export type PutWidgetsResponse = WidgetData;
 
-export interface PutWidgetsUpdateQueryParams extends PutWidgetsInstallQueryParams, Query {
+export interface PutWidgetsQueryParams extends PostWidgetsQueryParams, Query {
     id: string;
 }

@@ -12,6 +12,7 @@ import * as ManagerHandler from '../handler/ManagerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
 import type { PostPluginsUploadQueryParams, PutPluginsTitleResponse } from './Plugins.types';
+import type { GenericErrorResponse } from '../types';
 
 const router = express.Router();
 const upload = multer();
@@ -114,7 +115,7 @@ router.put(
     }
 );
 
-router.post<never, any, any, PostPluginsUploadQueryParams & Record<string, string>>(
+router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams & Record<string, string>>(
     '/upload',
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,

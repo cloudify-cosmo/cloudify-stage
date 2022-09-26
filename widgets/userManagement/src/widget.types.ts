@@ -1,5 +1,5 @@
 import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
-import type { UserResponse } from '../../../backend/routes/Auth.types';
+import type { UserResponse } from '../../../backend/handler/AuthHandler.types';
 
 export type User = UserResponse;
 
