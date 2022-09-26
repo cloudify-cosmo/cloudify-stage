@@ -16,8 +16,8 @@ interface DeploymentsViewHeaderProps {
     disableBulkActions: boolean;
 }
 
-const headerT = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
-const mapT = (suffix: string) => headerT(`map.${suffix}`);
+const tHeader = (suffix: string) => Stage.i18n.t(`${i18nPrefix}.header.${suffix}`);
+const tMap = (suffix: string) => tHeader(`map.${suffix}`);
 
 const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     mapOpen,
@@ -56,43 +56,43 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
                 icon="map"
                 active={mapOpen}
                 onClick={toggleMap}
-                title={mapT(mapOpen ? 'closeMap' : 'openMap')}
-                content={mapT('label')}
+                title={tMap(mapOpen ? 'closeMap' : 'openMap')}
+                content={tMap('label')}
             />
             {userFilterSelected ? (
                 <Button.Group color="blue">
                     <Button
                         icon="filter"
                         labelPosition="left"
-                        content={userFilterId ?? headerT('filter.unsavedFilter')}
+                        content={userFilterId ?? tHeader('filter.unsavedFilter')}
                         onClick={openFilterModal}
                         style={{ whiteSpace: 'nowrap', maxWidth: 200, textOverflow: 'ellipsis', overflow: 'hidden' }}
                     />
                     <Button
                         icon="delete"
                         onClick={() => handleFilterChange(undefined, undefined)}
-                        title={headerT('filter.clearButton')}
+                        title={tHeader('filter.clearButton')}
                     />
                 </Button.Group>
             ) : (
                 <Button
                     icon="filter"
                     labelPosition="left"
-                    content={headerT('filter.button')}
+                    content={tHeader('filter.button')}
                     onClick={openFilterModal}
                     style={{ marginRight: 0 }}
                 />
             )}
             <Dropdown
                 button
-                text={headerT('bulkActions.button')}
+                text={tHeader('bulkActions.button')}
                 style={{ marginLeft: '0.25em' }}
                 disabled={disableBulkActions}
             >
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu style={{ zIndex: 1000 }}>
-                    <Item text={headerT('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
-                    <Item text={headerT('bulkActions.runWorkflow.title')} onClick={openRunWorkflowModal} />
+                    <Item text={tHeader('bulkActions.deployOn.title')} onClick={openDeployOnModal} />
+                    <Item text={tHeader('bulkActions.runWorkflow.title')} onClick={openRunWorkflowModal} />
                 </Menu>
             </Dropdown>
 

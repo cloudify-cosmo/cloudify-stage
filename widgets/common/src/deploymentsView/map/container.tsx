@@ -7,7 +7,7 @@ import MapsActions from '../../map/MapsActions';
 import type { Site } from '../../map/site';
 
 import type { Deployment } from '../types';
-import { mapT } from './common';
+import { tMap } from './common';
 import DeploymentsMap from './DeploymentsMap';
 
 interface DeploymentsMapContainerProps {
@@ -39,13 +39,13 @@ const DeploymentsMapContainer: FunctionComponent<DeploymentsMapContainerProps> =
     if (sitesResult.isLoading || mapAvailableResult.isLoading) {
         const { Loading } = Stage.Basic;
 
-        return <Loading message={mapT('loadingSites')} />;
+        return <Loading message={tMap('loadingSites')} />;
     }
 
     if (sitesResult.isError || mapAvailableResult.isError) {
         const { ErrorMessage } = Stage.Basic;
 
-        return <ErrorMessage header={mapT('errorLoadingSites')} error={sitesResult.error as { message: string }} />;
+        return <ErrorMessage header={tMap('errorLoadingSites')} error={sitesResult.error as { message: string }} />;
     }
 
     if (sitesResult.isIdle || mapAvailableResult.isIdle) {
