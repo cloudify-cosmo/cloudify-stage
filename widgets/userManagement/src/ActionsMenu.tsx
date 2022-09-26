@@ -5,7 +5,7 @@ import getWidgetT from './getWidgetT';
 
 const tAction = (key: string) => getWidgetT()(`actions.${key}`);
 
-export enum Action {
+export enum MenuAction {
     CHANGE_PASSWORD_ACTION,
     EDIT_TENANTS_ACTION,
     EDIT_GROUPS_ACTION,
@@ -17,19 +17,19 @@ export enum Action {
     ENABLE_GETTING_STARTED_MODAL_ACTION,
     DISABLE_GETTING_STARTED_MODAL_ACTION
 }
-type ActionName = keyof typeof Action;
+type MenuActionName = keyof typeof MenuAction;
 
-interface MenuActionProps {
+interface ActionMenuProps {
     item: User;
-    onSelectAction: (action: Action, user: User) => void;
+    onSelectAction: (action: MenuAction, user: User) => void;
     isLocalIdp: boolean;
 }
 
-class MenuAction extends React.Component<MenuActionProps> {
+class ActionsMenu extends React.Component<ActionMenuProps> {
     actionClick: MenuItemProps['onClick'] = (_event, { name }) => {
         const { item, onSelectAction } = this.props;
-        const actionName = name as ActionName;
-        onSelectAction(Action[actionName], item);
+        const actionName = name as MenuActionName;
+        onSelectAction(MenuAction[actionName], item);
     };
 
     render() {
@@ -44,26 +44,26 @@ class MenuAction extends React.Component<MenuActionProps> {
                         <Menu.Item
                             icon="lock"
                             content={tAction('changePassword')}
-                            name={Action[Action.CHANGE_PASSWORD_ACTION]}
+                            name={MenuAction[MenuAction.CHANGE_PASSWORD_ACTION]}
                             onClick={this.actionClick}
                         />
                     )}
                     <Menu.Item
                         icon="users"
                         content={tAction('editGroups')}
-                        name={Action[Action.EDIT_GROUPS_ACTION]}
+                        name={MenuAction[MenuAction.EDIT_GROUPS_ACTION]}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="user"
                         content={tAction('editTenants')}
-                        name={Action[Action.EDIT_TENANTS_ACTION]}
+                        name={MenuAction[MenuAction.EDIT_TENANTS_ACTION]}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="trash"
                         content={tAction('delete')}
-                        name={Action[Action.DELETE_ACTION]}
+                        name={MenuAction[MenuAction.DELETE_ACTION]}
                         onClick={this.actionClick}
                     />
                 </Menu>
@@ -77,4 +77,4 @@ export default connectToStore(
         isLocalIdp: Stage.Utils.Idp.isLocal(state.manager)
     }),
     {}
-)(MenuAction);
+)(ActionsMenu);
