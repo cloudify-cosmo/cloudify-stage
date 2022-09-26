@@ -1,5 +1,6 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
+import styled from 'styled-components';
 
 import Utils from './utils';
 import Consts from './consts';
@@ -7,7 +8,15 @@ import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataTable, Icon } = Stage.Basic;
-const t = Utils.getWidgetTranslation();
+const t = Utils.getWidgetTranslation('configuration.fieldsToShow.items');
+
+const StyledLink = styled.a`
+    color: #000;
+    &:hover {
+        color: #000;
+        text-decoration: none !important;
+    }
+`;
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
@@ -34,49 +43,47 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             selectable
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column
-                label={t('configuration.fieldsToShow.items.name')}
-                width="25%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
-            />
-            <DataTable.Column
-                label={t('configuration.fieldsToShow.items.description')}
-                width="40%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
-            />
-            <DataTable.Column
-                label={t('configuration.fieldsToShow.items.created')}
-                width="12%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
-            />
-            <DataTable.Column
-                label={t('configuration.fieldsToShow.items.updated')}
-                width="12%"
-                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
-            />
+            <DataTable.Column label={t('name')} width="25%" show={fieldsToShow.includes(t('name'))} />
+            <DataTable.Column label={t('description')} width="40%" show={fieldsToShow.includes(t('description'))} />
+            <DataTable.Column label={t('created')} width="12%" show={fieldsToShow.includes(t('created'))} />
+            <DataTable.Column label={t('updated')} width="12%" show={fieldsToShow.includes(t('updated'))} />
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
-                const isReadmeLoading = readmeLoading === item.name;
-                const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
+                /* eslint-disable camelcase */
+                const {
+                    id,
+                    name,
+                    description,
+                    created_at,
+                    updated_at,
+                    image_url,
+                    isSelected,
+                    html_url,
+                    readme_url,
+                    zip_url,
+                    main_blueprint
+                } = item;
+                const isReadmeLoading = readmeLoading === name;
+                const isBlueprintUploaded = data.uploadedBlueprints.includes(name);
 
                 return (
                     <DataTable.Row
-                        key={item.id}
-                        className={`bp_${item.name}`}
-                        selected={item.isSelected}
+                        key={id}
+                        className={`bp_${name}`}
+                        selected={isSelected}
                         onClick={() => onSelect(item)}
                     >
                         <DataTable.Data>
-                            <ExternalBlueprintImage url={item.image_url} width={30} />{' '}
-                            <a href={item.html_url} target="_blank" rel="noopener noreferrer">
-                                {item.name}
-                            </a>
+                            <ExternalBlueprintImage url={image_url} width={30} /> {name}
                         </DataTable.Data>
-                        <DataTable.Data>{item.description}</DataTable.Data>
-                        <DataTable.Data>{item.created_at}</DataTable.Data>
-                        <DataTable.Data>{item.updated_at}</DataTable.Data>
+                        <DataTable.Data>{description}</DataTable.Data>
+                        <DataTable.Data>{created_at}</DataTable.Data>
+                        <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
+                            <StyledLink href={html_url} target="_blank" rel="noopener noreferrer">
+                                <Icon name="github" bordered />
+                            </StyledLink>
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
@@ -85,7 +92,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 bordered={!isReadmeLoading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
-                                    onReadme(item.name, item.readme_url);
+                                    onReadme(name, readme_url);
                                 }}
                             />
                             <Icon
@@ -96,11 +103,12 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 bordered
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
-                                    onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
+                                    onUpload(name, zip_url, image_url, main_blueprint);
                                 }}
                             />
                         </DataTable.Data>
                     </DataTable.Row>
+                    /* eslint-enable camelcase */
                 );
             })}
         </DataTable>
