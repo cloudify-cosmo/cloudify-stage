@@ -1,7 +1,5 @@
 # Backend
 
-![Backend architecture](./../doc/diagrams/architecture-backend.png)
-
 ## Starting
 
 ### Production

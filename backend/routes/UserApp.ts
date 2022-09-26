@@ -5,7 +5,6 @@ import { db } from '../db/Connection';
 import { getMode } from '../serverSettings';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
 import type {
-    GetUserAppClearPagesResponse,
     GetUserAppResponse,
     PostUserAppRequestBody,
     PostUserAppResponse,
@@ -59,25 +58,22 @@ router.post<never, PostUserAppResponse, PostUserAppRequestBody>('/', (req, res, 
         .catch(next);
 });
 
-router.get<never, GetUserAppClearPagesResponse, never, GetUserAppClearPagesRequestQueryParams>(
-    '/clear-pages',
-    (req, res, next) => {
-        db.UserApps.findOne<UserAppsInstance>({
-            where: {
-                username: req.user!.username,
-                mode: getMode(),
-                tenant: req.query.tenant
+router.get<never, never, never, GetUserAppClearPagesRequestQueryParams>('/clear-pages', (req, res, next) => {
+    db.UserApps.findOne<UserAppsInstance>({
+        where: {
+            username: req.user!.username,
+            mode: getMode(),
+            tenant: req.query.tenant
+        }
+    })
+        .then(userApp => {
+            if (userApp) {
+                return userApp.update({ appData: { pages: [] } });
             }
+            return Promise.reject('Could not clear pages. Row not found');
         })
-            .then(userApp => {
-                if (userApp) {
-                    return userApp.update({ appData: { pages: [] } });
-                }
-                return Promise.reject('Could not clear pages. Row not found');
-            })
-            .then(() => res.send({ status: 'ok' }))
-            .catch(next);
-    }
-);
+        .then(() => res.status(200).end())
+        .catch(next);
+});
 
 export default router;
