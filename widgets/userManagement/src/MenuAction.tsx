@@ -5,29 +5,31 @@ import getWidgetT from './getWidgetT';
 
 const tAction = (key: string) => getWidgetT()(`actions.${key}`);
 
-export enum MenuActions {
-    CHANGE_PASSWORD_ACTION = 'CHANGE_PASSWORD_ACTION',
-    EDIT_TENANTS_ACTION = 'EDIT_TENANTS_ACTION',
-    EDIT_GROUPS_ACTION = 'EDIT_GROUPS_ACTION',
-    DELETE_ACTION = 'DELETE_ACTION',
-    DEACTIVATE_ACTION = 'DEACTIVATE_ACTION',
-    ACTIVATE_ACTION = 'ACTIVATE_ACTION',
-    SET_DEFAULT_USER_ROLE_ACTION = 'SET_DEFAULT_USER_ROLE_ACTION',
-    SET_ADMIN_USER_ROLE_ACTION = 'SET_ADMIN_USER_ROLE_ACTION',
-    ENABLE_GETTING_STARTED_MODAL_ACTION = 'ENABLE_GETTING_STARTED_MODAL_ACTION',
-    DISABLE_GETTING_STARTED_MODAL_ACTION = 'DISABLE_GETTING_STARTED_MODAL_ACTION'
+export enum Action {
+    CHANGE_PASSWORD_ACTION,
+    EDIT_TENANTS_ACTION,
+    EDIT_GROUPS_ACTION,
+    DELETE_ACTION,
+    DEACTIVATE_ACTION,
+    ACTIVATE_ACTION,
+    SET_DEFAULT_USER_ROLE_ACTION,
+    SET_ADMIN_USER_ROLE_ACTION,
+    ENABLE_GETTING_STARTED_MODAL_ACTION,
+    DISABLE_GETTING_STARTED_MODAL_ACTION
 }
+type ActionName = keyof typeof Action;
 
 interface MenuActionProps {
     item: User;
-    onSelectAction: (value: MenuActions, user: User) => void;
+    onSelectAction: (action: Action, user: User) => void;
     isLocalIdp: boolean;
 }
 
 class MenuAction extends React.Component<MenuActionProps> {
     actionClick: MenuItemProps['onClick'] = (_event, { name }) => {
         const { item, onSelectAction } = this.props;
-        onSelectAction(name as MenuActions, item);
+        const actionName = name as ActionName;
+        onSelectAction(Action[actionName], item);
     };
 
     render() {
@@ -42,26 +44,26 @@ class MenuAction extends React.Component<MenuActionProps> {
                         <Menu.Item
                             icon="lock"
                             content={tAction('changePassword')}
-                            name={MenuActions.CHANGE_PASSWORD_ACTION}
+                            name={Action[Action.CHANGE_PASSWORD_ACTION]}
                             onClick={this.actionClick}
                         />
                     )}
                     <Menu.Item
                         icon="users"
                         content={tAction('editGroups')}
-                        name={MenuActions.EDIT_GROUPS_ACTION}
+                        name={Action[Action.EDIT_GROUPS_ACTION]}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="user"
                         content={tAction('editTenants')}
-                        name={MenuActions.EDIT_TENANTS_ACTION}
+                        name={Action[Action.EDIT_TENANTS_ACTION]}
                         onClick={this.actionClick}
                     />
                     <Menu.Item
                         icon="trash"
                         content={tAction('delete')}
-                        name={MenuActions.DELETE_ACTION}
+                        name={Action[Action.DELETE_ACTION]}
                         onClick={this.actionClick}
                     />
                 </Menu>
