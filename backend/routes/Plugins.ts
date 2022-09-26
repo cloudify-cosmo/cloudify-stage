@@ -11,6 +11,8 @@ import { getLogger } from '../handler/LoggerHandler';
 import * as ManagerHandler from '../handler/ManagerHandler';
 import { forward, getResponseForwarder, requestAndForwardResponse } from '../handler/RequestHandler';
 import { getHeadersWithAuthenticationTokenFromRequest } from '../utils';
+import type { PostPluginsUploadQueryParams, PutPluginsTitleResponse } from './Plugins.types';
+import type { GenericErrorResponse } from '../types';
 
 const router = express.Router();
 const upload = multer();
@@ -88,35 +90,32 @@ router.get('/icons/:pluginId', (req, res) => {
     });
 });
 
-router.put('/title', upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))), (req, res) => {
-    let getPluginYaml: Promise<any>;
-    if (typeof req.query.yamlUrl === 'string') {
-        getPluginYaml = downloadFile(req.query.yamlUrl);
-    } else {
-        const files = getFiles(req);
-        getPluginYaml = Promise.resolve(files.yaml_file[0].buffer);
+router.put(
+    '/title',
+    upload.fields(_.map(['yaml_file'], name => ({ name, maxCount: 1 }))),
+    (req, res: Response<PutPluginsTitleResponse>) => {
+        let getPluginYaml: Promise<any>;
+        if (typeof req.query.yamlUrl === 'string') {
+            getPluginYaml = downloadFile(req.query.yamlUrl);
+        } else {
+            const files = getFiles(req);
+            getPluginYaml = Promise.resolve(files.yaml_file[0].buffer);
+        }
+
+        // eslint-disable-next-line camelcase
+        type PluginYaml = { plugins: Record<string, { package_name?: string }> };
+        getPluginYaml
+            .then(pluginYamlString => yaml.load(pluginYamlString) as PluginYaml)
+            .then(pluginYaml =>
+                res.status(200).send({
+                    title: _.chain(pluginYaml.plugins).values().head().value()?.package_name || ''
+                })
+            )
+            .catch(() => res.status(200).send({ title: '' }));
     }
+);
 
-    // eslint-disable-next-line camelcase
-    type PluginYaml = { plugins: Record<string, { package_name: string }> };
-    getPluginYaml
-        .then(pluginYamlString => yaml.load(pluginYamlString) as PluginYaml)
-        .then(pluginYaml =>
-            res.status(200).send({
-                title: _.chain(pluginYaml.plugins).values().head().get('package_name', '')
-            })
-        )
-        .catch(() => res.status(200).send({ title: '' }));
-});
-
-interface PostUploadQuery {
-    iconUrl?: string;
-    title: string;
-    visibility: string;
-    wagonUrl?: string;
-    yamlUrl?: string;
-}
-router.post<any, any, any, any, PostUploadQuery>(
+router.post<never, any | GenericErrorResponse, any, PostPluginsUploadQueryParams & Record<string, string>>(
     '/upload',
     upload.fields(_.map(['wagon_file', 'yaml_file', 'icon_file'], name => ({ name, maxCount: 1 }))),
     checkParams,

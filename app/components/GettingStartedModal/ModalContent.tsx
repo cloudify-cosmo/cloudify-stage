@@ -14,6 +14,7 @@ import type {
     GettingStartedEnvironmentsData,
     GettingStartedSchemaItem
 } from './model';
+import type { Errors } from './GettingStartedModal';
 
 type Props = {
     stepName: StepName;
@@ -27,6 +28,7 @@ type Props = {
     onInstallationStarted: () => void;
     onInstallationFinished: () => void;
     onInstallationCanceled: () => void;
+    errors: Errors;
 };
 
 const ModalContent = ({
@@ -40,7 +42,8 @@ const ModalContent = ({
     onSecretsStepChange,
     onInstallationStarted,
     onInstallationFinished,
-    onInstallationCanceled
+    onInstallationCanceled,
+    errors
 }: Props) => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
@@ -70,6 +73,7 @@ const ModalContent = ({
                     selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
+                    errors={errors}
                 />
             )}
             {(stepName === StepName.Summary || statusStepActive) && (

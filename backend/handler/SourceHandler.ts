@@ -1,19 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
 import _ from 'lodash';
 import os from 'os';
 import pathlib from 'path';
 import url from 'url';
 import mime from 'mime-types';
+import type { Request } from 'express';
 
+// eslint-disable-next-line import/no-unresolved,node/no-missing-import
+import type { ParamsDictionary } from 'express-serve-static-core';
 import { getConfig } from '../config';
 import { isYamlFile } from '../sharedUtils';
-import { getParams, getValuesWithPaths } from '../utils';
 import * as ArchiveHelper from './ArchiveHelper';
 
 import { getLogger } from './LoggerHandler';
+import type { ScanningItem } from './SourceHandler.types';
 
 const logger = getLogger('SourceHandler');
 
@@ -23,20 +23,20 @@ const lookupYamlsDir = pathlib.join(os.tmpdir(), sourceConfig.lookupYamlsDir);
 
 const blueprintExtractDir = 'extracted';
 
-export type ScanningItem = { key: string; title: string; isDir: boolean; children?: ScanningItem[] };
+type RequestWithQuery<Query> = Request<ParamsDictionary, any, any, Query, Record<string, any>>;
 
-function isUnixHiddenPath(path) {
+function isUnixHiddenPath(path: string) {
     // eslint-disable-next-line no-useless-escape
     return /(^|.\/)\.+[^\/\.]/g.test(path);
 }
 
-function toRelativeUrl(relativePath) {
+function toRelativeUrl(relativePath: string) {
     const absoluteUrl = url.pathToFileURL(relativePath);
     const relativeUrl = absoluteUrl.pathname.substring(url.pathToFileURL('').pathname.length + 1);
     return relativeUrl;
 }
 
-function scanRecursive(rootDir, scannedFileOrDirPath) {
+function scanRecursive(rootDir: string, scannedFileOrDirPath: string) {
     const stats = fs.statSync(scannedFileOrDirPath);
     const name = pathlib.basename(scannedFileOrDirPath);
 
@@ -59,14 +59,14 @@ function scanRecursive(rootDir, scannedFileOrDirPath) {
             const children = fs
                 .readdirSync(scannedDir)
                 .map(child => scanRecursive(rootDir, pathlib.join(scannedDir, child)))
-                .filter(e => !!e);
+                .filter(e => !!e) as ScanningItem[];
 
             item.isDir = true;
             item.children = _.sortBy(children, i => !i.isDir);
 
             return item;
-        } catch (ex) {
-            if (ex.code === 'EACCES') {
+        } catch (error: any) {
+            if (error.code === 'EACCES') {
                 logger.debug('cannot access directory, ignoring');
             }
             return null;
@@ -76,12 +76,12 @@ function scanRecursive(rootDir, scannedFileOrDirPath) {
     }
 }
 
-function scanArchive(archivePath) {
+function scanArchive(archivePath: string) {
     logger.debug('scaning archive', archivePath);
     return scanRecursive(archivePath, archivePath);
 }
 
-export function browseArchiveTree(req, timestamp = Date.now()) {
+export function browseArchiveTree(req: Request, timestamp = Date.now().toString()) {
     const { blueprintId } = req.params;
     const archiveUrl = `/blueprints/${blueprintId}/archive`;
     logger.debug('download archive from url', archiveUrl);
@@ -100,11 +100,11 @@ export function browseArchiveTree(req, timestamp = Date.now()) {
         });
 }
 
-function checkPrefix(absCandidate, absPrefix) {
+function checkPrefix(absCandidate: string, absPrefix: string) {
     return absCandidate.substring(0, absPrefix.length) === absPrefix;
 }
 
-export async function browseArchiveFile(req, timestamp, path) {
+export async function browseArchiveFile(req: Request, timestamp: string, path: string) {
     const { blueprintId } = req.params;
     const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
 
@@ -124,94 +124,29 @@ export async function browseArchiveFile(req, timestamp, path) {
     return fs.readFile(absolutePath, '');
 }
 
-export function getMimeType(req, timestamp, path) {
+export function getMimeType(req: Request, timestamp: string, path: string) {
     const { blueprintId } = req.params;
     const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
     return mime.lookup(absolutePath);
 }
 
-function saveMultipartData(req) {
+function saveMultipartData(req: Request) {
     const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
     return ArchiveHelper.saveMultipartData(req, targetPath, 'archive');
 }
 
-function saveDataFromUrl(archiveUrl) {
+function saveDataFromUrl(archiveUrl: string) {
     const targetPath = pathlib.join(lookupYamlsDir, `archive${Date.now()}`);
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
 }
 
-function convertYamlToJson(path, yamlFile) {
-    let yamlFilePath = '';
-
-    let files = fs.readdirSync(path);
-    if (_.includes(files, yamlFile)) {
-        yamlFilePath = pathlib.resolve(path, yamlFile);
-    } else if (files.length === 1 && fs.statSync(pathlib.join(path, files[0])).isDirectory()) {
-        const directory = files[0];
-        files = fs.readdirSync(pathlib.join(path, directory));
-        if (_.includes(files, yamlFile)) {
-            yamlFilePath = pathlib.resolve(path, directory, yamlFile);
-        }
-    }
-
-    if (!_.isEmpty(yamlFilePath)) {
-        try {
-            const json = yaml.safeLoad(fs.readFileSync(yamlFilePath, 'utf8'));
-            return Promise.resolve(json);
-        } catch (error) {
-            const errorMessage = `Cannot parse YAML file ${yamlFile}. Error: ${error}`;
-            logger.error(errorMessage);
-            return Promise.reject(errorMessage);
-        }
-    } else {
-        return Promise.reject(`Cannot find YAML file ${yamlFile} in specified directory.`);
-    }
+interface ArchiveContent {
+    archiveFileName: string;
+    extractedDir: string;
+    decompressData: any;
 }
 
-function getInputs(inputs) {
-    return _.mapValues(inputs, inputObject => inputObject || {});
-}
-
-function getPlugins(imports) {
-    const PLUGIN_KEYWORD = 'plugin:';
-
-    return _.chain(imports)
-        .filter(imp => String(imp).match(PLUGIN_KEYWORD))
-        .map(plugin => {
-            const [packageName, pluginQueryString] = _.chain(plugin).replace(PLUGIN_KEYWORD, '').split('?').value();
-
-            const params = getParams(pluginQueryString);
-            const pluginObject = { packageName, params };
-
-            return pluginObject;
-        })
-        .reduce((result, pluginObject) => {
-            result[pluginObject.packageName] = _.omit(pluginObject, 'packageName');
-            return result;
-        }, {})
-        .value();
-}
-
-function getSecrets(json) {
-    const SECRET_KEYWORD = 'get_secret';
-
-    return _.chain(getValuesWithPaths(json, SECRET_KEYWORD))
-        .reduce((result, value) => {
-            const secretName = _.keys(value)[0];
-            const secretPath = value[secretName];
-
-            if (_.isUndefined(result[secretName])) {
-                result[secretName] = {};
-            }
-
-            (result[secretName].paths || (result[secretName].paths = [])).push(secretPath);
-
-            return result;
-        }, {})
-        .value();
-}
-
-function getBlueprintArchiveContent(request) {
+function getBlueprintArchiveContent(request: RequestWithQuery<any>) {
     const { query } = request;
     const promise = query.url ? saveDataFromUrl(query.url) : saveMultipartData(request);
 
@@ -243,24 +178,10 @@ function getBlueprintArchiveContent(request) {
                 ArchiveHelper.cleanTempData(archiveFolder).catch(logger.warn);
                 throw err;
             });
-    });
+    }) as Promise<ArchiveContent>;
 }
 
-export function getBlueprintResources(request) {
-    const { query } = request;
-    const { yamlFile } = query;
-
-    return getBlueprintArchiveContent(request)
-        .then(data => convertYamlToJson(data.extractedDir, yamlFile))
-        .then(json => ({
-            inputs: getInputs(json.inputs),
-            dataTypes: json.data_types,
-            plugins: getPlugins(json.imports),
-            secrets: getSecrets(json)
-        }));
-}
-
-function scanYamlFiles(extractedDir) {
+function scanYamlFiles(extractedDir: string) {
     logger.debug('scaning yaml files from', extractedDir);
 
     let items = fs.readdirSync(extractedDir);
@@ -274,7 +195,7 @@ function scanYamlFiles(extractedDir) {
     return Promise.resolve(items);
 }
 
-export function listYamlFiles(request) {
+export function listYamlFiles(request: RequestWithQuery<{ includeFilename?: string; url?: string }>) {
     const { query } = request;
     const includeFilename = query.includeFilename === 'true';
     let archiveFileName = '';

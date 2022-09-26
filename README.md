@@ -13,51 +13,24 @@ The following requirements should be met prior starting the application:
     - With [NVM](https://github.com/nvm-sh/nvm) installed just execute `nvm use` to set Node.js version compatible with this project
 - [PostgreSQL](https://www.postgresql.org/) (version >= 9.5.x) installed and configured
 - [Cloudify Manager](https://cloudify.co/download) (version >= 6.x) accessible from your local machine
+
+The following platforms are supported for development:
+* Linux
+* MacOS
+* Windows with WSL 2.0
+
 ## Setup
 
 To setup development environment and start the application follow the steps below.
 
----
-
-### Automated way
-
-#### Run the project with public released latest docker image
-```bash
-$ make install # configure project
-$ make -j2 up-public # run the project with development docker image
-```
-
-#### Run the project with development docker latest image
-```bash
-$ make install # configure project
-$ make install-dev # download latest docker dev image
-$ make -j2 up-public # run the project with public docker image
-```
-
-#### Commands description
-
-Run `make install` to do prerequired manual steps for you (described below).
-
-Run `make install-dev` to download latest dev docker image.
-
-Run `make -j2 up-public` to fire the backend and frontend and the latest public available docker image and postgres database.
-
-Run `make -j2 up-dev` to fire the backend and frontend and development latest downloaded docker image and postgres database.
-
-Run `make down` to stop the docker containers.
-
-The commands are described further inside of the `Makefile`.
-
----
-
-### Manual way
-
 1. **Cloudify Manager installation**
 
-    There are many ways to install Cloudify Manager. You can install the docker image of Cloudify Manager using the way described here:
+    There are many ways to install Cloudify Manager:
 
-     - [Production docker premium image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/trial_install/#step-1-install-the-cloudify-manager-as-a-docker-container).
-     - [Production docker community image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container).
+     - [Production docker premium image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/trial_install/#step-1-install-the-cloudify-manager-as-a-docker-container)
+     - [Production docker community image installation](https://docs.cloudify.co/staging/dev/trial_getting_started/set_trial_manager/download_community/#step-1-install-the-cloudify-manager-as-a-docker-container)
+     - [Development docker premium image installation](https://cloudifysource.atlassian.net/wiki/spaces/RD/pages/2459238401/Setting+up+an+environment+using+Docker)
+     - [Production or development AMI image installation](https://cloudifysource.atlassian.net/wiki/spaces/RD/pages/2406187011/Setting+up+an+environment+in+AWS+EC2)
 
 1. **Configuration**
    
@@ -76,8 +49,6 @@ The commands are described further inside of the `Makefile`.
 
  
    You can do this easily by:
-    - running pre-configured container with docker-composer: `docker-compose -d up postgres-cfy`
-    - or more manually with docker:
       ```bash
       docker pull postgres
       docker run --name postgres-cfy -e POSTGRES_PASSWORD=cloudify -e POSTGRES_USER=cloudify -e POSTGRES_DB=stage -p 5432:5432 -d postgres

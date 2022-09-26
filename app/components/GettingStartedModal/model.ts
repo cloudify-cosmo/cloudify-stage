@@ -23,10 +23,12 @@ export type GettingStartedSchemaPlugin = {
     version?: RegExpString;
 };
 
+export type GettingStartedSchemaSecretType = 'text' | 'password' | 'email';
+
 export type GettingStartedSchemaSecret = {
     label: string;
     name: string;
-    type: 'text' | 'password';
+    type: GettingStartedSchemaSecretType;
     description?: string;
 };
 
