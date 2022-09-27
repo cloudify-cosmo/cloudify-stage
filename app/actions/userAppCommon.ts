@@ -3,6 +3,7 @@ import type { Dispatch, Store } from 'redux';
 import type { ReduxState } from '../reducers';
 import Consts from '../utils/consts';
 import Internal from '../utils/Internal';
+import type { PostUserAppRequestBody, PostUserAppResponse } from '../../backend/routes/UserApp.types';
 
 export function saveUserAppData() {
     return (_dispatch: Dispatch, getState: Store<ReduxState>['getState']) => {
@@ -19,9 +20,9 @@ export function saveUserAppData() {
                 widget.maximized = false;
             });
 
-        const body = { appData, version: Consts.APP_VERSION };
+        const body: PostUserAppRequestBody = { appData, version: Consts.APP_VERSION };
 
         const internal = new Internal(getState().manager);
-        return internal.doPost('/ua', { body });
+        return internal.doPost<PostUserAppResponse, PostUserAppRequestBody>('/ua', { body });
     };
 }
