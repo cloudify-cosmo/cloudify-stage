@@ -307,6 +307,10 @@ export default function DynamicDropdown({
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
                 }}
+                onBlur={(event, data) => {
+                    if (!isFunction(onSearchChange)) setSearchQuery('');
+                    if (isFunction(rest.onBlur)) rest.onBlur(event, data);
+                }}
                 multiple={multiple}
                 loading={isLoading}
                 options={((): DropdownItemProps[] => {
