@@ -102,7 +102,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <Button
+                                <StyledLinkButton
                                     circular
                                     icon="github"
                                     onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
