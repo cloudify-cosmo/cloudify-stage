@@ -94,7 +94,7 @@
         }
 
         &.checked {
-            input:checked ~ label {
+            input ~ label {
                 &::before {
                     border: @defaultBorderProperties @checkboxActiveCheckColor;
                     background-color: rgba(101, 173, 255, 0.1) !important;
@@ -106,7 +106,7 @@
             }
 
             &:hover {
-                input:checked ~ label {
+                input ~ label {
                     &::before {
                         border: @defaultBorderProperties @hoveredCheckedCheckboxColor;
                     }
