@@ -1,6 +1,5 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
-import styled from 'styled-components';
 
 import Utils from './utils';
 import Consts from './consts';
@@ -9,14 +8,6 @@ import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataTable, Icon } = Stage.Basic;
 const t = Utils.getWidgetTranslation('configuration.fieldsToShow.items');
-
-const StyledLink = styled.a`
-    color: #000;
-    &:hover {
-        color: #000;
-        text-decoration: none !important;
-    }
-`;
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
@@ -81,9 +72,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
-                            <StyledLink href={html_url} target="_blank" rel="noopener noreferrer">
-                                <Icon name="github" bordered />
-                            </StyledLink>
+                            <Icon name="github" bordered onClick={() => Stage.Utils.Url.redirectToPage(html_url)} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
