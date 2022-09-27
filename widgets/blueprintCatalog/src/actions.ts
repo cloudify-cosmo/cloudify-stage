@@ -1,5 +1,6 @@
 import Consts from './consts';
 import type { WidgetParameters } from './types';
+import type { GetExternalContentQueryParams } from '../../../backend/routes/External.types';
 
 export default class Actions {
     private toolbox: Stage.Types.WidgetlessToolbox;
@@ -22,11 +23,14 @@ export default class Actions {
     }
 
     doGetRepos(params: WidgetParameters) {
-        if (!_.isEmpty(this.jsonPath)) {
+        if (this.jsonPath) {
             // JSON URL
             return this.toolbox
                 .getInternal()
-                .doGet('/external/content', { params: { url: this.jsonPath }, parseResponse: false })
+                .doGet<any, GetExternalContentQueryParams>('/external/content', {
+                    params: { url: this.jsonPath },
+                    parseResponse: false
+                })
                 .then(response => response.json())
                 .then(data =>
                     Promise.resolve({
@@ -47,8 +51,8 @@ export default class Actions {
             .then(data => Promise.resolve({ ...data, source: Consts.GITHUB_DATA_SOURCE }));
     }
 
-    doGetReadme(readmeUrl: string): Promise<string> {
-        return this.toolbox.getInternal().doGet(readmeUrl);
+    doGetReadme(readmeUrl: string) {
+        return this.toolbox.getInternal().doGet<string>(readmeUrl);
     }
 
     doGetRepoTree(repositoryName: string) {

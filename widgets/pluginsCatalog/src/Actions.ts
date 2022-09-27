@@ -1,4 +1,6 @@
 import type { PluginDescription, PluginDescriptionWithVersion, PluginUploadData } from './types';
+import type { GetExternalContentQueryParams } from '../../../backend/routes/External.types';
+import type { PostPluginsUploadQueryParams } from '../../../backend/routes/Plugins.types';
 
 interface UploadedPlugin {
     // NOTE: property names match from the backend ones
@@ -41,7 +43,10 @@ export default class Actions {
     private doGetPluginsCatalogList(): Promise<PluginDescription[]> {
         return this.toolbox
             .getInternal()
-            .doGet('/external/content', { params: { url: this.jsonPath }, parseResponse: false })
+            .doGet<any, GetExternalContentQueryParams>('/external/content', {
+                params: { url: this.jsonPath },
+                parseResponse: false
+            })
             .then(response => response.json());
     }
 
@@ -54,6 +59,8 @@ export default class Actions {
             title
         };
 
-        return this.toolbox.getInternal().doUpload('/plugins/upload', { params, method: 'post' });
+        return this.toolbox
+            .getInternal()
+            .doUpload<any, PostPluginsUploadQueryParams>('/plugins/upload', { params, method: 'post' });
     }
 }

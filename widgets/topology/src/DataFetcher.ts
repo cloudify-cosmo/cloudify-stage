@@ -1,5 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import type { GetBlueprintUserDataLayoutResponse } from '../../../backend/routes/BlueprintUserData.types';
 
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
@@ -8,7 +9,10 @@ export default class DataFetcher {
         }
 
         function getLayoutPromise(layoutBlueprintId) {
-            return toolbox.getInternal().doGet(`/bud/layout/${layoutBlueprintId}`).catch(_.constant(null));
+            return toolbox
+                .getInternal()
+                .doGet<GetBlueprintUserDataLayoutResponse>(`/bud/layout/${layoutBlueprintId}`)
+                .catch(_.constant(null));
         }
 
         if (deploymentId) {
