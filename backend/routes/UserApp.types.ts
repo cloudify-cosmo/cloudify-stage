@@ -9,10 +9,6 @@ export type PostUserAppRequestBody = {
     version: UserAppsData['appDataVersion'];
 };
 
-export interface GetUserAppClearPagesResponse {
-    status: 'ok';
-}
-
 export interface GetUserAppClearPagesRequestQueryParams {
     tenant?: string;
 }

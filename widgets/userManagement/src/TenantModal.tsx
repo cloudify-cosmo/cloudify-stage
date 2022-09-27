@@ -1,16 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DropdownProps } from 'semantic-ui-react';
+import type { FunctionComponent } from 'react';
 import Actions from './actions';
-import UserPropType from './props/UserPropType';
+import type { User } from './widget.types';
+import type { Role } from '../../common/src/roles/RolesPicker';
+import type { RolesAssignment } from '../../common/src/tenants/utils';
+import getWidgetT from './getWidgetT';
 
+const t = getWidgetT();
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
-export default function TenantModal({ onHide, open, user, toolbox, tenants }) {
+export interface TenantModalProps {
+    onHide: () => void;
+    open: boolean;
+    tenants: string[];
+    toolbox: Stage.Types.Toolbox;
+    user: User;
+}
+
+const TenantModal: FunctionComponent<TenantModalProps> = ({ onHide, open, user, toolbox, tenants }) => {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [editedTenants, setEditedTenants] = useInput({});
+    const [editedTenants, setEditedTenants] = useInput<RolesAssignment>({});
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
     useOpenProp(open, () => {
@@ -28,7 +40,7 @@ export default function TenantModal({ onHide, open, user, toolbox, tenants }) {
         );
     });
 
-    function onRoleChange(tenant, role) {
+    function onRoleChange(tenant: string, role: Role) {
         const newTenants = { ...editedTenants };
         newTenants[tenant] = role;
         setEditedTenants(newTenants);
@@ -42,9 +54,9 @@ export default function TenantModal({ onHide, open, user, toolbox, tenants }) {
         const tenantsList = Object.keys(userTenants);
         const submitTenantsList = Object.keys(editedTenants);
 
-        const tenantsToAdd = _.pick(editedTenants, _.difference(submitTenantsList, tenantsList));
-        const tenantsToRemove = _.difference(tenantsList, submitTenantsList);
-        const tenantsToUpdate = _.pickBy(editedTenants, (role, tenant) => {
+        const tenantsToAdd: RolesAssignment = _.pick(editedTenants, _.difference(submitTenantsList, tenantsList));
+        const tenantsToRemove: string[] = _.difference(tenantsList, submitTenantsList);
+        const tenantsToUpdate: RolesAssignment = _.pickBy(editedTenants, (role, tenant) => {
             return userTenants[tenant] && !_.isEqual(userTenants[tenant], role);
         });
 
@@ -61,31 +73,31 @@ export default function TenantModal({ onHide, open, user, toolbox, tenants }) {
             .finally(unsetLoading);
     }
 
-    function handleInputChange(proxy, field) {
-        const newTenants = {};
-        _.forEach(field.value, tenant => {
+    const handleInputChange: DropdownProps['onChange'] = (_event, field) => {
+        const newTenants: RolesAssignment = {};
+        _.forEach(field.value as string[], tenant => {
             newTenants[tenant] = editedTenants[tenant] || getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setEditedTenants(newTenants);
-    }
+    };
 
     const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-    const options = _.map(tenants.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
+    const options = _.map(tenants, tenant => {
+        return { text: tenant, value: tenant, key: tenant };
     });
 
     return (
         <Modal open={open} onClose={() => onHide()} className="editTenantsModal">
             <Modal.Header>
-                <Icon name="user" /> Edit tenants for {user.username}
+                <Icon name="user" /> {t('editTenantsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field>
                         <Form.Dropdown
-                            placeholder="Tenants"
+                            placeholder={t('details.tenants')}
                             multiple
                             selection
                             options={options}
@@ -109,14 +121,6 @@ export default function TenantModal({ onHide, open, user, toolbox, tenants }) {
             </Modal.Actions>
         </Modal>
     );
-}
-
-TenantModal.propTypes = {
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    tenants: PropTypes.shape({
-        items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string }))
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    user: UserPropType.isRequired
 };
+
+export default TenantModal;

@@ -1,31 +1,42 @@
-// @ts-nocheck File not migrated fully to TS
+import type { SystemRole } from '../../common/src/roles/types';
+import type { Toolbox } from '../../../app/utils/StageAPI';
+import type { RolesAssignment } from '../../common/src/tenants/utils';
+
+export type NamedResourceResponse = Stage.Types.PaginatedResponse<{ name: string }>;
 
 export default class Actions {
-    constructor(toolbox) {
+    toolbox: Toolbox;
+
+    constructor(toolbox: Toolbox) {
         this.toolbox = toolbox;
     }
 
-    doCreate(username, password, role) {
+    doCreate(username: string, password: string, role: SystemRole) {
         return this.toolbox.getManager().doPut('/users', { body: { username, password, role } });
     }
 
-    doSetPassword(username, password) {
+    doSetPassword(username: string, password: string) {
         return this.toolbox.getManager().doPost(`/users/${username}`, { body: { password } });
     }
 
-    doSetRole(username, role) {
+    doSetRole(username: string, role: SystemRole) {
         return this.toolbox.getManager().doPost(`/users/${username}`, { body: { role } });
     }
 
-    doGetTenants() {
+    doGetTenants(): Promise<NamedResourceResponse> {
         return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
-    doRemoveFromTenant(username, tenantName) {
+    doRemoveFromTenant(username: string, tenantName: string) {
         return this.toolbox.getManager().doDelete('/tenants/users', { body: { username, tenant_name: tenantName } });
     }
 
-    doHandleTenants(username, tenantsToAdd, tenantsToDelete, tenantsToUpdate) {
+    doHandleTenants(
+        username: string,
+        tenantsToAdd: RolesAssignment,
+        tenantsToDelete: string[],
+        tenantsToUpdate: RolesAssignment
+    ) {
         const addActions = _.map(tenantsToAdd, (role, tenantName) =>
             this.toolbox.getManager().doPut('/tenants/users', { body: { username, tenant_name: tenantName, role } })
         );
@@ -39,15 +50,15 @@ export default class Actions {
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
 
-    doGetGroups() {
+    doGetGroups(): Promise<NamedResourceResponse> {
         return this.toolbox.getManager().doGet('/user-groups?_include=name');
     }
 
-    doRemoveFromGroup(username, groupName) {
+    doRemoveFromGroup(username: string, groupName: string) {
         return this.toolbox.getManager().doDelete('/user-groups/users', { body: { username, group_name: groupName } });
     }
 
-    doHandleGroups(username, groupsToAdd, groupsToDelete) {
+    doHandleGroups(username: string, groupsToAdd: string[], groupsToDelete: string[]) {
         const addActions = _.map(groupsToAdd, groupName =>
             this.toolbox.getManager().doPut('/user-groups/users', { body: { username, group_name: groupName } })
         );
@@ -58,20 +69,19 @@ export default class Actions {
         return Promise.all(_.concat(addActions, deleteActions));
     }
 
-    doDelete(username) {
+    doDelete(username: string) {
         return this.toolbox.getManager().doDelete(`/users/${username}`);
     }
 
-    doActivate(username) {
+    doActivate(username: string) {
         return this.toolbox.getManager().doPost(`/users/active/${username}`, { body: { action: 'activate' } });
     }
 
-    doDeactivate(username) {
+    doDeactivate(username: string) {
         return this.toolbox.getManager().doPost(`/users/active/${username}`, { body: { action: 'deactivate' } });
     }
 
-    doSetGettingStartedModalEnabled(username, modalEnabled) {
-        // TODO(RD-1874): use common api for backend requests
+    doSetGettingStartedModalEnabled(username: string, modalEnabled: boolean) {
         return this.toolbox.getManager().doPost(`/users/${username}`, { body: { show_getting_started: modalEnabled } });
     }
 }

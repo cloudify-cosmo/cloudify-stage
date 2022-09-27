@@ -17,7 +17,7 @@ interface RunWorkflowModalProps {
 
 type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
 
-const modalT = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
+const tModal = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
 const getWorkflowsOptions = (workflows: Workflow[]) => {
     return _.chain(workflows)
@@ -48,7 +48,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
         resetWorkflowId();
         resetWorkflows();
         unsetExecutionGroupStarted();
-        setLoadingMessage(modalT('messages.fetchingWorkflows'));
+        setLoadingMessage(tModal('messages.fetchingWorkflows'));
 
         searchActions
             .doListAllWorkflows(filterRules)
@@ -59,17 +59,17 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
 
     async function runWorkflow() {
         if (!workflowId) {
-            setErrors({ error: modalT('errors.noWorkflowError') });
+            setErrors({ error: tModal('errors.noWorkflowError') });
             return;
         }
 
         try {
-            setLoadingMessage(modalT('messages.creatingDeploymentGroup'));
+            setLoadingMessage(tModal('messages.creatingDeploymentGroup'));
             const groupId = getGroupIdForBatchAction();
             const deploymentGroupsActions = new DeploymentGroupsActions(toolbox);
             await deploymentGroupsActions.doCreate(groupId, { filter_rules: filterRules });
 
-            setLoadingMessage(modalT('messages.startingExecutionGroup'));
+            setLoadingMessage(tModal('messages.startingExecutionGroup'));
             const executionGroupsActions = new ExecutionGroupsActions(toolbox);
             await executionGroupsActions.doStart(groupId, workflowId);
 
@@ -87,13 +87,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
     ) : (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="cogs" /> {modalT('header')}
+                <Icon name="cogs" /> {tModal('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     {loadingMessage && <LoadingOverlay message={loadingMessage} />}
-                    <Form.Field label={modalT('inputs.workflowId.label')} help={modalT('inputs.workflowId.help')}>
+                    <Form.Field label={tModal('inputs.workflowId.label')} help={tModal('inputs.workflowId.help')}>
                         <Dropdown
                             search
                             selection
@@ -102,13 +102,13 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
                             value={workflowId}
                         />
                     </Form.Field>
-                    <Message>{modalT('messages.limitations')}</Message>
+                    <Message>{tModal('messages.limitations')}</Message>
                 </Form>
             </Modal.Content>
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} />
-                <ApproveButton onClick={runWorkflow} content={modalT('buttons.run')} disabled={!workflowId} />
+                <ApproveButton onClick={runWorkflow} content={tModal('buttons.run')} disabled={!workflowId} />
             </Modal.Actions>
         </Modal>
     );

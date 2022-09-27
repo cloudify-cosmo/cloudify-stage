@@ -21,6 +21,7 @@ import TimeUtils from './shared/TimeUtils';
 import UrlUtils from './shared/UrlUtils';
 import type { WidgetDefinition } from './StageAPI';
 import { isEmptyWidgetData } from './StageAPI';
+import type { CancelablePromise } from './types';
 
 export default class StageUtils {
     static Execution = ExecutionUtils;
@@ -45,7 +46,7 @@ export default class StageUtils {
 
     static saveAs = saveAs;
 
-    static makeCancelable<T>(promise: Promise<T>) {
+    static makeCancelable<T>(promise: Promise<T>): CancelablePromise<T> {
         let hasCanceled = false;
 
         const wrappedPromise = new Promise<T>((resolve, reject) => {
