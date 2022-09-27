@@ -2,12 +2,14 @@
          Site Overrides
 *******************************/
 
-// TODO Norbert: Extract duplicated colors as a variables
+@hoveredCheckedCheckboxColor: #0077ff;
+@disabledCheckboxColor: rgba(235, 235, 235, 0.9);
+@defaultBorderProperties: 1px solid;
 
 .ui.checkbox {
     input:checked {
         ~ label::after {
-            color: @blue;
+            color: @checkboxActiveCheckColor;
         }
     }
 
@@ -15,11 +17,11 @@
         input:checked {
             ~ label {
                 &::before {
-                    border-color: #0077ff;
+                    border-color: @hoveredCheckedCheckboxColor;
                 }
 
                 &::after {
-                    color: #0077ff;
+                    color: @hoveredCheckedCheckboxColor;
                 }
             }
         }
@@ -28,7 +30,7 @@
             input:checked {
                 ~ label {
                     &::after {
-                        background-color: #0077ff;
+                        background-color: @hoveredCheckedCheckboxColor;
                     }
                 }
             }
@@ -39,18 +41,18 @@
         label {
             &::before {
                 background: @white;
-                border-color: rgba(235, 235, 235, 0.9) !important;
+                border-color: @disabledCheckboxColor !important;
             }
 
             &::after {
-                color: rgba(235, 235, 235, 0.9) !important;
+                color: @disabledCheckboxColor !important;
             }
         }
 
         &.radio {
             label {
                 &::after {
-                    background-color: rgba(235, 235, 235, 0.9) !important;
+                    background-color: @disabledCheckboxColor !important;
                 }
             }
         }
@@ -68,7 +70,7 @@
             padding-top: @relative1px;
 
             &::before {
-                border: 1px solid @checkboxBorderColor;
+                border: @defaultBorderProperties @checkboxBorderColor;
             }
 
             &::after {
@@ -80,37 +82,37 @@
         &:focus {
             label {
                 &::before {
-                    border: 1px solid #bdbdbd;
+                    border: @defaultBorderProperties @checkboxHoverBorderColor;
                 }
             }
         }
 
         input:focus {
             ~ label::before {
-                border: 1px solid #bdbdbd;
+                border: @defaultBorderProperties @checkboxHoverBorderColor;
             }
         }
 
         &.checked {
             input:checked ~ label {
                 &::before {
-                    border: 1px solid @blue;
+                    border: @defaultBorderProperties @checkboxActiveCheckColor;
                     background-color: rgba(101, 173, 255, 0.1) !important;
                 }
 
                 &::after {
-                    background-color: @blue !important;
+                    background-color: @checkboxActiveCheckColor !important;
                 }
             }
 
             &:hover {
                 input:checked ~ label {
                     &::before {
-                        border: 1px solid #0077ff;
+                        border: @defaultBorderProperties @hoveredCheckedCheckboxColor;
                     }
 
                     &::after {
-                        background-color: #0077ff !important;
+                        background-color: @hoveredCheckedCheckboxColor !important;
                     }
                 }
             }
@@ -120,12 +122,12 @@
             label {
                 &::before {
                     background-color: rgba(235, 235, 235, 0.51) !important;
-                    border: 1px solid #ebebeb !important;
+                    border: @defaultBorderProperties #ebebeb !important;
                 }
 
                 // TODO: Adjust while hovering over disabled toggle
                 &::after {
-                    background-color: rgba(235, 235, 235, 0.9) !important;
+                    background-color: @disabledCheckboxColor !important;
                 }
             }
         }
