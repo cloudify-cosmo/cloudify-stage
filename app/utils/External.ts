@@ -212,7 +212,7 @@ export default class External {
         });
     }
 
-    ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(
+    private ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(
         url: string,
         method: string,
         {

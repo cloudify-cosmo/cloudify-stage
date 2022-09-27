@@ -43,7 +43,7 @@ export default class Actions {
     private doGetPluginsCatalogList(): Promise<PluginDescription[]> {
         return this.toolbox
             .getInternal()
-            .doGet<any, GetExternalContentQueryParams>('/external/content', {
+            .doGet<Response, GetExternalContentQueryParams>('/external/content', {
                 params: { url: this.jsonPath },
                 parseResponse: false
             })
