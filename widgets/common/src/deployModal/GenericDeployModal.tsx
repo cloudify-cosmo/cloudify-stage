@@ -672,6 +672,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     value={blueprint.id}
                                     name="blueprintName"
                                     fetchUrl="/searches/blueprints?_include=id&state=uploaded"
+                                    clearable={false}
                                     onChange={this.selectBlueprint}
                                     toolbox={toolbox}
                                     filterRules={blueprintFilterRules}
