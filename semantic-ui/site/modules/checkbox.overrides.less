@@ -48,19 +48,19 @@
                 color: @disabledCheckboxColor !important;
             }
         }
-
-        &.radio {
-            label {
-                &::after {
-                    background-color: @disabledCheckboxColor !important;
-                }
-            }
-        }
     }
 
     &.radio {
         label {
             padding-top: @relative2px;
+        }
+
+        &.disabled {
+            label {
+                &::after {
+                    background-color: @disabledCheckboxColor !important;
+                }
+            }
         }
     }
 
