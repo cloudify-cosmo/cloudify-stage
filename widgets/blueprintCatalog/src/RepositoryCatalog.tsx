@@ -122,7 +122,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                 <Button
                                     disabled={data.uploadedBlueprints.includes(name)}
                                     content="Upload"
-                                    className="uploadButton"
                                     onClick={event => {
                                         event.stopPropagation();
                                         onUpload(name, zip_url, image_url, main_blueprint);
