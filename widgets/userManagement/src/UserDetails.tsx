@@ -1,11 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
-import UserPropType from './props/UserPropType';
+import type { User } from './widget.types';
+import getWidgetT from './getWidgetT';
 
-export default class UserDetails extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+const tDetails = (key: string) => getWidgetT()(`details.${key}`);
+
+interface UserDetailsProps {
+    toolbox: Stage.Types.Toolbox;
+    data: User;
+    onError: (error: string) => void;
+}
+
+interface UserDetailsState {
+    processing: boolean;
+    processItem: string;
+}
+
+export default class UserDetails extends React.Component<UserDetailsProps, UserDetailsState> {
+    constructor(props: UserDetailsProps) {
+        super(props);
 
         this.state = {
             processing: false,
@@ -13,7 +25,7 @@ export default class UserDetails extends React.Component {
         };
     }
 
-    removeTenant(tenant) {
+    removeTenant(tenant: string) {
         const { data, onError, toolbox } = this.props;
         this.setState({ processItem: tenant, processing: true });
 
@@ -31,7 +43,7 @@ export default class UserDetails extends React.Component {
             });
     }
 
-    removeGroup(group) {
+    removeGroup(group: string) {
         const { data, onError, toolbox } = this.props;
         this.setState({ processItem: group, processing: true });
 
@@ -58,7 +70,7 @@ export default class UserDetails extends React.Component {
         return (
             <Segment.Group horizontal>
                 <Segment>
-                    <Icon name="users" /> Groups
+                    <Icon name="users" /> {tDetails('groups')}
                     <Divider />
                     <List divided relaxed verticalAlign="middle" className="light">
                         {data.groups.map(item => {
@@ -69,7 +81,7 @@ export default class UserDetails extends React.Component {
                                     {item}
                                     <Icon
                                         link
-                                        name={processing ? 'notched circle' : 'remove'}
+                                        name={processing ? 'circle notched' : 'remove'}
                                         loading={processing}
                                         className="right floated"
                                         onClick={() => this.removeGroup(item)}
@@ -78,14 +90,14 @@ export default class UserDetails extends React.Component {
                             );
                         })}
 
-                        {_.isEmpty(data.groups) && <Message content="No groups available" />}
+                        {_.isEmpty(data.groups) && <Message content={tDetails('noGroups')} />}
                     </List>
                 </Segment>
 
                 <Popup>
                     <Popup.Trigger>
                         <Segment>
-                            <Icon name="user" /> Tenants
+                            <Icon name="user" /> {tDetails('tenants')}
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
                                 {_.map(_.keys(data.tenants), item => {
@@ -100,7 +112,7 @@ export default class UserDetails extends React.Component {
                                             />
                                             <Icon
                                                 link
-                                                name={processing ? 'notched circle' : 'remove'}
+                                                name={processing ? 'circle notched' : 'remove'}
                                                 loading={processing}
                                                 className="right floated"
                                                 onClick={() => this.removeTenant(item)}
@@ -109,22 +121,13 @@ export default class UserDetails extends React.Component {
                                     );
                                 })}
 
-                                {_.isEmpty(data.tenants) && <Message content="No tenants available" />}
+                                {_.isEmpty(data.tenants) && <Message content={tDetails('noTenants')} />}
                             </List>
                         </Segment>
                     </Popup.Trigger>
-                    <Popup.Content>
-                        The tenants that this user is assigned to, and the assigned roles. When the roles are inherited
-                        from a user group, the name of the user group is also shown, for example: viewer (Viewers)
-                    </Popup.Content>
+                    <Popup.Content>{tDetails('assignedTenantsNote')}</Popup.Content>
                 </Popup>
             </Segment.Group>
         );
     }
 }
-
-UserDetails.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    data: UserPropType.isRequired,
-    onError: PropTypes.func.isRequired
-};

@@ -3,11 +3,11 @@ import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import type { Deployment } from '../../types';
-import { mapT } from '../common';
+import { tMap } from '../common';
 import { DeploymentStatusIcon, SubdeploymentStatusIcon } from '../../StatusIcon';
 import { subenvironmentsIcon, subservicesIcon } from '../../common';
 
-const tooltipStatusT = (suffix: string) => mapT(`tooltip.status.${suffix}`);
+const tooltipStatusT = (suffix: string) => tMap(`tooltip.status.${suffix}`);
 const markerIconHeight = 41;
 const tooltipOffset = window.L.point(0, -markerIconHeight);
 

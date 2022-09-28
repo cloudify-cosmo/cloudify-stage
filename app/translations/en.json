@@ -1464,6 +1464,9 @@
             }
         },
         "userManagement": {
+            "name": "User management",
+            "description": "This widget shows a list of available users and allow managing them",
+            "noUsers": "There are no Users available in manager. Click \"Add\" to add Users.",
             "columns": {
                 "username": "Username",
                 "lastLoginAt": "Last login",
@@ -1472,7 +1475,50 @@
                 "showGettingStarted": "Getting started",
                 "groupCount": "# Groups",
                 "tenantCount": "# Tenants"
-            }
+            },
+            "actions": {
+                "changePassword": "Change password",
+                "editGroups": "Edit user's groups",
+                "editTenants": "Edit user's tenants",
+                "delete": "Delete"
+            },
+            "createModal": {
+                "button": "Add",
+                "header": "Add user",
+                "inputs": {
+                    "username": {
+                        "label": "Username",
+                        "error": "Please provide username"
+                    },
+                    "password": {
+                        "label": "Password",
+                        "error": "Please provide user password"
+                    },
+                    "confirmPassword": {
+                        "label": "Confirm password",
+                        "error": "Please provide password confirmation",
+                        "notMatchError": "Passwords do not match"
+                    },
+                    "isAdmin": {
+                        "label": "Admin",
+                        "note": "Admin users have full permissions to all tenants on the manager."
+                    }
+                }
+
+            },
+            "editGroupsModalHeader": "Edit user groups for {{username}}",
+            "editTenantsModalHeader": "Edit tenants for {{username}}",
+            "details": {
+                "groups": "Groups",
+                "noGroups": "No groups available",
+                "tenants": "Tenants",
+                "noTenants": "No tenants available",
+                "assignedTenantsNote": "The tenants that this user is assigned to, and the assigned roles. When the roles are inherited from a user group, the name of the user group is also shown, for example: viewer (Viewers)"
+            },
+            "deleteConfirm": "Are you sure you want to remove user '{{username}}'?",
+            "removeAdminPrivilagesConfirm": "Are you sure you want to remove your administrator privileges? You will be logged out of the system so the changes take effect.",
+            "deactivateConfirm": "Are you sure you want to deactivate current user and log out?",
+            "removeAdminPrivilagesNote": "To remove the administrator privileges for this user, remove the user from the group that is assigned administrator privileges."
         },
         "filters": {
             "name": "Filters",
