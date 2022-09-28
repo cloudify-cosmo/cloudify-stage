@@ -77,12 +77,14 @@ export default class External {
     doUpload(
         url: string,
         {
+            body = {},
             params = {},
             files,
             method,
             parseResponse = true,
             compressFile
         }: {
+            body?: Record<string, any>;
             params?: Record<string, any>;
             files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
@@ -91,6 +93,7 @@ export default class External {
         }
     ) {
         const actualUrl = this.buildActualUrl(url, params);
+        log.debug(body);
 
         log.debug(`Uploading file for url: ${url}`);
 
