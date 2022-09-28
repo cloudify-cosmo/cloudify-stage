@@ -33,8 +33,7 @@ const StyledLinkButton = styled(Button)`
         font-size: 22px;
         background: none;
         &:hover {
-            text-decoration: none !important;
-            color: black;
+            color: #1b1f23;
         }
     }
 `;
@@ -112,7 +111,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     circular
                                     icon="info"
                                     loading={readmeLoading === name}
-                                    className="readmeButton noPadded"
+                                    className="noPadded"
                                     onClick={event => {
                                         event.stopPropagation();
                                         onReadme(name, readme_url);
