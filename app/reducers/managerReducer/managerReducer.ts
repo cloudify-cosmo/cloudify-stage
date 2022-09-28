@@ -8,7 +8,7 @@ import emptyState from './emptyState';
 import type { ClusterStatusData } from './clusterStatusReducer';
 import type { LicenseData } from './licenseReducer';
 import type { TenantsData } from './tenantsReducer';
-import type { VersionResponse } from '../../../backend/routes/Auth.types';
+import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 import type { AuthData } from './authReducer';
 
 export interface ManagerData {

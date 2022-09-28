@@ -1,4 +1,4 @@
-import type { PageFileDefinition } from 'backend/routes/Templates.types';
+import type { GetPagesResponse } from 'backend/routes/Templates.types';
 
 describe('Page management', () => {
     before(() => {
@@ -106,7 +106,8 @@ describe('Page management', () => {
 
         cy.log('Verifying page was removed');
         cy.getPages().then(
-            data => expect(data.body.filter((page: PageFileDefinition) => page.id.startsWith('page'))).to.be.empty
+            ({ body }: { body: GetPagesResponse }) =>
+                expect(body.filter(page => page?.id.startsWith('page'))).to.be.empty
         );
     });
 });

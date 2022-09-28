@@ -24,7 +24,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             <Grid.Column key={item.id}>
                 <DataSegment.Item
                     selected={item.isSelected}
-                    onClick={event => {
+                    onClick={(event: Event) => {
                         event.stopPropagation();
                         onSelect(item);
                     }}

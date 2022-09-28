@@ -65,52 +65,49 @@ const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, re
 
         logger.info(`--- registering service ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`);
 
-        return (
-            db.WidgetBackends.findOrCreate<WidgetBackendsInstance>({
-                where: {
-                    widgetId,
-                    serviceName: normalizedServiceName,
-                    method: normalizedMethod
-                },
-                defaults: {
-                    widgetId,
-                    serviceName: normalizedServiceName,
-                    method: normalizedMethod
-                }
+        return db.WidgetBackends.findOrCreate<WidgetBackendsInstance>({
+            where: {
+                widgetId,
+                serviceName: normalizedServiceName,
+                method: normalizedMethod
+            },
+            defaults: {
+                widgetId,
+                serviceName: normalizedServiceName,
+                method: normalizedMethod
+            }
+        })
+            .then(([widgetBackend]) => {
+                logger.debug(
+                    `--- updating entry for service: ${getServiceString(
+                        widgetId,
+                        normalizedMethod,
+                        normalizedServiceName
+                    )}`
+                );
+                return widgetBackend.update(
+                    {
+                        script: <string>(<unknown>new VMScript(`module.exports = ${normalizedService!.toString()}`))
+                    },
+                    { fields: ['script'] }
+                );
             })
-                // @ts-ignore TODO(RD-3119) Update typings when types for WidgetBackends model are ready
-                .then(([widgetBackend]) => {
-                    logger.debug(
-                        `--- updating entry for service: ${getServiceString(
-                            widgetId,
-                            normalizedMethod,
-                            normalizedServiceName
-                        )}`
-                    );
-                    return widgetBackend.update(
-                        {
-                            script: <string>(<unknown>new VMScript(`module.exports = ${normalizedService!.toString()}`))
-                        },
-                        { fields: ['script'] }
-                    );
-                })
-                .then(() => {
-                    logger.info(
-                        `--- registered service: ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`
-                    );
-                    return resolve();
-                })
-                .catch((error: Error) => {
-                    logger.error(error);
-                    return reject(
-                        `--- error registering service: ${getServiceString(
-                            widgetId,
-                            normalizedMethod,
-                            normalizedServiceName
-                        )}`
-                    );
-                })
-        );
+            .then(() => {
+                logger.info(
+                    `--- registered service: ${getServiceString(widgetId, normalizedMethod, normalizedServiceName)}`
+                );
+                return resolve();
+            })
+            .catch((error: Error) => {
+                logger.error(error);
+                return reject(
+                    `--- error registering service: ${getServiceString(
+                        widgetId,
+                        normalizedMethod,
+                        normalizedServiceName
+                    )}`
+                );
+            });
     }
 });
 
