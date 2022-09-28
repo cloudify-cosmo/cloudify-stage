@@ -290,7 +290,7 @@
           {
              "name": "vcloud_allow_insecure",
              "label": "vCloud Allow insecure",
-             "type": "text"
+             "type": "boolean"
           },
           {
              "name": "vcloud_vdc",
