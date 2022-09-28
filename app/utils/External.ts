@@ -18,7 +18,9 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 */
 
-interface RequestOptions<RequestBody, RequestParams> {
+type QueryParams = Record<string, any>;
+
+interface RequestOptions<RequestBody, RequestParams extends QueryParams> {
     params?: RequestParams;
     body?: RequestBody;
     headers?: Record<string, any>;
@@ -26,8 +28,6 @@ interface RequestOptions<RequestBody, RequestParams> {
     withCredentials?: boolean;
     validateAuthentication?: boolean;
 }
-
-type QueryParams = Record<string, any>;
 
 function getContentType(type?: string) {
     return { 'content-type': type || 'application/json' };
@@ -52,46 +52,46 @@ function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
 export default class External {
     constructor(protected managerData: any) {}
 
-    doGet<ResponseBody = any, RequestQueryParams = QueryParams>(
+    doGet<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         requestOptions?: Omit<RequestOptions<never, RequestQueryParams>, 'body'>
     ) {
         return this.ajaxCall<ResponseBody, never, RequestQueryParams>(url, 'get', requestOptions);
     }
 
-    doPost<ResponseBody = any, RequestBody = any, RequestQueryParams = QueryParams>(
+    doPost<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'post', requestOptions);
     }
 
-    doDelete<ResponseBody = any, RequestBody = any, RequestQueryParams = QueryParams>(
+    doDelete<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'delete', requestOptions);
     }
 
-    doPut<ResponseBody = any, RequestBody = any, RequestQueryParams = QueryParams>(
+    doPut<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         requestOptions: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'put', requestOptions);
     }
 
-    doPatch<ResponseBody = any, RequestBody = any, RequestQueryParams = QueryParams>(
+    doPatch<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         requestOptions: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'PATCH', requestOptions);
     }
 
-    doDownload<ResponseBody = any, RequestQueryParams = QueryParams>(url: string, fileName = '') {
+    doDownload<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(url: string, fileName = '') {
         return this.ajaxCall<ResponseBody, never, RequestQueryParams>(url, 'get', { fileName });
     }
 
-    doUpload<ResponseBody = any, RequestQueryParams = QueryParams>(
+    doUpload<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         {
             params,
@@ -212,7 +212,7 @@ export default class External {
         });
     }
 
-    private ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(
+    private ajaxCall<ResponseBody, RequestBody, RequestQueryParams extends QueryParams>(
         url: string,
         method: string,
         {
@@ -316,7 +316,7 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    protected buildActualUrl(url: string, data?: Record<string, any>) {
+    protected buildActualUrl(url: string, data?: QueryParams) {
         return getUrlWithQueryString(url, data);
     }
 
