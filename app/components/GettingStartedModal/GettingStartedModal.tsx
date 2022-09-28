@@ -157,29 +157,29 @@ const GettingStartedModal = () => {
         closeModal();
     };
 
+    const setErrorsContent = (name: string, content: string) => {
+        setErrors({
+            ...errors,
+            [name]: {
+                content
+            }
+        });
+    };
+
     const validateInputs = (secrets: GettingStartedSchemaSecret[], key: string) => {
         clearErrors();
         return secrets
             .map(({ name, type }) => {
                 const allData = secretsStepsData[key];
                 const data = allData?.[name];
+
                 if (type === 'email' && data && !isEmailValid(data)) {
-                    setErrors({
-                        ...errors,
-                        [name]: {
-                            content: t('invalidEmail')
-                        }
-                    });
+                    setErrorsContent(name, t('invalidEmail'));
                     return false;
                 }
 
                 if (type === 'port' && data && !isPortValid(data)) {
-                    setErrors({
-                        ...errors,
-                        [name]: {
-                            content: t('invalidPort')
-                        }
-                    });
+                    setErrorsContent(name, t('invalidPort'));
                     return false;
                 }
                 return true;
