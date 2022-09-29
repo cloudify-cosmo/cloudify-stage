@@ -32,7 +32,7 @@ Stage.defineWidget({
                     _.map(data.items, item =>
                         toolbox
                             .getInternal()
-                            .doGet(`/plugins/icons/${item.id}`, { parseResponse: false })
+                            .doGet<Response>(`/plugins/icons/${item.id}`, { parseResponse: false })
                             .then(response => response.blob())
                             .then(
                                 blob =>

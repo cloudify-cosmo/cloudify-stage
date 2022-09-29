@@ -3,6 +3,11 @@ import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
+import type { GetExternalContentQueryParams } from '../../../../backend/routes/External.types';
+import type {
+    PutSourceListYamlQueryParams,
+    PutSourceListYamlResponse
+} from '../../../../backend/routes/SourceBrowser.types';
 
 class BlueprintUploadError extends Error {
     constructor(message: string | null, public state: string) {
@@ -249,7 +254,10 @@ export default class BlueprintActions {
                 imageFile = await (
                     await this.toolbox
                         .getInternal()
-                        .doGet('/external/content', { params: { url: imageUrl }, parseResponse: false })
+                        .doGet<Response, GetExternalContentQueryParams>('/external/content', {
+                            params: { url: imageUrl },
+                            parseResponse: false
+                        })
                 ).blob();
             } catch (error) {
                 throw new Error(Stage.i18n.t('widgets.common.blueprintUpload.validationErrors.invalidImageUrl'));
@@ -305,11 +313,16 @@ export default class BlueprintActions {
         if (file) {
             return this.toolbox
                 .getInternal()
-                .doUpload('/source/list/yaml', { params: { includeFilename }, files: { archive: file } });
+                .doUpload<PutSourceListYamlResponse, PutSourceListYamlQueryParams>('/source/list/yaml', {
+                    params: { includeFilename: String(includeFilename) },
+                    files: { archive: file }
+                });
         }
         return this.toolbox
             .getInternal()
-            .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
+            .doPut<PutSourceListYamlResponse, any, PutSourceListYamlQueryParams>('/source/list/yaml', {
+                params: { url: blueprintUrl, includeFilename: String(includeFilename) }
+            });
     }
 
     async doUploadImage(blueprintId: string, imageFile?: Blob) {
