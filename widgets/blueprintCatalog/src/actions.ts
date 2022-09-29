@@ -1,6 +1,10 @@
 import Consts from './consts';
 import type { WidgetParameters } from './types';
 import type { GetExternalContentQueryParams } from '../../../backend/routes/External.types';
+import type {
+    GetGitHubReposTreesResponse,
+    GetGitHubSearchRepositoriesResponse
+} from '../../../backend/routes/GitHub.types';
 
 export default class Actions {
     private toolbox: Stage.Types.WidgetlessToolbox;
@@ -47,7 +51,7 @@ export default class Actions {
                 params,
                 parseResponse: false
             })
-            .then(response => Promise.resolve(response.json()))
+            .then(response => Promise.resolve(response.json() as GetGitHubSearchRepositoriesResponse))
             .then(data => Promise.resolve({ ...data, source: Consts.GITHUB_DATA_SOURCE }));
     }
 
@@ -56,7 +60,9 @@ export default class Actions {
     }
 
     doGetRepoTree(repositoryName: string) {
-        return this.toolbox.getInternal().doGet(`/github/repos/${this.username}/${repositoryName}/git/trees/master`);
+        return this.toolbox
+            .getInternal()
+            .doGet<GetGitHubReposTreesResponse>(`/github/repos/${this.username}/${repositoryName}/git/trees/master`);
     }
 
     doFindImage(repositoryName: string): Promise<string> {
