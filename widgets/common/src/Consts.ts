@@ -29,7 +29,8 @@ const consts = {
     allowedVisibilitySettings: [defaultVisibility, appConsts.GLOBAL_VISIBILITY] as string[],
     drilldownPage: {
         blueprintMarketplace: 'blueprintMarketplace'
-    }
+    },
+    emailRegex: appConsts.EMAIL_REGEX
 } as const;
 
 export default consts;
