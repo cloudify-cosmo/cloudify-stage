@@ -18,9 +18,11 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 
 */
 
-interface RequestOptions {
-    params?: Record<string, any>;
-    body?: any;
+type QueryParams = Record<string, any>;
+
+interface RequestOptions<RequestBody, RequestParams extends QueryParams> {
+    params?: RequestParams;
+    body?: RequestBody;
     headers?: Record<string, any>;
     parseResponse?: boolean;
     withCredentials?: boolean;
@@ -50,40 +52,55 @@ function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
 export default class External {
     constructor(protected managerData: any) {}
 
-    doGet(url: string, requestOptions?: Omit<RequestOptions, 'body'>) {
-        return this.ajaxCall(url, 'get', requestOptions);
+    doGet<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
+        url: string,
+        requestOptions?: Omit<RequestOptions<never, RequestQueryParams>, 'body'>
+    ) {
+        return this.ajaxCall<ResponseBody, never, RequestQueryParams>(url, 'get', requestOptions);
     }
 
-    doPost(url: string, requestOptions?: RequestOptions) {
-        return this.ajaxCall(url, 'post', requestOptions);
+    doPost<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
+        url: string,
+        requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
+    ) {
+        return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'post', requestOptions);
     }
 
-    doDelete(url: string, requestOptions?: RequestOptions) {
-        return this.ajaxCall(url, 'delete', requestOptions);
+    doDelete<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
+        url: string,
+        requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
+    ) {
+        return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'delete', requestOptions);
     }
 
-    doPut(url: string, requestOptions: RequestOptions) {
-        return this.ajaxCall(url, 'put', requestOptions);
+    doPut<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
+        url: string,
+        requestOptions: RequestOptions<RequestBody, RequestQueryParams>
+    ) {
+        return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'put', requestOptions);
     }
 
-    doPatch(url: string, requestOptions: RequestOptions) {
-        return this.ajaxCall(url, 'PATCH', requestOptions);
+    doPatch<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
+        url: string,
+        requestOptions: RequestOptions<RequestBody, RequestQueryParams>
+    ) {
+        return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'PATCH', requestOptions);
     }
 
-    doDownload(url: string, fileName = '') {
-        return this.ajaxCall(url, 'get', { fileName });
+    doDownload<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(url: string, fileName = '') {
+        return this.ajaxCall<ResponseBody, never, RequestQueryParams>(url, 'get', { fileName });
     }
 
-    doUpload(
+    doUpload<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
         {
-            params = {},
+            params,
             files,
             method,
             parseResponse = true,
             compressFile
         }: {
-            params?: Record<string, any>;
+            params?: RequestQueryParams;
             files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
@@ -94,7 +111,7 @@ export default class External {
 
         log.debug(`Uploading file for url: ${url}`);
 
-        return new Promise<any>((resolve, reject) => {
+        return new Promise<ResponseBody>((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
             xhr.addEventListener('error', e => {
@@ -195,7 +212,7 @@ export default class External {
         });
     }
 
-    private ajaxCall(
+    private ajaxCall<ResponseBody, RequestBody, RequestQueryParams extends QueryParams>(
         url: string,
         method: string,
         {
@@ -206,8 +223,8 @@ export default class External {
             fileName,
             withCredentials,
             validateAuthentication = true
-        }: RequestOptions & { fileName?: string } = {}
-    ) {
+        }: RequestOptions<RequestBody, RequestQueryParams> & { fileName?: string } = {}
+    ): Promise<ResponseBody> {
         const actualUrl = this.buildActualUrl(url, params);
         log.debug(`${method} data. URL: ${url}`);
 
@@ -299,7 +316,7 @@ export default class External {
     }
 
     // eslint-disable-next-line class-methods-use-this
-    protected buildActualUrl(url: string, data?: Record<string, any>) {
+    protected buildActualUrl(url: string, data?: QueryParams) {
         return getUrlWithQueryString(url, data);
     }
 

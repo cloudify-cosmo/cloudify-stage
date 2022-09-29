@@ -3,6 +3,7 @@
 import Internal from '../utils/Internal';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import * as types from './types';
+import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 
 export function storeWidgetDefinitions(widgetDefinitions) {
     return {
@@ -107,6 +108,6 @@ export function replaceWidget(widgetId, widgetFile, widgetUrl) {
 export function checkIfWidgetIsUsed(widgetId) {
     return (dispatch, getState) => {
         const internal = new Internal(getState().manager);
-        return internal.doGet(`/widgets/${widgetId}/used`);
+        return internal.doGet<GetWidgetsUsedResponse>(`/widgets/${widgetId}/used`);
     };
 }

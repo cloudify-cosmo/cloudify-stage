@@ -8,6 +8,7 @@ import { saveUserAppData } from './userAppCommon';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
+import type { GetUserAppResponse } from '../../backend/routes/UserApp.types';
 
 function setPages(pages) {
     return {
@@ -50,7 +51,7 @@ export function resetPagesForTenant(tenant) {
             return dispatch(resetPages());
         }
         const internal = new Internal(getState().manager);
-        return internal.doGet('ua/clear-pages', { params: { tenant } });
+        return internal.doGet<GetUserAppResponse>('ua/clear-pages', { params: { tenant } });
     };
 }
 
@@ -59,7 +60,7 @@ export function loadOrCreateUserAppData() {
         const { manager } = getState();
 
         const internal = new Internal(manager);
-        return internal.doGet('/ua').then(userApp => {
+        return internal.doGet<GetUserAppResponse>('/ua').then(userApp => {
             if (
                 userApp &&
                 userApp.appDataVersion === Consts.APP_VERSION &&
