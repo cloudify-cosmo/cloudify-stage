@@ -1503,7 +1503,20 @@
                         "note": "Admin users have full permissions to all tenants on the manager."
                     }
                 }
-
+            },
+            "inviteModal": {
+                "button": "Invite",
+                "header": "Invite user",
+                "inputs": {
+                    "email": {
+                        "label": "E-mail",
+                        "error": "Please provide valid e-mail"
+                    },
+                    "isAdmin": {
+                        "label": "Admin",
+                        "note": "Admin users have full permissions to all tenants on the manager."
+                    }
+                }
             },
             "editGroupsModalHeader": "Edit user groups for {{username}}",
             "editTenantsModalHeader": "Edit tenants for {{username}}",
