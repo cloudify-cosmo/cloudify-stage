@@ -1,5 +1,6 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
+import styled from 'styled-components';
 
 import Consts from './consts';
 import Utils from './utils';
@@ -7,7 +8,35 @@ import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
-const t = Utils.getWidgetTranslation('catalog');
+const t = Utils.getWidgetTranslation('catalog.properties');
+
+const StyledDataSegment = styled(DataSegment.Item)`
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+`;
+
+const StyledGridColumnButtons = styled(Grid.Column)`
+    &&&& {
+        display: flex;
+        align-items: center;
+        padding: 0;
+    }
+`;
+
+const StyledLinkButton = styled(Button)`
+    &&&& {
+        padding: 0;
+        margin-right: 10px;
+        font-size: 22px;
+        background: none;
+        &:hover {
+            color: #1b1f23;
+        }
+    }
+`;
 
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
@@ -20,10 +49,25 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     widget
 }) => {
     const catalogItems = data.items.map(item => {
+        /* eslint-disable camelcase */
+        const {
+            id,
+            name,
+            description,
+            created_at,
+            updated_at,
+            html_url,
+            isSelected,
+            image_url,
+            readme_url,
+            zip_url,
+            main_blueprint
+        } = item;
+
         return (
-            <Grid.Column key={item.id}>
-                <DataSegment.Item
-                    selected={item.isSelected}
+            <Grid.Column key={id}>
+                <StyledDataSegment
+                    selected={isSelected}
                     onClick={(event: Event) => {
                         event.stopPropagation();
                         onSelect(item);
@@ -33,57 +77,64 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid className="contentBlock">
                         <Grid.Row className="bottomDivider">
                             <Grid.Column width="16">
-                                <ExternalBlueprintImage url={item.image_url} width={50} />
-                                <Header>
-                                    <a href={item.html_url} target="_blank" rel="noopener noreferrer">
-                                        {item.name}
-                                    </a>
-                                </Header>
+                                <ExternalBlueprintImage url={image_url} width={50} />
+                                <Header>{name}</Header>
                             </Grid.Column>
                         </Grid.Row>
 
-                        <Grid.Column width="16">{item.description}</Grid.Column>
+                        <Grid.Column width="16">{description}</Grid.Column>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">{t('properties.created')}</h5>
+                                <h5 className="ui icon header">{t('created')}</h5>
                             </Grid.Column>
-                            <Grid.Column width="12">{item.created_at}</Grid.Column>
+                            <Grid.Column width="12">{created_at}</Grid.Column>
                         </Grid.Row>
 
                         <Grid.Row className="noPadded">
                             <Grid.Column width="4">
-                                <h5 className="ui icon header">{t('properties.updated')}</h5>
+                                <h5 className="ui icon header">{t('updated')}</h5>
                             </Grid.Column>
-                            <Grid.Column width="12">{item.updated_at}</Grid.Column>
+                            <Grid.Column width="12">{updated_at}</Grid.Column>
                         </Grid.Row>
                     </Grid>
-                    <div>
-                        <Button
-                            circular
-                            icon="info"
-                            loading={readmeLoading === item.name}
-                            className="readmeButton icon"
-                            onClick={event => {
-                                event.stopPropagation();
-                                onReadme(item.name, item.readme_url);
-                            }}
-                        />
-                        <Button
-                            disabled={data.uploadedBlueprints.includes(item.name)}
-                            icon="upload"
-                            content="Upload"
-                            className="uploadButton labeled icon"
-                            onClick={event => {
-                                event.stopPropagation();
-                                onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
-                            }}
-                        />
-                    </div>
-                </DataSegment.Item>
+                    <Grid container>
+                        <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
+                            <StyledGridColumnButtons width="8">
+                                <StyledLinkButton
+                                    circular
+                                    icon="github"
+                                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                                />
+
+                                <Button
+                                    circular
+                                    icon="info"
+                                    loading={readmeLoading === name}
+                                    className="noPadded"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        onReadme(name, readme_url);
+                                    }}
+                                />
+                            </StyledGridColumnButtons>
+                            <Grid.Column width="8" textAlign="right" className="noPadded">
+                                <Button
+                                    disabled={data.uploadedBlueprints.includes(name)}
+                                    content="Upload"
+                                    onClick={event => {
+                                        event.stopPropagation();
+                                        onUpload(name, zip_url, image_url, main_blueprint);
+                                    }}
+                                />
+                            </Grid.Column>
+                        </Grid.Row>
+                    </Grid>
+                </StyledDataSegment>
             </Grid.Column>
         );
     });
+    /* eslint-enable camelcase */
 
     const catalogRows = [];
     let row: typeof catalogItems = [];
@@ -111,17 +162,15 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 
     return (
-        <div>
-            <DataSegment
-                totalSize={totalSize}
-                pageSize={pageSize}
-                fetchData={fetchData}
-                className="repositoryCatalog"
-                noDataMessage={noDataMessage}
-            >
-                <Grid>{catalogRows}</Grid>
-            </DataSegment>
-        </div>
+        <DataSegment
+            totalSize={totalSize}
+            pageSize={pageSize}
+            fetchData={fetchData}
+            className="repositoryCatalog"
+            noDataMessage={noDataMessage}
+        >
+            <Grid>{catalogRows}</Grid>
+        </DataSegment>
     );
 };
 
