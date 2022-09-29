@@ -1,3 +1,5 @@
+import type { PostPluginsUploadQueryParams } from '../../../../backend/routes/Plugins.types';
+
 class PluginActions {
     constructor(private readonly toolbox: Stage.Types.Toolbox) {}
 
@@ -5,22 +7,29 @@ class PluginActions {
         return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, { body: { force } });
     }
 
-    doUpload(visibility: string, title: string, resources: Record<string, { url: string; file: unknown }>) {
-        const params: Record<string, unknown> = { visibility, title };
+    doUpload(
+        visibility: string,
+        title: string,
+        resources: Record<'wagon' | 'yaml' | 'icon', { url: string; file: unknown }>
+    ) {
+        const params: PostPluginsUploadQueryParams = { visibility, title };
         const files: Record<string, unknown> = {};
 
         _.each(resources, ({ url, file }, name) => {
+            const paramName = `${name}Url` as keyof PostPluginsUploadQueryParams;
             if (file) {
-                params[`${name}Url`] = '';
+                params[paramName] = '';
                 files[`${name}_file`] = file;
             } else if (!_.isEmpty(url)) {
-                params[`${name}Url`] = url;
+                params[paramName] = url;
             }
         });
 
-        return this.toolbox
-            .getInternal()
-            .doUpload('/plugins/upload', { params, files: !_.isEmpty(files) ? files : undefined, method: 'post' });
+        return this.toolbox.getInternal().doUpload<any, PostPluginsUploadQueryParams>('/plugins/upload', {
+            params,
+            files: !_.isEmpty(files) ? files : undefined,
+            method: 'post'
+        });
     }
 
     // eslint-disable-next-line camelcase

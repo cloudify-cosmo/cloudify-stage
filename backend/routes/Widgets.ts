@@ -4,7 +4,7 @@ import * as WidgetsHandler from '../handler/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 import { getTokenFromCookies } from '../utils';
 import type {
-    GetWidgetsListResponse,
+    GetWidgetsResponse,
     GetWidgetsUsedResponse,
     PostWidgetsQueryParams,
     PostWidgetsResponse,
@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.use(express.json());
 
-router.get('/', (_req, res: Response<GetWidgetsListResponse>, next) => {
+router.get('/', (_req, res: Response<GetWidgetsResponse>, next) => {
     WidgetsHandler.listWidgets()
         .then(widgets => res.send(widgets))
         .catch(next);

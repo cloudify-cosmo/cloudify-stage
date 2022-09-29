@@ -2,7 +2,7 @@
 import type { Query } from 'express-serve-static-core';
 import type { WidgetData, WidgetUsage } from '../handler/WidgetsHandler.types';
 
-export type GetWidgetsListResponse = WidgetData[];
+export type GetWidgetsResponse = WidgetData[];
 
 export type GetWidgetsUsedResponse = WidgetUsage[];
 
