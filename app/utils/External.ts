@@ -77,23 +77,24 @@ export default class External {
     doUpload(
         url: string,
         {
-            body = {},
             params = {},
             files,
             method,
             parseResponse = true,
-            compressFile
+            compressFile,
+            onZipFileSend
         }: {
-            body?: Record<string, any>;
             params?: Record<string, any>;
             files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
             compressFile?: boolean;
+            onZipFileSend?: (
+                file: File
+            ) => string | Blob | BufferSource | FormData | URLSearchParams | Document | null | undefined;
         }
     ) {
         const actualUrl = this.buildActualUrl(url, params);
-        log.debug(body);
 
         log.debug(`Uploading file for url: ${url}`);
 
@@ -165,7 +166,13 @@ export default class External {
                                 }
                             }).then(
                                 function success(blob) {
-                                    xhr.send(new File([blob], `${name}.zip`));
+                                    const zippedFile = new File([blob], `${name}.zip`);
+                                    const dataToSend = onZipFileSend ? onZipFileSend(zippedFile) : zippedFile;
+
+                                    // const formData = new FormData();
+                                    // formData.append('blueprint_archive', zippedFile);
+                                    // formData.append('params', JSON.stringify(body));
+                                    xhr.send(dataToSend);
                                 },
                                 function error(err) {
                                     const errorMessage = `Cannot compress file. Error: ${err}`;
