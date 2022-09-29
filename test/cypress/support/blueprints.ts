@@ -24,16 +24,20 @@ const commands = {
     ): Cypress.Chainable<unknown> => {
         if (pathOrUrl.startsWith('http')) {
             return cy.cfyRequest(
-                `/blueprints/${id}?blueprint_archive_url=${pathOrUrl}&visibility=${visibility}&application_file_name=${yamlFile}`,
-                'PUT'
-            );
+                `/blueprints/${id}`,
+                'PUT',
+                {},
+                {
+                    visibility,
+                    application_file_name: yamlFile,
+                    blueprint_archive_url: pathOrUrl
+                }
+            ) as Cypress.Chainable<unknown>;
         }
-        return cy.cfyFileRequest(
-            pathOrUrl,
-            true,
-            `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`,
-            timeout
-        );
+        return cy.cfyBlueprintFileRequest(pathOrUrl, `/blueprints/${id}`, timeout, {
+            visibility,
+            application_file_name: yamlFile
+        });
     },
     getBlueprint: (blueprintId: string) => cy.cfyRequest(`/blueprints?id=${blueprintId}`, 'GET'),
     deleteBlueprint: (blueprintId: string, force = false) =>

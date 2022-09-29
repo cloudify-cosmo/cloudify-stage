@@ -46,6 +46,8 @@ const getCommonHeaders = () => ({
 
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
+const fileRequestsHeaders = { ...getCommonHeaders(), ...getAdminAuthorizationHeader() };
+
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.intercept('GET', '/console/auth/user', req => {
         req.on('response', res => {
@@ -155,6 +157,31 @@ const commands = {
             body,
             ...options
         }),
+    cfyBlueprintFileRequest: (filePath: string, url: string, timeout?: number, parameters?: Record<string, any>) => {
+        // eslint-disable-next-line
+        const filePromise = cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary));
+
+        return filePromise.then(fileContent =>
+            cy.window().then(
+                { timeout },
+                window =>
+                    new Promise((resolve, reject) => {
+                        const xhr = new window.XMLHttpRequest();
+                        const formData = new FormData();
+                        formData.append('blueprint_archive', fileContent);
+                        formData.append('params', JSON.stringify(parameters));
+                        xhr.open('PUT', `/console/sp${url}`);
+                        xhr.onload = resolve;
+                        xhr.onerror = reject;
+                        // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
+                        Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
+                            xhr.setRequestHeader(name, value as string)
+                        );
+                        xhr.send(formData);
+                    })
+            )
+        );
+    },
     cfyFileRequest: (filePath: string, isBinaryFile: boolean, url: string, timeout?: number) => {
         const filePromise: Cypress.Chainable<string | Blob> = isBinaryFile
             ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
@@ -170,10 +197,9 @@ const commands = {
                         xhr.onload = resolve;
                         xhr.onerror = reject;
                         // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
-                        Object.entries({
-                            ...getCommonHeaders(),
-                            ...getAdminAuthorizationHeader()
-                        }).forEach(([name, value]) => xhr.setRequestHeader(name, value as string));
+                        Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
+                            xhr.setRequestHeader(name, value as string)
+                        );
                         if (isBinaryFile) {
                             xhr.setRequestHeader('Content-type', 'application/octet-stream');
                         }
