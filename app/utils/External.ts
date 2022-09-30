@@ -169,8 +169,6 @@ export default class External {
                         const reader = new FileReader();
                         const zip = new JSZip();
 
-                        xhr.setRequestHeader('content-type', 'application/octet-stream');
-
                         reader.onload = event => {
                             const { name } = files;
                             const fileContent = event.target?.result as string | ArrayBuffer;
@@ -184,12 +182,7 @@ export default class External {
                             }).then(
                                 function success(blob) {
                                     const zippedFile = new File([blob], `${name}.zip`);
-                                    const dataToSend = onZipFileSend ? onZipFileSend(zippedFile) : zippedFile;
-
-                                    // const formData = new FormData();
-                                    // formData.append('blueprint_archive', zippedFile);
-                                    // formData.append('params', JSON.stringify(body));
-                                    xhr.send(dataToSend);
+                                    xhr.send(zippedFile);
                                 },
                                 function error(err) {
                                     const errorMessage = `Cannot compress file. Error: ${err}`;
@@ -207,7 +200,12 @@ export default class External {
 
                         reader.readAsText(files);
                     } else {
-                        xhr.send(files);
+                        const dataToSend = onZipFileSend ? onZipFileSend(files as File) : files;
+                        // eslint-disable-next-line
+                        console.log((dataToSend as any).get('params'));
+                        // eslint-disable-next-line
+                        console.log((dataToSend as any).get('blueprint_archive'));
+                        return xhr.send(dataToSend);
                     }
                 } else {
                     const formData = new FormData();
@@ -219,6 +217,8 @@ export default class External {
             } else {
                 xhr.send(new FormData());
             }
+
+            return undefined;
         });
     }
 
@@ -248,6 +248,11 @@ export default class External {
                 if (_.isString(body)) {
                     options.body = body;
                     _.merge(options.headers, getContentType('text/plain'));
+                } else if (body instanceof FormData) {
+                    options.body = body;
+                    // NOTE: By deleting content-type the browser will adequately adjust it
+                    // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
+                    options.headers = _.omit(options.headers, 'content-type') as RequestInit['headers'];
                 } else {
                     options.body = JSON.stringify(body);
                 }

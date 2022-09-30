@@ -278,7 +278,12 @@ export default class BlueprintActions {
                 }
             });
         } else {
-            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { body: params });
+            const formData = new FormData();
+            formData.append('params', JSON.stringify(params));
+
+            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, {
+                body: formData
+            });
         }
 
         await this.waitUntilUploaded(blueprintName, onStateChanged);
