@@ -63,7 +63,7 @@ export const testPageName = 'Test Page';
 
 const doXhrPutRequest = (
     url: string,
-    requestData: Document | Blob | FormData,
+    requestData: Document | Blob | FormData | string,
     timeout?: number,
     requestHeaders?: Record<string, string>
 ) => {

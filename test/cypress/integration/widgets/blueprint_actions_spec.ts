@@ -23,7 +23,7 @@ describe('Blueprint Action Buttons widget', () => {
 
     const getEditACopyInComposerButton = () => cy.contains('Edit a copy in Composer');
 
-    it('should not show the "Edit a copy in Composer" button by default', () => {
+    it.only('should not show the "Edit a copy in Composer" button by default', () => {
         useBlueprintActionButtonsWidget();
 
         getEditACopyInComposerButton().should('not.exist');

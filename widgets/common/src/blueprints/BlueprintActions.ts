@@ -270,7 +270,7 @@ export default class BlueprintActions {
                 files: file,
                 parseResponse: false,
                 compressFile,
-                onZipFileSend: zipFile => {
+                onFileUpload: zipFile => {
                     const formData = new FormData();
                     formData.append('blueprint_archive', zipFile);
                     formData.append('params', JSON.stringify(params));

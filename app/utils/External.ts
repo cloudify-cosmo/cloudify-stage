@@ -99,14 +99,14 @@ export default class External {
             method,
             parseResponse = true,
             compressFile,
-            onZipFileSend
+            onFileUpload
         }: {
             params?: RequestQueryParams;
             files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
             compressFile?: boolean;
-            onZipFileSend?: (
+            onFileUpload?: (
                 file: File
             ) => string | Blob | BufferSource | FormData | URLSearchParams | Document | null | undefined;
         }
@@ -182,7 +182,8 @@ export default class External {
                             }).then(
                                 function success(blob) {
                                     const zippedFile = new File([blob], `${name}.zip`);
-                                    xhr.send(zippedFile);
+                                    const dataToSend = onFileUpload ? onFileUpload(zippedFile) : zippedFile;
+                                    xhr.send(dataToSend);
                                 },
                                 function error(err) {
                                     const errorMessage = `Cannot compress file. Error: ${err}`;
@@ -200,11 +201,7 @@ export default class External {
 
                         reader.readAsText(files);
                     } else {
-                        const dataToSend = onZipFileSend ? onZipFileSend(files as File) : files;
-                        // eslint-disable-next-line
-                        console.log((dataToSend as any).get('params'));
-                        // eslint-disable-next-line
-                        console.log((dataToSend as any).get('blueprint_archive'));
+                        const dataToSend = onFileUpload ? onFileUpload(files as File) : files;
                         return xhr.send(dataToSend);
                     }
                 } else {
