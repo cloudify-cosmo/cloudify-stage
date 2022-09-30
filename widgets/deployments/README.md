@@ -159,7 +159,7 @@ By default, that page displays the following:
 * `Show first user journey buttons` - When there are no deployments, it presents a simplified view, as shown below.
 ![First user journey buttons]( /images/ui/widgets/blueprint-deployments_first_user_journey.png)  
 There are 2 buttons in the view:
-    - `Create new Deployment` - redirects to Blueprint Marketplace page, which has the same content as Blueprint Marketplace modal
+    - `Create new Deployment` - redirects to Blueprint Marketplace page
     ![Blueprint marketplace page]( /images/ui/widgets/blueprint-marketplace-page.png)  
     - `Upload from Terraform` - shows Create blueprint from Terraform modal 
     
