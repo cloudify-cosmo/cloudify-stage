@@ -11,12 +11,20 @@ export interface AppDataPage {
     layout: LayoutSection[];
 }
 
+export interface AppDataPageGroup {
+    id: string;
+    name: string;
+    type: 'pageGroup';
+    icon?: string;
+    pages: AppDataPage[];
+}
+
 export interface UserAppsData {
     username: string;
     appDataVersion: number;
     mode: Mode;
     tenant: string;
-    appData: { pages: AppDataPage[] };
+    appData: { pages: (AppDataPage | AppDataPageGroup)[] };
 }
 
 export type UserAppsAttributes = CommonAttributes & UserAppsData;

@@ -295,8 +295,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.setState({ fileLoading: true });
 
         actions
-            .doGetYamlFileContent(file)
-            .then((yamlInputs: Blueprint) => {
+            .doGetYamlFileContent<Blueprint>(file)
+            .then(yamlInputs => {
                 const deploymentInputs = getUpdatedInputs(blueprint.plan.inputs, deploymentInputsState, yamlInputs);
                 this.setState({ errors: {}, deploymentInputs, fileLoading: false });
             })
