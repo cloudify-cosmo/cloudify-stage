@@ -157,6 +157,38 @@ const commands = {
             body,
             ...options
         }),
+    cfyBlueprintRequest: (
+        pathOrUrl: string,
+        id: string,
+        yamlFile = 'blueprint.yaml',
+        visibility = 'tenant',
+        timeout?: number
+    ) => {
+        return cy.window().then(
+            { timeout },
+            window =>
+                new Promise((resolve, reject) => {
+                    const xhr = new window.XMLHttpRequest();
+                    const formData = new FormData();
+                    formData.append(
+                        'params',
+                        JSON.stringify({
+                            visibility,
+                            application_file_name: yamlFile,
+                            blueprint_archive_url: pathOrUrl
+                        })
+                    );
+                    xhr.open('PUT', `/console/sp/blueprints/${id}`);
+                    xhr.onload = resolve;
+                    xhr.onerror = reject;
+                    // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
+                    Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
+                        xhr.setRequestHeader(name, value as string)
+                    );
+                    xhr.send(formData);
+                })
+        );
+    },
     cfyBlueprintFileRequest: (filePath: string, url: string, timeout?: number, parameters?: Record<string, any>) => {
         // eslint-disable-next-line
         const filePromise = cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary));

@@ -23,16 +23,22 @@ const commands = {
         { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
         if (pathOrUrl.startsWith('http')) {
-            return cy.cfyRequest(
-                `/blueprints/${id}`,
-                'PUT',
-                {},
-                {
-                    visibility,
-                    application_file_name: yamlFile,
-                    blueprint_archive_url: pathOrUrl
-                }
-            ) as Cypress.Chainable<unknown>;
+            return cy.cfyBlueprintRequest(pathOrUrl, id, yamlFile, visibility, timeout);
+
+            // return cy.cfyRequest(
+            //     `/blueprints/${id}`,
+            //     'PUT',
+            //     {
+            //         'Content-Type': ' multipart/form-data'
+            //     },
+            //     JSON.stringify({
+            //         params: {
+            //             visibility,
+            //             application_file_name: yamlFile,
+            //             blueprint_archive_url: pathOrUrl
+            //         }
+            //     })
+            // ) as Cypress.Chainable<unknown>;
         }
         return cy.cfyBlueprintFileRequest(pathOrUrl, `/blueprints/${id}`, timeout, {
             visibility,
