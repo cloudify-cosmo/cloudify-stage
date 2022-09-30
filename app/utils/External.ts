@@ -145,7 +145,6 @@ export default class External {
                         log.error('xhr upload error', e, xhr.responseText);
 
                         reject({ message: StageUtils.resolveMessage(response.message) });
-                        return;
                     }
                 } catch (err) {
                     log.error('Cannot parse upload response', err, xhr.responseText);
@@ -202,7 +201,7 @@ export default class External {
                         reader.readAsText(files);
                     } else {
                         const dataToSend = onFileUpload ? onFileUpload(files as File) : files;
-                        return xhr.send(dataToSend);
+                        xhr.send(dataToSend);
                     }
                 } else {
                     const formData = new FormData();
@@ -214,8 +213,6 @@ export default class External {
             } else {
                 xhr.send(new FormData());
             }
-
-            return undefined;
         });
     }
 
