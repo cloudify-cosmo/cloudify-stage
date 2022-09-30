@@ -16,19 +16,53 @@ interface UploadBlueprintOptions {
     timeout?: number;
 }
 
+const uploadBlueprint = (blueprintId: string, parameters: Record<string, any>, timeout?: number) => {
+    const formData = new FormData();
+    formData.append('params', JSON.stringify(parameters));
+    return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
+};
+
+const uploadBlueprintWithFile = (
+    filePath: string,
+    blueprintId: string,
+    parameters: Record<string, any>,
+    timeout?: number
+) => {
+    return cy
+        .fixture(filePath, 'binary')
+        .then(binary => Cypress.Blob.binaryStringToBlob(binary))
+        .then(fileContent => {
+            const formData = new FormData();
+            formData.append('blueprint_archive', fileContent);
+            formData.append('params', JSON.stringify(parameters));
+
+            return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
+        });
+};
+
 const commands = {
     uploadBlueprint: (
         pathOrUrl: string,
         id: string,
         { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
-        if (pathOrUrl.startsWith('http')) {
-            return cy.cfyBlueprintRequest(pathOrUrl, id, yamlFile, visibility, timeout);
-        }
-        return cy.cfyBlueprintFileRequest(pathOrUrl, `/blueprints/${id}`, timeout, {
+        const requestParameters = {
             visibility,
             application_file_name: yamlFile
-        });
+        };
+
+        if (pathOrUrl.startsWith('http')) {
+            return uploadBlueprint(
+                id,
+                {
+                    ...requestParameters,
+                    blueprint_archive_url: pathOrUrl
+                },
+                timeout
+            );
+        }
+
+        return uploadBlueprintWithFile(pathOrUrl, id, requestParameters, timeout);
     },
     getBlueprint: (blueprintId: string) => cy.cfyRequest(`/blueprints?id=${blueprintId}`, 'GET'),
     deleteBlueprint: (blueprintId: string, force = false) =>

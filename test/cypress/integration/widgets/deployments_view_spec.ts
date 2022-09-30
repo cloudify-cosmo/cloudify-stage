@@ -93,7 +93,7 @@ describe('Deployments View widget', () => {
     };
 
     describe('configuration', () => {
-        it.only('should allow changing displayed columns', () => {
+        it('should allow changing displayed columns', () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
                     fieldsToShow: without(widgetConfiguration.fieldsToShow, 'blueprintName', 'location')

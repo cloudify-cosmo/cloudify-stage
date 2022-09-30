@@ -247,7 +247,8 @@ export default class External {
                     _.merge(options.headers, getContentType('text/plain'));
                 } else if (body instanceof FormData) {
                     options.body = body;
-                    // NOTE: By deleting content-type the browser will adequately adjust it
+                    // NOTE: fetch library has an issue with sending data when multipart/form-data content-type is being set manually
+                    // By not setting content-type, for multipart data, the browser will automatically adjust it
                     // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
                     options.headers = _.omit(options.headers, 'content-type') as RequestInit['headers'];
                 } else {
