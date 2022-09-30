@@ -186,7 +186,7 @@ export default class SitesTable extends React.Component {
                                         {item.deploymentCount}
                                     </Label>
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         bordered
                                         link

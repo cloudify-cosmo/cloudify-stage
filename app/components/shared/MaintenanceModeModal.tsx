@@ -191,7 +191,7 @@ function MaintenanceModeModal({
                                             <DataTable.Data>
                                                 <ExecutionStatus execution={item} />
                                             </DataTable.Data>
-                                            <DataTable.Data className="center aligned">
+                                            <DataTable.Data textAlign="center">
                                                 <PopupMenu className="menuAction">
                                                     <Menu pointing vertical>
                                                         <Menu.Item

@@ -171,7 +171,7 @@ export default class TenantsTable extends React.Component {
                                             {Object.keys(item.users).length}
                                         </Label>
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned rowActions">
+                                    <DataTable.Data textAlign="center" className="rowActions">
                                         <MenuAction tenant={item} onSelectAction={this.selectAction} />
                                     </DataTable.Data>
                                 </DataTable.Row>

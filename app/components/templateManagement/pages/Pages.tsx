@@ -84,7 +84,7 @@ const Pages: FunctionComponent<PagesProps> = ({
                                     {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
                                 </DataTable.Data>
                                 <DataTable.Data>{item.updatedBy}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     {item.custom ? (
                                         <div>
                                             <PopupConfirm
