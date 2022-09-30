@@ -46,8 +46,6 @@ const getCommonHeaders = () => ({
 
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
-const fileRequestsHeaders = { ...getCommonHeaders(), ...getAdminAuthorizationHeader() };
-
 const mockGettingStarted = (modalEnabled: boolean) =>
     cy.intercept('GET', '/console/auth/user', req => {
         req.on('response', res => {
@@ -62,6 +60,39 @@ const mockGettingStarted = (modalEnabled: boolean) =>
 const collapseSidebar = () => cy.get('.breadcrumb').click();
 
 export const testPageName = 'Test Page';
+
+const doXhrPutRequest = (
+    url: string,
+    requestData: Document | XMLHttpRequestBodyInit,
+    timeout?: number,
+    requestHeaders?: Record<string, string>
+) => {
+    return cy.window().then(
+        { timeout },
+        window =>
+            new Promise((resolve, reject) => {
+                const xhr = new window.XMLHttpRequest();
+                xhr.open('PUT', `/console/sp${url}`);
+                xhr.onload = resolve;
+                xhr.onerror = reject;
+
+                // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
+                const requiredRequestHeaders = { ...getCommonHeaders(), ...getAdminAuthorizationHeader() };
+                Object.entries(requiredRequestHeaders).forEach(([name, value]) =>
+                    xhr.setRequestHeader(name, value as string)
+                );
+
+                if (requestHeaders) {
+                    Object.keys(requestHeaders).forEach(headerName => {
+                        const requestHeader = requestHeaders[headerName];
+                        xhr.setRequestHeader(headerName, requestHeader);
+                    });
+                }
+
+                xhr.send(requestData);
+            })
+    );
+};
 
 interface LoginOptions {
     username?: string;
@@ -164,81 +195,41 @@ const commands = {
         visibility = 'tenant',
         timeout?: number
     ) => {
-        return cy.window().then(
-            { timeout },
-            window =>
-                new Promise((resolve, reject) => {
-                    const xhr = new window.XMLHttpRequest();
-                    const formData = new FormData();
-                    formData.append(
-                        'params',
-                        JSON.stringify({
-                            visibility,
-                            application_file_name: yamlFile,
-                            blueprint_archive_url: pathOrUrl
-                        })
-                    );
-                    xhr.open('PUT', `/console/sp/blueprints/${id}`);
-                    xhr.onload = resolve;
-                    xhr.onerror = reject;
-                    // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
-                    Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
-                        xhr.setRequestHeader(name, value as string)
-                    );
-                    xhr.send(formData);
-                })
+        const formData = new FormData();
+        formData.append(
+            'params',
+            JSON.stringify({
+                visibility,
+                application_file_name: yamlFile,
+                blueprint_archive_url: pathOrUrl
+            })
         );
+        return doXhrPutRequest(`/blueprints/${id}`, formData, timeout);
     },
     cfyBlueprintFileRequest: (filePath: string, url: string, timeout?: number, parameters?: Record<string, any>) => {
         // eslint-disable-next-line
         const filePromise = cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary));
 
-        return filePromise.then(fileContent =>
-            cy.window().then(
-                { timeout },
-                window =>
-                    new Promise((resolve, reject) => {
-                        const xhr = new window.XMLHttpRequest();
-                        const formData = new FormData();
-                        formData.append('blueprint_archive', fileContent);
-                        formData.append('params', JSON.stringify(parameters));
-                        xhr.open('PUT', `/console/sp${url}`);
-                        xhr.onload = resolve;
-                        xhr.onerror = reject;
-                        // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
-                        Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
-                            xhr.setRequestHeader(name, value as string)
-                        );
-                        xhr.send(formData);
-                    })
-            )
-        );
+        return filePromise.then(fileContent => {
+            const formData = new FormData();
+            formData.append('blueprint_archive', fileContent);
+            formData.append('params', JSON.stringify(parameters));
+
+            return doXhrPutRequest(url, formData, timeout);
+        });
     },
     cfyFileRequest: (filePath: string, isBinaryFile: boolean, url: string, timeout?: number) => {
         const filePromise: Cypress.Chainable<string | Blob> = isBinaryFile
             ? cy.fixture(filePath, 'binary').then(binary => Cypress.Blob.binaryStringToBlob(binary))
             : cy.fixture(filePath);
 
-        return filePromise.then(fileContent =>
-            cy.window().then(
-                { timeout },
-                window =>
-                    new Promise((resolve, reject) => {
-                        const xhr = new window.XMLHttpRequest();
-                        xhr.open('PUT', `/console/sp${url}`);
-                        xhr.onload = resolve;
-                        xhr.onerror = reject;
-                        // NOTE: Cookie cannot be set when using XMLHttpRequest, so need to use "Authorization" header
-                        Object.entries(fileRequestsHeaders).forEach(([name, value]) =>
-                            xhr.setRequestHeader(name, value as string)
-                        );
-                        if (isBinaryFile) {
-                            xhr.setRequestHeader('Content-type', 'application/octet-stream');
-                        }
-                        xhr.send(fileContent);
-                    })
-            )
-        );
+        return filePromise.then(fileContent => {
+            const requestHeaders = {
+                'Content-type': 'application/octet-stream'
+            };
+
+            return doXhrPutRequest(url, fileContent, timeout, requestHeaders);
+        });
     },
     stageRequest: (url: string, method = 'GET', options?: Partial<Cypress.RequestOptions>, headers?: any) =>
         cy.request({
