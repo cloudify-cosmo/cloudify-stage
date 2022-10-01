@@ -430,5 +430,18 @@ describe('Getting started modal', () => {
                 cy.get('.error .label').should('not.exist');
             });
         });
+
+        it('should validate port in secrets step', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'vSphere').click();
+                cy.typeToFieldInput('vSphere Port', '0');
+                goToNextStep();
+                cy.get('.error .label').should('have.text', 'Please enter a valid port number');
+                cy.typeToFieldInput('vSphere Port', '111');
+                goToNextStep();
+                cy.get('.error .label').should('not.exist');
+            });
+        });
     });
 });
