@@ -266,11 +266,24 @@ export default class BlueprintActions {
 
         if (file) {
             const compressFile = Stage.Utils.isYamlFile(file.name);
-            await this.toolbox
-                .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
+            await this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, {
+                files: file,
+                parseResponse: false,
+                compressFile,
+                onFileUpload: blueprintFile => {
+                    const formData = new FormData();
+                    formData.append('blueprint_archive', blueprintFile);
+                    formData.append('params', JSON.stringify(params));
+                    return formData;
+                }
+            });
         } else {
-            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
+            const formData = new FormData();
+            formData.append('params', JSON.stringify(params));
+
+            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, {
+                body: formData
+            });
         }
 
         await this.waitUntilUploaded(blueprintName, onStateChanged);
