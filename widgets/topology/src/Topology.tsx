@@ -5,6 +5,7 @@ import type { RefObject } from 'react';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 import TerraformDetailsModal from './TerraformDetailsModal';
+import type { PutBlueprintUserDataLayoutRequestBody } from '../../../backend/routes/BlueprintUserData.types';
 
 const saveConfirmationTimeout = 2500;
 
@@ -206,7 +207,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
             onLayoutSave: body =>
                 toolbox
                     .getInternal()
-                    .doPut(`/bud/layout/${blueprintId}`, { body })
+                    .doPut<any, PutBlueprintUserDataLayoutRequestBody>(`/bud/layout/${blueprintId}`, { body })
                     .then(() => {
                         this.setState({ saveConfirmationOpen: true });
                         setTimeout(() => this.setState({ saveConfirmationOpen: false }), saveConfirmationTimeout);

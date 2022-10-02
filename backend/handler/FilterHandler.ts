@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { db } from '../db/Connection';
 import { getLogger } from './LoggerHandler';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
-import type { TabContent, WidgetDefinition } from './templates/types';
+import type { LayoutSection, TabContent, WidgetDefinition } from './templates/types';
 import type { FilterUses } from './FilterHandler.types';
 
 const logger = getLogger('FilterHandler');
@@ -23,15 +23,23 @@ export async function getFilterUsage(filterId: string) {
                 });
             }
 
-            _.forEach(page.layout, ({ type, content }) => {
-                if (type === 'widgets') {
-                    checkWidgets(content as WidgetDefinition[]);
-                } else if (type === 'tabs') {
-                    _.forEach(content as TabContent[], tab => checkWidgets(tab.widgets));
-                } else {
-                    logger.warn('Unsupported layout type:', type);
-                }
-            });
+            function checkLayout(layout: LayoutSection[]) {
+                _.forEach(layout, ({ type, content }) => {
+                    if (type === 'widgets') {
+                        checkWidgets(content as WidgetDefinition[]);
+                    } else if (type === 'tabs') {
+                        _.forEach(content as TabContent[], tab => checkWidgets(tab.widgets));
+                    } else {
+                        logger.warn('Unsupported layout type:', type);
+                    }
+                });
+            }
+
+            if (page.type === 'pageGroup') {
+                _.forEach(page.pages, ({ layout }) => checkLayout(layout));
+            } else {
+                checkLayout(page.layout);
+            }
         });
     });
 

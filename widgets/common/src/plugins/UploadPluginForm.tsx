@@ -1,5 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 
+import type {
+    PutPluginsTitleResponse,
+    PutPluginsTitleRequestQueryParams
+} from '../../../../backend/routes/Plugins.types';
+
 const placeholders = {
     wagon: "Provide the plugin's wagon file URL or click browse to select a file",
     yaml: "Provide the plugin's YAML file URL or click browse to select a file",
@@ -79,7 +84,9 @@ class UploadPluginForm extends React.Component {
                         this.setState({ loading: true });
                         toolbox
                             .getInternal()
-                            .doUpload('/plugins/title', { files: { yaml_file: pluginYamlFile } })
+                            .doUpload<PutPluginsTitleResponse>('/plugins/title', {
+                                files: { yaml_file: pluginYamlFile }
+                            })
                             .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }
@@ -90,7 +97,10 @@ class UploadPluginForm extends React.Component {
                         this.setState({ loading: true });
                         toolbox
                             .getInternal()
-                            .doPut('/plugins/title', { params: { yamlUrl: pluginYamlUrl } })
+                            .doPut<PutPluginsTitleResponse, never, PutPluginsTitleRequestQueryParams>(
+                                '/plugins/title',
+                                { params: { yamlUrl: pluginYamlUrl } }
+                            )
                             .then(onTitleChange)
                             .finally(() => this.setState({ loading: false }));
                     }

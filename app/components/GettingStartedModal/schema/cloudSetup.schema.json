@@ -340,7 +340,7 @@
           {
              "name": "vsphere_port",
              "label": "vSphere Port",
-             "type": "text"
+             "type": "port"
           },
           {
              "name": "vsphere_allow_insecure",
