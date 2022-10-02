@@ -345,7 +345,7 @@
           {
              "name": "vsphere_allow_insecure",
              "label": "vSphere Allow Insecure",
-             "type": "text"
+             "type": "boolean"
           },
           {
              "name": "vsphere_datacenter_name",
