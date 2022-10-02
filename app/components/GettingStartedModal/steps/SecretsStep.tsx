@@ -41,13 +41,15 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                 };
                 if (type === 'boolean') {
                     return (
-                        <Form.Checkbox
-                            toggle
-                            label=""
-                            name={name}
-                            value={secretInputs[name]}
-                            onChange={setSecretInputs}
-                        />
+                        <Form.Field key={name} label={label} help={description}>
+                            <Form.Checkbox
+                                toggle
+                                label={label}
+                                name={name}
+                                value={secretInputs[name]}
+                                onChange={setSecretInputs}
+                            />
+                        </Form.Field>
                     );
                 }
                 return (
