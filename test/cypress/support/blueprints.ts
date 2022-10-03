@@ -1,6 +1,8 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
+import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
 import type { Visibility } from '../../../widgets/common/src/types';
+import type { BlueprintUploadParameters } from '../../../widgets/common/src/blueprints/BlueprintActions';
 
 declare global {
     namespace Cypress {
@@ -16,34 +18,22 @@ interface UploadBlueprintOptions {
     timeout?: number;
 }
 
-interface BlueprintParameters {
-    /* eslint-disable camelcase */
-    application_file_name: string;
-    blueprint_archive_url?: string;
-    visibility?: string;
-    async_upload?: boolean;
-    /* eslint-enable camelcase */
-}
-
-const uploadBlueprint = (blueprintId: string, parameters: BlueprintParameters, timeout?: number) => {
-    const formData = new FormData();
-    formData.append('params', JSON.stringify(parameters));
+const uploadBlueprint = (blueprintId: string, parameters: BlueprintUploadParameters, timeout?: number) => {
+    const formData = BlueprintActions.generateUploadFormData(parameters);
     return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
 };
 
 const uploadBlueprintWithFile = (
     filePath: string,
     blueprintId: string,
-    parameters: BlueprintParameters,
+    parameters: BlueprintUploadParameters,
     timeout?: number
 ) => {
     return cy
         .fixture(filePath, 'binary')
         .then(binary => Cypress.Blob.binaryStringToBlob(binary))
         .then(fileContent => {
-            const formData = new FormData();
-            formData.append('blueprint_archive', fileContent);
-            formData.append('params', JSON.stringify(parameters));
+            const formData = BlueprintActions.generateUploadFormData(parameters, fileContent);
 
             return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
         });
@@ -55,7 +45,7 @@ const commands = {
         id: string,
         { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
-        const requestParameters: BlueprintParameters = {
+        const requestParameters: BlueprintUploadParameters = {
             visibility,
             application_file_name: yamlFile
         };
