@@ -990,8 +990,8 @@
             "noDataMessage": "There are no Blueprints available in catalog. Check widget's configuration.",
             "catalog": {
                 "properties": {
-                    "created": "Created",
-                    "updated": "Updated"
+                    "created": "Created:",
+                    "updated": "Updated: "
                 }
             }
         },
@@ -1503,7 +1503,6 @@
                         "note": "Admin users have full permissions to all tenants on the manager."
                     }
                 }
-
             },
             "editGroupsModalHeader": "Edit user groups for {{username}}",
             "editTenantsModalHeader": "Edit tenants for {{username}}",
