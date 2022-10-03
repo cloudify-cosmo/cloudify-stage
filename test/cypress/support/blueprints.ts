@@ -16,7 +16,16 @@ interface UploadBlueprintOptions {
     timeout?: number;
 }
 
-const uploadBlueprint = (blueprintId: string, parameters: Record<string, any>, timeout?: number) => {
+interface BlueprintParameters {
+    /* eslint-disable camelcase */
+    application_file_name: string;
+    blueprint_archive_url?: string;
+    visibility?: string;
+    async_upload?: boolean;
+    /* eslint-enable camelcase */
+}
+
+const uploadBlueprint = (blueprintId: string, parameters: BlueprintParameters, timeout?: number) => {
     const formData = new FormData();
     formData.append('params', JSON.stringify(parameters));
     return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
@@ -25,7 +34,7 @@ const uploadBlueprint = (blueprintId: string, parameters: Record<string, any>, t
 const uploadBlueprintWithFile = (
     filePath: string,
     blueprintId: string,
-    parameters: Record<string, any>,
+    parameters: BlueprintParameters,
     timeout?: number
 ) => {
     return cy
@@ -46,7 +55,7 @@ const commands = {
         id: string,
         { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
-        const requestParameters = {
+        const requestParameters: BlueprintParameters = {
             visibility,
             application_file_name: yamlFile
         };
