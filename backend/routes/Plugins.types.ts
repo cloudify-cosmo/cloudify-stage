@@ -33,6 +33,10 @@ export interface PutPluginsTitleResponse {
     title: string;
 }
 
+export interface PutPluginsTitleRequestQueryParams {
+    yamlUrl?: string;
+}
+
 export interface PostPluginsUploadQueryParams {
     iconUrl?: string;
     title: string;

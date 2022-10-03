@@ -18,6 +18,7 @@ import Consts from '../utils/consts';
 import Internal from '../utils/Internal';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import { popDrilldownContext } from './drilldownContext';
+import type { GetSelectTemplateQueryParams, GetSelectTemplateResponse } from '../../backend/routes/Templates.types';
 
 export enum InsertPosition {
     Before,
@@ -225,53 +226,57 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
         const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         const internal = new Internal(manager);
-        return internal.doGet('/templates/select', { params: { tenant } }).then(templateId => {
-            log.debug('Selected template id', templateId);
+        return internal
+            .doGet<GetSelectTemplateResponse, GetSelectTemplateQueryParams>('/templates/select', {
+                params: { tenant }
+            })
+            .then(templateId => {
+                log.debug('Selected template id', templateId);
 
-            const storeTemplates = getState().templates;
-            const { pages } = storeTemplates.templatesDef[templateId];
+                const storeTemplates = getState().templates;
+                const { pages } = storeTemplates.templatesDef[templateId];
 
-            log.debug('Create pages from selected template', pages);
+                log.debug('Create pages from selected template', pages);
 
-            if (_.isEmpty(pages)) {
-                return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
-            }
-
-            _.each(pages, pageMenuItem => {
-                function createPageAndLayout(pageId: string) {
-                    const page = storeTemplates.pagesDef[pageId];
-                    if (!page) {
-                        log.error(`Cannot find page template: ${pageId}. Skipping... `);
-                        return null;
-                    }
-
-                    const pageInstanceId = createId(page.name, getState().pages);
-                    dispatch(createPage(page, pageInstanceId));
-                    dispatch(addLayoutToPage(page, pageInstanceId));
-
-                    return pageInstanceId;
+                if (_.isEmpty(pages)) {
+                    return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
                 }
 
-                if (pageMenuItem.type === 'page') {
-                    createPageAndLayout(pageMenuItem.id);
-                } else {
-                    const pageGroup = storeTemplates.pageGroupsDef[pageMenuItem.id as string];
-                    if (!pageGroup) {
-                        log.error(`Cannot find page group: ${pageMenuItem.id}. Skipping... `);
-                        return;
+                _.each(pages, pageMenuItem => {
+                    function createPageAndLayout(pageId: string) {
+                        const page = storeTemplates.pagesDef[pageId];
+                        if (!page) {
+                            log.error(`Cannot find page template: ${pageId}. Skipping... `);
+                            return null;
+                        }
+
+                        const pageInstanceId = createId(page.name, getState().pages);
+                        dispatch(createPage(page, pageInstanceId));
+                        dispatch(addLayoutToPage(page, pageInstanceId));
+
+                        return pageInstanceId;
                     }
 
-                    dispatch(createPageGroup(pageGroup, pageMenuItem.id));
+                    if (pageMenuItem.type === 'page') {
+                        createPageAndLayout(pageMenuItem.id);
+                    } else {
+                        const pageGroup = storeTemplates.pageGroupsDef[pageMenuItem.id as string];
+                        if (!pageGroup) {
+                            log.error(`Cannot find page group: ${pageMenuItem.id}. Skipping... `);
+                            return;
+                        }
 
-                    _.each(pageGroup.pages, pageId => {
-                        const pageInstanceId = createPageAndLayout(pageId);
-                        if (pageInstanceId) dispatch(addPageToGroup(pageMenuItem.id, pageInstanceId));
-                    });
-                }
+                        dispatch(createPageGroup(pageGroup, pageMenuItem.id));
+
+                        _.each(pageGroup.pages, pageId => {
+                            const pageInstanceId = createPageAndLayout(pageId);
+                            if (pageInstanceId) dispatch(addPageToGroup(pageMenuItem.id, pageInstanceId));
+                        });
+                    }
+                });
+
+                return Promise.resolve();
             });
-
-            return Promise.resolve();
-        });
     };
 }
 

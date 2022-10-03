@@ -86,7 +86,8 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "secrets": {
-            "invalidEmail": "Please enter a valid email address"
+            "invalidEmail": "Please enter a valid email address",
+            "invalidPort": "Please enter a valid port number"
         },
         "summary": {
             "taskListTitle": "Task List",

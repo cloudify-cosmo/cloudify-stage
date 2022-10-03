@@ -1,19 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
+import type {
+    GetSourceBrowseBlueprintArchiveResponse,
+    GetSourceBrowseBlueprintFileResponse
+} from '../../../backend/routes/SourceBrowser.types';
 
 export default class {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private readonly toolbox: Stage.Types.Toolbox) {}
 
-    doGetBlueprintId(deploymentId) {
+    doGetBlueprintId(deploymentId: string) {
         return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,blueprint_id`);
     }
 
-    doGetFilesTree(blueprintId) {
-        return this.toolbox.getInternal().doGet(`/source/browse/${blueprintId}/archive`);
+    doGetFilesTree(blueprintId: string) {
+        return this.toolbox
+            .getInternal()
+            .doGet<GetSourceBrowseBlueprintArchiveResponse>(`/source/browse/${blueprintId}/archive`);
     }
 
-    doGetBlueprintDetails(blueprintId) {
+    doGetBlueprintDetails(blueprintId: string) {
         return this.toolbox
             .getManager()
             .doGet(`/blueprints?id=${blueprintId}&_include=plan,main_file_name`)
@@ -23,7 +26,7 @@ export default class {
             }));
     }
 
-    doGetFileContent(path) {
-        return this.toolbox.getInternal().doGet(`/source/browse/${path}`);
+    doGetFileContent(path: string) {
+        return this.toolbox.getInternal().doGet<GetSourceBrowseBlueprintFileResponse>(`/source/browse/${path}`);
     }
 }

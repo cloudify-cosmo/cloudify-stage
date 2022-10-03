@@ -18,6 +18,11 @@ import { addPage, removePage } from '../../actions/templateManagement/pages';
 import PageGroups from './pageGroups/PageGroups';
 import type { ReduxState } from '../../reducers';
 import useCreatePageId from './pages/useCreatePageId';
+import type {
+    GetPageGroupsResponse,
+    GetPagesResponse,
+    GetTemplatesResponse
+} from '../../../backend/routes/Templates.types';
 
 export default function TemplateManagement() {
     const dispatch = useDispatch();
@@ -44,9 +49,9 @@ export default function TemplateManagement() {
     function fetchData() {
         startLoading();
         return Promise.all([
-            internal.doGet('/templates'),
-            internal.doGet('/templates/pages'),
-            internal.doGet('/templates/page-groups')
+            internal.doGet<GetTemplatesResponse>('/templates'),
+            internal.doGet<GetPagesResponse>('/templates/pages'),
+            internal.doGet<GetPageGroupsResponse>('/templates/page-groups')
         ])
             .then(data => {
                 const selectedTemplate = _.find(templates, { selected: true });

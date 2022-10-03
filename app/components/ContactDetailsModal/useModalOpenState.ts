@@ -5,10 +5,7 @@ import type { ReduxState } from '../../reducers';
 import consts from '../../utils/consts';
 import Internal from '../../utils/Internal';
 import useManager from '../../utils/hooks/useManager';
-
-interface ContactDetailsResponse {
-    contactDetailsReceived: boolean;
-}
+import type { GetContactDetailsResponse } from '../../../backend/routes/ContactDetails.types';
 
 const useModalOpenState = () => {
     // Modal is opened ONLY if currently the user is using the Community version and has not submitted contact details yet
@@ -21,7 +18,7 @@ const useModalOpenState = () => {
 
     useEffect(() => {
         if (userIsUsingCommunity) {
-            internal.doGet('contactDetails/').then((response: ContactDetailsResponse) => {
+            internal.doGet<GetContactDetailsResponse>('contactDetails/').then(response => {
                 if (!response.contactDetailsReceived) {
                     openModal();
                 }
