@@ -46,8 +46,9 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                                 toggle
                                 label={label}
                                 name={name}
-                                value={secretInputs[name]}
+                                checked={Boolean(secretInputs[name])}
                                 onChange={setSecretInputs}
+                                onBlur={handleBlur}
                             />
                         </Form.Field>
                     );
