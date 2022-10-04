@@ -144,7 +144,7 @@ export const CompletedBlueprintStates = {
     Invalid: 'invalid'
 };
 
-const UploadBlueprintFormFieldNames = {
+const UploadBlueprintFormDataProperties = {
     Params: 'params',
     BlueprintArchive: 'blueprint_archive'
 };
@@ -160,10 +160,10 @@ export default class BlueprintActions {
 
     static generateUploadFormData = (params: BlueprintUploadParameters, blueprintFile?: File | Blob): FormData => {
         const formData = new FormData();
-        formData.append(UploadBlueprintFormFieldNames.Params, JSON.stringify(params));
+        formData.append(UploadBlueprintFormDataProperties.Params, JSON.stringify(params));
 
         if (blueprintFile) {
-            formData.append(UploadBlueprintFormFieldNames.BlueprintArchive, blueprintFile);
+            formData.append(UploadBlueprintFormDataProperties.BlueprintArchive, blueprintFile);
         }
 
         return formData;
