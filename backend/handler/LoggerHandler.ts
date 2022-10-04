@@ -1,5 +1,5 @@
-import { initLogging } from 'cloudify-ui-common/backend';
-import type { LoggerFactory, Logger } from 'cloudify-ui-common/backend/logger';
+import { initLogging } from 'cloudify-ui-common-backend';
+import type { LoggerFactory, Logger } from 'cloudify-ui-common-backend';
 import _ from 'lodash';
 import { getConfig } from '../config';
 

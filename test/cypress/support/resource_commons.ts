@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
 import { getUrlWithQueryString } from '../../../backend/sharedUtils';
 
 declare global {

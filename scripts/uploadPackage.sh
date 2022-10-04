@@ -31,7 +31,7 @@ COMMANDS_FOR_TAR_GZ="
   ${POST_COMMANDS}"
 
 NODE_MODULES_PATH="$( npm root )"
-UPLOAD_PACKAGE_SCRIPT_PATH="${NODE_MODULES_PATH}/cloudify-ui-common/scripts/upload-package.sh"
+UPLOAD_PACKAGE_SCRIPT_PATH="${NODE_MODULES_PATH}/cloudify-ui-common-scripts/upload-package.sh"
 
 if [ ! -f "${UPLOAD_PACKAGE_SCRIPT_PATH}" ]; then
     echo "ERROR: Cloudify UI Common upload-package.sh script not found."

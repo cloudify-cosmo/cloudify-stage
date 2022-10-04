@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import { consts, icons } from 'cloudify-ui-common';
+import { consts, icons } from 'cloudify-ui-common-frontend';
 
 const NODE_STATUS = consts.nodeStatuses;
 
