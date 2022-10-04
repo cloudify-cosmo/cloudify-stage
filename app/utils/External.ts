@@ -145,6 +145,7 @@ export default class External {
                         log.error('xhr upload error', e, xhr.responseText);
 
                         reject({ message: StageUtils.resolveMessage(response.message) });
+                        return;
                     }
                 } catch (err) {
                     log.error('Cannot parse upload response', err, xhr.responseText);
