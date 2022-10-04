@@ -94,7 +94,7 @@
         "react-svg-pan-zoom": "^3.8.0",
         "react-syntax-highlighter": "^15.4.3",
         "react-visibility-sensor": "^5.1.1",
-        "recharts": "2.1.12",
+        "recharts": "2.1.14",
         "redux": "^4.0.4",
         "redux-devtools-extension": "^2.13.8",
         "redux-logger": "^3.0.6",
