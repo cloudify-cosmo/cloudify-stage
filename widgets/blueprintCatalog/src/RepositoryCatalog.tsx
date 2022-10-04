@@ -8,7 +8,7 @@ import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
-const t = Utils.getWidgetTranslation('catalog.properties');
+const t = Utils.getWidgetTranslation('blueprintCatalog');
 
 const StyledDataSegment = styled(DataSegment.Item)`
     display: flex;
@@ -120,7 +120,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         <Grid.Row className="noPadded">
                             <Grid.Column style={{ marginBottom: '5px' }}>
                                 <StyledText>
-                                    <strong>{t('created')}</strong> {created_at}
+                                    <strong>{t('catalog.properties.created')}</strong> {created_at}
                                 </StyledText>
                             </Grid.Column>
                         </Grid.Row>
@@ -128,7 +128,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         <Grid.Row className="noPadded">
                             <Grid.Column>
                                 <StyledText>
-                                    <strong>{t('updated')}</strong> {updated_at}
+                                    <strong>{t('catalog.properties.updated')}</strong> {updated_at}
                                 </StyledText>
                             </Grid.Column>
                         </Grid.Row>
@@ -140,6 +140,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     circular
                                     icon="github"
                                     onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                                    title={html_url}
                                 />
 
                                 <Button
@@ -151,6 +152,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                         event.stopPropagation();
                                         onReadme(name, readme_url);
                                     }}
+                                    title={t('actions.openDocumentation')}
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
@@ -161,6 +163,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                         event.stopPropagation();
                                         onUpload(name, zip_url, image_url, main_blueprint);
                                     }}
+                                    title={t('actions.uploadBlueprint')}
                                 />
                             </Grid.Column>
                         </Grid.Row>

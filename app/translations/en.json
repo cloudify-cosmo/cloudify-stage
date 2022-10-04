@@ -992,7 +992,7 @@
             "catalog": {
                 "properties": {
                     "created": "Created:",
-                    "updated": "Updated: "
+                    "updated": "Updated:"
                 }
             }
         },
