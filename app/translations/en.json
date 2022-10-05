@@ -942,6 +942,7 @@
             "name": "Blueprints Catalog",
             "description": "Shows blueprints catalog",
             "actions": {
+                "openBlueprintRepository": "Open blueprint repository",
                 "openDocumentation": "Open documentation",
                 "uploadBlueprint": "Upload blueprint"
             },

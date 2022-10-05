@@ -35,22 +35,22 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             noDataMessage={noDataMessage}
         >
             <DataTable.Column
-                label={t('name')}
+                label={t('configuration.fieldsToShow.items.name')}
                 width="25%"
                 show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
             />
             <DataTable.Column
-                label={t('description')}
+                label={t('configuration.fieldsToShow.items.description')}
                 width="40%"
                 show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
             />
             <DataTable.Column
-                label={t('created')}
+                label={t('configuration.fieldsToShow.items.created')}
                 width="12%"
                 show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
             />
             <DataTable.Column
-                label={t('updated')}
+                label={t('configuration.fieldsToShow.items.updated')}
                 width="12%"
                 show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
             />
@@ -92,7 +92,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 name="github"
                                 bordered
                                 onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                title={html_url}
+                                title={t('actions.openBlueprintRepository')}
                             />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}

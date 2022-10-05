@@ -140,7 +140,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     circular
                                     icon="github"
                                     onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                    title={html_url}
+                                    title={t('actions.openBlueprintRepository')}
                                 />
 
                                 <Button
