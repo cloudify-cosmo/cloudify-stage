@@ -81,6 +81,9 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
+    const showUpdatedColumn = widget.configuration.fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'));
+    const showCreatedColumn = widget.configuration.fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
+
     const catalogItems = data.items.map(item => {
         /* eslint-disable camelcase */
         const {
@@ -117,21 +120,25 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                             </Grid.Column>
                         </Grid.Row>
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column style={{ marginBottom: '5px' }}>
-                                <StyledText>
-                                    <strong>{t('catalog.properties.created')}</strong> {created_at}
-                                </StyledText>
-                            </Grid.Column>
-                        </Grid.Row>
+                        {showCreatedColumn && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column style={{ marginBottom: '5px' }}>
+                                    <StyledText>
+                                        <strong>{t('catalog.properties.created')}</strong> {created_at}
+                                    </StyledText>
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column>
-                                <StyledText>
-                                    <strong>{t('catalog.properties.updated')}</strong> {updated_at}
-                                </StyledText>
-                            </Grid.Column>
-                        </Grid.Row>
+                        {showUpdatedColumn && (
+                            <Grid.Row className="noPadded">
+                                <Grid.Column>
+                                    <StyledText>
+                                        <strong>{t('catalog.properties.updated')}</strong> {updated_at}
+                                    </StyledText>
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
                     </Grid>
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
