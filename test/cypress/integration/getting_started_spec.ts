@@ -453,7 +453,7 @@ describe('Getting started modal', () => {
                 goToNextStep();
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret will be created');
                 goToFinishStep();
-                cy.interceptSp('PATCH', 'secrets/vsphere_allow_insecure').as('createSecret');
+                cy.interceptSp('PUT', 'secrets/vsphere_allow_insecure').as('createSecret');
                 cy.wait('@createSecret').its('response.statusCode').should('eq', 200);
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
             });
