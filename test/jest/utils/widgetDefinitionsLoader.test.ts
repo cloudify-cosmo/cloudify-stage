@@ -15,7 +15,7 @@ function loadMockWidgetDefinition(
     widgetDefinition: InitialWidgetDefinition<unknown, unknown, unknown>,
     widgetDirectoryName: string
 ) {
-    fetchMock.get('/console/widgets/list', {
+    fetchMock.get('/console/widgets', {
         body: [{ id: widgetDirectoryName, isCustom: false }]
     });
 

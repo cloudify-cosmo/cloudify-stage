@@ -1,4 +1,5 @@
-import type { Filter, FilterUsage, FilterRule } from './types';
+import type { Filter, FilterRule } from './types';
+import type { GetFiltersUsageResponse } from '../../../../backend/routes/Filters.types';
 
 export default class FilterActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
@@ -11,8 +12,8 @@ export default class FilterActions {
         return this.toolbox.getManager().doDelete(`/filters/deployments/${filterId}`);
     }
 
-    doGetFilterUsage(filterId: string): Promise<FilterUsage[]> {
-        return this.toolbox.getInternal().doGet(`/filters/usage/${filterId}`);
+    doGetFilterUsage(filterId: string) {
+        return this.toolbox.getInternal().doGet<GetFiltersUsageResponse>(`/filters/usage/${filterId}`);
     }
 
     doCreate(filterId: string, filterRules: FilterRule[]) {

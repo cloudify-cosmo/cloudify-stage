@@ -4,6 +4,7 @@ import StageUtils from '../../../utils/stageUtils';
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
+import type { PostPluginsUploadQueryParams } from '../../../../backend/routes/Plugins.types';
 
 export enum TaskType {
     Plugin = 'plugin',
@@ -39,7 +40,7 @@ export const installPlugin = async (internal: Internal, plugin: PluginInstallati
         wagonUrl: plugin.wagonUrl
     };
     try {
-        await internal.doUpload('/plugins/upload', { params, method: 'post' });
+        await internal.doUpload<any, PostPluginsUploadQueryParams>('/plugins/upload', { params, method: 'post' });
         return true;
     } catch (e) {
         log.error(e);

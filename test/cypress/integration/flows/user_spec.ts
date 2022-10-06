@@ -69,13 +69,15 @@ describe('User flow', () => {
     it('uploads blueprint using first journey buttons', () => {
         cy.killRunningExecutions().deleteDeployments('', true);
         cy.visitPage('Dashboard');
-        const uploadBlueprintButtonSelector = 'i[title="Upload blueprint"]:not(.disabled)';
 
         cy.contains('Create new Deployment').click();
 
         cy.contains('Blueprint Marketplace');
         cy.containsActiveTab('Getting Started');
-        cy.get(uploadBlueprintButtonSelector).first().click();
+
+        cy.contains('Loading').should('not.exist');
+        cy.get('button').not('.disabled').contains('Upload').click();
+
         cy.contains('Uploading');
 
         cy.get('.modal').contains('Deploy blueprint', {

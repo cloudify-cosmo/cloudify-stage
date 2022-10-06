@@ -1,15 +1,12 @@
-.repositoryCatalog .uploadButton {
-    position: absolute !important;
-    bottom: 1rem;
-    right: 1rem;
+.repositoryCatalog .ui.icon.button {
+    width: 22px;
+    height: 22px;
 }
-
-.repositoryCatalog .readmeButton {
-    position: absolute !important;
-    bottom: 1rem;
-    left: 1rem;
-}
-
 .repositoryCatalog .contentBlock {
-    margin-bottom: 50px;
+    margin-bottom: 17px;
+}
+
+.widget .repositoryCatalog .row,
+.ui.segment {
+    cursor: default !important;
 }

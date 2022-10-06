@@ -1,34 +1,34 @@
-export interface Variable {
-    variable: string;
-    name: string;
-    source: 'input' | 'secret' | 'static';
-    value: string;
-    duplicated: boolean;
+import type { TerraformBlueprintData, TerraformParserResult } from '../handler/TerraformHandler.types';
+
+export type PostTerraformResourcesResponse = string[];
+
+export interface PostTerraformResourcesQueryParams {
+    templateUrl: string;
 }
 
-export interface Output {
-    name: string;
-    type: 'output' | 'capability';
-    terraformOutput: string;
-}
+export type PostTerraformResourcesFileResponse = PostTerraformResourcesResponse;
 
-export interface RequestBody {
-    blueprintName: string;
-    blueprintDescription: string;
-    terraformVersion: string;
-    terraformTemplate: string;
-    urlAuthentication: boolean;
-    resourceLocation: string;
-    variables?: Variable[];
-    environmentVariables?: Variable[];
-    outputs?: Output[];
-}
-
-export interface RequestArchiveBody extends Omit<RequestBody, 'terraformTemplate'> {
-    file?: string;
-}
-
-export interface RequestFetchDataBody {
+export interface PostTerraformFetchDataRequestBody {
     templateUrl: string;
     resourceLocation: string;
 }
+
+export type PostTerraformFetchDataResponse = TerraformParserResult;
+
+export interface PostTerraformFetchDataFileRequestBody {
+    file: Buffer;
+    resourceLocation: string;
+}
+
+export type PostTerraformFetchDataFileResponse = TerraformParserResult;
+
+export type PostTerraformBlueprintRequestBody = TerraformBlueprintData;
+
+export type PostTerraformBlueprintResponse = string;
+
+export interface PostTerraformBlueprintArchiveRequestBody
+    extends Omit<PostTerraformBlueprintRequestBody, 'terraformTemplate'> {
+    file?: string;
+}
+
+export type PostTerraformBlueprintArchiveResponse = Buffer;

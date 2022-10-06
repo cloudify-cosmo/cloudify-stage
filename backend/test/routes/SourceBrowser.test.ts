@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import request from 'supertest';
 import { existsSync, readFile, statSync } from 'fs-extra';
 import os from 'os';
@@ -8,8 +7,8 @@ import app from 'app';
 
 jest.mock('handler/ArchiveHelper');
 (<jest.Mock>saveDataFromUrl).mockResolvedValue({ archiveFolder: '', archiveFile: '' });
-(<jest.Mock>removeOldExtracts).mockResolvedValue();
-(<jest.Mock>decompressArchive).mockResolvedValue();
+(<jest.Mock>removeOldExtracts).mockResolvedValue(undefined);
+(<jest.Mock>decompressArchive).mockResolvedValue(undefined);
 
 jest.mock('fs-extra');
 (<jest.Mock>existsSync).mockReturnValue(false);

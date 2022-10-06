@@ -11,7 +11,7 @@ import type {
     TokenResponse,
     UserResponse,
     VersionResponse
-} from '../routes/Auth.types';
+} from './AuthHandler.types';
 import type { PaginatedResponse } from '../types';
 
 const logger = getLogger('AuthHandler');
@@ -69,7 +69,7 @@ export function isRbacInCache() {
     return !_.isEmpty(authorizationCache);
 }
 
-export async function getRBAC(token: string): Promise<{ roles: any }> {
+export async function getRBAC(token: string): Promise<ConfigResponse['authorization']> {
     if (!isRbacInCache()) {
         logger.debug('No RBAC data in cache.');
         await getAndCacheConfig(token);

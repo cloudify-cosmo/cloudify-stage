@@ -64,10 +64,10 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             id: 'displayStyle',
             name: t('configuration.displayStyle.label'),
             items: [
-                { name: t('configuration.displayStyle.option.table'), value: 'table' },
-                { name: t('configuration.displayStyle.option.catalog'), value: 'catalog' }
+                { name: t('configuration.displayStyle.option.catalog'), value: 'catalog' },
+                { name: t('configuration.displayStyle.option.table'), value: 'table' }
             ],
-            default: 'table',
+            default: 'catalog',
             type: Stage.Basic.GenericField.LIST_TYPE
         },
         {
@@ -107,9 +107,10 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             .then(([data, uploadedBlueprintsResp]) => {
                 const uploadedBlueprints = uploadedBlueprintsResp.items.map(({ id }: Partial<Blueprint>) => id);
                 let repos: Blueprint[] = data.items;
-                const { source } = data.source;
+                const { source } = data;
                 const total = data.total_count;
-                if (data.source === Consts.GITHUB_DATA_SOURCE) {
+                if (source === Consts.GITHUB_DATA_SOURCE) {
+                    // @ts-ignore TODO(RD-5993) Types should be improved once new Blueprint Marketplace API is ready
                     const isAuthenticated = data.isAuth;
 
                     const fetches = _.map(repos, repo =>

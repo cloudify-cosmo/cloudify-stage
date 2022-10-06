@@ -1,13 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { FunctionComponent } from 'react';
 import Actions from './actions';
-import UserPropType from './props/UserPropType';
+import type { User } from './widget.types';
+import getWidgetT from './getWidgetT';
 
-export default function GroupModal({ onHide, open, user, toolbox, groups }) {
+const t = getWidgetT();
+
+interface GroupModalProps {
+    groups: string[];
+    onHide: () => void;
+    open: boolean;
+    toolbox: Stage.Types.Toolbox;
+    user: User;
+}
+
+const GroupModal: FunctionComponent<GroupModalProps> = ({ onHide, open, user, toolbox, groups }) => {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [editedGroups, setEditedGroups] = useInput([]);
+    const [editedGroups, setEditedGroups] = useInput<string[]>([]);
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
     useOpenProp(open, () => {
@@ -44,21 +54,21 @@ export default function GroupModal({ onHide, open, user, toolbox, groups }) {
 
     const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
-    const options = _.map(groups.items, item => {
-        return { text: item.name, value: item.name, key: item.name };
+    const options = _.map(groups, group => {
+        return { text: group, value: group, key: group };
     });
 
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> Edit user groups for {user.username}
+                <Icon name="user" /> {t('editGroupsModalHeader', { username: user.username })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field>
                         <Form.Dropdown
-                            placeholder="Groups"
+                            placeholder={t('details.groups')}
                             multiple
                             selection
                             options={options}
@@ -76,12 +86,6 @@ export default function GroupModal({ onHide, open, user, toolbox, groups }) {
             </Modal.Actions>
         </Modal>
     );
-}
-
-GroupModal.propTypes = {
-    groups: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })) }).isRequired,
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    user: UserPropType.isRequired
 };
+
+export default GroupModal;

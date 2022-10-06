@@ -17,6 +17,14 @@ import ScriptLoader from './scriptLoader';
 import type { WidgetDefinition } from './StageAPI';
 import StageUtils from './stageUtils';
 import StyleLoader from './StyleLoader';
+import type {
+    GetWidgetsResponse,
+    PostWidgetsQueryParams,
+    PostWidgetsResponse,
+    PutWidgetsQueryParams,
+    PutWidgetsResponse
+} from '../../backend/routes/Widgets.types';
+import type { WidgetData } from '../../backend/handler/WidgetsHandler.types';
 
 let bundleLoadedWidgets: WidgetDefinition<any, any, any>[] = [];
 
@@ -113,12 +121,12 @@ export default class WidgetDefinitionsLoader {
         return widgetDefinition;
     }
 
-    public static load(manager: any): Promise<WidgetDefinition<any, any, any>[]> {
+    public static load(manager: any): Promise<(WidgetData & { loaded: boolean })[]> {
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
-            internal.doGet('/widgets/list') // We can load the list of widgets in the meanwhile
-        ]).then(results => results[1].map((widget: WidgetListItem) => ({ ...widget, loaded: false })));
+            internal.doGet<GetWidgetsResponse>('/widgets') // We can load the list of widgets in the meanwhile
+        ]).then(results => results[1].map(widget => ({ ...widget, loaded: false })));
     }
 
     private static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
@@ -126,14 +134,17 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug('Install widget from url', widgetUrl);
-            return internal.doPut('/widgets/install', {
+            return internal.doPost<PostWidgetsResponse, any, PostWidgetsQueryParams>('/widgets', {
                 params: {
                     url: widgetUrl
                 }
             });
         }
         log.debug('Install widget from file');
-        return internal.doUpload('/widgets/install', { files: { widget: widgetFile } });
+        return internal.doUpload<PostWidgetsResponse, PostWidgetsQueryParams>('/widgets', {
+            method: 'post',
+            files: { widget: widgetFile }
+        });
     }
 
     private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any): Promise<WidgetListItem> {
@@ -141,10 +152,15 @@ export default class WidgetDefinitionsLoader {
 
         if (widgetUrl) {
             log.debug(`Update widget ${widgetId} from url`, widgetUrl);
-            return internal.doPut('/widgets/update', { params: { url: widgetUrl, id: widgetId } });
+            return internal.doPut<PutWidgetsResponse, any, PutWidgetsQueryParams>('/widgets', {
+                params: { url: widgetUrl, id: widgetId }
+            });
         }
         log.debug(`Update widget ${widgetId} from file`);
-        return internal.doUpload('/widgets/update', { params: { id: widgetId }, files: { widget: widgetFile } });
+        return internal.doUpload<PutWidgetsResponse, PutWidgetsQueryParams>('/widgets', {
+            params: { id: widgetId },
+            files: { widget: widgetFile }
+        });
     }
 
     private static validateWidget(widgetId: any, manager: any) {

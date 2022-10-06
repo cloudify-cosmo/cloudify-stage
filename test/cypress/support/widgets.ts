@@ -10,7 +10,7 @@ declare global {
 }
 
 const commands = {
-    getWidgets: () => cy.stageRequest('/console/widgets/list'),
+    getWidgets: () => cy.stageRequest('/console/widgets'),
 
     removeCustomWidgets: () =>
         cy.getWidgets().then(response => {

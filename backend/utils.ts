@@ -14,29 +14,7 @@ export function getResourcePath(path: string, isUserData: boolean) {
     return pathlib.resolve(`../dist/${isUserData ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`);
 }
 
-export function getValuesWithPaths(obj: Record<string, any>, key: string, arr: string[] = []) {
-    let objects: any[] = [];
-    Object.keys(obj).forEach(i => {
-        if (typeof obj[i] === 'object') {
-            objects = objects.concat(getValuesWithPaths(obj[i], key, [...arr, i]));
-        } else if (i === key) {
-            objects.push({ [obj[i]]: arr });
-        }
-    });
-    return objects;
-}
-
-export function getParams(query: string) {
-    return query
-        ? (/^[?#]/.test(query) ? query.slice(1) : query).split('&').reduce((params: Record<string, string>, param) => {
-              const [key, value] = param.split('=');
-              params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
-              return params;
-          }, {})
-        : {};
-}
-
-export function getTokenFromCookies(req: Request) {
+export function getTokenFromCookies(req: Request<any, any, any, any, Record<string, any>>) {
     return req.cookies[TOKEN_COOKIE_NAME] as string;
 }
 

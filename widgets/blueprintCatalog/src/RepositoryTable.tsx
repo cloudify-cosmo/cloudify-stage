@@ -57,26 +57,43 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
-                const isReadmeLoading = readmeLoading === item.name;
-                const isBlueprintUploaded = data.uploadedBlueprints.includes(item.name);
+                /* eslint-disable camelcase */
+                const {
+                    id,
+                    name,
+                    description,
+                    created_at,
+                    updated_at,
+                    image_url,
+                    isSelected,
+                    html_url,
+                    readme_url,
+                    zip_url,
+                    main_blueprint
+                } = item;
+                const isReadmeLoading = readmeLoading === name;
+                const isBlueprintUploaded = data.uploadedBlueprints.includes(name);
 
                 return (
                     <DataTable.Row
-                        key={item.id}
-                        className={`bp_${item.name}`}
-                        selected={item.isSelected}
+                        key={id}
+                        className={`bp_${name}`}
+                        selected={isSelected}
                         onClick={() => onSelect(item)}
                     >
                         <DataTable.Data>
-                            <ExternalBlueprintImage url={item.image_url} width={30} />{' '}
-                            <a href={item.html_url} target="_blank" rel="noopener noreferrer">
-                                {item.name}
-                            </a>
+                            <ExternalBlueprintImage url={image_url} width={30} /> {name}
                         </DataTable.Data>
-                        <DataTable.Data>{item.description}</DataTable.Data>
-                        <DataTable.Data>{item.created_at}</DataTable.Data>
-                        <DataTable.Data>{item.updated_at}</DataTable.Data>
+                        <DataTable.Data>{description}</DataTable.Data>
+                        <DataTable.Data>{created_at}</DataTable.Data>
+                        <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
+                            <Icon
+                                name="github"
+                                bordered
+                                onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                                title={t('actions.openBlueprintRepository')}
+                            />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
@@ -85,7 +102,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 bordered={!isReadmeLoading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
-                                    onReadme(item.name, item.readme_url);
+                                    onReadme(name, readme_url);
                                 }}
                             />
                             <Icon
@@ -96,11 +113,12 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 bordered
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
-                                    onUpload(item.name, item.zip_url, item.image_url, item.main_blueprint);
+                                    onUpload(name, zip_url, image_url, main_blueprint);
                                 }}
                             />
                         </DataTable.Data>
                     </DataTable.Row>
+                    /* eslint-enable camelcase */
                 );
             })}
         </DataTable>

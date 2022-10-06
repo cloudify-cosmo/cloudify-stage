@@ -1,11 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-
 import UsersTable from './UsersTable';
+import type { User, UserManagementWidget } from './widget.types';
+import getWidgetT from './getWidgetT';
 
-Stage.defineWidget({
+export interface UserViewItem extends User {
+    groupCount: number;
+    tenantCount: number;
+    isSelected: boolean;
+    isAdmin: boolean;
+}
+
+export interface FormattedUsers {
+    items: UserViewItem[];
+    total: number;
+}
+
+const t = getWidgetT();
+
+Stage.defineWidget<UserManagementWidget.Params, UserManagementWidget.Data, UserManagementWidget.Configuration>({
     id: 'userManagement',
-    name: 'User management',
-    description: 'This widget shows a list of available users and allow managing them',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     color: 'brown',
@@ -24,19 +38,17 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (!data || _.isEmpty(data)) {
             return <Loading />;
         }
 
         const selectedUser = toolbox.getContext().getValue('userName');
 
-        let formattedData = data.users;
-        formattedData = {
-            ...data.users,
-            items: _.map(formattedData.items, item => {
+        const formattedData: FormattedUsers = {
+            items: _.map(data.users.items, item => {
                 return {
                     ...item,
                     last_login_at: item.last_login_at ? Stage.Utils.Time.formatTimestamp(item.last_login_at) : '',
@@ -48,7 +60,7 @@ Stage.defineWidget({
                         _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
                 };
             }),
-            total: _.get(data.users, 'metadata.pagination.total', 0)
+            total: data.users.metadata.pagination.total
         };
 
         return <UsersTable widget={widget} data={formattedData} toolbox={toolbox} />;

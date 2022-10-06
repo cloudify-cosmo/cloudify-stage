@@ -1,8 +1,15 @@
 import express from 'express';
+import type { Response } from 'express';
 import { db } from '../db/Connection';
 
 import { getMode } from '../serverSettings';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
+import type {
+    GetUserAppResponse,
+    PostUserAppRequestBody,
+    PostUserAppResponse,
+    GetUserAppClearPagesRequestQueryParams
+} from './UserApp.types';
 
 const router = express.Router();
 
@@ -11,7 +18,7 @@ router.use(express.json());
 /**
  * End point to get a request from the server. Assuming it has a url parameter 'su' - server url
  */
-router.get('/', (req, res, next) => {
+router.get('/', (req, res: Response<GetUserAppResponse>, next) => {
     db.UserApps.findOne<UserAppsInstance>({
         where: {
             username: req.user!.username,
@@ -20,12 +27,12 @@ router.get('/', (req, res, next) => {
         }
     })
         .then(userApp => {
-            res.send(userApp || {});
+            res.send(userApp);
         })
         .catch(next);
 });
 
-router.post('/', (req, res, next) => {
+router.post<never, PostUserAppResponse, PostUserAppRequestBody>('/', (req, res, next) => {
     db.UserApps.findOrCreate<UserAppsInstance>({
         where: {
             username: req.user!.username,
@@ -51,12 +58,12 @@ router.post('/', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/clear-pages', (req, res, next) => {
+router.get<never, never, never, GetUserAppClearPagesRequestQueryParams>('/clear-pages', (req, res, next) => {
     db.UserApps.findOne<UserAppsInstance>({
         where: {
             username: req.user!.username,
             mode: getMode(),
-            tenant: req.query.tenant?.toString()
+            tenant: req.query.tenant
         }
     })
         .then(userApp => {
@@ -65,7 +72,7 @@ router.get('/clear-pages', (req, res, next) => {
             }
             return Promise.reject('Could not clear pages. Row not found');
         })
-        .then(() => res.send({ status: 'ok' }))
+        .then(() => res.status(200).end())
         .catch(next);
 });
 

@@ -2,11 +2,12 @@ import fs from 'fs-extra';
 import _ from 'lodash';
 import path from 'path';
 import UserApps from '../db/models/UserAppsModel';
-import type { LayoutSection, LayoutSectionType, PageFileDefinition } from '../routes/Templates.types';
+import type { LayoutSection, LayoutSectionType } from '../handler/templates/types';
 import { getResourcePath } from '../utils';
 import type { DataTypes, MigrationObject, QueryInterface } from './common/types';
+import type { AppDataPage } from '../db/models/UserAppsModel.types';
 
-type NewPageData = Partial<PageFileDefinition>;
+type NewPageData = Partial<AppDataPage>;
 type OldPageData = Record<LayoutSectionType, any>;
 type PageData = OldPageData & NewPageData;
 
