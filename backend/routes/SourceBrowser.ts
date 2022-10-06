@@ -1,20 +1,13 @@
 import express from 'express';
 import type { Response } from 'express';
 
-import {
-    getArchiveFileContent,
-    getMimeType,
-    browseArchiveTree,
-    listYamlFiles,
-    getBlueprintResources,
-} from '../handler/SourceHandler';
+import { getArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
 import type {
     PutSourceListYamlQueryParams,
     PutSourceListYamlResponse,
     GetSourceBrowseBlueprintFileResponse,
     GetSourceBrowseBlueprintArchiveResponse
 } from './SourceBrowser.types';
-
 
 const router = express.Router();
 
@@ -27,7 +20,7 @@ router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/fi
     } else {
         const mimeType = getMimeType(req, timestamp, path);
 
-        getArchiveFileContent(req, timestamp, path)
+        getArchiveFile(req, timestamp, path)
             .then(({ file, isBinaryFile }) => {
                 if (mimeType) {
                     return res.contentType(mimeType).send(file);

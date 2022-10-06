@@ -121,11 +121,12 @@ export async function getArchiveFile(req: Request, timestamp: string, path: stri
     const data = fs.readFileSync(absolutePath);
     const stat = fs.lstatSync(absolutePath);
     const isBinaryFile = isBinaryFileSync(data, stat?.size);
-    return { file: await fs.readFile(absolutePath, isBinaryFile ? '' : 'utf-8'), isBinaryFile };
+    const file = await fs.readFile(absolutePath, isBinaryFile ? '' : 'utf-8');
+    return { file, isBinaryFile };
 }
 
-export async function getArchiveFileContent(req, timestamp, path) {
-    return getArchiveFile(req, timestamp, path).file;
+export async function getArchiveFileContent(req: Request, timestamp: string, path: string) {
+    return getArchiveFile(req, timestamp, path).then(({ file }) => file);
 }
 
 export function getMimeType(req: Request, timestamp: string, path: string) {
