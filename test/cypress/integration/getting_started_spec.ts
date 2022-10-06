@@ -443,5 +443,20 @@ describe('Getting started modal', () => {
                 cy.get('.error .label').should('not.exist');
             });
         });
+
+        it('should create vsphere_allow_insecure secret', () => {
+            cy.deletePlugins().deleteSecrets('vsphere_allow_insecure');
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'vSphere').click();
+                cy.get('.toggle').contains('vSphere Allow Insecure').click();
+                goToNextStep();
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret will be created');
+                goToFinishStep();
+                cy.interceptSp('PATCH', 'secrets/vsphere_allow_insecure').as('createSecret');
+                cy.wait('@createSecret').its('response.statusCode').should('eq', 200);
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
+            });
+        });
     });
 });
