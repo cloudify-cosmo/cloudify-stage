@@ -7,7 +7,7 @@ import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataTable, Icon } = Stage.Basic;
-const t = Utils.getWidgetTranslation('configuration.fieldsToShow.items');
+const t = Utils.getWidgetTranslation();
 
 const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
@@ -34,10 +34,26 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
             selectable
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label={t('name')} width="25%" show={fieldsToShow.includes(t('name'))} />
-            <DataTable.Column label={t('description')} width="40%" show={fieldsToShow.includes(t('description'))} />
-            <DataTable.Column label={t('created')} width="12%" show={fieldsToShow.includes(t('created'))} />
-            <DataTable.Column label={t('updated')} width="12%" show={fieldsToShow.includes(t('updated'))} />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.name')}
+                width="25%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.name'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.description')}
+                width="40%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.description'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.created')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.created'))}
+            />
+            <DataTable.Column
+                label={t('configuration.fieldsToShow.items.updated')}
+                width="12%"
+                show={fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'))}
+            />
             <DataTable.Column width="11%" />
 
             {data.items.map(item => {
@@ -72,7 +88,12 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
-                            <Icon name="github" bordered onClick={() => Stage.Utils.Url.redirectToPage(html_url)} />
+                            <Icon
+                                name="github"
+                                bordered
+                                onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                                title={t('actions.openBlueprintRepository')}
+                            />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
