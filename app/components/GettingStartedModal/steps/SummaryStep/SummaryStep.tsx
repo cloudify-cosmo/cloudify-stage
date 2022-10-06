@@ -87,14 +87,14 @@ const SummaryStep = ({
                     handleInstallationFinished();
                 }
             );
-            const updatedSecrets = secretsInstallationTasks.tasks.updatedSecrets.map(secret => ({
+            const stringMappedSecrets = secretsInstallationTasks.tasks.updatedSecrets.map(secret => ({
                 ...secret,
                 value: String(secret.value)
             }));
             // async installation that can be stopped with destroy() method
             resourcesInstaller.install(
                 pluginsInstallationTasks.tasks.scheduledPlugins,
-                updatedSecrets,
+                stringMappedSecrets,
                 secretsInstallationTasks.tasks.createdSecrets.filter(secret => !!secret.value),
                 blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
