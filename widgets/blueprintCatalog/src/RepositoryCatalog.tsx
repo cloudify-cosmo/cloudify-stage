@@ -52,6 +52,7 @@ const StyledGridRowHeader = styled(Grid.Row)`
     &&&& {
         display: flex;
         align-items: center;
+        flex-wrap: nowrap;
         border-bottom: 1px solid #ebebeb;
         margin: 0 10px 3px 10px;
         padding: 10px 0;
