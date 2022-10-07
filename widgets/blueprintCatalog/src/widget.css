@@ -4,6 +4,7 @@
 }
 .repositoryCatalog .contentBlock {
     margin-bottom: 17px;
+    width: 100%;
 }
 
 .widget .repositoryCatalog .row,
