@@ -55,6 +55,7 @@ const StyledGridRowHeader = styled(Grid.Row)`
         border-bottom: 1px solid #ebebeb;
         margin: 0 10px 3px 10px;
         padding: 10px 0;
+        min-height: 51px;
     }
 `;
 
@@ -81,8 +82,11 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const showUpdatedColumn = widget.configuration.fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'));
-    const showCreatedColumn = widget.configuration.fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
+    const { fieldsToShow } = widget.configuration;
+    const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
+    const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
+    const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
+    const showUpdated = fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'));
 
     const catalogItems = data.items.map(item => {
         /* eslint-disable camelcase */
@@ -112,17 +116,24 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid className="contentBlock">
                         <StyledGridRowHeader>
                             <ExternalBlueprintImage url={image_url} width={30} />
-                            <StyledHeader>{name}</StyledHeader>
+                            {showName && <StyledHeader>{name}</StyledHeader>}
                         </StyledGridRowHeader>
-                        <Grid.Row>
-                            <Grid.Column>
-                                <StyledText>{description}</StyledText>
-                            </Grid.Column>
-                        </Grid.Row>
+                        {showDescription && (
+                            <Grid.Row>
+                                <Grid.Column>
+                                    <StyledText>{description}</StyledText>
+                                </Grid.Column>
+                            </Grid.Row>
+                        )}
 
-                        {showCreatedColumn && (
+                        {showCreated && (
                             <Grid.Row className="noPadded">
-                                <Grid.Column style={{ marginBottom: '5px' }}>
+                                <Grid.Column
+                                    style={{
+                                        marginTop: !(showName && showDescription) ? '1rem' : 0,
+                                        marginBottom: '5px'
+                                    }}
+                                >
                                     <StyledText>
                                         <strong>{t('catalog.properties.created')}</strong> {created_at}
                                     </StyledText>
@@ -130,9 +141,13 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                             </Grid.Row>
                         )}
 
-                        {showUpdatedColumn && (
+                        {showUpdated && (
                             <Grid.Row className="noPadded">
-                                <Grid.Column>
+                                <Grid.Column
+                                    style={{
+                                        marginTop: !((showName && showDescription) || showCreated) ? '1rem' : 0
+                                    }}
+                                >
                                     <StyledText>
                                         <strong>{t('catalog.properties.updated')}</strong> {updated_at}
                                     </StyledText>
