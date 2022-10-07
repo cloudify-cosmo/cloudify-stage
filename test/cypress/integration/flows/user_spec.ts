@@ -16,7 +16,7 @@ describe('User flow', () => {
         });
     }
 
-    it('installs deployment from scratch', () => {
+    it.skip('installs deployment from scratch', () => {
         cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
