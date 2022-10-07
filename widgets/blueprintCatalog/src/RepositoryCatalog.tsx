@@ -11,20 +11,28 @@ const { DataSegment, Grid, Button, Header } = Stage.Basic;
 const t = Utils.getWidgetTranslation('blueprintCatalog');
 
 const StyledDataSegment = styled(DataSegment.Item)`
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-direction: column;
-    transition: box-shadow 0.1s ease-in-out;
-    border-color: #ebebeb;
-    border-radius: 5px;
-    background-color: #fff !important;
-    color: inherit;
-    height: 100%;
-    &:hover {
-        border: 1px solid #65adff;
-        box-shadow: 0 2px 4px 0 rgba(95, 89, 89, 0.38) !important;
-        background-color: #fff;
+    && {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        transition: box-shadow 0.1s ease-in-out;
+        border-color: #ebebeb;
+        border-radius: 5px;
+        background-color: #fff !important;
+        color: inherit;
+        height: 100%;
+        &:hover {
+            border: 1px solid #65adff;
+            box-shadow: 0 2px 4px 0 rgba(95, 89, 89, 0.38) !important;
+            background-color: #fff;
+        }
+    }
+`;
+
+const StyledColumn = styled(Grid.Column)`
+    &&&& {
+        padding: 0;
     }
 `;
 
@@ -54,7 +62,6 @@ const StyledGridRowHeader = styled(Grid.Row)`
         align-items: center;
         flex-wrap: nowrap;
         border-bottom: 1px solid #ebebeb;
-        margin: 0 10px 3px 10px;
         padding: 10px 0;
         min-height: 51px;
     }
@@ -114,22 +121,22 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         onSelect(item);
                     }}
                 >
-                    <Grid className="contentBlock">
+                    <Grid container className="contentBlock">
                         <StyledGridRowHeader>
                             <ExternalBlueprintImage url={image_url} width={30} />
                             {showName && <StyledHeader>{name}</StyledHeader>}
                         </StyledGridRowHeader>
                         {showDescription && (
                             <Grid.Row>
-                                <Grid.Column>
+                                <StyledColumn>
                                     <StyledText>{description}</StyledText>
-                                </Grid.Column>
+                                </StyledColumn>
                             </Grid.Row>
                         )}
 
                         {showCreated && (
                             <Grid.Row className="noPadded">
-                                <Grid.Column
+                                <StyledColumn
                                     style={{
                                         marginTop: !(showName && showDescription) ? '1rem' : 0,
                                         marginBottom: '5px'
@@ -138,13 +145,13 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     <StyledText>
                                         <strong>{t('catalog.properties.created')}</strong> {created_at}
                                     </StyledText>
-                                </Grid.Column>
+                                </StyledColumn>
                             </Grid.Row>
                         )}
 
                         {showUpdated && (
                             <Grid.Row className="noPadded">
-                                <Grid.Column
+                                <StyledColumn
                                     style={{
                                         marginTop: !((showName && showDescription) || showCreated) ? '1rem' : 0
                                     }}
@@ -152,7 +159,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     <StyledText>
                                         <strong>{t('catalog.properties.updated')}</strong> {updated_at}
                                     </StyledText>
-                                </Grid.Column>
+                                </StyledColumn>
                             </Grid.Row>
                         )}
                     </Grid>
