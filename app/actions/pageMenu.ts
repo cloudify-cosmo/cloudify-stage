@@ -14,11 +14,10 @@ import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
 import { clearContext } from './context';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
-import Consts from '../utils/consts';
 import Internal from '../utils/Internal';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import { popDrilldownContext } from './drilldownContext';
-import type { GetSelectTemplateQueryParams, GetSelectTemplateResponse } from '../../backend/routes/Templates.types';
+import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
 
 export enum InsertPosition {
     Before,
@@ -223,60 +222,55 @@ export function removePageWithChildren(page: PageDefinition): ThunkAction<void, 
 export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { manager } = getState();
-        const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         const internal = new Internal(manager);
-        return internal
-            .doGet<GetSelectTemplateResponse, GetSelectTemplateQueryParams>('/templates/select', {
-                params: { tenant }
-            })
-            .then(templateId => {
-                log.debug('Selected template id', templateId);
+        return internal.doGet<GetInitialTemplateIdResponse>('/templates/initial').then(templateId => {
+            log.debug('Selected template id', templateId);
 
-                const storeTemplates = getState().templates;
-                const { pages } = storeTemplates.templatesDef[templateId];
+            const storeTemplates = getState().templates;
+            const { pages } = storeTemplates.templatesDef[templateId];
 
-                log.debug('Create pages from selected template', pages);
+            log.debug('Create pages from selected template', pages);
 
-                if (_.isEmpty(pages)) {
-                    return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
+            if (_.isEmpty(pages)) {
+                return Promise.reject(NO_PAGES_FOR_TENANT_ERR);
+            }
+
+            _.each(pages, pageMenuItem => {
+                function createPageAndLayout(pageId: string) {
+                    const page = storeTemplates.pagesDef[pageId];
+                    if (!page) {
+                        log.error(`Cannot find page template: ${pageId}. Skipping... `);
+                        return null;
+                    }
+
+                    const pageInstanceId = createId(page.name, getState().pages);
+                    dispatch(createPage(page, pageInstanceId));
+                    dispatch(addLayoutToPage(page, pageInstanceId));
+
+                    return pageInstanceId;
                 }
 
-                _.each(pages, pageMenuItem => {
-                    function createPageAndLayout(pageId: string) {
-                        const page = storeTemplates.pagesDef[pageId];
-                        if (!page) {
-                            log.error(`Cannot find page template: ${pageId}. Skipping... `);
-                            return null;
-                        }
-
-                        const pageInstanceId = createId(page.name, getState().pages);
-                        dispatch(createPage(page, pageInstanceId));
-                        dispatch(addLayoutToPage(page, pageInstanceId));
-
-                        return pageInstanceId;
+                if (pageMenuItem.type === 'page') {
+                    createPageAndLayout(pageMenuItem.id);
+                } else {
+                    const pageGroup = storeTemplates.pageGroupsDef[pageMenuItem.id as string];
+                    if (!pageGroup) {
+                        log.error(`Cannot find page group: ${pageMenuItem.id}. Skipping... `);
+                        return;
                     }
 
-                    if (pageMenuItem.type === 'page') {
-                        createPageAndLayout(pageMenuItem.id);
-                    } else {
-                        const pageGroup = storeTemplates.pageGroupsDef[pageMenuItem.id as string];
-                        if (!pageGroup) {
-                            log.error(`Cannot find page group: ${pageMenuItem.id}. Skipping... `);
-                            return;
-                        }
+                    dispatch(createPageGroup(pageGroup, pageMenuItem.id));
 
-                        dispatch(createPageGroup(pageGroup, pageMenuItem.id));
-
-                        _.each(pageGroup.pages, pageId => {
-                            const pageInstanceId = createPageAndLayout(pageId);
-                            if (pageInstanceId) dispatch(addPageToGroup(pageMenuItem.id, pageInstanceId));
-                        });
-                    }
-                });
-
-                return Promise.resolve();
+                    _.each(pageGroup.pages, pageId => {
+                        const pageInstanceId = createPageAndLayout(pageId);
+                        if (pageInstanceId) dispatch(addPageToGroup(pageMenuItem.id, pageInstanceId));
+                    });
+                }
             });
+
+            return Promise.resolve();
+        });
     };
 }
 

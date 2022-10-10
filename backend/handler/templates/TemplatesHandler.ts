@@ -215,7 +215,7 @@ export function updateTemplate(username: string, templateUpdate: UpdateTemplateD
         .then(() => fs.writeJson(path, content, { spaces: '  ' }));
 }
 
-export async function selectTemplate(
+export async function getInitialTemplateId(
     userSystemRole: string,
     groupSystemRoles: Record<string, any>,
     tenantsRoles: TenantsRoles,

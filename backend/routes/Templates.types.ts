@@ -16,11 +16,7 @@ export type PostTemplatesRequestBody = CreateTemplateData;
 
 export type PutTemplatesRequestBody = UpdateTemplateData;
 
-export type GetSelectTemplateResponse = string;
-
-export interface GetSelectTemplateQueryParams {
-    tenant: string;
-}
+export type GetInitialTemplateIdResponse = string;
 
 export type GetPageGroupsResponse = PageGroup[];
 
