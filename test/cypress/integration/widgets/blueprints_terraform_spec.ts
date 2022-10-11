@@ -258,6 +258,8 @@ describe('Blueprints widget should open upload from Terraform module modal and',
                 expect(response.body.value).to.equal(secret.value);
             });
         });
+
+        cy.contains('.modal', 'Deploy blueprint');
     });
 
     it('handle template URL 401', () => {
@@ -367,6 +369,8 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         cy.getSecret(`${blueprintName}.password`).then(response => {
             expect(response.body.value).to.equal(password);
         });
+
+        cy.contains('.modal', 'Deploy blueprint');
     });
 
     describe('create installable blueprint on submit from', () => {
