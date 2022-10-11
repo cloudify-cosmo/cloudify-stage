@@ -1,8 +1,8 @@
 {
-    "$H": 12,
+    "$H": 13,
     "children": [
         {
-            "$H": 276,
+            "$H": 277,
             "children": [],
             "edges": [],
             "height": 50,
@@ -29,7 +29,7 @@
             "y": 12
         },
         {
-            "$H": 280,
+            "$H": 281,
             "children": [],
             "edges": [],
             "height": 50,
@@ -58,11 +58,14 @@
     ],
     "edges": [
         {
+            "container": "tasksGraph",
             "id": "615c9095-8a76-455f-99a1-fc1936658998_55c9a5f6-48c3-45fb-b238-026bcbf3812a",
             "sections": [
                 {
                     "endPoint": { "x": 332, "y": 37 },
                     "id": "615c9095-8a76-455f-99a1-fc1936658998_55c9a5f6-48c3-45fb-b238-026bcbf3812a_s0",
+                    "incomingShape": "615c9095-8a76-455f-99a1-fc1936658998",
+                    "outgoingShape": "55c9a5f6-48c3-45fb-b238-026bcbf3812a",
                     "startPoint": { "x": 282, "y": 37 }
                 }
             ],
