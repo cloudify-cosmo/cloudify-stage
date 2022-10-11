@@ -1,5 +1,6 @@
 import type { FilterRule } from '../../common/src/filters/types';
 import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { Visibility } from '../../common/src/types';
 
 export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration, DataTableConfiguration {
     clickToDrillDown: boolean;
@@ -19,7 +20,7 @@ interface Blueprint {
     id: string;
     main_file_name: string;
     updated_at: string;
-    visibility: string;
+    visibility: Visibility;
     state: string;
     error: string | null;
     /* eslint-enable camelcase */

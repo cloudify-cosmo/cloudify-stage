@@ -100,7 +100,10 @@ const Pages: FunctionComponent<PagesProps> = ({
                                                     'Are you sure to remove this page?'
                                                 )}
                                                 onConfirm={() => onDeletePage(item)}
-                                                onCanConfirm={() => onCanDeletePage(item)}
+                                                onCanConfirm={() => {
+                                                    onCanDeletePage(item);
+                                                    return '';
+                                                }}
                                                 onCancel={undefined}
                                                 defaultOpen={false}
                                             />

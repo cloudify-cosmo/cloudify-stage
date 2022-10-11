@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import Consts from '../Consts';
+import type { Visibility } from '../types';
 import BlueprintActions, { InProgressBlueprintStates } from './BlueprintActions';
 import UploadBlueprintForm from './UploadBlueprintForm';
 
@@ -31,7 +32,7 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [visibility, setVisibility, clearVisibility] = useResettableState(Consts.defaultVisibility);
+    const [visibility, setVisibility, clearVisibility] = useResettableState<Visibility>(Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
         blueprintUrl: '',
         blueprintFile: null,
