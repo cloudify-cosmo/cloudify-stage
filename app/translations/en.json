@@ -87,7 +87,9 @@
         },
         "secrets": {
             "invalidEmail": "Please enter a valid email address",
-            "invalidPort": "Please enter a valid port number"
+            "invalidPort": "Please enter a valid port number",
+            "secretsAlreadyExists": "Secrets already exists",
+            "overrideSecrets": "Override secrets"
         },
         "summary": {
             "taskListTitle": "Task List",

@@ -6,6 +6,9 @@ import { useInputs } from '../../../utils/hooks';
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 import type { Errors } from '../GettingStartedModal';
 import useFetchSecrets from '../secrets/useFetchSecrets';
+import StageUtils from '../../../utils/stageUtils';
+
+const t = StageUtils.getT('gettingStartedModal.secrets');
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
@@ -45,11 +48,11 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
             {isSecretsExist && (
                 <Message warning>
                     <Message.Content>
-                        <Message.Header>Secrets already exists</Message.Header>
+                        <Message.Header>{t('secretsAlreadyExists')}</Message.Header>
                         <Checkbox
                             label="Override secrets"
                             style={{ marginTop: 15 }}
-                            checked={overrideSecrets}
+                            checked={t('overrideSecrets')}
                             onChange={() => setOverrideSecrets(!overrideSecrets)}
                         />
                     </Message.Content>
