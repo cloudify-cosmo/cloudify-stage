@@ -456,6 +456,11 @@ describe('Getting started modal', () => {
                 goToFinishStep();
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
                 cy.wait('@createSecret').its('response.statusCode').should('eq', 200);
+                cy.cfyRequest('/secrets')
+                    .its('body.items')
+                    .then(items => items.find((item: { key: string }) => item.key === 'vsphere_allow_insecure'))
+                    .its('key')
+                    .should('equal', 'vsphere_allow_insecure');
             });
         });
     });
