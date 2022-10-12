@@ -444,7 +444,7 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should create a boolean secret', () => {
+        it.only('should create a boolean secret', () => {
             cy.deletePlugins().deleteSecrets('vsphere_allow_insecure');
             cy.get('.modal').within(() => {
                 goToNextStep();
@@ -454,6 +454,10 @@ describe('Getting started modal', () => {
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret will be created');
                 goToFinishStep();
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
+            });
+            cy.activate().usePageMock('secrets').mockLogin();
+            cy.get('.secretsWidget').within(() => {
+                cy.contains('vsphere_allow_insecure').should('exist');
             });
         });
     });
