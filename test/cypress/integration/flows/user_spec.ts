@@ -80,8 +80,6 @@ describe('User flow', () => {
 
         cy.contains('Uploading');
 
-        cy.get('.modal').contains('Deploy blueprint', {
-            timeout: minutesToMs(1)
-        });
+        cy.contains('.modal', 'Deploy blueprint', { timeout: minutesToMs(1) });
     });
 });
