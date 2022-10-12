@@ -1,5 +1,5 @@
 {
-    "extends": "./node_modules/cloudify-ui-common/configs/tsconfig.base.json",
+    "extends": "./node_modules/cloudify-ui-common-configs/tsconfig.base.json",
     "compilerOptions": {
         "lib": ["es2021"],
         "module": "commonjs",

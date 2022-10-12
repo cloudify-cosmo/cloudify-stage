@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
 import type { WaitUntilOptions } from './resource_commons';
 
 declare global {

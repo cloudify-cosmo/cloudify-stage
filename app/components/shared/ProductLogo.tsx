@@ -1,7 +1,7 @@
 import type { CSSProperties, FunctionComponent } from 'react';
 import React, { useContext, useMemo } from 'react';
-import builtInLogoLightBackground from 'cloudify-ui-common/images/logo_color.png';
-import builtInLogoDarkBackground from 'cloudify-ui-common/images/logo_color_dark_background.svg';
+import builtInLogoLightBackground from 'cloudify-ui-common-frontend/images/logo_color.png';
+import builtInLogoDarkBackground from 'cloudify-ui-common-frontend/images/logo_color_dark_background.svg';
 import { ThemeContext } from 'styled-components';
 import { Logo } from '../basic';
 

@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import colors from 'cloudify-ui-common/styles/_colors.scss';
+import colors from 'cloudify-ui-common-frontend/styles/_colors.scss';
 import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without, wrap } from 'lodash';

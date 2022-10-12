@@ -1,5 +1,5 @@
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
 import type { FilterRule } from 'widgets/common/src/filters/types';
 
 declare global {

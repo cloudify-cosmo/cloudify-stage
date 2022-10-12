@@ -283,7 +283,7 @@ module.exports = (env, argv) => {
                     new CopyWebpackPlugin({
                         patterns: [
                             {
-                                from: 'node_modules/cloudify-ui-common/images/favicon.png',
+                                from: 'node_modules/cloudify-ui-common-frontend/images/favicon.png',
                                 to: 'static/images'
                             },
                             {
