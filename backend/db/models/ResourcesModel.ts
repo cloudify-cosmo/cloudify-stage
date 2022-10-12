@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
 import type { Model, Optional } from 'sequelize';
-import type { ModelFactory } from 'cloudify-ui-common/backend/db';
+import type { ModelFactory } from 'cloudify-ui-common-backend';
 
 import type { ResourceType } from '../types/ResourceTypes';
 import ResourceTypes from '../types/ResourceTypes';

@@ -86,7 +86,8 @@
             "blueprintsMetadataLoadingError": "Blueprints information loading error"
         },
         "secrets": {
-            "invalidEmail": "Please enter a valid email address"
+            "invalidEmail": "Please enter a valid email address",
+            "invalidPort": "Please enter a valid port number"
         },
         "summary": {
             "taskListTitle": "Task List",
@@ -937,10 +938,14 @@
                 }
             }
         },
+        "blueprintSources": {
+            "binaryFile": "File cannot be displayed."
+        },
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
             "description": "Shows blueprints catalog",
             "actions": {
+                "openBlueprintRepository": "Open blueprint repository",
                 "openDocumentation": "Open documentation",
                 "uploadBlueprint": "Upload blueprint"
             },
@@ -990,8 +995,8 @@
             "noDataMessage": "There are no Blueprints available in catalog. Check widget's configuration.",
             "catalog": {
                 "properties": {
-                    "created": "Created",
-                    "updated": "Updated"
+                    "created": "Created:",
+                    "updated": "Updated:"
                 }
             }
         },

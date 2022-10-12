@@ -56,7 +56,7 @@ describe('Topology', () => {
             verifyTopology();
         });
 
-        it('deployment', () => {
+        it.skip('deployment', () => {
             const getTerraformDetailsButton = () => getNodeTopologyButton(0);
             const getTerraformNodeExpandButton = () => getNodeTopologyButton(1);
             cy.setDeploymentContext(deploymentId);

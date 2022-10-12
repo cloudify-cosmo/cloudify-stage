@@ -1,4 +1,4 @@
-import type { Logger } from 'cloudify-ui-common/backend/logger';
+import type { Logger } from 'cloudify-ui-common-backend';
 import type { Request, Response, NextFunction } from 'express';
 
 export default function checkIfFileUploaded(logger: Logger) {

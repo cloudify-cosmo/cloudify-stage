@@ -16,7 +16,7 @@ describe('User flow', () => {
         });
     }
 
-    it('installs deployment from scratch', () => {
+    it.skip('installs deployment from scratch', () => {
         cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
@@ -45,7 +45,7 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('input[name=blueprintUrl]')
                 .type(
-                    'https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.5-74/utilities-examples-cloudify_secrets.zip'
+                    'https://github.com/cloudify-community/blueprint-examples/releases/download/6.3.0-6/utilities-examples-cloudify_secrets.zip'
                 )
                 .blur();
             cy.get('input[name=blueprintName]').clear().type(resourceName);
@@ -80,8 +80,6 @@ describe('User flow', () => {
 
         cy.contains('Uploading');
 
-        cy.get('.modal').contains('Deploy blueprint', {
-            timeout: minutesToMs(1)
-        });
+        cy.contains('.modal', 'Deploy blueprint', { timeout: minutesToMs(1) });
     });
 });

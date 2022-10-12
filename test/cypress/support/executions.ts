@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
 import type { WaitUntilOptions } from './resource_commons';
 
 declare global {
@@ -42,21 +42,27 @@ const commands = {
 
     waitForExecutionToEnd: (
         workflowId: string,
-        options: { deploymentId?: string; deploymentDisplayName?: string } = {},
+        options: { deploymentId?: string; deploymentDisplayName?: string; expectedStatus?: string } = {},
         waitOptions?: WaitUntilOptions
     ) => {
-        const { deploymentId, deploymentDisplayName } = options;
+        const { deploymentId, deploymentDisplayName, expectedStatus = 'completed' } = options;
 
-        let deploymentExecutionsUrl = `executions?_include=id,workflow_id,ended_at&workflow_id=${workflowId}`;
+        let deploymentExecutionsUrl = `executions?_include=id,status_display,workflow_id,ended_at&workflow_id=${workflowId}`;
         if (deploymentId) deploymentExecutionsUrl += `&deployment_id=${deploymentId}`;
         if (deploymentDisplayName) deploymentExecutionsUrl += `&deployment_display_name=${deploymentDisplayName}`;
 
         cy.log(`Waiting for workflow ${workflowId} on deployment ${deploymentId} to be ended.`);
-        return cy.waitUntil(
+        cy.waitUntil(
             deploymentExecutionsUrl,
             response => _.find(response.body.items, item => item.ended_at),
             waitOptions
         );
+
+        cy.log(`Checking if workflow ${workflowId} on deployment ${deploymentId} has status ${expectedStatus}.`);
+        return cy.cfyRequest(`/${deploymentExecutionsUrl}`).then(response => {
+            const status = response.body.items[0].status_display;
+            expect(status).to.equal(expectedStatus);
+        });
     }
 };
 

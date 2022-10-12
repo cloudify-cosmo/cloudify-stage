@@ -8,14 +8,32 @@ import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
-const t = Utils.getWidgetTranslation('catalog.properties');
+const t = Utils.getWidgetTranslation('blueprintCatalog');
 
 const StyledDataSegment = styled(DataSegment.Item)`
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: column;
+    && {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        transition: box-shadow 0.1s ease-in-out;
+        border-color: #ebebeb;
+        border-radius: 5px;
+        background-color: #fff !important;
+        color: inherit;
+        height: 100%;
+        &:hover {
+            border: 1px solid #65adff;
+            box-shadow: 0 2px 4px 0 rgba(95, 89, 89, 0.38) !important;
+            background-color: #fff;
+        }
+    }
+`;
+
+const StyledColumn = styled(Grid.Column)`
+    &&&& {
+        padding: 0;
+    }
 `;
 
 const StyledGridColumnButtons = styled(Grid.Column)`
@@ -38,6 +56,30 @@ const StyledLinkButton = styled(Button)`
     }
 `;
 
+const StyledGridRowHeader = styled(Grid.Row)`
+    &&&& {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        border-bottom: 1px solid #ebebeb;
+        padding: 10px 0;
+        min-height: 51px;
+    }
+`;
+
+const StyledHeader = styled(Header)`
+    &&&& {
+        margin: 0 0 0 18px;
+        font-size: 16px;
+        line-height: normal;
+        display: inline;
+    }
+`;
+
+const StyledText = styled.p`
+    font-size: 12px;
+`;
+
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -48,6 +90,12 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
+    const { fieldsToShow } = widget.configuration;
+    const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
+    const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
+    const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
+    const showUpdated = fieldsToShow.includes(t('configuration.fieldsToShow.items.updated'));
+
     const catalogItems = data.items.map(item => {
         /* eslint-disable camelcase */
         const {
@@ -72,31 +120,48 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         event.stopPropagation();
                         onSelect(item);
                     }}
-                    className="fullHeight"
                 >
-                    <Grid className="contentBlock">
-                        <Grid.Row className="bottomDivider">
-                            <Grid.Column width="16">
-                                <ExternalBlueprintImage url={image_url} width={50} />
-                                <Header>{name}</Header>
-                            </Grid.Column>
-                        </Grid.Row>
+                    <Grid container className="contentBlock">
+                        <StyledGridRowHeader>
+                            <ExternalBlueprintImage url={image_url} width={30} />
+                            {showName && <StyledHeader>{name}</StyledHeader>}
+                        </StyledGridRowHeader>
+                        {showDescription && (
+                            <Grid.Row>
+                                <StyledColumn>
+                                    <StyledText>{description}</StyledText>
+                                </StyledColumn>
+                            </Grid.Row>
+                        )}
 
-                        <Grid.Column width="16">{description}</Grid.Column>
+                        {showCreated && (
+                            <Grid.Row className="noPadded">
+                                <StyledColumn
+                                    style={{
+                                        marginTop: !(showName && showDescription) ? '1rem' : 0,
+                                        marginBottom: '5px'
+                                    }}
+                                >
+                                    <StyledText>
+                                        <strong>{t('catalog.properties.created')}</strong> {created_at}
+                                    </StyledText>
+                                </StyledColumn>
+                            </Grid.Row>
+                        )}
 
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="4">
-                                <h5 className="ui icon header">{t('created')}</h5>
-                            </Grid.Column>
-                            <Grid.Column width="12">{created_at}</Grid.Column>
-                        </Grid.Row>
-
-                        <Grid.Row className="noPadded">
-                            <Grid.Column width="4">
-                                <h5 className="ui icon header">{t('updated')}</h5>
-                            </Grid.Column>
-                            <Grid.Column width="12">{updated_at}</Grid.Column>
-                        </Grid.Row>
+                        {showUpdated && (
+                            <Grid.Row className="noPadded">
+                                <StyledColumn
+                                    style={{
+                                        marginTop: !((showName && showDescription) || showCreated) ? '1rem' : 0
+                                    }}
+                                >
+                                    <StyledText>
+                                        <strong>{t('catalog.properties.updated')}</strong> {updated_at}
+                                    </StyledText>
+                                </StyledColumn>
+                            </Grid.Row>
+                        )}
                     </Grid>
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
@@ -105,6 +170,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                     circular
                                     icon="github"
                                     onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                                    title={t('actions.openBlueprintRepository')}
                                 />
 
                                 <Button
@@ -116,6 +182,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                         event.stopPropagation();
                                         onReadme(name, readme_url);
                                     }}
+                                    title={t('actions.openDocumentation')}
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
@@ -126,6 +193,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                         event.stopPropagation();
                                         onUpload(name, zip_url, image_url, main_blueprint);
                                     }}
+                                    title={t('actions.uploadBlueprint')}
                                 />
                             </Grid.Column>
                         </Grid.Row>

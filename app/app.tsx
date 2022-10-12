@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import './styles/style.scss';
-import 'cloudify-ui-common/styles/font-cloudify.css';
+import 'cloudify-ui-common-frontend/styles/font-cloudify.css';
 
 // Import semantic
 import 'semantic-ui-css-offline/semantic.min.css';

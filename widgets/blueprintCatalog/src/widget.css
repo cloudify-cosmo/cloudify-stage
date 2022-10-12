@@ -2,7 +2,12 @@
     width: 22px;
     height: 22px;
 }
-
 .repositoryCatalog .contentBlock {
-    margin-bottom: 1rem;
+    margin-bottom: 17px;
+    width: 100%;
+}
+
+.widget .repositoryCatalog .row,
+.ui.segment {
+    cursor: default !important;
 }

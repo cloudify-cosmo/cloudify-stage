@@ -98,13 +98,17 @@ export default class External {
             files,
             method,
             parseResponse = true,
-            compressFile
+            compressFile,
+            onFileUpload
         }: {
             params?: RequestQueryParams;
             files?: (Blob & { name: string }) | Record<string, any>;
             method?: string;
             parseResponse?: boolean;
             compressFile?: boolean;
+            onFileUpload?: (
+                file: File
+            ) => string | Blob | BufferSource | FormData | URLSearchParams | Document | null | undefined;
         }
     ) {
         const actualUrl = this.buildActualUrl(url, params);
@@ -165,8 +169,6 @@ export default class External {
                         const reader = new FileReader();
                         const zip = new JSZip();
 
-                        xhr.setRequestHeader('content-type', 'application/octet-stream');
-
                         reader.onload = event => {
                             const { name } = files;
                             const fileContent = event.target?.result as string | ArrayBuffer;
@@ -179,7 +181,9 @@ export default class External {
                                 }
                             }).then(
                                 function success(blob) {
-                                    xhr.send(new File([blob], `${name}.zip`));
+                                    const zippedFile = new File([blob], `${name}.zip`);
+                                    const dataToSend = onFileUpload ? onFileUpload(zippedFile) : zippedFile;
+                                    xhr.send(dataToSend);
                                 },
                                 function error(err) {
                                     const errorMessage = `Cannot compress file. Error: ${err}`;
@@ -197,7 +201,8 @@ export default class External {
 
                         reader.readAsText(files);
                     } else {
-                        xhr.send(files);
+                        const dataToSend = onFileUpload ? onFileUpload(files as File) : files;
+                        xhr.send(dataToSend);
                     }
                 } else {
                     const formData = new FormData();
@@ -238,6 +243,12 @@ export default class External {
                 if (_.isString(body)) {
                     options.body = body;
                     _.merge(options.headers, getContentType('text/plain'));
+                } else if (body instanceof FormData) {
+                    options.body = body;
+                    // NOTE: fetch library has an issue with sending data when multipart/form-data content-type is being set manually
+                    // By not setting content-type, for multipart data, the browser will automatically adjust it
+                    // https://stackoverflow.com/questions/39280438/fetch-missing-boundary-in-multipart-form-data-post
+                    options.headers = _.omit(options.headers, 'content-type') as RequestInit['headers'];
                 } else {
                     options.body = JSON.stringify(body);
                 }
@@ -260,6 +271,7 @@ export default class External {
                 }
                 if (parseResponse) {
                     const contentType = _.toLower(response.headers.get('content-type') ?? undefined);
+                    if (contentType.includes('application/octet-stream')) return null;
                     return response.status !== 204 && contentType.indexOf('application/json') >= 0
                         ? response.json()
                         : response.text();

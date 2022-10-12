@@ -1,6 +1,7 @@
 import express from 'express';
 import type { Response } from 'express';
-import { browseArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
+
+import { getArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
 import type {
     PutSourceListYamlQueryParams,
     PutSourceListYamlResponse,
@@ -17,9 +18,18 @@ router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/fi
     if (!path) {
         next('no file path passed [path]');
     } else {
-        const mimeType = getMimeType(req, timestamp, path) || 'text/plain';
-        browseArchiveFile(req, timestamp, path)
-            .then(content => res.contentType(mimeType).send(content))
+        const mimeType = getMimeType(req, timestamp, path);
+
+        getArchiveFile(req, timestamp, path)
+            .then(({ file, isBinaryFile }) => {
+                if (mimeType) {
+                    return res.contentType(mimeType).send(file);
+                }
+                if (isBinaryFile) {
+                    return res.contentType('application/octet-stream').send(file);
+                }
+                return res.contentType('text/plain').send(file);
+            })
             .catch(next);
     }
 });

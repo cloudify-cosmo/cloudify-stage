@@ -1,3 +1,3 @@
-import 'cloudify-ui-common/styles/font-JosefinSans-Bold.css';
+import 'cloudify-ui-common-frontend/styles/font-JosefinSans-Bold.css';
 
 export const productFont = 'JosefinSans-Bold';

@@ -39,6 +39,10 @@ export type Errors = {
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
 const isEmailValid = (email: string) => Consts.EMAIL_REGEX.test(email);
+const isPortValid = (port: string) => {
+    const portNum = Number(port);
+    return portNum >= 1 && portNum <= 65535;
+};
 
 const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
 const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
@@ -156,18 +160,25 @@ const GettingStartedModal = () => {
         clearErrors();
         return secrets
             .map(({ name, type }) => {
-                if (type === 'email') {
-                    const allData = secretsStepsData[key];
-                    const data = allData?.[name];
-                    if (data && !isEmailValid(data)) {
-                        setErrors({
-                            ...errors,
-                            [name]: {
-                                content: t('invalidEmail')
-                            }
-                        });
-                        return false;
-                    }
+                const allData = secretsStepsData[key];
+                const data = allData?.[name];
+                const setErrorsContent = (tKey: string) => {
+                    setErrors({
+                        ...errors,
+                        [name]: {
+                            content: t(tKey)
+                        }
+                    });
+                };
+
+                if (type === 'email' && data && !isEmailValid(data)) {
+                    setErrorsContent('invalidEmail');
+                    return false;
+                }
+
+                if (type === 'port' && data && !isPortValid(data)) {
+                    setErrorsContent('invalidPort');
+                    return false;
                 }
                 return true;
             })
