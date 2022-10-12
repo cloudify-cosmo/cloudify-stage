@@ -4,6 +4,7 @@ import os from 'os';
 import pathlib from 'path';
 import url from 'url';
 import mime from 'mime-types';
+import { isBinaryFileSync } from 'isbinaryfile';
 import type { Request } from 'express';
 
 // eslint-disable-next-line import/no-unresolved,node/no-missing-import
@@ -104,7 +105,7 @@ function checkPrefix(absCandidate: string, absPrefix: string) {
     return absCandidate.substring(0, absPrefix.length) === absPrefix;
 }
 
-export async function browseArchiveFile(req: Request, timestamp: string, path: string) {
+export async function getArchiveFile(req: Request, timestamp: string, path: string) {
     const { blueprintId } = req.params;
     const absolutePath = pathlib.resolve(browseSourcesDir, `${blueprintId}${timestamp}`, blueprintExtractDir, path);
 
@@ -117,11 +118,15 @@ export async function browseArchiveFile(req: Request, timestamp: string, path: s
         await browseArchiveTree(req, timestamp);
     }
 
-    const mimeType = getMimeType(req, timestamp, path);
-    if (!mimeType || mimeType.startsWith('text/')) {
-        return fs.readFile(absolutePath, 'utf-8');
-    }
-    return fs.readFile(absolutePath, '');
+    const data = await fs.readFile(absolutePath, 'utf-8');
+    const buf = Buffer.from(data, 'utf8');
+    const isBinaryFile = isBinaryFileSync(buf, buf.length);
+    const file = await fs.readFile(absolutePath, isBinaryFile ? '' : 'utf-8');
+    return { file, isBinaryFile };
+}
+
+export async function getArchiveFileContent(req: Request, timestamp: string, path: string) {
+    return getArchiveFile(req, timestamp, path).then(({ file }) => file);
 }
 
 export function getMimeType(req: Request, timestamp: string, path: string) {

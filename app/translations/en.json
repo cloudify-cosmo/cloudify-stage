@@ -938,6 +938,9 @@
                 }
             }
         },
+        "blueprintSources": {
+            "binaryFile": "File cannot be displayed."
+        },
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
             "description": "Shows blueprints catalog",
