@@ -7,8 +7,7 @@ import { getTokenFromCookies } from '../utils';
 import type {
     GetPageGroupsResponse,
     GetPagesResponse,
-    GetSelectTemplateQueryParams,
-    GetSelectTemplateResponse,
+    GetInitialTemplateIdResponse,
     GetTemplatesResponse,
     PostPageGroupsRequestBody,
     PostPagesRequestBody,
@@ -45,12 +44,12 @@ router.delete('/:templateId', (req, res, next) => {
         .catch(next);
 });
 
-router.get<never, GetSelectTemplateResponse, any, GetSelectTemplateQueryParams>('/select', (req, res, next) => {
-    TemplatesHandler.selectTemplate(
+router.get('/initial', (req, res: Response<GetInitialTemplateIdResponse>, next) => {
+    TemplatesHandler.getInitialTemplateId(
         req.user!.role,
         req.user!.group_system_roles,
         req.user!.tenants,
-        req.query.tenant,
+        req.headers.tenant as string,
         getTokenFromCookies(req)
     )
         .then(template => res.send(template))

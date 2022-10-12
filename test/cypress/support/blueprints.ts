@@ -1,7 +1,7 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
-import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
 import type { Visibility } from '../../../widgets/common/src/types';
+import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
 import type { BlueprintUploadParameters } from '../../../widgets/common/src/blueprints/BlueprintActions';
 
 declare global {
