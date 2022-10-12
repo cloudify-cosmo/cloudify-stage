@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
+import type { Visibility } from '../../common/src/types';
 import MarketplaceModal from './MarketplaceModal';
 
 const t = Stage.Utils.getT('widgets.plugins');
@@ -17,7 +18,7 @@ interface PluginItem {
     package_version: string;
     supported_platform: string;
     uploaded_at: string;
-    visibility: string;
+    visibility: Visibility;
     /* eslint-enable camelcase */
 }
 

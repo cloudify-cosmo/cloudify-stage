@@ -42,7 +42,7 @@
         "decompress": "^4.2.1",
         "directory-tree": "^3.2.2",
         "ejs": "^3.1.7",
-        "elkjs": "^0.4.1",
+        "elkjs": "^0.8.2",
         "express": "^4.14.0",
         "express-static-gzip": "^2.1.7",
         "flat": "^4.1.1",
