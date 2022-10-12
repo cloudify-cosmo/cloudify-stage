@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
 import _ from 'lodash';
-import { types } from 'cloudify-ui-common';
+import { types } from 'cloudify-ui-common-frontend';
 
 export default class JsonUtils {
     static stringify(value, indented = false, ignoreEmpty = false) {

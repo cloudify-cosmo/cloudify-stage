@@ -11,7 +11,7 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-import performCommonSetup from 'cloudify-ui-common/cypress/plugins';
+import performCommonSetup from 'cloudify-ui-common-cypress/plugins';
 // @ts-ignore Webpack config not in TS
 import getWebpackConfig from '../../../webpack.config';
 

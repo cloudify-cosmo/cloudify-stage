@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import { icons } from 'cloudify-ui-common';
+import { icons } from 'cloudify-ui-common-frontend';
 import NodeInstancesTable from './NodeInstancesTable';
 import NodeInstancePropType from './props/NodeInstancePropType';
 
