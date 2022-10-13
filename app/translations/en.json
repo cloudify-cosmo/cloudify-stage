@@ -88,7 +88,7 @@
         "secrets": {
             "invalidEmail": "Please enter a valid email address",
             "invalidPort": "Please enter a valid port number",
-            "secretsAlreadyExists": "Secrets already exists",
+            "secretsAlreadyExist": "Secrets already exist",
             "overrideSecrets": "Override secrets"
         },
         "summary": {

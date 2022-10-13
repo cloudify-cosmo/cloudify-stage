@@ -13,7 +13,7 @@ const SecretsAlreadyExist = ({ overrideSecrets, setOverrideSecrets }: SecretsAlr
     return (
         <Message warning>
             <Message.Content>
-                <Message.Header>{t('secretsAlreadyExists')}</Message.Header>
+                <Message.Header>{t('secretsAlreadyExist')}</Message.Header>
                 <Checkbox
                     label={t('overrideSecrets')}
                     style={{ marginTop: 15 }}
