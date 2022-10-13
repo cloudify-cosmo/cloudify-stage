@@ -1,5 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
 export {};
+
+type TextWidgetConfiguration = {
+    header: string;
+    content: string;
+    headerTextFont: string;
+    headerTextColor: string;
+    headerTextSize: number;
+    contentTextFont: string;
+    contentTextColor: string;
+    contentTextSize: number;
+};
+
+type TextWidget = {
+    configuration: TextWidgetConfiguration;
+};
 
 const textFonts = [
     { name: 'Sans Serif', value: 'sans-serif' }, // used as default
@@ -74,7 +88,7 @@ Stage.defineWidget({
         }
     ],
 
-    render(widget) {
+    render(widget: TextWidget) {
         const header = widget.configuration.header ? widget.configuration.header : '';
         const content = widget.configuration.content ? Stage.Utils.parseMarkdown(widget.configuration.content) : '';
 

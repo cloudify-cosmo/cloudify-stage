@@ -92,7 +92,7 @@ interface StageCustomConfigurationComponentProps<T> {
         event: SyntheticEvent<HTMLElement, Event> | undefined,
         field: {
             name?: string;
-            value: T;
+            value?: T;
             checked?: boolean;
         }
     ) => void;
