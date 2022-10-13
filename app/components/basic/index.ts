@@ -42,7 +42,6 @@ import {
     VisibilityField,
     VisibilityIcon
 } from 'cloudify-ui-components';
-import type { InferProps } from 'prop-types';
 import type { ComponentType } from 'react';
 
 import { CircleMarker, FeatureGroup, Map, Marker, Popup as LeafletPopup, TileLayer, Tooltip } from 'react-leaflet';
