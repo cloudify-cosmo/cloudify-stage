@@ -455,8 +455,9 @@ describe('Getting started modal', () => {
                 cy.interceptSp('PUT', '/secrets/vsphere_allow_insecure').as('createSecret');
                 goToFinishStep();
                 cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
-                cy.wait('@createSecret').its('response.statusCode').should('eq', 200);
-                cy.cfyRequest('/secrets/vsphere_allow_insecure').its('body.value').should('equal', 'true');
+                cy.wait('@createSecret').then(({ request }) => {
+                    expect(request.body.value).to.equal('true');
+                });
             });
         });
     });
