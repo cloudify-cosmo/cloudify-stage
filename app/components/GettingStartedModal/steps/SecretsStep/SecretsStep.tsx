@@ -1,14 +1,12 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 
-import { Checkbox, Form, Message } from '../../basic';
-import { useInputs } from '../../../utils/hooks';
+import { Form } from '../../../basic';
+import { useInputs } from '../../../../utils/hooks';
 
-import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
-import type { Errors } from '../GettingStartedModal';
-import useFetchSecrets from '../secrets/useFetchSecrets';
-import StageUtils from '../../../utils/stageUtils';
-
-const t = StageUtils.getT('gettingStartedModal.secrets');
+import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
+import type { Errors } from '../../GettingStartedModal';
+import useFetchSecrets from '../../secrets/useFetchSecrets';
+import SecretsAlreadyExist from './SecretsAlreadyExist';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
@@ -45,19 +43,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
 
     return (
         <>
-            {isSecretsExist && (
-                <Message warning>
-                    <Message.Content>
-                        <Message.Header>{t('secretsAlreadyExists')}</Message.Header>
-                        <Checkbox
-                            label="Override secrets"
-                            style={{ marginTop: 15 }}
-                            checked={t('overrideSecrets')}
-                            onChange={() => setOverrideSecrets(!overrideSecrets)}
-                        />
-                    </Message.Content>
-                </Message>
-            )}
+            {isSecretsExist && <SecretsAlreadyExist {...{ overrideSecrets, setOverrideSecrets }} />}
             <Form>
                 {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                     const handleBlur = () => {
