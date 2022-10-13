@@ -45,6 +45,20 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                     const handleBlur = () => {
                         onChange(secretInputs);
                     };
+                    if (type === 'boolean') {
+                        return (
+                            <Form.Field key={name} label={label} help={description}>
+                                <Form.Checkbox
+                                    toggle
+                                    label={label}
+                                    name={name}
+                                    checked={Boolean(secretInputs[name])}
+                                    onChange={setSecretInputs}
+                                    onBlur={handleBlur}
+                                />
+                            </Form.Field>
+                        );
+                    }
                     return (
                         <Form.Field key={name} label={label} help={description}>
                             <Form.Input
