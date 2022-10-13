@@ -4,10 +4,15 @@ import StageUtils from '../../../utils/stageUtils';
 import LogoLabel from '../../banner/LogoLabel';
 import LargeLogo from '../../banner/LargeLogo';
 import renderMultilineText from '../../../utils/shared/renderMultilineText';
+import type { GettingStartedSchema } from '../model';
 
 const t = StageUtils.getT('gettingStartedModal');
 
-const WelcomeStep = () => {
+type Props = {
+    schema: GettingStartedSchema;
+};
+
+const WelcomeStep = ({ schema }: Props) => {
     const theme = useContext(ThemeContext);
 
     return (
@@ -25,7 +30,7 @@ const WelcomeStep = () => {
                     font: 'inherit'
                 }}
             >
-                {renderMultilineText(t('welcomeText'))}
+                {renderMultilineText(schema.welcomeText)}
             </div>
         </div>
     );

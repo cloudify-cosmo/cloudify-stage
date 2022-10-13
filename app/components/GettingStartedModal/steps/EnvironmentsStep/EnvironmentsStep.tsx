@@ -13,7 +13,7 @@ type Props = {
 const EnvironmentsStep = ({ schema, onChange }: Props) => {
     return (
         <Form>
-            {schema.map(({ name, logo, label }) => {
+            {schema.content.map(({ name, logo, label }) => {
                 const handleClick = () => {
                     const newLocalSelectedEnvironment = { [name]: true };
                     onChange?.(newLocalSelectedEnvironment);
