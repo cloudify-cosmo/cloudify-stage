@@ -444,7 +444,7 @@ describe('Getting started modal', () => {
             });
         });
 
-        it.only('should create a boolean secret', () => {
+        it('should create a boolean secret', () => {
             cy.deletePlugins().deleteSecrets('vsphere_allow_insecure');
             cy.get('.modal').within(() => {
                 goToNextStep();
