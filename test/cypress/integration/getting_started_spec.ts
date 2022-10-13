@@ -444,11 +444,13 @@ describe('Getting started modal', () => {
             });
         });
 
-        it.only('should disable editing and show message on existing screts with a checkbox override secrets', () => {
+        it('should disable editing and show message on existing screts with a checkbox override secrets', () => {
             cy.get('.modal').within(() => {
+                cy.deleteSecrets('aws');
+                cy.createSecret('aws_access_key_id', 'aaa');
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
-                cy.contains('.message', 'Secrets already exists').should('exist');
+                cy.contains('.message', 'Secrets already exist').should('exist');
                 cy.contains('.field', 'AWS Access Key ID').get('input').should('be.disabled');
                 cy.contains('.checkbox', 'Override secrets').click();
                 cy.contains('.field', 'AWS Access Key ID').get('input').should('be.enabled');
