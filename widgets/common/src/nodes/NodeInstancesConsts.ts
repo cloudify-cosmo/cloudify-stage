@@ -8,7 +8,7 @@ const groupNames = {
     deleted: 'deleted'
 };
 
-export const groupStates: (GroupState & { states: string[] })[] = [
+export const groupStates: (GroupState & { states: string[]; colorHTML: string })[] = [
     {
         name: groupNames.uninitialized,
         icon: 'cancel',

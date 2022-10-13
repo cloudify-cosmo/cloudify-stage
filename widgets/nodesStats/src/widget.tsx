@@ -1,5 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
 export {};
+
+type Item = {
+    // eslint-disable-next-line camelcase
+    node_instances: number;
+    state: string;
+};
+
+type NodeStatsData =
+    | {
+          items?: Item[];
+          metadata: any;
+      }
+    | Record<string, never>
+    | undefined;
 
 Stage.defineWidget({
     id: 'nodesStats',
@@ -16,13 +29,13 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=state[params:deployment_id]',
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId')
         };
     },
 
-    render(widget, data) {
+    render(_widget, data: NodeStatsData) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
@@ -33,8 +46,8 @@ Stage.defineWidget({
         const { NodeInstancesConsts } = Stage.Common;
 
         const states = _.reduce(
-            data.items,
-            (result, item) => {
+            data?.items,
+            (result: Record<string, number>, item) => {
                 result[item.state] = item.node_instances;
                 return result;
             },
