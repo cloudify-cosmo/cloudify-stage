@@ -2,10 +2,10 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 
 import { Form } from '../../../basic';
 import { useInputs } from '../../../../utils/hooks';
-import useFetchSecrets from '../../secrets/useFetchSecrets';
 import SecretsAlreadyExist from './SecretsAlreadyExist';
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
 import type { Errors } from '../../GettingStartedModal';
+import useCheckSecretsExist from './useCheckSecretsExist';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
@@ -30,10 +30,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
     const [overrideSecrets, setOverrideSecrets] = useState(false);
 
-    const allExistingSecrets = useFetchSecrets();
-    const allExistingSecretsKeys = allExistingSecrets.response?.map((secret: { key: string }) => secret.key);
-    const defaultSecretInputsKeys = Object.keys(defaultSecretInputs);
-    const isSecretsExist = allExistingSecretsKeys?.some(secret => defaultSecretInputsKeys.includes(secret));
+    const { isSecretsExist, existingSecrets } = useCheckSecretsExist(defaultSecretInputs);
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
@@ -57,7 +54,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                                 value={secretInputs[name]}
                                 onChange={setSecretInputs}
                                 onBlur={handleBlur}
-                                disabled={!overrideSecrets && allExistingSecretsKeys?.includes(name)}
+                                disabled={!overrideSecrets && existingSecrets.includes(name)}
                             />
                         </Form.Field>
                     );
