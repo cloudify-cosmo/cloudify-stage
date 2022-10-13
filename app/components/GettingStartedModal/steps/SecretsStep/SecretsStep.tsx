@@ -2,11 +2,10 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 
 import { Form } from '../../../basic';
 import { useInputs } from '../../../../utils/hooks';
-
-import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
-import type { Errors } from '../../GettingStartedModal';
 import useFetchSecrets from '../../secrets/useFetchSecrets';
 import SecretsAlreadyExist from './SecretsAlreadyExist';
+import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
+import type { Errors } from '../../GettingStartedModal';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
