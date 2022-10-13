@@ -97,11 +97,6 @@ const Leaflet = {
 // TODO(RD-5712) Remove once Confirm component is fully migrated to TypeScript
 const ConfirmWithCorrectProps = Confirm as unknown as ComponentType<StrictConfirmProps>;
 
-// TODO(RD-5716) Remove once ErrorMessage component is fully migrated to TypeScript
-const ErrorMessageWithCorrectReturnType = ErrorMessage as unknown as ComponentType<
-    InferProps<typeof ErrorMessage['propTypes']>
->;
-
 type AnyProps = Record<string, any>;
 
 // TODO(RD-5720) Remove once DataInput component is fully migrated to TypeScript
@@ -145,7 +140,7 @@ export {
     Divider,
     Dropdown,
     EditableLabel,
-    ErrorMessageWithCorrectReturnType as ErrorMessage,
+    ErrorMessage,
     Form,
     FullScreenSegment,
     GenericField,
