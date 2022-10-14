@@ -22,7 +22,6 @@ const InviteModal: FunctionComponent<InviteModalProps> = ({ toolbox }) => {
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
     const [isOpen, openModal, closeModal] = useOpen(() => {
-        setLoading();
         clearInputs();
         clearErrors();
     });
@@ -42,11 +41,7 @@ const InviteModal: FunctionComponent<InviteModalProps> = ({ toolbox }) => {
 
         const authServiceActions = new AuthServiceActions(toolbox);
 
-        authServiceActions
-            .doInvite(inputs.email)
-            .then(closeModal)
-            .catch(setMessageAsError)
-            .finally(unsetLoading);
+        authServiceActions.doInvite(inputs.email).then(closeModal).catch(setMessageAsError).finally(unsetLoading);
     }
 
     const { ApproveButton, Button, CancelButton, Icon, Form, Modal } = Stage.Basic;
