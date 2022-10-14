@@ -452,12 +452,13 @@ describe('Getting started modal', () => {
             cy.get('.modal').within(() => {
                 cy.deleteSecrets('aws');
                 cy.createSecret('aws_access_key_id', 'aaa');
+                cy.createSecret('aws_secret_access_key', 'aaa');
                 goToNextStep();
                 cy.contains('button', 'AWS').click();
                 cy.contains('.message', 'Secrets already exist').should('exist');
-                cy.contains('.field', 'AWS Access Key ID').get('input').should('be.disabled');
+                cy.contains('.field', 'AWS Access Key ID').should('have.class', 'disabled');
                 cy.contains('.checkbox', 'Override secrets').click();
-                cy.contains('.field', 'AWS Access Key ID').get('input').should('be.enabled');
+                cy.contains('.field', 'AWS Access Key ID').should('not.have.class', 'disabled');
                 goToNextStep();
                 cy.contains('aws_access_key_id').parent().should('contain.text', 'secret will be skipped');
             });
