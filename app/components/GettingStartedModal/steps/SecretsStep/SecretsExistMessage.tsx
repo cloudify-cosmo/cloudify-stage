@@ -4,12 +4,12 @@ import StageUtils from '../../../../utils/stageUtils';
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
-type SecretsAlreadyExistProps = {
+type SecretsExistMessageProps = {
     overrideSecrets: boolean;
     setOverrideSecrets: (overrideSecrets: boolean) => void;
 };
 
-const SecretsAlreadyExist = ({ overrideSecrets, setOverrideSecrets }: SecretsAlreadyExistProps) => {
+const SecretsExistMessage = ({ overrideSecrets, setOverrideSecrets }: SecretsExistMessageProps) => {
     return (
         <Message warning>
             <Message.Content>
@@ -25,4 +25,4 @@ const SecretsAlreadyExist = ({ overrideSecrets, setOverrideSecrets }: SecretsAlr
     );
 };
 
-export default SecretsAlreadyExist;
+export default SecretsExistMessage;

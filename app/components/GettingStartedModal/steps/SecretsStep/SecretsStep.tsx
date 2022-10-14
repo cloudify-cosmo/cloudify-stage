@@ -2,7 +2,7 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 
 import { Form } from '../../../basic';
 import { useInputs } from '../../../../utils/hooks';
-import SecretsAlreadyExist from './SecretsAlreadyExist';
+import SecretsExistMessage from './SecretsExistMessage';
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
 import type { Errors } from '../../GettingStartedModal';
 import useCheckSecretsExist from './useCheckSecretsExist';
@@ -39,7 +39,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
 
     return (
         <>
-            {isSecretsExist && <SecretsAlreadyExist {...{ overrideSecrets, setOverrideSecrets }} />}
+            {isSecretsExist && <SecretsExistMessage {...{ overrideSecrets, setOverrideSecrets }} />}
             <Form>
                 {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                     const handleBlur = () => {
