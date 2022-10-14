@@ -45,9 +45,14 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                     const handleBlur = () => {
                         onChange(secretInputs);
                     };
-                    if (type === 'boolean') {
-                        return (
-                            <Form.Field key={name} label={label} help={description}>
+                    return (
+                        <Form.Field
+                            key={name}
+                            label={label}
+                            help={description}
+                            disabled={!overrideSecrets && existingSecrets.includes(name)}
+                        >
+                            {type === 'boolean' ? (
                                 <Form.Checkbox
                                     toggle
                                     label={label}
@@ -56,24 +61,16 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                                     onChange={setSecretInputs}
                                     onBlur={handleBlur}
                                 />
-                            </Form.Field>
-                        );
-                    }
-                    return (
-                        <Form.Field
-                            key={name}
-                            label={label}
-                            help={description}
-                            disabled={!overrideSecrets && existingSecrets.includes(name)}
-                        >
-                            <Form.Input
-                                type={type}
-                                name={name}
-                                error={errors[name]}
-                                value={secretInputs[name]}
-                                onChange={setSecretInputs}
-                                onBlur={handleBlur}
-                            />
+                            ) : (
+                                <Form.Input
+                                    type={type}
+                                    name={name}
+                                    error={errors[name]}
+                                    value={secretInputs[name]}
+                                    onChange={setSecretInputs}
+                                    onBlur={handleBlur}
+                                />
+                            )}
                         </Form.Field>
                     );
                 })}
