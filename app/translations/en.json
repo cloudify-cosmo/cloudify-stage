@@ -1516,10 +1516,6 @@
                     "email": {
                         "label": "E-mail",
                         "error": "Please provide valid e-mail"
-                    },
-                    "isAdmin": {
-                        "label": "Admin",
-                        "note": "Admin users have full permissions to all tenants on the manager."
                     }
                 }
             },

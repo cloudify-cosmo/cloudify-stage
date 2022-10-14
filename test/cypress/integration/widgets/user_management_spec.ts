@@ -121,7 +121,7 @@ describe('User management widget', () => {
         });
     });
 
-    describe.only('when authentication service is available', () => {
+    describe('when authentication service is available', () => {
         function verifyEmailFieldError() {
             cy.contains('Please provide valid e-mail');
             cy.get('.error.message').get('.close.icon').click();
