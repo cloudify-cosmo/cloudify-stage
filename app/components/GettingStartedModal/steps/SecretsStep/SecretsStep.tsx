@@ -30,7 +30,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
     const [overrideSecrets, setOverrideSecrets] = useState(false);
 
-    const isAllSecretsExist = useCheckSecretsExist(defaultSecretInputs);
+    const isAllSecretsExist = useCheckSecretsExist(Object.keys(defaultSecretInputs));
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
