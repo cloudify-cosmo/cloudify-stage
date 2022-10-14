@@ -6,15 +6,12 @@ type Item = {
     state: string;
 };
 
-type NodeStatsData =
-    | {
-          items?: Item[];
-          metadata: any;
-      }
-    | Record<string, never>
-    | undefined;
+type NodeInstancesSummaryResponse = {
+    items?: Item[];
+    metadata: any;
+};
 
-Stage.defineWidget({
+Stage.defineWidget<unknown, NodeInstancesSummaryResponse, unknown>({
     id: 'nodesStats',
     name: 'Nodes statistics',
     description: 'This widget shows number of node instances in different states',
@@ -35,7 +32,7 @@ Stage.defineWidget({
         };
     },
 
-    render(_widget, data: NodeStatsData) {
+    render(_widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
