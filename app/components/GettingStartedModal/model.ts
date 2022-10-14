@@ -23,7 +23,7 @@ export type GettingStartedSchemaPlugin = {
     version?: RegExpString;
 };
 
-export type GettingStartedSchemaSecretType = 'text' | 'password' | 'email' | 'port';
+export type GettingStartedSchemaSecretType = 'text' | 'password' | 'email' | 'port' | 'boolean';
 
 export type GettingStartedSchemaSecret = {
     label: string;

@@ -443,5 +443,22 @@ describe('Getting started modal', () => {
                 cy.get('.error .label').should('not.exist');
             });
         });
+
+        it('should create a boolean secret', () => {
+            cy.deletePlugins().deleteSecrets('vsphere_allow_insecure');
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'vSphere').click();
+                cy.get('.toggle').contains('vSphere Allow Insecure').click();
+                goToNextStep();
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret will be created');
+                cy.interceptSp('PUT', '/secrets/vsphere_allow_insecure').as('createSecret');
+                goToFinishStep();
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
+                cy.wait('@createSecret').then(({ request }) => {
+                    expect(request.body.value).to.equal('true');
+                });
+            });
+        });
     });
 });
