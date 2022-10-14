@@ -60,7 +60,12 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                         );
                     }
                     return (
-                        <Form.Field key={name} label={label} help={description}>
+                        <Form.Field
+                            key={name}
+                            label={label}
+                            help={description}
+                            disabled={!overrideSecrets && existingSecrets.includes(name)}
+                        >
                             <Form.Input
                                 type={type}
                                 name={name}
@@ -68,7 +73,6 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                                 value={secretInputs[name]}
                                 onChange={setSecretInputs}
                                 onBlur={handleBlur}
-                                disabled={!overrideSecrets && existingSecrets.includes(name)}
                             />
                         </Form.Field>
                     );
