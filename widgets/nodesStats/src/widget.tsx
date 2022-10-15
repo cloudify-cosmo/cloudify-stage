@@ -1,5 +1,7 @@
 export {};
 
+const t = Stage.Utils.getT('widgets.nodesStats');
+
 type Item = {
     // eslint-disable-next-line camelcase
     node_instances: number;
@@ -13,8 +15,8 @@ type NodeInstancesSummaryResponse = {
 
 Stage.defineWidget<unknown, NodeInstancesSummaryResponse, unknown>({
     id: 'nodesStats',
-    name: 'Nodes statistics',
-    description: 'This widget shows number of node instances in different states',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 4,
     initialHeight: 22,
     color: 'green',

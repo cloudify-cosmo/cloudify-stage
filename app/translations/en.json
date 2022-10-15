@@ -1350,6 +1350,10 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "nodesStats": {
+            "name": "Nodes statistics",
+            "description": "This widget shows number of node instances in different states"
+        },
         "pluginsCatalog": {
             "name": "Plugins Catalog",
             "description": "Shows plugins catalog",
