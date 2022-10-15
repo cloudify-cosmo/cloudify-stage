@@ -290,7 +290,7 @@
           {
              "name": "vcloud_allow_insecure",
              "label": "vCloud Allow insecure",
-             "type": "text"
+             "type": "boolean"
           },
           {
              "name": "vcloud_vdc",
@@ -345,7 +345,7 @@
           {
              "name": "vsphere_allow_insecure",
              "label": "vSphere Allow Insecure",
-             "type": "text"
+             "type": "boolean"
           },
           {
              "name": "vsphere_datacenter_name",
