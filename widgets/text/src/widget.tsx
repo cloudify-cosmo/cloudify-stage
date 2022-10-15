@@ -1,6 +1,6 @@
 export {};
 
-type TextWidgetConfiguration = {
+type Configuration = {
     header: string;
     content: string;
     headerTextFont: string;
@@ -11,17 +11,13 @@ type TextWidgetConfiguration = {
     contentTextSize: number;
 };
 
-type TextWidget = {
-    configuration: TextWidgetConfiguration;
-};
-
 const textFonts = [
     { name: 'Sans Serif', value: 'sans-serif' }, // used as default
     { name: 'Serif', value: 'serif' },
     { name: 'Monospace', value: 'monospace' }
 ];
 
-Stage.defineWidget({
+Stage.defineWidget<unknown, unknown, Configuration>({
     id: 'text',
     name: 'Text box',
     description: 'Adds text box',
@@ -88,7 +84,7 @@ Stage.defineWidget({
         }
     ],
 
-    render(widget: TextWidget) {
+    render(widget) {
         const header = widget.configuration.header ? widget.configuration.header : '';
         const content = widget.configuration.content ? Stage.Utils.parseMarkdown(widget.configuration.content) : '';
 
