@@ -11,7 +11,7 @@ type SecretsExistMessageProps = {
 
 const SecretsExistMessage = ({ overrideSecrets, setOverrideSecrets }: SecretsExistMessageProps) => {
     return (
-        <Message info>
+        <Message warning>
             <Message.Content>
                 <Message.Header>{t('secretsAlreadyExist')}</Message.Header>
                 <Checkbox
