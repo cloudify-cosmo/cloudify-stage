@@ -49,7 +49,7 @@ export type GettingStartedSchemaItem = {
     blueprints: GettingStartedSchemaBlueprint[];
 };
 
-export type GettingStartedSchema = GettingStartedSchemaItem[];
+export type GettingStartedSchema = { welcomeText: string; content: GettingStartedSchemaItem[] };
 
 export type GettingStartedEnvironmentsData = Record<string, boolean | undefined>;
 export type GettingStartedSecretsData = Record<string, string | undefined>;
