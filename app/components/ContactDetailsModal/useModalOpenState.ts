@@ -4,6 +4,7 @@ import { useBoolean } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
 import consts from '../../utils/consts';
 import Internal from '../../utils/Internal';
+import useManager from '../../utils/hooks/useManager';
 import type { GetContactDetailsResponse } from '../../../backend/routes/ContactDetails.types';
 
 const useModalOpenState = () => {
@@ -12,7 +13,8 @@ const useModalOpenState = () => {
     const userIsUsingCommunity = useSelector(
         (state: ReduxState) => state.manager.version.edition === consts.EDITION.COMMUNITY
     );
-    const internal = new Internal();
+    const manager = useManager();
+    const internal = new Internal(manager);
 
     useEffect(() => {
         if (userIsUsingCommunity) {

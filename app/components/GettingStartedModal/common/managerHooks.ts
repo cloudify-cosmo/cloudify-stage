@@ -8,9 +8,9 @@ import useManager from '../../../utils/hooks/useManager';
 import type { ReduxState } from '../../../reducers';
 
 const getCurrentDistribution = (manager: Manager) => {
-    const currentDistributionName = manager.getDistributionName()?.trim();
-    const currentDistributionRelease = manager.getDistributionRelease()?.trim();
-    return `${currentDistributionName?.toLowerCase()} ${currentDistributionRelease?.toLowerCase()}`;
+    const currentDistributionName = manager.getDistributionName().trim();
+    const currentDistributionRelease = manager.getDistributionRelease().trim();
+    return `${currentDistributionName.toLowerCase()} ${currentDistributionRelease.toLowerCase()}`;
 };
 
 /**
