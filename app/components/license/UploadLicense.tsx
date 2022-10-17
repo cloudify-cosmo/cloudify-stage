@@ -41,7 +41,7 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
 }
 
 UploadLicense.propTypes = {
-    error: ErrorMessage.propTypes.error,
+    error: ErrorMessage.propTypes?.error,
     isLoading: PropTypes.bool.isRequired,
     license: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
