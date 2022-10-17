@@ -51,7 +51,7 @@ export default function BlueprintsTable({
                         {Blueprints.Actions.isUploaded(item) && (
                             <Blueprints.UploadedImage
                                 blueprintId={item.id}
-                                tenantName={manager.getSelectedTenant()}
+                                tenantName={manager.getSelectedTenant()!}
                                 width={30}
                             />
                         )}{' '}

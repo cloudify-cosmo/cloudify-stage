@@ -2,15 +2,21 @@ import _ from 'lodash';
 import External from './External';
 import Consts from './consts';
 import StageUtils from './stageUtils';
+import type { ManagerData } from '../reducers/managerReducer';
 
+export type InternalOptions = Partial<Pick<ManagerData, 'tenants'>>;
 export default class Internal extends External {
+    constructor(private internalOptions?: InternalOptions) {
+        super();
+    }
+
     buildHeaders() {
-        if (!this.managerData) {
+        if (!this.internalOptions) {
             return {};
         }
 
         const headers = {
-            tenant: _.get(this.managerData, 'tenants.selected', Consts.DEFAULT_TENANT)
+            tenant: _.get(this.internalOptions, 'tenants.selected', Consts.DEFAULT_TENANT)
         };
 
         return headers;

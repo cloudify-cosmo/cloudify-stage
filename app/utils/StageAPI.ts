@@ -19,6 +19,7 @@ import type StageUtils from './stageUtils';
 // NOTE: make sure the types are registered globally
 import './types';
 import type { ManagerData } from '../reducers/managerReducer';
+import type { ExternalOptions } from './External';
 
 type StagePropTypes = typeof StagePropTypes;
 type StageHooks = typeof StageHooks;
@@ -33,11 +34,10 @@ interface StageWidgetlessToolbox {
     ): void;
     getContext(): WidgetContext;
     getEventBus(): typeof EventBus;
-    getExternal(basicAuth: unknown): External;
+    getExternal(externalOptions?: ExternalOptions): External;
     getInternal(): Internal;
     getManager(): Manager;
     getManagerState(): ManagerData;
-    getNewManager(ip: unknown): any;
     goToHomePage(): void;
     goToPage(pageName: string, context: any): void;
     goToParentPage(): void;

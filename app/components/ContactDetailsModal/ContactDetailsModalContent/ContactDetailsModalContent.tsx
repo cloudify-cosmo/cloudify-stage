@@ -9,7 +9,6 @@ import { FormFieldType, getFormFields } from './formFields';
 import ContactDetailsFormField from './ContactDetailsFormField';
 import StageUtils from '../../../utils/stageUtils';
 import { removeHtmlTagsFromString } from './utils';
-import useManager from '../../../utils/hooks/useManager';
 import Internal from '../../../utils/Internal';
 
 const FieldsRow = styled.div`
@@ -28,8 +27,7 @@ const ContactDetailsModalContent: FunctionComponent<ContactDetailsModalContentPr
     const { errors, setErrors, clearErrors } = useErrors();
     const [hasSubmittingError, showSubmittingError, hideSubmittingError] = useBoolean();
     const [loading, setLoading, cancelLoading] = useBoolean();
-    const manager = useManager();
-    const internal = new Internal(manager);
+    const internal = new Internal();
     const formFields = useMemo(getFormFields, undefined);
     const requiredFormFields = useMemo(
         () => Object.values(formFields).filter(formField => formField.isRequired),
