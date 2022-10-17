@@ -5,7 +5,7 @@ import useFetchPlugins from '../plugins/useFetchPlugins';
 import useFetchSecrets from '../secrets/useFetchSecrets';
 import { useCurrentDistribution } from '../common/managerHooks';
 
-import type { GettingStartedData, GettingStartedSchema, RegExpString, GettingStartedSecretsData } from '../model';
+import type { GettingStartedData, RegExpString, GettingStartedSecretsData, GettingStartedSchemaItem } from '../model';
 import type { CatalogPluginResponse, ManagerPluginResponse, URLString } from '../plugins/model';
 import type { PluginsHook } from '../plugins/useFetchPlugins';
 import type { SecretsHook } from '../secrets/useFetchSecrets';
@@ -55,7 +55,10 @@ export const mapDefinedSecrets = (definedSecrets: GettingStartedSecretsData[]) =
     }, {} as Record<string, Omit<GettingStartedSecretsData, 'name'>>);
 };
 
-export const filterSchemaData = (selectedEnvironments: GettingStartedSchema, typedSecrets: GettingStartedData) => {
+export const filterSchemaData = (
+    selectedEnvironments: GettingStartedSchemaItem[],
+    typedSecrets: GettingStartedData
+) => {
     const filteredSecrets = {} as GettingStartedData;
     selectedEnvironments.forEach(selectedEnvironment => {
         filteredSecrets[selectedEnvironment.name] = typedSecrets[selectedEnvironment.name];
@@ -127,7 +130,7 @@ export type PluginInstallationTask = {
 export const createPluginInstallationTasks = (
     currentDistribution: string,
     currentPlugins: PluginsHook,
-    selectedEnvironments: GettingStartedSchema
+    selectedEnvironments: GettingStartedSchemaItem[]
 ) => {
     const acceptedPlugins = new Set();
     const rejectedPlugins: PluginInstallationTask[] = [];
@@ -187,7 +190,7 @@ export type SecretInstallationTask = {
 
 export const createSecretsInstallationTasks = (
     currentSecrets: SecretsHook,
-    selectedEnvironments: GettingStartedSchema,
+    selectedEnvironments: GettingStartedSchemaItem[],
     typedSecrets: GettingStartedData
 ) => {
     const usedSecrets = new Set();
@@ -233,7 +236,7 @@ export type BlueprintInstallationTask = {
 
 export const createBlueprintsInstallationTasks = (
     currentBlueprints: BlueprintsHook,
-    selectedEnvironments: GettingStartedSchema
+    selectedEnvironments: GettingStartedSchemaItem[]
 ) => {
     const usedBlueprints = new Set();
     const uploadedBlueprints: BlueprintInstallationTask[] = [];
@@ -262,7 +265,7 @@ export const createBlueprintsInstallationTasks = (
     return { uploadedBlueprints, scheduledBlueprints };
 };
 
-export const usePluginsInstallationTasks = (selectedEnvironments: GettingStartedSchema) => {
+export const usePluginsInstallationTasks = (selectedEnvironments: GettingStartedSchemaItem[]) => {
     const currentDistribution = useCurrentDistribution();
     const currentPlugins = useFetchPlugins();
     return useMemo(() => {
@@ -280,7 +283,7 @@ export const usePluginsInstallationTasks = (selectedEnvironments: GettingStarted
 };
 
 export const useSecretsInstallationTasks = (
-    selectedEnvironments: GettingStartedSchema,
+    selectedEnvironments: GettingStartedSchemaItem[],
     typedSecrets: GettingStartedData
 ) => {
     const currentSecrets = useFetchSecrets();
@@ -302,7 +305,7 @@ export const useSecretsInstallationTasks = (
     }, [currentSecrets, selectedEnvironments, filteredTypedSecrets]);
 };
 
-export const useBlueprintsInstallationTasks = (selectedEnvironments: GettingStartedSchema) => {
+export const useBlueprintsInstallationTasks = (selectedEnvironments: GettingStartedSchemaItem[]) => {
     const currentBlueprints = useFetchBlueprints();
     return useMemo(() => {
         if (currentBlueprints.loading) {
