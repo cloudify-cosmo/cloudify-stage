@@ -14,14 +14,14 @@ import useManager from '../../../../utils/hooks/useManager';
 import type { TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import { createResourcesInstaller } from '../../installation/process';
 
-import type { GettingStartedData, GettingStartedSchema } from '../../model';
+import type { GettingStartedData, GettingStartedSchemaItem } from '../../model';
 import TaskList from './TaskList';
 
 const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
 type Props = {
     installationMode?: boolean;
-    selectedEnvironments: GettingStartedSchema;
+    selectedEnvironments: GettingStartedSchemaItem[];
     typedSecrets: GettingStartedData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
