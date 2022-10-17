@@ -2,8 +2,13 @@ import _ from 'lodash';
 import External from './External';
 import Consts from './consts';
 import StageUtils from './stageUtils';
+import type { ManagerData } from '../reducers/managerReducer';
 
 export default class Internal extends External {
+    constructor(protected managerData?: ManagerData) {
+        super();
+    }
+
     buildHeaders() {
         if (!this.managerData) {
             return {};

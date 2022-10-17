@@ -10,6 +10,7 @@ import { selectPageByName, selectHomePage, selectParentPage } from '../actions/p
 import EventBus from './EventBus';
 import Context from './Context';
 import Manager from './Manager';
+import type { ExternalOptions } from './External';
 import External from './External';
 import Internal from './Internal';
 import WidgetBackend from './WidgetBackend';
@@ -95,8 +96,8 @@ class Toolbox implements Stage.Types.Toolbox {
         return new WidgetBackend(_.get(widget, 'definition.id', ''), state.manager || {});
     }
 
-    getExternal: Stage.Types.Toolbox['getExternal'] = basicAuth => {
-        return new External(basicAuth);
+    getExternal: Stage.Types.Toolbox['getExternal'] = (externalOptions?: ExternalOptions) => {
+        return new External(externalOptions);
     };
 
     // This is sometimes needed inorder to join a different manager (for cluster joining for example)

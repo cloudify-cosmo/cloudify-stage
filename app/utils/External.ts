@@ -49,8 +49,10 @@ function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
     return fallbackFilename;
 }
 
+export type ExternalOptions = { basicAuth?: string };
+
 export default class External {
-    constructor(protected managerData: any) {}
+    constructor(private externalOptions?: ExternalOptions) {}
 
     doGet<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
@@ -333,10 +335,10 @@ export default class External {
     }
 
     protected buildHeaders(): Record<string, string> {
-        if (!this.managerData) {
+        if (!this.externalOptions) {
             return {};
         }
 
-        return { Authorization: `Basic ${this.managerData.basicAuth}` };
+        return { Authorization: `Basic ${this.externalOptions.basicAuth}` };
     }
 }

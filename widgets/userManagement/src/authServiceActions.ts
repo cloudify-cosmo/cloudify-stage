@@ -15,7 +15,7 @@ export default class AuthServiceActions {
     external: ReturnType<Toolbox['getExternal']>;
 
     constructor(toolbox: Toolbox) {
-        this.external = toolbox.getExternal(undefined);
+        this.external = toolbox.getExternal();
     }
 
     isAuthServiceAvailable() {
