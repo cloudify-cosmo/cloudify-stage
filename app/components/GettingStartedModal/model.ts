@@ -23,7 +23,7 @@ export type GettingStartedSchemaPlugin = {
     version?: RegExpString;
 };
 
-export type GettingStartedSchemaSecretType = 'text' | 'password' | 'email' | 'port';
+export type GettingStartedSchemaSecretType = 'text' | 'password' | 'email' | 'port' | 'boolean';
 
 export type GettingStartedSchemaSecret = {
     label: string;
@@ -49,7 +49,7 @@ export type GettingStartedSchemaItem = {
     blueprints: GettingStartedSchemaBlueprint[];
 };
 
-export type GettingStartedSchema = GettingStartedSchemaItem[];
+export type GettingStartedSchema = { welcomeText: string; content: GettingStartedSchemaItem[] };
 
 export type GettingStartedEnvironmentsData = Record<string, boolean | undefined>;
 export type GettingStartedSecretsData = Record<string, string | undefined>;
