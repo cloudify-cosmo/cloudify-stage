@@ -1,21 +1,21 @@
+import { HeaderBar } from 'cloudify-ui-components';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
 
 import type { LicenseResponse } from '../../backend/handler/AuthHandler.types';
 import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
-import Banner from './banner/Banner';
 import Consts from '../utils/consts';
+import type Manager from '../utils/Manager';
+import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import StageUtils from '../utils/stageUtils';
+import Banner from './banner/Banner';
 import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
 import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type Manager from '../utils/Manager';
 
 interface LicenseSwitchButtonProps {
     color: ButtonProps['color'];

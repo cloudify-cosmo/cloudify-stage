@@ -22,6 +22,7 @@ export function init() {
     const modes = [MODE_MAIN, MODE_CUSTOMER, MODE_COMMUNITY];
 
     const displayUsage = () => {
+        // eslint-disable-next-line security-node/detect-crlf
         console.log(`Usage: server.js -mode [${_.join(modes, '|')}]`);
         process.exit(0);
     };
