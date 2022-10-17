@@ -64,7 +64,7 @@ const GettingStartedModal = () => {
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
     const commonStepsSchemas = useMemo(
-        () => schema.filter(item => environmentsStepData[item.name]),
+        () => schema.content.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
 
