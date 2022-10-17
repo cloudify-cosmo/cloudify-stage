@@ -8,11 +8,11 @@ import type { GettingStartedSchema } from '../model';
 
 const t = StageUtils.getT('gettingStartedModal');
 
-type Props = {
+type WelcomeStepProps = {
     schema: GettingStartedSchema;
 };
 
-const WelcomeStep = ({ schema }: Props) => {
+const WelcomeStep = ({ schema }: WelcomeStepProps) => {
     const theme = useContext(ThemeContext);
 
     return (
