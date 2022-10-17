@@ -1,5 +1,4 @@
 import type {
-    GettingStartedSchema,
     GettingStartedSchemaBlueprint,
     GettingStartedSchemaItem,
     GettingStartedSchemaPlugin,
@@ -11,7 +10,7 @@ type SecretGroup = {
     environments: GettingStartedSchemaItem[];
 };
 
-const mapEnvironmentsBySecretName = (environmentsSchema: GettingStartedSchema) => {
+const mapEnvironmentsBySecretName = (environmentsSchema: GettingStartedSchemaItem[]) => {
     const groupedSecrets = {} as Record<string, SecretGroup>;
     environmentsSchema.forEach(environmentSchema => {
         environmentSchema.secrets.forEach(secretSchema => {
@@ -63,7 +62,7 @@ const mapSecretsByEnvironmentName = (groupedSecrets: SecretGroup[]) => {
  * @param environmentsSchema environments that will be grouped to provide unique field names.
  * @returns environment groups with unique field names
  */
-const createEnvironmentsGroups = (environmentsSchema: GettingStartedSchema) => {
+const createEnvironmentsGroups = (environmentsSchema: GettingStartedSchemaItem[]) => {
     const groupedSecretsMap = mapEnvironmentsBySecretName(environmentsSchema);
     const groupedSecretsArray = Object.values(groupedSecretsMap);
     const groupedEnvironmentsMap = mapSecretsByEnvironmentName(groupedSecretsArray);
