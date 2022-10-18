@@ -10,6 +10,8 @@ import type { UserViewItem } from './widget';
 import IsAdminCheckbox from './IsAdminCheckbox';
 import type { User, UserManagementWidget } from './widget.types';
 import getWidgetT from './getWidgetT';
+import InviteModal from './InviteModal';
+import AuthServiceActions from './authServiceActions';
 
 const t = getWidgetT();
 const tColumn = (key: string) => t(`columns.${key}`);
@@ -29,6 +31,7 @@ interface UsersTableState {
     groups: string[];
     usernameDuringActivation: string;
     usernameDuringRoleSetting: string;
+    isAuthServiceAvailable: boolean | null;
 }
 
 function getNames(response: NamedResourceResponse) {
@@ -47,12 +50,17 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             tenants: [],
             groups: [],
             usernameDuringActivation: '',
-            usernameDuringRoleSetting: ''
+            usernameDuringRoleSetting: '',
+            isAuthServiceAvailable: null
         };
     }
 
     componentDidMount() {
         const { toolbox } = this.props;
+        const authServiceActions = new AuthServiceActions(toolbox);
+        authServiceActions.isAuthServiceAvailable().then(isAuthServiceAvailable => {
+            this.setState({ isAuthServiceAvailable });
+        });
         toolbox.getEventBus().on('users:refresh', this.refreshData, this);
     }
 
@@ -279,12 +287,15 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             tenants,
             user,
             usernameDuringActivation,
-            usernameDuringRoleSetting
+            usernameDuringRoleSetting,
+            isAuthServiceAvailable
         } = this.state;
         const { data, toolbox, widget } = this.props;
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
         const { PasswordModal, TextEllipsis } = Stage.Shared;
         const tableName = 'usersTable';
+
+        if (isAuthServiceAvailable === null) return <Stage.Basic.Loading />;
 
         return (
             <div>
@@ -396,7 +407,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                         </DataTable.RowExpandable>
                     ))}
                     <DataTable.Action>
-                        <CreateModal toolbox={toolbox} />
+                        {isAuthServiceAvailable ? <InviteModal toolbox={toolbox} /> : <CreateModal toolbox={toolbox} />}
                     </DataTable.Action>
                 </DataTable>
 
