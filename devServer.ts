@@ -10,8 +10,13 @@ const webpackConfig = getWebpackConfig({}, { mode: 'development' });
 
 const devServerPort = 4000;
 
-const proxyOptions = {
+const stageBackendOptions: WebpackDevServer.HttpProxyMiddlewareOptions = {
     target: `http://${SERVER_HOST}:${SERVER_PORT}`,
+    secure: false
+};
+
+const authServiceOptions: WebpackDevServer.HttpProxyMiddlewareOptions = {
+    target: `http://${SERVER_HOST}`,
     secure: false
 };
 
@@ -22,27 +27,28 @@ const options: WebpackDevServer.Configuration = {
         index: `${CONTEXT_PATH}/static/index.html`
     },
     proxy: {
-        [`${CONTEXT_PATH}/auth`]: proxyOptions,
-        [`${CONTEXT_PATH}/ba`]: proxyOptions,
-        [`${CONTEXT_PATH}/bud`]: proxyOptions,
-        [`${CONTEXT_PATH}/clientConfig`]: proxyOptions,
-        [`${CONTEXT_PATH}/contactDetails`]: proxyOptions,
-        [`${CONTEXT_PATH}/config`]: proxyOptions,
-        [`${CONTEXT_PATH}/external`]: proxyOptions,
-        [`${CONTEXT_PATH}/file`]: proxyOptions,
-        [`${CONTEXT_PATH}/filters`]: proxyOptions,
-        [`${CONTEXT_PATH}/github`]: proxyOptions,
-        [`${CONTEXT_PATH}/maps`]: proxyOptions,
-        [`${CONTEXT_PATH}/plugins`]: proxyOptions,
-        [`${CONTEXT_PATH}/source`]: proxyOptions,
-        [`${CONTEXT_PATH}/sp`]: proxyOptions,
-        [`${CONTEXT_PATH}/style`]: proxyOptions,
-        [`${CONTEXT_PATH}/templates`]: proxyOptions,
-        [`${CONTEXT_PATH}/terraform`]: proxyOptions,
-        [`${CONTEXT_PATH}/ua`]: proxyOptions,
-        [`${CONTEXT_PATH}/userData`]: proxyOptions,
-        [`${CONTEXT_PATH}/wb`]: proxyOptions,
-        [`${CONTEXT_PATH}/widgets`]: proxyOptions
+        [`${CONTEXT_PATH}/auth`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/ba`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/bud`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/clientConfig`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/contactDetails`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/config`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/external`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/file`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/filters`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/github`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/maps`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/plugins`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/source`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/sp`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/style`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/templates`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/terraform`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/ua`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/userData`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/wb`]: stageBackendOptions,
+        [`${CONTEXT_PATH}/widgets`]: stageBackendOptions,
+        [`/auth`]: authServiceOptions
     },
     static: {
         publicPath: CONTEXT_PATH,
