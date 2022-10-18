@@ -84,5 +84,7 @@ export default {
         LOGOUT: '/logout',
         MAINTENANCE: '/maintenance',
         LICENSE: '/license'
-    }
+    },
+
+    EMAIL_REGEX: /^\S+@\S+\.\S+$/
 } as const;

@@ -38,8 +38,7 @@ export type Errors = {
 
 const t = StageUtils.getT('gettingStartedModal.secrets');
 
-const emailRegex = /\S+@\S+\.\S+/;
-const isEmailValid = (email: string) => emailRegex.test(email);
+const isEmailValid = (email: string) => Consts.EMAIL_REGEX.test(email);
 const isPortValid = (port: string) => {
     const portNum = Number(port);
     return portNum >= 1 && portNum <= 65535;
