@@ -1,73 +1,25 @@
-import type { EDITION } from '../consts';
-import type { GroupSystemRoles, TenantsRoles } from '../types';
+import type { ConfigResponse, LicenseResponse, UserResponse, VersionResponse } from '../handler/AuthHandler.types';
 
-/* eslint-disable camelcase */
-export interface TokenResponse {
-    id: string;
-    username: string;
-    value: string;
+export interface PostAuthLoginResponse {
     role: string;
-    expiration_date: string;
-    last_used: string;
-    description: string;
-}
-/* eslint-enable camelcase */
-
-export interface ConfigResponse {
-    metadata: any;
-    items: any[];
-    authorization: {
-        roles: {
-            id: number;
-            name: string;
-            type: string;
-            description: string;
-        }[];
-        permissions: Record<string, string[]>[];
-    };
 }
 
-export interface VersionResponse {
-    edition: typeof EDITION.PREMIUM | typeof EDITION.COMMUNITY;
-    version: string;
-    build: any;
-    date: any;
-    commit: any;
-    distribution: string;
-    // eslint-disable-next-line camelcase
-    distro_release: string;
+export type PostAuthSamlCallbackResponse = never;
+
+export interface GetAuthManagerResponse {
+    license: LicenseResponse | null;
+    version: VersionResponse;
+    rbac: ConfigResponse['authorization'];
 }
 
-/* eslint-disable camelcase */
-export interface UserResponse {
-    username: string;
-    tenants: TenantsRoles;
-    tenant_roles: any;
-    groups: any;
-    role: string;
-    group_system_roles: GroupSystemRoles;
-    active: boolean;
-    first_login_at: string;
-    last_login_at: string;
-    is_locked: boolean;
-    show_getting_started: boolean;
-}
-
-export interface LicenseResponse {
-    capabilities: string[] | null;
-    cloudify_version: string | null;
-    customer_id: string;
-    expiration_date: string;
-    expired: boolean;
-    license_edition: string;
-    trial: boolean;
-}
-/* eslint-enable camelcase */
-
-export interface AuthUserResponse {
+export interface GetAuthUserResponse {
     username: UserResponse['username'];
     role: UserResponse['role'];
     groupSystemRoles: UserResponse['group_system_roles'];
     tenantsRoles: UserResponse['tenants'];
     showGettingStarted: UserResponse['show_getting_started'];
 }
+
+export type GetAuthRBACResponse = ConfigResponse['authorization'];
+
+export type GetAuthFirstLoginResponse = boolean;

@@ -7,7 +7,11 @@ import renderMultilineText from '../../../utils/shared/renderMultilineText';
 
 const t = StageUtils.getT('gettingStartedModal');
 
-const WelcomeStep = () => {
+type WelcomeStepProps = {
+    welcomeText: string;
+};
+
+const WelcomeStep = ({ welcomeText }: WelcomeStepProps) => {
     const theme = useContext(ThemeContext);
 
     return (
@@ -25,7 +29,7 @@ const WelcomeStep = () => {
                     font: 'inherit'
                 }}
             >
-                {renderMultilineText(t('welcomeText'))}
+                {renderMultilineText(welcomeText)}
             </div>
         </div>
     );

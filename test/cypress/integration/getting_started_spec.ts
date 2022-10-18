@@ -417,5 +417,48 @@ describe('Getting started modal', () => {
                 cy.contains('Installation failed.');
             });
         });
+
+        it('should validate email in secrets step', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'GCP').click();
+                cy.typeToFieldInput('GCP Client E-mail', 'aaa');
+                goToNextStep();
+                cy.get('.error .label').should('have.text', 'Please enter a valid email address');
+                cy.typeToFieldInput('GCP Client E-mail', 'aaa@aaa.com');
+                goToNextStep();
+                cy.get('.error .label').should('not.exist');
+            });
+        });
+
+        it('should validate port in secrets step', () => {
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'vSphere').click();
+                cy.typeToFieldInput('vSphere Port', '0');
+                goToNextStep();
+                cy.get('.error .label').should('have.text', 'Please enter a valid port number');
+                cy.typeToFieldInput('vSphere Port', '111');
+                goToNextStep();
+                cy.get('.error .label').should('not.exist');
+            });
+        });
+
+        it('should create a boolean secret', () => {
+            cy.deletePlugins().deleteSecrets('vsphere_allow_insecure');
+            cy.get('.modal').within(() => {
+                goToNextStep();
+                cy.contains('button', 'vSphere').click();
+                cy.get('.toggle').contains('vSphere Allow Insecure').click();
+                goToNextStep();
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret will be created');
+                cy.interceptSp('PUT', '/secrets/vsphere_allow_insecure').as('createSecret');
+                goToFinishStep();
+                cy.contains('vsphere_allow_insecure').parent().should('contain.text', 'secret setting done');
+                cy.wait('@createSecret').then(({ request }) => {
+                    expect(request.body.value).to.equal('true');
+                });
+            });
+        });
     });
 });

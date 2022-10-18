@@ -1,8 +1,7 @@
 import Actions from './actions';
-import type { TenantItem } from '../../common/src/tenants/TenantsDropdown';
+import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
 import type { RolesAssignment } from '../../common/src/tenants/utils';
 import type { Role } from '../../common/src/roles/RolesPicker';
-import { mapTenantsToRoles } from '../../common/src/tenants/utils';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 
@@ -97,10 +96,10 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         setTenants(newTenants);
     }
 
-    function handleTenantChange(_proxy: any, field: { value?: any }) {
-        const newTenants = mapTenantsToRoles(field, tenants, toolbox);
+    const handleTenantChange: TenantsDropdownProps['onChange'] = (_proxy, { value }) => {
+        const newTenants = Stage.Common.Tenants.mapTenantsToRoles(value, tenants, toolbox);
         setTenants(newTenants);
-    }
+    };
 
     const { groupName, isAdmin, ldapGroup } = inputs;
 

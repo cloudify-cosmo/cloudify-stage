@@ -14,6 +14,7 @@ import type {
     GettingStartedEnvironmentsData,
     GettingStartedSchemaItem
 } from './model';
+import type { Errors } from './GettingStartedModal';
 
 type Props = {
     stepName: StepName;
@@ -27,6 +28,7 @@ type Props = {
     onInstallationStarted: () => void;
     onInstallationFinished: () => void;
     onInstallationCanceled: () => void;
+    errors: Errors;
 };
 
 const ModalContent = ({
@@ -40,22 +42,38 @@ const ModalContent = ({
     onSecretsStepChange,
     onInstallationStarted,
     onInstallationFinished,
-    onInstallationCanceled
+    onInstallationCanceled,
+    errors
 }: Props) => {
     const secretsStepSchema = secretsStepsSchemas[secretsStepIndex];
     const secretsStepData = secretsStepsData[secretsStepSchema?.name];
     const statusStepActive = stepName === StepName.Status;
+    const secretsStepPageDescription = secretsStepSchema?.secretsPageDescription;
+
+    const { Message } = Stage.Basic;
+
     return (
         <Modal.Content style={{ minHeight: 220, flexDirection: 'column' }}>
-            {stepName === StepName.Welcome && <WelcomeStep />}
+            {stepName === StepName.Welcome && <WelcomeStep welcomeText={schema.welcomeText} />}
             {stepName === StepName.Environments && (
                 <EnvironmentsStep schema={schema} onChange={onEnvironmentsStepChange} />
+            )}
+            {stepName === StepName.Secrets && secretsStepPageDescription && (
+                <Message>
+                    <span
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                            __html: secretsStepPageDescription
+                        }}
+                    />
+                </Message>
             )}
             {stepName === StepName.Secrets && secretsStepSchema && (
                 <SecretsStep
                     selectedEnvironment={secretsStepSchema}
                     typedSecrets={secretsStepData}
                     onChange={onSecretsStepChange}
+                    errors={errors}
                 />
             )}
             {(stepName === StepName.Summary || statusStepActive) && (

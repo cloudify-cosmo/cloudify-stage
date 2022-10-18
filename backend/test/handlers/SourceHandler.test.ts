@@ -1,12 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
 import { statSync, readdirSync } from 'fs-extra';
 import { saveDataFromUrl, removeOldExtracts, decompressArchive } from 'handler/ArchiveHelper';
 import { browseArchiveTree } from 'handler/SourceHandler';
 
 jest.mock('handler/ArchiveHelper');
 (<jest.Mock>saveDataFromUrl).mockResolvedValue({ archiveFolder: '', archiveFile: '' });
-(<jest.Mock>removeOldExtracts).mockResolvedValue();
-(<jest.Mock>decompressArchive).mockResolvedValue();
+(<jest.Mock>removeOldExtracts).mockResolvedValue(undefined);
+(<jest.Mock>decompressArchive).mockResolvedValue(undefined);
 
 jest.mock('fs-extra');
 (<jest.Mock>statSync).mockReturnValueOnce({
@@ -25,8 +24,9 @@ jest.mock('fs-extra');
 
 describe('SourceHandler', () => {
     it('generates archive tree', () => {
+        // @ts-ignore Passing mocked request
         return browseArchiveTree({ params: {} }).then(archiveTree =>
-            expect(archiveTree.children[0].children[0].key).toEqual('subdir/fileNameSpecial%3F%23Characters')
+            expect(archiveTree?.children?.[0]?.children?.[0].key).toEqual('subdir/fileNameSpecial%3F%23Characters')
         );
     });
 });

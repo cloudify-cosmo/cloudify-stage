@@ -10,6 +10,7 @@ import { getRBAC } from '../AuthHandler';
 
 import { getLogger } from '../LoggerHandler';
 import { defaultUpdater } from './consts';
+import type { CreateTemplateData, Template, TemplateData, TemplateFileContent, UpdateTemplateData } from './types';
 
 const logger = getLogger('TemplateHandler');
 
@@ -17,20 +18,6 @@ export const builtInTemplatesFolder = getResourcePath('templates', false);
 export const userTemplatesFolder = getResourcePath('templates', true);
 
 const allTenants = '*';
-
-interface Template {
-    id: string;
-    name: string;
-    data: { roles: any; tenants: any };
-    pages?: any;
-    updatedBy: string;
-    updatedAt: string;
-    custom: boolean;
-}
-
-interface TemplateUpdate extends Pick<Template, 'id' | 'data' | 'pages'> {
-    oldId: string;
-}
 
 function getTemplates(folder: string, custom: boolean, filter: (fileName: string) => boolean) {
     const compareTemplates = (templateA: Template, templateB: Template) => {
@@ -52,29 +39,21 @@ function getTemplates(folder: string, custom: boolean, filter: (fileName: string
             const templateFilePath = pathlib.resolve(folder, templateFile);
 
             try {
-                const templateFileContent = fs.readJsonSync(templateFilePath);
+                const templateFileContent: TemplateFileContent = fs.readJsonSync(templateFilePath);
                 const id = pathlib.basename(templateFile, '.json');
 
-                const {
-                    name = id,
-                    updatedBy = custom ? '' : defaultUpdater,
-                    updatedAt = '',
-                    ...data
-                } = templateFileContent;
+                const name = id;
+                const { updatedBy = custom ? '' : defaultUpdater, updatedAt = '', ...data } = templateFileContent;
 
-                return {
+                const template: Template = {
                     id,
                     name,
                     custom,
-                    data: {
-                        roles: [],
-                        tenants: [],
-                        pages: [],
-                        ...data
-                    },
+                    data,
                     updatedBy,
                     updatedAt
                 };
+                return template;
             } catch (error) {
                 logger.error(`Error when trying to parse ${templateFilePath} file to JSON.`, error);
 
@@ -147,10 +126,10 @@ async function getSystemRole(userSystemRole: string, groupSystemRoles: Record<st
     return systemRole;
 }
 
-function checkTemplateExistence(data: Template['data'], excludeTemplateId?: string) {
-    const { roles } = data;
-    const { tenants } = data;
-    const getTenantString = (tenant: string) => (tenant === allTenants ? 'all tenants' : `tenant=${tenant}`);
+function checkTemplateExistence(data: TemplateData, excludeTemplateId?: string) {
+    const { tenants, roles } = data;
+    const getTenantString = (listOfTenants: string[]) =>
+        listOfTenants.includes(allTenants) ? 'all tenants' : `tenants="${listOfTenants.join(', ')}"`;
 
     const userTemplates = _.filter(getUserTemplates(), template => template.id !== excludeTemplateId);
 
@@ -174,13 +153,13 @@ function checkTemplateExistence(data: Template['data'], excludeTemplateId?: stri
     return Promise.resolve();
 }
 
-export function createTemplate(username: string, template: Template) {
+export function createTemplate(username: string, template: CreateTemplateData) {
     const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
     if (fs.existsSync(path)) {
         return Promise.reject(`Template name "${template.id}" already exists`);
     }
 
-    const content = {
+    const content: TemplateFileContent = {
         updatedBy: username,
         updatedAt: moment().format(),
         roles: template.data.roles,
@@ -205,10 +184,10 @@ export function deleteTemplate(templateId: string) {
     });
 }
 
-export function updateTemplate(username: string, templateUpdate: TemplateUpdate) {
+export function updateTemplate(username: string, templateUpdate: UpdateTemplateData) {
     const path = pathlib.resolve(userTemplatesFolder, `${templateUpdate.id}.json`);
 
-    const content = {
+    const content: TemplateFileContent = {
         updatedBy: username,
         updatedAt: moment().format(),
         roles: templateUpdate.data.roles,
@@ -236,7 +215,7 @@ export function updateTemplate(username: string, templateUpdate: TemplateUpdate)
         .then(() => fs.writeJson(path, content, { spaces: '  ' }));
 }
 
-export async function selectTemplate(
+export async function getInitialTemplateId(
     userSystemRole: string,
     groupSystemRoles: Record<string, any>,
     tenantsRoles: TenantsRoles,

@@ -1,38 +1,31 @@
-export interface WidgetDefinition {
-    definition: string;
-    name: string;
-    height: number;
-    width: number;
-    x: number;
-    y: number;
-    configuration: Record<string, any>;
-}
+import type {
+    CreatePageData,
+    CreatePageGroupData,
+    CreateTemplateData,
+    Page,
+    PageGroup,
+    Template,
+    UpdatePageData,
+    UpdatePageGroupData,
+    UpdateTemplateData
+} from '../handler/templates/types';
 
-export interface WidgetsSection {
-    type: 'widgets';
-    content: WidgetDefinition[];
-}
+export type GetTemplatesResponse = Template[];
 
-export interface TabContent {
-    name: string;
-    widgets: WidgetDefinition[];
-    isDefault?: boolean;
-}
+export type PostTemplatesRequestBody = CreateTemplateData;
 
-export interface TabsSection {
-    type: 'tabs';
-    content: TabContent[];
-}
+export type PutTemplatesRequestBody = UpdateTemplateData;
 
-export type LayoutSectionType = 'tabs' | 'widgets';
+export type GetInitialTemplateIdResponse = string;
 
-export type LayoutSection = WidgetsSection | TabsSection;
+export type GetPageGroupsResponse = PageGroup[];
 
-export interface PageFileDefinition {
-    id: string;
-    name: string;
-    type: 'page';
-    icon?: string;
-    description?: string;
-    layout: LayoutSection[];
-}
+export type PostPageGroupsRequestBody = CreatePageGroupData;
+
+export type PutPageGroupsRequestBody = UpdatePageGroupData;
+
+export type GetPagesResponse = (Page | null)[];
+
+export type PostPagesRequestBody = CreatePageData;
+
+export type PutPagesRequestBody = UpdatePageData;

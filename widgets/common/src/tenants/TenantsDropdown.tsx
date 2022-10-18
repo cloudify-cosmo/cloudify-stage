@@ -10,7 +10,7 @@ export interface TenantItem {
 }
 
 export interface TenantsDropdownProps {
-    onChange: DropdownProps['onChange'];
+    onChange: (event: React.SyntheticEvent<HTMLElement>, data: DropdownProps & { value?: string[] }) => void;
     value: string[];
     availableTenants?: TenantItem[];
 }
@@ -28,7 +28,7 @@ const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownP
                 selection
                 options={availableTenantsOptions}
                 value={value}
-                onChange={onChange}
+                onChange={onChange as DropdownProps['onChange']}
             />
         </Form.Field>
     );

@@ -1,45 +1,47 @@
-// @ts-nocheck File not migrated fully to TS
-
 import express from 'express';
-import passport from 'passport';
-import {
-    browseArchiveFile,
-    getMimeType,
-    browseArchiveTree,
-    listYamlFiles,
-    getBlueprintResources
-} from '../handler/SourceHandler';
+import type { Response } from 'express';
+
+import { getArchiveFile, getMimeType, browseArchiveTree, listYamlFiles } from '../handler/SourceHandler';
+import type {
+    PutSourceListYamlQueryParams,
+    PutSourceListYamlResponse,
+    GetSourceBrowseBlueprintFileResponse,
+    GetSourceBrowseBlueprintArchiveResponse
+} from './SourceBrowser.types';
 
 const router = express.Router();
 
-router.get('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
-    const { timestamp } = req.params;
+router.get<never, GetSourceBrowseBlueprintFileResponse>('/browse/:blueprintId/file/:timestamp/*', (req, res, next) => {
     const path = req.params[0];
+    const { timestamp } = req.params;
 
     if (!path) {
         next('no file path passed [path]');
     } else {
-        const mimeType = getMimeType(req, timestamp, path) || 'text/plain';
-        browseArchiveFile(req, timestamp, path)
-            .then(content => res.contentType(mimeType).send(content))
+        const mimeType = getMimeType(req, timestamp, path);
+
+        getArchiveFile(req, timestamp, path)
+            .then(({ file, isBinaryFile }) => {
+                if (mimeType) {
+                    return res.contentType(mimeType).send(file);
+                }
+                if (isBinaryFile) {
+                    return res.contentType('application/octet-stream').send(file);
+                }
+                return res.contentType('text/plain').send(file);
+            })
             .catch(next);
     }
 });
 
-router.get('/browse/:blueprintId/archive', (req, res, next) => {
+router.get('/browse/:blueprintId/archive', (req, res: Response<GetSourceBrowseBlueprintArchiveResponse>, next) => {
     browseArchiveTree(req)
         .then(data => res.send(data))
         .catch(next);
 });
 
-router.put('/list/yaml', (req, res, next) => {
+router.put<never, PutSourceListYamlResponse, never, PutSourceListYamlQueryParams>('/list/yaml', (req, res, next) => {
     listYamlFiles(req)
-        .then(data => res.send(data))
-        .catch(next);
-});
-
-router.put('/list/resources', (req, res, next) => {
-    getBlueprintResources(req)
         .then(data => res.send(data))
         .catch(next);
 });

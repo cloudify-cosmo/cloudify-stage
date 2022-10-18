@@ -3,7 +3,7 @@
         {
             "files": ["./*.{js,ts}", "backend/*.js", "scripts/*.js"],
             "extends": [
-                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
@@ -17,7 +17,7 @@
             "files": "./app/**/*.{ts,tsx}",
             "extends": [
                 "plugin:react/recommended",
-                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-react.json",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
@@ -37,7 +37,7 @@
             "files": ["./widgets/**/*.{ts,tsx}", "./test/cypress/fixtures/widgets/*.ts"],
             "extends": [
                 "plugin:react/recommended",
-                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-react.json",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
@@ -69,7 +69,7 @@
         {
             "files": "./widgets/*/src/backend.ts",
             "extends": [
-                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
                 "plugin:node/recommended-module",
                 "./.eslintrc.temp-overrides.json"
             ],
@@ -84,8 +84,8 @@
             "files": "./test/jest/**/*.{ts,tsx}",
             "extends": [
                 "plugin:react/recommended",
-                "./node_modules/cloudify-ui-common/configs/eslint-common-react.json",
-                "./node_modules/cloudify-ui-common/configs/eslint-common-jest.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-react.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-jest.json",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
@@ -116,9 +116,15 @@
             }
         },
         {
+            "files": "./test/jest/setupFiles.ts",
+            "settings": {
+                "import/resolver": { "node": { "moduleDirectory": ["./node_modules", "."] } }
+            }
+        },
+        {
             "files": "./test/cypress/**/*.{js,ts,tsx}",
             "extends": [
-                "./node_modules/cloudify-ui-common/configs/eslint-common-cypress.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-cypress.json",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
@@ -132,7 +138,7 @@
         {
             "files": "./backend/**/*.ts",
             "extends": [
-                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
                 "plugin:node/recommended-module",
                 "./.eslintrc.temp-overrides.json"
             ],
@@ -156,8 +162,8 @@
         {
             "files": "./backend/test/**/*.ts",
             "extends": [
-                "./node_modules/cloudify-ui-common/configs/eslint-common-node.json",
-                "./node_modules/cloudify-ui-common/configs/eslint-common-jest.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
+                "./node_modules/cloudify-ui-common-configs/eslint-common-jest.json",
                 "plugin:node/recommended-module",
                 "./.eslintrc.temp-overrides.json"
             ],

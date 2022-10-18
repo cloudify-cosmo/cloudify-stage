@@ -4,7 +4,8 @@ const { defaults } = require('jest-config');
 /** @type {import('@jest/types').Config.GlobalConfig} */
 module.exports = {
     moduleNameMapper: {
-        '\\.(s?css|png|svg)$': '<rootDir>/test/jest/stub'
+        '\\.(s?css|png|svg)$': '<rootDir>/test/jest/stub',
+        '^d3-.*$': '<rootDir>/test/jest/stub'
     },
     moduleDirectories: ['node_modules', 'app', 'widgets'],
     /**
@@ -16,5 +17,7 @@ module.exports = {
      */
     moduleFileExtensions: defaults.moduleFileExtensions,
     transformIgnorePatterns: ['node_modules/(?!cloudify-ui-components|react-syntax-highlighter)'],
-    setupFiles: ['<rootDir>/test/jest/setup.ts']
+    setupFiles: ['<rootDir>/test/jest/setupFiles.ts'],
+    setupFilesAfterEnv: ['<rootDir>/test/jest/setupAfterEnv.ts'],
+    testEnvironment: 'jsdom'
 };

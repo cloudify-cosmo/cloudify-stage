@@ -14,10 +14,10 @@ import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
 import { clearContext } from './context';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
-import Consts from '../utils/consts';
 import Internal from '../utils/Internal';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import { popDrilldownContext } from './drilldownContext';
+import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
 
 export enum InsertPosition {
     Before,
@@ -222,10 +222,9 @@ export function removePageWithChildren(page: PageDefinition): ThunkAction<void, 
 export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { manager } = getState();
-        const tenant = _.get(manager, 'tenants.selected', Consts.DEFAULT_ALL);
 
         const internal = new Internal(manager);
-        return internal.doGet('/templates/select', { params: { tenant } }).then(templateId => {
+        return internal.doGet<GetInitialTemplateIdResponse>('/templates/initial').then(templateId => {
             log.debug('Selected template id', templateId);
 
             const storeTemplates = getState().templates;

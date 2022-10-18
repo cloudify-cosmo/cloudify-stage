@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import { types } from 'cloudify-ui-common';
+import { types } from 'cloudify-ui-common-frontend';
 import highlighterStyles from 'react-syntax-highlighter/dist/esm/styles/hljs/idea';
 
 /**

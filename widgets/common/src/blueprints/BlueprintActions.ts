@@ -3,6 +3,11 @@ import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
+import type { GetExternalContentQueryParams } from '../../../../backend/routes/External.types';
+import type {
+    PutSourceListYamlQueryParams,
+    PutSourceListYamlResponse
+} from '../../../../backend/routes/SourceBrowser.types';
 
 class BlueprintUploadError extends Error {
     constructor(message: string | null, public state: string) {
@@ -114,6 +119,15 @@ export interface BlueprintDeployParams {
     runtimeOnlyEvaluation?: boolean;
 }
 
+export interface BlueprintUploadParameters {
+    /* eslint-disable camelcase */
+    application_file_name?: string;
+    blueprint_archive_url?: string;
+    visibility?: string;
+    async_upload?: boolean;
+    /* eslint-enable camelcase */
+}
+
 export const InProgressBlueprintStates = {
     Pending: 'pending',
     Uploading: 'uploading',
@@ -130,6 +144,11 @@ export const CompletedBlueprintStates = {
     Invalid: 'invalid'
 };
 
+const UploadBlueprintFormDataProperties = {
+    Params: 'params',
+    BlueprintArchive: 'blueprint_archive'
+};
+
 export default class BlueprintActions {
     static isUploaded(blueprint: { state: string }) {
         return blueprint.state === CompletedBlueprintStates.Uploaded;
@@ -138,6 +157,17 @@ export default class BlueprintActions {
     static isCompleted(blueprint: { state: string }) {
         return Object.values(CompletedBlueprintStates).includes(blueprint.state);
     }
+
+    static generateUploadFormData = (params: BlueprintUploadParameters, blueprintFile?: File | Blob): FormData => {
+        const formData = new FormData();
+        formData.append(UploadBlueprintFormDataProperties.Params, JSON.stringify(params));
+
+        if (blueprintFile) {
+            formData.append(UploadBlueprintFormDataProperties.BlueprintArchive, blueprintFile);
+        }
+
+        return formData;
+    };
 
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
 
@@ -231,7 +261,7 @@ export default class BlueprintActions {
             onStateChanged?: (state: string) => void;
         }
     ) {
-        const params: Record<string, any> = {
+        const params: BlueprintUploadParameters = {
             visibility,
             async_upload: true
         };
@@ -249,7 +279,10 @@ export default class BlueprintActions {
                 imageFile = await (
                     await this.toolbox
                         .getInternal()
-                        .doGet('/external/content', { params: { url: imageUrl }, parseResponse: false })
+                        .doGet<Response, GetExternalContentQueryParams>('/external/content', {
+                            params: { url: imageUrl },
+                            parseResponse: false
+                        })
                 ).blob();
             } catch (error) {
                 throw new Error(Stage.i18n.t('widgets.common.blueprintUpload.validationErrors.invalidImageUrl'));
@@ -258,11 +291,21 @@ export default class BlueprintActions {
 
         if (file) {
             const compressFile = Stage.Utils.isYamlFile(file.name);
-            await this.toolbox
-                .getManager()
-                .doUpload(`/blueprints/${blueprintName}`, { params, files: file, parseResponse: false, compressFile });
+            await this.toolbox.getManager().doUpload(`/blueprints/${blueprintName}`, {
+                files: file,
+                parseResponse: false,
+                compressFile,
+                onFileUpload: blueprintFile => {
+                    const formData = BlueprintActions.generateUploadFormData(params, blueprintFile);
+                    return formData;
+                }
+            });
         } else {
-            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, { params });
+            const formData = BlueprintActions.generateUploadFormData(params);
+
+            await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, {
+                body: formData
+            });
         }
 
         await this.waitUntilUploaded(blueprintName, onStateChanged);
@@ -305,11 +348,16 @@ export default class BlueprintActions {
         if (file) {
             return this.toolbox
                 .getInternal()
-                .doUpload('/source/list/yaml', { params: { includeFilename }, files: { archive: file } });
+                .doUpload<PutSourceListYamlResponse, PutSourceListYamlQueryParams>('/source/list/yaml', {
+                    params: { includeFilename: String(includeFilename) },
+                    files: { archive: file }
+                });
         }
         return this.toolbox
             .getInternal()
-            .doPut('/source/list/yaml', { params: { url: blueprintUrl, includeFilename } });
+            .doPut<PutSourceListYamlResponse, any, PutSourceListYamlQueryParams>('/source/list/yaml', {
+                params: { url: blueprintUrl, includeFilename: String(includeFilename) }
+            });
     }
 
     async doUploadImage(blueprintId: string, imageFile?: Blob) {

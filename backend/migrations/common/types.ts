@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
 import type { DataTypes } from 'sequelize';
-import type { UpDownFunction } from 'cloudify-ui-common/backend/migration';
+import type { UpDownFunction } from 'cloudify-ui-common-backend';
 
 export type DataTypes = typeof DataTypes;
 // eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import

@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { consts } from 'cloudify-ui-common';
+import { consts } from 'cloudify-ui-common-frontend';
 import { getColorByStatus, getContentByStatus, getNodeState } from 'topology/src/NodeStatusService';
 
 describe('(Widget) Topology', () => {

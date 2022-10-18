@@ -1,6 +1,8 @@
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
+import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
 import type { Visibility } from '../../../widgets/common/src/types';
+import type { BlueprintUploadParameters } from '../../../widgets/common/src/blueprints/BlueprintActions';
 
 declare global {
     namespace Cypress {
@@ -16,24 +18,50 @@ interface UploadBlueprintOptions {
     timeout?: number;
 }
 
+const uploadBlueprint = (blueprintId: string, parameters: BlueprintUploadParameters, timeout?: number) => {
+    const formData = BlueprintActions.generateUploadFormData(parameters);
+    return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
+};
+
+const uploadBlueprintWithFile = (
+    filePath: string,
+    blueprintId: string,
+    parameters: BlueprintUploadParameters,
+    timeout?: number
+) => {
+    return cy
+        .fixture(filePath, 'binary')
+        .then(binary => Cypress.Blob.binaryStringToBlob(binary))
+        .then(fileContent => {
+            const formData = BlueprintActions.generateUploadFormData(parameters, fileContent);
+
+            return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
+        });
+};
+
 const commands = {
     uploadBlueprint: (
         pathOrUrl: string,
         id: string,
         { yamlFile = 'blueprint.yaml', visibility = 'tenant', timeout }: UploadBlueprintOptions = {}
     ): Cypress.Chainable<unknown> => {
+        const requestParameters: BlueprintUploadParameters = {
+            visibility,
+            application_file_name: yamlFile
+        };
+
         if (pathOrUrl.startsWith('http')) {
-            return cy.cfyRequest(
-                `/blueprints/${id}?blueprint_archive_url=${pathOrUrl}&visibility=${visibility}&application_file_name=${yamlFile}`,
-                'PUT'
+            return uploadBlueprint(
+                id,
+                {
+                    ...requestParameters,
+                    blueprint_archive_url: pathOrUrl
+                },
+                timeout
             );
         }
-        return cy.cfyFileRequest(
-            pathOrUrl,
-            true,
-            `/blueprints/${id}?visibility=${visibility}&application_file_name=${yamlFile}`,
-            timeout
-        );
+
+        return uploadBlueprintWithFile(pathOrUrl, id, requestParameters, timeout);
     },
     getBlueprint: (blueprintId: string) => cy.cfyRequest(`/blueprints?id=${blueprintId}`, 'GET'),
     deleteBlueprint: (blueprintId: string, force = false) =>

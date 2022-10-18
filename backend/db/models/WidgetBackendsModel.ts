@@ -1,11 +1,8 @@
-import type { CommonAttributes, Model, ModelFactory, Optional } from './types';
+// eslint-disable-next-line import/no-extraneous-dependencies,node/no-unpublished-import
+import type { Model, Optional } from 'sequelize';
+import type { ModelFactory } from 'cloudify-ui-common-backend';
+import type { WidgetBackendsAttributes } from './WidgetBackendsModel.types';
 
-interface WidgetBackendsAttributes extends CommonAttributes {
-    widgetId: string;
-    serviceName: string;
-    method: string;
-    script: string;
-}
 type WidgetBackendsCreationAttributes = Optional<WidgetBackendsAttributes, 'script'>;
 export type WidgetBackendsInstance = Model<WidgetBackendsAttributes, WidgetBackendsCreationAttributes> &
     WidgetBackendsAttributes;

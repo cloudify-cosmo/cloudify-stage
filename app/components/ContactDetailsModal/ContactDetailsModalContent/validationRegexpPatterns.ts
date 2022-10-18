@@ -10,5 +10,3 @@ export function isBetweenCharactersRange(minCharacters?: number, maxCharacters?:
 export function isBetweenDigitCharactersRange(minDigits?: number, maxDigits?: number): RegExp {
     return isInPatternRange('\\d', minDigits, maxDigits);
 }
-
-export const emailRegexp = /^\S+@\S+\.\S+$/;

@@ -2,7 +2,7 @@ import { readdirSync } from 'fs-extra';
 import { getRBAC } from 'handler/AuthHandler';
 import { getMode } from 'serverSettings';
 
-import { selectTemplate } from 'handler/templates/TemplatesHandler';
+import { getInitialTemplateId } from 'handler/templates/TemplatesHandler';
 
 jest.mock('fs');
 (<jest.Mock>readdirSync).mockReturnValue([]);
@@ -47,18 +47,20 @@ describe('TemplatesHandler', () => {
         it('in Premium version', async () => {
             (<jest.Mock>getMode).mockReturnValue('main');
 
-            await expect(selectTemplate('default', { sys_admin: ['G1'] }, {}, 'default_tenant', '')).resolves.toEqual(
-                'main-sys_admin'
+            await expect(
+                getInitialTemplateId('default', { sys_admin: ['G1'] }, {}, 'default_tenant', '')
+            ).resolves.toEqual('main-sys_admin');
+
+            await expect(getInitialTemplateId('sys_admin', {}, {}, '', '')).resolves.toEqual('main-sys_admin');
+
+            await expect(getInitialTemplateId('default', {}, {}, 'default_tenant', '')).resolves.toEqual(
+                'main-default'
             );
-
-            await expect(selectTemplate('sys_admin', {}, {}, '', '')).resolves.toEqual('main-sys_admin');
-
-            await expect(selectTemplate('default', {}, {}, 'default_tenant', '')).resolves.toEqual('main-default');
         });
 
         it('in Community version', async () => {
             (<jest.Mock>getMode).mockReturnValue('community');
-            await expect(selectTemplate('default', {}, {}, 'default_tenant', '')).resolves.toEqual('community');
+            await expect(getInitialTemplateId('default', {}, {}, 'default_tenant', '')).resolves.toEqual('community');
         });
     });
 });

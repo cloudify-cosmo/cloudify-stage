@@ -14,14 +14,14 @@ import useManager from '../../../../utils/hooks/useManager';
 import type { TaskDetails, TaskStatus, TaskType } from '../../installation/process';
 import { createResourcesInstaller } from '../../installation/process';
 
-import type { GettingStartedData, GettingStartedSchema } from '../../model';
+import type { GettingStartedData, GettingStartedSchemaItem } from '../../model';
 import TaskList from './TaskList';
 
 const tMessages = StageUtils.getT('gettingStartedModal.messages');
 
 type Props = {
     installationMode?: boolean;
-    selectedEnvironments: GettingStartedSchema;
+    selectedEnvironments: GettingStartedSchemaItem[];
     typedSecrets: GettingStartedData;
     onInstallationStarted?: () => void;
     onInstallationFinished?: () => void;
@@ -87,11 +87,19 @@ const SummaryStep = ({
                     handleInstallationFinished();
                 }
             );
+            const stringMappedUpdatedSecrets = secretsInstallationTasks.tasks.updatedSecrets.map(secret => ({
+                ...secret,
+                value: String(secret.value)
+            }));
+            const stringMappedCreatedSecrets = secretsInstallationTasks.tasks.createdSecrets.map(secret => ({
+                ...secret,
+                value: String(secret.value)
+            }));
             // async installation that can be stopped with destroy() method
             resourcesInstaller.install(
                 pluginsInstallationTasks.tasks.scheduledPlugins,
-                secretsInstallationTasks.tasks.updatedSecrets,
-                secretsInstallationTasks.tasks.createdSecrets.filter(secret => !!secret.value),
+                stringMappedUpdatedSecrets,
+                stringMappedCreatedSecrets.filter(secret => !!secret.value),
                 blueprintsInstallationTasks.tasks.scheduledBlueprints
             );
             return () => {

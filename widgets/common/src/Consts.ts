@@ -1,7 +1,8 @@
 import type { MapOptions } from 'leaflet';
 import appConsts from '../../../app/utils/consts';
+import type { Visibility } from './types';
 
-const defaultVisibility = 'tenant';
+const defaultVisibility: Visibility = 'tenant';
 
 const consts = {
     defaultVisibility,
@@ -26,10 +27,11 @@ const consts = {
         initialZoom: 2.5,
         urlTemplate: '/maps/{z}/{x}/{y}/{r}'
     },
-    allowedVisibilitySettings: [defaultVisibility, appConsts.GLOBAL_VISIBILITY] as string[],
+    allowedVisibilitySettings: [defaultVisibility, appConsts.GLOBAL_VISIBILITY] as Visibility[],
     drilldownPage: {
         blueprintMarketplace: 'blueprintMarketplace'
-    }
+    },
+    emailRegex: appConsts.EMAIL_REGEX
 } as const;
 
 export default consts;

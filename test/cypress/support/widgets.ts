@@ -1,5 +1,5 @@
-import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
-import { addCommands } from 'cloudify-ui-common/cypress/support';
+import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
+import { addCommands } from 'cloudify-ui-common-cypress/support';
 
 declare global {
     namespace Cypress {
@@ -10,7 +10,7 @@ declare global {
 }
 
 const commands = {
-    getWidgets: () => cy.stageRequest('/console/widgets/list'),
+    getWidgets: () => cy.stageRequest('/console/widgets'),
 
     removeCustomWidgets: () =>
         cy.getWidgets().then(response => {

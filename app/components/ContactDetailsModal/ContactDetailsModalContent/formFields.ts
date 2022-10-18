@@ -1,5 +1,6 @@
 import * as ValidationRegexpPatterns from './validationRegexpPatterns';
 import StageUtils from '../../../utils/stageUtils';
+import Consts from '../../../utils/consts';
 
 export enum FormFieldType {
     Text,
@@ -64,7 +65,7 @@ export const getFormFields = (): Record<string, FormField> => ({
         type: FormFieldType.Text,
         validation: {
             errorMessage: getFormFieldValidationMessage('email'),
-            regexp: ValidationRegexpPatterns.emailRegexp
+            regexp: Consts.EMAIL_REGEX
         },
         isRequired: true
     },

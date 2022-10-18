@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import mkdirp from 'mkdirp';
 import { getResourcePath } from 'utils';
 import { listWidgets } from 'handler/WidgetsHandler';
@@ -25,7 +24,6 @@ describe('WidgetHandler', () => {
             { id: 'deploymentButton', isCustom: false },
             { id: 'deploymentInfo', isCustom: false },
             { id: 'deploymentNum', isCustom: false },
-            { id: 'deploymentWizardButtons', isCustom: false },
             { id: 'deployments', isCustom: false },
             { id: 'deploymentsView', isCustom: false },
             { id: 'deploymentsViewDrilledDown', isCustom: false },

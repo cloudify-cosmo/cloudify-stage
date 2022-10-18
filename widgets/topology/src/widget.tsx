@@ -108,7 +108,7 @@ Stage.defineWidget({
 
                                 return toolbox
                                     .getInternal()
-                                    .doGet(`/plugins/icons/${pluginId}`, { parseResponse: false })
+                                    .doGet<Response>(`/plugins/icons/${pluginId}`, { parseResponse: false })
                                     .then(response => response.blob())
                                     .then(
                                         blob =>
