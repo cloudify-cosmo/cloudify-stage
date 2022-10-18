@@ -10,7 +10,16 @@ type Item = {
 
 type NodeInstancesSummaryResponse = Stage.Types.PaginatedResponse<Item>;
 
-Stage.defineWidget<unknown, NodeInstancesSummaryResponse, unknown>({
+interface WidgetParams {
+    // eslint-disable-next-line camelcase
+    deployment_id?: string | string[] | null;
+}
+
+const pollingTimeConfiguration = Stage.GenericConfig.POLLING_TIME_CONFIG(10);
+
+type Configuration = typeof pollingTimeConfiguration;
+
+Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, Configuration>({
     id: 'nodesStats',
     name: t('name'),
     description: t('description'),
@@ -22,7 +31,7 @@ Stage.defineWidget<unknown, NodeInstancesSummaryResponse, unknown>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesStats'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
-    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
+    initialConfiguration: [pollingTimeConfiguration],
     fetchUrl: '[manager]/summary/node_instances?_target_field=state[params:deployment_id]',
 
     fetchParams(_widget, toolbox) {
