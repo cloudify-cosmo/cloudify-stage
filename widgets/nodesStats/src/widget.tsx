@@ -8,10 +8,7 @@ type Item = {
     state: string;
 };
 
-type NodeInstancesSummaryResponse = {
-    items?: Item[];
-    metadata: any;
-};
+type NodeInstancesSummaryResponse = Stage.Types.PaginatedResponse<Item>;
 
 Stage.defineWidget<unknown, NodeInstancesSummaryResponse, unknown>({
     id: 'nodesStats',
