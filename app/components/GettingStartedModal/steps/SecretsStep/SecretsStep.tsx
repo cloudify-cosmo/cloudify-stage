@@ -30,7 +30,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
     const [overrideSecrets, setOverrideSecrets] = useState(false);
 
-    const isAllSecretsExist = useCheckSecretsExist(Object.keys(defaultSecretInputs));
+    const allSecretsExist = useCheckSecretsExist(Object.keys(defaultSecretInputs));
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
@@ -39,7 +39,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
 
     return (
         <>
-            {isAllSecretsExist && <SecretsExistMessage {...{ overrideSecrets, setOverrideSecrets }} />}
+            {allSecretsExist && <SecretsExistMessage {...{ overrideSecrets, setOverrideSecrets }} />}
             <Form>
                 {selectedEnvironment.secrets.map(({ name, label, type, description }) => {
                     const handleBlur = () => {
@@ -50,7 +50,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
                             key={name}
                             label={label}
                             help={description}
-                            disabled={!overrideSecrets && isAllSecretsExist}
+                            disabled={!overrideSecrets && allSecretsExist}
                         >
                             {type === 'boolean' ? (
                                 <Form.Checkbox
