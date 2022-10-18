@@ -3,7 +3,10 @@ describe('Admin flow', () => {
     const groupName = `admin_flow_test_group`;
     const userName = `admin_flow_test_user`;
 
-    before(() => cy.activate().login().deleteAllUsersAndTenants().deleteUserGroup(groupName));
+    before(() => {
+        cy.activate().login().deleteAllUsersAndTenants().deleteUserGroup(groupName);
+        cy.intercept('GET', '/auth/users/me', { statusCode: 401 });
+    });
 
     it('manages groups, tenants and users', () => {
         cy.log('Creating tenant');
