@@ -52,7 +52,7 @@ Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, Configuration>({
 
         const states = _.reduce(
             data?.items,
-            (result, item) => {
+            (result: Record<string, number>, item) => {
                 result[item.state] = item.node_instances;
                 return result;
             },
