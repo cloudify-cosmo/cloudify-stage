@@ -4,15 +4,14 @@ import StageUtils from '../../../utils/stageUtils';
 import LogoLabel from '../../banner/LogoLabel';
 import LargeLogo from '../../banner/LargeLogo';
 import renderMultilineText from '../../../utils/shared/renderMultilineText';
-import type { GettingStartedSchema } from '../model';
 
 const t = StageUtils.getT('gettingStartedModal');
 
 type WelcomeStepProps = {
-    schema: GettingStartedSchema;
+    welcomeText: string;
 };
 
-const WelcomeStep = ({ schema }: WelcomeStepProps) => {
+const WelcomeStep = ({ welcomeText }: WelcomeStepProps) => {
     const theme = useContext(ThemeContext);
 
     return (
@@ -30,7 +29,7 @@ const WelcomeStep = ({ schema }: WelcomeStepProps) => {
                     font: 'inherit'
                 }}
             >
-                {renderMultilineText(schema.welcomeText)}
+                {renderMultilineText(welcomeText)}
             </div>
         </div>
     );
