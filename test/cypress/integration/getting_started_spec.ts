@@ -200,11 +200,13 @@ describe('Getting started modal', () => {
     });
 
     describe('with mocked pages', () => {
-        beforeEach(() =>
-            cy
-                .usePageMock()
-                .mockLoginWithoutWaiting({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
-        );
+        beforeEach(() => {
+            cy.usePageMock().mockLoginWithoutWaiting({
+                disableGettingStarted: false,
+                visitPage: '/console?cloudSetup=true'
+            });
+            cy.deleteSecrets('');
+        });
 
         it('should install selected environment', () => {
             resetAwsEnvironmentData();
@@ -319,7 +321,6 @@ describe('Getting started modal', () => {
                 cy.contains('button', 'AWS').click();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
-                cy.contains('.checkbox', 'Override secrets').click();
                 setSecretValues(awsSecrets);
                 goToNextStep();
 
@@ -335,7 +336,6 @@ describe('Getting started modal', () => {
                 cy.contains('AWS Access Key ID').should('exist');
                 cy.contains('AWS Secret Access Key').should('exist');
                 verifyHeader(getExpectedSecretsHeader('AWS'));
-                cy.contains('.checkbox', 'Override secrets').click();
                 setSecretValues(awsSecrets);
 
                 goToBackStep();
@@ -363,7 +363,6 @@ describe('Getting started modal', () => {
 
             goToNextStep();
             cy.contains('button', 'AWS').click();
-            cy.contains('.checkbox', 'Override secrets').click();
             setSecretValues(awsSecrets.filter(awsSecret => awsSecret !== secretToSkip));
 
             cy.contains('button', 'Next').click();
