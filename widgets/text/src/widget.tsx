@@ -41,7 +41,7 @@ Stage.defineWidget<unknown, unknown, Configuration>({
             description: t('configuration.description.name'),
             default: t('configuration.content.default'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: Stage.Basic.Form.TextArea
+            component: Stage.Basic.Form.TextArea as Stage.Types.WidgetComponent
         },
 
         {

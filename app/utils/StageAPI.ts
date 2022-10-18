@@ -92,13 +92,15 @@ interface StageCustomConfigurationComponentProps<T> {
         event: SyntheticEvent<HTMLElement, Event> | undefined,
         field: {
             name?: string;
-            value?: T;
+            value: T;
             checked?: boolean;
         }
     ) => void;
     widgetlessToolbox: StageWidgetlessToolbox;
 }
 export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
+
+export type StageWidgetComponent = JSXElementConstructor<StageCustomConfigurationComponentProps<any>>;
 
 // TODO(RD-2792): use a discriminated union for different types of configuration
 interface StageWidgetConfigurationDefinition {
@@ -109,7 +111,7 @@ interface StageWidgetConfigurationDefinition {
     default?: any;
     placeHolder?: string;
     hidden?: boolean;
-    component?: JSXElementConstructor<StageCustomConfigurationComponentProps<any>>;
+    component?: StageWidgetComponent;
     /** Used for lists */
     items?: (string | { name: string; value: string })[];
     [key: string]: any;
@@ -286,6 +288,7 @@ declare global {
                 Data,
                 Configuration
             >;
+            type WidgetComponent = StageWidgetComponent;
             type PaginatedResponse<ResponseItem> = CloudifyPaginatedResponse<ResponseItem>;
             type ReduxState = import('../reducers').ReduxState;
 
