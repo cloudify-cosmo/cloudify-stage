@@ -4,7 +4,7 @@ import type { ButtonProps } from 'semantic-ui-react';
 import { Button, Header } from '../basic';
 import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
 
-interface SystemStatusHeaderProps {
+export interface SystemStatusHeaderProps {
     onStatusRefresh: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, data: ButtonProps) => void;
     isFetching: boolean;
 }

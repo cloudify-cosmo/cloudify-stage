@@ -15,7 +15,7 @@ const defaultServices = _.mapValues(clusterServiceEnum, () => {
     return clusterServiceData;
 });
 
-interface SystemServicesStatusProps {
+export interface SystemServicesStatusProps {
     services: ClusterServices;
     isFetching: boolean;
     fetchingError: string;
