@@ -1,3 +1,5 @@
+import { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
 export {};
 
 const t = Stage.Utils.getT('widgets.nodesStats');
@@ -15,11 +17,7 @@ interface WidgetParams {
     deployment_id?: string | string[] | null;
 }
 
-const pollingTimeConfiguration = Stage.GenericConfig.POLLING_TIME_CONFIG(10);
-
-type Configuration = typeof pollingTimeConfiguration;
-
-Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, Configuration>({
+Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, PollingTimeConfiguration>({
     id: 'nodesStats',
     name: t('name'),
     description: t('description'),
@@ -31,7 +29,7 @@ Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, Configuration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesStats'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],
 
-    initialConfiguration: [pollingTimeConfiguration],
+    initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=state[params:deployment_id]',
 
     fetchParams(_widget, toolbox) {
