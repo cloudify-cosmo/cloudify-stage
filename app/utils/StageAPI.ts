@@ -108,7 +108,7 @@ interface StageWidgetConfigurationDefinition {
     name?: string;
     description?: ReactNode;
     type: GenericFieldType;
-    default?: GenericFieldType;
+    default?: any;
     placeHolder?: string;
     hidden?: boolean;
     component?: StageWidgetComponent;
