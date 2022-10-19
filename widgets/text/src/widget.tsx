@@ -19,7 +19,7 @@ const textFonts = [
     { name: 'Monospace', value: 'monospace' }
 ];
 
-Stage.defineWidget<unknown, unknown, Configuration>({
+Stage.defineWidget<never, never, Configuration>({
     id: 'text',
     name: t('name'),
     description: t('description'),
