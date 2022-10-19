@@ -42,7 +42,6 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     const [selectedPlugin, setSelectedPlugin] = useState<PluginItem | null>(null);
 
     useRefreshEvent(toolbox, 'plugins:refresh');
-    console.log(hoveredPlugin);
     function fetchGridData(fetchParams: any) {
         return toolbox.refresh(fetchParams);
     }

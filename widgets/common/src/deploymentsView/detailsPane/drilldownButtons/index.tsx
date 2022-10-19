@@ -44,7 +44,7 @@ const DrilldownButtons: FunctionComponent<DrilldownButtonsProps> = ({
 
     if (subdeploymentInfoResult.isIdle || subdeploymentInfoResult.isError) {
         const { ErrorMessage } = Stage.Basic;
-        return <ErrorMessage error={tDrillDownButtons('detailsFetchingError')} header="" />;
+        return <ErrorMessage error={tDrillDownButtons('detailsFetchingError')} header="" onDismiss={null} />;
     }
 
     const subdeploymentResults = getSubdeploymentResults(subdeploymentInfoResult);
