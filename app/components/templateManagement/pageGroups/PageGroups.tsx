@@ -133,7 +133,7 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
                             </DataTable.Data>
                             <DataTable.Data>{item.updatedBy}</DataTable.Data>
-                            <DataTable.Data style={{ textAlign: 'center' }}>
+                            <DataTable.Data textAlign="center">
                                 {item.custom && (
                                     <>
                                         <PopupConfirm

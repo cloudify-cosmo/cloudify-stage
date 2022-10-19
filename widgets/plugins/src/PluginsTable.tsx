@@ -166,7 +166,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             <DataTable.Data>{item.distribution_release}</DataTable.Data>
                             <DataTable.Data>{item.uploaded_at}</DataTable.Data>
                             <DataTable.Data>{item.created_by}</DataTable.Data>
-                            <DataTable.Data className="center aligned rowActions">
+                            <DataTable.Data textAlign="center" className="rowActions">
                                 <Icon
                                     name="download"
                                     link

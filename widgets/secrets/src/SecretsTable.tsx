@@ -293,7 +293,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <SecretValue
                                         canShowSecret={canShowSecret}
                                         secretKey={item.key}
@@ -305,7 +305,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                         toolbox={toolbox}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <Checkbox
                                         checked={item.is_hidden_value}
                                         onChange={() => this.onIsHiddenValueChange(item.key, !item.is_hidden_value)}
@@ -317,7 +317,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data>{item.tenant_name}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         bordered
                                         link

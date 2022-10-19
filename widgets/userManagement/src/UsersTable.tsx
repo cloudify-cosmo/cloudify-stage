@@ -336,7 +336,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                     <TextEllipsis maxWidth="450px">{item.username}</TextEllipsis>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.last_login_at}</DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <IsAdminCheckbox
                                         onAdminUserChange={() =>
                                             this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
@@ -348,7 +348,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     {/* TODO (RD-2100): create better way to block current user state change */}
                                     {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
@@ -365,7 +365,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         />
                                     )}
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     {/* TODO (RD-2100): propose way to block current user state change */}
                                     <Checkbox
                                         checked={item.show_getting_started}
@@ -395,7 +395,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         {item.tenantCount}
                                     </Label>
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <ActionsMenu item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>

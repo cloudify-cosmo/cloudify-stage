@@ -147,7 +147,7 @@ export default class SnapshotsTable extends React.Component {
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.status}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         name="undo"
                                         title="Restore"

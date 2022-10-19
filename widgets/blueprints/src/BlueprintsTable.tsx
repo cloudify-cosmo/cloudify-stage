@@ -76,7 +76,7 @@ export default function BlueprintsTable({
                         <div className="ui green horizontal label">{item.depCount}</div>
                     </DataTable.Data>
 
-                    <DataTable.Data className="center aligned rowActions">
+                    <DataTable.Data textAlign="center" className="rowActions">
                         {Blueprints.Actions.isCompleted(item) && (
                             <>
                                 {Blueprints.Actions.isUploaded(item) && (
