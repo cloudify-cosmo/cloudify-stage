@@ -1,23 +1,23 @@
-import _, { find, includes } from 'lodash';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
-import type { LocationDescriptorObject } from 'history';
-import { stringify } from 'query-string';
 import { push } from 'connected-react-router';
+import type { LocationDescriptorObject } from 'history';
+import _, { find, includes } from 'lodash';
 import log from 'loglevel';
+import { stringify } from 'query-string';
+import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
+import type { ReduxState } from '../reducers';
+import type { DrilldownContext } from '../reducers/drilldownContextReducer';
+import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
+import Internal from '../utils/Internal';
+import { clearContext } from './context';
+import { popDrilldownContext } from './drilldownContext';
 import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
 import * as types from './types';
-import type { ReduxState } from '../reducers';
 import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
-import { clearContext } from './context';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
-import Internal from '../utils/Internal';
-import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
-import { popDrilldownContext } from './drilldownContext';
-import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
 
 export enum InsertPosition {
     Before,
@@ -129,12 +129,10 @@ export function selectPage(
             dispatch(clearContext());
             if (drilldownContext) {
                 const newDrilldownContext: DrilldownContext[] = [{ context: drilldownContext }];
-                // eslint-disable-next-line scanjs-rules/assign_to_search
                 location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
             }
         } else {
             if (!_.isEmpty(drilldownPageName)) {
-                // eslint-disable-next-line scanjs-rules/assign_to_pathname
                 location.pathname += `/${drilldownPageName}`;
             }
 
@@ -149,7 +147,6 @@ export function selectPage(
                 throw new Error('Either drilldown page name or context have to be provided while doing a drilldown');
             }
 
-            // eslint-disable-next-line scanjs-rules/assign_to_search
             location.search = stringify({ c: JSON.stringify(newDrilldownContext) });
         }
 
