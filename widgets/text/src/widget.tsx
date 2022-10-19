@@ -54,7 +54,7 @@ Stage.defineWidget<never, never, Configuration>({
         {
             id: 'headerTextSize',
             name: t('configuration.headerTextSize.name'),
-            default: '20',
+            default: 20,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
@@ -77,7 +77,7 @@ Stage.defineWidget<never, never, Configuration>({
         {
             id: 'contentTextSize',
             name: t('configuration.contentTextSize.name'),
-            default: '14',
+            default: 14,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
