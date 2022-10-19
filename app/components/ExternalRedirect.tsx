@@ -1,12 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
 
+import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
-import i18n from 'i18next';
 
 export default function ExternalRedirect({ url }) {
     useEffect(() => {
-        // eslint-disable-next-line scanjs-rules/assign_to_location
         window.location = url;
     }, []);
 
