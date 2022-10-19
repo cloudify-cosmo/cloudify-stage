@@ -35,7 +35,7 @@ export default function SystemServicesStatus({
             header={
                 <Table.Row>
                     <Table.HeaderCell colSpan="2">
-                        <SystemStatusHeader isFetching={isFetching} />
+                        <SystemStatusHeader />
                     </Table.HeaderCell>
                 </Table.Row>
             }
