@@ -19,7 +19,6 @@ const commands = {
     createSite: (site: Site) => {
         const data: Site = { name: site.name };
         if (site.location) {
-            // eslint-disable-next-line scanjs-rules/assign_to_location
             data.location = site.location;
         }
         if (site.visibility) {

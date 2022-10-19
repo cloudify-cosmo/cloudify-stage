@@ -403,13 +403,10 @@ const commands = {
     interceptSp: (method: string, spRouteMatcher: GlobPattern | RouteMatcherOptions, routeHandler?: RouteHandler) => {
         const routeMatcher: RouteMatcherOptions = { method };
         if (isString(spRouteMatcher)) {
-            // eslint-disable-next-line scanjs-rules/assign_to_pathname
             routeMatcher.pathname = `/console/sp${spRouteMatcher}`;
         } else {
             Object.assign(routeMatcher, spRouteMatcher);
-            if (routeMatcher.pathname)
-                // eslint-disable-next-line scanjs-rules/assign_to_pathname
-                routeMatcher.pathname = `/console/sp${routeMatcher.pathname}`;
+            if (routeMatcher.pathname) routeMatcher.pathname = `/console/sp${routeMatcher.pathname}`;
             if (routeMatcher.path) routeMatcher.path = `/console/sp${routeMatcher.path}`;
         }
 
