@@ -6,19 +6,24 @@ const useCheckSecretsExist = (secretKeys: string[]) => {
     const [isAllSecretsExist, setAllSecretsExist] = useState<boolean | undefined>();
 
     useEffect(() => {
-        manager
-            .doPost('/searches/secrets', {
+        const searchSecrets = async () => {
+            const response = await manager.doPost('/searches/secrets', {
                 body: {
-                    filter_rules: []
+                    filter_rules: [
+                        {
+                            key: 'key',
+                            values: secretKeys,
+                            operator: 'contains',
+                            type: 'attribute'
+                        }
+                    ]
                 }
-            })
-            .then(response => {
-                console.log('LEON DEBUG', response?.items);
-                const allExistingSecrets = response?.items;
-                const allExistingSecretsKeys = allExistingSecrets?.map((secret: { key: string }) => secret.key) || [];
-                const secretsExist = secretKeys.every(secret => allExistingSecretsKeys.includes(secret));
-                setAllSecretsExist(secretsExist);
             });
+            const secretsExist = response?.items.length === secretKeys.length;
+            setAllSecretsExist(secretsExist);
+        };
+
+        searchSecrets();
     }, []);
 
     return isAllSecretsExist;
