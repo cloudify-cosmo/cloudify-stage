@@ -102,7 +102,6 @@ export default class SitesTable extends React.Component {
         const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { VerticallyAlignedCell } = Stage.Shared;
         const { allowedVisibilitySettings } = Stage.Common.Consts;
         const { data, toolbox, widget } = this.props;
         let latitude;
@@ -137,18 +136,16 @@ export default class SitesTable extends React.Component {
 
                         return (
                             <DataTable.Row key={item.name}>
-                                <DataTable.Data>
-                                    <VerticallyAlignedCell>
-                                        {item.name}
-                                        <ResourceVisibility
-                                            visibility={item.visibility}
-                                            onSetVisibility={visibility => {
-                                                this.setSiteVisibility(item.name, visibility);
-                                            }}
-                                            allowedSettingTo={allowedVisibilitySettings}
-                                            className="rightFloated"
-                                        />
-                                    </VerticallyAlignedCell>
+                                <DataTable.Data verticalAlign="flexMiddle">
+                                    {item.name}
+                                    <ResourceVisibility
+                                        visibility={item.visibility}
+                                        onSetVisibility={visibility => {
+                                            this.setSiteVisibility(item.name, visibility);
+                                        }}
+                                        allowedSettingTo={allowedVisibilitySettings}
+                                        className="rightFloated"
+                                    />
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.location && (

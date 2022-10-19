@@ -158,7 +158,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             });
     }
 
-    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
+    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -325,7 +325,6 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     <DataTable.Column label={tColumn('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
-                        /* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                             <DataTable.Row
                                 id={`${tableName}_${item.username}`}
@@ -400,7 +399,6 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                     <ActionsMenu item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
-                            {/* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */}
                             <DataTable.DataExpandable key={item.username}>
                                 <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
                             </DataTable.DataExpandable>

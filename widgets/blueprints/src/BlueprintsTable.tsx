@@ -45,7 +45,7 @@ export default function BlueprintsTable({
                     id={`${tableName}_${item.id}`}
                     key={item.id}
                     selected={item.isSelected}
-                    onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
+                    onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : undefined}
                 >
                     <DataTable.Data>
                         {Blueprints.Actions.isUploaded(item) && (

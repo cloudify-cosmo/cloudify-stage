@@ -108,15 +108,7 @@ type AnyProps = Record<string, any>;
 const DateInputWithTemporaryProps = DateInput as unknown as ComponentType<AnyProps>;
 
 // TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
-const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyProps> & {
-    Row: React.FC<AnyProps>;
-    Column: React.FC<AnyProps>;
-    Data: React.FC<AnyProps>;
-    Action: React.FC<AnyProps>;
-    Filter: React.FC<AnyProps>;
-    RowExpandable: React.FC<AnyProps>;
-    DataExpandable: React.FC<AnyProps>;
-};
+const DataTableWithTemporaryProps = DataTable;
 
 // TODO(RD-5718) Remove once DataSegment component is fully migrated to TypeScript
 const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {

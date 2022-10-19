@@ -42,7 +42,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     const [selectedPlugin, setSelectedPlugin] = useState<PluginItem | null>(null);
 
     useRefreshEvent(toolbox, 'plugins:refresh');
-
+    console.log(hoveredPlugin);
     function fetchGridData(fetchParams: any) {
         return toolbox.refresh(fetchParams);
     }
@@ -103,7 +103,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     }
 
     const { DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
-    const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
+    const { IdPopup } = Stage.Shared;
     const { DeleteConfirm } = Stage.Common.Components;
     const { UploadModal, Icon: PluginIcon } = Stage.Common.Plugins;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
@@ -116,9 +116,9 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
             <DataTable
                 fetchData={fetchGridData}
                 totalSize={data.total}
-                pageSize={widget.configuration.pageSize}
-                sortColumn={widget.configuration.sortColumn}
-                sortAscending={widget.configuration.sortAscending}
+                pageSize={widget.configuration.pageSize as any} // TODO: Type configuration
+                sortColumn={widget.configuration.sortColumn as any}
+                sortAscending={widget.configuration.sortAscending as any}
                 selectable
                 searchable
                 className="pluginsTable"
@@ -142,7 +142,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             key={item.id}
                             selected={item.isSelected}
                             onClick={() => selectPlugin(item)}
-                            onMouseOver={setHoveredPlugin}
+                            onMouseOver={setHoveredPlugin as any} // TODO: How does it work? :(, probably a bug
                             onMouseOut={clearHoveredPlugin}
                         >
                             <DataTable.Data>
@@ -151,16 +151,14 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             <DataTable.Data>
                                 <PluginIcon src={item.icon} />
                             </DataTable.Data>
-                            <DataTable.Data>
-                                <VerticallyAlignedCell>
-                                    {item.title || item.package_name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={allowedVisibilitySettings}
-                                        className="rightFloated"
-                                    />
-                                </VerticallyAlignedCell>
+                            <DataTable.Data verticalAlign="flexMiddle">
+                                {item.title || item.package_name}
+                                <ResourceVisibility
+                                    visibility={item.visibility}
+                                    onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
+                                    allowedSettingTo={allowedVisibilitySettings}
+                                    className="rightFloated"
+                                />
                             </DataTable.Data>
                             <DataTable.Data>{item.package_name}</DataTable.Data>
                             <DataTable.Data>{item.package_version}</DataTable.Data>
