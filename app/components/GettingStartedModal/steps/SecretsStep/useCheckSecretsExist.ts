@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react';
-import { useManagerFetch } from '../../common/fetchHooks';
-import type { SecretsResponse } from '../../secrets/model';
+import useManager from '../../../../utils/hooks/useManager';
 
 const useCheckSecretsExist = (secretKeys: string[]) => {
+    const manager = useManager();
     const [isAllSecretsExist, setAllSecretsExist] = useState<boolean | undefined>();
-    const managerSecrets = useManagerFetch<SecretsResponse>('/secrets?_include=key,visibility');
 
     useEffect(() => {
-        const allExistingSecrets = managerSecrets.response?.items;
-        const allExistingSecretsKeys = allExistingSecrets?.map((secret: { key: string }) => secret.key) || [];
-        const secretsExist = secretKeys.every(secret => allExistingSecretsKeys.includes(secret));
-        setAllSecretsExist(secretsExist);
-    }, [managerSecrets]);
+        manager
+            .doPost('/searches/secrets', {
+                body: {
+                    filter_rules: []
+                }
+            })
+            .then(response => {
+                console.log('LEON DEBUG', response?.items);
+                const allExistingSecrets = response?.items;
+                const allExistingSecretsKeys = allExistingSecrets?.map((secret: { key: string }) => secret.key) || [];
+                const secretsExist = secretKeys.every(secret => allExistingSecretsKeys.includes(secret));
+                setAllSecretsExist(secretsExist);
+            });
+    }, []);
 
     return isAllSecretsExist;
 };
