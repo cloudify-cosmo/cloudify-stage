@@ -41,9 +41,9 @@ Stage.defineWidget<never, never, Configuration>({
             description: t('configuration.description.name'),
             default: t('configuration.content.default'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
-            component: Stage.Basic.Form.TextArea as Stage.Types.WidgetComponent
+            // @ts-ignore TODO(RD-6138): Fix once proper typing is added to `StageCustomConfigurationComponentProps` and `GenericField`
+            component: Stage.Basic.Form.TextArea
         },
-
         {
             id: 'headerTextColor',
             name: t('configuration.headerTextColor.name'),
