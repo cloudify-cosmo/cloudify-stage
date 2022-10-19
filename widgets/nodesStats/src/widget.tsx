@@ -1,4 +1,4 @@
-import { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
 export {};
 
