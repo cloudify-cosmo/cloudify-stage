@@ -1,24 +1,24 @@
+import type { CookieOptions, Request, Response } from 'express';
 import express from 'express';
-import type { Response, CookieOptions, Request } from 'express';
 import _ from 'lodash';
 
 import { authenticateWithCookie, authenticateWithSaml } from '../auth/AuthMiddlewares';
-import * as AuthHandler from '../handler/AuthHandler';
 import { CONTEXT_PATH, EXTERNAL_LOGIN_PATH, TOKEN_COOKIE_NAME } from '../consts';
+import { db } from '../db/Connection';
+import type { UserAppsInstance } from '../db/models/UserAppsModel';
+import * as AuthHandler from '../handler/AuthHandler';
+import type { LicenseResponse } from '../handler/AuthHandler.types';
 import { getLogger } from '../handler/LoggerHandler';
+import type { GenericErrorResponse } from '../types';
 import { getTokenFromCookies } from '../utils';
 import type {
-    GetAuthUserResponse,
+    GetAuthFirstLoginResponse,
     GetAuthManagerResponse,
     GetAuthRBACResponse,
-    GetAuthFirstLoginResponse,
+    GetAuthUserResponse,
     PostAuthLoginResponse,
     PostAuthSamlCallbackResponse
 } from './Auth.types';
-import type { LicenseResponse } from '../handler/AuthHandler.types';
-import { db } from '../db/Connection';
-import type { UserAppsInstance } from '../db/models/UserAppsModel';
-import type { GenericErrorResponse } from '../types';
 
 const router = express.Router();
 const logger = getLogger('Auth');
@@ -62,6 +62,7 @@ router.post(
             AuthHandler.getTokenViaSamlResponse(req.body.SAMLResponse)
                 .then(token => {
                     res.cookie(TOKEN_COOKIE_NAME, token.value, getCookieOptions(req));
+                    // eslint-disable-next-line security-node/detect-dangerous-redirects
                     res.redirect(`${CONTEXT_PATH}${EXTERNAL_LOGIN_PATH}`);
                 })
                 .catch(err => {

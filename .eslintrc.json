@@ -10,7 +10,9 @@
                 "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
                 "no-console": "off",
                 "security/detect-child-process": "off",
-                "no-process-exit": "off"
+                "no-process-exit": "off",
+                "xss/no-mixed-html": "off",
+                "security-node/detect-crlf": "off"
             }
         },
         {
