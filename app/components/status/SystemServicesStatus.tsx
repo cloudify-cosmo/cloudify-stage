@@ -1,14 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
-import { clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from '../shared/cluster/consts';
+import { clusterServiceEnum } from '../shared/cluster/consts';
+import type { ClusterServices, ClusterServiceData } from '../shared/cluster/types';
 
-export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
+const defaultServices = _.mapValues(clusterServiceEnum, () => {
+    const clusterServiceData: ClusterServiceData = {
+        status: 'Unknown',
+        is_external: false
+    };
+    return clusterServiceData;
+});
+
+interface SystemServicesStatusProps {
+    services: ClusterServices;
+    isFetching: boolean;
+    fetchingError: string;
+}
+
+export default function SystemServicesStatus({
+    services = defaultServices,
+    isFetching = false,
+    fetchingError = ''
+}: SystemServicesStatusProps) {
     return (
         <ClusterStatusOverview
             clickable
@@ -18,29 +35,10 @@ export default function SystemServicesStatus({ services, isFetching, fetchingErr
             header={
                 <Table.Row>
                     <Table.HeaderCell colSpan="2">
-                        <SystemStatusHeader />
+                        <SystemStatusHeader isFetching={isFetching} />
                     </Table.HeaderCell>
                 </Table.Row>
             }
         />
     );
 }
-
-SystemServicesStatus.propTypes = {
-    services: PropTypes.shape(
-        _.mapValues(clusterServiceEnum, () =>
-            PropTypes.shape({
-                status: PropTypes.oneOf(clusterServiceStatuses),
-                is_external: PropTypes.bool
-            })
-        )
-    ),
-    isFetching: PropTypes.bool,
-    fetchingError: PropTypes.string
-};
-
-SystemServicesStatus.defaultProps = {
-    services: _.mapValues(clusterServiceEnum, () => ({ status: clusterServiceStatusEnum.Unknown, is_external: false })),
-    isFetching: false,
-    fetchingError: ''
-};

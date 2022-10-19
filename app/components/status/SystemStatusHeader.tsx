@@ -25,6 +25,6 @@ export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
     );
 }
 SystemStatusHeader.propTypes = {
-    onStatusRefresh: PropTypes.func.isRequired,
+    onStatusRefresh: PropTypes.func,
     isFetching: PropTypes.bool.isRequired
 };
