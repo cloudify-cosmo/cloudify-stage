@@ -103,13 +103,13 @@ export default class StageUtils {
         let sentence = '';
         let resolvedMessage = message;
 
-        // eslint-disable-next-line no-cond-assign,scanjs-rules/accidental_assignment
+        // eslint-disable-next-line no-cond-assign
         while ((matchedTag = tagPattern.exec(resolvedMessage))) {
             const tag = matchedTag[0];
             sentence = matchedTag[1].toLowerCase();
 
             const attributes = [];
-            // eslint-disable-next-line no-cond-assign,scanjs-rules/accidental_assignment
+            // eslint-disable-next-line no-cond-assign
             while ((matchedAttr = attrPattern.exec(tag))) {
                 attributes.push({ key: matchedAttr[1], value: matchedAttr[2] });
             }
