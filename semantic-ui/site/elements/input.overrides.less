@@ -2,24 +2,51 @@
          Site Overrides
 *******************************/
 
+// TODO Norbert: Consider renaming and propagating variables below
+@inputBorderColor: #ebebeb;
+@inputHoverBorderColor: @grey;
+
 .ui.input {
     & > input {
-        border-color: #ebebeb;
+        border-color: @inputBorderColor;
         padding: 8.5px 12px;
     }
 
-    &.disabled > input {
-        border-color: #ebebeb;
-        color: rgba(95, 99, 104, 0.45);
+    &.disabled {
+        & > input,
+        &.labeled .label {
+            color: rgba(95, 99, 104, 0.45);
+        }
     }
 
     &:not(.disabled) {
-        &:hover > input {
-            border-color: @grey;
-        }
+        & > input {
+            &:hover {
+                border-color: @inputHoverBorderColor;
+            }
 
-        &:focus-within > input {
-            border-color: @downBorderColor;
+            &:focus {
+                border-color: @downBorderColor;
+            }
+        }
+    }
+
+    // TODO Norbert: Double check vertical label text placement
+    &.labeled {
+        &.left {
+            & > input {
+                & {
+                    border-left-color: @inputBorderColor !important;
+                }
+
+                &:hover {
+                    border-left-color: @inputHoverBorderColor !important;
+                }
+
+                &:focus {
+                    border-left-color: @downBorderColor !important;
+                }
+            }
         }
     }
 }
