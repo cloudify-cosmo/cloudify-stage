@@ -100,8 +100,6 @@ interface StageCustomConfigurationComponentProps<T> {
 }
 export type { StageCustomConfigurationComponentProps as CustomConfigurationComponentProps };
 
-export type StageWidgetComponent = JSXElementConstructor<StageCustomConfigurationComponentProps<any>>;
-
 // TODO(RD-2792): use a discriminated union for different types of configuration
 interface StageWidgetConfigurationDefinition {
     id: string;
@@ -111,7 +109,7 @@ interface StageWidgetConfigurationDefinition {
     default?: any;
     placeHolder?: string;
     hidden?: boolean;
-    component?: StageWidgetComponent;
+    component?: JSXElementConstructor<StageCustomConfigurationComponentProps<any>>;
     /** Used for lists */
     items?: (string | { name: string; value: string })[];
     [key: string]: any;
@@ -288,7 +286,6 @@ declare global {
                 Data,
                 Configuration
             >;
-            type WidgetComponent = StageWidgetComponent;
             type PaginatedResponse<ResponseItem> = CloudifyPaginatedResponse<ResponseItem>;
             type ReduxState = import('../reducers').ReduxState;
 
