@@ -6,7 +6,7 @@ import { Icon } from '../../basic';
 import { clusterStatusEnum } from './consts';
 import type { ClusterStatus } from './types';
 
-interface ClusterStatusIconProps {
+export interface ClusterStatusIconProps {
     status: ClusterStatus | '';
 }
 const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status = '' }) => {
