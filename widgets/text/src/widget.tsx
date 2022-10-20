@@ -1,5 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
 export {};
+
+const t = Stage.Utils.getT('widgets.text');
+
+type Configuration = {
+    header: string;
+    content: string;
+    headerTextFont: string;
+    headerTextColor: string;
+    headerTextSize: number;
+    contentTextFont: string;
+    contentTextColor: string;
+    contentTextSize: number;
+};
 
 const textFonts = [
     { name: 'Sans Serif', value: 'sans-serif' }, // used as default
@@ -7,44 +19,49 @@ const textFonts = [
     { name: 'Monospace', value: 'monospace' }
 ];
 
-Stage.defineWidget({
+Stage.defineWidget<never, never, Configuration>({
     id: 'text',
-    name: 'Text box',
-    description: 'Adds text box',
+    name: t('name'),
+    description: t('description'),
     showHeader: false,
     showBorder: false,
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('text'),
     initialConfiguration: [
-        { id: 'header', name: 'Header', default: 'Header text', type: Stage.Basic.GenericField.STRING_TYPE },
+        {
+            id: 'header',
+            name: t('configuration.header.name'),
+            default: t('configuration.header.default'),
+            type: Stage.Basic.GenericField.STRING_TYPE
+        },
         {
             id: 'content',
-            name: 'Content',
-            description: 'Markdown is supported',
-            default: 'Markdown supported content. Update in widget configuration.',
+            name: t('configuration.content.name'),
+            description: t('configuration.description.name'),
+            default: t('configuration.content.default'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
+            // @ts-ignore TODO(RD-6138): Fix once proper typing is added to `StageCustomConfigurationComponentProps` and `GenericField`
             component: Stage.Basic.Form.TextArea
         },
-
         {
             id: 'headerTextColor',
-            name: 'Header text color',
+            name: t('configuration.headerTextColor.name'),
             default: '#000000',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'headerTextSize',
-            name: 'Header text size [px]',
-            default: '20',
+            name: t('configuration.headerTextSize.name'),
+            default: 20,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
         },
         {
             id: 'headerTextFont',
-            name: 'Header text font',
+            name: t('configuration.headerTextFont.name'),
             default: textFonts[0].value,
             items: textFonts,
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -52,22 +69,22 @@ Stage.defineWidget({
 
         {
             id: 'contentTextColor',
-            name: 'Content text color',
+            name: t('configuration.contentTextColor.name'),
             default: '#000000',
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Basic.Form.ColorPicker
         },
         {
             id: 'contentTextSize',
-            name: 'Content text size [px]',
-            default: '14',
+            name: t('configuration.contentTextSize.name'),
+            default: 14,
             type: Stage.Basic.GenericField.NUMBER_TYPE,
             min: 6,
             max: 100
         },
         {
             id: 'contentTextFont',
-            name: 'Content text font',
+            name: t('configuration.contentTextFont.name'),
             default: textFonts[0].value,
             items: textFonts,
             type: Stage.Basic.GenericField.LIST_TYPE

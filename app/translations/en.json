@@ -1711,6 +1711,39 @@
                 }
             }
         },
+        "text": {
+            "name": "Text box",
+            "description": "Adds text box",
+            "configuration": {
+                "header": {
+                    "name": "Header",
+                    "default": "Header text"
+                },
+                "content": {
+                    "name": "Content",
+                    "description": "Markdown is supported",
+                    "default": "Markdown supported content. Update in widget configuration."
+                },
+                "headerTextColor": {
+                    "name": "Header text color"
+                },
+                "headerTextSize": {
+                    "name": "Header text size [px]"
+                },
+                "headerTextFont": {
+                    "name": "Header text font"
+                },
+                "contentTextColor": {
+                    "name": "Content text color"
+                },
+                "contentTextSize": {
+                    "name": "Content text size [px]"
+                },
+                "contentTextFont": {
+                    "name": "Content text font"
+                }
+            }
+        },
         "deployments": {
             "name": "Blueprint deployments",
             "description": "Shows blueprint deployments list",
