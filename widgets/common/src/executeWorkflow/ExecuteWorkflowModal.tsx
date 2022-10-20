@@ -17,6 +17,7 @@ import type {
     WorkflowOptions,
     WorkflowParameters
 } from './types';
+import type { Field } from '../types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -174,9 +175,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
     const onWorkflowInputChange: OnChange = (_event, field) => {
         setUserWorkflowParams({
             ...userWorkflowParams,
-            ...Stage.Basic.Form.fieldNameValue(
-                field as { name: string; value: unknown; type: string; checked?: string | undefined }
-            )
+            ...Stage.Basic.Form.fieldNameValue(field as Field)
         });
     };
 
