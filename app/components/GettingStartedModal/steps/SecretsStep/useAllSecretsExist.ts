@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useManager from '../../../../utils/hooks/useManager';
 
-const useCheckSecretsExist = (secretKeys: string[]) => {
+const useAllSecretsExist = (secretKeys: string[]) => {
     const manager = useManager();
     const [allSecretsExist, setAllSecretsExist] = useState<boolean | undefined>();
 
@@ -29,4 +29,4 @@ const useCheckSecretsExist = (secretKeys: string[]) => {
     return allSecretsExist;
 };
 
-export default useCheckSecretsExist;
+export default useAllSecretsExist;

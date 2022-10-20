@@ -5,7 +5,7 @@ import { useInputs } from '../../../../utils/hooks';
 import SecretsExistMessage from './SecretsExistMessage';
 import type { GettingStartedSecretsData, GettingStartedSchemaItem } from '../../model';
 import type { Errors } from '../../GettingStartedModal';
-import useCheckSecretsExist from './useCheckSecretsExist';
+import useAllSecretsExist from './useAllSecretsExist';
 
 type Props = {
     selectedEnvironment: GettingStartedSchemaItem;
@@ -30,7 +30,7 @@ const SecretsStep = ({ selectedEnvironment, typedSecrets, onChange, errors }: Pr
     const [secretInputs, setSecretInputs, resetSecretInputs] = useInputs(typedSecrets || defaultSecretInputs);
     const [overrideSecrets, setOverrideSecrets] = useState(false);
 
-    const allSecretsExist = useCheckSecretsExist(Object.keys(defaultSecretInputs));
+    const allSecretsExist = useAllSecretsExist(Object.keys(defaultSecretInputs));
 
     useEffect(() => resetSecretInputs(), [typedSecrets]);
     useEffect(() => {
