@@ -447,7 +447,7 @@ describe('Getting started modal', () => {
             });
         });
 
-        it('should disable editing and show message on existing screts with a checkbox override secrets', () => {
+        it('should disable secrets fields when secrets already exist', () => {
             cy.get('.modal').within(() => {
                 cy.deleteSecrets('aws');
                 cy.createSecret('aws_access_key_id', 'aaa');
