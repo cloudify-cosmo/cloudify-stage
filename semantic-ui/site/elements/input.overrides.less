@@ -1,3 +1,25 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.input {
+    & > input {
+        border-color: #ebebeb;
+        padding: 8.5px 12px;
+    }
+
+    &.disabled > input {
+        border-color: #ebebeb;
+        color: rgba(95, 99, 104, 0.45);
+    }
+
+    &:not(.disabled) {
+        &:hover > input {
+            border-color: @grey;
+        }
+
+        &:focus-within > input {
+            border-color: @downBorderColor;
+        }
+    }
+}

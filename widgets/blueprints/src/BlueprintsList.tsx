@@ -157,17 +157,17 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             <div>
                 <h2>Default Input</h2>
                 <ExampleRow>
-                    <Form.Input />
-                    <Form.Input disabled />
+                    <Form.Input value="Some value" />
+                    <Form.Input disabled value="Some value" />
                     <Form.Input placeholder="Placeholder" />
                 </ExampleRow>
                 <h2>Labeled Input</h2>
                 <ExampleRow>
-                    <Form.Input labelPosition="left">
+                    <Form.Input labelPosition="left" value="Some value">
                         <Label>http://</Label>
                         <input />
                     </Form.Input>
-                    <Form.Input labelPosition="left" disabled>
+                    <Form.Input labelPosition="left" value="Some value" disabled>
                         <Label>http://</Label>
                         <input />
                     </Form.Input>
@@ -178,8 +178,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 </ExampleRow>
                 <h2>Icon Input</h2>
                 <ExampleRow>
-                    <Form.Input icon="user" iconPosition="left" />
-                    <Form.Input icon="user" iconPosition="left" disabled />
+                    <Form.Input icon="user" iconPosition="left" value="Some value" />
+                    <Form.Input icon="user" iconPosition="left" value="Some value" disabled />
                     <Form.Input icon="user" iconPosition="left" placeholder="Placeholder" />
                 </ExampleRow>
                 <div style={{ marginBottom: '500px' }} />
