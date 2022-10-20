@@ -1,10 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
 export {};
 
-Stage.defineWidget({
+const t = Stage.Utils.getT('widgets.nodesStats');
+
+type Item = {
+    // eslint-disable-next-line camelcase
+    node_instances: number;
+    state: string;
+};
+
+type NodeInstancesSummaryResponse = Stage.Types.PaginatedResponse<Item>;
+
+interface WidgetParams {
+    // eslint-disable-next-line camelcase
+    deployment_id?: string | string[] | null;
+}
+
+Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, PollingTimeConfiguration>({
     id: 'nodesStats',
-    name: 'Nodes statistics',
-    description: 'This widget shows number of node instances in different states',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 4,
     initialHeight: 22,
     color: 'green',
@@ -16,13 +32,13 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(10)],
     fetchUrl: '[manager]/summary/node_instances?_target_field=state[params:deployment_id]',
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         return {
             deployment_id: toolbox.getContext().getValue('deploymentId')
         };
     },
 
-    render(widget, data) {
+    render(_widget, data) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
@@ -32,8 +48,8 @@ Stage.defineWidget({
         const { PieGraph } = Stage.Shared;
         const { NodeInstancesConsts } = Stage.Common;
 
-        const states = _.reduce(
-            data.items,
+        const states = _.reduce<Item, Record<string, number>>(
+            data?.items,
             (result, item) => {
                 result[item.state] = item.node_instances;
                 return result;
