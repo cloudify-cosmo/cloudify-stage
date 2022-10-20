@@ -3,7 +3,7 @@ import useManager from '../../../../utils/hooks/useManager';
 
 const useCheckSecretsExist = (secretKeys: string[]) => {
     const manager = useManager();
-    const [isAllSecretsExist, setAllSecretsExist] = useState<boolean | undefined>();
+    const [allSecretsExist, setAllSecretsExist] = useState<boolean | undefined>();
 
     useEffect(() => {
         const searchSecrets = async () => {
@@ -26,7 +26,7 @@ const useCheckSecretsExist = (secretKeys: string[]) => {
         searchSecrets();
     }, []);
 
-    return isAllSecretsExist;
+    return allSecretsExist;
 };
 
 export default useCheckSecretsExist;
