@@ -4,12 +4,12 @@ import React from 'react';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
-import { clusterServiceEnum } from '../shared/cluster/consts';
-import type { ClusterServices, ClusterServiceData } from '../shared/cluster/types';
+import { clusterServiceEnum, clusterServiceStatusEnum } from '../shared/cluster/consts';
+import type { ClusterServices, ClusterServiceData, ClusterServiceStatus } from '../shared/cluster/types';
 
 const defaultServices = _.mapValues(clusterServiceEnum, () => {
     const clusterServiceData: ClusterServiceData = {
-        status: 'Unknown',
+        status: clusterServiceStatusEnum.Unknown as ClusterServiceStatus,
         is_external: false
     };
     return clusterServiceData;
