@@ -1,4 +1,6 @@
 import type { ComponentProps } from 'react';
+import styled from 'styled-components';
+import { Label } from 'semantic-ui-react';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -137,7 +139,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage } = Stage.Basic;
+        const { ErrorMessage, Form } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -145,8 +147,43 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         const BlueprintsView = shouldShowTable ? BlueprintsTable : BlueprintsCatalog;
 
+        const ExampleRow = styled.div`
+            display: flex;
+            margin-top: 36px;
+            gap: 24px;
+        `;
+
         return (
             <div>
+                <h2>Default Input</h2>
+                <ExampleRow>
+                    <Form.Input />
+                    <Form.Input disabled />
+                    <Form.Input placeholder="Placeholder" />
+                </ExampleRow>
+                <h2>Labeled Input</h2>
+                <ExampleRow>
+                    <Form.Input labelPosition="left">
+                        <Label>http://</Label>
+                        <input />
+                    </Form.Input>
+                    <Form.Input labelPosition="left" disabled>
+                        <Label>http://</Label>
+                        <input />
+                    </Form.Input>
+                    <Form.Input labelPosition="left" placeholder="site.com">
+                        <Label>http://</Label>
+                        <input />
+                    </Form.Input>
+                </ExampleRow>
+                <h2>Icon Input</h2>
+                <ExampleRow>
+                    <Form.Input icon="user" iconPosition="left" />
+                    <Form.Input icon="user" iconPosition="left" disabled />
+                    <Form.Input icon="user" iconPosition="left" placeholder="Placeholder" />
+                </ExampleRow>
+                <div style={{ marginBottom: '500px' }} />
+
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
