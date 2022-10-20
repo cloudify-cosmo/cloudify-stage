@@ -5,7 +5,7 @@ import { Button, Header } from '../basic';
 import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
 
 export interface SystemStatusHeaderProps {
-    onStatusRefresh: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, data: ButtonProps) => void;
+    onStatusRefresh: ButtonProps['onClick'];
     isFetching: boolean;
 }
 
