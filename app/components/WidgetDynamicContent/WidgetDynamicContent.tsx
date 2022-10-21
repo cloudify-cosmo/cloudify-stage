@@ -6,12 +6,10 @@ import log from 'loglevel';
 import PropTypes from 'prop-types';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
-import { Message } from 'semantic-ui-react';
 import WidgetPropType from '../../utils/props/WidgetPropType';
 import combineClassNames from '../../utils/shared/combineClassNames';
 import { getToolbox } from '../../utils/Toolbox';
 import WidgetParamsHandler from '../../utils/WidgetParamsHandler';
-import { ErrorMessage } from '../basic';
 import WidgetErrorMessage from './WidgetErrorMessage';
 
 export default class WidgetDynamicContent extends Component {
@@ -335,7 +333,7 @@ export default class WidgetDynamicContent extends Component {
 WidgetDynamicContent.propTypes = {
     context: PropTypes.shape({}).isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    data: PropTypes.shape({ data: PropTypes.any.isRequired, error: ErrorMessage.propTypes?.error }),
+    data: PropTypes.shape({ data: PropTypes.any, error: PropTypes.any }).isRequired,
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,

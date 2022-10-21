@@ -41,7 +41,8 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
 }
 
 UploadLicense.propTypes = {
-    error: ErrorMessage.propTypes?.error,
+    // eslint-disable-next-line react/forbid-prop-types
+    error: PropTypes.any,
     isLoading: PropTypes.bool.isRequired,
     license: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired,
