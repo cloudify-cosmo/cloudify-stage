@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../../actions/types';
+import { ActionType } from '../../actions/types';
 import emptyState from './emptyState';
 
 export type AuthState = 'loggedOut' | 'loggingIn' | 'loggedIn';
@@ -20,27 +20,27 @@ const emptyAuthState = emptyState.auth;
 
 const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
     switch (action.type) {
-        case types.REQ_LOGIN:
+        case ActionType.REQ_LOGIN:
             return {
                 ...emptyAuthState,
                 state: 'loggingIn'
             };
-        case types.RES_LOGIN:
+        case ActionType.RES_LOGIN:
             return {
                 ...emptyAuthState,
                 username: action.username,
                 role: action.role,
                 state: 'loggedIn'
             };
-        case types.LOGOUT:
+        case ActionType.LOGOUT:
             return emptyAuthState;
-        case types.ERR_LOGIN:
+        case ActionType.ERR_LOGIN:
             return {
                 ...emptyAuthState,
                 username: action.username,
                 error: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error
             };
-        case types.SET_USER_DATA:
+        case ActionType.SET_USER_DATA:
             return {
                 ...state,
                 username: action.username,
@@ -49,7 +49,7 @@ const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
                 tenantsRoles: action.tenantsRoles,
                 showGettingStarted: action.showGettingStarted
             };
-        case types.SET_IDENTITY_PROVIDERS:
+        case ActionType.SET_IDENTITY_PROVIDERS:
             return {
                 ...state,
                 identityProviders: action.identityProviders

@@ -6,7 +6,7 @@ import timeKeeper from 'timekeeper';
 
 import tenantsReducer from 'reducers/managerReducer/tenantsReducer';
 import { getTenants, selectTenant } from 'actions/tenants';
-import * as types from 'actions/types';
+import { ActionType } from 'actions/types';
 
 import fetchMock from 'fetch-mock';
 import log from 'loglevel';
@@ -37,9 +37,9 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: types.REQ_TENANTS },
+            { type: ActionType.REQ_TENANTS },
             {
-                type: types.RES_TENANTS,
+                type: ActionType.RES_TENANTS,
                 tenants: {
                     items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
                 },
@@ -65,9 +65,9 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: types.REQ_TENANTS },
+            { type: ActionType.REQ_TENANTS },
             {
-                type: types.ERR_TENANTS,
+                type: ActionType.ERR_TENANTS,
                 error: 'Error fetching tenants',
                 receivedAt: Date.now()
             }

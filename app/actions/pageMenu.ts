@@ -15,7 +15,7 @@ import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
 import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
-import * as types from './types';
+import { ActionType } from './types';
 import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
 
@@ -37,7 +37,7 @@ export type PageMenuItem = PageDefinition | PageGroup;
 
 export function createPage(page: Partial<PageDefinition>, newPageId: string) {
     return {
-        type: types.ADD_PAGE,
+        type: ActionType.ADD_PAGE,
         page,
         newPageId
     };
@@ -45,7 +45,7 @@ export function createPage(page: Partial<PageDefinition>, newPageId: string) {
 
 function createPageGroup(pageGroup: any, id: string) {
     return {
-        type: types.ADD_PAGE_GROUP,
+        type: ActionType.ADD_PAGE_GROUP,
         pageGroup,
         id
     };
@@ -53,7 +53,7 @@ function createPageGroup(pageGroup: any, id: string) {
 
 function addPageToGroup(pageGroupId: string, pageId: string) {
     return {
-        type: types.ADD_PAGE_TO_GROUP,
+        type: ActionType.ADD_PAGE_TO_GROUP,
         pageGroupId,
         pageId
     };
@@ -61,7 +61,7 @@ function addPageToGroup(pageGroupId: string, pageId: string) {
 
 export function createDrilldownPage(page: PageDefinition, newPageId: string) {
     return {
-        type: types.CREATE_DRILLDOWN_PAGE,
+        type: ActionType.CREATE_DRILLDOWN_PAGE,
         page,
         newPageId
     };
@@ -96,7 +96,7 @@ function createId(name: string, pages: PageMenuItem[]) {
 
 export function changePageMenuItemName(pageMenuItemId: string, newName: string) {
     return {
-        type: types.RENAME_PAGE_MENU_ITEM,
+        type: ActionType.RENAME_PAGE_MENU_ITEM,
         pageMenuItemId,
         name: newName
     };
@@ -104,7 +104,7 @@ export function changePageMenuItemName(pageMenuItemId: string, newName: string) 
 
 export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS) {
     return {
-        type: types.CHANGE_PAGE_MENU_ITEM_ICON,
+        type: ActionType.CHANGE_PAGE_MENU_ITEM_ICON,
         pageMenuItemId,
         icon
     };
@@ -195,7 +195,7 @@ export function addPage(name: string): ThunkAction<void, ReduxState, never, AnyA
 
 export function removeSinglePageMenuItem(pageMenuItemId: string) {
     return {
-        type: types.REMOVE_PAGE_MENU_ITEM,
+        type: ActionType.REMOVE_PAGE_MENU_ITEM,
         pageMenuItemId
     };
 }
@@ -273,7 +273,7 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
 
 export function reorderPageMenu(sourceId: string, targetId: string, position: InsertPosition) {
     return {
-        type: types.REORDER_PAGE_MENU,
+        type: ActionType.REORDER_PAGE_MENU,
         sourceId,
         targetId,
         position

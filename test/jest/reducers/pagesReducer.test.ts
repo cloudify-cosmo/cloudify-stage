@@ -3,7 +3,7 @@ import { drillDownToPage } from 'actions/drilldownPage';
 import { changePageDescription } from 'actions/page';
 import { changePageMenuItemName, removePageWithChildren } from 'actions/pageMenu';
 
-import * as types from 'actions/types';
+import { ActionType } from 'actions/types';
 import { parse } from 'query-string';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 
@@ -30,7 +30,7 @@ describe('(Reducer) Pages', () => {
 
             const expectedActions = [
                 {
-                    type: types.CREATE_DRILLDOWN_PAGE,
+                    type: ActionType.CREATE_DRILLDOWN_PAGE,
                     page: {
                         name: 'tmp1',
                         layout: [
@@ -51,7 +51,7 @@ describe('(Reducer) Pages', () => {
                     }
                 },
                 {
-                    type: types.ADD_WIDGET,
+                    type: ActionType.ADD_WIDGET,
                     layoutSection: 0,
                     tab: null,
                     widgetDefinition: initialState.widgetDefinitions[0],
@@ -65,13 +65,13 @@ describe('(Reducer) Pages', () => {
                     }
                 },
                 {
-                    type: types.ADD_DRILLDOWN_PAGE,
+                    type: ActionType.ADD_DRILLDOWN_PAGE,
                     widgetId: '1',
                     drillDownName: 'tmp1'
                 },
-                { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
-                { type: types.WIDGET_DATA_CLEAR },
-                { type: types.MINIMIZE_TAB_WIDGETS },
+                { type: ActionType.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: ActionType.WIDGET_DATA_CLEAR },
+                { type: ActionType.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 
@@ -180,9 +180,9 @@ describe('(Reducer) Pages', () => {
             const store = mockStore(initialState);
 
             const expectedActions = [
-                { type: types.WIDGET_DATA_CLEAR },
-                { type: types.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
-                { type: types.MINIMIZE_TAB_WIDGETS },
+                { type: ActionType.WIDGET_DATA_CLEAR },
+                { type: ActionType.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: ActionType.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
 

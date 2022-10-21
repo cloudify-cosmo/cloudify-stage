@@ -1,17 +1,17 @@
 // @ts-nocheck File not migrated fully to TS
 
-import * as types from './types';
+import { ActionType } from './types';
 
 export function setLicense(license) {
     return {
-        type: types.SET_MANAGER_LICENSE,
+        type: ActionType.SET_MANAGER_LICENSE,
         license
     };
 }
 
 export function setLicenseRequired(isRequired) {
     return {
-        type: types.SET_LICENSE_REQUIRED,
+        type: ActionType.SET_LICENSE_REQUIRED,
         isRequired
     };
 }

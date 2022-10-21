@@ -1,11 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
 
 import _ from 'lodash';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
 
 const widgetData = (state = [], action) => {
     switch (action.type) {
-        case types.WIDGET_FETCH_LOADING:
+        case ActionType.WIDGET_FETCH_LOADING:
             if (!_.find(state, { id: action.widgetId })) {
                 return [
                     ...state,
@@ -32,7 +32,7 @@ const widgetData = (state = [], action) => {
                 return w;
             });
 
-        case types.WIDGET_FETCH_ERROR:
+        case ActionType.WIDGET_FETCH_ERROR:
             return state.map(w => {
                 if (w.id === action.widgetId) {
                     return {
@@ -46,7 +46,7 @@ const widgetData = (state = [], action) => {
                 }
                 return w;
             });
-        case types.WIDGET_FETCH_RES:
+        case ActionType.WIDGET_FETCH_RES:
             return state.map(w => {
                 if (w.id === action.widgetId) {
                     return {
@@ -63,7 +63,7 @@ const widgetData = (state = [], action) => {
                 return w;
             });
 
-        case types.WIDGET_FETCH_CANCELED:
+        case ActionType.WIDGET_FETCH_CANCELED:
             return state.map(w => {
                 if (w.id === action.widgetId) {
                     return {
@@ -77,7 +77,7 @@ const widgetData = (state = [], action) => {
                 }
                 return w;
             });
-        case types.WIDGET_DATA_CLEAR:
+        case ActionType.WIDGET_DATA_CLEAR:
             return [];
         default:
             return state;

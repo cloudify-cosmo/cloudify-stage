@@ -2,7 +2,7 @@
 
 import log from 'loglevel';
 import type { ThunkAction, AnyAction } from 'redux';
-import * as types from './types';
+import { ActionType } from './types';
 import Manager from '../utils/Manager';
 import { setAppLoading } from './appState';
 import { setEditMode } from './config';
@@ -12,13 +12,13 @@ import type { ReduxState } from '../reducers';
 
 function requestTenants() {
     return {
-        type: types.REQ_TENANTS
+        type: ActionType.REQ_TENANTS
     };
 }
 
 function recieveTenants(tenants) {
     return {
-        type: types.RES_TENANTS,
+        type: ActionType.RES_TENANTS,
         tenants,
         receivedAt: Date.now()
     };
@@ -26,7 +26,7 @@ function recieveTenants(tenants) {
 
 function errorTenants(err) {
     return {
-        type: types.ERR_TENANTS,
+        type: ActionType.ERR_TENANTS,
         error: err,
         receivedAt: Date.now()
     };
@@ -52,7 +52,7 @@ export function getTenants(): ThunkAction<void, ReduxState, never, AnyAction> {
 
 export function selectTenant(tenantName) {
     return {
-        type: types.SELECT_TENANT,
+        type: ActionType.SELECT_TENANT,
         tenant: tenantName
     };
 }

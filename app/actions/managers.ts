@@ -1,8 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 
-import { push } from 'connected-react-router';
 import log from 'loglevel';
+import { push } from 'connected-react-router';
 import type { AnyAction, ThunkAction } from 'redux';
+import { ActionType } from './types';
 import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
 import type { ReduxState } from '../reducers';
 import Auth from '../utils/auth';
@@ -11,19 +12,17 @@ import Manager from '../utils/Manager';
 import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
-
-import * as types from './types';
 import { setVersion } from './version';
 
 function requestLogin() {
     return {
-        type: types.REQ_LOGIN
+        type: ActionType.REQ_LOGIN
     };
 }
 
 export function receiveLogin(username, role) {
     return {
-        type: types.RES_LOGIN,
+        type: ActionType.RES_LOGIN,
         username,
         role,
         receivedAt: Date.now()
@@ -32,7 +31,7 @@ export function receiveLogin(username, role) {
 
 function errorLogin(username, err) {
     return {
-        type: types.ERR_LOGIN,
+        type: ActionType.ERR_LOGIN,
         username,
         error: err,
         receivedAt: Date.now()
@@ -41,7 +40,7 @@ function errorLogin(username, err) {
 
 export function storeRBAC(RBAC) {
     return {
-        type: types.STORE_RBAC,
+        type: ActionType.STORE_RBAC,
         roles: RBAC.roles,
         permissions: RBAC.permissions
     };
@@ -78,7 +77,7 @@ export function login(
 
 function responseUserData({ username, role, groupSystemRoles, tenantsRoles, showGettingStarted }: GetAuthUserResponse) {
     return {
-        type: types.SET_USER_DATA,
+        type: ActionType.SET_USER_DATA,
         username,
         role,
         groupSystemRoles,
@@ -111,7 +110,7 @@ export function getUserData(): ThunkAction<void, ReduxState, never, AnyAction> {
 
 function responseIdentityProviders(identityProviders: string[]) {
     return {
-        type: types.SET_IDENTITY_PROVIDERS,
+        type: ActionType.SET_IDENTITY_PROVIDERS,
         identityProviders
     };
 }
@@ -127,7 +126,7 @@ export function getIdentityProviders() {
 
 function doLogout(err) {
     return {
-        type: types.LOGOUT,
+        type: ActionType.LOGOUT,
         error: err,
         receivedAt: Date.now()
     };
@@ -147,7 +146,7 @@ export function logout(err?, path?): ThunkAction<void, ReduxState, never, AnyAct
 
 export function setMaintenanceStatus(maintenance) {
     return {
-        type: types.SET_MAINTENANCE_STATUS,
+        type: ActionType.SET_MAINTENANCE_STATUS,
         maintenance,
         receivedAt: Date.now()
     };
@@ -177,7 +176,7 @@ export function switchMaintenance(manager, activate) {
 
 export function setActiveExecutions(activeExecutions) {
     return {
-        type: types.SET_ACTIVE_EXECUTIONS,
+        type: ActionType.SET_ACTIVE_EXECUTIONS,
         activeExecutions
     };
 }
@@ -204,7 +203,7 @@ export function getActiveExecutions(manager) {
 
 export function cancelExecution(execution, action) {
     return {
-        type: types.CANCEL_EXECUTION,
+        type: ActionType.CANCEL_EXECUTION,
         execution,
         action
     };

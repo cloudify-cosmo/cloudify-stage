@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { createStore } from 'redux';
 
 import { setLicense } from 'actions/license';
-import * as types from 'actions/types';
+import { ActionType } from 'actions/types';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import licenses from '../../resources/licenses';
 
@@ -19,7 +19,7 @@ describe('(Reducer) License', () => {
 
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
-                type: types.SET_MANAGER_LICENSE,
+                type: ActionType.SET_MANAGER_LICENSE,
                 license: licenses.activePayingLicense
             };
             const expectedActions = [setManagerLicenseAction];
@@ -46,7 +46,7 @@ describe('(Reducer) License', () => {
 
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
-                type: types.SET_MANAGER_LICENSE,
+                type: ActionType.SET_MANAGER_LICENSE,
                 license: licenses.expiredPayingLicense
             };
             const expectedActions = [setManagerLicenseAction];

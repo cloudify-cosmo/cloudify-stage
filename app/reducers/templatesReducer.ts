@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import type { Reducer } from 'redux';
 import type { PageDefinition } from '../actions/page';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
 
 export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 
@@ -13,10 +13,10 @@ export interface TemplatesState {
 
 const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} }, action) => {
     switch (action.type) {
-        case types.STORE_TEMPLATES:
+        case ActionType.STORE_TEMPLATES:
             return { ...action.templates };
-        case types.ADD_TEMPLATE:
-        case types.EDIT_TEMPLATE:
+        case ActionType.ADD_TEMPLATE:
+        case ActionType.EDIT_TEMPLATE:
             return {
                 ...state,
                 templatesDef: {
@@ -24,23 +24,23 @@ const templates: Reducer<TemplatesState> = (state = { templatesDef: {}, pagesDef
                     [action.templateId]: { ...[action.templateId], pages: action.pages }
                 }
             };
-        case types.REMOVE_TEMPLATE:
+        case ActionType.REMOVE_TEMPLATE:
             return { ...state, templatesDef: _.omit(state.templatesDef, [action.templateId]) };
-        case types.ADD_TEMPLATE_PAGE:
+        case ActionType.ADD_TEMPLATE_PAGE:
             return {
                 ...state,
                 pagesDef: { ...state.pagesDef, [action.page.id]: _.omit(action.page, 'id') }
             };
-        case types.REMOVE_TEMPLATE_PAGE:
+        case ActionType.REMOVE_TEMPLATE_PAGE:
             return { ...state, pagesDef: _.omit(state.pagesDef, [action.pageId]) };
-        case types.REMOVE_TEMPLATE_PAGE_GROUP:
+        case ActionType.REMOVE_TEMPLATE_PAGE_GROUP:
             return { ...state, pageGroupsDef: _.omit(state.pageGroupsDef, [action.pageGroupdId]) };
-        case types.CREATE_TEMPLATE_PAGE_GROUP:
+        case ActionType.CREATE_TEMPLATE_PAGE_GROUP:
             return {
                 ...state,
                 pageGroupsDef: { ...state.pageGroupsDef, [action.pageGroupId]: _.pick(action, 'name', 'pages', 'icon') }
             };
-        case types.UPDATE_TEMPLATE_PAGE_GROUP:
+        case ActionType.UPDATE_TEMPLATE_PAGE_GROUP:
             return {
                 ...state,
                 pageGroupsDef: {

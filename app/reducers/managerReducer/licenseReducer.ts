@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../../actions/types';
+import { ActionType } from '../../actions/types';
 import Auth from '../../utils/auth';
 import type Consts from '../../utils/consts';
 import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
@@ -15,9 +15,9 @@ export interface LicenseData {
 
 const license: Reducer<LicenseData> = (state = {}, { type, license: licenseData, isRequired }) => {
     switch (type) {
-        case types.SET_LICENSE_REQUIRED:
+        case ActionType.SET_LICENSE_REQUIRED:
             return { ...state, isRequired };
-        case types.SET_MANAGER_LICENSE:
+        case ActionType.SET_MANAGER_LICENSE:
             return {
                 ...state,
                 data: licenseData,

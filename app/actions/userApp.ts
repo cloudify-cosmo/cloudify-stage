@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { push } from 'connected-react-router';
-import * as types from './types';
+import { ActionType } from './types';
 import { createPagesFromTemplate } from './pageMenu';
 import { setAppLoading, setAppError } from './appState';
 import { saveUserAppData } from './userAppCommon';
@@ -12,7 +12,7 @@ import type { GetUserAppResponse } from '../../backend/routes/UserApp.types';
 
 function setPages(pages) {
     return {
-        type: types.SET_PAGES,
+        type: ActionType.SET_PAGES,
         pages,
         receivedAt: Date.now()
     };

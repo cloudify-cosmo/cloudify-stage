@@ -11,7 +11,7 @@ import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
-import * as types from './types';
+import { ActionType } from './types';
 import { addWidget } from './widgets';
 import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
 
@@ -50,7 +50,7 @@ export interface PageDefinition extends Omit<AppDataPage, 'icon' | 'layout'> {
 
 export function addTab(pageId: string, layoutSection: number) {
     return {
-        type: types.ADD_TAB,
+        type: ActionType.ADD_TAB,
         pageId,
         layoutSection
     } as const;
@@ -58,7 +58,7 @@ export function addTab(pageId: string, layoutSection: number) {
 
 export function removeTab(pageId: string, layoutSection: number, tabIndex: number) {
     return {
-        type: types.REMOVE_TAB,
+        type: ActionType.REMOVE_TAB,
         pageId,
         layoutSection,
         tabIndex
@@ -67,7 +67,7 @@ export function removeTab(pageId: string, layoutSection: number, tabIndex: numbe
 
 export function updateTab(pageId: string, layoutSection: number, tabIndex: number, name: string, isDefault: boolean) {
     return {
-        type: types.UPDATE_TAB,
+        type: ActionType.UPDATE_TAB,
         pageId,
         layoutSection,
         tabIndex,
@@ -77,7 +77,7 @@ export function updateTab(pageId: string, layoutSection: number, tabIndex: numbe
 }
 
 export function moveTab(pageId: string, layoutSection: number, oldTabIndex: number, newTabIndex: number) {
-    return { type: types.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex } as const;
+    return { type: ActionType.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex } as const;
 }
 
 export function forAllWidgets(
@@ -120,7 +120,7 @@ export function getWidgetDefinitionById(
 
 export function changePageDescription(pageId: string, newDescription: string) {
     return {
-        type: types.CHANGE_PAGE_DESCRIPTION,
+        type: ActionType.CHANGE_PAGE_DESCRIPTION,
         pageId,
         description: newDescription
     };
@@ -153,9 +153,9 @@ export function addLayoutToPage(
 }
 
 export function addLayoutSectionToPage(pageId: string, layoutSection: LayoutSection, position: number) {
-    return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection, position };
+    return { type: ActionType.ADD_LAYOUT_SECTION, pageId, layoutSection, position };
 }
 
 export function removeLayoutSectionFromPage(pageId: string, layoutSection: number) {
-    return { type: types.REMOVE_LAYOUT_SECTION, pageId, layoutSection };
+    return { type: ActionType.REMOVE_LAYOUT_SECTION, pageId, layoutSection };
 }

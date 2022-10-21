@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
 
 export interface AppData {
     loading: boolean;
@@ -15,15 +15,15 @@ const appEmptyState: AppData = {
 
 const app: Reducer<AppData> = (state = appEmptyState, action) => {
     switch (action.type) {
-        case types.SET_APP_LOADING:
+        case ActionType.SET_APP_LOADING:
             return { ...state, loading: action.isLoading };
-        case types.SET_APP_ERROR:
+        case ActionType.SET_APP_ERROR:
             return { ...state, error: action.error, loading: false };
-        case types.STORE_CURRENT_PAGE:
+        case ActionType.STORE_CURRENT_PAGE:
             return { ...state, currentPageId: action.pageId };
-        case types.RES_LOGIN:
+        case ActionType.RES_LOGIN:
             return { ...state, loading: true };
-        case types.LOGOUT:
+        case ActionType.LOGOUT:
             return { ...state, error: action.error, loading: false };
         default:
             return state;

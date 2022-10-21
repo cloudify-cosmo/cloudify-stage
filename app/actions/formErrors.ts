@@ -1,8 +1,8 @@
-import * as types from './types';
+import { ActionType } from './types';
 
 export function setFieldError(formName: string, fieldName: string, message?: string) {
     return {
-        type: types.SET_FIELD_ERROR,
+        type: ActionType.SET_FIELD_ERROR,
         formName,
         fieldName,
         message
@@ -11,7 +11,7 @@ export function setFieldError(formName: string, fieldName: string, message?: str
 
 export function cleanFormErrors(formName: string) {
     return {
-        type: types.CLEAN_FORM_ERRORS,
+        type: ActionType.CLEAN_FORM_ERRORS,
         formName
     };
 }

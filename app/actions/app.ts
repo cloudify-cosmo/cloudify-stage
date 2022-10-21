@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import log from 'loglevel';
-import * as types from './types';
+import { ActionType } from './types';
 import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadWidgetDefinitions } from './widgets';
@@ -34,7 +34,7 @@ export function intialPageLoad() {
 
 export function storeCurrentPageId(pageId) {
     return {
-        type: types.STORE_CURRENT_PAGE,
+        type: ActionType.STORE_CURRENT_PAGE,
         pageId
     };
 }

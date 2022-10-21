@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../../actions/types';
+import { ActionType } from '../../actions/types';
 import auth from './authReducer';
 import clusterStatus from './clusterStatusReducer';
 import tenants from './tenantsReducer';
@@ -30,39 +30,39 @@ export interface ManagerData {
 
 const manager: Reducer<ManagerData> = (state = emptyState, action) => {
     switch (action.type) {
-        case types.REQ_LOGIN:
-        case types.RES_LOGIN:
-        case types.LOGOUT:
-        case types.ERR_LOGIN:
+        case ActionType.REQ_LOGIN:
+        case ActionType.RES_LOGIN:
+        case ActionType.LOGOUT:
+        case ActionType.ERR_LOGIN:
             return {
                 ...emptyState,
                 auth: auth(state.auth, action),
                 lastUpdated: action.receivedAt
             };
-        case types.SET_IDENTITY_PROVIDERS:
-        case types.SET_USER_DATA:
+        case ActionType.SET_IDENTITY_PROVIDERS:
+        case ActionType.SET_USER_DATA:
             return { ...state, auth: auth(state.auth, action) };
-        case types.REQ_CLUSTER_STATUS:
-        case types.SET_CLUSTER_STATUS:
-        case types.ERR_CLUSTER_STATUS:
+        case ActionType.REQ_CLUSTER_STATUS:
+        case ActionType.SET_CLUSTER_STATUS:
+        case ActionType.ERR_CLUSTER_STATUS:
             return { ...state, clusterStatus: clusterStatus(state.clusterStatus, action) };
-        case types.SET_MANAGER_VERSION:
+        case ActionType.SET_MANAGER_VERSION:
             return { ...state, version: action.version };
-        case types.SET_MANAGER_LICENSE:
-        case types.SET_LICENSE_REQUIRED:
+        case ActionType.SET_MANAGER_LICENSE:
+        case ActionType.SET_LICENSE_REQUIRED:
             return { ...state, license: license(state.license, action) };
-        case types.SET_MAINTENANCE_STATUS:
+        case ActionType.SET_MAINTENANCE_STATUS:
             return { ...state, maintenance: action.maintenance };
-        case types.REQ_TENANTS:
-        case types.RES_TENANTS:
-        case types.ERR_TENANTS:
-        case types.SELECT_TENANT:
+        case ActionType.REQ_TENANTS:
+        case ActionType.RES_TENANTS:
+        case ActionType.ERR_TENANTS:
+        case ActionType.SELECT_TENANT:
             return { ...state, tenants: tenants(state.tenants, action) };
-        case types.SET_ACTIVE_EXECUTIONS:
+        case ActionType.SET_ACTIVE_EXECUTIONS:
             return { ...state, activeExecutions: action.activeExecutions ? action.activeExecutions : {} };
-        case types.CANCEL_EXECUTION:
+        case ActionType.CANCEL_EXECUTION:
             return { ...state, cancelExecution: action.execution, cancelAction: action.action };
-        case types.STORE_RBAC:
+        case ActionType.STORE_RBAC:
             return { ...state, roles: action.roles, permissions: action.permissions };
         default:
             return state;

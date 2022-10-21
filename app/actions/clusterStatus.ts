@@ -1,18 +1,18 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import * as types from './types';
+import { ActionType } from './types';
 import Manager from '../utils/Manager';
 import { forEachWidget } from './page';
 
 export function requestClusterStatus() {
     return {
-        type: types.REQ_CLUSTER_STATUS
+        type: ActionType.REQ_CLUSTER_STATUS
     };
 }
 
 export function setClusterStatus(status, services) {
     return {
-        type: types.SET_CLUSTER_STATUS,
+        type: ActionType.SET_CLUSTER_STATUS,
         status,
         services
     };
@@ -20,7 +20,7 @@ export function setClusterStatus(status, services) {
 
 export function errorClusterStatus(error) {
     return {
-        type: types.ERR_CLUSTER_STATUS,
+        type: ActionType.ERR_CLUSTER_STATUS,
         error
     };
 }

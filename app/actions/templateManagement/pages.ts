@@ -3,7 +3,7 @@ import { push } from 'connected-react-router';
 import _ from 'lodash';
 import type { ThunkAction } from 'redux-thunk';
 import type { AnyAction } from 'redux';
-import * as types from '../types';
+import { ActionType } from '../types';
 import type { SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
@@ -34,7 +34,7 @@ export function createPageId(name: string, pageDefs: ReduxState['templates']['pa
 
 export function addPage(page: Page) {
     return {
-        type: types.ADD_TEMPLATE_PAGE,
+        type: ActionType.ADD_TEMPLATE_PAGE,
         page
     };
 }
@@ -67,18 +67,18 @@ export function persistPage(page: Page): ThunkAction<Promise<any>, ReduxState, n
 
 export function removePage(pageId: string) {
     return {
-        type: types.REMOVE_TEMPLATE_PAGE,
+        type: ActionType.REMOVE_TEMPLATE_PAGE,
         pageId
     };
 }
 
 export function setDrillDownWarningActive(show: boolean) {
     return {
-        type: types.PAGE_MANAGEMENT_DRILLDOWN_WARN,
+        type: ActionType.PAGE_MANAGEMENT_DRILLDOWN_WARN,
         show
     };
 }
 
 export function setPageEditMode(isPageEditMode: boolean) {
-    return { type: types.PAGE_MANAGEMENT_SET_EDIT_MODE, isPageEditMode };
+    return { type: ActionType.PAGE_MANAGEMENT_SET_EDIT_MODE, isPageEditMode };
 }
