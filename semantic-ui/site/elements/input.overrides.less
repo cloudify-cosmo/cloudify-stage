@@ -31,7 +31,6 @@
         }
     }
 
-    // TODO Norbert: Double check vertical label text placement
     &.labeled {
         &.left {
             & > input {
@@ -46,6 +45,10 @@
                 &:focus {
                     border-left-color: @downBorderColor !important;
                 }
+            }
+
+            .ui.label {
+                line-height: @inputLineHeight;
             }
         }
     }
