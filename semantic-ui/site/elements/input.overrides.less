@@ -14,7 +14,8 @@
 
     &.disabled {
         & > input,
-        &.labeled .label {
+        &.labeled .label,
+        &.icon > i.icon {
             color: rgba(95, 99, 104, 0.45);
         }
     }
@@ -49,6 +50,29 @@
 
             .ui.label {
                 line-height: @inputLineHeight;
+            }
+        }
+    }
+
+    &.icon {
+        & > i.icon {
+            &::before {
+                width: @iconSize;
+                font-size: @iconFontSize;
+            }
+        }
+
+        &.left > i.icon {
+            &::before {
+                left: @iconBorderOffset;
+                right: @iconTextOffset;
+            }
+        }
+
+        &.right > i.icon {
+            &::before {
+                left: @iconTextOffset;
+                right: @iconBorderOffset;
             }
         }
     }
