@@ -1,9 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 
 import _ from 'lodash';
+import type { Reducer } from 'redux';
 import { ActionType } from '../actions/types';
 
-const widgetData = (state = [], action) => {
+const widgetData: Reducer = (state = [], action) => {
     switch (action.type) {
         case ActionType.WIDGET_FETCH_LOADING:
             if (!_.find(state, { id: action.widgetId })) {

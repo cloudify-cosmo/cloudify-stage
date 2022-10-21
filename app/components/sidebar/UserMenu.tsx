@@ -14,7 +14,7 @@ import Consts from '../../utils/consts';
 import ResetPagesModal from '../ResetPagesModal';
 import { resetPagesForTenant } from '../../actions/userApp';
 import PasswordModal from '../shared/PasswordModal';
-import { logout } from '../../actions/managers';
+import { logout } from '../../actions/manager/auth';
 import UserInitialsIcon from './UserInitialsIcon';
 import type { SystemMenuGroupItemProps } from './SystemMenu';
 

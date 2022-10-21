@@ -1,6 +1,7 @@
 import type { Reducer } from 'redux';
 import { ActionType } from '../../actions/types';
 import type { ClusterServices } from '../../components/shared/cluster/types';
+import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
 
 export interface ClusterStatusData {
     isFetching?: boolean;
@@ -9,7 +10,7 @@ export interface ClusterStatusData {
     services?: ClusterServices;
 }
 
-const clusterStatus: Reducer<ClusterStatusData> = (state = {}, action) => {
+const clusterStatus: Reducer<ClusterStatusData, ClusterStatusAction> = (state = {}, action) => {
     switch (action.type) {
         case ActionType.REQ_CLUSTER_STATUS:
             return { ...state, isFetching: true };
@@ -17,11 +18,11 @@ const clusterStatus: Reducer<ClusterStatusData> = (state = {}, action) => {
             return {
                 isFetching: false,
                 error: undefined,
-                status: action.status,
-                services: action.services || state.services
+                status: action.payload.status,
+                services: action.payload.services || state.services
             };
         case ActionType.ERR_CLUSTER_STATUS:
-            return { ...state, isFetching: false, error: action.error };
+            return { ...state, isFetching: false, error: action.payload.error };
         default:
             return state;
     }

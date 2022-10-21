@@ -44,8 +44,8 @@ export default class Auth {
         return true;
     }
 
-    static getLicenseStatus(licenseData: LicenseResponse): LicenseStatus {
-        if (_.isEmpty(licenseData)) {
+    static getLicenseStatus(licenseData: LicenseResponse | null): LicenseStatus {
+        if (licenseData === null || _.isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
         }
         if (licenseData.expired) {

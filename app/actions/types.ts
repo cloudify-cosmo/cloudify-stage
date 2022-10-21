@@ -1,3 +1,5 @@
+import type { Action } from 'redux';
+
 export enum ActionType {
     ADD_TAB,
     REMOVE_TAB,
@@ -94,4 +96,8 @@ export enum ActionType {
 
     SET_FIELD_ERROR,
     CLEAN_FORM_ERRORS
+}
+
+export interface PayloadAction<Payload = unknown, Type = ActionType> extends Action<Type> {
+    payload: Payload;
 }

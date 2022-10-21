@@ -16,7 +16,12 @@ import {
     Modal,
     PopupMenu
 } from '../basic';
-import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
+import {
+    doCancelExecution,
+    getActiveExecutions,
+    setActiveExecutions,
+    switchMaintenance
+} from '../../actions/manager/maintenance';
 import Consts from '../../utils/consts';
 
 import { useBoolean, useErrors } from '../../utils/hooks';

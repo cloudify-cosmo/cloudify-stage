@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { InputOnChangeData } from 'semantic-ui-react';
 
 import { Dropdown, Input, Loading } from '../basic';
-import { changeTenant, getTenants } from '../../actions/tenants';
+import { changeTenant, getTenants } from '../../actions/manager/tenants';
 import { useResettableState } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
 import StageUtils from '../../utils/stageUtils';
