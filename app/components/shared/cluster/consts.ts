@@ -16,12 +16,13 @@ export const clusterServiceEnum = Object.freeze({
 });
 export const clusterServices = _.keys(clusterServiceEnum);
 
-export const clusterServiceStatusEnum = Object.freeze({
-    OK: 'OK',
-    Fail: 'Fail',
-    Degraded: 'Degraded',
-    Unknown: 'Unknown'
-});
+export enum clusterServiceStatusEnum {
+    OK = 'OK',
+    Fail = 'Fail',
+    Degraded = 'Degraded',
+    Unknown = 'Unknown'
+}
+
 export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
 export const clusterServiceBgColor = (serviceStatus: ClusterServiceStatus) => {
