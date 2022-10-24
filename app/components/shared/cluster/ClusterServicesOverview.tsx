@@ -10,7 +10,7 @@ import ClusterService from './ClusterService';
 import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum } from './consts';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
-import type { ClusterService as ClusterServiceName, ClusterServices, ClusterServiceStatus } from './types';
+import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
 import type { ReduxState } from '../../../reducers';
 
 interface ClusterServicesOverviewProps {
@@ -22,7 +22,7 @@ interface ClusterServicesOverviewProps {
 }
 const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> = ({
     services = _.mapValues(clusterServiceEnum, () => ({
-        status: clusterServiceStatusEnum.Unknown as ClusterServiceStatus,
+        status: clusterServiceStatusEnum.Unknown,
         is_external: false
     })),
     clickable = false,

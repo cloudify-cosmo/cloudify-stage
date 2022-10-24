@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { ClusterService, ClusterServiceStatus } from './types';
+import type { ClusterService, ClusterStatus } from './types';
 
-export const clusterStatusEnum = Object.freeze({
-    OK: 'OK',
-    Fail: 'Fail',
-    Degraded: 'Degraded',
-    Unknown: 'Unknown'
-});
+export enum clusterServiceStatusEnum {
+    OK = 'OK',
+    Fail = 'Fail',
+    Degraded = 'Degraded',
+    Unknown = 'Unknown'
+}
 
 export const clusterServiceEnum = Object.freeze({
     manager: 'manager',
@@ -16,15 +16,9 @@ export const clusterServiceEnum = Object.freeze({
 });
 export const clusterServices = _.keys(clusterServiceEnum);
 
-export const clusterServiceStatusEnum = Object.freeze({
-    OK: 'OK',
-    Fail: 'Fail',
-    Degraded: 'Degraded',
-    Unknown: 'Unknown'
-});
 export const clusterServiceStatuses = _.keys(clusterServiceStatusEnum);
 
-export const clusterServiceBgColor = (serviceStatus: ClusterServiceStatus) => {
+export const clusterServiceBgColor = (serviceStatus: ClusterStatus) => {
     switch (serviceStatus) {
         case clusterServiceStatusEnum.OK:
             return '#21ba45';
