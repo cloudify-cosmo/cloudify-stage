@@ -1,3 +1,4 @@
+import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
 import { styles } from '../support/cluster_status_commons';
 
 describe('Cluster Status', () => {
@@ -75,10 +76,10 @@ describe('Cluster Status', () => {
 
         interceptFullStatus(['cluster_status/degraded.json', 'cluster_status/ok.json', 'cluster_status/fail.json']);
 
-        checkStatus('Degraded', 'OK', 'OK', 'yellow');
+        checkStatus(ClusterServiceStatus.Degraded, ClusterServiceStatus.OK, ClusterServiceStatus.OK, 'yellow');
 
-        checkStatus('OK', 'OK', 'OK');
+        checkStatus(ClusterServiceStatus.OK, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
 
-        checkStatus('Fail', 'OK', 'Fail', 'red');
+        checkStatus(ClusterServiceStatus.Fail, ClusterServiceStatus.OK, ClusterServiceStatus.Fail, 'red');
     });
 });
