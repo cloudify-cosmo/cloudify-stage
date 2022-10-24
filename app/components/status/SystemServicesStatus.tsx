@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
-import { clusterServiceEnum, clusterServiceStatusEnum, clusterServiceStatuses } from '../shared/cluster/consts';
+import { clusterServiceEnum, ClusterServiceStatus, clusterServiceStatuses } from '../shared/cluster/consts';
 
 export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     return (
@@ -40,7 +40,7 @@ SystemServicesStatus.propTypes = {
 };
 
 SystemServicesStatus.defaultProps = {
-    services: _.mapValues(clusterServiceEnum, () => ({ status: clusterServiceStatusEnum.Unknown, is_external: false })),
+    services: _.mapValues(clusterServiceEnum, () => ({ status: ClusterServiceStatus.Unknown, is_external: false })),
     isFetching: false,
     fetchingError: ''
 };
