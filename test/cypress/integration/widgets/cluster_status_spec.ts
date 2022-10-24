@@ -1,6 +1,7 @@
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { ClusterNodeStatus, ClusterService, ClusterStatus } from 'app/components/shared/cluster/types';
+import type { ClusterNodeStatus, ClusterService } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
+import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
 
 export type StatusColor = 'green' | 'yellow' | 'red';
 export type NodeService = { name: string; description: string; active: boolean };
@@ -19,9 +20,9 @@ describe('Cluster Status widget', () => {
     };
 
     const checkServicesStatus = (
-        expectedManagerStatus: ClusterStatus,
-        expectedDbStatus: ClusterStatus,
-        expectedBrokerStatus: ClusterStatus
+        expectedManagerStatus: ClusterServiceStatus,
+        expectedDbStatus: ClusterServiceStatus,
+        expectedBrokerStatus: ClusterServiceStatus
     ) => {
         const managerCell = `tbody tr:nth-child(${rowNumber.manager}) td:nth-child(1)`;
         const databaseCell = `tbody tr:nth-child(${rowNumber.db}) td:nth-child(1)`;
@@ -141,12 +142,12 @@ describe('Cluster Status widget', () => {
             'clusterStatusFull'
         );
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('Degraded', 'OK', 'OK');
+        checkServicesStatus(ClusterServiceStatus.Degraded, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
 
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('OK', 'OK', 'OK');
+        checkServicesStatus(ClusterServiceStatus.OK, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
 
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('Fail', 'OK', 'Fail');
+        checkServicesStatus(ClusterServiceStatus.Fail, ClusterServiceStatus.OK, ClusterServiceStatus.Fail);
     });
 });

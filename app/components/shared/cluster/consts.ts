@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { ClusterService, ClusterStatus } from './types';
+import type { ClusterService } from './types';
 
 export enum ClusterServiceStatus {
     OK = 'OK',
@@ -18,7 +18,7 @@ export const clusterServices = _.keys(clusterServiceEnum);
 
 export const clusterServiceStatuses = _.keys(ClusterServiceStatus);
 
-export const clusterServiceBgColor = (serviceStatus: ClusterStatus) => {
+export const clusterServiceBgColor = (serviceStatus: ClusterServiceStatus) => {
     switch (serviceStatus) {
         case ClusterServiceStatus.OK:
             return '#21ba45';

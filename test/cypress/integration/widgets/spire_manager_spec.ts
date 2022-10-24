@@ -1,4 +1,4 @@
-import type { ClusterStatus } from 'app/components/shared/cluster/types';
+import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
 import { styles } from '../../support/cluster_status_commons';
 import type { StatusColor } from './cluster_status_spec';
 
@@ -88,9 +88,9 @@ describe('Spire Manager widget', () => {
     it('allows checking deployment cluster status details', () => {
         const checkServiceRow = (
             rowNumber: number,
-            managerStatus: ClusterStatus,
-            databaseStatus: ClusterStatus,
-            brokerStatus: ClusterStatus
+            managerStatus: ClusterServiceStatus,
+            databaseStatus: ClusterServiceStatus,
+            brokerStatus: ClusterServiceStatus
         ) => {
             cy.get('.popup table.servicesData').should('not.exist');
             cy.get(`tbody > :nth-child(${rowNumber}) > :nth-child(5) i.statusIcon`).trigger('mouseover');
@@ -108,9 +108,9 @@ describe('Spire Manager widget', () => {
             cy.get('.popup table.servicesData').should('not.exist');
         };
 
-        checkServiceRow(1, 'OK', 'OK', 'OK');
-        checkServiceRow(2, 'Degraded', 'OK', 'OK');
-        checkServiceRow(3, 'Fail', 'OK', 'Fail');
+        checkServiceRow(1, ClusterServiceStatus.OK, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
+        checkServiceRow(2, ClusterServiceStatus.Degraded, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
+        checkServiceRow(3, ClusterServiceStatus.Fail, ClusterServiceStatus.OK, ClusterServiceStatus.Fail);
     });
 
     it('allows to do status refresh of selected spire deployment', () => {
