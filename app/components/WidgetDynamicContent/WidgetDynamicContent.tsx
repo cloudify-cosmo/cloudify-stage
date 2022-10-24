@@ -334,8 +334,16 @@ export default class WidgetDynamicContent extends Component {
 
 WidgetDynamicContent.propTypes = {
     context: PropTypes.shape({}).isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    data: PropTypes.shape({ data: PropTypes.any.isRequired, error: ErrorMessage.propTypes?.error }),
+    data: PropTypes.shape({
+        // eslint-disable-next-line react/forbid-prop-types
+        data: PropTypes.any.isRequired,
+        error: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.array,
+            PropTypes.element,
+            PropTypes.shape({ header: PropTypes.string, message: PropTypes.string })
+        ])
+    }),
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
