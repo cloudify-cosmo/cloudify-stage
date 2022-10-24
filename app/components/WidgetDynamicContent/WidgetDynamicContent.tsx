@@ -336,14 +336,14 @@ WidgetDynamicContent.propTypes = {
     context: PropTypes.shape({}).isRequired,
     data: PropTypes.shape({
         // eslint-disable-next-line react/forbid-prop-types
-        data: PropTypes.any.isRequired,
+        data: PropTypes.any,
         error: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.array,
             PropTypes.element,
             PropTypes.shape({ header: PropTypes.string, message: PropTypes.string })
         ])
-    }),
+    }).isRequired,
     fetchWidgetData: PropTypes.func.isRequired,
     onWidgetConfigUpdate: PropTypes.func.isRequired,
     manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
