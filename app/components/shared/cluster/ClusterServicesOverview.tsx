@@ -7,7 +7,7 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
-import { clusterServiceBgColor, clusterServiceEnum, clusterServiceStatusEnum } from './consts';
+import { clusterServiceBgColor, clusterServiceEnum, ClusterServiceStatus } from './consts';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
 import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
@@ -22,7 +22,7 @@ interface ClusterServicesOverviewProps {
 }
 const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> = ({
     services = _.mapValues(clusterServiceEnum, () => ({
-        status: clusterServiceStatusEnum.Unknown,
+        status: ClusterServiceStatus.Unknown,
         is_external: false
     })),
     clickable = false,
