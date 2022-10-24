@@ -12,16 +12,14 @@ const UploadingMessage = ({ blueprintName }: UploadingMessageProps) => {
     return (
         <LoadingOverlay
             message={
-                (
-                    <>
-                        <MessageHeader>
-                            {t('uploading', {
-                                blueprintName
-                            })}
-                        </MessageHeader>
-                        <MessageDescription>{t('redirection')}</MessageDescription>
-                    </>
-                ) as any // TODO(RD-4934): Remove type assertion
+                <>
+                    <MessageHeader>
+                        {t('uploading', {
+                            blueprintName
+                        })}
+                    </MessageHeader>
+                    <MessageDescription>{t('redirection')}</MessageDescription>
+                </>
             }
         />
     );
