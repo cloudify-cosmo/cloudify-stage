@@ -1,6 +1,5 @@
 import type { ComponentProps } from 'react';
 
-export type OnDateInputChange = (event: Event, field: { name?: string; value?: string }) => void; // DateInput has props any, so it is impossible to use ComponentProps<typeof Stage.Basic.DateInput>['onChange'];
 export type OnDropdownChange = ComponentProps<typeof Stage.Basic.Dropdown>['onChange'];
 export type OnCheckboxChange = ComponentProps<typeof Stage.Basic.Checkbox>['onChange'];
 

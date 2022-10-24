@@ -4,6 +4,7 @@ import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
+import type { Field } from '../../common/src/types';
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;
@@ -18,6 +19,8 @@ interface BlueprintListState {
     error: any;
     force: boolean;
 }
+
+type ForceCheckboxState = Pick<BlueprintListState, 'force'>;
 
 export default class BlueprintList extends React.Component<BlueprintListProps, BlueprintListState> {
     constructor(props: BlueprintListProps) {
@@ -119,8 +122,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         _event,
         field
     ) => {
-        // @ts-expect-error Form.fieldNameValue is not converted to TS yet
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState(Stage.Basic.Form.fieldNameValue(field as Field) as ForceCheckboxState);
     };
 
     fetchGridData: BlueprintsViewProps['fetchData'] = fetchParams => {
