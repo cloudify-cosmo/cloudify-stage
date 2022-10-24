@@ -1,5 +1,5 @@
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { ClusterNodeStatus, ClusterService, ClusterServiceStatus } from 'app/components/shared/cluster/types';
+import type { ClusterNodeStatus, ClusterService, ClusterStatus } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
 
 export type StatusColor = 'green' | 'yellow' | 'red';
@@ -19,9 +19,9 @@ describe('Cluster Status widget', () => {
     };
 
     const checkServicesStatus = (
-        expectedManagerStatus: ClusterServiceStatus,
-        expectedDbStatus: ClusterServiceStatus,
-        expectedBrokerStatus: ClusterServiceStatus
+        expectedManagerStatus: ClusterStatus,
+        expectedDbStatus: ClusterStatus,
+        expectedBrokerStatus: ClusterStatus
     ) => {
         const managerCell = `tbody tr:nth-child(${rowNumber.manager}) td:nth-child(1)`;
         const databaseCell = `tbody tr:nth-child(${rowNumber.db}) td:nth-child(1)`;

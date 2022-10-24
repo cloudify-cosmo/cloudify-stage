@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import type { SemanticCOLORS } from 'semantic-ui-react';
 
 import { Icon } from '../../basic';
-import { clusterStatusEnum } from './consts';
+import { ClusterServiceStatus } from './consts';
 import type { ClusterStatus } from './types';
 
 export interface ClusterStatusIconProps {
@@ -11,11 +11,11 @@ export interface ClusterStatusIconProps {
 }
 const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status = '' }) => {
     let color: SemanticCOLORS = 'grey';
-    if (status === clusterStatusEnum.Fail) {
+    if (status === ClusterServiceStatus.Fail) {
         color = 'red';
-    } else if (status === clusterStatusEnum.Degraded) {
+    } else if (status === ClusterServiceStatus.Degraded) {
         color = 'yellow';
-    } else if (status === clusterStatusEnum.OK) {
+    } else if (status === ClusterServiceStatus.OK) {
         color = 'green';
     }
 
