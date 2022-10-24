@@ -46,7 +46,6 @@ import type { ComponentType } from 'react';
 
 import { CircleMarker, FeatureGroup, Map, Marker, Popup as LeafletPopup, TileLayer, Tooltip } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import type { StrictConfirmProps } from 'semantic-ui-react';
 import {
     Accordion,
     Breadcrumb,
@@ -93,9 +92,6 @@ const Leaflet = {
     MarkerClusterGroup
 };
 
-// TODO(RD-5712) Remove once Confirm component is fully migrated to TypeScript
-const ConfirmWithCorrectProps = Confirm as unknown as ComponentType<StrictConfirmProps>;
-
 type AnyProps = Record<string, any>;
 
 // TODO(RD-5720) Remove once DataInput component is fully migrated to TypeScript
@@ -128,7 +124,7 @@ export {
     Card,
     Checkbox,
     Checkmark,
-    ConfirmWithCorrectProps as Confirm,
+    Confirm,
     Container,
     CopyToClipboardButton,
     DateInputWithTemporaryProps as DateInput,
