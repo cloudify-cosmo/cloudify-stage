@@ -3,7 +3,7 @@ import _ from 'lodash';
 import * as types from './types';
 import Manager from '../utils/Manager';
 import { forEachWidget } from './page';
-import { ClusterServiceStatus } from '../components/shared/cluster/consts';
+import { ClusterServiceStatus } from '../components/shared/cluster/types';
 
 export function requestClusterStatus() {
     return {

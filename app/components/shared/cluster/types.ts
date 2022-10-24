@@ -1,5 +1,12 @@
 /* eslint-disable camelcase */
-import type { ClusterServiceStatus, clusterServiceEnum, clusterNodeStatusEnum, nodeServiceStatusEnum } from './consts';
+import type { clusterServiceEnum, clusterNodeStatusEnum, nodeServiceStatusEnum } from './consts';
+
+export enum ClusterServiceStatus {
+    OK,
+    Fail,
+    Degraded,
+    Unknown
+}
 
 export type ClusterService = keyof typeof clusterServiceEnum;
 export interface ClusterServiceData {

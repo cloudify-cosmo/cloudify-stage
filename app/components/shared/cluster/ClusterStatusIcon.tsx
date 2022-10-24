@@ -3,7 +3,7 @@ import type { FunctionComponent } from 'react';
 import type { SemanticCOLORS } from 'semantic-ui-react';
 
 import { Icon } from '../../basic';
-import { ClusterServiceStatus } from './consts';
+import { ClusterServiceStatus } from './types';
 
 export interface ClusterStatusIconProps {
     status: ClusterServiceStatus | null;

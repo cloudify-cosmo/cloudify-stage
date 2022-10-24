@@ -4,7 +4,8 @@ import React from 'react';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
-import { clusterServiceEnum, ClusterServiceStatus } from '../shared/cluster/consts';
+import { clusterServiceEnum } from '../shared/cluster/consts';
+import { ClusterServiceStatus } from '../shared/cluster/types';
 import type { ClusterServices, ClusterServiceData } from '../shared/cluster/types';
 
 const defaultServices = _.mapValues(clusterServiceEnum, () => {

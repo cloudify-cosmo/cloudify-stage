@@ -1,4 +1,4 @@
-import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
+import { ClusterServiceStatus } from 'app/components/shared/cluster/types';
 
 export const styles = {
     [ClusterServiceStatus.Degraded]: 'background-color: rgb(251, 189, 8);',

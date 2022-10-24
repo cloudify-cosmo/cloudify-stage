@@ -1,5 +1,5 @@
 import type { SemanticICONS } from 'semantic-ui-react';
-import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
+import { ClusterServiceStatus } from 'app/components/shared/cluster/types';
 import type { ClusterNodeStatus, ClusterService } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
 
@@ -142,12 +142,12 @@ describe('Cluster Status widget', () => {
             'clusterStatusFull'
         );
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('Degraded', 'OK', 'OK');
+        checkServicesStatus(ClusterServiceStatus.Degraded, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
 
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('OK', 'OK', 'OK');
+        checkServicesStatus(ClusterServiceStatus.OK, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
 
         cy.wait('@clusterStatusFull', clusterStatusFetchTimeout);
-        checkServicesStatus('Fail', 'OK', 'Fail');
+        checkServicesStatus(ClusterServiceStatus.Fail, ClusterServiceStatus.OK, ClusterServiceStatus.Fail);
     });
 });

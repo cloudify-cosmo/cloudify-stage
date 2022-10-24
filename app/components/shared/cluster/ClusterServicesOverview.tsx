@@ -7,10 +7,11 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
-import { clusterServiceBgColor, clusterServiceEnum, ClusterServiceStatus } from './consts';
+import { clusterServiceBgColor, clusterServiceEnum } from './consts';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
 import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
+import { ClusterServiceStatus } from './types';
 import type { ReduxState } from '../../../reducers';
 
 interface ClusterServicesOverviewProps {
