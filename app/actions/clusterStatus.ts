@@ -3,6 +3,7 @@ import _ from 'lodash';
 import * as types from './types';
 import Manager from '../utils/Manager';
 import { forEachWidget } from './page';
+import { ClusterServiceStatus } from '../components/shared/cluster/consts';
 
 export function requestClusterStatus() {
     return {
@@ -48,7 +49,15 @@ export function getClusterStatus(summaryOnly = false) {
             .doGet(`/cluster-status?summary=${fetchOnlySummary}`)
             .then(data => {
                 const { services, status } = data;
-                dispatch(setClusterStatus(status, fetchOnlySummary ? undefined : services));
+
+                const mapStringToEnum = {
+                    OK: ClusterServiceStatus.OK,
+                    Fail: ClusterServiceStatus.Fail,
+                    Degraded: ClusterServiceStatus.Degraded,
+                    Unknown: ClusterServiceStatus.Unknown
+                };
+
+                dispatch(setClusterStatus(mapStringToEnum[status], fetchOnlySummary ? undefined : services));
             })
             .catch(err => {
                 dispatch(errorClusterStatus(err));

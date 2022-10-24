@@ -6,6 +6,6 @@ type SystemStatusIconProps = {
     systemStatus: ClusterStatusIconProps['status'];
 };
 
-export default function SystemStatusIcon({ systemStatus = '' }: SystemStatusIconProps) {
+export default function SystemStatusIcon({ systemStatus = null }: SystemStatusIconProps) {
     return <ClusterStatusIcon status={systemStatus} />;
 }
