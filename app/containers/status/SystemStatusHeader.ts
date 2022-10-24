@@ -2,7 +2,7 @@
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import SystemStatusHeader from '../../components/status/SystemStatusHeader';
-import { getClusterStatus } from '../../actions/clusterStatus';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
 const mapStateToProps = state => {
     return {

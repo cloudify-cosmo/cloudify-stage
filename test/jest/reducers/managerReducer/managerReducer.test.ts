@@ -6,7 +6,7 @@ import timeKeeper from 'timekeeper';
 import { applyMiddleware, createStore } from 'redux';
 import type { Reducer } from 'redux';
 
-import { getManagerData, login, logout } from 'actions/managers';
+import { getManagerData, login, logout } from 'actions/manager/auth';
 import { ActionType } from 'actions/types';
 import type { ManagerData } from 'reducers/managerReducer';
 import managerReducer, { emptyState } from 'reducers/managerReducer';

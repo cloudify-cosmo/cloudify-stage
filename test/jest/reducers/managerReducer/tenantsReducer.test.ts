@@ -5,7 +5,7 @@ import type { Reducer } from 'redux';
 import timeKeeper from 'timekeeper';
 
 import tenantsReducer from 'reducers/managerReducer/tenantsReducer';
-import { getTenants, selectTenant } from 'actions/tenants';
+import { getTenants, selectTenant } from 'actions/manager/tenants';
 import { ActionType } from 'actions/types';
 
 import fetchMock from 'fetch-mock';

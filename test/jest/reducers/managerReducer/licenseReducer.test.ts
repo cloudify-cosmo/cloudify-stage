@@ -2,7 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore } from 'redux';
 
-import { setLicense } from 'actions/license';
+import { setLicense } from 'actions/manager/license';
 import { ActionType } from 'actions/types';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import licenses from '../../resources/licenses';
