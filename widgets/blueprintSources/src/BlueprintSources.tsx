@@ -2,6 +2,7 @@ import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import styled from 'styled-components';
+import type { Key, EventDataNode, DataNode } from 'rc-tree/lib/interface';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
@@ -14,19 +15,6 @@ interface NodeTreeItem {
     key: string;
     title: string;
     isDir: boolean;
-}
-
-interface FileInfo {
-    node: {
-        props: {
-            children: any;
-            title: {
-                props: {
-                    children: React.SetStateAction<string>[];
-                };
-            };
-        };
-    };
 }
 
 interface BlueprintTree {
@@ -140,14 +128,23 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         resetType();
     }, [data]);
 
-    function selectFile(selectedKeys: string[], info: FileInfo) {
-        if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
+    function selectFile(
+        selectedKeys: Key[],
+        info: {
+            event: 'select';
+            selected: boolean;
+            node: EventDataNode<DataNode>;
+            selectedNodes: DataNode[];
+            nativeEvent: MouseEvent;
+        }
+    ) {
+        if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.children)) {
             clearContent();
             clearFilename();
             return;
         }
 
-        const path = selectedKeys[0];
+        const path = selectedKeys[0] as string;
         const isImage = path.match(/.(jpg|jpeg|png|gif|ico)$/i);
 
         unsetBinary();
@@ -179,8 +176,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
                 }
-
-                setFilename(info.node.props.title.props.children[1]);
+                const propsTitle = info.node.title as any;
+                setFilename(propsTitle?.props.children[1]);
                 setType(fileType);
                 clearError();
             })
@@ -197,7 +194,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
-                    // @ts-ignore NodesTree.Node is not migrated to typescript
                     <NodesTree.Node
                         key={key}
                         title={
@@ -225,7 +221,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     item.title
                 );
             return (
-                // @ts-ignore NodesTree.Node is not migrated to typescript
                 <NodesTree.Node
                     key={key}
                     title={
@@ -249,7 +244,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 >
                     <div>
                         <NodesTree className="nodes-tree" showLine selectable defaultExpandAll onSelect={selectFile}>
-                            {/* @ts-ignore NodesTree.Node is not migrated to typescript */}
                             <NodesTree.Node
                                 key="blueprint"
                                 disabled
@@ -262,7 +256,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                 {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
-                                // @ts-ignore NodesTree.Node is not migrated to typescript
                                 <NodesTree.Node
                                     key="imported"
                                     style={{ marginTop: '5px' }}
@@ -275,7 +268,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     }
                                 >
                                     {_.map(data.importedBlueprintTrees, (tree, index: number) => (
-                                        // @ts-ignore NodesTree.Node is not migrated to typescript
                                         <NodesTree.Node
                                             key={data.importedBlueprintIds[index]}
                                             style={{ marginTop: '3px' }}
