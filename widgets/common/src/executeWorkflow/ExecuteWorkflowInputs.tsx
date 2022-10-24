@@ -1,9 +1,10 @@
 import type { FunctionComponent } from 'react';
+import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import InputFields from '../inputs/InputFields';
 import type { OnChange } from '../inputs/types';
 import YamlFileButton from '../inputs/YamlFileButton';
-import type { BaseWorkflowInputs, OnCheckboxChange, OnDateInputChange, UserWorkflowInputsState } from './types';
+import type { BaseWorkflowInputs, OnCheckboxChange, UserWorkflowInputsState } from './types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
 
@@ -46,7 +47,7 @@ interface ExecuteWorkflowInputsProps extends CommonExecuteWorflowProps {
     onDryRunChange: OnCheckboxChange;
     onQueueChange: OnCheckboxChange;
     onScheduleChange: OnCheckboxChange;
-    onScheduledTimeChange: OnDateInputChange;
+    onScheduledTimeChange: DateInputProps['onChange'];
     toolbox: Stage.Types.Toolbox;
 }
 
