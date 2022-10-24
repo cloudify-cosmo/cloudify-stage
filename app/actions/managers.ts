@@ -1,19 +1,19 @@
 // @ts-nocheck File not migrated fully to TS
 
-import log from 'loglevel';
 import { push } from 'connected-react-router';
-import type { ThunkAction, AnyAction } from 'redux';
-
-import * as types from './types';
+import log from 'loglevel';
+import type { AnyAction, ThunkAction } from 'redux';
+import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
+import type { ReduxState } from '../reducers';
 import Auth from '../utils/auth';
 import Consts from '../utils/consts';
 import Manager from '../utils/Manager';
 import ExecutionUtils from '../utils/shared/ExecutionUtils';
 import { clearContext } from './context';
 import { setLicense, setLicenseRequired } from './license';
+
+import * as types from './types';
 import { setVersion } from './version';
-import type { ReduxState } from '../reducers';
-import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
 
 function requestLogin() {
     return {
@@ -63,7 +63,6 @@ export function login(
                         const routePath = redirect.replace(Consts.CONTEXT_PATH, '');
                         dispatch(push(routePath));
                     } else {
-                        // eslint-disable-next-line scanjs-rules/assign_to_location
                         window.location = redirect;
                     }
                 } else {
