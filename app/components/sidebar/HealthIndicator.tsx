@@ -22,9 +22,7 @@ const dropdownMenuStyle = { padding: 5 };
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
     const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
-    const dotColorIndex =
-        systemStatus === ClusterServiceStatus.Degraded ? ClusterServiceStatus.Degraded : ClusterServiceStatus.Fail;
-    const dotColor = dotColors[dotColorIndex];
+    const dotColor = dotColors[systemStatus || ClusterServiceStatus.Fail];
 
     return (
         <SideBarDropdownItem
