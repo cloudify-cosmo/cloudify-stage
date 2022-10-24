@@ -94,9 +94,6 @@ const Leaflet = {
 
 type AnyProps = Record<string, any>;
 
-// TODO(RD-5720) Remove once DataInput component is fully migrated to TypeScript
-const DateInputWithTemporaryProps = DateInput as unknown as ComponentType<AnyProps>;
-
 // TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
 const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyProps> & {
     Row: React.FC<AnyProps>;
@@ -127,7 +124,7 @@ export {
     Confirm,
     Container,
     CopyToClipboardButton,
-    DateInputWithTemporaryProps as DateInput,
+    DateInput,
     DateRangeInput,
     DataSegmentWithTemporaryProps as DataSegment,
     DataTableWithTemporaryProps as DataTable,

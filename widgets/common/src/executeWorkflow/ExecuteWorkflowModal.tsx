@@ -1,4 +1,5 @@
 import type { FunctionComponent } from 'react';
+import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
 import FileActions from '../actions/FileActions';
 import DeploymentActions from '../deployments/DeploymentActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
@@ -9,14 +10,7 @@ import type { OnChange } from '../inputs/types';
 import { executeWorkflow, getWorkflowName } from './common';
 
 import ExecuteWorkflowInputs from './ExecuteWorkflowInputs';
-import type {
-    Errors,
-    OnCheckboxChange,
-    OnDateInputChange,
-    Workflow,
-    WorkflowOptions,
-    WorkflowParameters
-} from './types';
+import type { Errors, OnCheckboxChange, Workflow, WorkflowOptions, WorkflowParameters } from './types';
 import type { Field } from '../types';
 
 const t = Stage.Utils.getT('widgets.common.deployments.execute');
@@ -217,7 +211,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         clearErrorsAndQueue();
         setSchedule(field.checked);
     };
-    const onScheduledTimeChange: OnDateInputChange = (_event, field) => {
+    const onScheduledTimeChange: DateInputProps['onChange'] = (_event, field) => {
         clearErrorsAndQueue();
         setScheduledTime(field.value);
     };
