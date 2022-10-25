@@ -6,15 +6,15 @@ import SideBarItemIcon from './SideBarItemIcon';
 import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
-import { clusterStatusEnum } from '../shared/cluster/consts';
+import { ClusterServiceStatus } from '../shared/cluster/consts';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
 const dotColors = {
-    [clusterStatusEnum.Fail]: 'red',
-    [clusterStatusEnum.Degraded]: 'yellow'
+    [ClusterServiceStatus.Fail]: 'red',
+    [ClusterServiceStatus.Degraded]: 'yellow'
 } as const;
 
 const dropdownMenuStyle = { padding: 5 };
@@ -22,7 +22,9 @@ const dropdownMenuStyle = { padding: 5 };
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
     const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
-    const dotColor = dotColors[systemStatus || clusterStatusEnum.Fail];
+    const dotColorIndex =
+        systemStatus === ClusterServiceStatus.Degraded ? ClusterServiceStatus.Degraded : ClusterServiceStatus.Fail;
+    const dotColor = dotColors[dotColorIndex];
 
     return (
         <SideBarDropdownItem

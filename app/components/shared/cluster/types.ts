@@ -1,16 +1,7 @@
 /* eslint-disable camelcase */
-import type {
-    clusterStatusEnum,
-    clusterServiceStatusEnum,
-    clusterServiceEnum,
-    clusterNodeStatusEnum,
-    nodeServiceStatusEnum
-} from './consts';
-
-export type ClusterStatus = keyof typeof clusterStatusEnum;
+import type { clusterServiceEnum, clusterNodeStatusEnum, nodeServiceStatusEnum, ClusterServiceStatus } from './consts';
 
 export type ClusterService = keyof typeof clusterServiceEnum;
-export type ClusterServiceStatus = keyof typeof clusterServiceStatusEnum;
 export interface ClusterServiceData {
     status: ClusterServiceStatus;
     nodes: Record<string, ClusterNodeData>;
