@@ -1,21 +1,42 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
+import type { AnyAction } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
 import { setDrilldownContext } from './drilldownContext';
 import { addLayoutToPage } from './page';
 import { createDrilldownPage, selectPage } from './pageMenu';
 import { setDrillDownWarningActive } from './templateManagement/pages';
+import type { PayloadAction } from './types';
 import { ActionType } from './types';
+import type { ReduxState } from '../reducers';
+import type { TemplatePageDefinition } from '../reducers/templatesReducer';
+import type { Widget } from '../utils/StageAPI';
 
-export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
+export type AddDrilldownPageAction = PayloadAction<
+    { widgetId: string; drillDownName: string; drillDownPageId: string },
+    ActionType.ADD_DRILLDOWN_PAGE
+>;
+
+export function addWidgetDrilldownPage(
+    widgetId: string,
+    drillDownName: string,
+    drillDownPageId: string
+): AddDrilldownPageAction {
     return {
         type: ActionType.ADD_DRILLDOWN_PAGE,
-        widgetId,
-        drillDownPageId,
-        drillDownName
+        payload: {
+            widgetId,
+            drillDownPageId,
+            drillDownName
+        }
     };
 }
 
-export function drillDownToPage(widget, defaultTemplate, drilldownContext, drilldownPageName) {
+export function drillDownToPage(
+    widget: Widget<unknown>,
+    defaultTemplate: TemplatePageDefinition,
+    drilldownContext: Record<string, any>,
+    drilldownPageName: string
+): ThunkAction<void, ReduxState, never, AnyAction> {
     return async (dispatch, getState) => {
         const isTemplateManagement = _.get(getState().templateManagement, 'isActive');
         if (isTemplateManagement) {
