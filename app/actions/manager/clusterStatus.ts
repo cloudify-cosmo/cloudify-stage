@@ -9,9 +9,9 @@ import type { ReduxState } from '../../reducers';
 import type { PageMenuItem } from '../pageMenu';
 
 export type RequestClusterStatusAction = Action<ActionType.REQ_CLUSTER_STATUS>;
-// TODO: Add proper typings once Cluster Status API is typed properly
+// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
 export type SetClusterStatusAction = PayloadAction<{ status: any; services: any }, ActionType.SET_CLUSTER_STATUS>;
-// TODO: Add proper typings once Cluster Status API is typed properly / Change action name?
+// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly / Change action name?
 export type ErrorClusterStatusAction = PayloadAction<any, ActionType.ERR_CLUSTER_STATUS>;
 export type ClusterStatusAction = RequestClusterStatusAction | SetClusterStatusAction | ErrorClusterStatusAction;
 
@@ -21,7 +21,7 @@ export function requestClusterStatus() {
     };
 }
 
-// TODO: Add proper typings once Cluster Status API is typed properly
+// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
 export function setClusterStatus(status: any, services: any): SetClusterStatusAction {
     return {
         type: ActionType.SET_CLUSTER_STATUS,
@@ -42,7 +42,7 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[
 
     let widgetPresent = false;
     if (currentPage) {
-        // @ts-ignore: TODO-FIXME - we should iterate over page groups as well here
+        // @ts-ignore: TODO(RD-5591) Iterate not only over widgets, but also over page groups
         forEachWidget(currentPage, widget => {
             if (widget.definition === clusterStatusWidgetDefinitionName) widgetPresent = true;
             return widget;

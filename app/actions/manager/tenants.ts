@@ -10,7 +10,7 @@ import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
 import type { ReduxState } from '../../reducers';
 
-// TODO: Refactor this to keep just string[] instead of { items: { name: string }[] }
+// TODO(RD-5591): Refactor this to store { names: string[] } instead of { items: { name: string }[] }
 type Tenants = { items: { name: string }[] };
 export type RequestTenantsAction = Action<ActionType.REQ_TENANTS>;
 export type RecieveTenantsAction = PayloadAction<{ tenants: Tenants; receivedAt: number }, ActionType.RES_TENANTS>;
