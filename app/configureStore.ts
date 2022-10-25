@@ -16,7 +16,7 @@ import { ActionType } from './actions/types';
 function enhancedComposeWithDevTools<StoreExt>(...funcs: Array<StoreEnhancer<StoreExt>>): StoreEnhancer<StoreExt> {
     type ActionSanitizer = <A extends Action>(action: A) => A;
 
-    const readableActionTypes: ActionSanitizer = action =>
+    const getActionWithReadableType: ActionSanitizer = action =>
         action.type in ActionType
             ? {
                   ...action,
@@ -24,7 +24,7 @@ function enhancedComposeWithDevTools<StoreExt>(...funcs: Array<StoreEnhancer<Sto
               }
             : action;
 
-    return composeWithDevTools({ actionSanitizer: readableActionTypes })(...funcs);
+    return composeWithDevTools({ actionSanitizer: getActionWithReadableType })(...funcs);
 }
 
 export default (history: History, config: ClientConfig) => {
