@@ -34,10 +34,15 @@ export interface ManagerData {
     version: Partial<VersionResponse>;
 }
 
-const manager: Reducer<
-    ManagerData,
-    AuthAction | ClusterStatusAction | SetVersionAction | TenantAction | LicenseAction | MaintenanceAction
-> = (state = emptyState, action) => {
+type ManagerAction =
+    | AuthAction
+    | ClusterStatusAction
+    | SetVersionAction
+    | TenantAction
+    | LicenseAction
+    | MaintenanceAction;
+
+const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action) => {
     switch (action.type) {
         case ActionType.REQ_LOGIN:
             return {
