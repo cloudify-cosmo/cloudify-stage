@@ -4,6 +4,7 @@ import type { FunctionComponent, MouseEvent } from 'react';
 import type { SemanticICONS, SemanticCOLORS, StrictIconProps, StrictLabelProps } from 'semantic-ui-react';
 import i18n from 'i18next';
 import { Icon, Label, Popup } from '../basic';
+import type { Execution } from '../../utils/shared/ExecutionUtils';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 
 /**
@@ -26,15 +27,6 @@ import ExecutionUtils from '../../utils/shared/ExecutionUtils';
  * ```
  *
  */
-
-interface Execution {
-    /* eslint-disable camelcase */
-    status_display?: string;
-    status?: string;
-    scheduled_for?: string;
-    workflow_id?: string;
-    /* eslint-enable camelcase  */
-}
 
 interface ExecutionStatusProps {
     /**

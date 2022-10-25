@@ -6,18 +6,18 @@ import { ActionType } from '../types';
 import type { ReduxState } from '../../reducers';
 import Manager from '../../utils/Manager';
 import Consts from '../../utils/consts';
+import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
+import type { PaginatedResponse } from '../../../backend/types';
 
-// TODO: move CancelAction to ExecutionUtils?
-type CancelAction = 'cancel' | 'force_cancel' | 'kill';
+type ActiveExecutions = PaginatedResponse<
+    Required<Pick<Execution, 'id' | 'workflow_id' | 'status' | 'status_display' | 'blueprint_id' | 'deployment_id'>>
+>;
 
 export type SetMaintenanceStatusAction = PayloadAction<string, ActionType.SET_MAINTENANCE_STATUS>;
-export type SetActiveExecutionsAction = PayloadAction<
-    { status: string; receivedAt: number },
-    ActionType.SET_ACTIVE_EXECUTIONS
->;
+export type SetActiveExecutionsAction = PayloadAction<ActiveExecutions, ActionType.SET_ACTIVE_EXECUTIONS>;
 export type CancelExecutionAction = PayloadAction<
-    { execution: any; action: CancelAction },
+    { execution: Execution; action: CancelAction },
     ActionType.CANCEL_EXECUTION
 >;
 
@@ -57,8 +57,7 @@ export function switchMaintenance(
         });
 }
 
-// TODO: Add better typing
-export function setActiveExecutions(activeExecutions: any): SetActiveExecutionsAction {
+export function setActiveExecutions(activeExecutions: ActiveExecutions): SetActiveExecutionsAction {
     return {
         type: ActionType.SET_ACTIVE_EXECUTIONS,
         payload: activeExecutions
@@ -76,29 +75,30 @@ export function getActiveExecutions(
             ...ExecutionUtils.ACTIVE_EXECUTION_STATUSES
         ];
         return managerAccessor
-            .doGet('/executions?_include=id,workflow_id,status,status_display,blueprint_id,deployment_id', {
-                params: {
-                    status: maintenanceModeActivationBlockingStatuses
+            .doGet<ActiveExecutions>(
+                '/executions?_include=id,workflow_id,status,status_display,blueprint_id,deployment_id',
+                {
+                    params: {
+                        status: maintenanceModeActivationBlockingStatuses
+                    }
                 }
-            })
+            )
             .then(data => {
                 dispatch(setActiveExecutions(data));
             });
     };
 }
 
-// TODO: Add better typing
-export function cancelExecution(execution: any, action: CancelAction): CancelExecutionAction {
+export function cancelExecution(execution: Execution, action: CancelAction): CancelExecutionAction {
     return {
         type: ActionType.CANCEL_EXECUTION,
         payload: { execution, action }
     };
 }
 
-// TODO: Add better typing
 export function doCancelExecution(
     manager: ReduxState['manager'],
-    execution: any,
+    execution: Execution,
     action: CancelAction
 ): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     const managerAccessor = new Manager(manager);
