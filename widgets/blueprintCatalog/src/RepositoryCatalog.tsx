@@ -113,13 +113,14 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
         } = item;
 
         return (
-            <Grid.Column key={id}>
+            <div>
                 <StyledDataSegment
                     selected={isSelected}
                     onClick={(event: Event) => {
                         event.stopPropagation();
                         onSelect(item);
                     }}
+                    key={id}
                 >
                     <Grid container className="contentBlock">
                         <StyledGridRowHeader>
@@ -199,31 +200,10 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         </Grid.Row>
                     </Grid>
                 </StyledDataSegment>
-            </Grid.Column>
+            </div>
         );
+        /* eslint-enable camelcase */
     });
-    /* eslint-enable camelcase */
-
-    const catalogRows = [];
-    let row: typeof catalogItems = [];
-    _.each(catalogItems, (catalogItem, index) => {
-        row.push(catalogItem);
-        if ((index + 1) % 3 === 0) {
-            catalogRows.push(
-                <Grid.Row key={catalogRows.length + 1} columns="3">
-                    {row}
-                </Grid.Row>
-            );
-            row = [];
-        }
-    });
-    if (row.length > 0) {
-        catalogRows.push(
-            <Grid.Row key={catalogRows.length + 1} columns="3">
-                {row}
-            </Grid.Row>
-        );
-    }
 
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
@@ -237,7 +217,18 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <Grid>{catalogRows}</Grid>
+            <Grid>
+                <Grid.Row
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(370px, 3fr))',
+                        gridGap: '20px',
+                        margin: '0 1rem'
+                    }}
+                >
+                    {catalogItems}
+                </Grid.Row>
+            </Grid>
         </DataSegment>
     );
 };
