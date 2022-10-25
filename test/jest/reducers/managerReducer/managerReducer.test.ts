@@ -1,30 +1,33 @@
 import configureMockStore from 'redux-mock-store';
-import type { MockStore } from 'redux-mock-store';
+import type { MockStoreEnhanced } from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import timeKeeper from 'timekeeper';
 import { applyMiddleware, createStore } from 'redux';
-import type { Reducer } from 'redux';
+import type { Reducer, AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
 
 import { getManagerData, login, logout } from 'actions/manager/auth';
 import { ActionType } from 'actions/types';
 import type { ManagerData } from 'reducers/managerReducer';
 import managerReducer, { emptyState } from 'reducers/managerReducer';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
+import type { ReduxState } from 'reducers';
 import rbac from '../../resources/rbac';
 import versions from '../../resources/versions';
 import licenses from '../../resources/licenses';
 
 describe('(Reducer) Manager', () => {
-    const mockStore = configureMockStore([thunk]);
-    const createStoreAsMockStore = (reducer: Reducer) => <MockStore>createStore(reducer, {}, applyMiddleware(thunk));
+    const mockStore = configureMockStore<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>([thunk]);
+    const createStoreAsMockStore = (reducer: Reducer) =>
+        <MockStoreEnhanced<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>>(
+            createStore(reducer, {}, applyMiddleware(thunk))
+        );
     const mockDate = new Date(2019, 4, 6);
 
     const username = 'admin';
     const password = 'admin';
     const sysAdminRole = 'sys_admin';
-
-    let store: MockStore;
 
     beforeAll(() => {
         timeKeeper.freeze(mockDate);
@@ -49,13 +52,13 @@ describe('(Reducer) Manager', () => {
             });
 
             it('triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(login(username, password)).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
                         { type: ActionType.REQ_LOGIN },
-                        { type: ActionType.RES_LOGIN, username, role, receivedAt: Date.now() },
+                        { type: ActionType.RES_LOGIN, payload: { username, role, receivedAt: Date.now() } },
                         {
                             type: '@@router/CALL_HISTORY_METHOD',
                             payload: { args: ['/'], method: 'push' }
@@ -67,7 +70,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('initializes state', () => {
-                store = createStoreAsMockStore(managerReducer);
+                const store = createStoreAsMockStore(managerReducer);
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
@@ -96,7 +99,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(login(username, password)).then(() => {
                     const actualActions = store.getActions();
@@ -104,9 +107,11 @@ describe('(Reducer) Manager', () => {
                         { type: ActionType.REQ_LOGIN },
                         {
                             type: ActionType.ERR_LOGIN,
-                            username,
-                            error: { code: undefined, message: 'User unauthorized', status: 401 },
-                            receivedAt: Date.now()
+                            payload: {
+                                username,
+                                error: { code: undefined, message: 'User unauthorized', status: 401 },
+                                receivedAt: Date.now()
+                            }
                         }
                     ];
 
@@ -115,7 +120,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('sets error state', () => {
-                store = createStoreAsMockStore(managerReducer);
+                const store = createStoreAsMockStore(managerReducer);
 
                 return store.dispatch(login(username, password)).then(() => {
                     expect(store.getState()).toEqual({
@@ -141,13 +146,13 @@ describe('(Reducer) Manager', () => {
         });
 
         it('triggers actions', () => {
-            store = mockStore({});
+            const store = mockStore({});
 
             return store.dispatch(logout('License expired')).then(() => {
                 const actualActions = store.getActions();
                 const expectedActions = [
                     { type: ActionType.CLEAR_CONTEXT },
-                    { type: ActionType.LOGOUT, error: 'License expired', receivedAt: Date.now() },
+                    { type: ActionType.LOGOUT, payload: { error: 'License expired', receivedAt: Date.now() } },
                     {
                         type: '@@router/CALL_HISTORY_METHOD',
                         payload: { args: ['/error'], method: 'push' }
@@ -159,7 +164,7 @@ describe('(Reducer) Manager', () => {
         });
 
         it('resets state', () => {
-            store = createStoreAsMockStore(managerReducer);
+            const store = createStoreAsMockStore(managerReducer);
 
             return store.dispatch(logout('License expired')).then(() => {
                 expect(store.getState()).toEqual({
@@ -184,21 +189,20 @@ describe('(Reducer) Manager', () => {
             });
 
             it('triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(getManagerData()).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
                         {
                             type: ActionType.SET_MANAGER_VERSION,
-                            version: versions.premium
+                            payload: versions.premium
                         },
-                        { type: ActionType.SET_LICENSE_REQUIRED, isRequired: true },
-                        { type: ActionType.SET_MANAGER_LICENSE, license: {} },
+                        { type: ActionType.SET_LICENSE_REQUIRED, payload: true },
+                        { type: ActionType.SET_MANAGER_LICENSE, payload: {} },
                         {
                             type: ActionType.STORE_RBAC,
-                            roles: rbac.roles,
-                            permissions: rbac.permissions
+                            payload: { roles: rbac.roles, permissions: rbac.permissions }
                         }
                     ];
 
@@ -207,7 +211,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStoreAsMockStore(licenseReducer);
+                const store = createStoreAsMockStore(licenseReducer as Reducer);
 
                 const expectedLicenseState = {
                     data: {},
@@ -234,27 +238,26 @@ describe('(Reducer) Manager', () => {
             });
 
             it('triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(getManagerData()).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
                         {
                             type: ActionType.SET_MANAGER_VERSION,
-                            version: versions.premium
+                            payload: versions.premium
                         },
                         {
                             type: ActionType.SET_LICENSE_REQUIRED,
-                            isRequired: true
+                            payload: true
                         },
                         {
                             type: ActionType.SET_MANAGER_LICENSE,
-                            license: licenses.activePayingLicense
+                            payload: licenses.activePayingLicense
                         },
                         {
                             type: ActionType.STORE_RBAC,
-                            roles: rbac.roles,
-                            permissions: rbac.permissions
+                            payload: { roles: rbac.roles, permissions: rbac.permissions }
                         }
                     ];
 
@@ -263,7 +266,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStoreAsMockStore(licenseReducer);
+                const store = createStoreAsMockStore(licenseReducer as Reducer);
 
                 const expectedLicenseState = {
                     data: { ...licenses.activePayingLicense },
@@ -290,27 +293,26 @@ describe('(Reducer) Manager', () => {
             });
 
             it('triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(getManagerData()).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
                         {
                             type: ActionType.SET_MANAGER_VERSION,
-                            version: versions.premium
+                            payload: versions.premium
                         },
                         {
                             type: ActionType.SET_LICENSE_REQUIRED,
-                            isRequired: true
+                            payload: true
                         },
                         {
                             type: ActionType.SET_MANAGER_LICENSE,
-                            license: licenses.expiredPayingLicense
+                            payload: licenses.expiredPayingLicense
                         },
                         {
                             type: ActionType.STORE_RBAC,
-                            roles: rbac.roles,
-                            permissions: rbac.permissions
+                            payload: { roles: rbac.roles, permissions: rbac.permissions }
                         }
                     ];
 
@@ -319,7 +321,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('changes license state', () => {
-                store = createStoreAsMockStore(licenseReducer);
+                const store = createStoreAsMockStore(licenseReducer as Reducer);
 
                 const expectedLicenseState = {
                     data: licenses.expiredPayingLicense,
@@ -346,21 +348,20 @@ describe('(Reducer) Manager', () => {
             });
 
             it('non-licensed version triggers actions', () => {
-                store = mockStore({});
+                const store = mockStore({});
 
                 return store.dispatch(getManagerData()).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
                         {
                             type: ActionType.SET_MANAGER_VERSION,
-                            version: versions.community
+                            payload: versions.community
                         },
-                        { type: ActionType.SET_LICENSE_REQUIRED, isRequired: false },
-                        { type: ActionType.SET_MANAGER_LICENSE, license: null },
+                        { type: ActionType.SET_LICENSE_REQUIRED, payload: false },
+                        { type: ActionType.SET_MANAGER_LICENSE, payload: null },
                         {
                             type: ActionType.STORE_RBAC,
-                            roles: rbac.roles,
-                            permissions: rbac.permissions
+                            payload: { roles: rbac.roles, permissions: rbac.permissions }
                         }
                     ];
 
@@ -369,7 +370,7 @@ describe('(Reducer) Manager', () => {
             });
 
             it('non-licensed version changes license state', () => {
-                store = createStoreAsMockStore(licenseReducer);
+                const store = createStoreAsMockStore(licenseReducer as Reducer);
 
                 const expectedLicenseState = {
                     data: null,

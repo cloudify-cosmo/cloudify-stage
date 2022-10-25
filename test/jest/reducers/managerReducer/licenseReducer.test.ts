@@ -20,7 +20,7 @@ describe('(Reducer) License', () => {
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
                 type: ActionType.SET_MANAGER_LICENSE,
-                license: licenses.activePayingLicense
+                payload: licenses.activePayingLicense
             };
             const expectedActions = [setManagerLicenseAction];
 
@@ -47,7 +47,7 @@ describe('(Reducer) License', () => {
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
                 type: ActionType.SET_MANAGER_LICENSE,
-                license: licenses.expiredPayingLicense
+                payload: licenses.expiredPayingLicense
             };
             const expectedActions = [setManagerLicenseAction];
 

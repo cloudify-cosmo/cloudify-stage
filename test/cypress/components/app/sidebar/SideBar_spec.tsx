@@ -26,7 +26,7 @@ describe('SideBar', () => {
                         auth: { ...emptyState.auth, username },
                         tenants: { items: [] },
                         version: { version },
-                        license: {}
+                        license: { data: null }
                     } as ManagerData,
                     config: { mode: Consts.MODE_CUSTOMER }
                 }

@@ -1,17 +1,20 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
-import type { Reducer } from 'redux';
+import type { Reducer, AnyAction } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
 import timeKeeper from 'timekeeper';
 
+import type { TenantsData } from 'reducers/managerReducer/tenantsReducer';
 import tenantsReducer from 'reducers/managerReducer/tenantsReducer';
 import { getTenants, selectTenant } from 'actions/manager/tenants';
 import { ActionType } from 'actions/types';
 
 import fetchMock from 'fetch-mock';
 import log from 'loglevel';
+import type { ReduxState } from 'reducers';
 
-const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>([thunk]);
 
 const time = new Date(1);
 
@@ -40,10 +43,12 @@ describe('(Reducer) Tenants', () => {
             { type: ActionType.REQ_TENANTS },
             {
                 type: ActionType.RES_TENANTS,
-                tenants: {
-                    items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
-                },
-                receivedAt: Date.now()
+                payload: {
+                    tenants: {
+                        items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
+                    },
+                    receivedAt: Date.now()
+                }
             }
         ];
 
@@ -68,13 +73,15 @@ describe('(Reducer) Tenants', () => {
             { type: ActionType.REQ_TENANTS },
             {
                 type: ActionType.ERR_TENANTS,
-                error: 'Error fetching tenants',
-                receivedAt: Date.now()
+                payload: {
+                    error: 'Error fetching tenants',
+                    receivedAt: Date.now()
+                }
             }
         ];
 
         const store = mockStore({});
-        store.replaceReducer(tenantsReducer as Reducer<unknown>);
+        store.replaceReducer(tenantsReducer as Reducer);
 
         return store.dispatch(getTenants()).catch(() => {
             // return of async actions
@@ -92,7 +99,7 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
+        const store = createStore<TenantsData, AnyAction, any, any>(tenantsReducer, {}, applyMiddleware(thunk));
 
         return store.dispatch(getTenants()).catch(() => {
             // return of async actions
@@ -114,7 +121,7 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
+        const store = createStore<TenantsData, AnyAction, any, any>(tenantsReducer, {}, applyMiddleware(thunk));
 
         return store.dispatch(getTenants()).then(() => {
             // return of async actions
