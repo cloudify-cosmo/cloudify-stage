@@ -22,3 +22,6 @@
 @iconBorderOffset: unit((@iconBorderOffsetInPx / @iconSizeInPx), em);
 @iconTextOffset: unit((@iconTextOffsetInPx / @iconSizeInPx), em);
 @iconWidth: @iconFontSize + unit((@iconBorderOffsetInPx + @iconTextOffsetInPx) / @emSize, em);
+
+// TODO Norbert: Migrate other, opaque colors to be generated from `fade` function
+@loaderLineColor: fade(@grey, 40%);
