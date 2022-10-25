@@ -113,14 +113,13 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
         } = item;
 
         return (
-            <div>
+            <div key={id}>
                 <StyledDataSegment
                     selected={isSelected}
                     onClick={(event: Event) => {
                         event.stopPropagation();
                         onSelect(item);
                     }}
-                    key={id}
                 >
                     <Grid container className="contentBlock">
                         <StyledGridRowHeader>
@@ -209,6 +208,12 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
 
+    const StyledGridWrapper = styled.div`
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(370px, 3fr));
+        grid-gap: 20px;
+    `;
+
     return (
         <DataSegment
             totalSize={totalSize}
@@ -217,18 +222,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <Grid>
-                <Grid.Row
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(370px, 3fr))',
-                        gridGap: '20px',
-                        margin: '0 1rem'
-                    }}
-                >
-                    {catalogItems}
-                </Grid.Row>
-            </Grid>
+            <StyledGridWrapper>{catalogItems}</StyledGridWrapper>
         </DataSegment>
     );
 };
