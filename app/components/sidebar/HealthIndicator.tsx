@@ -6,7 +6,7 @@ import SideBarItemIcon from './SideBarItemIcon';
 import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
-import { ClusterServiceStatus } from '../shared/cluster/consts';
+import { ClusterServiceStatus } from '../shared/cluster/types';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
