@@ -2,10 +2,10 @@
 import type { clusterServiceEnum, clusterNodeStatusEnum, nodeServiceStatusEnum } from './consts';
 
 export enum ClusterServiceStatus {
-    OK = 'OK',
-    Fail = 'Fail',
-    Degraded = 'Degraded',
-    Unknown = 'Unknown'
+    OK,
+    Fail,
+    Degraded,
+    Unknown
 }
 
 export type ClusterService = keyof typeof clusterServiceEnum;
