@@ -41,7 +41,7 @@ function errorTenants(error: any): ErrorTenantsAction {
     };
 }
 
-export function getTenants(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function getTenants(): ThunkAction<Promise<Tenants>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         dispatch(requestTenants());
         const managerAccessor = new Manager(getState().manager);

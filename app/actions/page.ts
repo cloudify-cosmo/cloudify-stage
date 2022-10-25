@@ -129,7 +129,7 @@ export function changePageDescription(pageId: string, newDescription: string) {
 export function addLayoutToPage(
     page: Pick<PageDefinition, 'layout'>,
     pageId: string
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
         const widgetsToLoad: Record<string, WidgetDefinition<any, any, Record<string, unknown>>> = {};

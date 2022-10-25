@@ -39,11 +39,11 @@ export function addPage(page: Page) {
     };
 }
 
-export function savePage(page: Page): ThunkAction<Promise<any>, ReduxState, never, AnyAction> {
+export function savePage(page: Page): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
 }
 
-export function persistPage(page: Page): ThunkAction<Promise<any>, ReduxState, never, AnyAction> {
+export function persistPage(page: Page): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         function prepareWidgetData(widget: SimpleWidgetObj) {
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');

@@ -30,7 +30,9 @@ export function setMaintenanceStatus(status: string): SetMaintenanceStatusAction
     };
 }
 
-export function getMaintenanceStatus(manager: ReduxState['manager']): ThunkAction<void, ReduxState, never, AnyAction> {
+export function getMaintenanceStatus(
+    manager: ReduxState['manager']
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor
@@ -46,7 +48,7 @@ export function getMaintenanceStatus(manager: ReduxState['manager']): ThunkActio
 export function switchMaintenance(
     manager: ReduxState['manager'],
     activate: boolean
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor.doPost(`/maintenance/${activate ? 'activate' : 'deactivate'}`).then(data => {
@@ -63,7 +65,9 @@ export function setActiveExecutions(activeExecutions: any): SetActiveExecutionsA
     };
 }
 
-export function getActiveExecutions(manager: ReduxState['manager']): ThunkAction<void, ReduxState, never, AnyAction> {
+export function getActiveExecutions(
+    manager: ReduxState['manager']
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     const managerAccessor = new Manager(manager);
 
     return dispatch => {
@@ -96,7 +100,7 @@ export function doCancelExecution(
     manager: ReduxState['manager'],
     execution: any,
     action: CancelAction
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor

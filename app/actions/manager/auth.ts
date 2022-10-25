@@ -75,7 +75,7 @@ export function login(
     username: string,
     password: string,
     redirect?: string
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
@@ -156,7 +156,7 @@ function doLogout(error?: string | null): LogoutAction {
     };
 }
 
-export function logout(err?: string | null, path?: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function logout(err?: string | null, path?: string): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());

@@ -15,7 +15,7 @@ import type { ReduxState } from '../reducers';
 export type StoreCurrentPageAction = PayloadAction<string, ActionType.STORE_CURRENT_PAGE>;
 export type AppAction = StoreCurrentPageAction;
 
-export function intialPageLoad(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function intialPageLoad(): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return dispatch => {
         dispatch(setAppLoading(true));
 

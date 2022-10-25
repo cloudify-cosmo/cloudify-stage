@@ -52,7 +52,7 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[
     return widgetPresent;
 }
 
-export function getClusterStatus(summaryOnly = false): ThunkAction<void, ReduxState, never, AnyAction> {
+export function getClusterStatus(summaryOnly = false): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { app, manager, pages } = getState();
         const managerAccessor = new Manager(manager);

@@ -216,7 +216,7 @@ export function removePageWithChildren(page: PageDefinition): ThunkAction<void, 
     };
 }
 
-export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function createPagesFromTemplate(): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
     return (dispatch, getState) => {
         const { manager } = getState();
 
