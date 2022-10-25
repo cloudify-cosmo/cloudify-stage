@@ -2,7 +2,7 @@
     "extends": ["./node_modules/cloudify-ui-common-configs/eslint-common-backend.json"],
     "overrides": [
         {
-            "files": ["./*.{js,ts}", "backend/*.js", "scripts/*.js"],
+            "files": ["./*.{js,ts}", "scripts/*.js"],
             "extends": [
                 "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
                 "./.eslintrc.temp-overrides.json"
