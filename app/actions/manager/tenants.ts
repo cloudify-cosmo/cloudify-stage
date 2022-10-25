@@ -3,7 +3,7 @@ import type { Action } from 'redux';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
-import { setAppLoading } from '../appState';
+import { setAppLoading } from '../app';
 import { setEditMode } from '../config';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
