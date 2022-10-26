@@ -1,5 +1,6 @@
 import type { ComponentProps } from 'react';
 import styled from 'styled-components';
+import { Label } from 'semantic-ui-react';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -159,14 +160,16 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <h2>Default Input</h2>
                 <ExampleRow>
                     <Form.Input value="Some value" />
-                    <Form.Input disabled value="Some value" />
+                    <Form.Input disabled value="Disabled" />
                     <Form.Input placeholder="Placeholder" />
                 </ExampleRow>
                 <h2>Search Input</h2>
                 <ExampleRow>
-                    <Form.Input disabled value="Some value" icon="search" />
-                    <Form.Input value="Loading" icon="search" loading />
-                    <Form.Input placeholder="Placeholder" icon="search" loading />
+                    <Form.Input value="Search" icon="search" />
+                    <Form.Input disabled value="Disabled" icon="search" />
+                    <Form.Input placeholder="Placeholder" icon="search" />
+                    <Form.Input value="Loading..." icon="search" loading />
+                    <Form.Input disabled value="Disabled" icon="search" loading />
                 </ExampleRow>
                 <div style={{ marginBottom: '500px' }} />
 
