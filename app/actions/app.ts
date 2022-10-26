@@ -1,13 +1,6 @@
-import log from 'loglevel';
 import { push } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import { loadTemplates } from './templates';
-import { loadWidgetDefinitions } from './widgets';
-
-import { loadOrCreateUserAppData } from './userApp';
-import { getIdentityProviders } from './manager/auth';
-import { getClusterStatus } from './manager/clusterStatus';
 import { clearContext } from './context';
 import Consts from '../utils/consts';
 
@@ -43,28 +36,5 @@ export function showAppError(error: string): ReduxThunkAction<void> {
         dispatch(clearContext());
         dispatch(setAppError(error));
         dispatch(push(Consts.PAGE_PATH.ERROR));
-    };
-}
-
-export function intialPageLoad(): ReduxThunkAction {
-    return dispatch => {
-        dispatch(setAppLoading(true));
-
-        return Promise.all([
-            dispatch(loadTemplates()),
-            dispatch(loadWidgetDefinitions()),
-            dispatch(getClusterStatus()),
-            dispatch(getIdentityProviders())
-        ])
-            .then(() => dispatch(loadOrCreateUserAppData()))
-            .then(() => {
-                dispatch(setAppLoading(false));
-                dispatch(setAppError(null));
-            })
-            .catch(e => {
-                log.error('Error initializing user data. Cannot load page', e);
-                dispatch(setAppLoading(false));
-                return Promise.reject(e);
-            });
     };
 }
