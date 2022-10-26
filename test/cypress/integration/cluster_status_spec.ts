@@ -76,10 +76,12 @@ describe('Cluster Status', () => {
 
         interceptFullStatus(['cluster_status/degraded.json', 'cluster_status/ok.json', 'cluster_status/fail.json']);
 
-        checkStatus(ClusterServiceStatus.Degraded, ClusterServiceStatus.OK, ClusterServiceStatus.OK, 'yellow');
+        const { OK, Degraded, Fail } = ClusterServiceStatus;
 
-        checkStatus(ClusterServiceStatus.OK, ClusterServiceStatus.OK, ClusterServiceStatus.OK);
+        checkStatus(Degraded, OK, OK, 'yellow');
 
-        checkStatus(ClusterServiceStatus.Fail, ClusterServiceStatus.OK, ClusterServiceStatus.Fail, 'red');
+        checkStatus(OK, OK, OK);
+
+        checkStatus(Fail, OK, Fail, 'red');
     });
 });
