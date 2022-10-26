@@ -1,3 +1,79 @@
 /*******************************
          Site Overrides
 *******************************/
+
+@inputBorderColor: #ebebeb;
+@inputHoverBorderColor: @grey;
+@inputVerticalPadding: unit(8.5px / @emSize, em);
+
+.ui.input {
+    & > input {
+        border-color: @inputBorderColor;
+        padding: @inputVerticalPadding @relative12px;
+    }
+
+    &.disabled {
+        & > input,
+        &.labeled .label,
+        &.icon > i.icon {
+            color: fade(@grey, 45%);
+        }
+    }
+
+    &:not(.disabled) {
+        & > input {
+            &:hover {
+                border-color: @inputHoverBorderColor;
+            }
+
+            &:focus {
+                border-color: @downBorderColor;
+            }
+        }
+    }
+
+    &.labeled {
+        &.left {
+            & > input {
+                & {
+                    border-left-color: @inputBorderColor !important;
+                }
+
+                &:hover {
+                    border-left-color: @inputHoverBorderColor !important;
+                }
+
+                &:focus {
+                    border-left-color: @downBorderColor !important;
+                }
+            }
+
+            .ui.label {
+                line-height: @inputLineHeight;
+            }
+        }
+    }
+
+    &.icon {
+        & > i.icon {
+            &::before {
+                width: @iconSize;
+                font-size: @iconFontSize;
+            }
+        }
+
+        &.left > i.icon {
+            &::before {
+                left: @iconBorderOffset;
+                right: @iconTextOffset;
+            }
+        }
+
+        &.right > i.icon {
+            &::before {
+                left: @iconTextOffset;
+                right: @iconBorderOffset;
+            }
+        }
+    }
+}

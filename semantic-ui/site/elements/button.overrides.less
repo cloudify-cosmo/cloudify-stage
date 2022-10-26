@@ -23,7 +23,9 @@
 }
 
 .ui.button {
-    min-width: 90px;
+    &:not(.icon) {
+        min-width: 90px;
+    }
 
     &:not(.icon) > .icon:not(.button):not(.dropdown) {
         // NOTE: Previously icon had 14px height, so after changing it to 17px we have to realign it
