@@ -14,15 +14,15 @@
 @borderRadius: 5px;
 @borderColor: @grey;
 
-@backgroundColor: #EBEBEB;
-@hoverBackgroundColor: #E5E5E5;
-@focusBackgroundColor: #D6D6D6;
+@backgroundColor: #ebebeb;
+@hoverBackgroundColor: #e5e5e5;
+@focusBackgroundColor: #d6d6d6;
 @downBackgroundColor: @focusBackgroundColor;
 
-@basicHoverBackground: rgba(95, 99, 104, 0.1);
+@basicHoverBackground: fade(@grey, 10%);
 @basicHoverBoxShadow: 0px 0px 0px @basicBorderSize @borderColor inset;
 
-@basicDownBackground: rgba(95, 99, 104, 0.2);
+@basicdownbackground:fade (@grey, 20%);
 @basicDownBoxShadow: @basicHoverBoxShadow;
 
 @basicFocusBackground: @basicDownBackground;
