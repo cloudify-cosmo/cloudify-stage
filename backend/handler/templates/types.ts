@@ -8,25 +8,25 @@ export interface WidgetDefinition {
     configuration: Record<string, any>;
 }
 
-export interface WidgetsSection {
+export interface WidgetsSection<WD = WidgetDefinition> {
     type: 'widgets';
-    content: WidgetDefinition[];
+    content: WD[];
 }
 
-export interface TabContent {
+export interface TabContent<WD = WidgetDefinition> {
     name: string;
-    widgets: WidgetDefinition[];
+    widgets: WD[];
     isDefault?: boolean;
 }
 
-export interface TabsSection {
+export interface TabsSection<WD = WidgetDefinition> {
     type: 'tabs';
-    content: TabContent[];
+    content: TabContent<WD>[];
 }
 
 export type LayoutSectionType = 'tabs' | 'widgets';
 
-export type LayoutSection = WidgetsSection | TabsSection;
+export type LayoutSection<WD = WidgetDefinition> = WidgetsSection<WD> | TabsSection<WD>;
 
 export interface PageItem {
     id: string;
@@ -88,16 +88,16 @@ export interface CreatePageGroupData {
 
 export type UpdatePageGroupData = CreatePageGroupData;
 
-export interface PageFileContent extends CommonFileContent {
+export interface PageFileContent<WD = WidgetDefinition, I = string> extends CommonFileContent {
     name: string;
-    icon?: string;
-    layout: LayoutSection[];
+    icon?: I;
+    layout: LayoutSection<WD>[];
 }
 
-export interface Page extends Required<CommonFileContent>, CommonIdentityData {
+export interface Page<WD = WidgetDefinition, I = string> extends Required<CommonFileContent>, CommonIdentityData {
     data: {
-        icon: PageFileContent['icon'];
-        layout: PageFileContent['layout'];
+        icon: PageFileContent<WD, I>['icon'];
+        layout: PageFileContent<WD, I>['layout'];
     };
 }
 
@@ -107,8 +107,8 @@ export interface CreatePageData {
     layout: [];
 }
 
-export interface UpdatePageData extends Omit<CreatePageData, 'layout'> {
+export interface UpdatePageData<WD = WidgetDefinition> extends Omit<CreatePageData, 'layout'> {
     oldId: string;
     icon?: string;
-    layout: LayoutSection[];
+    layout: LayoutSection<WD>[];
 }

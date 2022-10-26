@@ -3,7 +3,8 @@ import type { SemanticICONS } from 'semantic-ui-react';
 import type {
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
-    WidgetsSection as BackendWidgetsSection
+    WidgetsSection as BackendWidgetsSection,
+    LayoutSection as BackendLayoutSection
 } from '../../backend/handler/templates/types';
 import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
@@ -17,20 +18,10 @@ import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
-
-export interface WidgetsSection extends Omit<BackendWidgetsSection, 'content'> {
-    content: SimpleWidgetObj[];
-}
-
-export interface TabContent extends Omit<BackendTabContent, 'widgets'> {
-    widgets: SimpleWidgetObj[];
-}
-
-export interface TabsSection extends Omit<BackendTabsSection, 'content'> {
-    content: TabContent[];
-}
-
-export type LayoutSection = WidgetsSection | TabsSection;
+export type WidgetsSection = BackendWidgetsSection<SimpleWidgetObj>;
+export type TabContent = BackendTabContent<SimpleWidgetObj>;
+export type TabsSection = BackendTabsSection<SimpleWidgetObj>;
+export type LayoutSection = BackendLayoutSection<SimpleWidgetObj>;
 
 export function isWidgetsSection(layoutSection: LayoutSection): layoutSection is WidgetsSection {
     return layoutSection.type === 'widgets';
