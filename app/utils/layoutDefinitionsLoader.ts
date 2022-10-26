@@ -23,18 +23,29 @@ function fetchResource<Resource extends ArrayElement<GetTemplatesResponse | GetP
         .then(resources => keyBy(resources, 'id'));
 }
 
-export default function load(manager: ManagerData) {
+export interface LayoutDefinitions {
+    templatesDef: Record<string, Template['data']>;
+    pagesDef: Record<string, { name: Page['name'] } & Page['data']>;
+    pageGroupsDef: Record<string, Pick<PageGroup, 'name' | 'icon' | 'pages'>>;
+}
+export const emptyLayoutDefinitions = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} };
+
+export default function fetchLayoutDefinitions(manager: ManagerData) {
     return Promise.all([
         fetchResource<Template>(manager),
         fetchResource<Page>(manager, '/pages'),
         fetchResource<PageGroup>(manager, '/page-groups')
     ])
-        .then(results => {
-            return {
-                templatesDef: mapValues(results[0], 'data'),
-                pagesDef: mapValues(results[1], ({ name, data }) => ({ name, ...data })),
-                pageGroupsDef: mapValues(results[2], ({ name, icon, pages }) => ({ name, icon, pages }))
-            };
-        })
-        .catch(e => log.error(e));
+        .then(
+            results =>
+                ({
+                    templatesDef: mapValues(results[0], 'data'),
+                    pagesDef: mapValues(results[1], ({ name, data }) => ({ name, ...data })),
+                    pageGroupsDef: mapValues(results[2], ({ name, icon, pages }) => ({ name, icon, pages }))
+                } as LayoutDefinitions)
+        )
+        .catch(e => {
+            log.error(e);
+            return emptyLayoutDefinitions;
+        });
 }

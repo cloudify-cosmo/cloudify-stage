@@ -8,8 +8,8 @@ export type WidgetDefinitionsState = WidgetDefinition[];
 
 const widgetDefinitionsReducer: Reducer<WidgetDefinitionsState> = (state = [], action) => {
     switch (action.type) {
-        case ActionType.STORE_WIDGETS:
-            return [...action.widgetDefinitions];
+        case ActionType.STORE_WIDGETS_DEFINITIONS:
+            return [...action.payload.widgetDefinitions];
         case ActionType.INSTALL_WIDGET:
             return _.sortBy([...state, action.widgetDefinition], ['name']);
         case ActionType.UPDATE_WIDGET_DEFINITION: {

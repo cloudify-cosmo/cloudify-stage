@@ -5,18 +5,6 @@ import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import { ActionType } from './types';
 import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 
-export function storeWidgetDefinitions(widgetDefinitions) {
-    return {
-        type: ActionType.STORE_WIDGETS,
-        widgetDefinitions
-    };
-}
-
-export function loadWidgetDefinitions() {
-    return (dispatch, getState) =>
-        widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
-}
-
 export function addWidget(pageId, layoutSection, tab, widget, widgetDefinition) {
     return {
         type: ActionType.ADD_WIDGET,

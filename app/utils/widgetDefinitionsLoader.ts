@@ -40,6 +40,8 @@ interface WidgetListItem {
     isCustom: boolean;
 }
 
+export type WidgetsDefinitions = (WidgetData & { loaded: boolean })[];
+
 export default class WidgetDefinitionsLoader {
     public static init() {
         const stageAPI: typeof Stage = {
@@ -121,7 +123,7 @@ export default class WidgetDefinitionsLoader {
         return widgetDefinition;
     }
 
-    public static load(manager: any): Promise<(WidgetData & { loaded: boolean })[]> {
+    public static load(manager: any): Promise<WidgetsDefinitions> {
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets

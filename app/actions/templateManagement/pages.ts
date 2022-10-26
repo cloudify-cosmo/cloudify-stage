@@ -7,8 +7,9 @@ import type { SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
+import type { TemplatesState } from '../../reducers/templatesReducer';
 
-type Page = ReduxState['templates']['pagesDef'][string] & { id: string; oldId?: string };
+type Page = TemplatesState['pagesDef'][string] & { id: string; oldId?: string };
 
 export type AddPageAction = PayloadAction<Page, ActionType.ADD_TEMPLATE_PAGE>;
 export type RemovePageAction = PayloadAction<string, ActionType.REMOVE_TEMPLATE_PAGE>;
@@ -55,6 +56,8 @@ export function persistPage(page: Page): ReduxThunkAction<Promise<AddPageAction>
         }
 
         const body = _(page).pick('id', 'oldId', 'name', 'icon', 'layout').cloneDeep();
+
+        // @ts-ignore TODO: Seems like it's intentional here to end up with non SimpleWidgetObj type
         forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
