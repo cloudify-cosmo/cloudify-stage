@@ -49,14 +49,7 @@ export function getClusterStatus(summaryOnly = false) {
             .then(data => {
                 const { services, status } = data;
 
-                const mapStringToEnum = {
-                    OK: ClusterServiceStatus.OK,
-                    Fail: ClusterServiceStatus.Fail,
-                    Degraded: ClusterServiceStatus.Degraded,
-                    Unknown: ClusterServiceStatus.Unknown
-                };
-
-                dispatch(setClusterStatus(mapStringToEnum[status], fetchOnlySummary ? undefined : services));
+                dispatch(setClusterStatus(ClusterServiceStatus[status], fetchOnlySummary ? undefined : services));
             })
             .catch(err => {
                 dispatch(errorClusterStatus(err));
