@@ -4,11 +4,12 @@
 
 @inputBorderColor: #ebebeb;
 @inputHoverBorderColor: @grey;
+@inputVerticalPadding: unit(8.5px / @emSize, em);
 
 .ui.input {
     & > input {
         border-color: @inputBorderColor;
-        padding: 8.5px 12px;
+        padding: @inputVerticalPadding @relative12px;
     }
 
     &.disabled {
