@@ -12,10 +12,11 @@ import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
 import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
-import type { ReduxThunkAction } from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
+import type { TemplatePageDefinition } from '../reducers/templatesReducer';
 
 export enum InsertPosition {
     Before,
@@ -33,35 +34,52 @@ export interface PageGroup {
 
 export type PageMenuItem = PageDefinition | PageGroup;
 
-export function createPage(page: Partial<PageDefinition>, newPageId: string) {
+export type AddPageAction = PayloadAction<{ page: Partial<PageDefinition>; newPageId: string }, ActionType.ADD_PAGE>;
+export type AddPageGroupAction = PayloadAction<{ pageGroup: any; id: string }, ActionType.ADD_PAGE_GROUP>;
+export type AddPageToGroupAction = PayloadAction<{ pageGroupId: string; pageId: string }, ActionType.ADD_PAGE_TO_GROUP>;
+export type CreateDrilldownPageAction = PayloadAction<
+    { page: TemplatePageDefinition; newPageId: string },
+    ActionType.CREATE_DRILLDOWN_PAGE
+>;
+export type RenamePageMenuItemAction = PayloadAction<
+    { pageMenuItemId: string; newName: string },
+    ActionType.RENAME_PAGE_MENU_ITEM
+>;
+export type ChangePageMenuItemIconAction = PayloadAction<
+    { pageMenuItemId: string; icon?: SemanticICONS },
+    ActionType.CHANGE_PAGE_MENU_ITEM_ICON
+>;
+export type RemovePageMenuItemAction = PayloadAction<string, ActionType.REMOVE_PAGE_MENU_ITEM>;
+export type ReorderPageMenuAction = PayloadAction<
+    { sourceId: string; targetId: string; position: InsertPosition },
+    ActionType.REORDER_PAGE_MENU
+>;
+
+export function createPage(page: Partial<PageDefinition>, newPageId: string): AddPageAction {
     return {
         type: ActionType.ADD_PAGE,
-        page,
-        newPageId
+        payload: { page, newPageId }
     };
 }
-
-function createPageGroup(pageGroup: any, id: string) {
+// TODO: Fix any
+function createPageGroup(pageGroup: any, id: string): AddPageGroupAction {
     return {
         type: ActionType.ADD_PAGE_GROUP,
-        pageGroup,
-        id
+        payload: { pageGroup, id }
     };
 }
 
-function addPageToGroup(pageGroupId: string, pageId: string) {
+function addPageToGroup(pageGroupId: string, pageId: string): AddPageToGroupAction {
     return {
         type: ActionType.ADD_PAGE_TO_GROUP,
-        pageGroupId,
-        pageId
+        payload: { pageGroupId, pageId }
     };
 }
 
-export function createDrilldownPage(page: PageDefinition, newPageId: string) {
+export function createDrilldownPage(page: TemplatePageDefinition, newPageId: string): CreateDrilldownPageAction {
     return {
         type: ActionType.CREATE_DRILLDOWN_PAGE,
-        page,
-        newPageId
+        payload: { page, newPageId }
     };
 }
 
@@ -92,19 +110,17 @@ function createId(name: string, pages: PageMenuItem[]) {
     return newPageId;
 }
 
-export function changePageMenuItemName(pageMenuItemId: string, newName: string) {
+export function changePageMenuItemName(pageMenuItemId: string, newName: string): RenamePageMenuItemAction {
     return {
         type: ActionType.RENAME_PAGE_MENU_ITEM,
-        pageMenuItemId,
-        name: newName
+        payload: { pageMenuItemId, newName }
     };
 }
 
-export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS) {
+export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS): ChangePageMenuItemIconAction {
     return {
         type: ActionType.CHANGE_PAGE_MENU_ITEM_ICON,
-        pageMenuItemId,
-        icon
+        payload: { pageMenuItemId, icon }
     };
 }
 
@@ -188,10 +204,10 @@ export function addPage(name: string): ReduxThunkAction<void> {
     };
 }
 
-export function removeSinglePageMenuItem(pageMenuItemId: string) {
+export function removeSinglePageMenuItem(pageMenuItemId: string): RemovePageMenuItemAction {
     return {
         type: ActionType.REMOVE_PAGE_MENU_ITEM,
-        pageMenuItemId
+        payload: pageMenuItemId
     };
 }
 
@@ -266,12 +282,10 @@ export function createPagesFromTemplate(): ReduxThunkAction {
     };
 }
 
-export function reorderPageMenu(sourceId: string, targetId: string, position: InsertPosition) {
+export function reorderPageMenu(sourceId: string, targetId: string, position: InsertPosition): ReorderPageMenuAction {
     return {
         type: ActionType.REORDER_PAGE_MENU,
-        sourceId,
-        targetId,
-        position
+        payload: { sourceId, targetId, position }
     };
 }
 
