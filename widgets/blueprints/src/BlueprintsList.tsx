@@ -1,5 +1,4 @@
 import type { ComponentProps } from 'react';
-import styled from 'styled-components';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -140,7 +139,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage, Form } = Stage.Basic;
+        const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -148,23 +147,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         const BlueprintsView = shouldShowTable ? BlueprintsTable : BlueprintsCatalog;
 
-        const ExampleRow = styled.div`
-            display: flex;
-            margin-top: 36px;
-            gap: 24px;
-        `;
-
         return (
             <div>
-                <h2>Search Input</h2>
-                <ExampleRow>
-                    <Form.Input value="Search" icon="search" />
-                    <Form.Input disabled value="Disabled" icon="search" />
-                    <Form.Input placeholder="Placeholder" icon="search" />
-                    <Form.Input value="Loading..." icon="search" loading />
-                </ExampleRow>
-                <div style={{ marginBottom: '500px' }} />
-
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
