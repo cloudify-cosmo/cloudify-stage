@@ -1,17 +1,16 @@
 import _ from 'lodash';
+import type { Callback, EventBus } from 'cloudify-ui-components';
 
-type Callback = (...args: any[]) => void;
+const events: Record<string, [Callback, any][]> = {};
 
-export default class EventBus {
-    private static events: Record<string, [Callback, any][]> = {};
+const eventBus: EventBus = {
+    on(event, callback, context) {
+        events[event] = events[event] || [];
+        events[event].push([callback, context]);
+    },
 
-    public static on(event: string, callback: Callback, context?: any) {
-        this.events[event] = this.events[event] || [];
-        this.events[event].push([callback, context]);
-    }
-
-    public static trigger(event: string, ...args: any[]) {
-        const callbacks = this.events[event];
+    trigger(event, ...args) {
+        const callbacks = events[event];
         if (callbacks) {
             _.each(callbacks, callback => {
                 const currCallback = callback[0];
@@ -19,15 +18,17 @@ export default class EventBus {
                 currCallback.apply(context, args);
             });
         }
-        return EventBus;
-    }
+        return eventBus;
+    },
 
-    public static off(event: string, offCallback: Callback) {
-        const callbacks = this.events[event];
+    off(event, offCallback) {
+        const callbacks = events[event];
         if (callbacks) {
             _.remove(callbacks, callback => {
                 return callback[0] === offCallback;
             });
         }
     }
-}
+};
+
+export default eventBus;

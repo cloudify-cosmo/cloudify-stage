@@ -4,8 +4,9 @@ import _ from 'lodash';
 import 'proxy-polyfill';
 import type { AnyAction, Store, Unsubscribe } from 'redux';
 
+import type { DrilldownHandler } from 'cloudify-ui-components';
 import { drillDownToPage } from '../actions/drilldownPage';
-import { selectPageByName, selectHomePage, selectParentPage } from '../actions/pageMenu';
+import { selectHomePage, selectPageByName, selectParentPage } from '../actions/pageMenu';
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -58,6 +59,11 @@ class Toolbox implements Stage.Types.Toolbox {
             ) as unknown as AnyAction
         );
     };
+
+    getDrilldownHandler(): DrilldownHandler {
+        return (pageId: string, drilldownContext: Record<string, any>, drilldownPageTitle: string) =>
+            this.drillDown(this.getWidget(), pageId, drilldownContext, drilldownPageTitle);
+    }
 
     goToHomePage() {
         // NOTE: redux's type do not handle thunks well

@@ -1,3 +1,4 @@
+import type { Manager } from 'cloudify-ui-components';
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
 import type { Label } from '../labels/types';
@@ -12,31 +13,31 @@ export interface WorkflowOptions {
 }
 
 export default class DeploymentActions {
-    constructor(private toolbox: Stage.Types.Toolbox) {}
+    constructor(private manager: Manager) {}
 
     static toManagerLabels(labels: Label[]) {
         return _.map(labels, ({ key, value }) => ({ [key]: value }));
     }
 
     doGet(deployment: { id: string }, params: any) {
-        return this.toolbox.getManager().doGet(`/deployments/${deployment.id}`, { params });
+        return this.manager.doGet(`/deployments/${deployment.id}`, { params });
     }
 
     doGetDeployments(params: any) {
-        return this.toolbox.getManager().doGet('/deployments', { params });
+        return this.manager.doGet('/deployments', { params });
     }
 
     doDelete(deployment: { id: string }) {
-        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`);
+        return this.manager.doDelete(`/deployments/${deployment.id}`);
     }
 
     doForceDelete(deployment: { id: string }) {
-        return this.toolbox.getManager().doDelete(`/deployments/${deployment.id}`, { params: { force: 'true' } });
+        return this.manager.doDelete(`/deployments/${deployment.id}`, { params: { force: 'true' } });
     }
 
     // eslint-disable-next-line camelcase
     doCancel(execution: { id: string; deployment_id: string }, action: string) {
-        return this.toolbox.getManager().doPost(`/executions/${execution.id}`, {
+        return this.manager.doPost(`/executions/${execution.id}`, {
             body: {
                 deployment_id: execution.deployment_id,
                 action
@@ -55,7 +56,7 @@ export default class DeploymentActions {
             scheduledTime: undefined
         }
     ) {
-        return this.toolbox.getManager().doPost('/executions', {
+        return this.manager.doPost('/executions', {
             body: {
                 deployment_id: deploymentId,
                 workflow_id: workflowId,
@@ -106,30 +107,27 @@ export default class DeploymentActions {
         body.force = forceUpdate;
         body.preview = preview;
 
-        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
+        return this.manager.doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {
-        return this.toolbox
-            .getManager()
-            .doPatch(`/deployments/${deploymentId}/set-visibility`, { body: { visibility } });
+        return this.manager.doPatch(`/deployments/${deploymentId}/set-visibility`, { body: { visibility } });
     }
 
     doSetSite(deploymentId: string, siteName: string, detachSite: any) {
         const body = detachSite ? { detach_site: detachSite } : { site_name: siteName };
 
-        return this.toolbox.getManager().doPost(`/deployments/${deploymentId}/set-site`, { body });
+        return this.manager.doPost(`/deployments/${deploymentId}/set-site`, { body });
     }
 
     doGetSiteName(deploymentId: string) {
-        return this.toolbox
-            .getManager()
+        return this.manager
             .doGet(`/deployments/${deploymentId}?_include=site_name`)
             .then(({ site_name: siteName }) => siteName);
     }
 
     private doGetSites(include: string, params: Record<string, any> = {}) {
-        return this.toolbox.getManager().doGet('/sites', {
+        return this.manager.doGet('/sites', {
             params: {
                 _include: include,
                 _get_all_results: true,
@@ -148,34 +146,28 @@ export default class DeploymentActions {
 
     doSetLabels(deploymentId: string, deploymentLabels: Label[]) {
         const labels = DeploymentActions.toManagerLabels(deploymentLabels);
-        return this.toolbox.getManager().doPatch(`/deployments/${deploymentId}`, { body: { labels } });
+        return this.manager.doPatch(`/deployments/${deploymentId}`, { body: { labels } });
     }
 
     doGetLabel(key: string, value: string) {
-        return this.toolbox.getManager().doGet(`/labels/deployments/${key}?_search=${value}`);
+        return this.manager.doGet(`/labels/deployments/${key}?_search=${value}`);
     }
 
     doGetLabels(deploymentId: string) {
-        return this.toolbox
-            .getManager()
-            .doGet(`/deployments/${deploymentId}?_include=labels`)
-            .then(({ labels }) => labels);
+        return this.manager.doGet(`/deployments/${deploymentId}?_include=labels`).then(({ labels }) => labels);
     }
 
     doGetReservedLabelKeys() {
-        return this.toolbox
-            .getManager()
-            .doGet('/labels/deployments?_reserved=true')
-            .then(({ items }) => items);
+        return this.manager.doGet('/labels/deployments?_reserved=true').then(({ items }) => items);
     }
 
     // eslint-disable-next-line camelcase
     doGetWorkflows(deploymentId: string): Promise<{ id: string; display_name: string; workflows: Workflow[] }> {
-        return this.toolbox.getManager().doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
+        return this.manager.doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
     }
 
     async waitUntilCreated(deploymentId: string) {
-        const executionActions = new ExecutionActions(this.toolbox);
+        const executionActions = new ExecutionActions(this.manager);
         const pollHelper = new PollHelper(60);
         for (;;) {
             // eslint-disable-next-line no-await-in-loop
