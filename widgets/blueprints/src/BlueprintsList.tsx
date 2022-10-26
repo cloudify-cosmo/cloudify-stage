@@ -162,7 +162,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                     <Form.Input disabled value="Disabled" icon="search" />
                     <Form.Input placeholder="Placeholder" icon="search" />
                     <Form.Input value="Loading..." icon="search" loading />
-                    <Form.Input disabled value="Disabled" icon="search" loading />
                 </ExampleRow>
                 <div style={{ marginBottom: '500px' }} />
 
