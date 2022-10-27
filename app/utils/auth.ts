@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { get, isEmpty, isEqual } from 'lodash';
 
 import Consts from './consts';
 import StageUtils from './stageUtils';
@@ -31,21 +31,21 @@ export default class Auth {
     }
 
     static isProductOperational(license: LicenseData) {
-        const isLicenseRequired = _.get(license, 'isRequired', false);
-        const isTrialLicense = _.get(license, 'data.trial', false);
-        const licenseStatus = _.get(license, 'status', Consts.LICENSE.EMPTY);
+        const isLicenseRequired = get(license, 'isRequired', false);
+        const isTrialLicense = get(license, 'data.trial', false);
+        const licenseStatus = get(license, 'status', Consts.LICENSE.EMPTY);
 
         if (isLicenseRequired) {
             return isTrialLicense
-                ? _.isEqual(licenseStatus, Consts.LICENSE.ACTIVE)
-                : !_.isEqual(licenseStatus, Consts.LICENSE.EMPTY);
+                ? isEqual(licenseStatus, Consts.LICENSE.ACTIVE)
+                : !isEqual(licenseStatus, Consts.LICENSE.EMPTY);
         }
 
         return true;
     }
 
     static getLicenseStatus(licenseData: LicenseResponse | null): LicenseStatus {
-        if (licenseData === null || _.isEmpty(licenseData)) {
+        if (licenseData === null || isEmpty(licenseData)) {
             return Consts.LICENSE.EMPTY;
         }
         if (licenseData.expired) {
