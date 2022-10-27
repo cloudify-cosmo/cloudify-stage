@@ -1,6 +1,4 @@
 import { compact, each, find, map } from 'lodash';
-import type { AnyAction } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
     TabContent as BackendTabContent,
@@ -11,6 +9,7 @@ import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
+import type { ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { addWidget } from './widgets';
 import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
@@ -126,10 +125,7 @@ export function changePageDescription(pageId: string, newDescription: string) {
     };
 }
 
-export function addLayoutToPage(
-    page: Pick<PageDefinition, 'layout'>,
-    pageId: string
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function addLayoutToPage(page: Pick<PageDefinition, 'layout'>, pageId: string): ReduxThunkAction {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
         const widgetsToLoad: Record<string, WidgetDefinition<any, any, Record<string, unknown>>> = {};

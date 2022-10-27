@@ -1,11 +1,8 @@
 import { push } from 'connected-react-router';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
-import type { PayloadAction } from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { clearContext } from './context';
 import Consts from '../utils/consts';
-import type { ReduxState } from '../reducers';
 
 export type SetAppLoadingAction = PayloadAction<boolean, ActionType.SET_APP_LOADING>;
 export type SetAppErrorAction = PayloadAction<string | null, ActionType.SET_APP_ERROR>;
@@ -25,7 +22,7 @@ export function setAppError(error: string | null) {
     };
 }
 
-export function showAppError(error: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function showAppError(error: string): ReduxThunkAction<void> {
     return dispatch => {
         dispatch(clearContext());
         dispatch(setAppError(error));

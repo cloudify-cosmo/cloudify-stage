@@ -1,7 +1,5 @@
 import { push } from 'connected-react-router';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
-import type { PayloadAction } from '../types';
+import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { ReduxState } from '../../reducers';
 import Manager from '../../utils/Manager';
@@ -30,9 +28,7 @@ function setMaintenanceStatus(status: string): SetMaintenanceStatusAction {
     };
 }
 
-export function getMaintenanceStatus(
-    manager: ReduxState['manager']
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function getMaintenanceStatus(manager: ReduxState['manager']): ReduxThunkAction {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor
@@ -45,10 +41,7 @@ export function getMaintenanceStatus(
             });
 }
 
-export function switchMaintenance(
-    manager: ReduxState['manager'],
-    activate: boolean
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function switchMaintenance(manager: ReduxState['manager'], activate: boolean): ReduxThunkAction {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor.doPost(`/maintenance/${activate ? 'activate' : 'deactivate'}`).then(data => {
@@ -64,9 +57,7 @@ export function setActiveExecutions(activeExecutions: ActiveExecutions): SetActi
     };
 }
 
-export function getActiveExecutions(
-    manager: ReduxState['manager']
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function getActiveExecutions(manager: ReduxState['manager']): ReduxThunkAction {
     const managerAccessor = new Manager(manager);
 
     return dispatch => {
@@ -100,7 +91,7 @@ export function cancelExecution(
     manager: ReduxState['manager'],
     execution: Execution,
     action: CancelAction
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+): ReduxThunkAction {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor

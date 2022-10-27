@@ -1,8 +1,8 @@
 import log from 'loglevel';
 import { push } from 'connected-react-router';
-import type { Action, AnyAction } from 'redux';
+import type { Action } from 'redux';
 import type { ThunkAction } from 'redux-thunk';
-import type { PayloadAction } from '../types';
+import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { GetAuthUserResponse } from '../../../backend/routes/Auth.types';
 import type { ReduxState } from '../../reducers';
@@ -71,11 +71,7 @@ export function storeRBAC(RBAC: ConfigResponse['authorization']): StoreRBACActio
     };
 }
 
-export function login(
-    username: string,
-    password: string,
-    redirect?: string
-): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function login(username: string, password: string, redirect?: string): ReduxThunkAction {
     return dispatch => {
         dispatch(requestLogin());
         return Auth.login(username, password)
@@ -112,7 +108,7 @@ function isLicenseRequired(versionEdition: string) {
     return versionEdition !== Consts.EDITION.COMMUNITY;
 }
 
-export function getManagerData(): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function getManagerData(): ReduxThunkAction {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
@@ -122,7 +118,7 @@ export function getManagerData(): ThunkAction<Promise<void>, ReduxState, never, 
         });
 }
 
-export function getUserData(): ThunkAction<Promise<GetAuthUserResponse>, ReduxState, never, AnyAction> {
+export function getUserData(): ReduxThunkAction<Promise<GetAuthUserResponse>> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
             dispatch(responseUserData(data));
@@ -156,7 +152,7 @@ function doLogout(error?: string | null): LogoutAction {
     };
 }
 
-export function logout(err?: string | null, path?: string): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function logout(err?: string | null, path?: string): ReduxThunkAction {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());

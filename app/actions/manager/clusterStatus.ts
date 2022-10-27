@@ -1,11 +1,9 @@
 import _ from 'lodash';
-import type { Action, AnyAction } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
-import type { PayloadAction } from '../types';
+import type { Action } from 'redux';
+import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
-import type { ReduxState } from '../../reducers';
 import type { PageMenuItem } from '../pageMenu';
 
 export type RequestClusterStatusAction = Action<ActionType.REQ_CLUSTER_STATUS>;
@@ -52,7 +50,7 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[
     return widgetPresent;
 }
 
-export function getClusterStatus(summaryOnly = false): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function getClusterStatus(summaryOnly = false): ReduxThunkAction {
     return (dispatch, getState) => {
         const { app, manager, pages } = getState();
         const managerAccessor = new Manager(manager);

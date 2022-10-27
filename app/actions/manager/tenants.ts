@@ -1,14 +1,12 @@
 import log from 'loglevel';
-import type { Action, AnyAction } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
-import type { PayloadAction } from '../types';
+import type { Action } from 'redux';
+import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
 import { setAppLoading } from '../appState';
 import { setEditMode } from '../config';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
-import type { ReduxState } from '../../reducers';
 
 // TODO(RD-5591): Refactor this to store { names: string[] } instead of { items: { name: string }[] }
 type Tenants = { items: { name: string }[] };
@@ -41,7 +39,7 @@ function errorTenants(error: any): ErrorTenantsAction {
     };
 }
 
-export function getTenants(): ThunkAction<Promise<Tenants>, ReduxState, never, AnyAction> {
+export function getTenants(): ReduxThunkAction<Promise<Tenants>> {
     return (dispatch, getState) => {
         dispatch(requestTenants());
         const managerAccessor = new Manager(getState().manager);
@@ -66,7 +64,7 @@ export function selectTenant(tenantName: string): SelectTenantAction {
     };
 }
 
-export function changeTenant(tenantName: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function changeTenant(tenantName: string): ReduxThunkAction<void> {
     return dispatch => {
         dispatch(setAppLoading(true));
         dispatch(setEditMode(false));

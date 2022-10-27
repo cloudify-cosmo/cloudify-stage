@@ -3,6 +3,7 @@ import { push } from 'connected-react-router';
 import _ from 'lodash';
 import type { ThunkAction } from 'redux-thunk';
 import type { AnyAction } from 'redux';
+import type { ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
@@ -39,11 +40,11 @@ export function addPage(page: Page) {
     };
 }
 
-export function savePage(page: Page): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function savePage(page: Page): ReduxThunkAction {
     return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
 }
 
-export function persistPage(page: Page): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export function persistPage(page: Page): ReduxThunkAction {
     return (dispatch, getState) => {
         function prepareWidgetData(widget: SimpleWidgetObj) {
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');

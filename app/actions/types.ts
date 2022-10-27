@@ -1,4 +1,7 @@
 import type { Action } from 'redux';
+import type { ThunkAction } from 'redux-thunk';
+import type { CallHistoryMethodAction } from 'connected-react-router';
+import type { ReduxState } from '../reducers';
 
 export enum ActionType {
     ADD_TAB,
@@ -101,3 +104,10 @@ export enum ActionType {
 export interface PayloadAction<Payload = unknown, Type = ActionType> extends Action<Type> {
     payload: Payload;
 }
+
+export type ReduxThunkAction<R = Promise<void>, A = ActionType> = ThunkAction<
+    R,
+    ReduxState,
+    never,
+    Action<A> | CallHistoryMethodAction
+>;
