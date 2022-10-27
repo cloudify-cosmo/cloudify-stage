@@ -1,7 +1,8 @@
 import log from 'loglevel';
 import type { ThunkAction } from 'redux-thunk';
 import type { AnyAction } from 'redux';
-import { loadLayoutDefinitions, loadWidgetDefinitions } from './layoutDefinitions';
+import { loadTemplates } from './templates';
+import { loadWidgetDefinitions } from './widgets';
 
 import { loadOrCreateUserAppData } from './userApp';
 import { getIdentityProviders } from './manager/auth';
@@ -14,7 +15,7 @@ export default function intialPageLoad(): ThunkAction<Promise<void>, ReduxState,
         dispatch(setAppLoading(true));
 
         return Promise.all([
-            dispatch(loadLayoutDefinitions()),
+            dispatch(loadTemplates()),
             dispatch(loadWidgetDefinitions()),
             dispatch(getClusterStatus()),
             dispatch(getIdentityProviders())
