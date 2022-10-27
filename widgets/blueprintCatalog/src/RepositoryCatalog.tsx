@@ -80,6 +80,12 @@ const StyledText = styled.p`
     font-size: 12px;
 `;
 
+const StyledGridWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
+    grid-gap: 20px;
+`;
+
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -207,12 +213,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
-
-    const StyledGridWrapper = styled.div`
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
-        grid-gap: 20px;
-    `;
 
     return (
         <DataSegment
