@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { fromPairs } from 'lodash';
 import type { DeploymentsViewColumnId } from './columns';
 import { deploymentsViewColumnDefinitions } from './columns';
 import type { Deployment } from '../types';
@@ -10,11 +11,13 @@ const renderDeploymentRow =
     (
         toolbox: Stage.Types.Toolbox,
         fieldsToShow: DeploymentsViewColumnId[],
-        selectedDeployment: Deployment | undefined
+        selectedDeployment: Deployment | undefined,
+        labelsToShow: string[]
     ) =>
     (deployment: Deployment) => {
         const { DataTable } = Stage.Basic;
         const progressUnderline = getDeploymentProgressUnderline(deployment);
+        const labelsDict = fromPairs(deployment.labels?.map(({ key, value }) => [key, value]));
 
         return [
             <DataTable.Row
@@ -26,6 +29,9 @@ const renderDeploymentRow =
                 {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
                 ))}
+                {labelsToShow.map(label => {
+                    return <DataTable.Data key={label}>{labelsDict[label]}</DataTable.Data>;
+                })}
             </DataTable.Row>,
             progressUnderline && (
                 <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
