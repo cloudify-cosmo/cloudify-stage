@@ -21,12 +21,12 @@ const emptyAuthState = emptyState.auth;
 
 const auth: Reducer<AuthData, AuthAction> = (state = emptyAuthState, action) => {
     switch (action.type) {
-        case ActionType.REQ_LOGIN:
+        case ActionType.LOGIN_REQUEST:
             return {
                 ...emptyAuthState,
                 state: 'loggingIn'
             };
-        case ActionType.RES_LOGIN:
+        case ActionType.LOGIN_SUCCESS:
             return {
                 ...emptyAuthState,
                 username: action.payload.username,
@@ -35,7 +35,7 @@ const auth: Reducer<AuthData, AuthAction> = (state = emptyAuthState, action) => 
             };
         case ActionType.LOGOUT:
             return emptyAuthState;
-        case ActionType.ERR_LOGIN:
+        case ActionType.LOGIN_FAILURE:
             return {
                 ...emptyAuthState,
                 username: action.payload.username,

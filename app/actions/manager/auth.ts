@@ -14,14 +14,14 @@ import { setLicense, setLicenseRequired } from './license';
 import { setVersion } from './version';
 import type { ConfigResponse } from '../../../backend/handler/AuthHandler.types';
 
-export type RequestLoginAction = Action<ActionType.REQ_LOGIN>;
-export type ReceiveLoginAction = PayloadAction<
+export type LoginRequestAction = Action<ActionType.LOGIN_REQUEST>;
+export type LoginSuccessAction = PayloadAction<
     { username: string; role: string; receivedAt: number },
-    ActionType.RES_LOGIN
+    ActionType.LOGIN_SUCCESS
 >;
-export type ErrorLoginAction = PayloadAction<
+export type LoginFailureAction = PayloadAction<
     { username: string; error: any; receivedAt: number },
-    ActionType.ERR_LOGIN
+    ActionType.LOGIN_FAILURE
 >;
 export type StoreRBACAction = PayloadAction<
     Pick<ConfigResponse['authorization'], 'roles' | 'permissions'>,
@@ -32,30 +32,30 @@ export type SetIdentityProvidersAction = PayloadAction<string[], ActionType.SET_
 export type LogoutAction = PayloadAction<{ error?: string | null; receivedAt: number }, ActionType.LOGOUT>;
 
 export type AuthAction =
-    | RequestLoginAction
-    | ReceiveLoginAction
-    | ErrorLoginAction
+    | LoginRequestAction
+    | LoginSuccessAction
+    | LoginFailureAction
     | StoreRBACAction
     | SetUserDataAction
     | SetIdentityProvidersAction
     | LogoutAction;
 
-function requestLogin() {
+function loginRequest(): LoginRequestAction {
     return {
-        type: ActionType.REQ_LOGIN
+        type: ActionType.LOGIN_REQUEST
     };
 }
 
-export function receiveLogin(username: string, role: string): ReceiveLoginAction {
+export function loginSuccess(username: string, role: string): LoginSuccessAction {
     return {
-        type: ActionType.RES_LOGIN,
+        type: ActionType.LOGIN_SUCCESS,
         payload: { username, role, receivedAt: Date.now() }
     };
 }
 
-function errorLogin(username: string, error: any): ErrorLoginAction {
+function loginFailure(username: string, error: any): LoginFailureAction {
     return {
-        type: ActionType.ERR_LOGIN,
+        type: ActionType.LOGIN_FAILURE,
         payload: {
             username,
             error,
@@ -73,10 +73,10 @@ export function storeRBAC(RBAC: ConfigResponse['authorization']): StoreRBACActio
 
 export function login(username: string, password: string, redirect?: string): ReduxThunkAction {
     return dispatch => {
-        dispatch(requestLogin());
+        dispatch(loginRequest());
         return Auth.login(username, password)
             .then(({ role }) => {
-                dispatch(receiveLogin(username, role));
+                dispatch(loginSuccess(username, role));
                 if (redirect) {
                     // NOTE: Using react router for internal paths to keep logged in state
                     if (redirect.startsWith(Consts.CONTEXT_PATH)) {
@@ -92,12 +92,12 @@ export function login(username: string, password: string, redirect?: string): Re
             })
             .catch(err => {
                 log.log(err);
-                dispatch(errorLogin(username, err));
+                dispatch(loginFailure(username, err));
             });
     };
 }
 
-function responseUserData(getAuthUserResponse: GetAuthUserResponse): SetUserDataAction {
+function setUserData(getAuthUserResponse: GetAuthUserResponse): SetUserDataAction {
     return {
         type: ActionType.SET_USER_DATA,
         payload: getAuthUserResponse
@@ -121,12 +121,12 @@ export function getManagerData(): ReduxThunkAction {
 export function getUserData(): ReduxThunkAction<Promise<GetAuthUserResponse>> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
-            dispatch(responseUserData(data));
+            dispatch(setUserData(data));
             return data;
         });
 }
 
-function responseIdentityProviders(identityProviders: string[]): SetIdentityProvidersAction {
+function setIdentityProviders(identityProviders: string[]): SetIdentityProvidersAction {
     return {
         type: ActionType.SET_IDENTITY_PROVIDERS,
         payload: identityProviders
@@ -136,9 +136,7 @@ function responseIdentityProviders(identityProviders: string[]): SetIdentityProv
 export function getIdentityProviders(): ThunkAction<void, ReduxState, never, SetIdentityProvidersAction> {
     return (dispatch, getState) => {
         const manager = new Manager(getState().manager);
-        manager
-            .doGet('/idp')
-            .then(identityProviders => dispatch(responseIdentityProviders(identityProviders.split(','))));
+        manager.doGet('/idp').then(identityProviders => dispatch(setIdentityProviders(identityProviders.split(','))));
     };
 }
 

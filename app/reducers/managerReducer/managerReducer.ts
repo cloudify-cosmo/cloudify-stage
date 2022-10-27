@@ -44,14 +44,14 @@ type ManagerAction =
 
 const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action) => {
     switch (action.type) {
-        case ActionType.REQ_LOGIN:
+        case ActionType.LOGIN_REQUEST:
             return {
                 ...emptyState,
                 auth: auth(state.auth, action)
             };
-        case ActionType.RES_LOGIN:
+        case ActionType.LOGIN_SUCCESS:
         case ActionType.LOGOUT:
-        case ActionType.ERR_LOGIN:
+        case ActionType.LOGIN_FAILURE:
             return {
                 ...emptyState,
                 auth: auth(state.auth, action),
@@ -60,9 +60,9 @@ const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action
         case ActionType.SET_IDENTITY_PROVIDERS:
         case ActionType.SET_USER_DATA:
             return { ...state, auth: auth(state.auth, action) };
-        case ActionType.REQ_CLUSTER_STATUS:
-        case ActionType.SET_CLUSTER_STATUS:
-        case ActionType.ERR_CLUSTER_STATUS:
+        case ActionType.FETCH_CLUSTER_STATUS_REQUEST:
+        case ActionType.FETCH_CLUSTER_STATUS_SUCCESS:
+        case ActionType.FETCH_CLUSTER_STATUS_FAILURE:
             return { ...state, clusterStatus: clusterStatus(state.clusterStatus, action) };
         case ActionType.SET_MANAGER_VERSION:
             return { ...state, version: action.payload };
@@ -71,9 +71,9 @@ const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action
             return { ...state, license: license(state.license, action) };
         case ActionType.SET_MAINTENANCE_STATUS:
             return { ...state, maintenance: action.payload };
-        case ActionType.REQ_TENANTS:
-        case ActionType.RES_TENANTS:
-        case ActionType.ERR_TENANTS:
+        case ActionType.FETCH_TENANTS_REQUEST:
+        case ActionType.FETCH_TENANTS_SUCCESS:
+        case ActionType.FETCH_TENANTS_FAILURE:
         case ActionType.SELECT_TENANT:
             return { ...state, tenants: tenants(state.tenants, action) };
         case ActionType.SET_ACTIVE_EXECUTIONS:

@@ -40,9 +40,9 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: ActionType.REQ_TENANTS },
+            { type: ActionType.FETCH_TENANTS_REQUEST },
             {
-                type: ActionType.RES_TENANTS,
+                type: ActionType.FETCH_TENANTS_SUCCESS,
                 payload: {
                     tenants: {
                         items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
@@ -70,9 +70,9 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: ActionType.REQ_TENANTS },
+            { type: ActionType.FETCH_TENANTS_REQUEST },
             {
-                type: ActionType.ERR_TENANTS,
+                type: ActionType.FETCH_TENANTS_FAILURE,
                 payload: {
                     error: 'Error fetching tenants',
                     receivedAt: Date.now()

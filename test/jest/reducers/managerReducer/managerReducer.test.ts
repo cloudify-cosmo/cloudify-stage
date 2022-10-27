@@ -57,8 +57,8 @@ describe('(Reducer) Manager', () => {
                 return store.dispatch(login(username, password)).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
-                        { type: ActionType.REQ_LOGIN },
-                        { type: ActionType.RES_LOGIN, payload: { username, role, receivedAt: Date.now() } },
+                        { type: ActionType.LOGIN_REQUEST },
+                        { type: ActionType.LOGIN_SUCCESS, payload: { username, role, receivedAt: Date.now() } },
                         {
                             type: '@@router/CALL_HISTORY_METHOD',
                             payload: { args: ['/'], method: 'push' }
@@ -104,9 +104,9 @@ describe('(Reducer) Manager', () => {
                 return store.dispatch(login(username, password)).then(() => {
                     const actualActions = store.getActions();
                     const expectedActions = [
-                        { type: ActionType.REQ_LOGIN },
+                        { type: ActionType.LOGIN_REQUEST },
                         {
-                            type: ActionType.ERR_LOGIN,
+                            type: ActionType.LOGIN_FAILURE,
                             payload: {
                                 username,
                                 error: { code: undefined, message: 'User unauthorized', status: 401 },

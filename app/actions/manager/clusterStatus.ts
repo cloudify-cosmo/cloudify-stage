@@ -6,30 +6,36 @@ import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
 
-export type RequestClusterStatusAction = Action<ActionType.REQ_CLUSTER_STATUS>;
+export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
 // TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
-export type SetClusterStatusAction = PayloadAction<{ status: any; services: any }, ActionType.SET_CLUSTER_STATUS>;
+export type FetchClusterStatusSuccessAction = PayloadAction<
+    { status: any; services: any },
+    ActionType.FETCH_CLUSTER_STATUS_SUCCESS
+>;
 // TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly / Change action name?
-export type ErrorClusterStatusAction = PayloadAction<any, ActionType.ERR_CLUSTER_STATUS>;
-export type ClusterStatusAction = RequestClusterStatusAction | SetClusterStatusAction | ErrorClusterStatusAction;
+export type FetchClusterStatusFailureAction = PayloadAction<any, ActionType.FETCH_CLUSTER_STATUS_FAILURE>;
+export type ClusterStatusAction =
+    | FetchClusterStatusRequestAction
+    | FetchClusterStatusSuccessAction
+    | FetchClusterStatusFailureAction;
 
-export function requestClusterStatus(): RequestClusterStatusAction {
+function fetchClusterStatusRequest(): FetchClusterStatusRequestAction {
     return {
-        type: ActionType.REQ_CLUSTER_STATUS
+        type: ActionType.FETCH_CLUSTER_STATUS_REQUEST
     };
 }
 
 // TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
-export function setClusterStatus(status: any, services: any): SetClusterStatusAction {
+function fetchClusterStatusSuccess(status: any, services: any): FetchClusterStatusSuccessAction {
     return {
-        type: ActionType.SET_CLUSTER_STATUS,
+        type: ActionType.FETCH_CLUSTER_STATUS_SUCCESS,
         payload: { status, services }
     };
 }
 
-export function errorClusterStatus(error: any): ErrorClusterStatusAction {
+function fetchClusterStatusFailure(error: any): FetchClusterStatusFailureAction {
     return {
-        type: ActionType.ERR_CLUSTER_STATUS,
+        type: ActionType.FETCH_CLUSTER_STATUS_FAILURE,
         payload: error
     };
 }
@@ -55,15 +61,15 @@ export function getClusterStatus(summaryOnly = false): ReduxThunkAction {
         const { app, manager, pages } = getState();
         const managerAccessor = new Manager(manager);
         const fetchOnlySummary = summaryOnly && !isClusterStatusWidgetOnPage(app.currentPageId, pages);
-        dispatch(requestClusterStatus());
+        dispatch(fetchClusterStatusRequest());
         return managerAccessor
             .doGet(`/cluster-status?summary=${fetchOnlySummary}`)
             .then(data => {
                 const { services, status } = data;
-                dispatch(setClusterStatus(status, fetchOnlySummary ? undefined : services));
+                dispatch(fetchClusterStatusSuccess(status, fetchOnlySummary ? undefined : services));
             })
             .catch(err => {
-                dispatch(errorClusterStatus(err));
+                dispatch(fetchClusterStatusFailure(err));
             });
     };
 }

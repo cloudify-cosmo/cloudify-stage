@@ -16,9 +16,9 @@ export interface TenantsData {
 const tenants: Reducer<TenantsData, TenantAction> = (state = {}, action) => {
     let selectedTenant;
     switch (action.type) {
-        case ActionType.REQ_TENANTS:
+        case ActionType.FETCH_TENANTS_REQUEST:
             return { ...state, isFetching: true };
-        case ActionType.RES_TENANTS:
+        case ActionType.FETCH_TENANTS_SUCCESS:
             selectedTenant = _.get(action.payload.tenants, 'items[0].name', null);
             if (!_.isEmpty(state.selected) && _.find(action.payload.tenants.items, { name: state.selected }) != null) {
                 selectedTenant = state.selected;
@@ -30,7 +30,7 @@ const tenants: Reducer<TenantsData, TenantAction> = (state = {}, action) => {
                 selected: selectedTenant,
                 lastUpdated: action.payload.receivedAt
             };
-        case ActionType.ERR_TENANTS:
+        case ActionType.FETCH_TENANTS_FAILURE:
             return {
                 ...state,
                 isFetching: false,
