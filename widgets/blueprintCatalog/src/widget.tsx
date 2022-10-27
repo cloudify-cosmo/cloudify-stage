@@ -14,16 +14,15 @@ import './widget.css';
 
 const t = Utils.getWidgetTranslation('');
 
-const fieldsToShowItems = [
-    t('configuration.fieldsToShow.items.name'),
-    t('configuration.fieldsToShow.items.description'),
-    t('configuration.fieldsToShow.items.created'),
-    t('configuration.fieldsToShow.items.updated')
-];
-
-const defaultFieldsToShow = [
+const defaultFieldsToShowItems = [
     t('configuration.fieldsToShow.items.name'),
     t('configuration.fieldsToShow.items.description')
+];
+
+const fieldsToShowItems = [
+    ...defaultFieldsToShowItems,
+    t('configuration.fieldsToShow.items.created'),
+    t('configuration.fieldsToShow.items.updated')
 ];
 
 Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
@@ -80,7 +79,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             name: t('configuration.fieldsToShow.label'),
             placeholder: t('configuration.fieldsToShow.placeholder'),
             items: fieldsToShowItems,
-            default: defaultFieldsToShow,
+            default: defaultFieldsToShowItems,
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
