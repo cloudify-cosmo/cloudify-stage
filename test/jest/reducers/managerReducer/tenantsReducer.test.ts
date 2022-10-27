@@ -44,9 +44,7 @@ describe('(Reducer) Tenants', () => {
             {
                 type: ActionType.FETCH_TENANTS_SUCCESS,
                 payload: {
-                    tenants: {
-                        items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
-                    },
+                    tenants: ['aaa', 'bbb', 'ccc'],
                     receivedAt: Date.now()
                 }
             }
@@ -127,7 +125,7 @@ describe('(Reducer) Tenants', () => {
             // return of async actions
             expect(store.getState()).toEqual({
                 isFetching: false,
-                items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }],
+                items: ['aaa', 'bbb', 'ccc'],
                 selected: 'aaa',
                 lastUpdated: Date.now()
             });

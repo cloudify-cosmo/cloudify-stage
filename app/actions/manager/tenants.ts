@@ -7,12 +7,11 @@ import { setAppLoading } from '../app';
 import { setEditMode } from '../config';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
+import type { PaginatedResponse } from '../../../backend/types';
 
-// TODO(RD-5591): Refactor this to store { names: string[] } instead of { items: { name: string }[] }
-type Tenants = { items: { name: string }[] };
 export type FetchTenantsRequestAction = Action<ActionType.FETCH_TENANTS_REQUEST>;
 export type FetchTenantsSuccessAction = PayloadAction<
-    { tenants: Tenants; receivedAt: number },
+    { tenants: string[]; receivedAt: number },
     ActionType.FETCH_TENANTS_SUCCESS
 >;
 export type FetchTenantsFailureAction = PayloadAction<
@@ -32,7 +31,7 @@ function fetchTenantsRequest(): FetchTenantsRequestAction {
     };
 }
 
-function fetchTenantsSuccess(tenants: Tenants): FetchTenantsSuccessAction {
+function fetchTenantsSuccess(tenants: string[]): FetchTenantsSuccessAction {
     return {
         type: ActionType.FETCH_TENANTS_SUCCESS,
         payload: { tenants, receivedAt: Date.now() }
@@ -49,13 +48,15 @@ function fetchTenantsFailure(error: any): FetchTenantsFailureAction {
     };
 }
 
-export function getTenants(): ReduxThunkAction<Promise<Tenants>> {
+export function getTenants(): ReduxThunkAction<Promise<string[]>> {
+    type GetTenantsResponse = PaginatedResponse<{ name: string }>;
     return (dispatch, getState) => {
         dispatch(fetchTenantsRequest());
         const managerAccessor = new Manager(getState().manager);
         return managerAccessor
-            .doGet('/tenants', { params: { _include: 'name', _get_all_results: true } })
-            .then(tenants => {
+            .doGet<GetTenantsResponse>('/tenants', { params: { _include: 'name', _get_all_results: true } })
+            .then(response => {
+                const tenants = response.items.map(item => item.name);
                 dispatch(fetchTenantsSuccess(tenants));
                 return tenants;
             })
