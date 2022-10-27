@@ -1,21 +1,39 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { setDrilldownContext } from './drilldownContext';
 import { addLayoutToPage } from './page';
 import { createDrilldownPage, selectPage } from './pageMenu';
 import { setDrillDownWarningActive } from './templateManagement/pages';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
+import type { TemplatePageDefinition } from '../reducers/templatesReducer';
+import type { Widget } from '../utils/StageAPI';
 
-export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
+export type AddDrilldownPageAction = PayloadAction<
+    { widgetId: string; drillDownName: string; drillDownPageId: string },
+    ActionType.ADD_DRILLDOWN_PAGE
+>;
+
+export function addWidgetDrilldownPage(
+    widgetId: string,
+    drillDownName: string,
+    drillDownPageId: string
+): AddDrilldownPageAction {
     return {
         type: ActionType.ADD_DRILLDOWN_PAGE,
-        widgetId,
-        drillDownPageId,
-        drillDownName
+        payload: {
+            widgetId,
+            drillDownPageId,
+            drillDownName
+        }
     };
 }
 
-export function drillDownToPage(widget, defaultTemplate, drilldownContext, drilldownPageName) {
+export function drillDownToPage(
+    widget: Widget<unknown>,
+    defaultTemplate: TemplatePageDefinition,
+    drilldownContext: Record<string, any>,
+    drilldownPageName: string
+): ReduxThunkAction<void> {
     return async (dispatch, getState) => {
         const isTemplateManagement = _.get(getState().templateManagement, 'isActive');
         if (isTemplateManagement) {
@@ -29,6 +47,7 @@ export function drillDownToPage(widget, defaultTemplate, drilldownContext, drill
             const isDrilldownPagePresent = !!_.find(getState().pages, { id: newPageId });
 
             if (!isDrilldownPagePresent) {
+                // @ts-ignore TODO(RD-5591) Fix in the next PR
                 dispatch(createDrilldownPage(defaultTemplate, newPageId));
                 await dispatch(addLayoutToPage(defaultTemplate, newPageId));
             }
