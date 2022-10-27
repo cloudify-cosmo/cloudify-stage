@@ -15,7 +15,10 @@ Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 16.16.0, rsync
 %if "%{arch}" == "arm64"
-BuildRequires:  gcc-c++, gcc, libsass, libpng-devel
+BuildRequires:  centos-release-scl
+BuildRequires:  devtoolset-7-gcc-c++
+BuildRequires:  gcc
+BuildRequires:  gcc-c++, libsass, libpng-devel
 %endif
 Requires:       nodejs >= 16.16.0, cloudify-rest-service, nginx, shadow-utils
 AutoReqProv:    no
@@ -32,6 +35,7 @@ export LIBSASS_EXT="no"
 npm run beforebuild:no-tests
 %if "%{arch}" == "arm64"
 npm install -g node-gyp
+scl enable devtoolset-7 bash
 npm install sharp --build-from-source --prefix backend
 %endif
 
