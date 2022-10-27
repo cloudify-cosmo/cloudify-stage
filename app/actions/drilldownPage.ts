@@ -50,6 +50,7 @@ export function drillDownToPage(
             const isDrilldownPagePresent = !!_.find(getState().pages, { id: newPageId });
 
             if (!isDrilldownPagePresent) {
+                // @ts-ignore TODO(RD-5591) Fix in the next PR
                 dispatch(createDrilldownPage(defaultTemplate, newPageId));
                 await dispatch(addLayoutToPage(defaultTemplate, newPageId));
             }
