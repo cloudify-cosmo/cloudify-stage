@@ -30,6 +30,12 @@
                 border-color: @downBorderColor;
             }
         }
+
+        &.loading {
+            & > input {
+                background-color: fade(@blue, 10%) !important;
+            }
+        }
     }
 
     &.labeled {
@@ -54,11 +60,13 @@
         }
     }
 
-    &.icon {
+    &.icon:not(.loading) {
         & > i.icon {
             &::before {
                 width: @iconSize;
                 font-size: @iconFontSize;
+                left: @iconTextOffset;
+                right: @iconBorderOffset;
             }
         }
 
@@ -68,12 +76,11 @@
                 right: @iconTextOffset;
             }
         }
+    }
 
-        &.right > i.icon {
-            &::before {
-                left: @iconTextOffset;
-                right: @iconBorderOffset;
-            }
+    &.loading {
+        & > i.icon {
+            margin-right: @relative4px;
         }
     }
 }

@@ -46,15 +46,15 @@
 
     &.basic {
         &.green {
-            .basicButtonStyling(@green, rgba(34, 186, 70, 0.1), #199436, rgba(34, 186, 70, 0.2));
+            .basicButtonStyling(@green, fade(@green, 10%), #199436, fade(@green, 20%));
         }
 
         &.red {
-            .basicButtonStyling(@red, rgba(239, 83, 80, 0.1), #b13836, rgba(239, 83, 80, 0.2));
+            .basicButtonStyling(@red, fade(@red, 10%), #b13836, fade(@red, 20%));
         }
 
         &.blue {
-            .basicButtonStyling(@blue, rgba(101, 173, 255, 0.1), #0066da, rgba(101, 173, 255, 0.2));
+            .basicButtonStyling(@blue, fade(@blue, 10%), #0066da,fade(@blue, 20%));
         }
 
         &.disabled,
