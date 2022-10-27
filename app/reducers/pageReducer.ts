@@ -258,7 +258,7 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
         }
         case ActionType.SET_PAGES:
             // Replace all the pages data (when reading user pages from db)
-            return action.pages;
+            return action.payload.pages;
         // Clear the pages when logging in & out (after login we fetch those)
         case ActionType.LOGIN_SUCCESS:
         case ActionType.LOGOUT:
