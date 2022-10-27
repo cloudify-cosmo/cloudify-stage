@@ -15,7 +15,7 @@ export type SetClusterStatusAction = PayloadAction<{ status: any; services: any 
 export type ErrorClusterStatusAction = PayloadAction<any, ActionType.ERR_CLUSTER_STATUS>;
 export type ClusterStatusAction = RequestClusterStatusAction | SetClusterStatusAction | ErrorClusterStatusAction;
 
-export function requestClusterStatus() {
+export function requestClusterStatus(): RequestClusterStatusAction {
     return {
         type: ActionType.REQ_CLUSTER_STATUS
     };
@@ -29,7 +29,7 @@ export function setClusterStatus(status: any, services: any): SetClusterStatusAc
     };
 }
 
-export function errorClusterStatus(error: any) {
+export function errorClusterStatus(error: any): ErrorClusterStatusAction {
     return {
         type: ActionType.ERR_CLUSTER_STATUS,
         payload: error
