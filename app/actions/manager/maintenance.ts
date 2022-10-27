@@ -16,14 +16,14 @@ type ActiveExecutions = PaginatedResponse<
 
 export type SetMaintenanceStatusAction = PayloadAction<string, ActionType.SET_MAINTENANCE_STATUS>;
 export type SetActiveExecutionsAction = PayloadAction<ActiveExecutions, ActionType.SET_ACTIVE_EXECUTIONS>;
-export type CancelExecutionAction = PayloadAction<
+export type SetCancelExecutionAction = PayloadAction<
     { execution: Execution; action: CancelAction },
-    ActionType.CANCEL_EXECUTION
+    ActionType.SET_CANCEL_EXECUTION
 >;
 
-export type MaintenanceAction = SetMaintenanceStatusAction | SetActiveExecutionsAction | CancelExecutionAction;
+export type MaintenanceAction = SetMaintenanceStatusAction | SetActiveExecutionsAction | SetCancelExecutionAction;
 
-export function setMaintenanceStatus(status: string): SetMaintenanceStatusAction {
+function setMaintenanceStatus(status: string): SetMaintenanceStatusAction {
     return {
         type: ActionType.SET_MAINTENANCE_STATUS,
         payload: status
@@ -89,14 +89,14 @@ export function getActiveExecutions(
     };
 }
 
-export function cancelExecution(execution: Execution, action: CancelAction): CancelExecutionAction {
+function setCancelExecution(execution: Execution, action: CancelAction): SetCancelExecutionAction {
     return {
-        type: ActionType.CANCEL_EXECUTION,
+        type: ActionType.SET_CANCEL_EXECUTION,
         payload: { execution, action }
     };
 }
 
-export function doCancelExecution(
+export function cancelExecution(
     manager: ReduxState['manager'],
     execution: Execution,
     action: CancelAction
@@ -106,6 +106,6 @@ export function doCancelExecution(
         managerAccessor
             .doPost(`/executions/${execution.id}`, { body: { deployment_id: execution.deployment_id, action } })
             .then(() => {
-                dispatch(cancelExecution(execution, action));
+                dispatch(setCancelExecution(execution, action));
             });
 }

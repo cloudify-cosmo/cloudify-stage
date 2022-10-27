@@ -78,7 +78,7 @@ const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action
             return { ...state, tenants: tenants(state.tenants, action) };
         case ActionType.SET_ACTIVE_EXECUTIONS:
             return { ...state, activeExecutions: action.payload ? action.payload : {} };
-        case ActionType.CANCEL_EXECUTION:
+        case ActionType.SET_CANCEL_EXECUTION:
             return { ...state, cancelExecution: action.payload.execution, cancelAction: action.payload.action };
         case ActionType.STORE_RBAC:
             return { ...state, roles: action.payload.roles, permissions: action.payload.permissions };
