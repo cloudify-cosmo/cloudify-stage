@@ -21,6 +21,11 @@ const fieldsToShowItems = [
     t('configuration.fieldsToShow.items.updated')
 ];
 
+const defaultFieldsToShow = [
+    t('configuration.fieldsToShow.items.name'),
+    t('configuration.fieldsToShow.items.description')
+];
+
 Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
     hasTemplate: false,
     id: Consts.WIDGET_ID,
@@ -75,7 +80,7 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
             name: t('configuration.fieldsToShow.label'),
             placeholder: t('configuration.fieldsToShow.placeholder'),
             items: fieldsToShowItems,
-            default: fieldsToShowItems.join(),
+            default: defaultFieldsToShow,
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
