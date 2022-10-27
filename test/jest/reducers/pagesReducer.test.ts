@@ -69,7 +69,7 @@ describe('(Reducer) Pages', () => {
                     widgetId: '1',
                     drillDownName: 'tmp1'
                 },
-                { type: ActionType.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: ActionType.SET_DRILLDOWN_CONTEXT, payload: [{ context: undefined }] },
                 { type: ActionType.WIDGET_DATA_CLEAR },
                 { type: ActionType.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
@@ -181,7 +181,7 @@ describe('(Reducer) Pages', () => {
 
             const expectedActions = [
                 { type: ActionType.WIDGET_DATA_CLEAR },
-                { type: ActionType.SET_DRILLDOWN_CONTEXT, drilldownContext: [{ context: undefined }] },
+                { type: ActionType.SET_DRILLDOWN_CONTEXT, payload: [{ context: undefined }] },
                 { type: ActionType.MINIMIZE_TAB_WIDGETS },
                 { type: 'router action' }
             ];
