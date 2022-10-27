@@ -12,7 +12,7 @@ import type { VersionResponse } from '../../../backend/handler/AuthHandler.types
 import type { AuthData } from './authReducer';
 import type { AuthAction } from '../../actions/manager/auth';
 import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
-import type { SetVersionAction } from '../../actions/manager/version';
+import type { VersionAction } from '../../actions/manager/version';
 import type { TenantAction } from '../../actions/manager/tenants';
 import type { LicenseAction } from '../../actions/manager/license';
 import type { MaintenanceAction } from '../../actions/manager/maintenance';
@@ -37,7 +37,7 @@ export interface ManagerData {
 type ManagerAction =
     | AuthAction
     | ClusterStatusAction
-    | SetVersionAction
+    | VersionAction
     | TenantAction
     | LicenseAction
     | MaintenanceAction;
