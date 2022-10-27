@@ -80,6 +80,12 @@ const StyledText = styled.p`
     font-size: 12px;
 `;
 
+const StyledGridWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
+    grid-gap: 20px;
+`;
+
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -113,7 +119,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
         } = item;
 
         return (
-            <Grid.Column key={id}>
+            <div key={id}>
                 <StyledDataSegment
                     selected={isSelected}
                     onClick={(event: Event) => {
@@ -199,31 +205,10 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                         </Grid.Row>
                     </Grid>
                 </StyledDataSegment>
-            </Grid.Column>
+            </div>
         );
+        /* eslint-enable camelcase */
     });
-    /* eslint-enable camelcase */
-
-    const catalogRows = [];
-    let row: typeof catalogItems = [];
-    _.each(catalogItems, (catalogItem, index) => {
-        row.push(catalogItem);
-        if ((index + 1) % 3 === 0) {
-            catalogRows.push(
-                <Grid.Row key={catalogRows.length + 1} columns="3">
-                    {row}
-                </Grid.Row>
-            );
-            row = [];
-        }
-    });
-    if (row.length > 0) {
-        catalogRows.push(
-            <Grid.Row key={catalogRows.length + 1} columns="3">
-                {row}
-            </Grid.Row>
-        );
-    }
 
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
@@ -237,7 +222,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <Grid>{catalogRows}</Grid>
+            <StyledGridWrapper>{catalogItems}</StyledGridWrapper>
         </DataSegment>
     );
 };
