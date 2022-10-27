@@ -3,8 +3,11 @@ import type { Action } from 'redux';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
+import type { SetAppLoadingAction } from '../app';
 import { setAppLoading } from '../app';
+import type { SetConfigEditModeAction } from '../config';
 import { setEditMode } from '../config';
+import type { ClearContextAction } from '../context';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
 import type { PaginatedResponse } from '../../../backend/types';
@@ -48,7 +51,10 @@ function fetchTenantsFailure(error: any): FetchTenantsFailureAction {
     };
 }
 
-export function getTenants(): ReduxThunkAction<Promise<string[]>> {
+export function getTenants(): ReduxThunkAction<
+    Promise<string[]>,
+    FetchTenantsRequestAction | FetchTenantsSuccessAction | FetchTenantsFailureAction
+> {
     type GetTenantsResponse = PaginatedResponse<{ name: string }>;
     return (dispatch, getState) => {
         dispatch(fetchTenantsRequest());
@@ -75,7 +81,9 @@ export function selectTenant(tenantName: string): SelectTenantAction {
     };
 }
 
-export function changeTenant(tenantName: string): ReduxThunkAction<void> {
+export function changeTenant(
+    tenantName: string
+): ReduxThunkAction<void, SetAppLoadingAction | SetConfigEditModeAction | ClearContextAction | SelectTenantAction> {
     return dispatch => {
         dispatch(setAppLoading(true));
         dispatch(setEditMode(false));

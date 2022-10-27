@@ -1,16 +1,19 @@
 import log from 'loglevel';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
 import { loadTemplates } from './templates';
 import { loadWidgetDefinitions } from './widgets';
 
 import { loadOrCreateUserAppData } from './userApp';
+import type { SetIdentityProvidersAction } from './manager/auth';
 import { getIdentityProviders } from './manager/auth';
 import { getClusterStatus } from './manager/clusterStatus';
-import type { ReduxState } from '../reducers';
+import type { SetAppErrorAction, SetAppLoadingAction } from './app';
 import { setAppError, setAppLoading } from './app';
+import type { ReduxThunkAction } from './types';
 
-export default function intialPageLoad(): ThunkAction<Promise<void>, ReduxState, never, AnyAction> {
+export default function intialPageLoad(): ReduxThunkAction<
+    Promise<void>,
+    SetAppLoadingAction | SetIdentityProvidersAction | SetAppErrorAction
+> {
     return dispatch => {
         dispatch(setAppLoading(true));
 

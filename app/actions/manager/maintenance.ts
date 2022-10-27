@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { ReduxState } from '../../reducers';
@@ -28,7 +29,9 @@ function setMaintenanceStatus(status: string): SetMaintenanceStatusAction {
     };
 }
 
-export function getMaintenanceStatus(manager: ReduxState['manager']): ReduxThunkAction {
+export function getMaintenanceStatus(
+    manager: ReduxState['manager']
+): ReduxThunkAction<Promise<void>, SetMaintenanceStatusAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor
@@ -41,7 +44,10 @@ export function getMaintenanceStatus(manager: ReduxState['manager']): ReduxThunk
             });
 }
 
-export function switchMaintenance(manager: ReduxState['manager'], activate: boolean): ReduxThunkAction {
+export function switchMaintenance(
+    manager: ReduxState['manager'],
+    activate: boolean
+): ReduxThunkAction<Promise<void>, SetMaintenanceStatusAction | CallHistoryMethodAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor.doPost(`/maintenance/${activate ? 'activate' : 'deactivate'}`).then(data => {
@@ -57,7 +63,9 @@ export function setActiveExecutions(activeExecutions: ActiveExecutions): SetActi
     };
 }
 
-export function getActiveExecutions(manager: ReduxState['manager']): ReduxThunkAction {
+export function getActiveExecutions(
+    manager: ReduxState['manager']
+): ReduxThunkAction<Promise<void>, SetActiveExecutionsAction> {
     const managerAccessor = new Manager(manager);
 
     return dispatch => {
@@ -91,7 +99,7 @@ export function cancelExecution(
     manager: ReduxState['manager'],
     execution: Execution,
     action: CancelAction
-): ReduxThunkAction {
+): ReduxThunkAction<Promise<void>, SetCancelExecutionAction> {
     const managerAccessor = new Manager(manager);
     return dispatch =>
         managerAccessor

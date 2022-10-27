@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
-import type { PayloadAction } from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import type { PageDefinition } from './page';
 import type { PageMenuItem } from './pageMenu';
 import { createPagesFromTemplate } from './pageMenu';
+import type { SetAppErrorAction, SetAppLoadingAction } from './app';
 import { setAppLoading, setAppError } from './app';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
@@ -17,7 +17,6 @@ import type {
     PostUserAppResponse
 } from '../../backend/routes/UserApp.types';
 import type { AppDataPage, AppDataPageGroup } from '../../backend/db/models/UserAppsModel.types';
-import type { ReduxState } from '../reducers';
 
 type Pages = (AppDataPage | AppDataPageGroup)[];
 export type SetPagesAction = PayloadAction<{ pages: Pages; receivedAt: number }, ActionType.SET_PAGES>;
@@ -32,7 +31,10 @@ function setPages(pages: Pages): SetPagesAction {
     };
 }
 
-export function resetPages(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function resetPages(): ReduxThunkAction<
+    void,
+    SetPagesAction | SetAppLoadingAction | SetAppErrorAction | CallHistoryMethodAction
+> {
     return dispatch => {
         const autoSaver = UserAppDataAutoSaver.getAutoSaver();
         autoSaver.stop();
@@ -58,9 +60,7 @@ export function resetPages(): ThunkAction<void, ReduxState, never, AnyAction> {
     };
 }
 
-export function resetPagesForTenant(
-    tenant: string
-): ThunkAction<void | Promise<GetUserAppResponse>, ReduxState, never, AnyAction> {
+export function resetPagesForTenant(tenant: string): ReduxThunkAction<void | Promise<GetUserAppResponse>, never> {
     return (dispatch, getState) => {
         const { manager } = getState();
         if (_.get(manager, 'tenants.selected', Consts.DEFAULT_ALL) === tenant) {
@@ -71,7 +71,7 @@ export function resetPagesForTenant(
     };
 }
 
-export function loadOrCreateUserAppData(): ThunkAction<Promise<SetPagesAction | void>, ReduxState, never, AnyAction> {
+export function loadOrCreateUserAppData(): ReduxThunkAction<Promise<SetPagesAction | void>, SetPagesAction> {
     return (dispatch, getState) => {
         const { manager } = getState();
 
@@ -90,7 +90,10 @@ export function loadOrCreateUserAppData(): ThunkAction<Promise<SetPagesAction | 
     };
 }
 
-export function reloadUserAppData(): ThunkAction<Promise<SetPagesAction | void>, ReduxState, never, AnyAction> {
+export function reloadUserAppData(): ReduxThunkAction<
+    Promise<SetPagesAction | void>,
+    SetAppLoadingAction | CallHistoryMethodAction
+> {
     return (dispatch, getState) => {
         dispatch(setAppLoading(true));
 
@@ -121,7 +124,7 @@ export function reloadUserAppData(): ThunkAction<Promise<SetPagesAction | void>,
     };
 }
 
-export function saveUserAppData(): ThunkAction<Promise<PostUserAppResponse>, ReduxState, never, AnyAction> {
+export function saveUserAppData(): ReduxThunkAction<Promise<PostUserAppResponse>, never> {
     return (_dispatch, getState) => {
         const appData = _(getState()).pick('pages').cloneDeep();
 

@@ -1,16 +1,18 @@
 import log from 'loglevel';
 import { push } from 'connected-react-router';
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import type { Action } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { GetAuthUserResponse } from '../../../backend/routes/Auth.types';
-import type { ReduxState } from '../../reducers';
 import Auth from '../../utils/auth';
 import Consts from '../../utils/consts';
 import Manager from '../../utils/Manager';
+import type { ClearContextAction } from '../context';
 import { clearContext } from '../context';
+import type { SetLicenseAction, SetLicenseRequiredAction } from './license';
 import { setLicense, setLicenseRequired } from './license';
+import type { SetVersionAction } from './version';
 import { setVersion } from './version';
 import type { ConfigResponse } from '../../../backend/handler/AuthHandler.types';
 
@@ -71,7 +73,14 @@ export function storeRBAC(RBAC: ConfigResponse['authorization']): StoreRBACActio
     };
 }
 
-export function login(username: string, password: string, redirect?: string): ReduxThunkAction {
+export function login(
+    username: string,
+    password: string,
+    redirect?: string
+): ReduxThunkAction<
+    Promise<void>,
+    LoginRequestAction | LoginSuccessAction | LoginFailureAction | CallHistoryMethodAction
+> {
     return dispatch => {
         dispatch(loginRequest());
         return Auth.login(username, password)
@@ -108,7 +117,10 @@ function isLicenseRequired(versionEdition: string) {
     return versionEdition !== Consts.EDITION.COMMUNITY;
 }
 
-export function getManagerData(): ReduxThunkAction {
+export function getManagerData(): ReduxThunkAction<
+    Promise<void>,
+    SetVersionAction | SetLicenseAction | SetLicenseRequiredAction | StoreRBACAction
+> {
     return (dispatch, getState) =>
         Auth.getManagerData(getState().manager).then(({ version, license, rbac }) => {
             dispatch(setVersion(version));
@@ -118,7 +130,7 @@ export function getManagerData(): ReduxThunkAction {
         });
 }
 
-export function getUserData(): ReduxThunkAction<Promise<GetAuthUserResponse>> {
+export function getUserData(): ReduxThunkAction<Promise<GetAuthUserResponse>, SetUserDataAction> {
     return (dispatch, getState) =>
         Auth.getUserData(getState().manager).then(data => {
             dispatch(setUserData(data));
@@ -133,7 +145,7 @@ function setIdentityProviders(identityProviders: string[]): SetIdentityProviders
     };
 }
 
-export function getIdentityProviders(): ThunkAction<void, ReduxState, never, SetIdentityProvidersAction> {
+export function getIdentityProviders(): ReduxThunkAction<void, SetIdentityProvidersAction> {
     return (dispatch, getState) => {
         const manager = new Manager(getState().manager);
         manager.doGet('/idp').then(identityProviders => dispatch(setIdentityProviders(identityProviders.split(','))));
@@ -150,7 +162,10 @@ function doLogout(error?: string | null): LogoutAction {
     };
 }
 
-export function logout(err?: string | null, path?: string): ReduxThunkAction {
+export function logout(
+    err?: string | null,
+    path?: string
+): ReduxThunkAction<Promise<void>, ClearContextAction | LogoutAction | CallHistoryMethodAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());
