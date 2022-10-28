@@ -1,6 +1,7 @@
 import type { Reducer } from 'redux';
-import * as types from '../../actions/types';
+import { ActionType } from '../../actions/types';
 import emptyState from './emptyState';
+import type { AuthAction } from '../../actions/manager/auth';
 
 export type AuthState = 'loggedOut' | 'loggingIn' | 'loggedIn';
 export type IdentityProvider = 'local' | 'okta' | 'ldap' | string;
@@ -18,41 +19,40 @@ export interface AuthData {
 
 const emptyAuthState = emptyState.auth;
 
-const auth: Reducer<AuthData> = (state = emptyAuthState, action) => {
+const auth: Reducer<AuthData, AuthAction> = (state = emptyAuthState, action) => {
     switch (action.type) {
-        case types.REQ_LOGIN:
+        case ActionType.LOGIN_REQUEST:
             return {
                 ...emptyAuthState,
                 state: 'loggingIn'
             };
-        case types.RES_LOGIN:
+        case ActionType.LOGIN_SUCCESS:
             return {
                 ...emptyAuthState,
-                username: action.username,
-                role: action.role,
+                username: action.payload.username,
+                role: action.payload.role,
                 state: 'loggedIn'
             };
-        case types.LOGOUT:
+        case ActionType.LOGOUT:
             return emptyAuthState;
-        case types.ERR_LOGIN:
+        case ActionType.LOGIN_FAILURE:
             return {
                 ...emptyAuthState,
-                username: action.username,
-                error: action.error !== null && typeof action.error === 'object' ? action.error.message : action.error
+                username: action.payload.username,
+                error:
+                    action.payload.error !== null && typeof action.payload.error === 'object'
+                        ? action.payload.error.message
+                        : action.payload.error
             };
-        case types.SET_USER_DATA:
+        case ActionType.SET_USER_DATA:
             return {
                 ...state,
-                username: action.username,
-                role: action.role,
-                groupSystemRoles: action.groupSystemRoles,
-                tenantsRoles: action.tenantsRoles,
-                showGettingStarted: action.showGettingStarted
+                ...action.payload
             };
-        case types.SET_IDENTITY_PROVIDERS:
+        case ActionType.SET_IDENTITY_PROVIDERS:
             return {
                 ...state,
-                identityProviders: action.identityProviders
+                identityProviders: action.payload
             };
         default:
             return state;

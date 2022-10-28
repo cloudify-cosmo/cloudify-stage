@@ -16,7 +16,12 @@ import {
     Modal,
     PopupMenu
 } from '../basic';
-import { doCancelExecution, getActiveExecutions, setActiveExecutions, switchMaintenance } from '../../actions/managers';
+import {
+    cancelExecution,
+    getActiveExecutions,
+    setActiveExecutions,
+    switchMaintenance
+} from '../../actions/manager/maintenance';
 import Consts from '../../utils/consts';
 
 import { useBoolean, useErrors } from '../../utils/hooks';
@@ -143,7 +148,7 @@ function MaintenanceModeModal({
         return true;
     }
 
-    function cancelExecution(execution, action) {
+    function handleCancelExecution(execution, action) {
         onCancelExecution(execution, action)
             .then(() => {
                 loadPendingExecutions();
@@ -199,7 +204,10 @@ function MaintenanceModeModal({
                                                             icon="cancel"
                                                             name={ExecutionUtils.CANCEL_ACTION}
                                                             onClick={() =>
-                                                                cancelExecution(item, ExecutionUtils.CANCEL_ACTION)
+                                                                handleCancelExecution(
+                                                                    item,
+                                                                    ExecutionUtils.CANCEL_ACTION
+                                                                )
                                                             }
                                                         />
                                                         <Menu.Item
@@ -207,7 +215,7 @@ function MaintenanceModeModal({
                                                             icon={<Icon name="cancel" color="red" />}
                                                             name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                                             onClick={() =>
-                                                                cancelExecution(
+                                                                handleCancelExecution(
                                                                     item,
                                                                     ExecutionUtils.FORCE_CANCEL_ACTION
                                                                 )
@@ -218,7 +226,7 @@ function MaintenanceModeModal({
                                                             icon={<Icon name="stop" color="red" />}
                                                             name={ExecutionUtils.KILL_CANCEL_EXECUTION}
                                                             onClick={() =>
-                                                                cancelExecution(
+                                                                handleCancelExecution(
                                                                     item,
                                                                     ExecutionUtils.KILL_CANCEL_EXECUTION
                                                                 )
@@ -297,7 +305,7 @@ const mapDispatchToProps = dispatch => {
             return dispatch(getActiveExecutions(manager));
         },
         onCancelExecution: (manager, execution, action) => {
-            return dispatch(doCancelExecution(manager, execution, action));
+            return dispatch(cancelExecution(manager, execution, action));
         },
         onClose: () => {
             return dispatch(setActiveExecutions({}));

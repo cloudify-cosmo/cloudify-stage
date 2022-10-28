@@ -1,11 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
 
-import * as types from './types';
+import { ActionType } from './types';
 import doLoadTemplates from '../utils/templatesLoader';
 
 export function storeTemplates(templates) {
     return {
-        type: types.STORE_TEMPLATES,
+        type: ActionType.STORE_TEMPLATES,
         templates
     };
 }

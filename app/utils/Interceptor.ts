@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import { push } from 'connected-react-router';
-import { showAppError } from '../actions/auth';
+import { showAppError } from '../actions/app';
 import Consts from './consts';
 import { clearContext } from '../actions/context';
 
