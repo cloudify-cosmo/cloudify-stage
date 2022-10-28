@@ -1,6 +1,5 @@
 import type { Reducer } from 'redux';
 import { ActionType } from '../actions/types';
-import type { AppStateAction } from '../actions/appState';
 import type { AppAction } from '../actions/app';
 import type { LogoutAction, LoginSuccessAction } from '../actions/manager/auth';
 
@@ -16,10 +15,7 @@ const appEmptyState: AppData = {
     currentPageId: null
 };
 
-const app: Reducer<AppData, AppStateAction | AppAction | LoginSuccessAction | LogoutAction> = (
-    state = appEmptyState,
-    action
-) => {
+const app: Reducer<AppData, AppAction | LoginSuccessAction | LogoutAction> = (state = appEmptyState, action) => {
     switch (action.type) {
         case ActionType.SET_APP_LOADING:
             return { ...state, loading: action.payload };

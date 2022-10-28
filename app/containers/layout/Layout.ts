@@ -3,7 +3,7 @@
 import { connect } from 'react-redux';
 import Layout from '../../components/layout/Layout';
 
-import { intialPageLoad } from '../../actions/app';
+import intialPageLoad from '../../actions/initialPageLoad';
 import { logout } from '../../actions/manager/auth';
 import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';

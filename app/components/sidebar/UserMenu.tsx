@@ -47,9 +47,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
         (state: ReduxState) =>
             Idp.isLocal(state.manager) || state.manager.auth.username === Consts.DEFAULT_ADMIN_USERNAME
     );
-    const tenantNames = useSelector((state: ReduxState) =>
-        state.manager.tenants.items!.map((tenant: { name: string }) => tenant.name)
-    );
+    const tenantNames = useSelector((state: ReduxState) => state.manager.tenants.items!);
 
     function handleEditModeClick() {
         onModalOpen();

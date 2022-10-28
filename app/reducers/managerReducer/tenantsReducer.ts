@@ -1,14 +1,12 @@
 import type { Reducer } from 'redux';
-import _ from 'lodash';
+import { find, isEmpty } from 'lodash';
 import { ActionType } from '../../actions/types';
-import type { TenantAction } from '../../actions/manager/tenants';
+import type { TenantAction, Tenants } from '../../actions/manager/tenants';
 
 export interface TenantsData {
     isFetching?: boolean;
-    items?: {
-        name: string;
-    }[];
-    selected?: string;
+    items?: Tenants;
+    selected?: string | null;
     lastUpdated?: number;
     error?: string;
 }
@@ -19,14 +17,14 @@ const tenants: Reducer<TenantsData, TenantAction> = (state = {}, action) => {
         case ActionType.FETCH_TENANTS_REQUEST:
             return { ...state, isFetching: true };
         case ActionType.FETCH_TENANTS_SUCCESS:
-            selectedTenant = _.get(action.payload.tenants, 'items[0].name', null);
-            if (!_.isEmpty(state.selected) && _.find(action.payload.tenants.items, { name: state.selected }) != null) {
+            selectedTenant = action.payload.tenants[0] || null;
+            if (!isEmpty(state.selected) && find(action.payload.tenants, tenant => tenant === state.selected) != null) {
                 selectedTenant = state.selected;
             }
             return {
                 ...state,
                 isFetching: false,
-                items: action.payload.tenants.items,
+                items: action.payload.tenants,
                 selected: selectedTenant,
                 lastUpdated: action.payload.receivedAt
             };

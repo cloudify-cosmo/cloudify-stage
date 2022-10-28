@@ -56,7 +56,12 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[
     return widgetPresent;
 }
 
-export function getClusterStatus(summaryOnly = false): ReduxThunkAction {
+export function getClusterStatus(
+    summaryOnly = false
+): ReduxThunkAction<
+    Promise<void>,
+    FetchClusterStatusRequestAction | FetchClusterStatusFailureAction | FetchClusterStatusSuccessAction
+> {
     return (dispatch, getState) => {
         const { app, manager, pages } = getState();
         const managerAccessor = new Manager(manager);

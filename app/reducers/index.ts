@@ -12,7 +12,7 @@ import config from './configReducer';
 import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
-import plugins from './plugins';
+import plugins from './pluginsReducer';
 import formErrors from './formErrorsReducer';
 
 const rootReducer = (history: History) =>

@@ -3,13 +3,16 @@ import type { Action } from 'redux';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
-import { setAppLoading } from '../appState';
+import type { SetAppLoadingAction } from '../app';
+import { setAppLoading } from '../app';
+import type { SetConfigEditModeAction } from '../config';
 import { setEditMode } from '../config';
+import type { ClearContextAction } from '../context';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
+import type { PaginatedResponse } from '../../../backend/types';
 
-// TODO(RD-5591): Refactor this to store { names: string[] } instead of { items: { name: string }[] }
-type Tenants = { items: { name: string }[] };
+export type Tenants = string[];
 export type FetchTenantsRequestAction = Action<ActionType.FETCH_TENANTS_REQUEST>;
 export type FetchTenantsSuccessAction = PayloadAction<
     { tenants: Tenants; receivedAt: number },
@@ -49,13 +52,18 @@ function fetchTenantsFailure(error: any): FetchTenantsFailureAction {
     };
 }
 
-export function getTenants(): ReduxThunkAction<Promise<Tenants>> {
+export function getTenants(): ReduxThunkAction<
+    Promise<Tenants>,
+    FetchTenantsRequestAction | FetchTenantsSuccessAction | FetchTenantsFailureAction
+> {
+    type GetTenantsResponse = PaginatedResponse<{ name: string }>;
     return (dispatch, getState) => {
         dispatch(fetchTenantsRequest());
         const managerAccessor = new Manager(getState().manager);
         return managerAccessor
-            .doGet('/tenants', { params: { _include: 'name', _get_all_results: true } })
-            .then(tenants => {
+            .doGet<GetTenantsResponse>('/tenants', { params: { _include: 'name', _get_all_results: true } })
+            .then(response => {
+                const tenants = response.items.map(item => item.name);
                 dispatch(fetchTenantsSuccess(tenants));
                 return tenants;
             })
@@ -74,7 +82,9 @@ export function selectTenant(tenantName: string): SelectTenantAction {
     };
 }
 
-export function changeTenant(tenantName: string): ReduxThunkAction<void> {
+export function changeTenant(
+    tenantName: string
+): ReduxThunkAction<void, SetAppLoadingAction | SetConfigEditModeAction | ClearContextAction | SelectTenantAction> {
     return dispatch => {
         dispatch(setAppLoading(true));
         dispatch(setEditMode(false));
