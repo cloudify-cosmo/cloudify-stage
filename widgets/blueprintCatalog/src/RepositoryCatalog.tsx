@@ -118,6 +118,36 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             main_blueprint
         } = item;
 
+        const renderLinkButton = (url: string) => {
+            const isGithub = url.includes('github');
+            const isBitbucket = url.includes('bitbucket');
+            const isGitlab = url.includes('gitlab');
+
+            let icon;
+            switch (true) {
+                case isGithub:
+                    icon = 'github';
+                    break;
+                case isBitbucket:
+                    icon = 'bitbucket';
+                    break;
+                case isGitlab:
+                    icon = 'gitlab';
+                    break;
+                default:
+                    icon = 'git';
+            }
+
+            return (
+                <StyledLinkButton
+                    circular
+                    icon={icon}
+                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
+                    title={t('actions.openBlueprintRepository')}
+                />
+            );
+        };
+
         return (
             <div key={id}>
                 <StyledDataSegment
@@ -172,12 +202,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <StyledLinkButton
-                                    circular
-                                    icon="github"
-                                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                    title={t('actions.openBlueprintRepository')}
-                                />
+                                {renderLinkButton(html_url)}
 
                                 <Button
                                     circular
