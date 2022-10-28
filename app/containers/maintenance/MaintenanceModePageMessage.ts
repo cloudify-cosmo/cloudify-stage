@@ -5,7 +5,7 @@ import { push } from 'connected-react-router';
 import MaintenanceModePageMessage from '../../components/maintenance/MaintenanceModePageMessage';
 import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
-import { getClusterStatus } from '../../actions/clusterStatus';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
 const mapStateToProps = state => {
     const canMaintenanceMode = stageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager);

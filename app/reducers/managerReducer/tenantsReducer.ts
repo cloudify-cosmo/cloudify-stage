@@ -1,38 +1,43 @@
 import type { Reducer } from 'redux';
-import _ from 'lodash';
-import * as types from '../../actions/types';
+import { find, isEmpty } from 'lodash';
+import { ActionType } from '../../actions/types';
+import type { TenantAction, Tenants } from '../../actions/manager/tenants';
 
 export interface TenantsData {
     isFetching?: boolean;
-    items?: {
-        name: string;
-    }[];
-    selected?: string;
+    items?: Tenants;
+    selected?: string | null;
     lastUpdated?: number;
     error?: string;
 }
 
-const tenants: Reducer<TenantsData> = (state = {}, action) => {
+const tenants: Reducer<TenantsData, TenantAction> = (state = {}, action) => {
     let selectedTenant;
     switch (action.type) {
-        case types.REQ_TENANTS:
+        case ActionType.FETCH_TENANTS_REQUEST:
             return { ...state, isFetching: true };
-        case types.RES_TENANTS:
-            selectedTenant = _.get(action.tenants, 'items[0].name', null);
-            if (!_.isEmpty(state.selected) && _.find(action.tenants.items, { name: state.selected }) != null) {
+        case ActionType.FETCH_TENANTS_SUCCESS:
+            selectedTenant = action.payload.tenants[0] || null;
+            if (!isEmpty(state.selected) && find(action.payload.tenants, tenant => tenant === state.selected) != null) {
                 selectedTenant = state.selected;
             }
             return {
                 ...state,
                 isFetching: false,
-                items: action.tenants.items,
+                items: action.payload.tenants,
                 selected: selectedTenant,
-                lastUpdated: action.receivedAt
+                lastUpdated: action.payload.receivedAt
             };
-        case types.ERR_TENANTS:
-            return { ...state, isFetching: false, error: action.error, items: [], lastUpdated: action.receivedAt };
-        case types.SELECT_TENANT:
-            return { ...state, selected: action.tenant };
+        case ActionType.FETCH_TENANTS_FAILURE:
+            return {
+                ...state,
+                isFetching: false,
+                error: action.payload.error,
+                items: [],
+                lastUpdated: action.payload.receivedAt
+            };
+        case ActionType.SELECT_TENANT:
+            return { ...state, selected: action.payload };
         default:
             return state;
     }

@@ -3,11 +3,8 @@ import type { LocationDescriptorObject } from 'history';
 import _, { find, includes } from 'lodash';
 import log from 'loglevel';
 import { stringify } from 'query-string';
-import type { AnyAction } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
-import type { ReduxState } from '../reducers';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import Internal from '../utils/Internal';
@@ -15,7 +12,8 @@ import { clearContext } from './context';
 import { popDrilldownContext } from './drilldownContext';
 import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
-import * as types from './types';
+import type { ReduxThunkAction } from './types';
+import { ActionType } from './types';
 import { clearWidgetsData } from './WidgetData';
 import { minimizeTabWidgets } from './widgets';
 
@@ -37,7 +35,7 @@ export type PageMenuItem = PageDefinition | PageGroup;
 
 export function createPage(page: Partial<PageDefinition>, newPageId: string) {
     return {
-        type: types.ADD_PAGE,
+        type: ActionType.ADD_PAGE,
         page,
         newPageId
     };
@@ -45,7 +43,7 @@ export function createPage(page: Partial<PageDefinition>, newPageId: string) {
 
 function createPageGroup(pageGroup: any, id: string) {
     return {
-        type: types.ADD_PAGE_GROUP,
+        type: ActionType.ADD_PAGE_GROUP,
         pageGroup,
         id
     };
@@ -53,7 +51,7 @@ function createPageGroup(pageGroup: any, id: string) {
 
 function addPageToGroup(pageGroupId: string, pageId: string) {
     return {
-        type: types.ADD_PAGE_TO_GROUP,
+        type: ActionType.ADD_PAGE_TO_GROUP,
         pageGroupId,
         pageId
     };
@@ -61,7 +59,7 @@ function addPageToGroup(pageGroupId: string, pageId: string) {
 
 export function createDrilldownPage(page: PageDefinition, newPageId: string) {
     return {
-        type: types.CREATE_DRILLDOWN_PAGE,
+        type: ActionType.CREATE_DRILLDOWN_PAGE,
         page,
         newPageId
     };
@@ -96,7 +94,7 @@ function createId(name: string, pages: PageMenuItem[]) {
 
 export function changePageMenuItemName(pageMenuItemId: string, newName: string) {
     return {
-        type: types.RENAME_PAGE_MENU_ITEM,
+        type: ActionType.RENAME_PAGE_MENU_ITEM,
         pageMenuItemId,
         name: newName
     };
@@ -104,7 +102,7 @@ export function changePageMenuItemName(pageMenuItemId: string, newName: string) 
 
 export function changePageMenuItemIcon(pageMenuItemId: string, icon?: SemanticICONS) {
     return {
-        type: types.CHANGE_PAGE_MENU_ITEM_ICON,
+        type: ActionType.CHANGE_PAGE_MENU_ITEM_ICON,
         pageMenuItemId,
         icon
     };
@@ -115,7 +113,7 @@ export function selectPage(
     isDrilldown?: boolean,
     drilldownContext?: Record<string, any>,
     drilldownPageName?: string
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const location: LocationDescriptorObject = { pathname: `/page/${pageId}` };
 
@@ -154,10 +152,7 @@ export function selectPage(
     };
 }
 
-export function selectPageByName(
-    pageName: string,
-    context: Record<string, any>
-): ThunkAction<void, ReduxState, never, AnyAction> {
+export function selectPageByName(pageName: string, context: Record<string, any>): ReduxThunkAction<void> {
     return dispatch => {
         if (context) {
             dispatch(clearContext());
@@ -174,7 +169,7 @@ export function createGroupId(groupName: string, pages: PageMenuItem[]) {
     );
 }
 
-export function addPageGroup(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function addPageGroup(name: string): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const newPageGroupId = createGroupId(name, getState().pages);
 
@@ -184,7 +179,7 @@ export function addPageGroup(name: string): ThunkAction<void, ReduxState, never,
     };
 }
 
-export function addPage(name: string): ThunkAction<void, ReduxState, never, AnyAction> {
+export function addPage(name: string): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const newPageId = createId(name, Object.values(createPagesMap(getState().pages)));
 
@@ -195,12 +190,12 @@ export function addPage(name: string): ThunkAction<void, ReduxState, never, AnyA
 
 export function removeSinglePageMenuItem(pageMenuItemId: string) {
     return {
-        type: types.REMOVE_PAGE_MENU_ITEM,
+        type: ActionType.REMOVE_PAGE_MENU_ITEM,
         pageMenuItemId
     };
 }
 
-export function removePageWithChildren(page: PageDefinition): ThunkAction<void, ReduxState, never, AnyAction> {
+export function removePageWithChildren(page: PageDefinition): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const pagesMap = createPagesMap(getState().pages);
         const removePage = (p: PageDefinition) => {
@@ -216,7 +211,7 @@ export function removePageWithChildren(page: PageDefinition): ThunkAction<void, 
     };
 }
 
-export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function createPagesFromTemplate(): ReduxThunkAction {
     return (dispatch, getState) => {
         const { manager } = getState();
 
@@ -273,14 +268,14 @@ export function createPagesFromTemplate(): ThunkAction<void, ReduxState, never, 
 
 export function reorderPageMenu(sourceId: string, targetId: string, position: InsertPosition) {
     return {
-        type: types.REORDER_PAGE_MENU,
+        type: ActionType.REORDER_PAGE_MENU,
         sourceId,
         targetId,
         position
     };
 }
 
-export function selectHomePage(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function selectHomePage(): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const homePageId = getState().pages[0].id;
 
@@ -288,7 +283,7 @@ export function selectHomePage(): ThunkAction<void, ReduxState, never, AnyAction
     };
 }
 
-export function selectParentPage(): ThunkAction<void, ReduxState, never, AnyAction> {
+export function selectParentPage(): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const state = getState();
 
@@ -325,7 +320,7 @@ export function findSelectedRootPageId(pagesMap: Record<string, PageDefinition>,
 export function removePageMenuItem(
     pageListItem: PageMenuItem,
     currentlySelectedPageId: string
-): ThunkAction<void, ReduxState, never, AnyAction> {
+): ReduxThunkAction<void> {
     return (dispatch, getState) => {
         const { pages } = getState();
         const homePageId = pages[0].id;
