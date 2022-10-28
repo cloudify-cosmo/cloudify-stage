@@ -12,9 +12,10 @@ import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
 import type { PaginatedResponse } from '../../../backend/types';
 
+export type Tenants = string[];
 export type FetchTenantsRequestAction = Action<ActionType.FETCH_TENANTS_REQUEST>;
 export type FetchTenantsSuccessAction = PayloadAction<
-    { tenants: string[]; receivedAt: number },
+    { tenants: Tenants; receivedAt: number },
     ActionType.FETCH_TENANTS_SUCCESS
 >;
 export type FetchTenantsFailureAction = PayloadAction<
@@ -34,7 +35,7 @@ function fetchTenantsRequest(): FetchTenantsRequestAction {
     };
 }
 
-function fetchTenantsSuccess(tenants: string[]): FetchTenantsSuccessAction {
+function fetchTenantsSuccess(tenants: Tenants): FetchTenantsSuccessAction {
     return {
         type: ActionType.FETCH_TENANTS_SUCCESS,
         payload: { tenants, receivedAt: Date.now() }
@@ -52,7 +53,7 @@ function fetchTenantsFailure(error: any): FetchTenantsFailureAction {
 }
 
 export function getTenants(): ReduxThunkAction<
-    Promise<string[]>,
+    Promise<Tenants>,
     FetchTenantsRequestAction | FetchTenantsSuccessAction | FetchTenantsFailureAction
 > {
     type GetTenantsResponse = PaginatedResponse<{ name: string }>;

@@ -1,11 +1,11 @@
 import type { Reducer } from 'redux';
 import { find, isEmpty } from 'lodash';
 import { ActionType } from '../../actions/types';
-import type { TenantAction } from '../../actions/manager/tenants';
+import type { TenantAction, Tenants } from '../../actions/manager/tenants';
 
 export interface TenantsData {
     isFetching?: boolean;
-    items?: string[];
+    items?: Tenants;
     selected?: string | null;
     lastUpdated?: number;
     error?: string;
