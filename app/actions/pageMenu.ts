@@ -14,7 +14,7 @@ import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import { clearWidgetsData } from './WidgetData';
+import { clearWidgetsData } from './widgetData';
 import { minimizeTabWidgets } from './widgets';
 import type { TemplatePageDefinition } from '../reducers/templatesReducer';
 
