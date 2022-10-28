@@ -4,7 +4,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import i18n from 'i18next';
 import type { AnyAction, Reducer } from 'redux';
 
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
 import widgets from './widgetsReducer';
 import type { addTab, LayoutSection, moveTab, PageDefinition, removeTab, TabContent, updateTab } from '../actions/page';
 import { forAllWidgets, forEachWidget, isWidgetsSection } from '../actions/page';
@@ -31,11 +31,11 @@ type TabsAction =
 
 const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
     switch (action.type) {
-        case types.ADD_TAB:
+        case ActionType.ADD_TAB:
             return [...state, { name: i18n.t('editMode.tabs.newTab'), widgets: [] }];
-        case types.REMOVE_TAB:
+        case ActionType.REMOVE_TAB:
             return _.without(state, state[action.tabIndex]);
-        case types.UPDATE_TAB: {
+        case ActionType.UPDATE_TAB: {
             let updatedTabs = [...state];
             if (action.isDefault) {
                 updatedTabs = _.map(updatedTabs, tab => ({ ...tab, isDefault: false }));
@@ -43,13 +43,13 @@ const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
             updatedTabs[action.tabIndex] = { ...updatedTabs[action.tabIndex], ..._.pick(action, 'name', 'isDefault') };
             return updatedTabs;
         }
-        case types.MOVE_TAB:
+        case ActionType.MOVE_TAB:
             return arrayMove(state, action.oldTabIndex, action.newTabIndex);
 
         // NOTE: widgets actions are not in TypeScript
         /* eslint-disable @typescript-eslint/ban-ts-comment */
         // @ts-expect-error
-        case types.ADD_WIDGET: {
+        case ActionType.ADD_WIDGET: {
             const updatedTabs = [...state];
             // @ts-expect-error
             updatedTabs[action.tab] = {
@@ -68,21 +68,21 @@ const tabs: Reducer<TabContent[], TabsAction> = (state = [], action) => {
 
 const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
     switch (action.type) {
-        case types.MINIMIZE_TAB_WIDGETS: {
+        case ActionType.MINIMIZE_TAB_WIDGETS: {
             const newState = _.cloneDeep(state);
             forAllWidgets(newState, (widgetsList, _layoutSectionIdx, tabIdx) =>
                 tabIdx !== null ? widgets(widgetsList, action) : widgetsList
             );
             return newState;
         }
-        case types.MINIMIZE_WIDGETS:
-        case types.REMOVE_WIDGET:
-        case types.UPDATE_WIDGET: {
+        case ActionType.MINIMIZE_WIDGETS:
+        case ActionType.REMOVE_WIDGET:
+        case ActionType.UPDATE_WIDGET: {
             const newState = _.cloneDeep(state);
             forAllWidgets(newState, widgetsList => widgets(widgetsList, action));
             return newState;
         }
-        case types.ADD_WIDGET:
+        case ActionType.ADD_WIDGET:
             return {
                 ...state,
                 layout: _.map(state.layout, (layoutSection, layoutSectionIdx) => {
@@ -95,7 +95,7 @@ const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
                     return layoutSection;
                 })
             };
-        case types.ADD_LAYOUT_SECTION: {
+        case ActionType.ADD_LAYOUT_SECTION: {
             const position = _.isNil(action.position) ? _.size(state.layout) : action.position;
             return {
                 ...state,
@@ -106,9 +106,9 @@ const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
                 ]
             };
         }
-        case types.REMOVE_LAYOUT_SECTION:
+        case ActionType.REMOVE_LAYOUT_SECTION:
             return { ...state, layout: _.without(state.layout, _.nth(state.layout, action.layoutSection)) };
-        case types.ADD_DRILLDOWN_PAGE: {
+        case ActionType.ADD_DRILLDOWN_PAGE: {
             let pageMenuItem = _.cloneDeep(state);
 
             // Update widget that created drilldown page
@@ -130,16 +130,16 @@ const pageMenuItemReducer = (state: PageMenuItem, action: AnyAction) => {
 
             return pageMenuItem;
         }
-        case types.CHANGE_PAGE_DESCRIPTION:
+        case ActionType.CHANGE_PAGE_DESCRIPTION:
             return { ...state, description: action.description };
-        case types.RENAME_PAGE_MENU_ITEM:
+        case ActionType.RENAME_PAGE_MENU_ITEM:
             return { ...state, name: action.name };
-        case types.CHANGE_PAGE_MENU_ITEM_ICON:
+        case ActionType.CHANGE_PAGE_MENU_ITEM_ICON:
             return { ...state, icon: action.icon };
-        case types.ADD_TAB:
-        case types.REMOVE_TAB:
-        case types.UPDATE_TAB:
-        case types.MOVE_TAB:
+        case ActionType.ADD_TAB:
+        case ActionType.REMOVE_TAB:
+        case ActionType.UPDATE_TAB:
+        case ActionType.MOVE_TAB:
             return {
                 ...state,
                 layout: _.map(state.layout, (layoutSection, layoutSectionIdx) => {
@@ -170,54 +170,54 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
     };
 
     switch (action.type) {
-        case types.ADD_PAGE:
-        case types.CREATE_DRILLDOWN_PAGE:
+        case ActionType.ADD_PAGE:
+        case ActionType.CREATE_DRILLDOWN_PAGE:
             return [...state, createPage(action as any)];
-        case types.ADD_PAGE_GROUP:
+        case ActionType.ADD_PAGE_GROUP:
             return [...state, createPageGroup(action)];
-        case types.ADD_PAGE_TO_GROUP: {
+        case ActionType.ADD_PAGE_TO_GROUP: {
             const pageToAdd = _.find(state, { id: action.pageId });
             const newState = _.without(state, pageToAdd);
             _.find(newState, { id: action.pageGroupId }).pages.push(pageToAdd);
             return newState;
         }
-        case types.MINIMIZE_WIDGETS:
-        case types.MINIMIZE_TAB_WIDGETS: {
+        case ActionType.MINIMIZE_WIDGETS:
+        case ActionType.MINIMIZE_TAB_WIDGETS: {
             const newState = _.cloneDeep(state);
             const pagesMap = createPagesMap(newState);
             _.each(pagesMap, pageItem => Object.assign(pageItem, pageMenuItemReducer(pageItem, action)));
             return newState;
         }
-        case types.REMOVE_PAGE_MENU_ITEM: {
+        case ActionType.REMOVE_PAGE_MENU_ITEM: {
             const id = action.pageMenuItemId;
             const newPageMenuItems = cloneDeep(state);
             const itemContainer = findContainer(newPageMenuItems, id);
             remove(itemContainer, { id });
             return newPageMenuItems;
         }
-        case types.CHANGE_PAGE_MENU_ITEM_ICON:
-        case types.RENAME_PAGE_MENU_ITEM: {
+        case ActionType.CHANGE_PAGE_MENU_ITEM_ICON:
+        case ActionType.RENAME_PAGE_MENU_ITEM: {
             const newPageMenuItems = cloneDeep(state);
             const itemToUpdate = findItem(newPageMenuItems, action.pageMenuItemId);
             Object.assign(itemToUpdate, pageMenuItemReducer(itemToUpdate, action));
             return newPageMenuItems;
         }
-        case types.UPDATE_WIDGET:
-        case types.REMOVE_WIDGET:
-        case types.ADD_WIDGET:
-        case types.ADD_LAYOUT_SECTION:
-        case types.REMOVE_LAYOUT_SECTION:
-        case types.CHANGE_PAGE_DESCRIPTION:
-        case types.ADD_TAB:
-        case types.REMOVE_TAB:
-        case types.UPDATE_TAB:
-        case types.MOVE_TAB: {
+        case ActionType.UPDATE_WIDGET:
+        case ActionType.REMOVE_WIDGET:
+        case ActionType.ADD_WIDGET:
+        case ActionType.ADD_LAYOUT_SECTION:
+        case ActionType.REMOVE_LAYOUT_SECTION:
+        case ActionType.CHANGE_PAGE_DESCRIPTION:
+        case ActionType.ADD_TAB:
+        case ActionType.REMOVE_TAB:
+        case ActionType.UPDATE_TAB:
+        case ActionType.MOVE_TAB: {
             const newState = _.cloneDeep(state);
             const pageItem = createPagesMap(newState)[action.pageId];
             Object.assign(pageItem, pageMenuItemReducer(pageItem, action));
             return newState;
         }
-        case types.ADD_DRILLDOWN_PAGE: {
+        case ActionType.ADD_DRILLDOWN_PAGE: {
             // Add drilldown page to children list of this page, and drilldown page parent id
             let parentPageId = null;
             const pagesList: PageDefinition[] = _.flatMap(state, pageMenuItem => pageMenuItem.pages || pageMenuItem);
@@ -235,7 +235,7 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
                 return pageMenuItemReducer(p, updatedAction);
             });
         }
-        case types.REORDER_PAGE_MENU: {
+        case ActionType.REORDER_PAGE_MENU: {
             const { sourceId, targetId, position } = action;
             const newPageMenuItems = cloneDeep(state);
 
@@ -256,12 +256,12 @@ const pageMenuItemsReducer: Reducer<PageMenuItem[]> = (state = [], action) => {
 
             return newPageMenuItems;
         }
-        case types.SET_PAGES:
+        case ActionType.SET_PAGES:
             // Replace all the pages data (when reading user pages from db)
             return action.pages;
         // Clear the pages when logging in & out (after login we fetch those)
-        case types.RES_LOGIN:
-        case types.LOGOUT:
+        case ActionType.LOGIN_SUCCESS:
+        case ActionType.LOGOUT:
             return [];
         default:
             return state;
@@ -287,7 +287,7 @@ function createPage(action: { type: string; page: PageDefinition; newPageId: str
                         : _.map(layoutSection.content, tab => ({ ...tab, widgets: [] }))
                 } as LayoutSection)
         ),
-        isDrillDown: action.type === types.CREATE_DRILLDOWN_PAGE
+        isDrillDown: action.type === ActionType.CREATE_DRILLDOWN_PAGE
     };
 }
 

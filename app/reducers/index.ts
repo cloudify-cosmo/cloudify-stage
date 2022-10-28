@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import type { History } from 'history';

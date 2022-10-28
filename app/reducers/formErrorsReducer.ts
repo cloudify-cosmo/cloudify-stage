@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
 
 export type FieldError = string | undefined;
 export type FieldErrors = Record<string, FieldError>;
@@ -15,7 +15,7 @@ type FormErrors = Record<string, FieldErrors>;
  */
 const formErrorsReducer: Reducer<FormErrors | undefined> = (state = {}, action) => {
     switch (action.type) {
-        case types.SET_FIELD_ERROR: {
+        case ActionType.SET_FIELD_ERROR: {
             const { [action.formName]: fieldErrors = {}, ...restState } = state;
             const { [action.fieldName]: fieldName, ...restFieldErrors } = fieldErrors;
 
@@ -25,7 +25,7 @@ const formErrorsReducer: Reducer<FormErrors | undefined> = (state = {}, action) 
 
             return { ...restState, [action.formName]: { ...restFieldErrors, [action.fieldName]: action.message } };
         }
-        case types.CLEAN_FORM_ERRORS: {
+        case ActionType.CLEAN_FORM_ERRORS: {
             const { [action.formName]: _value, ...restState } = state;
 
             return restState;

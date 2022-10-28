@@ -1,10 +1,10 @@
 // @ts-nocheck File not migrated fully to TS
 
-import * as types from './types';
+import { ActionType } from './types';
 
 export function setValue(key, value) {
     return {
-        type: types.SET_CONTEXT_VALUE,
+        type: ActionType.SET_CONTEXT_VALUE,
         key,
         value
     };
@@ -12,6 +12,6 @@ export function setValue(key, value) {
 
 export function clearContext() {
     return {
-        type: types.CLEAR_CONTEXT
+        type: ActionType.CLEAR_CONTEXT
     };
 }

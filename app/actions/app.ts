@@ -1,16 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
 import log from 'loglevel';
-import * as types from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
+import { ActionType } from './types';
 import { setAppError, setAppLoading } from './appState';
 import { loadTemplates } from './templates';
 import { loadWidgetDefinitions } from './widgets';
 
 import { loadOrCreateUserAppData } from './userApp';
-import { getIdentityProviders } from './managers';
-import { getClusterStatus } from './clusterStatus';
+import { getIdentityProviders } from './manager/auth';
+import { getClusterStatus } from './manager/clusterStatus';
 
-export function intialPageLoad() {
-    return (dispatch /* , getState */) => {
+export type StoreCurrentPageAction = PayloadAction<string, ActionType.STORE_CURRENT_PAGE>;
+export type AppAction = StoreCurrentPageAction;
+
+export function intialPageLoad(): ReduxThunkAction {
+    return dispatch => {
         dispatch(setAppLoading(true));
 
         return Promise.all([
@@ -32,9 +35,9 @@ export function intialPageLoad() {
     };
 }
 
-export function storeCurrentPageId(pageId) {
+export function storeCurrentPageId(pageId: string): StoreCurrentPageAction {
     return {
-        type: types.STORE_CURRENT_PAGE,
-        pageId
+        type: ActionType.STORE_CURRENT_PAGE,
+        payload: pageId
     };
 }
