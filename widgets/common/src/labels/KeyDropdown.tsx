@@ -6,7 +6,7 @@ import ResourceTypeContext from '../filters/resourceTypeContext';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {
     value: string | string[];
-    multiple: boolean;
+    multiple?: boolean;
     overrideResourceType?: string;
 }
 
