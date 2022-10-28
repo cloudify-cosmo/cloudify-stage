@@ -11,7 +11,7 @@ import { setValue } from '../../../actions/context';
 import type { SimpleWidgetObj } from '../../../actions/page';
 import { getWidgetDefinitionById } from '../../../actions/page';
 import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/widgetData';
-import { updateWidgetDefinition as updateWidgetDefinitionThunk } from '../../../actions/widgets';
+import { updateWidgetDefinition as updateWidgetDefinitionThunk } from '../../../actions/widgetDefinitions';
 import type { ReduxState } from '../../../reducers';
 import type { ManagerData } from '../../../reducers/managerReducer';
 import LoaderUtils from '../../../utils/LoaderUtils';

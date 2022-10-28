@@ -1,8 +1,8 @@
 import type { PayloadAction } from '../types';
 import { ActionType } from '../types';
-import type { ReduxState } from '../../reducers';
+import type { PageItem } from '../../../backend/handler/templates/types';
 
-type Pages = ReduxState['templates']['templatesDef'][string]['pages'];
+type Pages = PageItem[];
 
 export type AddTemplateAction = PayloadAction<{ templateId: string; pages: Pages }, ActionType.ADD_TEMPLATE>;
 export type EditTemplateAction = PayloadAction<{ templateId: string; pages: Pages }, ActionType.EDIT_TEMPLATE>;
