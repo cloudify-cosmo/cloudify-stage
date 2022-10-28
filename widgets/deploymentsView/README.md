@@ -72,6 +72,7 @@ The columns can show:
     The counts and statuses in those columns are based on **all** child
     deployments (it does not matter whether they are directly or indirectly
     attached to the main deployment).
+8.  You can also add additional columns which would display values of labels
 
 ### Sorting deployments
 
