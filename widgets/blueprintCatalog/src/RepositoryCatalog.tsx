@@ -6,6 +6,7 @@ import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
+import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
 const t = Utils.getWidgetTranslation('blueprintCatalog');
@@ -41,18 +42,6 @@ const StyledGridColumnButtons = styled(Grid.Column)`
         display: flex;
         align-items: center;
         padding: 0;
-    }
-`;
-
-const StyledLinkButton = styled(Button)`
-    &&&& {
-        padding: 0;
-        margin-right: 10px;
-        font-size: 22px;
-        background: none;
-        &:hover {
-            color: #1b1f23;
-        }
     }
 `;
 
@@ -118,36 +107,6 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             main_blueprint
         } = item;
 
-        const renderLinkButton = (url: string) => {
-            const isGithub = url.includes('github');
-            const isBitbucket = url.includes('bitbucket');
-            const isGitlab = url.includes('gitlab');
-
-            let icon;
-            switch (true) {
-                case isGithub:
-                    icon = 'github';
-                    break;
-                case isBitbucket:
-                    icon = 'bitbucket';
-                    break;
-                case isGitlab:
-                    icon = 'gitlab';
-                    break;
-                default:
-                    icon = 'git';
-            }
-
-            return (
-                <StyledLinkButton
-                    circular
-                    icon={icon}
-                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                    title={t('actions.openBlueprintRepository')}
-                />
-            );
-        };
-
         return (
             <div key={id}>
                 <StyledDataSegment
@@ -202,7 +161,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                {renderLinkButton(html_url)}
+                                <RepositoryLinkButton url={html_url} />
 
                                 <Button
                                     circular
