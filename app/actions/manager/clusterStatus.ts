@@ -5,6 +5,7 @@ import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
+import { ClusterServiceStatus } from '../../components/shared/cluster/types';
 
 export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
 // TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
@@ -71,7 +72,9 @@ export function getClusterStatus(
             .doGet(`/cluster-status?summary=${fetchOnlySummary}`)
             .then(data => {
                 const { services, status } = data;
-                dispatch(fetchClusterStatusSuccess(status, fetchOnlySummary ? undefined : services));
+                dispatch(
+                    fetchClusterStatusSuccess(ClusterServiceStatus[status], fetchOnlySummary ? undefined : services)
+                );
             })
             .catch(err => {
                 dispatch(fetchClusterStatusFailure(err));
