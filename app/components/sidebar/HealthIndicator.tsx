@@ -27,8 +27,8 @@ const HealthIndicator: FunctionComponent = () => {
 
     if (!systemStatus) {
         dotColor = dotColors[ClusterServiceStatus.Fail];
-    } else if (systemStatus === ClusterServiceStatus.Degraded) {
-        dotColor = dotColors[ClusterServiceStatus.Degraded];
+    } else if (systemStatus === ClusterServiceStatus.Degraded || systemStatus === ClusterServiceStatus.Fail) {
+        dotColor = dotColors[systemStatus];
     }
 
     return (
