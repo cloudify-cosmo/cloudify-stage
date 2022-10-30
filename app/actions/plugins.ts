@@ -1,15 +1,20 @@
-import * as types from './types';
+import type { PayloadAction } from './types';
+import { ActionType } from './types';
 
-export function setPluginUploading(pluginUrl: string) {
+export type SetPluginUploadingAction = PayloadAction<string, ActionType.SET_PLUGIN_UPLOADING>;
+export type UnsetPluginUploadingAction = PayloadAction<string, ActionType.UNSET_PLUGIN_UPLOADING>;
+export type PluginAction = SetPluginUploadingAction | UnsetPluginUploadingAction;
+
+export function setPluginUploading(pluginUrl: string): SetPluginUploadingAction {
     return {
-        type: types.SET_PLUGIN_UPLOADING,
-        pluginUrl
+        type: ActionType.SET_PLUGIN_UPLOADING,
+        payload: pluginUrl
     } as const;
 }
 
-export function unsetPluginUploading(pluginUrl: string) {
+export function unsetPluginUploading(pluginUrl: string): UnsetPluginUploadingAction {
     return {
-        type: types.UNSET_PLUGIN_UPLOADING,
-        pluginUrl
+        type: ActionType.UNSET_PLUGIN_UPLOADING,
+        payload: pluginUrl
     } as const;
 }

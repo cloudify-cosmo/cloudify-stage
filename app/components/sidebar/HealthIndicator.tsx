@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Icon } from '../basic';
 import SideBarItemIcon from './SideBarItemIcon';
 import StageUtils from '../../utils/stageUtils';
-import { getClusterStatus } from '../../actions/clusterStatus';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
 import { ClusterServiceStatus } from '../shared/cluster/types';
 import type { ReduxState } from '../../reducers';
