@@ -21,6 +21,7 @@ BuildRequires:  gcc
 BuildRequires:  gcc-c++, libsass, libpng-devel
 %endif
 Requires:       nodejs >= 16.16.0, cloudify-rest-service, nginx, shadow-utils
+Requires:       gcc-c++
 AutoReqProv:    no
 
 
