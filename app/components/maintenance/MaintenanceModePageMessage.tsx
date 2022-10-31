@@ -13,7 +13,23 @@ import StatusPoller from '../../utils/StatusPoller';
 import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
 
-export default class MaintenanceModePageMessage extends Component {
+interface MaintenanceModePageMessageProps {
+    canMaintenanceMode: boolean;
+    isFetchingClusterStatus: boolean;
+    maintenanceStatus: string;
+    navigateToHome: () => void;
+    onGetClusterStatus: () => void;
+    showServicesStatus: boolean;
+}
+
+interface MaintenanceModePageMessageState {
+    showMaintenanceModal: boolean;
+}
+
+export default class MaintenanceModePageMessage extends Component<
+    MaintenanceModePageMessageProps,
+    MaintenanceModePageMessageState
+> {
     constructor(props, context) {
         super(props, context);
 
@@ -88,12 +104,3 @@ export default class MaintenanceModePageMessage extends Component {
         );
     }
 }
-
-MaintenanceModePageMessage.propTypes = {
-    canMaintenanceMode: PropTypes.bool.isRequired,
-    isFetchingClusterStatus: PropTypes.bool.isRequired,
-    maintenanceStatus: PropTypes.string.isRequired,
-    navigateToHome: PropTypes.func.isRequired,
-    onGetClusterStatus: PropTypes.func.isRequired,
-    showServicesStatus: PropTypes.bool.isRequired
-};
