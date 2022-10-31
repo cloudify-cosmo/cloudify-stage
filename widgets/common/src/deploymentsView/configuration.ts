@@ -47,7 +47,6 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         name: tConfiguration('labelsToShow.name') || 'aaa',
         placeHolder: tConfiguration('fieldsToShow.placeholder') || 'bbb',
         default: [],
-        // type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: DeploymentLabelConfigurationInput
     },
