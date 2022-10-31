@@ -5,7 +5,7 @@ import type { SemanticCOLORS } from 'semantic-ui-react';
 import { Icon } from '../../basic';
 import { ClusterServiceStatus } from './types';
 
-interface ClusterStatusIconProps {
+export interface ClusterStatusIconProps {
     status: ClusterServiceStatus | null;
 }
 const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status = null }) => {
