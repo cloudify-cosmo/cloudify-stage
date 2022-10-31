@@ -13,7 +13,7 @@ import StatusPoller from '../../utils/StatusPoller';
 import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
 
-interface MaintenanceModePageMessageProps {
+export interface MaintenanceModePageMessageProps {
     canMaintenanceMode: boolean;
     isFetchingClusterStatus: boolean;
     maintenanceStatus: string;
@@ -22,7 +22,7 @@ interface MaintenanceModePageMessageProps {
     showServicesStatus: boolean;
 }
 
-interface MaintenanceModePageMessageState {
+export interface MaintenanceModePageMessageState {
     showMaintenanceModal: boolean;
 }
 
