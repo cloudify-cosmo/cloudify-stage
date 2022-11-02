@@ -1,3 +1,19 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.form {
+    textarea {
+        & {
+            font-family: @inputFont;
+        }
+
+        &:hover {
+            border-color: @grey;
+        }
+
+        &:focus {
+            border-color: @blue;
+        }
+    }
+}
