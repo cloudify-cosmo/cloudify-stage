@@ -41,7 +41,6 @@ const RepositoryLinkButton = ({ url, displayStyle }: IconLinkProps) => {
             icon={icon}
             onClick={() => Stage.Utils.Url.redirectToPage(url)}
             title={t('actions.openBlueprintRepository')}
-            bordered
         />
     ) : (
         <Icon
