@@ -1,6 +1,4 @@
 import type { ComponentProps } from 'react';
-import styled from 'styled-components';
-import { Form } from 'cloudify-ui-components';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -149,29 +147,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         const BlueprintsView = shouldShowTable ? BlueprintsTable : BlueprintsCatalog;
 
-        const StyledDemoRow = styled.div`
-            display: flex;
-            gap: 16px;
-            & + & {
-                margin-top: 24px;
-            }
-        `;
-
         return (
             <div>
-                <Form>
-                    <StyledDemoRow>
-                        <Form.Input value="Example value" />
-                        <Form.Input placeholder="Placeholder" />
-                        <Form.Input value="Disabled value" disabled />
-                    </StyledDemoRow>
-                    <StyledDemoRow>
-                        <Form.TextArea value="Example value" />
-                        <Form.TextArea placeholder="Placeholder" />
-                        <Form.TextArea value="Disabled value" disabled />
-                    </StyledDemoRow>
-                </Form>
-                <div style={{ height: '500px' }} />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
