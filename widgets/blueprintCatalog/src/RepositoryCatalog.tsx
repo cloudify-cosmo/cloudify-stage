@@ -161,7 +161,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <RepositoryLinkButton url={html_url} />
+                                <RepositoryLinkButton url={html_url} displayStyle="catalog" />
 
                                 <Button
                                     circular

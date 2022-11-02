@@ -3,8 +3,9 @@ import Utils from './utils';
 
 interface IconLinkProps {
     url: string;
+    displayStyle: string;
 }
-const { Button } = Stage.Basic;
+const { Button, Icon } = Stage.Basic;
 
 const StyledLinkButton = styled(Button)`
     &&&& {
@@ -31,13 +32,21 @@ const getIcon = (url: string): string => {
     return 'git';
 };
 
-const RepositoryLinkButton = ({ url }: IconLinkProps) => {
+const RepositoryLinkButton = ({ url, displayStyle }: IconLinkProps) => {
     const icon = getIcon(url);
 
-    return (
+    return displayStyle === 'catalog' ? (
         <StyledLinkButton
             circular
             icon={icon}
+            onClick={() => Stage.Utils.Url.redirectToPage(url)}
+            title={t('actions.openBlueprintRepository')}
+            bordered
+        />
+    ) : (
+        <Icon
+            name="github"
+            bordered
             onClick={() => Stage.Utils.Url.redirectToPage(url)}
             title={t('actions.openBlueprintRepository')}
         />
