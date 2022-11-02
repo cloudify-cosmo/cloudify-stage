@@ -4,11 +4,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import type { Dispatch } from 'redux';
+import type { ThunkDispatch } from 'redux-thunk';
 import styled from 'styled-components';
+import type { AnyAction } from 'redux';
 import type { ClientConfig } from '../../backend/routes/Config.types';
 
-import { login } from '../actions/managers';
+import { login } from '../actions/manager/auth';
 import type { ReduxState } from '../reducers';
 import renderMultilineText from '../utils/shared/renderMultilineText';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
@@ -208,7 +209,7 @@ const mapStateToProps = (state: ReduxState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>) => {
     return {
         onLogin: (username: string, password: string, redirect?: string) => {
             dispatch(login(username, password, redirect));

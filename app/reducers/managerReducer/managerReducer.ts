@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import * as types from '../../actions/types';
+import { ActionType } from '../../actions/types';
 import auth from './authReducer';
 import clusterStatus from './clusterStatusReducer';
 import tenants from './tenantsReducer';
@@ -10,6 +10,12 @@ import type { LicenseData } from './licenseReducer';
 import type { TenantsData } from './tenantsReducer';
 import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 import type { AuthData } from './authReducer';
+import type { AuthAction } from '../../actions/manager/auth';
+import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
+import type { VersionAction } from '../../actions/manager/version';
+import type { TenantAction } from '../../actions/manager/tenants';
+import type { LicenseAction } from '../../actions/manager/license';
+import type { MaintenanceAction } from '../../actions/manager/maintenance';
 
 export interface ManagerData {
     auth: AuthData;
@@ -28,42 +34,54 @@ export interface ManagerData {
     version: Partial<VersionResponse>;
 }
 
-const manager: Reducer<ManagerData> = (state = emptyState, action) => {
+type ManagerAction =
+    | AuthAction
+    | ClusterStatusAction
+    | VersionAction
+    | TenantAction
+    | LicenseAction
+    | MaintenanceAction;
+
+const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action) => {
     switch (action.type) {
-        case types.REQ_LOGIN:
-        case types.RES_LOGIN:
-        case types.LOGOUT:
-        case types.ERR_LOGIN:
+        case ActionType.LOGIN_REQUEST:
+            return {
+                ...emptyState,
+                auth: auth(state.auth, action)
+            };
+        case ActionType.LOGIN_SUCCESS:
+        case ActionType.LOGOUT:
+        case ActionType.LOGIN_FAILURE:
             return {
                 ...emptyState,
                 auth: auth(state.auth, action),
-                lastUpdated: action.receivedAt
+                lastUpdated: action.payload.receivedAt
             };
-        case types.SET_IDENTITY_PROVIDERS:
-        case types.SET_USER_DATA:
+        case ActionType.SET_IDENTITY_PROVIDERS:
+        case ActionType.SET_USER_DATA:
             return { ...state, auth: auth(state.auth, action) };
-        case types.REQ_CLUSTER_STATUS:
-        case types.SET_CLUSTER_STATUS:
-        case types.ERR_CLUSTER_STATUS:
+        case ActionType.FETCH_CLUSTER_STATUS_REQUEST:
+        case ActionType.FETCH_CLUSTER_STATUS_SUCCESS:
+        case ActionType.FETCH_CLUSTER_STATUS_FAILURE:
             return { ...state, clusterStatus: clusterStatus(state.clusterStatus, action) };
-        case types.SET_MANAGER_VERSION:
-            return { ...state, version: action.version };
-        case types.SET_MANAGER_LICENSE:
-        case types.SET_LICENSE_REQUIRED:
+        case ActionType.SET_MANAGER_VERSION:
+            return { ...state, version: action.payload };
+        case ActionType.SET_MANAGER_LICENSE:
+        case ActionType.SET_LICENSE_REQUIRED:
             return { ...state, license: license(state.license, action) };
-        case types.SET_MAINTENANCE_STATUS:
-            return { ...state, maintenance: action.maintenance };
-        case types.REQ_TENANTS:
-        case types.RES_TENANTS:
-        case types.ERR_TENANTS:
-        case types.SELECT_TENANT:
+        case ActionType.SET_MAINTENANCE_STATUS:
+            return { ...state, maintenance: action.payload };
+        case ActionType.FETCH_TENANTS_REQUEST:
+        case ActionType.FETCH_TENANTS_SUCCESS:
+        case ActionType.FETCH_TENANTS_FAILURE:
+        case ActionType.SELECT_TENANT:
             return { ...state, tenants: tenants(state.tenants, action) };
-        case types.SET_ACTIVE_EXECUTIONS:
-            return { ...state, activeExecutions: action.activeExecutions ? action.activeExecutions : {} };
-        case types.CANCEL_EXECUTION:
-            return { ...state, cancelExecution: action.execution, cancelAction: action.action };
-        case types.STORE_RBAC:
-            return { ...state, roles: action.roles, permissions: action.permissions };
+        case ActionType.SET_ACTIVE_EXECUTIONS:
+            return { ...state, activeExecutions: action.payload ? action.payload : {} };
+        case ActionType.SET_CANCEL_EXECUTION:
+            return { ...state, cancelExecution: action.payload.execution, cancelAction: action.payload.action };
+        case ActionType.STORE_RBAC:
+            return { ...state, roles: action.payload.roles, permissions: action.payload.permissions };
         default:
             return state;
     }

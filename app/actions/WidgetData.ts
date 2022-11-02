@@ -1,20 +1,20 @@
 // @ts-nocheck File not migrated fully to TS
 
 import log from 'loglevel';
-import * as types from './types';
+import { ActionType } from './types';
 import WidgetDataFetcher from '../utils/widgetDataFetcher';
 import StageUtils from '../utils/stageUtils';
 
 function widgetFetchReq(widgetId) {
     return {
-        type: types.WIDGET_FETCH_LOADING,
+        type: ActionType.WIDGET_FETCH_LOADING,
         widgetId
     };
 }
 
 function widgetFetchError(widgetId, error) {
     return {
-        type: types.WIDGET_FETCH_ERROR,
+        type: ActionType.WIDGET_FETCH_ERROR,
         widgetId,
         error
     };
@@ -22,7 +22,7 @@ function widgetFetchError(widgetId, error) {
 
 function widgetFetchRes(widgetId, data) {
     return {
-        type: types.WIDGET_FETCH_RES,
+        type: ActionType.WIDGET_FETCH_RES,
         widgetId,
         data,
         receivedAt: Date.now()
@@ -31,7 +31,7 @@ function widgetFetchRes(widgetId, data) {
 
 function widgetFetchCanceled(widgetId) {
     return {
-        type: types.WIDGET_FETCH_CANCELED,
+        type: ActionType.WIDGET_FETCH_CANCELED,
         widgetId
     };
 }
@@ -73,6 +73,6 @@ export function fetchWidgetData(widget, toolbox, paramsHandler) {
 
 export function clearWidgetsData() {
     return {
-        type: types.WIDGET_DATA_CLEAR
+        type: ActionType.WIDGET_DATA_CLEAR
     };
 }

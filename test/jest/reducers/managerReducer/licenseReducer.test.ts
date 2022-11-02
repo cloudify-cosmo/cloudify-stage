@@ -2,8 +2,8 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore } from 'redux';
 
-import { setLicense } from 'actions/license';
-import * as types from 'actions/types';
+import { setLicense } from 'actions/manager/license';
+import { ActionType } from 'actions/types';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import licenses from '../../resources/licenses';
 
@@ -19,8 +19,8 @@ describe('(Reducer) License', () => {
 
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
-                type: types.SET_MANAGER_LICENSE,
-                license: licenses.activePayingLicense
+                type: ActionType.SET_MANAGER_LICENSE,
+                payload: licenses.activePayingLicense
             };
             const expectedActions = [setManagerLicenseAction];
 
@@ -46,8 +46,8 @@ describe('(Reducer) License', () => {
 
             const actualActions = store.getActions();
             const setManagerLicenseAction = {
-                type: types.SET_MANAGER_LICENSE,
-                license: licenses.expiredPayingLicense
+                type: ActionType.SET_MANAGER_LICENSE,
+                payload: licenses.expiredPayingLicense
             };
             const expectedActions = [setManagerLicenseAction];
 

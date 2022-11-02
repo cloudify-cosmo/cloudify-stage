@@ -1,8 +1,11 @@
-import * as types from './types';
+import type { PayloadAction } from './types';
+import { ActionType } from './types';
 
-export function setEditMode(isEditMode: boolean) {
+export type SetConfigEditModeAction = PayloadAction<boolean, ActionType.SET_CONFIG_EDIT_MODE>;
+
+export function setEditMode(isEditMode: boolean): SetConfigEditModeAction {
     return {
-        type: types.SET_CONFIG_EDIT_MODE,
-        isEditMode
+        type: ActionType.SET_CONFIG_EDIT_MODE,
+        payload: isEditMode
     };
 }

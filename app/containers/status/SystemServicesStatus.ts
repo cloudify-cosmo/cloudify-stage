@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 import SystemServicesStatus from '../../components/status/SystemServicesStatus';
-import { getClusterStatus } from '../../actions/clusterStatus';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
 const mapStateToProps = state => {
     return {
