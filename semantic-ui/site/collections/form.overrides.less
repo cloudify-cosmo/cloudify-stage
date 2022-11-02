@@ -1,3 +1,21 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.form {
+    .field {
+        &.error {
+            .input.labeled {
+                .label {
+                    background-color: @red;
+                    color: #fff;
+                }
+
+                & > input {
+                    border-left-color: @red !important;
+                    border-right-color: @red !important;
+                }
+            }
+        }
+    }
+}

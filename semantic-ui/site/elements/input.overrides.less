@@ -60,6 +60,14 @@
         }
     }
 
+    &.action {
+        & > input {
+            &:hover {
+                border-right-color: @inputHoverBorderColor !important;
+            }
+        }
+    }
+
     &.icon:not(.loading) {
         & > i.icon {
             &::before {
