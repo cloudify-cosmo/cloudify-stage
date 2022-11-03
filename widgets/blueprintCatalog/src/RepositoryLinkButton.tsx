@@ -1,3 +1,4 @@
+import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Utils from './utils';
 import type { BlueprintCatalogWidgetConfiguration } from './types';
@@ -22,7 +23,7 @@ const StyledLinkButton = styled(Button)`
 
 const t = Utils.getWidgetTranslation('blueprintCatalog');
 
-const getIcon = (url: string): string => {
+const getIcon = (url: string): SemanticICONS => {
     const isGithub = url.startsWith('https://github.com');
     const isGitlab = url.startsWith('https://gitlab.com');
     const isBitbucket = url.startsWith('https://bitbucket.org');
@@ -45,7 +46,7 @@ const RepositoryLinkButton = ({ url, displayStyle }: RepositoryLinkButtonProps) 
         />
     ) : (
         <Icon
-            name="github"
+            name={icon as SemanticICONS}
             bordered
             onClick={() => Stage.Utils.Url.redirectToPage(url)}
             title={t('actions.openBlueprintRepository')}

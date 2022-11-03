@@ -5,7 +5,8 @@ describe('Blueprints catalog widget', () => {
         cy
             .activate()
             .usePageMock('blueprintCatalog', {
-                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json',
+                jsonPath:
+                    'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-stage/ab8dfce1874456ae2fed24d82e5b85f4b16c1765/test/cypress/fixtures/blueprints/blueprintsCatalog.json',
                 displayStyle: 'catalog',
                 fieldsToShow: ['Name', 'Description']
             })
@@ -56,6 +57,26 @@ describe('Blueprints catalog widget', () => {
             cy.contains('Created').should('be.visible');
             cy.contains('Updated').should('not.exist');
             cy.contains('Description').should('not.exist');
+        });
+    });
+
+    it('should have segment with correct icons', () => {
+        const iconNames = ['github', 'gitlab', 'bitbucket', 'git'];
+        const selectorMatch = (selector: string) => {
+            // eslint-disable-next-line security/detect-non-literal-regexp
+            return new RegExp(`.+${selector}$`);
+        };
+
+        iconNames.forEach(iconName => {
+            cy.get('.blueprintCatalogWidget').within(() => {
+                cy.contains(selectorMatch(iconName))
+                    .parent()
+                    .parent()
+                    .parent()
+                    .within(() => {
+                        cy.get(`i.${iconName}.icon`).should('have.class', iconName);
+                    });
+            });
         });
     });
 });
