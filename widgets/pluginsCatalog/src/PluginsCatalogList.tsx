@@ -137,10 +137,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
     const { FeedbackMessages } = Stage.Common.Components;
     const PluginIcon = Stage.Common.Plugins.Icon;
 
-    const distro = `${toolbox.getManager().getDistributionName().toLowerCase()} ${toolbox
-        .getManager()
-        .getDistributionRelease()
-        .toLowerCase()}`;
+    const distro = toolbox.getManager().getDistribution();
     const plugins: PluginsCatalogItem[] = compact(
         map(itemsProp, item => {
             const wagonUrl = Stage.Utils.Plugin.getWagon(item.pluginDescription, distro)?.url;
