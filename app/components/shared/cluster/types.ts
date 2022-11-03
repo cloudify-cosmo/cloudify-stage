@@ -11,7 +11,7 @@ export type ServiceStatus = keyof typeof ClusterServiceStatus;
 
 export type ClusterService = keyof typeof clusterServiceEnum;
 export interface ClusterServiceData {
-    status: keyof typeof ClusterServiceStatus;
+    status: ServiceStatus;
     nodes: Record<string, ClusterNodeData>;
     is_external: boolean;
 }
