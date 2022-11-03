@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import Utils from './utils';
+import type { BlueprintCatalogWidgetConfiguration } from './types';
 
 interface RepositoryLinkButtonProps {
     url: string;
-    displayStyle: string;
+    displayStyle: BlueprintCatalogWidgetConfiguration['displayStyle'];
 }
 const { Button, Icon } = Stage.Basic;
 
