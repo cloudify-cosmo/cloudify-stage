@@ -1,6 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
@@ -16,12 +14,23 @@ import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import ScrollToTop from './ScrollToTop';
 import TemplateManagement from '../templateManagement/TemplateManagement';
 
-export default class Layout extends Component {
+export interface LayoutProps {
+    doLogout: (error: string) => void;
+    initialPageLoad: () => Promise<void>;
+    isLoading: boolean;
+    isUserAuthorizedForTemplateManagement: boolean;
+}
+
+export interface LayoutState {
+    initialized: boolean;
+}
+
+export default class Layout extends Component<LayoutProps, LayoutState> {
     static initialState = {
         initialized: false
     };
 
-    constructor(props, context) {
+    constructor(props: LayoutProps, context: any) {
         super(props, context);
         this.state = Layout.initialState;
     }
@@ -97,10 +106,3 @@ export default class Layout extends Component {
         );
     }
 }
-
-Layout.propTypes = {
-    doLogout: PropTypes.func.isRequired,
-    initialPageLoad: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-    isUserAuthorizedForTemplateManagement: PropTypes.bool.isRequired
-};
