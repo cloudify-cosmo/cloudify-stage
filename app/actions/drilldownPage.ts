@@ -4,11 +4,11 @@ import { setDrilldownContext } from './drilldownContext';
 import { addLayoutToPage } from './page';
 import { createDrilldownPage, selectPage } from './pageMenu';
 import { setDrillDownWarningActive } from './templateManagement/pages';
-import * as types from './types';
+import { ActionType } from './types';
 
 export function addWidgetDrilldownPage(widgetId, drillDownName, drillDownPageId) {
     return {
-        type: types.ADD_DRILLDOWN_PAGE,
+        type: ActionType.ADD_DRILLDOWN_PAGE,
         widgetId,
         drillDownPageId,
         drillDownName

@@ -1,5 +1,5 @@
-import * as types from '../types';
+import { ActionType } from '../types';
 
 export function setTemplateManagementActive(isActive: boolean) {
-    return { type: types.TEMPLATE_MANAGEMENT_ACTIVE, isActive };
+    return { type: ActionType.TEMPLATE_MANAGEMENT_ACTIVE, isActive };
 }

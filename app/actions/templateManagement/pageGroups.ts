@@ -1,16 +1,16 @@
 import type { SemanticICONS } from 'semantic-ui-react';
-import * as types from '../types';
+import { ActionType } from '../types';
 
 export function deletePageGroup(pageGroupId: string) {
     return {
-        type: types.REMOVE_TEMPLATE_PAGE_GROUP,
+        type: ActionType.REMOVE_TEMPLATE_PAGE_GROUP,
         pageGroupId
     };
 }
 
 export function createPageGroup(pageGroupId: string, name: string, pages: string[], icon?: SemanticICONS) {
     return {
-        type: types.CREATE_TEMPLATE_PAGE_GROUP,
+        type: ActionType.CREATE_TEMPLATE_PAGE_GROUP,
         pageGroupId,
         name,
         pages,
@@ -26,7 +26,7 @@ export function updatePageGroup(
     icon?: SemanticICONS
 ) {
     return {
-        type: types.UPDATE_TEMPLATE_PAGE_GROUP,
+        type: ActionType.UPDATE_TEMPLATE_PAGE_GROUP,
         pageGroupId,
         newId,
         name,

@@ -15,7 +15,7 @@ describe('UserMenu', () => {
         return {
             ...emptyState,
             auth: { ...emptyState.auth, username: 'admin' },
-            license: {},
+            license: { data: null },
             tenants: { items: [] },
             ...overrides
         };
@@ -25,7 +25,7 @@ describe('UserMenu', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: getManagerData({ license: { isRequired: true } }),
+            manager: getManagerData({ license: { data: null, isRequired: true } }),
             config: { mode: Consts.MODE_MAIN }
         });
 
@@ -92,7 +92,7 @@ describe('UserMenu', () => {
         cy.stub(StageUtils, 'isUserAuthorized', () => true);
 
         const { history } = mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
-            manager: getManagerData({ license: { isRequired: true } }),
+            manager: getManagerData({ license: { data: null, isRequired: true } }),
             config: { mode: Consts.MODE_MAIN }
         });
 

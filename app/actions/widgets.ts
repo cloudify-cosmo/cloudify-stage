@@ -2,12 +2,12 @@
 
 import Internal from '../utils/Internal';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
-import * as types from './types';
+import { ActionType } from './types';
 import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 
 export function storeWidgetDefinitions(widgetDefinitions) {
     return {
-        type: types.STORE_WIDGETS,
+        type: ActionType.STORE_WIDGETS,
         widgetDefinitions
     };
 }
@@ -19,7 +19,7 @@ export function loadWidgetDefinitions() {
 
 export function addWidget(pageId, layoutSection, tab, widget, widgetDefinition) {
     return {
-        type: types.ADD_WIDGET,
+        type: ActionType.ADD_WIDGET,
         pageId,
         layoutSection,
         tab,
@@ -30,7 +30,7 @@ export function addWidget(pageId, layoutSection, tab, widget, widgetDefinition) 
 
 export function updateWidget(pageId, widgetId, params) {
     return {
-        type: types.UPDATE_WIDGET,
+        type: ActionType.UPDATE_WIDGET,
         pageId,
         widgetId,
         params
@@ -39,7 +39,7 @@ export function updateWidget(pageId, widgetId, params) {
 
 export function removeWidget(pageId, widgetId) {
     return {
-        type: types.REMOVE_WIDGET,
+        type: ActionType.REMOVE_WIDGET,
         pageId,
         widgetId
     };
@@ -47,19 +47,19 @@ export function removeWidget(pageId, widgetId) {
 
 export function minimizeTabWidgets() {
     return {
-        type: types.MINIMIZE_TAB_WIDGETS
+        type: ActionType.MINIMIZE_TAB_WIDGETS
     };
 }
 
 export function minimizeWidgets() {
     return {
-        type: types.MINIMIZE_WIDGETS
+        type: ActionType.MINIMIZE_WIDGETS
     };
 }
 
 function setInstallWidget(widgetDefinition) {
     return {
-        type: types.INSTALL_WIDGET,
+        type: ActionType.INSTALL_WIDGET,
         widgetDefinition
     };
 }
@@ -73,7 +73,7 @@ export function installWidget(widgetFile, widgetUrl) {
 
 export function setUninstallWidget(widgetId) {
     return {
-        type: types.UNINSTALL_WIDGET,
+        type: ActionType.UNINSTALL_WIDGET,
         widgetId
     };
 }
@@ -88,7 +88,7 @@ export function uninstallWidget(widgetId) {
 export function updateWidgetDefinition(widgetId, widgetDefinition) {
     return dispatch =>
         dispatch({
-            type: types.UPDATE_WIDGET_DEFINITION,
+            type: ActionType.UPDATE_WIDGET_DEFINITION,
             widgetDefinition,
             widgetId
         });
@@ -98,7 +98,7 @@ export function replaceWidget(widgetId, widgetFile, widgetUrl) {
     return (dispatch, getState) =>
         widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager).then(widgetDefinition =>
             dispatch({
-                type: types.UPDATE_WIDGET_DEFINITION,
+                type: ActionType.UPDATE_WIDGET_DEFINITION,
                 widgetDefinition,
                 widgetId
             })
