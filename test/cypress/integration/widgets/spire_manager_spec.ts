@@ -166,9 +166,9 @@ describe('Spire Manager widget', () => {
         cy.get('.modal').should('be.visible');
         cy.get('.actions > .positive').click();
 
-        waitForExecutionsRequest('rome');
-        waitForExecutionsRequest('london');
         waitForExecutionsRequest('new-york');
+        waitForExecutionsRequest('london');
+        waitForExecutionsRequest('rome');
 
         cy.get('.modal').should('not.exist');
     });
