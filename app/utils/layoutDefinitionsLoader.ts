@@ -1,3 +1,4 @@
+import type { SemanticICONS } from 'semantic-ui-react';
 import { keyBy, mapValues } from 'lodash';
 import log from 'loglevel';
 import type { ManagerData } from '../reducers/managerReducer';
@@ -8,6 +9,7 @@ import type {
     GetPagesResponse,
     GetTemplatesResponse
 } from '../../backend/routes/Templates.types';
+import type { SimpleWidgetObj } from '../actions/page';
 
 // NOTE: Solution based on https://stackoverflow.com/questions/41253310/typescript-retrieve-element-type-information-from-array-type
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType extends readonly (infer ElementType)[]
@@ -25,7 +27,7 @@ function fetchResource<Resource extends ArrayElement<GetTemplatesResponse | GetP
 
 export interface LayoutDefinitions {
     templatesDef: Record<string, Template['data']>;
-    pagesDef: Record<string, { name: Page['name'] } & Page['data']>;
+    pagesDef: Record<string, { name: Page['name'] } & Page<SimpleWidgetObj, SemanticICONS>['data']>;
     pageGroupsDef: Record<string, Pick<PageGroup, 'name' | 'icon' | 'pages'>>;
 }
 export const emptyLayoutDefinitions = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} };

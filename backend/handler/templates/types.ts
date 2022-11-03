@@ -96,7 +96,7 @@ export interface PageFileContent<WD = WidgetDefinition, I = string> extends Comm
 
 export interface Page<WD = WidgetDefinition, I = string> extends Required<CommonFileContent>, CommonIdentityData {
     data: {
-        icon: PageFileContent<WD, I>['icon'];
+        icon?: PageFileContent<WD, I>['icon'];
         layout: PageFileContent<WD, I>['layout'];
     };
 }

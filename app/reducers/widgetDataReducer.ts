@@ -3,7 +3,7 @@ import type { Reducer } from 'redux';
 import { ActionType } from '../actions/types';
 import type { WidgetDataAction } from '../actions/widgetData';
 
-interface WidgetData {
+export interface WidgetData {
     id: string;
     data: any; // TODO(RD-5591): Add more strict type
     loading: boolean;
@@ -11,7 +11,7 @@ interface WidgetData {
     error: any; // TODO(RD-5591): Add more strict type
     recievedAt?: number;
 }
-type WidgetDataState = WidgetData[];
+export type WidgetDataState = WidgetData[];
 
 const widgetData: Reducer<WidgetDataState, WidgetDataAction> = (state = [], action) => {
     switch (action.type) {

@@ -9,9 +9,10 @@ import type { TemplatePageDefinition } from '../reducers/templatesReducer';
 import type { Widget } from '../utils/StageAPI';
 
 export type AddDrilldownPageAction = PayloadAction<
-    { widgetId: string; drillDownName: string; drillDownPageId: string },
+    { widgetId: string; drillDownName: string; drillDownPageId: string; parentPageId?: string },
     ActionType.ADD_DRILLDOWN_PAGE
 >;
+export type DrilldownPageAction = AddDrilldownPageAction;
 
 export function addWidgetDrilldownPage(
     widgetId: string,

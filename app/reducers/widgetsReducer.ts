@@ -4,10 +4,23 @@ import type { Reducer } from 'redux';
 import { ActionType } from '../actions/types';
 import StageUtils from '../utils/stageUtils';
 import type { WidgetAction } from '../actions/widgets';
-import type { AddDrilldownPageAction } from '../actions/drilldownPage';
-import type { Widget } from '../utils/StageAPI';
+import type { DrilldownPageAction } from '../actions/drilldownPage';
+import type { SimpleWidgetObj } from '../actions/page';
 
-const widget: Reducer<Widget, WidgetAction | AddDrilldownPageAction> = (state = {}, action) => {
+const emptyWidget: SimpleWidgetObj = {
+    id: '',
+    configuration: {},
+    definition: '',
+    drillDownPages: {},
+    name: '',
+    height: 0,
+    width: 0,
+    x: 0,
+    y: 0,
+    maximized: false
+};
+
+const widget: Reducer<SimpleWidgetObj, WidgetAction | DrilldownPageAction> = (state = emptyWidget, action) => {
     let newState;
     switch (action.type) {
         case ActionType.UPDATE_WIDGET:
@@ -16,7 +29,7 @@ const widget: Reducer<Widget, WidgetAction | AddDrilldownPageAction> = (state = 
         case ActionType.MINIMIZE_TAB_WIDGETS:
             return { ...state, maximized: false };
         case ActionType.ADD_DRILLDOWN_PAGE:
-            newState = { ...state, drillDownPages: { ...state.drillDownPages } };
+            newState = { ...state, drillDownPages: { ...state?.drillDownPages } };
             newState.drillDownPages[action.payload.drillDownName] = action.payload.drillDownPageId;
             return newState;
         default:
@@ -24,7 +37,7 @@ const widget: Reducer<Widget, WidgetAction | AddDrilldownPageAction> = (state = 
     }
 };
 
-const widgets: Reducer<Widget[], WidgetAction | AddDrilldownPageAction> = (state = [], action) => {
+const widgets: Reducer<SimpleWidgetObj[], WidgetAction | DrilldownPageAction> = (state = [], action) => {
     switch (action.type) {
         case ActionType.ADD_WIDGET:
             if (!action.payload.widgetDefinition) {
@@ -45,7 +58,7 @@ const widgets: Reducer<Widget[], WidgetAction | AddDrilldownPageAction> = (state
                     },
                     drillDownPages: {},
                     maximized: false
-                }
+                } as SimpleWidgetObj
             ];
         case ActionType.UPDATE_WIDGET:
             return state.map(w => {

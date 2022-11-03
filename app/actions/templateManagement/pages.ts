@@ -7,9 +7,9 @@ import type { SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
-import type { TemplatesState } from '../../reducers/templatesReducer';
+import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
 
-type Page = TemplatesState['pagesDef'][string] & { id: string; oldId?: string };
+type Page = TemplatePageDefinition & { id: string; oldId?: string };
 
 export type AddPageAction = PayloadAction<Page, ActionType.ADD_TEMPLATE_PAGE>;
 export type RemovePageAction = PayloadAction<string, ActionType.REMOVE_TEMPLATE_PAGE>;

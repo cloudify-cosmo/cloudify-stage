@@ -55,6 +55,16 @@ export type ReorderPageMenuAction = PayloadAction<
     ActionType.REORDER_PAGE_MENU
 >;
 
+export type PageMenuAction =
+    | AddPageAction
+    | AddPageGroupAction
+    | AddPageToGroupAction
+    | CreateDrilldownPageAction
+    | RenamePageMenuItemAction
+    | ChangePageMenuItemIconAction
+    | RemovePageMenuItemAction
+    | ReorderPageMenuAction;
+
 export function createPage(page: Partial<PageDefinition>, newPageId: string): AddPageAction {
     return {
         type: ActionType.ADD_PAGE,

@@ -35,12 +35,9 @@ function getBundleLoadedWidget(custom = true) {
     return registeredWidget;
 }
 
-interface WidgetListItem {
-    id: string;
-    isCustom: boolean;
-}
+type WidgetListItem = WidgetData;
 
-export type WidgetsDefinitions = (WidgetData & { loaded: boolean })[];
+export type SimpleWidgetDefinition = WidgetListItem & { loaded: boolean };
 
 export default class WidgetDefinitionsLoader {
     public static init() {
@@ -75,9 +72,11 @@ export default class WidgetDefinitionsLoader {
         window.Stage = stageAPI;
     }
 
-    private static loadWidgetBundle(widget: WidgetListItem, rejectOnError = true) {
-        const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widget.isCustom)}/${widget.id}/widget.js`;
-        return new ScriptLoader(scriptPath).load(widget.id, rejectOnError);
+    private static loadWidgetBundle(widgetListItem: WidgetListItem, rejectOnError = true) {
+        const scriptPath = `${LoaderUtils.getResourceUrl('widgets', widgetListItem.isCustom)}/${
+            widgetListItem.id
+        }/widget.js`;
+        return new ScriptLoader(scriptPath).load(widgetListItem.id, rejectOnError);
     }
 
     public static loadWidget(widgetListItem: WidgetListItem) {
@@ -123,7 +122,7 @@ export default class WidgetDefinitionsLoader {
         return widgetDefinition;
     }
 
-    public static load(manager: any): Promise<WidgetsDefinitions> {
+    public static load(manager: any): Promise<SimpleWidgetDefinition[]> {
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets

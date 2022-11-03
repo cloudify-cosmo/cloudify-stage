@@ -1,7 +1,7 @@
 import type { WidgetDefinition } from '../utils/StageAPI';
 import type { ReduxThunkAction, PayloadAction } from './types';
 import { ActionType } from './types';
-import type { WidgetsDefinitions } from '../utils/widgetDefinitionsLoader';
+import type { SimpleWidgetDefinition } from '../utils/widgetDefinitionsLoader';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
 import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 import Internal from '../utils/Internal';
@@ -12,13 +12,18 @@ export type UpdateWidgetDefinitionAction = PayloadAction<
     { widgetId: string; widgetDefinition: WidgetDefinition },
     ActionType.UPDATE_WIDGET_DEFINITION
 >;
-export type StoreWidgetsDefinitionsAction = PayloadAction<WidgetsDefinitions, ActionType.STORE_WIDGETS_DEFINITIONS>;
+export type StoreWidgetsDefinitionsAction = PayloadAction<
+    SimpleWidgetDefinition[],
+    ActionType.STORE_WIDGETS_DEFINITIONS
+>;
 
 export type WidgetDefinitionsAction =
     | InstallWidgetAction
     | UninstallWidgetAction
     | UpdateWidgetDefinitionAction
     | StoreWidgetsDefinitionsAction;
+
+export type EnhancedWidgetDefinition = WidgetDefinition & SimpleWidgetDefinition;
 
 function setInstallWidget(widgetDefinition: WidgetDefinition): InstallWidgetAction {
     return {
@@ -87,7 +92,7 @@ export function checkIfWidgetIsUsed(widgetId: string): ReduxThunkAction<Promise<
     };
 }
 
-function storeWidgetDefinitions(widgetDefinitions: WidgetsDefinitions): StoreWidgetsDefinitionsAction {
+function storeWidgetDefinitions(widgetDefinitions: SimpleWidgetDefinition[]): StoreWidgetsDefinitionsAction {
     return {
         type: ActionType.STORE_WIDGETS_DEFINITIONS,
         payload: widgetDefinitions

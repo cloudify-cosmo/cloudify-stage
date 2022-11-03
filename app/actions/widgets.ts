@@ -8,8 +8,8 @@ export type AddWidgetAction = PayloadAction<
     {
         pageId: string;
         layoutSectionIndex: number;
-        tabIndex: number;
-        widget: SimpleWidgetObj;
+        tabIndex: number | null;
+        widget: Partial<SimpleWidgetObj>;
         widgetDefinition: WidgetDefinition;
     },
     ActionType.ADD_WIDGET
@@ -32,8 +32,8 @@ export type WidgetAction =
 export function addWidget(
     pageId: string,
     layoutSectionIndex: number,
-    tabIndex: number,
-    widget: SimpleWidgetObj,
+    tabIndex: number | null,
+    widget: Partial<SimpleWidgetObj>,
     widgetDefinition: WidgetDefinition
 ): AddWidgetAction {
     return {
