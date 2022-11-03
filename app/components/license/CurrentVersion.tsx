@@ -1,12 +1,40 @@
-// @ts-nocheck File not migrated fully to TS
+import type { SemanticICONS } from 'semantic-ui-react';
 import i18n from 'i18next';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 import { Icon, Header, Message, Segment, Table } from '../basic';
 
-export default function CurrentVersion({ version = {} }) {
+interface Version {
+    build?: string;
+    commit?: string;
+    date?: string;
+    distribution?: string;
+    distro?: string;
+    // eslint-disable-next-line camelcase
+    distro_release?: string;
+    edition?: string;
+    version?: string;
+    // eslint-disable-next-line camelcase
+    full_version?: string;
+}
+
+type VersionProperty =
+    | 'build'
+    | 'commit'
+    | 'date'
+    | 'distribution'
+    | 'distro'
+    | 'distro_release'
+    | 'edition'
+    | 'version'
+    | 'full_version';
+
+interface CurrentVersionProps {
+    version: Version;
+}
+
+export default function CurrentVersion({ version = {} }: CurrentVersionProps) {
     version.distro = _.join([version.distribution, version.distro_release], ' ');
     version.full_version = `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
          (${_.capitalize(version.edition)})`;
@@ -27,21 +55,21 @@ export default function CurrentVersion({ version = {} }) {
             <Table basic="very" size="large" celled>
                 <Table.Body>
                     {_.map(fields, field => {
-                        const value = version[field.name];
+                        const value = version[field.name as VersionProperty];
 
                         return !!field.hide && field.hide(value) ? null : (
                             <Table.Row key={field.header}>
                                 <Table.Cell width={5}>
                                     <Header as="h4">
                                         <Icon
-                                            name={field.icon}
+                                            name={field.icon as SemanticICONS}
                                             size="large"
                                             style={{ display: 'inline-block', float: 'left' }}
                                         />
                                         <Header.Content>{field.header}</Header.Content>
                                     </Header>
                                 </Table.Cell>
-                                <Table.Cell>{field.format(version[field.name])}</Table.Cell>
+                                <Table.Cell>{field.format(value)}</Table.Cell>
                             </Table.Row>
                         );
                     })}
@@ -52,15 +80,3 @@ export default function CurrentVersion({ version = {} }) {
         <Message>{i18n.t('licenseManagement.noVersion', 'There is no version data.')}</Message>
     );
 }
-
-CurrentVersion.propTypes = {
-    version: PropTypes.shape({
-        build: PropTypes.string,
-        commit: PropTypes.string,
-        date: PropTypes.string,
-        distribution: PropTypes.string,
-        distro_release: PropTypes.string,
-        edition: PropTypes.string,
-        version: PropTypes.string
-    }).isRequired
-};
