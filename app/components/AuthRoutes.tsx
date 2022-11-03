@@ -3,11 +3,9 @@ import i18n from 'i18next';
 import log from 'loglevel';
 import React, { useEffect } from 'react';
 import type { FunctionComponent } from 'react';
-import type { ThunkDispatch } from 'redux-thunk';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import type { AnyAction } from 'redux';
 import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/manager/tenants';
 import Auth from '../utils/auth';
@@ -17,7 +15,7 @@ import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type { ReduxState } from '../reducers';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 class NoTenantsError extends Error {}
 
@@ -28,7 +26,7 @@ const AuthRoutes: FunctionComponent = () => {
     );
     const isLicenseRequired = useSelector(state => get(state, 'manager.license.isRequired', false));
     const isProductOperational = useSelector(state => Auth.isProductOperational(get(state, 'manager.license', {})));
-    const dispatch: ThunkDispatch<ReduxState, never, AnyAction> = useDispatch();
+    const dispatch: ReduxThunkDispatch = useDispatch();
 
     useEffect(() => {
         SplashLoadingScreen.turnOn();
