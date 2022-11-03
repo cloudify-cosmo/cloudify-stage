@@ -23,7 +23,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
 
     return (
         <DataTable
@@ -89,7 +89,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data className="center aligned rowActions">
-                            <RepositoryLinkButton url={html_url} displayStyle="table" />
+                            <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}

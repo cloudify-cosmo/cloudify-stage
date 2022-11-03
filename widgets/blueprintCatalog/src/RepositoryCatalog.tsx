@@ -85,7 +85,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
     const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
@@ -161,7 +161,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <RepositoryLinkButton url={html_url} displayStyle="catalog" />
+                                <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
 
                                 <Button
                                     circular
