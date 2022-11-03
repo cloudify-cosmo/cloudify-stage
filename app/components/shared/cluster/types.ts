@@ -7,6 +7,7 @@ export enum ClusterServiceStatus {
     Degraded,
     Unknown
 }
+export type ServiceStatus = keyof typeof ClusterServiceStatus;
 
 export type ClusterService = keyof typeof clusterServiceEnum;
 export interface ClusterServiceData {

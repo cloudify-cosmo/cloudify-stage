@@ -7,29 +7,39 @@ import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
 import { ClusterServiceStatus } from '../shared/cluster/types';
+import type { ServiceStatus } from '../shared/cluster/types';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
-const dotColors = {
-    [ClusterServiceStatus.Fail]: 'red',
-    [ClusterServiceStatus.Degraded]: 'yellow'
-} as const;
+const statusToDotColor = (systemStatus: ServiceStatus | undefined) => {
+    const dotColors = {
+        [ClusterServiceStatus.Fail]: 'red',
+        [ClusterServiceStatus.Degraded]: 'yellow'
+    } as const;
+
+    if (!systemStatus) {
+        return dotColors[ClusterServiceStatus.Fail];
+    }
+
+    const clusterServiceStatus = ClusterServiceStatus[systemStatus];
+    if (clusterServiceStatus === ClusterServiceStatus.Degraded || clusterServiceStatus === ClusterServiceStatus.Fail) {
+        return dotColors[clusterServiceStatus];
+    }
+
+    return undefined;
+};
 
 const dropdownMenuStyle = { padding: 5 };
 
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
-    const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
+    const systemStatus: ServiceStatus | undefined = useSelector(
+        (state: ReduxState) => state.manager.clusterStatus.status
+    );
 
-    let dotColor = null;
-
-    if (!systemStatus) {
-        dotColor = dotColors[ClusterServiceStatus.Fail];
-    } else if (systemStatus === ClusterServiceStatus.Degraded || systemStatus === ClusterServiceStatus.Fail) {
-        dotColor = dotColors[systemStatus];
-    }
+    let dotColor = statusToDotColor(systemStatus);
 
     return (
         <SideBarDropdownItem

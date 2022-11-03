@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { ClusterService } from './types';
+import type { ClusterService, ServiceStatus } from './types';
 import { ClusterServiceStatus } from './types';
 
 export const clusterServiceEnum = Object.freeze({
@@ -12,7 +12,7 @@ export const clusterServices = _.keys(clusterServiceEnum);
 
 export const clusterServiceStatuses = _.keys(ClusterServiceStatus);
 
-export const clusterServiceBgColor = (serviceStatus: keyof typeof ClusterServiceStatus) => {
+export const clusterServiceBgColor = (serviceStatus: ServiceStatus) => {
     const clusterServiceStatus = ClusterServiceStatus[serviceStatus];
     switch (clusterServiceStatus) {
         case ClusterServiceStatus.OK:

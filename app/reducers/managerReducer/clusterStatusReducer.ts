@@ -1,12 +1,12 @@
 import type { Reducer } from 'redux';
-import type { ClusterServices, ClusterServiceStatus } from '../../components/shared/cluster/types';
+import type { ClusterServices, ServiceStatus } from '../../components/shared/cluster/types';
 import { ActionType } from '../../actions/types';
 import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
 
 export interface ClusterStatusData {
     isFetching?: boolean;
     error?: string;
-    status?: ClusterServiceStatus;
+    status?: ServiceStatus;
     services?: ClusterServices;
 }
 

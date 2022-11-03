@@ -11,7 +11,7 @@ import { clusterServiceBgColor, clusterServiceEnum } from './consts';
 import { ClusterServiceStatus } from './types';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
-import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
+import type { ClusterService as ClusterServiceName, ClusterServices, ServiceStatus } from './types';
 import type { ReduxState } from '../../../reducers';
 
 interface ClusterServicesOverviewProps {
@@ -23,7 +23,7 @@ interface ClusterServicesOverviewProps {
 }
 const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> = ({
     services = _.mapValues(clusterServiceEnum, () => ({
-        status: ClusterServiceStatus.Unknown,
+        status: ClusterServiceStatus[ClusterServiceStatus.Unknown],
         is_external: false
     })),
     clickable = false,
@@ -56,7 +56,9 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                 return (
                                     <Table.Row
                                         key={serviceName}
-                                        style={{ backgroundColor: clusterServiceBgColor(service.status) }}
+                                        style={{
+                                            backgroundColor: clusterServiceBgColor(service.status as ServiceStatus)
+                                        }}
                                     >
                                         <Table.Cell>
                                             {clickable && isSystemHealthPagePresent ? (
