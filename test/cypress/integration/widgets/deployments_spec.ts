@@ -94,10 +94,6 @@ describe('Deployments widget', () => {
                 cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
             });
 
-            beforeEach(() => {
-                cy.visitTestPage();
-            });
-
             const getMockedResponse = (deployments: unknown[] = []) => ({
                 items: deployments,
                 metadata: {
@@ -116,6 +112,8 @@ describe('Deployments widget', () => {
             it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
+
+                cy.visitTestPage();
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
@@ -146,6 +144,9 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
+
+                cy.visitTestPage();
+
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
