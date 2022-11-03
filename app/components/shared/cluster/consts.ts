@@ -12,8 +12,9 @@ export const clusterServices = _.keys(clusterServiceEnum);
 
 export const clusterServiceStatuses = _.keys(ClusterServiceStatus);
 
-export const clusterServiceBgColor = (serviceStatus: ClusterServiceStatus) => {
-    switch (serviceStatus) {
+export const clusterServiceBgColor = (serviceStatus: keyof typeof ClusterServiceStatus) => {
+    const clusterServiceStatus = ClusterServiceStatus[serviceStatus];
+    switch (clusterServiceStatus) {
         case ClusterServiceStatus.OK:
             return '#21ba45';
         case ClusterServiceStatus.Degraded:
