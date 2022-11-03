@@ -1,6 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -10,7 +8,11 @@ import i18n from 'i18next';
 import Consts from '../../utils/consts';
 import LicenseLabel from '../LicenseLabel';
 
-function Banner({ className }) {
+interface BannerProps {
+    className?: string;
+}
+
+function Banner({ className = '' }: BannerProps) {
     const isCommunity = useSelector(
         state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
     );
@@ -25,7 +27,6 @@ function Banner({ className }) {
         <>
             <Link to={Consts.PAGE_PATH.HOME} className={className}>
                 <HeaderBanner
-                    isCommunity={isCommunity}
                     licenseEdition={licenseEdition}
                     productName={productName}
                     productVersion={productVersion}
@@ -36,14 +37,6 @@ function Banner({ className }) {
         </>
     );
 }
-
-Banner.propTypes = {
-    className: PropTypes.string
-};
-
-Banner.defaultProps = {
-    className: ''
-};
 
 interface StyledBannerProps {
     hideOnSmallScreen?: boolean;
