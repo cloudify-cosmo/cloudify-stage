@@ -19,9 +19,11 @@ export default class AuthServiceActions {
     }
 
     isAuthServiceAvailable() {
+        const isReponseFromAuthService = (response: GetAuthUserResponse | string) => typeof response === 'object';
+
         return this.external
-            .doGet<GetAuthUserResponse>('/auth/users/me')
-            .then(() => true)
+            .doGet<GetAuthUserResponse | string>('/auth/users/me')
+            .then(isReponseFromAuthService)
             .catch(() => false);
     }
 
