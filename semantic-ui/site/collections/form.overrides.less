@@ -3,6 +3,20 @@
 *******************************/
 
 .ui.form {
+    textarea {
+        & {
+            font-family: @inputFont;
+        }
+
+        &:hover {
+            border-color: @grey;
+        }
+
+        &:focus {
+            border-color: @blue;
+        }
+    }
+
     .field {
         &.error {
             .input.labeled {
