@@ -16,11 +16,10 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
     onChange,
     toolbox,
     value,
-    multiple,
-    overrideResourceType
+    multiple
 }) => {
     const { i18n } = Stage;
-    const resourceType = overrideResourceType || useContext(ResourceTypeContext);
+    const resourceType = useContext(ResourceTypeContext);
 
     return (
         <CommonDropdown

@@ -44,8 +44,8 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
     },
     {
         id: 'labelsToShow',
-        name: tConfiguration('labelsToShow.name') || 'aaa',
-        placeHolder: tConfiguration('fieldsToShow.placeholder') || 'bbb',
+        name: tConfiguration('labelsToShow.name'),
+        placeHolder: tConfiguration('fieldsToShow.placeholder'),
         default: [],
         type: Stage.Basic.GenericField.CUSTOM_TYPE,
         component: DeploymentLabelConfigurationInput
