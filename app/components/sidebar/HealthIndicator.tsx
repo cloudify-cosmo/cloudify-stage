@@ -39,7 +39,7 @@ const HealthIndicator: FunctionComponent = () => {
         (state: ReduxState) => state.manager.clusterStatus.status
     );
 
-    let dotColor = statusToDotColor(systemStatus);
+    const dotColor = statusToDotColor(systemStatus);
 
     return (
         <SideBarDropdownItem
