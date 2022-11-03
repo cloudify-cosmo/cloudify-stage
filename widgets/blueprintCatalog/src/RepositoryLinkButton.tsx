@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Utils from './utils';
 
-interface IconLinkProps {
+interface RepositoryLinkButtonProps {
     url: string;
     displayStyle: string;
 }
@@ -32,7 +32,7 @@ const getIcon = (url: string): string => {
     return 'git';
 };
 
-const RepositoryLinkButton = ({ url, displayStyle }: IconLinkProps) => {
+const RepositoryLinkButton = ({ url, displayStyle }: RepositoryLinkButtonProps) => {
     const icon = getIcon(url);
 
     return displayStyle === 'catalog' ? (
