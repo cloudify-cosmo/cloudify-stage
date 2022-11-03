@@ -144,7 +144,8 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', '0, -0.8789062500000001');
+        const location = '0.013732910024768903, -0.8789062500000001';
+        cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', location);
 
         // change visibility
         cy.get('.modal > :nth-child(1) > .green').click();
@@ -152,7 +153,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .positive').click();
 
-        verifySiteRow(1, { name, location: '0.013732910024768903, -0.8789062500000001', visibility: 'private' });
+        verifySiteRow(1, { name, location, visibility: 'private' });
     });
 
     invalidSites.forEach(site => {
