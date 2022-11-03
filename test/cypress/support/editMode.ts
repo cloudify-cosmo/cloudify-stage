@@ -24,6 +24,7 @@ const commands = {
         cy.enterEditMode();
 
         cy.contains('Add Widget').click();
+        cy.waitUntilWidgetsDataLoaded();
         cy.get(`*[data-id=${widgetId}]`).click();
         cy.contains('Add selected widgets').click();
 
