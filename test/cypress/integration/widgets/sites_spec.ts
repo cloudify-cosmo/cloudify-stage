@@ -152,7 +152,7 @@ describe('Sites Management', () => {
         // submit
         cy.get('.actions > .positive').click();
 
-        verifySiteRow(1, { name, location: '0.0, -0.8789062500000001', visibility: 'private' });
+        verifySiteRow(1, { name, location: '0.013732910024768903, -0.8789062500000001', visibility: 'private' });
     });
 
     invalidSites.forEach(site => {
@@ -189,7 +189,7 @@ describe('Sites Management', () => {
     });
 
     it('update a site with location changed with map', () => {
-        const location = '32.10118973232094, 33.92578125000001';
+        const location = '32.11282228909443, 33.92578125000001';
 
         cy.createSite(siteWithLocation);
         refreshSiteManagementPage();
