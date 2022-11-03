@@ -1,4 +1,5 @@
-import type { DrilldownHandler, GenericFieldType } from 'cloudify-ui-components';
+import type { DrilldownHandler } from 'cloudify-ui-components/toolbox';
+import type { GenericFieldType } from 'cloudify-ui-components';
 import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } from 'react';
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved

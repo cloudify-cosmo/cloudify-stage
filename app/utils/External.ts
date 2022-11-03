@@ -3,7 +3,7 @@ import 'isomorphic-fetch';
 import JSZip from 'jszip';
 import _ from 'lodash';
 import log from 'loglevel';
-import type { Http, QueryParams, RequestOptions } from 'cloudify-ui-components';
+import type { Http, QueryParams, RequestOptions } from 'cloudify-ui-components/toolbox';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
 import Interceptor from './Interceptor';
 

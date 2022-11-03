@@ -4,7 +4,7 @@ import _ from 'lodash';
 import 'proxy-polyfill';
 import type { AnyAction, Store, Unsubscribe } from 'redux';
 
-import type { DrilldownHandler } from 'cloudify-ui-components';
+import type { DrilldownHandler } from 'cloudify-ui-components/toolbox';
 import { drillDownToPage } from '../actions/drilldownPage';
 import { selectHomePage, selectPageByName, selectParentPage } from '../actions/pageMenu';
 

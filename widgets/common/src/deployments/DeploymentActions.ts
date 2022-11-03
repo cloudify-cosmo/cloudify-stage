@@ -1,4 +1,4 @@
-import type { Manager } from 'cloudify-ui-components';
+import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
 import type { Label } from '../labels/types';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import type { Callback, EventBus } from 'cloudify-ui-components';
+import type { Callback, EventBus } from 'cloudify-ui-components/toolbox';
 
 const events: Record<string, [Callback, any][]> = {};
 

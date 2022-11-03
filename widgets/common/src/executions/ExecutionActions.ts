@@ -1,4 +1,4 @@
-import type { Manager } from 'cloudify-ui-components';
+import type { Manager } from 'cloudify-ui-components/toolbox';
 
 export default class ExecutionActions {
     constructor(private manager: Manager) {}
