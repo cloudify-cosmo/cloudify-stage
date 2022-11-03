@@ -32,7 +32,11 @@ describe('User configuration', () => {
 
         it('logo', () => {
             cy.log('Verifying logoUrl...');
-            cy.get('.loginContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
+            cy.location('protocol').then(protocol =>
+                cy
+                    .get('.loginContainer .logo')
+                    .should('have.css', 'background-image', `url("${protocol}//test.com/logo.png")`)
+            );
         });
 
         it('colors', () => {
