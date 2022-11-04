@@ -64,7 +64,7 @@ describe('Blueprints catalog widget', () => {
             'blueprintsCatalog'
         );
         cy.usePageMock('blueprintCatalog', {
-            jsonPath: 'test', // this is not used, but it is required to avoid using default mock
+            jsonPath: 'test', // this is required to avoid using default mock
             displayStyle: 'catalog',
             fieldsToShow: ['Name', 'Description']
         }).mockLogin();
