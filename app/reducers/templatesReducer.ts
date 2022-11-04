@@ -2,11 +2,9 @@ import _ from 'lodash';
 import type { Reducer } from 'redux';
 import type { PageDefinition } from '../actions/page';
 import { ActionType } from '../actions/types';
-import type { TemplateAction } from '../actions/templateManagement/templates';
-import type { PageAction } from '../actions/templateManagement/pages';
-import type { PageGroupAction } from '../actions/templateManagement/pageGroups';
 import type { LayoutDefinitionsAction } from '../actions/layoutDefinitions';
 import type { LayoutDefinitions } from '../utils/layoutDefinitionsLoader';
+import type { TemplateManagementAction } from '../actions/templateManagement';
 
 export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 
@@ -16,7 +14,7 @@ export interface TemplatesState {
     pageGroupsDef: LayoutDefinitions['pageGroupsDef'];
 }
 
-type TemplatesActions = LayoutDefinitionsAction | TemplateAction | PageAction | PageGroupAction;
+type TemplatesActions = LayoutDefinitionsAction | TemplateManagementAction;
 
 const templates: Reducer<TemplatesState, TemplatesActions> = (
     state = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} },
