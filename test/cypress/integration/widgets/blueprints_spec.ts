@@ -53,13 +53,14 @@ describe('Blueprints widget', () => {
         });
 
         it('should not show the "Edit a copy in Composer" button if it is turned off in the configuration', () => {
-            cy.editWidgetConfiguration('blueprints', () => {
-                cy.getField('Show Composer options')
+            cy.editWidgetConfiguration('blueprints', () =>
+                cy
+                    .getField('Show Composer options')
                     .find('input')
                     // NOTE: force, as the checkbox from Semantic UI is
                     // class=hidden which prevents Cypress from clicking it
-                    .click({ force: true });
-            });
+                    .click({ force: true })
+            );
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 

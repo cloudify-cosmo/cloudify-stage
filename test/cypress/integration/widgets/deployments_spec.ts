@@ -160,9 +160,9 @@ describe('Deployments widget', () => {
 
             cy.refreshPage();
 
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName);
-            });
+            cy.editWidgetConfiguration('deployments', () =>
+                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
+            );
 
             cy.wait('@getFilteredDeployments');
         });
@@ -173,7 +173,7 @@ describe('Deployments widget', () => {
 
             cy.editWidgetConfiguration('deployments', () => {
                 cy.get('div[name="displayStyle"]').click();
-                cy.get('div[option-value="list"]').click();
+                return cy.get('div[option-value="list"]').click();
             });
 
             cy.get('table.deploymentsTable').should('not.exist');

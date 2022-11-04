@@ -18,7 +18,7 @@ import 'cypress-file-upload';
 import 'cypress-get-table';
 import 'cypress-localstorage-commands';
 import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import { castArray, isString, noop } from 'lodash';
+import { castArray, isString } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -386,7 +386,7 @@ const commands = {
             // TODO(RD-1820): Currently we don't supply widget's default configuration when rendering.
             // In order to load default configuration for widget widget edit configuration modal should be opened
             // and configuration saved without making any changes
-            .editWidgetConfiguration(widgetId, noop),
+            .editWidgetConfiguration(widgetId, () => cy.wrap(true)),
     refreshPage: () => {
         cy.get('.pageMenuItem.active').click({ force: true });
         return collapseSidebar();

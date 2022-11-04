@@ -42,37 +42,41 @@ const commands = {
 
         return cy.exitEditMode();
     },
-    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void, save = true) => {
+    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => Cypress.Chainable, save = true) => {
         cy.enterEditMode();
 
         cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
         cy.get('.editWidgetModal').within(() => {
-            fnWithinEditWidgetModal();
-            cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
-            cy.get(`button${save ? '.ok' : '.cancel'}`).click();
-            cy.wait('@uaSaveRequest');
+            fnWithinEditWidgetModal().then(editSubject => {
+                if (editSubject && save) {
+                    cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
+                    cy.get(`button.ok`).click();
+                    cy.wait('@uaSaveRequest');
+                } else {
+                    cy.get(`button.cancel`).click();
+                }
+            });
         });
 
         return cy.exitEditMode();
     },
-    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName)
+    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) => {
+        cy.editWidgetConfiguration(widgetId, () =>
+            cy
+                .getField(fieldName)
                 .find('div.checkbox')
                 .as('toggle')
                 .then($div => {
                     if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
-                        cy.get('@toggle').click();
-                });
-        }),
+                        return cy.get('@toggle').click();
+                    return null;
+                })
+        );
+    },
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName).find('input').clear().type(value);
-        }),
+        cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.setSearchableDropdownValue(fieldName, value);
-        })
+        cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(fieldName, value))
 };
 
 addCommands(commands);

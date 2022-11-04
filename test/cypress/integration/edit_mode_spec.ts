@@ -277,7 +277,7 @@ describe('Edit mode', () => {
             cy.log('Verifying request service');
             cy.editWidgetConfiguration(widgetId, () => {
                 cy.get('div[name="service"]').click();
-                cy.get('div[option-value="request"]').click();
+                return cy.get('div[option-value="request"]').click();
             });
             cy.get('input[name="url"]').type(url);
             cy.contains('Fire').click();

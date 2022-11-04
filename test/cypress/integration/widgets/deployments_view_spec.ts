@@ -112,7 +112,7 @@ describe('Deployments View widget', () => {
                 widgetConfigurationHelpers.getFieldsDropdown().within(() => {
                     cy.get('[role="option"]').contains('Blueprint name').click();
                 });
-                widgetConfigurationHelpers.toggleFieldsDropdown();
+                return widgetConfigurationHelpers.toggleFieldsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
@@ -133,7 +133,7 @@ describe('Deployments View widget', () => {
 
             cy.editWidgetConfiguration(widgetId, () => {
                 // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
-                widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
+                return widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
             });
 
             verifyMapHeight(newHeight);
@@ -371,31 +371,28 @@ describe('Deployments View widget', () => {
             const filterFieldLabel = 'Name of the saved filter to apply';
 
             cy.log('Show only precious deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.setSearchableDropdownValue(filterFieldLabel, filterId);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(filterFieldLabel, filterId));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
 
             cy.log('Show all deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.clearSearchableDropdown(filterFieldLabel);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.clearSearchableDropdown(filterFieldLabel));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
 
             cy.log('Invalid filter id');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.getField(filterFieldLabel)
+            cy.editWidgetConfiguration(widgetId, () =>
+                cy
+                    .getField(filterFieldLabel)
                     .click()
                     .within(() => {
                         cy.get('input').type('some-very-gibberish-filter-id');
                         // NOTE: there should not be such a filter
                         cy.contains('No results found');
-                    });
-            });
+                    })
+            );
         });
 
         it('should return an error when the filter ID saved in the configuration is invalid', () => {

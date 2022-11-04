@@ -131,9 +131,7 @@ describe('Tokens widget', () => {
 
         cy.contains(expiredToken.value).should('not.exist');
 
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.get('input[name=showExpiredTokens]').parent().click();
-        });
+        cy.editWidgetConfiguration(widgetId, () => cy.get('input[name=showExpiredTokens]').parent().click());
 
         cy.contains(expiredToken.value).should('exist');
     });

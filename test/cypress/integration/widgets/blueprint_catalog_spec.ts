@@ -39,9 +39,7 @@ describe('Blueprints catalog widget', () => {
     });
 
     it('should allow to change display style', () => {
-        cy.editWidgetConfiguration('blueprintCatalog', () => {
-            cy.setMultipleDropdownValues('Display style', ['Table']);
-        });
+        cy.editWidgetConfiguration('blueprintCatalog', () => cy.setMultipleDropdownValues('Display style', ['Table']));
 
         cy.get('.blueprintCatalogWidget table').should('be.visible');
     });
@@ -49,7 +47,7 @@ describe('Blueprints catalog widget', () => {
     it('should allow to customize fields to show', () => {
         cy.editWidgetConfiguration('blueprintCatalog', () => {
             cy.clearMultipleDropdown('List of fields to show');
-            cy.setMultipleDropdownValues('List of fields to show', ['Name', 'Created']);
+            return cy.setMultipleDropdownValues('List of fields to show', ['Name', 'Created']);
         });
         cy.get('.blueprintCatalogWidget').within(() => {
             cy.contains('Name').should('be.visible');
