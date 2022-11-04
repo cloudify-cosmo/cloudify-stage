@@ -33,8 +33,7 @@ function setInstallWidget(widgetDefinition: WidgetDefinition): InstallWidgetActi
 }
 
 export function installWidget(
-    // TODO(RD-5591): Add proper type
-    widgetFile: any,
+    widgetFile: File | null,
     widgetUrl: string
 ): ReduxThunkAction<Promise<InstallWidgetAction>, InstallWidgetAction> {
     return (dispatch, getState) =>
@@ -75,8 +74,7 @@ export function updateWidgetDefinition(
 
 export function replaceWidget(
     widgetId: string,
-    // TODO(RD-5591): Add proper type
-    widgetFile: any,
+    widgetFile: File | null,
     widgetUrl: string
 ): ReduxThunkAction<Promise<UpdateWidgetDefinitionAction>, UpdateWidgetDefinitionAction> {
     return (dispatch, getState) =>

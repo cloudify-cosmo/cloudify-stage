@@ -3,7 +3,6 @@ import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import type { PageDefinition } from './page';
 import type { PageMenuItem } from './pageMenu';
 import { createPagesFromTemplate } from './pageMenu';
 import type { SetAppErrorAction, SetAppLoadingAction } from './app';
@@ -98,20 +97,19 @@ export function reloadUserAppData(): ReduxThunkAction<
         dispatch(setAppLoading(true));
 
         return dispatch(loadOrCreateUserAppData()).then(() => {
-            const getPageById = (pages: PageMenuItem[], pageId?: string | null) => {
-                // TODO(RD-5591): I suspect a bug here. We should probably take into account Page Groups as well
-                return _.find(pages, { id: pageId }) as PageDefinition | undefined;
+            const getPageMenuItemById = (pages: PageMenuItem[], pageId?: string | null) => {
+                return _.find(pages, { id: pageId }) as PageMenuItem | undefined;
             };
 
             const state = getState();
             const { currentPageId } = state.app;
             const { pages } = state;
-            const page = getPageById(pages, currentPageId);
+            const page = getPageMenuItemById(pages, currentPageId);
 
             if (!page) {
                 dispatch(push(Consts.PAGE_PATH.HOME));
-            } else if (page.isDrillDown) {
-                const parent = getPageById(pages, page.parent);
+            } else if (page && page.type === 'page' && page.isDrillDown) {
+                const parent = getPageMenuItemById(pages, page.parent);
                 if (!parent) {
                     dispatch(push(Consts.PAGE_PATH.HOME));
                 } else {

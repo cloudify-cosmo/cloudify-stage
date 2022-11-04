@@ -5,10 +5,10 @@ import type { WidgetDataAction } from '../actions/widgetData';
 
 export interface WidgetData {
     id: string;
-    data: any; // TODO(RD-5591): Add more strict type
+    data: any;
     loading: boolean;
     canceled: boolean;
-    error: any; // TODO(RD-5591): Add more strict type
+    error: any;
     recievedAt?: number;
 }
 export type WidgetDataState = WidgetData[];

@@ -130,7 +130,7 @@ export default class WidgetDefinitionsLoader {
         ]).then(results => results[1].map(widget => ({ ...widget, loaded: false })));
     }
 
-    private static installWidget(widgetFile: any, widgetUrl: any, manager: any) {
+    private static installWidget(widgetFile: File | null, widgetUrl: string, manager: any) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -148,7 +148,12 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    private static updateWidget(widgetId: any, widgetFile: any, widgetUrl: any, manager: any): Promise<WidgetListItem> {
+    private static updateWidget(
+        widgetId: string,
+        widgetFile: File | null,
+        widgetUrl: string,
+        manager: any
+    ): Promise<WidgetListItem> {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -164,7 +169,7 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    private static validateWidget(widgetId: any, manager: any) {
+    private static validateWidget(widgetId: string, manager: any) {
         const errors = [];
 
         if (_.isEmpty(bundleLoadedWidgets)) {
@@ -231,7 +236,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve();
     }
 
-    public static install(widgetFile: any, widgetUrl: any, manager: any) {
+    public static install(widgetFile: File | null, widgetUrl: string, manager: any) {
         let widgetData: any = {};
 
         return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
@@ -249,7 +254,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    public static update(widgetId: any, widgetFile: any, widgetUrl: any, manager: any) {
+    public static update(widgetId: string, widgetFile: File | null, widgetUrl: string, manager: any) {
         const widgetData: any = {};
 
         return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
@@ -264,7 +269,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    public static uninstall(widgetId: any, manager: any) {
+    public static uninstall(widgetId: string, manager: any) {
         const internal = new Internal(manager);
         return internal.doDelete(`/widgets/${widgetId}`);
     }

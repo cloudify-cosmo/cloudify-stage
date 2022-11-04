@@ -71,13 +71,13 @@ export interface UpdateTemplateData extends CreateTemplateData {
     oldId: string;
 }
 
-export interface PageGroupFileContent extends CommonFileContent {
+export interface PageGroupFileContent<I = string> extends CommonFileContent {
     name: string;
-    icon: string;
+    icon: I;
     pages: string[];
 }
 
-export type PageGroup = Required<PageGroupFileContent>;
+export type PageGroup<I = string> = Required<PageGroupFileContent<I>>;
 
 export interface CreatePageGroupData {
     id: string;

@@ -24,11 +24,13 @@ function fetchResource<Resource extends ArrayElement<GetTemplatesResponse | GetP
         .doGet<Resource[]>(`/templates${resourceUrl}`)
         .then(resources => keyBy(resources, 'id'));
 }
-
+export type LayoutTemplateDefinition = Template['data'];
+export type LayoutPageDefinition = { name: Page['name'] } & Page<SimpleWidgetObj, SemanticICONS>['data'];
+export type LayoutPageGroupDefinition = Pick<PageGroup<SemanticICONS>, 'name' | 'icon' | 'pages'>;
 export interface LayoutDefinitions {
-    templatesDef: Record<string, Template['data']>;
-    pagesDef: Record<string, { name: Page['name'] } & Page<SimpleWidgetObj, SemanticICONS>['data']>;
-    pageGroupsDef: Record<string, Pick<PageGroup, 'name' | 'icon' | 'pages'>>;
+    templatesDef: Record<string, LayoutTemplateDefinition>;
+    pagesDef: Record<string, LayoutPageDefinition>;
+    pageGroupsDef: Record<string, LayoutPageGroupDefinition>;
 }
 export const emptyLayoutDefinitions = { templatesDef: {}, pagesDef: {}, pageGroupsDef: {} };
 

@@ -10,7 +10,6 @@ import type WidgetParamsHandler from '../utils/WidgetParamsHandler';
 
 export type FetchWidgetRequestAction = PayloadAction<string, ActionType.FETCH_WIDGET_REQUEST>;
 export type FetchWidgetFailureAction = PayloadAction<{ widgetId: string; error: any }, ActionType.FETCH_WIDGET_FAILURE>;
-// TODO(RD-5591): Improve `data` type
 export type FetchWidgetSuccessAction = PayloadAction<
     { widgetId: string; data: any; receivedAt: number },
     ActionType.FETCH_WIDGET_SUCCESS

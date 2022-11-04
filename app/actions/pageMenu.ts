@@ -35,6 +35,7 @@ export interface PageGroup {
 export type PageMenuItem = PageDefinition | PageGroup;
 
 export type AddPageAction = PayloadAction<{ page: Partial<PageDefinition>; newPageId: string }, ActionType.ADD_PAGE>;
+// TODO(RD-5591): Fix any
 export type AddPageGroupAction = PayloadAction<{ pageGroup: any; id: string }, ActionType.ADD_PAGE_GROUP>;
 export type AddPageToGroupAction = PayloadAction<{ pageGroupId: string; pageId: string }, ActionType.ADD_PAGE_TO_GROUP>;
 export type CreateDrilldownPageAction = PayloadAction<
@@ -71,7 +72,7 @@ export function createPage(page: Partial<PageDefinition>, newPageId: string): Ad
         payload: { page, newPageId }
     };
 }
-// TODO: Fix any
+
 function createPageGroup(pageGroup: any, id: string): AddPageGroupAction {
     return {
         type: ActionType.ADD_PAGE_GROUP,
