@@ -59,10 +59,16 @@ describe('Blueprints catalog widget', () => {
         });
     });
 
-    it.only('should have segment with correct icons', () => {
-        cy.intercept('/console/external/content?url*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
+    it('should have segment with correct icons', () => {
+        cy.usePageMock('blueprintCatalog', {
+            jsonPath: 'test', // this i
+            displayStyle: 'catalog',
+            fieldsToShow: ['Name', 'Description']
+        }).mockLogin();
+        cy.intercept('/console/external/content*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
             'blueprintsCatalog'
         );
+        cy.refreshPage();
         cy.wait('@blueprintsCatalog');
         const iconNames = ['gitlab', 'bitbucket', 'git'];
         const selectorMatch = (selector: string) => {
