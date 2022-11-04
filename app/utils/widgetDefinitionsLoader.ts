@@ -25,6 +25,7 @@ import type {
     PutWidgetsResponse
 } from '../../backend/routes/Widgets.types';
 import type { WidgetData } from '../../backend/handler/WidgetsHandler.types';
+import type { ManagerData } from '../reducers/managerReducer';
 
 let bundleLoadedWidgets: WidgetDefinition<any, any, any>[] = [];
 
@@ -122,7 +123,7 @@ export default class WidgetDefinitionsLoader {
         return widgetDefinition;
     }
 
-    public static load(manager: any): Promise<SimpleWidgetDefinition[]> {
+    public static load(manager: ManagerData): Promise<SimpleWidgetDefinition[]> {
         const internal = new Internal(manager);
         return Promise.all([
             new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
@@ -130,7 +131,7 @@ export default class WidgetDefinitionsLoader {
         ]).then(results => results[1].map(widget => ({ ...widget, loaded: false })));
     }
 
-    private static installWidget(widgetFile: File | null, widgetUrl: string, manager: any) {
+    private static installWidget(widgetFile: File | null, widgetUrl: string, manager: ManagerData) {
         const internal = new Internal(manager);
 
         if (widgetUrl) {
@@ -152,7 +153,7 @@ export default class WidgetDefinitionsLoader {
         widgetId: string,
         widgetFile: File | null,
         widgetUrl: string,
-        manager: any
+        manager: ManagerData
     ): Promise<WidgetListItem> {
         const internal = new Internal(manager);
 
@@ -169,7 +170,7 @@ export default class WidgetDefinitionsLoader {
         });
     }
 
-    private static validateWidget(widgetId: string, manager: any) {
+    private static validateWidget(widgetId: string, manager: ManagerData) {
         const errors = [];
 
         if (_.isEmpty(bundleLoadedWidgets)) {
@@ -236,7 +237,7 @@ export default class WidgetDefinitionsLoader {
         return Promise.resolve();
     }
 
-    public static install(widgetFile: File | null, widgetUrl: string, manager: any) {
+    public static install(widgetFile: File | null, widgetUrl: string, manager: ManagerData) {
         let widgetData: any = {};
 
         return WidgetDefinitionsLoader.installWidget(widgetFile, widgetUrl, manager)
@@ -254,7 +255,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    public static update(widgetId: string, widgetFile: File | null, widgetUrl: string, manager: any) {
+    public static update(widgetId: string, widgetFile: File | null, widgetUrl: string, manager: ManagerData) {
         const widgetData: any = {};
 
         return WidgetDefinitionsLoader.updateWidget(widgetId, widgetFile, widgetUrl, manager)
@@ -269,7 +270,7 @@ export default class WidgetDefinitionsLoader {
             });
     }
 
-    public static uninstall(widgetId: string, manager: any) {
+    public static uninstall(widgetId: string, manager: ManagerData) {
         const internal = new Internal(manager);
         return internal.doDelete(`/widgets/${widgetId}`);
     }
