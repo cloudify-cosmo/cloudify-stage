@@ -4,12 +4,21 @@ import { ActionType } from '../actions/types';
 import type { TemplateManagementAction } from '../actions/templateManagement';
 
 export interface TemplateManagementState {
-    showDrillDownWarn?: boolean;
-    isActive?: boolean;
-    isPageEditMode?: boolean;
+    showDrillDownWarn: boolean;
+    isActive: boolean;
+    isPageEditMode: boolean;
 }
 
-const templates: Reducer<TemplateManagementState, TemplateManagementAction> = (state = {}, action) => {
+const initialTemplateManagementState: TemplateManagementState = {
+    showDrillDownWarn: false,
+    isActive: false,
+    isPageEditMode: false
+};
+
+const templates: Reducer<TemplateManagementState, TemplateManagementAction> = (
+    state = initialTemplateManagementState,
+    action
+) => {
     switch (action.type) {
         case ActionType.PAGE_MANAGEMENT_DRILLDOWN_WARN:
             return { ...state, showDrillDownWarn: action.payload };
