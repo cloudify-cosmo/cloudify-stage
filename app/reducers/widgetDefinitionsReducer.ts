@@ -39,8 +39,19 @@ const widgetDefinitionsReducer: Reducer<WidgetDefinitionsState, WidgetDefinition
         case ActionType.INSTALL_WIDGET:
             return _.sortBy([...state, { ...action.payload, isCustom: true }], ['name']);
         case ActionType.UPDATE_WIDGET_DEFINITION: {
-            const defs = _.reject(state, { id: action.payload.widgetId });
-            return _.sortBy([...defs, { ...action.payload.widgetDefinition, isCustom: true }], ['name']);
+            const { widgetId } = action.payload;
+            const updatedWidgetDefinition = _.find(state, { id: widgetId });
+            if (updatedWidgetDefinition) {
+                const widgetDefinitionsWithoutUpdatedWidget = _.reject(state, { id: widgetId });
+                return _.sortBy(
+                    [
+                        ...widgetDefinitionsWithoutUpdatedWidget,
+                        { ...action.payload.widgetDefinition, isCustom: updatedWidgetDefinition.isCustom }
+                    ],
+                    ['name']
+                );
+            }
+            return state;
         }
         case ActionType.UNINSTALL_WIDGET:
             return _.reject(state, { id: action.payload });

@@ -45,7 +45,7 @@ const tabs: Reducer<TabContent[], TabAction | AddWidgetAction> = (state = [], ac
             }
             updatedTabs[action.payload.tabIndex] = {
                 ...updatedTabs[action.payload.tabIndex],
-                ..._.pick(action, 'name', 'isDefault')
+                ..._.pick(action.payload, 'name', 'isDefault')
             };
             return updatedTabs;
         }
