@@ -81,7 +81,7 @@ Stage.defineWidget({
     },
 
     async fetchData(widget, toolbox, params) {
-        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox).doGetDeployments(
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
                 _include:
                     'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -101,7 +101,7 @@ Stage.defineWidget({
         const latestExecutionsDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.latest_execution))
             .then(ids =>
-                new Stage.Common.Executions.Actions(toolbox).doGetAll({
+                new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll({
                     _include:
                         'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
                     id: ids
