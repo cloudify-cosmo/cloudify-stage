@@ -1,10 +1,9 @@
-import type { AnyAction, Reducer, ReducersMapObject } from 'redux';
+import type { Reducer, ReducersMapObject } from 'redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import type { ReduxState } from 'reducers';
 import { parse } from 'query-string';
-import type { ThunkDispatch } from 'redux-thunk';
 import type { CallHistoryMethodAction } from 'connected-react-router';
 
 import { ActionType } from 'actions/types';
@@ -23,9 +22,9 @@ import type { AddWidgetAction, MinimizeTabWidgetsAction } from 'actions/widgets'
 import type { SetDrilldownContextAction } from 'actions/drilldownContext';
 import type { ClearWidgetDataAction } from 'actions/widgetData';
 import type { EnhancedWidgetDefinition } from 'actions/widgetDefinitions';
-import type { ReduxStore } from 'configureStore';
+import type { ReduxStore, ReduxThunkDispatch } from 'configureStore';
 
-const mockStore = configureMockStore<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>([thunk]);
+const mockStore = configureMockStore<Partial<ReduxState>, ReduxThunkDispatch>([thunk]);
 
 jest.mock('utils/widgetDefinitionsLoader', () => ({
     loadWidget: () => ({ id: 'widget1' })
