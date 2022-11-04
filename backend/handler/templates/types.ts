@@ -71,13 +71,13 @@ export interface UpdateTemplateData extends CreateTemplateData {
     oldId: string;
 }
 
-export interface PageGroupFileContent<I = string> extends CommonFileContent {
+export interface PageGroupFileContent<Icon = string> extends CommonFileContent {
     name: string;
-    icon: I;
+    icon: Icon;
     pages: string[];
 }
 
-export type PageGroup<I = string> = Required<PageGroupFileContent<I>>;
+export type PageGroup<Icon = string> = Required<PageGroupFileContent<Icon>>;
 
 export interface CreatePageGroupData {
     id: string;
@@ -88,16 +88,16 @@ export interface CreatePageGroupData {
 
 export type UpdatePageGroupData = CreatePageGroupData;
 
-export interface PageFileContent<WD = WidgetDefinition, I = string> extends CommonFileContent {
+export interface PageFileContent<WD = WidgetDefinition, Icon = string> extends CommonFileContent {
     name: string;
-    icon?: I;
+    icon?: Icon;
     layout: LayoutSection<WD>[];
 }
 
-export interface Page<WD = WidgetDefinition, I = string> extends Required<CommonFileContent>, CommonIdentityData {
+export interface Page<WD = WidgetDefinition, Icon = string> extends Required<CommonFileContent>, CommonIdentityData {
     data: {
-        icon?: PageFileContent<WD, I>['icon'];
-        layout: PageFileContent<WD, I>['layout'];
+        icon?: PageFileContent<WD, Icon>['icon'];
+        layout: PageFileContent<WD, Icon>['layout'];
     };
 }
 
