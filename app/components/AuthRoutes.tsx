@@ -10,6 +10,7 @@ import { useBoolean } from '../utils/hooks';
 import { getTenants } from '../actions/manager/tenants';
 import Auth from '../utils/auth';
 import Consts from '../utils/consts';
+import type { LogoutAction } from '../actions/manager/auth';
 import { getManagerData, getUserData, logout } from '../actions/manager/auth';
 import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
@@ -26,7 +27,7 @@ const AuthRoutes: FunctionComponent = () => {
     );
     const isLicenseRequired = useSelector(state => get(state, 'manager.license.isRequired', false));
     const isProductOperational = useSelector(state => Auth.isProductOperational(get(state, 'manager.license', {})));
-    const dispatch: ReduxThunkDispatch = useDispatch();
+    const dispatch: ReduxThunkDispatch<LogoutAction> = useDispatch();
 
     useEffect(() => {
         SplashLoadingScreen.turnOn();

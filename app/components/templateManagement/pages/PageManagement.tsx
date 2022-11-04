@@ -7,12 +7,15 @@ import PropTypes from 'prop-types';
 import v4 from 'uuid/v4';
 import { arrayMove } from 'react-sortable-hoc';
 
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
+import type { SetTemplateManagementActiveAction } from '../../../actions/templateManagement';
 import { setTemplateManagementActive } from '../../../actions/templateManagement';
+import type { SetPageEditModeAction, SetDrillDownWarningActiveAction } from '../../../actions/templateManagement/pages';
 import { savePage, setDrillDownWarningActive, setPageEditMode } from '../../../actions/templateManagement/pages';
 import StageUtils from '../../../utils/stageUtils';
 import { useErrors } from '../../../utils/hooks';
@@ -39,7 +42,15 @@ const StyledPageContainer = styled.div`
 `;
 
 export default function PageManagement({ pageId, isEditMode = false }: PageManagementProps) {
-    const dispatch = useDispatch<ReduxThunkDispatch>();
+    const dispatch =
+        useDispatch<
+            ReduxThunkDispatch<
+                | SetTemplateManagementActiveAction
+                | SetPageEditModeAction
+                | CallHistoryMethodAction
+                | SetDrillDownWarningActiveAction
+            >
+        >();
     const createPageId = useCreatePageId();
 
     useEffect(() => {

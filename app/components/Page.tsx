@@ -5,9 +5,17 @@ import type { ConnectedProps } from 'react-redux';
 import { connect } from 'react-redux';
 
 import styled from 'styled-components';
+import type { SetConfigEditModeAction } from '../actions/config';
 import { setEditMode } from '../actions/config';
+import type { SetDrilldownContextAction } from '../actions/drilldownContext';
 import { setDrilldownContext } from '../actions/drilldownContext';
-import type { LayoutSection, PageDefinition } from '../actions/page';
+import type {
+    ChangePageDescriptionAction,
+    LayoutSection,
+    LayoutSectionAction,
+    PageDefinition,
+    TabAction
+} from '../actions/page';
 import {
     addLayoutSectionToPage,
     addTab,
@@ -17,7 +25,9 @@ import {
     removeTab,
     updateTab
 } from '../actions/page';
+import type { RenamePageMenuItemAction } from '../actions/pageMenu';
 import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
+import type { WidgetAction } from '../actions/widgets';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import type { ReduxState } from '../reducers';
 import type { DrilldownContext } from '../reducers/drilldownContextReducer';
@@ -178,7 +188,18 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps) => {
+const mapDispatchToProps = (
+    dispatch: ReduxThunkDispatch<
+        | RenamePageMenuItemAction
+        | ChangePageDescriptionAction
+        | SetDrilldownContextAction
+        | WidgetAction
+        | TabAction
+        | LayoutSectionAction
+        | SetConfigEditModeAction
+    >,
+    ownProps: PageOwnProps
+) => {
     return {
         onPageNameChange: (page: PageDefinition, newName: string) => {
             dispatch(changePageMenuItemName(page.id, newName));
