@@ -167,8 +167,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
                 }
-                const propsTitle = info.node.title as any;
-                setFilename(propsTitle?.props.children[1]);
+                const propsTitle = info.node.title as JSX.Element;
+                setFilename(propsTitle.props.children[1]);
                 setType(fileType);
                 clearError();
             })
