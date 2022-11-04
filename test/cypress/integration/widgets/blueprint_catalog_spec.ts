@@ -60,7 +60,9 @@ describe('Blueprints catalog widget', () => {
     });
 
     it.only('should have segment with correct icons', () => {
-        cy.intercept('/console/external/content?url*', { fixture: 'blueprints/blueprintsCatalog.json' });
+        cy.intercept('/console/external/content?url*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
+            'blueprintsCatalog'
+        );
         cy.wait('@blueprintsCatalog');
         const iconNames = ['gitlab', 'bitbucket', 'git'];
         const selectorMatch = (selector: string) => {
