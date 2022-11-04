@@ -39,17 +39,17 @@ export interface PageDefinition extends Omit<AppDataPage, 'icon' | 'layout'> {
     layout: LayoutSection[];
 }
 
-export type AddTabAction = PayloadAction<{ pageId: string; layoutSection: number }, ActionType.ADD_TAB>;
+export type AddTabAction = PayloadAction<{ pageId: string; layoutSectionIndex: number }, ActionType.ADD_TAB>;
 export type RemoveTabAction = PayloadAction<
-    { pageId: string; layoutSection: number; tabIndex: number },
+    { pageId: string; layoutSectionIndex: number; tabIndex: number },
     ActionType.REMOVE_TAB
 >;
 export type UpdateTabAction = PayloadAction<
-    { pageId: string; layoutSection: number; tabIndex: number; name: string; isDefault: boolean },
+    { pageId: string; layoutSectionIndex: number; tabIndex: number; name: string; isDefault: boolean },
     ActionType.UPDATE_TAB
 >;
 export type MoveTabAction = PayloadAction<
-    { pageId: string; layoutSection: number; oldTabIndex: number; newTabIndex: number },
+    { pageId: string; layoutSectionIndex: number; oldTabIndex: number; newTabIndex: number },
     ActionType.MOVE_TAB
 >;
 export type ChangePageDescriptionAction = PayloadAction<
@@ -57,53 +57,53 @@ export type ChangePageDescriptionAction = PayloadAction<
     ActionType.CHANGE_PAGE_DESCRIPTION
 >;
 export type AddLayoutSectionAction = PayloadAction<
-    { pageId: string; layoutSection: LayoutSection; position: number },
+    { pageId: string; layoutSection: LayoutSection; index: number },
     ActionType.ADD_LAYOUT_SECTION
 >;
 export type RemoveLayoutSectionAction = PayloadAction<
-    { pageId: string; layoutSection: number },
+    { pageId: string; layoutSectionIndex: number },
     ActionType.REMOVE_LAYOUT_SECTION
 >;
 
 export type TabAction = AddTabAction | RemoveTabAction | UpdateTabAction | MoveTabAction;
 export type LayoutSectionAction = ChangePageDescriptionAction | AddLayoutSectionAction | RemoveLayoutSectionAction;
 
-export function addTab(pageId: string, layoutSection: number): AddTabAction {
+export function addTab(pageId: string, layoutSectionIndex: number): AddTabAction {
     return {
         type: ActionType.ADD_TAB,
-        payload: { pageId, layoutSection }
+        payload: { pageId, layoutSectionIndex }
     } as const;
 }
 
-export function removeTab(pageId: string, layoutSection: number, tabIndex: number): RemoveTabAction {
+export function removeTab(pageId: string, layoutSectionIndex: number, tabIndex: number): RemoveTabAction {
     return {
         type: ActionType.REMOVE_TAB,
-        payload: { pageId, layoutSection, tabIndex }
+        payload: { pageId, layoutSectionIndex, tabIndex }
     } as const;
 }
 
 export function updateTab(
     pageId: string,
-    layoutSection: number,
+    layoutSectionIndex: number,
     tabIndex: number,
     name: string,
     isDefault: boolean
 ): UpdateTabAction {
     return {
         type: ActionType.UPDATE_TAB,
-        payload: { pageId, layoutSection, tabIndex, name, isDefault }
+        payload: { pageId, layoutSectionIndex, tabIndex, name, isDefault }
     } as const;
 }
 
 export function moveTab(
     pageId: string,
-    layoutSection: number,
+    layoutSectionIndex: number,
     oldTabIndex: number,
     newTabIndex: number
 ): MoveTabAction {
     return {
         type: ActionType.MOVE_TAB,
-        payload: { pageId, layoutSection, oldTabIndex, newTabIndex }
+        payload: { pageId, layoutSectionIndex, oldTabIndex, newTabIndex }
     } as const;
 }
 
@@ -179,17 +179,17 @@ export function addLayoutToPage(page: Pick<PageDefinition, 'layout'>, pageId: st
 export function addLayoutSectionToPage(
     pageId: string,
     layoutSection: LayoutSection,
-    position: number
+    index: number
 ): AddLayoutSectionAction {
     return {
         type: ActionType.ADD_LAYOUT_SECTION,
-        payload: { pageId, layoutSection, position }
+        payload: { pageId, layoutSection, index }
     };
 }
 
-export function removeLayoutSectionFromPage(pageId: string, layoutSection: number): RemoveLayoutSectionAction {
+export function removeLayoutSectionFromPage(pageId: string, layoutSectionIndex: number): RemoveLayoutSectionAction {
     return {
         type: ActionType.REMOVE_LAYOUT_SECTION,
-        payload: { pageId, layoutSection }
+        payload: { pageId, layoutSectionIndex }
     };
 }

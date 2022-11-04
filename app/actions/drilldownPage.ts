@@ -9,14 +9,14 @@ import type { TemplatePageDefinition } from '../reducers/templatesReducer';
 import type { Widget } from '../utils/StageAPI';
 
 export type AddDrilldownPageAction = PayloadAction<
-    { widgetId: string; drillDownName: string; drillDownPageId: string; parentPageId?: string },
+    { widgetId: string; drillDownPageName: string; drillDownPageId: string; parentPageId?: string },
     ActionType.ADD_DRILLDOWN_PAGE
 >;
 export type DrilldownPageAction = AddDrilldownPageAction;
 
 export function addWidgetDrilldownPage(
     widgetId: string,
-    drillDownName: string,
+    drillDownPageName: string,
     drillDownPageId: string
 ): AddDrilldownPageAction {
     return {
@@ -24,7 +24,7 @@ export function addWidgetDrilldownPage(
         payload: {
             widgetId,
             drillDownPageId,
-            drillDownName
+            drillDownPageName
         }
     };
 }

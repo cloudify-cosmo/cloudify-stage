@@ -120,13 +120,13 @@ const pageMenuItemReducer: Reducer<
 
         case ActionType.ADD_LAYOUT_SECTION: {
             if (state?.type === 'page') {
-                const position = _.isNil(action.payload.position) ? _.size(state?.layout) : action.payload.position;
+                const index = _.isNil(action.payload.index) ? _.size(state?.layout) : action.payload.index;
                 const page: PageDefinition = {
                     ...state,
                     layout: [
-                        ..._.slice(state.layout, 0, position),
+                        ..._.slice(state.layout, 0, index),
                         action.payload.layoutSection,
-                        ..._.slice(state.layout, position)
+                        ..._.slice(state.layout, index)
                     ]
                 };
                 return page;
@@ -136,7 +136,7 @@ const pageMenuItemReducer: Reducer<
         case ActionType.REMOVE_LAYOUT_SECTION:
             if (state?.type === 'page') {
                 const pageMenuItem = _.cloneDeep(state);
-                const layoutSectionToRemove = _.nth(state.layout, action.payload.layoutSection);
+                const layoutSectionToRemove = _.nth(state.layout, action.payload.layoutSectionIndex);
                 if (layoutSectionToRemove) {
                     pageMenuItem.layout = _.without(state.layout, layoutSectionToRemove);
                 }
@@ -181,10 +181,10 @@ const pageMenuItemReducer: Reducer<
             if (state?.type === 'page') {
                 return {
                     ...state,
-                    layout: _.map(state?.layout, (layoutSection, layoutSectionIdx: number) => {
+                    layout: _.map(state?.layout, (layoutSection, layoutSectionIndex: number) => {
                         if (
                             layoutSection.type === Consts.LAYOUT_TYPE.TABS &&
-                            layoutSectionIdx === action.payload.layoutSection
+                            layoutSectionIndex === action.payload.layoutSectionIndex
                         )
                             return { ...layoutSection, content: tabs(layoutSection.content, action) };
                         return layoutSection;

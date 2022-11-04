@@ -97,19 +97,18 @@ export function reloadUserAppData(): ReduxThunkAction<
         dispatch(setAppLoading(true));
 
         return dispatch(loadOrCreateUserAppData()).then(() => {
-            const getPageMenuItemById = (pages: PageMenuItem[], pageId?: string | null) => {
-                return _.find(pages, { id: pageId }) as PageMenuItem | undefined;
-            };
+            const getPageMenuItemById = (pageMenuItems: PageMenuItem[], id?: string | null) =>
+                _.find(pageMenuItems, { id }) as PageMenuItem | undefined;
 
             const state = getState();
             const { currentPageId } = state.app;
-            const { pages } = state;
-            const page = getPageMenuItemById(pages, currentPageId);
+            const { pages: pageMenuItems } = state;
+            const pageMenuItem = getPageMenuItemById(pageMenuItems, currentPageId);
 
-            if (!page) {
+            if (!pageMenuItem) {
                 dispatch(push(Consts.PAGE_PATH.HOME));
-            } else if (page && page.type === 'page' && page.isDrillDown) {
-                const parent = getPageMenuItemById(pages, page.parent);
+            } else if (pageMenuItem && pageMenuItem.type === 'page' && pageMenuItem.isDrillDown) {
+                const parent = getPageMenuItemById(pageMenuItems, pageMenuItem.parent);
                 if (!parent) {
                     dispatch(push(Consts.PAGE_PATH.HOME));
                 } else {

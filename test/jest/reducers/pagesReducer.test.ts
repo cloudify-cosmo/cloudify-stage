@@ -144,7 +144,7 @@ describe('(Reducer) Pages', () => {
                     type: ActionType.ADD_DRILLDOWN_PAGE,
                     payload: {
                         widgetId: '1',
-                        drillDownName: 'tmp1',
+                        drillDownPageName: 'tmp1',
                         drillDownPageId: 'tmp_1'
                     }
                 },

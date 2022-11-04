@@ -30,7 +30,7 @@ const widget: Reducer<SimpleWidgetObj, WidgetAction | DrilldownPageAction> = (st
             return { ...state, maximized: false };
         case ActionType.ADD_DRILLDOWN_PAGE:
             newState = { ...state, drillDownPages: { ...state?.drillDownPages } };
-            newState.drillDownPages[action.payload.drillDownName] = action.payload.drillDownPageId;
+            newState.drillDownPages[action.payload.drillDownPageName] = action.payload.drillDownPageId;
             return newState;
         default:
             return state;
