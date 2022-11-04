@@ -57,7 +57,7 @@ export function persistPage(page: Page): ReduxThunkAction<Promise<AddPageAction>
 
         const body = _(page).pick('id', 'oldId', 'name', 'icon', 'layout').cloneDeep();
 
-        // @ts-ignore TODO: Seems like it's intentional here to end up with non SimpleWidgetObj type
+        // @ts-ignore TODO(RD-5591): Seems like it's intentional here to end up with non SimpleWidgetObj type
         forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
