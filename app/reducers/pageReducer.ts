@@ -54,7 +54,7 @@ const tabs: Reducer<TabContent[], TabAction | AddWidgetAction> = (state = [], ac
 
         case ActionType.ADD_WIDGET: {
             const updatedTabs = [...state];
-            if (action.payload.tabIndex)
+            if (action.payload.tabIndex !== null)
                 updatedTabs[action.payload.tabIndex] = {
                     ...updatedTabs[action.payload.tabIndex],
                     widgets: widgets(updatedTabs[action.payload.tabIndex].widgets, action)
