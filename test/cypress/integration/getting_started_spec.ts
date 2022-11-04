@@ -200,11 +200,13 @@ describe('Getting started modal', () => {
     });
 
     describe('with mocked pages', () => {
-        beforeEach(() =>
-            cy
-                .usePageMock()
-                .mockLoginWithoutWaiting({ disableGettingStarted: false, visitPage: '/console?cloudSetup=true' })
-        );
+        beforeEach(() => {
+            cy.usePageMock().mockLoginWithoutWaiting({
+                disableGettingStarted: false,
+                visitPage: '/console?cloudSetup=true'
+            });
+            cy.deleteSecrets('');
+        });
 
         it('should install selected environment', () => {
             resetAwsEnvironmentData();
@@ -257,6 +259,7 @@ describe('Getting started modal', () => {
                 cy.contains('button', 'AWS').click();
 
                 verifyHeader(getExpectedSecretsHeader('AWS'));
+                cy.contains('.checkbox', 'Override secrets').click();
                 setSecretValues(awsSecrets);
                 goToNextStep();
 
@@ -441,6 +444,22 @@ describe('Getting started modal', () => {
                 cy.typeToFieldInput('vSphere Port', '111');
                 goToNextStep();
                 cy.get('.error .label').should('not.exist');
+            });
+        });
+
+        it('should disable secrets fields when secrets already exist', () => {
+            cy.get('.modal').within(() => {
+                cy.deleteSecrets('aws');
+                cy.createSecret('aws_access_key_id', 'aaa');
+                cy.createSecret('aws_secret_access_key', 'aaa');
+                goToNextStep();
+                cy.contains('button', 'AWS').click();
+                cy.contains('.message', 'Secrets already exist').should('exist');
+                cy.contains('.field', 'AWS Access Key ID').should('have.class', 'disabled');
+                cy.contains('.checkbox', 'Override secrets').click();
+                cy.contains('.field', 'AWS Access Key ID').should('not.have.class', 'disabled');
+                goToNextStep();
+                cy.contains('aws_access_key_id').parent().should('contain.text', 'secret will be skipped');
             });
         });
 

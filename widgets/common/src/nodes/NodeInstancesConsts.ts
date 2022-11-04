@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { GroupState } from '../components/GroupState';
 
 const groupNames = {
@@ -8,7 +7,7 @@ const groupNames = {
     deleted: 'deleted'
 };
 
-export const groupStates: (GroupState & { states: string[] })[] = [
+export const groupStates: (GroupState & { states: string[]; colorHTML: string })[] = [
     {
         name: groupNames.uninitialized,
         icon: 'cancel',
@@ -49,6 +48,14 @@ export const groupStates: (GroupState & { states: string[] })[] = [
     }
 ];
 
+type InstanceSummaryItem = {
+    /* eslint-disable camelcase */
+    'by state': { state: string; node_instances: number }[];
+    deployment_id: string;
+    node_instances: number;
+    /* eslint-enable camelcase */
+};
+
 /**
  * Extracts states from node instances summary item
  *
@@ -62,10 +69,10 @@ export const groupStates: (GroupState & { states: string[] })[] = [
  *
  * @returns {object} states in the following format { "started": 4, "deleted": 2, ... }
  */
-function extractStatesFrom(instancesSummaryItem) {
+function extractStatesFrom(instancesSummaryItem: InstanceSummaryItem) {
     return _.reduce(
         instancesSummaryItem['by state'],
-        (result, state) => {
+        (result: Record<string, number>, state) => {
             result[state.state] = state.node_instances;
             return result;
         },
@@ -86,7 +93,7 @@ function extractStatesFrom(instancesSummaryItem) {
  *
  * @returns {number} number of node instances
  */
-function extractCountFrom(instancesSummaryItem) {
+function extractCountFrom(instancesSummaryItem: InstanceSummaryItem) {
     return _.get(instancesSummaryItem, 'node_instances', 0);
 }
 

@@ -7,7 +7,7 @@ describe('Blueprints catalog widget', () => {
             .usePageMock('blueprintCatalog', {
                 jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json',
                 displayStyle: 'catalog',
-                fieldsToShow: ['Name', 'Description', 'Created', 'Updated']
+                fieldsToShow: ['Name', 'Description']
             })
             .mockLogin()
             .deleteBlueprints(blueprintName, true)

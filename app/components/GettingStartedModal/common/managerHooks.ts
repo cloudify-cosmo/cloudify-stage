@@ -2,16 +2,9 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import Internal from '../../../utils/Internal';
-import type Manager from '../../../utils/Manager';
 import useManager from '../../../utils/hooks/useManager';
 
 import type { ReduxState } from '../../../reducers';
-
-const getCurrentDistribution = (manager: Manager) => {
-    const currentDistributionName = manager.getDistributionName().trim();
-    const currentDistributionRelease = manager.getDistributionRelease().trim();
-    return `${currentDistributionName.toLowerCase()} ${currentDistributionRelease.toLowerCase()}`;
-};
 
 /**
  * Gets current internal from context.
@@ -28,5 +21,5 @@ export const useInternal = () => {
  */
 export const useCurrentDistribution = () => {
     const manager = useManager();
-    return useMemo(() => getCurrentDistribution(manager), [manager]);
+    return useMemo(() => manager.getDistribution(), [manager]);
 };

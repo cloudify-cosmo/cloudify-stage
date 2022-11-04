@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { combineReducers } from 'redux';
 import { connectRouter } from 'connected-react-router';
 import type { History } from 'history';
@@ -14,7 +12,7 @@ import config from './configReducer';
 import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
-import plugins from './plugins';
+import plugins from './pluginsReducer';
 import formErrors from './formErrorsReducer';
 
 const rootReducer = (history: History) =>
