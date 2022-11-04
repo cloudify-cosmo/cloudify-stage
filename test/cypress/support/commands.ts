@@ -443,7 +443,7 @@ const commands = {
 
     typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
 
-    setSearchableDropdownValue: (fieldName: string, value: string) => {
+    setSearchableDropdownValue: (fieldName: string, value: string): Cypress.Chainable => {
         if (value) {
             return cy
                 .getField(fieldName)
@@ -457,7 +457,10 @@ const commands = {
             .getField(fieldName)
             .find('i.dropdown')
             .then($icon => {
-                if ($icon.hasClass('clear')) cy.clearSearchableDropdown(fieldName);
+                if ($icon.hasClass('clear')) {
+                    return cy.clearSearchableDropdown(fieldName);
+                }
+                return null;
             });
     },
 
