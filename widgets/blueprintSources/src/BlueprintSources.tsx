@@ -1,8 +1,8 @@
+import type { NodesTreeProps } from 'cloudify-ui-components/typings/components/data/NodesTree/NodesTree';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import styled from 'styled-components';
-import type { Key, EventDataNode, DataNode } from 'rc-tree/lib/interface';
 import Actions from './actions';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
@@ -128,16 +128,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         resetType();
     }, [data]);
 
-    function selectFile(
-        selectedKeys: Key[],
-        info: {
-            event: 'select';
-            selected: boolean;
-            node: EventDataNode<DataNode>;
-            selectedNodes: DataNode[];
-            nativeEvent: MouseEvent;
-        }
-    ) {
+    const selectFile: NodesTreeProps['onSelect'] = (selectedKeys, info) => {
         if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.children)) {
             clearContent();
             clearFilename();
@@ -187,7 +178,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 clearFilename();
             })
             .finally(() => toolbox.loading(false));
-    }
+    };
 
     const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
