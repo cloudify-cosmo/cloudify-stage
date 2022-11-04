@@ -213,7 +213,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 mainYamlFilePath === item.key ? (
                     <strong>
                         {item.title}
-                        <Label color="blue" size="mini" style={{ marginLeft: 8 }}>
+                        <Label color="blue" size="mini" style={{ marginLeft: 8, position: 'relative', top: -2 }}>
                             Main
                         </Label>
                     </strong>
