@@ -5,8 +5,7 @@ describe('Blueprints catalog widget', () => {
         cy
             .activate()
             .usePageMock('blueprintCatalog', {
-                jsonPath:
-                    'https://raw.githubusercontent.com/cloudify-cosmo/cloudify-stage/ab8dfce1874456ae2fed24d82e5b85f4b16c1765/test/cypress/fixtures/blueprints/blueprintsCatalog.json',
+                jsonPath: 'https://repository.cloudifysource.org/cloudify/blueprints/6.3/vm-examples.json',
                 displayStyle: 'catalog',
                 fieldsToShow: ['Name', 'Description']
             })
@@ -60,8 +59,10 @@ describe('Blueprints catalog widget', () => {
         });
     });
 
-    it('should have segment with correct icons', () => {
-        const iconNames = ['github', 'gitlab', 'bitbucket', 'git'];
+    it.only('should have segment with correct icons', () => {
+        cy.intercept('/console/external/content?url*', { fixture: 'blueprints/blueprintsCatalog.json' });
+        cy.wait('@blueprintsCatalog');
+        const iconNames = ['gitlab', 'bitbucket', 'git'];
         const selectorMatch = (selector: string) => {
             // eslint-disable-next-line security/detect-non-literal-regexp
             return new RegExp(`.+${selector}$`);
