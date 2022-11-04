@@ -96,7 +96,6 @@
         "recharts": "2.1.14",
         "redux": "^4.0.4",
         "redux-devtools-extension": "^2.13.8",
-        "redux-logger": "^3.0.6",
         "redux-thunk": "^2.3.0",
         "semantic-ui-css-offline": "^1.0.4-2.4.2",
         "semantic-ui-react": "^2.1.3",
