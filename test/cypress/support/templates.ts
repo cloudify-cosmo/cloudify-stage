@@ -59,7 +59,10 @@ const commands = {
             });
         }),
 
-    goToTemplateManagement: () => cy.clickSystemMenuItem('admin').clickSystemMenuItem('Template Management')
+    goToTemplateManagement: () =>
+        cy
+            .usePageMock([], {}, { stubTemplatesResponse: false })
+            .mockLoginWithoutWaiting({ visitPage: '/console/template_management' })
 };
 
 addCommands(commands);
