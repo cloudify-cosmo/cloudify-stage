@@ -48,7 +48,9 @@ const commands = {
         cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
         cy.get('.editWidgetModal').within(() => {
             fnWithinEditWidgetModal();
+            cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
             cy.get(`button${save ? '.ok' : '.cancel'}`).click();
+            cy.wait('@uaSaveRequest');
         });
 
         return cy.exitEditMode();

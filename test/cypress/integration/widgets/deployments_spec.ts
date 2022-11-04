@@ -113,7 +113,7 @@ describe('Deployments widget', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
 
-                cy.visitTestPage();
+                cy.refreshTemplate();
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
@@ -130,11 +130,12 @@ describe('Deployments widget', () => {
             });
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
+                const displayName = 'deploymentDisplayName';
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
                     created_by: 'admin',
-                    display_name: 'Test',
+                    display_name: displayName,
                     id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
                     inputs: { webserver_port: 8000 },
                     latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
@@ -147,6 +148,7 @@ describe('Deployments widget', () => {
 
                 cy.visitTestPage();
 
+                cy.contains(displayName).should('be.visible');
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
