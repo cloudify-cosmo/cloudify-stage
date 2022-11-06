@@ -36,7 +36,7 @@ export LIBSASS_EXT="no"
 npm run beforebuild:no-tests
 %if "%{arch}" == "arm64"
 yum install -y gcc-c++
-npm install -g node-gyp
+npm install node-gyp --location=global
 scl enable devtoolset-7 bash
 npm install sharp --build-from-source --prefix backend
 %endif
