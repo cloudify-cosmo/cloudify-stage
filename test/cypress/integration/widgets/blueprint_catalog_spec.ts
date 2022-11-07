@@ -59,7 +59,7 @@ describe('Blueprints catalog widget', () => {
         });
     });
 
-    it('should show different icons depending on blueprint repository URL', () => {
+    it.only('should show different icons depending on blueprint repository URL', () => {
         cy.intercept('/console/external/content*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
             'blueprintsCatalog'
         );
@@ -68,13 +68,12 @@ describe('Blueprints catalog widget', () => {
             displayStyle: 'table',
             fieldsToShow: ['Name', 'Description']
         }).mockLogin();
-        cy.wait('@blueprintsCatalog');
         const iconNames = ['gitlab', 'bitbucket', 'git'];
 
-        iconNames.forEach(iconName => {
-            cy.get('.blueprintCatalogWidget').within(() => {
-                cy.get(`tr[class*="${iconName}"]`).within(() => {
-                    cy.get(`i.${iconName}.icon`).should('have.class', iconName);
+        cy.get('.blueprintCatalogWidget').within(() => {
+            iconNames.forEach(iconName => {
+                cy.get(`tr[class$="${iconName}"]`).within(() => {
+                    cy.get('i[title="Open blueprint repository"]').should('have.class', iconName);
                 });
             });
         });
