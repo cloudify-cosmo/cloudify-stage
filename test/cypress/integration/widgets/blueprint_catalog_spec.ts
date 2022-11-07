@@ -65,25 +65,17 @@ describe('Blueprints catalog widget', () => {
         );
         cy.usePageMock('blueprintCatalog', {
             jsonPath: 'test', // this is required to avoid using default mock
-            displayStyle: 'catalog',
+            displayStyle: 'table',
             fieldsToShow: ['Name', 'Description']
         }).mockLogin();
         cy.wait('@blueprintsCatalog');
         const iconNames = ['gitlab', 'bitbucket', 'git'];
-        const selectorMatch = (selector: string) => {
-            // eslint-disable-next-line security/detect-non-literal-regexp
-            return new RegExp(`.+${selector}$`);
-        };
 
         iconNames.forEach(iconName => {
             cy.get('.blueprintCatalogWidget').within(() => {
-                cy.contains(selectorMatch(iconName))
-                    .parent()
-                    .parent()
-                    .parent()
-                    .within(() => {
-                        cy.get(`i.${iconName}.icon`).should('have.class', iconName);
-                    });
+                cy.get(`tr[class*="${iconName}"]`).within(() => {
+                    cy.get(`i.${iconName}.icon`).should('have.class', iconName);
+                });
             });
         });
     });
