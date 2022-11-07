@@ -59,7 +59,7 @@ describe('Blueprints catalog widget', () => {
         });
     });
 
-    it.only('should show different icons depending on blueprint repository URL', () => {
+    it('should show different icons depending on blueprint repository URL', () => {
         cy.intercept('/console/external/content*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
             'blueprintsCatalog'
         );
