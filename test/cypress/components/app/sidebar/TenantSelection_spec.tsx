@@ -41,7 +41,7 @@ describe('TenantSelection', () => {
 
     it('renders tenants list with no tenant selected', () => {
         mountWithProvider(<TenantSelection />, {
-            manager: { tenants: { items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
+            manager: { tenants: { items: ['aaa', 'bbb', 'ccc'] } }
         });
 
         cy.get('div.loader').should('not.exist');
@@ -53,7 +53,7 @@ describe('TenantSelection', () => {
 
     it('renders tenants list with selected tenant', () => {
         mountWithProvider(<TenantSelection />, {
-            manager: { tenants: { selected: 'bbb', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
+            manager: { tenants: { selected: 'bbb', items: ['aaa', 'bbb', 'ccc'] } }
         });
 
         cy.get('div.loader').should('not.exist');
@@ -65,7 +65,7 @@ describe('TenantSelection', () => {
 
     it('renders tenants list when selected tenant is not on the list', () => {
         mountWithProvider(<TenantSelection />, {
-            manager: { tenants: { selected: 'abc', items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }] } }
+            manager: { tenants: { selected: 'abc', items: ['aaa', 'bbb', 'ccc'] } }
         });
 
         cy.get('div.loader').should('not.exist');

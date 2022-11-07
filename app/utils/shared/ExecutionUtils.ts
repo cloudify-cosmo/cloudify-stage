@@ -1,6 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
+
+export interface Execution {
+    /* eslint-disable camelcase */
+    id?: string;
+    blueprint_id?: string;
+    deployment_id?: string;
+    status_display?: string;
+    status?: string;
+    scheduled_for?: string;
+    workflow_id?: string;
+    finished_operations?: number;
+    total_operations?: number;
+    /* eslint-enable camelcase  */
+}
 
 export default class ExecutionUtils {
     /* Execution resume types */
@@ -9,11 +21,11 @@ export default class ExecutionUtils {
     static RESUME_ACTION = 'resume';
 
     /* Execution cancellation types */
-    static CANCEL_ACTION = 'cancel';
+    static CANCEL_ACTION = 'cancel' as const;
 
-    static FORCE_CANCEL_ACTION = 'force-cancel';
+    static FORCE_CANCEL_ACTION = 'force-cancel' as const;
 
-    static KILL_CANCEL_ACTION = 'kill';
+    static KILL_CANCEL_ACTION = 'kill' as const;
 
     /* Execution status groups */
     static EXECUTION_SUCCESSFUL = 'success';
@@ -80,31 +92,31 @@ export default class ExecutionUtils {
     static UPDATE_WORKFLOW_ID = 'update';
 
     /* Helper methods */
-    static isCancelledExecution(execution) {
+    static isCancelledExecution(execution: Execution) {
         return execution.status === 'cancelled';
     }
 
-    static isWaitingExecution(execution) {
+    static isWaitingExecution(execution: Execution) {
         return _.includes(ExecutionUtils.WAITING_EXECUTION_STATUSES, execution.status);
     }
 
-    static isFailedExecution(execution) {
+    static isFailedExecution(execution: Execution) {
         return execution.status === 'failed';
     }
 
-    static isSuccessfulExecution(execution) {
+    static isSuccessfulExecution(execution: Execution) {
         return execution.status === 'terminated';
     }
 
-    static isUpdateExecution(execution) {
+    static isUpdateExecution(execution: Execution) {
         return execution.workflow_id === ExecutionUtils.UPDATE_WORKFLOW_ID;
     }
 
-    static isActiveExecution(execution) {
+    static isActiveExecution(execution: Execution) {
         return _.includes(ExecutionUtils.ACTIVE_EXECUTION_STATUSES, execution.status);
     }
 
-    static getExecutionStatusGroup(execution) {
+    static getExecutionStatusGroup(execution: Execution) {
         if (ExecutionUtils.isFailedExecution(execution)) {
             return ExecutionUtils.EXECUTION_FAILED;
         }
@@ -120,16 +132,21 @@ export default class ExecutionUtils {
         return ExecutionUtils.EXECUTION_IN_PROGRESS;
     }
 
-    static getExecutionStatusIconParams(execution) {
+    static getExecutionStatusIconParams(execution: Execution) {
         return ExecutionUtils.STATUS_ICON_PARAMS[ExecutionUtils.getExecutionStatusGroup(execution)];
     }
 
     /**
      * @param {{ total_operations: number, finished_operations: number }} execution
      */
-    static getProgress(execution) {
+    static getProgress(execution: Required<Pick<Execution, 'finished_operations' | 'total_operations'>>) {
         const { finished_operations: finishedOperations, total_operations: totalOperations } = execution;
         const ratio = finishedOperations / totalOperations;
         return Number.isFinite(ratio) ? Math.round(ratio * 100) : 0;
     }
 }
+
+export type CancelAction =
+    | typeof ExecutionUtils.CANCEL_ACTION
+    | typeof ExecutionUtils.FORCE_CANCEL_ACTION
+    | typeof ExecutionUtils.KILL_CANCEL_ACTION;

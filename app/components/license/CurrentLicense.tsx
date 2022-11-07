@@ -8,7 +8,7 @@ import { Icon, Header, Segment, Table } from '../basic';
 import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 
 interface CurrentLicenseProps {
-    license?: LicenseResponse;
+    license: LicenseResponse | null;
 }
 
 const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => {
