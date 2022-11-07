@@ -1,3 +1,4 @@
+import type { NodesTreeProps } from 'cloudify-ui-components/typings/components/data/NodesTree/NodesTree';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
@@ -14,19 +15,6 @@ interface NodeTreeItem {
     key: string;
     title: string;
     isDir: boolean;
-}
-
-interface FileInfo {
-    node: {
-        props: {
-            children: any;
-            title: {
-                props: {
-                    children: React.SetStateAction<string>[];
-                };
-            };
-        };
-    };
 }
 
 interface BlueprintTree {
@@ -140,14 +128,14 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
         resetType();
     }, [data]);
 
-    function selectFile(selectedKeys: string[], info: FileInfo) {
-        if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.props.children)) {
+    const selectFile: NodesTreeProps['onSelect'] = (selectedKeys, info) => {
+        if (_.isEmpty(selectedKeys) || !_.isEmpty(info.node.children)) {
             clearContent();
             clearFilename();
             return;
         }
 
-        const path = selectedKeys[0];
+        const path = selectedKeys[0] as string;
         const isImage = path.match(/.(jpg|jpeg|png|gif|ico)$/i);
 
         unsetBinary();
@@ -179,8 +167,8 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 } else if (_.endsWith(path.toLowerCase(), '.sh')) {
                     fileType = 'bash';
                 }
-
-                setFilename(info.node.props.title.props.children[1]);
+                const propsTitle = info.node.title as JSX.Element;
+                setFilename(propsTitle.props.children[1]);
                 setType(fileType);
                 clearError();
             })
@@ -190,14 +178,13 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 clearFilename();
             })
             .finally(() => toolbox.loading(false));
-    }
+    };
 
     const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
             const key = `${blueprintId}/file/${timestamp}/${item.key}`;
             if (item.children) {
                 return (
-                    // @ts-ignore NodesTree.Node is not migrated to typescript
                     <NodesTree.Node
                         key={key}
                         title={
@@ -217,7 +204,7 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 mainYamlFilePath === item.key ? (
                     <strong>
                         {item.title}
-                        <Label color="blue" size="mini" style={{ marginLeft: 8 }}>
+                        <Label color="blue" size="mini" style={{ marginLeft: 8, position: 'relative', top: -2 }}>
                             Main
                         </Label>
                     </strong>
@@ -225,7 +212,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                     item.title
                 );
             return (
-                // @ts-ignore NodesTree.Node is not migrated to typescript
                 <NodesTree.Node
                     key={key}
                     title={
@@ -249,7 +235,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                 >
                     <div>
                         <NodesTree className="nodes-tree" showLine selectable defaultExpandAll onSelect={selectFile}>
-                            {/* @ts-ignore NodesTree.Node is not migrated to typescript */}
                             <NodesTree.Node
                                 key="blueprint"
                                 disabled
@@ -262,7 +247,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                 {loop(data.blueprintId, data.blueprintTree.timestamp, data.blueprintTree.children)}
                             </NodesTree.Node>
                             {_.size(data.importedBlueprintIds) > 0 && (
-                                // @ts-ignore NodesTree.Node is not migrated to typescript
                                 <NodesTree.Node
                                     key="imported"
                                     style={{ marginTop: '5px' }}
@@ -275,7 +259,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
                                     }
                                 >
                                     {_.map(data.importedBlueprintTrees, (tree, index: number) => (
-                                        // @ts-ignore NodesTree.Node is not migrated to typescript
                                         <NodesTree.Node
                                             key={data.importedBlueprintIds[index]}
                                             style={{ marginTop: '3px' }}
