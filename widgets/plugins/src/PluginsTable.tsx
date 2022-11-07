@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import type { Visibility } from '../../common/src/types';
 import MarketplaceModal from './MarketplaceModal';
+import type { DataTableConfiguration } from '../../../tsc-dist/app/utils/GenericConfig';
 
 const t = Stage.Utils.getT('widgets.plugins');
 
@@ -28,7 +29,7 @@ interface PluginsTableProps {
         total: number;
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
+    widget: Stage.Types.Widget<DataTableConfiguration>;
 }
 
 const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, widget }) => {
@@ -115,9 +116,9 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
             <DataTable
                 fetchData={fetchGridData}
                 totalSize={data.total}
-                pageSize={widget.configuration.pageSize as any} // TODO: Type configuration
-                sortColumn={widget.configuration.sortColumn as any}
-                sortAscending={widget.configuration.sortAscending as any}
+                pageSize={widget.configuration.pageSize}
+                sortColumn={widget.configuration.sortColumn}
+                sortAscending={widget.configuration.sortAscending}
                 selectable
                 searchable
                 className="pluginsTable"
