@@ -38,6 +38,8 @@ npm run beforebuild:no-tests
 npm -v
 node -v
 gcc -v
+source scl_source enable devtoolset-7
+gcc -v
 npm install node-gyp@9.2.0 --location=global
 npm install sharp --build-from-source --prefix backend --verbose
 %endif
