@@ -948,7 +948,8 @@
             "actions": {
                 "openBlueprintRepository": "Open blueprint repository",
                 "openDocumentation": "Open documentation",
-                "uploadBlueprint": "Upload blueprint"
+                "uploadBlueprint": "Upload blueprint",
+                "openBlueprint": "Open blueprint"
             },
             "configuration": {
                 "jsonPath": {

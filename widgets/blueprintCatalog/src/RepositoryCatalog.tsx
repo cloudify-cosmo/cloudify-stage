@@ -90,6 +90,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
     onUpload = noop,
+    onOpenBlueprintPage = noop,
     readmeLoading = null,
     data,
     noDataMessage,
@@ -192,15 +193,25 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
-                                <Button
-                                    disabled={data.uploadedBlueprints.includes(name)}
-                                    content="Upload"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        onUpload(name, zip_url, image_url, main_blueprint);
-                                    }}
-                                    title={t('actions.uploadBlueprint')}
-                                />
+                                {data.uploadedBlueprints.includes(name) ? (
+                                    <Button
+                                        content="Open"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            onOpenBlueprintPage(name);
+                                        }}
+                                        title={t('actions.openBlueprint')}
+                                    />
+                                ) : (
+                                    <Button
+                                        content="Upload"
+                                        onClick={event => {
+                                            event.stopPropagation();
+                                            onUpload(name, zip_url, image_url, main_blueprint);
+                                        }}
+                                        title={t('actions.uploadBlueprint')}
+                                    />
+                                )}
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
