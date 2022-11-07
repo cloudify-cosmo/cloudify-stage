@@ -42,20 +42,20 @@ const commands = {
 
         return cy.exitEditMode();
     },
-    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => Cypress.Chainable, save = true) => {
+    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void, save = true) => {
         cy.enterEditMode();
 
         cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
         cy.get('.editWidgetModal').within(() => {
-            fnWithinEditWidgetModal().then(editSubject => {
-                if (editSubject && save) {
-                    cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
-                    cy.get(`button.ok`).click();
-                    cy.wait('@uaSaveRequest');
-                } else {
-                    cy.get(`button.cancel`).click();
-                }
-            });
+            fnWithinEditWidgetModal(); // .then(() => {
+            if (save) {
+                // cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
+                cy.get(`button.ok`).click();
+                // cy.wait('@uaSaveRequest');
+            } else {
+                cy.get(`button.cancel`).click();
+            }
+            // });
         });
 
         return cy.exitEditMode();
