@@ -3,10 +3,27 @@
 *******************************/
 
 .ui.dropdown {
-    &.selection {
+    &.selection.visible {
         &.error {
-            .menu.visible {
+            .text {
+                color: @red;
+            }
+
+            .menu {
                 border-color: @red;
+
+                .item {
+                    background-color: @errorBackgroundColor;
+                    border-top: none;
+
+                    &.active {
+                        background-color: @errorItemActiveBackground;
+                    }
+
+                    &:hover {
+                        background-color: @errorItemHoverBackground;
+                    }
+                }
             }
         }
     }
