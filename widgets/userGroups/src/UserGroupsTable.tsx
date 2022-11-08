@@ -223,7 +223,7 @@ class UserGroupsTable extends React.Component {
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
                                     {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data>
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
                                         ) : (
