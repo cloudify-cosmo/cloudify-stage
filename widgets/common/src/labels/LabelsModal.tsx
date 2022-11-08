@@ -28,7 +28,7 @@ const LabelsModal: FunctionComponent<LabelsModalProps> = ({
     const { i18n } = Stage;
     const { ApproveButton, CancelButton, Icon, Modal, Form } = Stage.Basic;
     const { useBoolean, useErrors, useOpenProp, useResettableState } = Stage.Hooks;
-    const actions = new DeploymentActions(toolbox);
+    const actions = new DeploymentActions(toolbox.getManager());
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, clearErrors, setErrors, setMessageAsError } = useErrors();

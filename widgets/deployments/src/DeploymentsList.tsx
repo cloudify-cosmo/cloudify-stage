@@ -66,7 +66,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
 
     setDeploymentVisibility = (deploymentId: string, visibility: Visibility) => {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Deployments.Actions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(toolbox.getManager());
         toolbox.loading(true);
         actions
             .doSetVisibility(deploymentId, visibility)
