@@ -7,13 +7,12 @@ import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
 import { ClusterServiceStatus } from '../shared/cluster/types';
-import type { ServiceStatus } from '../shared/cluster/types';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
-const statusToDotColor = (systemStatus: ServiceStatus | undefined) => {
+const statusToDotColor = (systemStatus: keyof typeof ClusterServiceStatus | undefined) => {
     const dotColors = {
         [ClusterServiceStatus.Fail]: 'red',
         [ClusterServiceStatus.Degraded]: 'yellow'
@@ -35,7 +34,7 @@ const dropdownMenuStyle = { padding: 5 };
 
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
-    const systemStatus: ServiceStatus | undefined = useSelector(
+    const systemStatus: keyof typeof ClusterServiceStatus | undefined = useSelector(
         (state: ReduxState) => state.manager.clusterStatus.status
     );
 

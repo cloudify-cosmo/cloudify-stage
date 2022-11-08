@@ -11,7 +11,7 @@ import { clusterServiceBgColor, clusterServiceEnum } from './consts';
 import { ClusterServiceStatus } from './types';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
-import type { ClusterService as ClusterServiceName, ClusterServices, ServiceStatus } from './types';
+import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
 import type { ReduxState } from '../../../reducers';
 
 interface ClusterServicesOverviewProps {
@@ -57,7 +57,11 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                     <Table.Row
                                         key={serviceName}
                                         style={{
-                                            backgroundColor: clusterServiceBgColor(service.status as ServiceStatus)
+                                            backgroundColor: clusterServiceBgColor(
+                                                ClusterServiceStatus[
+                                                    service.status as keyof typeof ClusterServiceStatus
+                                                ]
+                                            )
                                         }}
                                     >
                                         <Table.Cell>

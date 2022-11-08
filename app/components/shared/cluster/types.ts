@@ -7,11 +7,11 @@ export enum ClusterServiceStatus {
     Degraded,
     Unknown
 }
-export type ServiceStatus = keyof typeof ClusterServiceStatus;
 
 export type ClusterService = keyof typeof clusterServiceEnum;
+
 export interface ClusterServiceData {
-    status: ServiceStatus;
+    status: keyof typeof ClusterServiceStatus;
     nodes: Record<string, ClusterNodeData>;
     is_external: boolean;
 }

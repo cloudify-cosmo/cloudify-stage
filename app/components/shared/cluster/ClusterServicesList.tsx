@@ -9,7 +9,7 @@ import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
 import { clusterServiceEnum, clusterServiceBgColor } from './consts';
 import type { ReduxState } from '../../../reducers';
-import type { ClusterService as ClusterServiceName } from './types';
+import { ClusterService as ClusterServiceName, ClusterServiceStatus } from './types';
 
 interface PublicIPProps {
     ip?: string;
@@ -49,7 +49,9 @@ const ClusterServicesList: FunctionComponent = () => {
                             {index === 0 && (
                                 <DataTable.Data
                                     rowSpan={numberOfNodes}
-                                    style={{ backgroundColor: clusterServiceBgColor(service.status) }}
+                                    style={{
+                                        backgroundColor: clusterServiceBgColor(ClusterServiceStatus[service.status])
+                                    }}
                                 >
                                     <ClusterService isExternal={service.is_external} name={clusterServiceName} />
                                 </DataTable.Data>
