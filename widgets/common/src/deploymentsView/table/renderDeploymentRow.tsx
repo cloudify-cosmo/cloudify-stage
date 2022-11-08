@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { fromPairs } from 'lodash';
+import { groupBy } from 'lodash';
+import { Label } from 'semantic-ui-react';
 import type { DeploymentsViewColumnId } from './columns';
 import { deploymentsViewColumnDefinitions } from './columns';
 import type { Deployment } from '../types';
@@ -17,7 +18,7 @@ const renderDeploymentRow =
     (deployment: Deployment) => {
         const { DataTable } = Stage.Basic;
         const progressUnderline = getDeploymentProgressUnderline(deployment);
-        const labelsDict = fromPairs(deployment.labels?.map(({ key, value }) => [key, value]));
+        const labelsDict = groupBy(deployment.labels, 'key');
 
         return [
             <DataTable.Row
@@ -30,7 +31,11 @@ const renderDeploymentRow =
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
                 ))}
                 {labelsToShow.map(labelKey => (
-                    <DataTable.Data key={labelKey}>{labelsDict[labelKey]}</DataTable.Data>
+                    <DataTable.Data key={labelKey}>
+                        {labelsDict[labelKey]?.map(({ value }) => (
+                            <Label>{value}</Label>
+                        ))}
+                    </DataTable.Data>
                 ))}
             </DataTable.Row>,
             progressUnderline && (
