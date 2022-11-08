@@ -3,8 +3,7 @@ import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import type { PageMenuItem } from './pageMenu';
-import { createPagesFromTemplate } from './pageMenu';
+import { createPagesFromTemplate, createPagesMap } from './pageMenu';
 import type { SetAppErrorAction, SetAppLoadingAction } from './app';
 import { setAppLoading, setAppError } from './app';
 import Internal from '../utils/Internal';
@@ -97,25 +96,15 @@ export function reloadUserAppData(): ReduxThunkAction<
         dispatch(setAppLoading(true));
 
         return dispatch(loadOrCreateUserAppData()).then(() => {
-            const getPageMenuItemById = (pageMenuItems: PageMenuItem[], id?: string | null) =>
-                _.find(pageMenuItems, { id }) as PageMenuItem | undefined;
-
             const state = getState();
             const { currentPageId } = state.app;
             const { pages: pageMenuItems } = state;
-            const pageMenuItem = getPageMenuItemById(pageMenuItems, currentPageId);
 
-            if (!pageMenuItem) {
-                dispatch(push(Consts.PAGE_PATH.HOME));
-            } else if (pageMenuItem && pageMenuItem.type === 'page' && pageMenuItem.isDrillDown) {
-                const parent = getPageMenuItemById(pageMenuItems, pageMenuItem.parent);
-                if (!parent) {
-                    dispatch(push(Consts.PAGE_PATH.HOME));
-                } else {
-                    dispatch(push(`/page/${parent.id}`));
-                }
-            }
+            const pagesMap = createPagesMap(pageMenuItems);
+            const pagePath =
+                currentPageId && pagesMap[currentPageId] ? `/page/${currentPageId}` : Consts.PAGE_PATH.HOME;
 
+            dispatch(push(pagePath));
             dispatch(setAppLoading(false));
         });
     };
