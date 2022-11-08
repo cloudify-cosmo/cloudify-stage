@@ -12,8 +12,8 @@ export default function ValidateAgentsModal({
     nodeInstanceId,
     onHide,
     open,
-    toolbox,
-    widget
+    manager,
+    drilldownHandler
 }) {
     const { useEffect, useState } = React;
 
@@ -59,8 +59,7 @@ export default function ValidateAgentsModal({
         const { deploymentId: selectedDeploymentId } = inputValues.nodeFilter;
 
         onHide();
-        toolbox.drillDown(
-            widget,
+        drilldownHandler(
             'execution',
             { deploymentId: selectedDeploymentId, executionId },
             `Validate Agents on ${selectedDeploymentId}`
@@ -81,7 +80,7 @@ export default function ValidateAgentsModal({
             install_methods: !_.isEmpty(methods) ? methods : undefined
         };
 
-        const actions = new Stage.Common.Deployments.Actions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(manager);
         actions
             .doExecute(nodeFilter.deploymentId, 'validate_agents', params)
             .then(data => {
@@ -141,7 +140,7 @@ export default function ValidateAgentsModal({
                                     allowedNodes={allowedNodes}
                                     allowedNodeInstances={allowedNodeInstances}
                                     onChange={handleInputChange}
-                                    toolbox={toolbox}
+                                    manager={manager}
                                 />
                             </Form.Field>
 
@@ -190,8 +189,6 @@ export default function ValidateAgentsModal({
 ValidateAgentsModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
 
     agents: AgentsPropType,
     // eslint-disable-next-line react/no-unused-prop-types

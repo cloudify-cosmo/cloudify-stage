@@ -1,6 +1,6 @@
 import log from 'loglevel';
-import { loadTemplates } from './templates';
-import { loadWidgetDefinitions } from './widgets';
+import { loadLayoutDefinitions } from './layoutDefinitions';
+import { loadWidgetDefinitions } from './widgetDefinitions';
 
 import { loadOrCreateUserAppData } from './userApp';
 import type { SetIdentityProvidersAction } from './manager/auth';
@@ -18,7 +18,7 @@ export default function intialPageLoad(): ReduxThunkAction<
         dispatch(setAppLoading(true));
 
         return Promise.all([
-            dispatch(loadTemplates()),
+            dispatch(loadLayoutDefinitions()),
             dispatch(loadWidgetDefinitions()),
             dispatch(getClusterStatus()),
             dispatch(getIdentityProviders())

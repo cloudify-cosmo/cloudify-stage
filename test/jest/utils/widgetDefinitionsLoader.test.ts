@@ -3,6 +3,7 @@ import fetchMock from 'fetch-mock';
 import ScriptLoader from 'utils/scriptLoader';
 import type { InitialWidgetDefinition } from 'utils/StageAPI';
 import WidgetDefinitionsLoader from 'utils/widgetDefinitionsLoader';
+import type { ManagerData } from 'reducers/managerReducer';
 
 const initialWidgetDefinition: InitialWidgetDefinition<unknown, unknown, unknown> = {
     id: 'testWidget',
@@ -63,7 +64,7 @@ describe('(Utils) widgetDefinitionsLoader', () => {
     it('should load widgets list', async () => {
         loadMockWidgetDefinition(initialWidgetDefinition, initialWidgetDefinition.id);
 
-        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
+        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({} as ManagerData);
 
         expect(loadedWidgetDefinitions).toHaveLength(1);
         expect(loadedWidgetDefinitions[0]).toEqual({
@@ -80,7 +81,7 @@ describe('(Utils) widgetDefinitionsLoader', () => {
         };
         loadMockWidgetDefinition(widgetDefinition, initialWidgetDefinition.id);
 
-        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({});
+        const loadedWidgetDefinitions = await WidgetDefinitionsLoader.load({} as ManagerData);
 
         expect(loadedWidgetDefinitions).toHaveLength(1);
         expect(loadedWidgetDefinitions[0].id).not.toBe(widgetDefinition.id);
