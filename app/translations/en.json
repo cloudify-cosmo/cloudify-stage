@@ -1091,8 +1091,8 @@
                     "placeholder": "Select fields from the list"
                 },
                 "labelsToShow": {
-                  "name": "List of labels to show in the table as columns",
-                  "placeholder": "Select labels from the list"
+                  "name": "List of labels' keys to show in the table as columns",
+                  "placeholder": "Select keys from the list"
                 },
                 "mapOpenByDefault": {
                     "name": "Show map by default"

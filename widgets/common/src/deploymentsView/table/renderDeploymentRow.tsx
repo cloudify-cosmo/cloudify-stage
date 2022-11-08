@@ -29,9 +29,9 @@ const renderDeploymentRow =
                 {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
                 ))}
-                {labelsToShow.map(label => {
-                    return <DataTable.Data key={label}>{labelsDict[label]}</DataTable.Data>;
-                })}
+                {labelsToShow.map(labelKey => (
+                    <DataTable.Data key={labelKey}>{labelsDict[labelKey]}</DataTable.Data>
+                ))}
             </DataTable.Row>,
             progressUnderline && (
                 <DataTable.Row key={`${deployment.id}-progress`} className="deployment-progress-row">
