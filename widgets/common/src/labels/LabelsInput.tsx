@@ -26,7 +26,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     const [fetchingReservedKeys, setFetchingReservedKeys, unsetFetchingReservedKeys] = useBoolean();
 
     useEffect(() => {
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
@@ -96,7 +96,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 
     function onAddLabel() {
         function isLabelInSystem() {
-            const actions = new DeploymentActions(toolbox);
+            const actions = new DeploymentActions(toolbox.getManager());
             return actions
                 .doGetLabel(newLabelKey, newLabelValue)
                 .then(({ items }) => !_.isEmpty(items))
