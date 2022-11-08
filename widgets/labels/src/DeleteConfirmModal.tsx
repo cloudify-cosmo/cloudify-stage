@@ -25,7 +25,7 @@ export default function DeleteConfirmModal({
             open={!!labelToDelete}
             onCancel={onHide}
             onConfirm={() => {
-                new DeploymentActions(toolbox)
+                new DeploymentActions(toolbox.getManager())
                     .doSetLabels(
                         deploymentId,
                         labels.filter(filteredItem => !_.isEqual(filteredItem, labelToDelete))
