@@ -1,6 +1,6 @@
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { CommonExecuteWorflowProps } from './ExecuteWorkflowInputs';
-import type { Workflow, Errors } from './types';
+import type { Errors, Workflow } from './types';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsMap from '../inputs/utils/getInputsMap';
@@ -92,7 +92,7 @@ export const executeWorkflow = ({
     }
 
     setLoading();
-    const actions = new DeploymentActions(toolbox);
+    const actions = new DeploymentActions(toolbox.getManager());
 
     const executePromises = _.map(deploymentsList, (id: string) => {
         return actions

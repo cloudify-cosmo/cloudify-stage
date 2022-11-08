@@ -76,7 +76,7 @@ describe('User flow', () => {
         cy.containsActiveTab('Getting Started');
 
         cy.contains('Loading').should('not.exist');
-        cy.get('button').not('.disabled').contains('Upload').click();
+        cy.contains('button:not(.disabled)', 'Upload').click();
 
         cy.contains('Uploading');
 

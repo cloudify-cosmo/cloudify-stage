@@ -85,7 +85,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         resetUserWorkflowParams();
         resetBaseWorkflowParams();
 
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         if (typeof workflow === 'string') {
             setLoading();
             actions

@@ -19,10 +19,11 @@ export enum ActionType {
     REMOVE_LAYOUT_SECTION,
     INSTALL_WIDGET,
     UNINSTALL_WIDGET,
-    UPDATE_WIDGET_DEFINITION,
-    STORE_WIDGETS,
 
-    STORE_TEMPLATES,
+    UPDATE_WIDGET_DEFINITION,
+    STORE_WIDGETS_DEFINITIONS,
+    STORE_LAYOUT_DEFINITIONS,
+
     ADD_TEMPLATE,
     EDIT_TEMPLATE,
     REMOVE_TEMPLATE,
@@ -85,10 +86,10 @@ export enum ActionType {
     SET_APP_LOADING,
     SET_APP_ERROR,
 
-    WIDGET_FETCH_LOADING,
-    WIDGET_FETCH_ERROR,
-    WIDGET_FETCH_RES,
-    WIDGET_FETCH_CANCELED,
+    FETCH_WIDGET_REQUEST,
+    FETCH_WIDGET_FAILURE,
+    FETCH_WIDGET_SUCCESS,
+    FETCH_WIDGET_CANCEL,
     WIDGET_DATA_CLEAR,
 
     SET_DRILLDOWN_CONTEXT,
@@ -105,7 +106,6 @@ export interface PayloadAction<Payload = unknown, Type = ActionType> extends Act
     payload: Payload;
 }
 
-export type ReduxThunkAction<
-    R = Promise<void>,
-    A extends Action = Action<ActionType> | CallHistoryMethodAction
-> = ThunkAction<R, ReduxState, never, A>;
+export type ReduxAction = Action<ActionType> | CallHistoryMethodAction;
+
+export type ReduxThunkAction<R = Promise<void>, A extends Action = ReduxAction> = ThunkAction<R, ReduxState, never, A>;

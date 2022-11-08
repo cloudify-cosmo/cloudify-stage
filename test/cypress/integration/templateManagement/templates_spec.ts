@@ -59,10 +59,6 @@ describe('Templates segment', () => {
     });
 
     it('lists built-in templates', () => {
-        cy.mockLogin();
-
-        cy.get('.loader').should('be.not.visible');
-
         cy.goToTemplateManagement();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
@@ -84,9 +80,7 @@ describe('Templates segment', () => {
 
     it('allows users to create and modify templates', { retries: { runMode: 2 } }, () => {
         const clickOnHeader = () => cy.get('.header').click();
-        cy.removeUserTemplates().mockLogin();
-
-        cy.goToTemplateManagement();
+        cy.removeUserTemplates().goToTemplateManagement();
 
         cy.get('.createTemplateButton').click();
 
