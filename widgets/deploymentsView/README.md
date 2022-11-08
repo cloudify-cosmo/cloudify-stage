@@ -72,7 +72,6 @@ The columns can show:
     The counts and statuses in those columns are based on **all** child
     deployments (it does not matter whether they are directly or indirectly
     attached to the main deployment).
-8.  You can also add additional columns which would display values of labels
 
 ### Sorting deployments
 
@@ -288,7 +287,6 @@ filter.
   be refreshed, in seconds. Default: 10 seconds
 - `Map height` - the height of the map section in pixels
 - `List of fields to show in the table`
-- `List of labels to show in the table as columns`
 - `Number of items to show at once in the table`
 - `Show map by default`
 - `Name of the saved filter to apply` - the name of a filter to use by default
