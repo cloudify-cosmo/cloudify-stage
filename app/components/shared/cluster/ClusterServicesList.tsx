@@ -9,7 +9,8 @@ import ClusterService from './ClusterService';
 import NodeStatus from './NodeStatus';
 import { clusterServiceEnum, clusterServiceBgColor } from './consts';
 import type { ReduxState } from '../../../reducers';
-import { ClusterService as ClusterServiceName, ClusterServiceStatus } from './types';
+import { ClusterServiceStatus } from './types';
+import type { ClusterService as ClusterServiceName } from './types';
 
 interface PublicIPProps {
     ip?: string;
