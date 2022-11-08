@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
@@ -20,7 +20,7 @@ export default function LabelsTable({ data, toolbox }) {
 
     useRefreshEvent(toolbox, 'labels:refresh');
 
-    const actions = new DeploymentActions(toolbox);
+    const actions = new DeploymentActions(toolbox.getManager());
 
     useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 

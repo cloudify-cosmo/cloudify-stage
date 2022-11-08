@@ -20,7 +20,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
     });
 
     useOpenProp(open, () => {
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
 
         setLoading();
         clearDetachSite();
@@ -40,7 +40,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
     function setSite() {
         setLoading();
 
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         actions
             .doSetSite(deploymentId, siteName, detachSite)
             .then(() => {

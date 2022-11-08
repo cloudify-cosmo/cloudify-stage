@@ -29,7 +29,7 @@ Stage.defineWidget({
         const { deploymentId } = params;
         if (deploymentId) {
             const DeploymentActions = Stage.Common.Deployments.Actions;
-            return new DeploymentActions(toolbox).doGetLabels(deploymentId);
+            return new DeploymentActions(toolbox.getManager()).doGetLabels(deploymentId);
         }
         return Promise.resolve([]);
     },
