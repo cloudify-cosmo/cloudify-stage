@@ -6,7 +6,7 @@ import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
 export interface ClusterStatusData {
     isFetching?: boolean;
     error?: string;
-    status?: ClusterServiceStatus;
+    status?: keyof typeof ClusterServiceStatus;
     services?: ClusterServices;
 }
 

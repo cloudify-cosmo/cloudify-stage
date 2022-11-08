@@ -12,24 +12,33 @@ import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
-const dotColors = {
-    [ClusterServiceStatus.Fail]: 'red',
-    [ClusterServiceStatus.Degraded]: 'yellow'
-} as const;
+const statusToDotColor = (systemStatus: keyof typeof ClusterServiceStatus | undefined) => {
+    const dotColors = {
+        [ClusterServiceStatus.Fail]: 'red',
+        [ClusterServiceStatus.Degraded]: 'yellow'
+    } as const;
+
+    if (!systemStatus) {
+        return dotColors[ClusterServiceStatus.Fail];
+    }
+
+    const clusterServiceStatus = ClusterServiceStatus[systemStatus];
+    if (clusterServiceStatus === ClusterServiceStatus.Degraded || clusterServiceStatus === ClusterServiceStatus.Fail) {
+        return dotColors[clusterServiceStatus];
+    }
+
+    return undefined;
+};
 
 const dropdownMenuStyle = { padding: 5 };
 
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
-    const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
+    const systemStatus: keyof typeof ClusterServiceStatus | undefined = useSelector(
+        (state: ReduxState) => state.manager.clusterStatus.status
+    );
 
-    let dotColor = null;
-
-    if (!systemStatus) {
-        dotColor = dotColors[ClusterServiceStatus.Fail];
-    } else if (systemStatus === ClusterServiceStatus.Degraded || systemStatus === ClusterServiceStatus.Fail) {
-        dotColor = dotColors[systemStatus];
-    }
+    const dotColor = statusToDotColor(systemStatus);
 
     return (
         <SideBarDropdownItem

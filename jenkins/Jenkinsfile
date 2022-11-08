@@ -33,7 +33,7 @@ pipeline {
     BRANCH = "${env.BRANCH_NAME}"
     WORKSPACE = "${env.WORKSPACE}"
     STAGE_DIR = "cloudify-stage"
-    
+
     CFY_NODE_RPM = 'https://cloudify-release-eu.s3.eu-west-1.amazonaws.com/cloudify/components/nodejs-16.16.0-1nodesource.x86_64.rpm'
     MAIN_BRANCH = getMainBranch("${env.BRANCH}")
     VERSION = getVersion("cloudify-manager","${env.MAIN_BRANCH}").trim()
@@ -101,9 +101,6 @@ pipeline {
           }
         }
         stage('Build RPM'){
-          when {
-            branch pattern: ".+-build|master", comparator: "REGEXP"
-          }
           steps {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
@@ -221,9 +218,6 @@ pipeline {
 
                 echo 'Check if widgets documentation is up to date'
                 sh 'git diff --exit-code ./widgets'
-
-                echo 'Check if cloudify-ui-components version is the same as in official documentation'
-                sh 'npm run docCheck'
               }
             }
           }
