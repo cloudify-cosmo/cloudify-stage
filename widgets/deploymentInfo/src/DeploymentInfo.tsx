@@ -16,7 +16,7 @@ export default function DeploymentInfo({ data, toolbox }: DeploymentsInfoProps) 
     const [visibilityError, setVisibilityError, clearVisibilityError] = useResettableState('');
 
     const setVisibility = (visibility: string) => {
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
 
         toolbox.loading(true);
         return actions

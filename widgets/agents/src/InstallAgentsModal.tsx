@@ -12,8 +12,8 @@ export default function InstallAgentsModal({
     nodeInstanceId,
     onHide,
     open,
-    toolbox,
-    widget
+    manager,
+    drilldownHandler
 }) {
     const { useEffect, useState } = React;
 
@@ -62,8 +62,7 @@ export default function InstallAgentsModal({
         const { deploymentId: selectedDeploymentId } = inputValues.nodeFilter;
 
         onHide();
-        toolbox.drillDown(
-            widget,
+        drilldownHandler(
             'execution',
             { deploymentId: selectedDeploymentId, executionId },
             `Install New Agents on ${selectedDeploymentId}`
@@ -87,7 +86,7 @@ export default function InstallAgentsModal({
             manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
         };
 
-        const actions = new Stage.Common.Deployments.Actions(toolbox);
+        const actions = new Stage.Common.Deployments.Actions(manager);
         actions
             .doExecute(nodeFilter.deploymentId, 'install_new_agents', params)
             .then(data => {
@@ -147,7 +146,7 @@ export default function InstallAgentsModal({
                                     allowedNodes={allowedNodes}
                                     allowedNodeInstances={allowedNodeInstances}
                                     onChange={handleInputChange}
-                                    toolbox={toolbox}
+                                    manager={manager}
                                 />
                             </Form.Field>
 
@@ -238,8 +237,6 @@ export default function InstallAgentsModal({
 InstallAgentsModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onHide: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
 
     agents: AgentsPropType,
     // eslint-disable-next-line react/no-unused-prop-types

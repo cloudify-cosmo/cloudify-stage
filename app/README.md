@@ -21,3 +21,8 @@ For more details see [loglevel](https://github.com/pimterry/loglevel) package we
 
 See `tsconfig.json` for the list of backend files that are included in frontend code base.
 These files can be directly imported. 
+
+## Documentation
+
+Documentation of widget basic components (exposed using `Stage.Basic` global) is available in
+[Widget Components Reference](https://docs.cloudify.co/staging/dev/developer/writing_widgets/widgets-components/).
