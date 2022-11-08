@@ -6,6 +6,7 @@ import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
+import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
 const t = Utils.getWidgetTranslation('blueprintCatalog');
@@ -41,18 +42,6 @@ const StyledGridColumnButtons = styled(Grid.Column)`
         display: flex;
         align-items: center;
         padding: 0;
-    }
-`;
-
-const StyledLinkButton = styled(Button)`
-    &&&& {
-        padding: 0;
-        margin-right: 10px;
-        font-size: 22px;
-        background: none;
-        &:hover {
-            color: #1b1f23;
-        }
     }
 `;
 
@@ -97,7 +86,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
     const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
@@ -173,12 +162,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <StyledLinkButton
-                                    circular
-                                    icon="github"
-                                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                    title={t('actions.openBlueprintRepository')}
-                                />
+                                <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
 
                                 <Button
                                     circular
