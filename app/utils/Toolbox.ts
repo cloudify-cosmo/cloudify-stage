@@ -4,8 +4,9 @@ import _ from 'lodash';
 import 'proxy-polyfill';
 import type { Unsubscribe } from 'redux';
 
+import type { DrilldownHandler } from 'cloudify-ui-components/toolbox';
 import { drillDownToPage } from '../actions/drilldownPage';
-import { selectPageByName, selectHomePage, selectParentPage } from '../actions/pageMenu';
+import { selectHomePage, selectPageByName, selectParentPage } from '../actions/pageMenu';
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -53,6 +54,11 @@ class Toolbox implements Stage.Types.Toolbox {
             drillDownToPage(widget, this.templates.pagesDef[defaultTemplate], drilldownContext, drilldownPageName)
         );
     };
+
+    getDrilldownHandler(): DrilldownHandler {
+        return (pageId: string, drilldownContext: Record<string, any>, drilldownPageTitle: string) =>
+            this.drillDown(this.getWidget(), pageId, drilldownContext, drilldownPageTitle);
+    }
 
     goToHomePage() {
         this.store.dispatch(selectHomePage());

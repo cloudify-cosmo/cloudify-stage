@@ -43,7 +43,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         }
 
         const DeploymentActions = Stage.Common.Deployments.Actions;
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
 
         return actions.doGetWorkflows(id);
     },
