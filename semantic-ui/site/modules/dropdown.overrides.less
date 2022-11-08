@@ -2,6 +2,8 @@
         User Overrides
 *******************************/
 
+@dropdownHeight: @relative36px;
+
 .ui.dropdown {
     &.selection {
         & > .text {
@@ -30,6 +32,15 @@
                         }
                     }
                 }
+            }
+        }
+
+        &.multiple {
+            padding: (@relative11px / 2) @relative5px;
+            height: @dropdownHeight;
+
+            &.search {
+                max-height: @dropdownHeight + @relative1px;
             }
         }
     }

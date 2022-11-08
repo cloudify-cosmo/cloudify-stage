@@ -183,18 +183,26 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         return (
             <div>
                 <Form>
-                    <div style={{ display: 'flex', gap: '24px' }}>
-                        <Form.Input value="value" />
-                        <Form.Input placeholder="placeholder" />
-                        <Form.Input value="disabled" disabled />
-                        <Form.Input value="error" error />
-                    </div>
+                    <h2>Single select dropdown</h2>
                     <div style={{ display: 'flex', gap: '24px' }}>
                         <Form.Dropdown selection options={friendOptions} />
                         <Form.Dropdown selection options={friendOptions} search placeholder="Search" />
                         <Form.Dropdown selection options={friendOptions} placeholder="Placeholder" />
                         <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} disabled />
                         <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} error />
+                    </div>
+                    <h2>Multiple select dropdown</h2>
+                    <div style={{ display: 'flex', gap: '24px' }}>
+                        <Form.Dropdown selection multiple options={friendOptions} />
+                        <Form.Dropdown selection multiple options={friendOptions} search placeholder="Search" />
+                        <Form.Dropdown selection multiple options={friendOptions} placeholder="Placeholder" />
+                        <Form.Dropdown
+                            selection
+                            multiple
+                            options={friendOptions}
+                            value={[friendOptions[0].value]}
+                            disabled
+                        />
                     </div>
                 </Form>
                 <div style={{ height: '500px' }} />
