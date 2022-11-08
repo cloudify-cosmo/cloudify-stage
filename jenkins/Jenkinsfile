@@ -101,9 +101,6 @@ pipeline {
           }
         }
         stage('Build RPM'){
-          when {
-            branch pattern: ".+-build|master", comparator: "REGEXP"
-          }
           steps {
             container('rpmbuild'){
               echo 'Create RPM directory and copy all data from build stage to, for rpmbuild to run'
