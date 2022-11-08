@@ -106,7 +106,6 @@ export interface PayloadAction<Payload = unknown, Type = ActionType> extends Act
     payload: Payload;
 }
 
-export type ReduxThunkAction<
-    R = Promise<void>,
-    A extends Action = Action<ActionType> | CallHistoryMethodAction
-> = ThunkAction<R, ReduxState, never, A>;
+export type ReduxAction = Action<ActionType> | CallHistoryMethodAction;
+
+export type ReduxThunkAction<R = Promise<void>, A extends Action = ReduxAction> = ThunkAction<R, ReduxState, never, A>;

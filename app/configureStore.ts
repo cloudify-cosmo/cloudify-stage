@@ -1,5 +1,4 @@
 import thunkMiddleware from 'redux-thunk';
-import type { CallHistoryMethodAction } from 'connected-react-router';
 import { routerMiddleware } from 'connected-react-router';
 import type { Action, Store, StoreEnhancer } from 'redux';
 import type { ThunkDispatch } from 'redux-thunk';
@@ -13,13 +12,10 @@ import ManagerStatePersister from './utils/ManagerStatePersister';
 import type { ReduxState } from './reducers';
 import createRootReducer from './reducers';
 import type { ClientConfig } from '../backend/routes/Config.types';
+import type { ReduxAction } from './actions/types';
 import { ActionType } from './actions/types';
 
-export type ReduxThunkDispatch<A extends Action = Action<ActionType> | CallHistoryMethodAction> = ThunkDispatch<
-    ReduxState,
-    never,
-    A
->;
+export type ReduxThunkDispatch<A extends Action = ReduxAction> = ThunkDispatch<ReduxState, never, A>;
 export type ReduxStore<State = ReduxState> = Store<State> & { dispatch: ReduxThunkDispatch };
 
 function enhancedComposeWithDevTools<StoreExt>(...funcs: Array<StoreEnhancer<StoreExt>>): StoreEnhancer<StoreExt> {
