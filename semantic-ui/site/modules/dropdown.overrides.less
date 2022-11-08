@@ -3,25 +3,31 @@
 *******************************/
 
 .ui.dropdown {
-    &.selection.visible {
-        &.error {
-            .text {
-                color: @red;
-            }
+    &.selection {
+        & > .text {
+            line-height: @relative17px;
+        }
 
-            .menu {
-                border-color: @red;
+        &.visible {
+            &.error {
+                .text {
+                    color: @red;
+                }
 
-                .item {
-                    background-color: @errorBackgroundColor;
-                    border-top: none;
+                .menu {
+                    border-color: @red;
 
-                    &.active {
-                        background-color: @errorItemActiveBackground;
-                    }
+                    .item {
+                        background-color: @errorBackgroundColor;
+                        border-top: none;
 
-                    &:hover {
-                        background-color: @errorItemHoverBackground;
+                        &.active {
+                            background-color: @errorItemActiveBackground;
+                        }
+
+                        &:hover {
+                            background-color: @errorItemHoverBackground;
+                        }
                     }
                 }
             }

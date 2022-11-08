@@ -193,8 +193,8 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         <Form.Dropdown selection options={friendOptions} />
                         <Form.Dropdown selection options={friendOptions} search placeholder="Search" />
                         <Form.Dropdown selection options={friendOptions} placeholder="Placeholder" />
-                        <Form.Dropdown selection options={friendOptions} disabled />
-                        <Form.Dropdown selection options={friendOptions} error />
+                        <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} disabled />
+                        <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} error />
                     </div>
                 </Form>
                 <div style={{ height: '500px' }} />
