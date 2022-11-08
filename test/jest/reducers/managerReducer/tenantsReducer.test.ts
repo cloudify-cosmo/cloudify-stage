@@ -2,7 +2,6 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
 import type { Reducer, AnyAction } from 'redux';
-import type { ThunkDispatch } from 'redux-thunk';
 import timeKeeper from 'timekeeper';
 
 import type { TenantsData } from 'reducers/managerReducer/tenantsReducer';
@@ -13,8 +12,9 @@ import { ActionType } from 'actions/types';
 import fetchMock from 'fetch-mock';
 import log from 'loglevel';
 import type { ReduxState } from 'reducers';
+import type { ReduxThunkDispatch } from 'configureStore';
 
-const mockStore = configureMockStore<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>([thunk]);
+const mockStore = configureMockStore<Partial<ReduxState>, ReduxThunkDispatch>([thunk]);
 
 const time = new Date(1);
 

@@ -1,16 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import log from 'loglevel';
 import i18n from 'i18next';
+import type { Toolbox, Widget } from './StageAPI';
+import type WidgetParamsHandler from './WidgetParamsHandler';
 
-function getUrlRegExString(str) {
+function getUrlRegExString(str: string) {
     // eslint-disable-next-line security/detect-non-literal-regexp
     return new RegExp(`\\[${str}:?(.*)\\]`, 'i');
 }
 
 export default class WidgetDataFetcher {
-    constructor(widget, toolbox, paramsHandler) {
+    toolbox: Toolbox;
+
+    widget: Widget<Record<string, unknown>>;
+
+    paramsHandler: WidgetParamsHandler;
+
+    constructor(widget: Widget, toolbox: Toolbox, paramsHandler: WidgetParamsHandler) {
         this.widget = widget;
         this.toolbox = toolbox;
         this.paramsHandler = paramsHandler;
@@ -24,21 +30,22 @@ export default class WidgetDataFetcher {
         const fetches = _.map(urls, url => this.fetchByUrl(url));
         return Promise.all(fetches).then(data => {
             // Parse the data per url key name
-            let output = data;
             if (!_.isString(this.widget.definition.fetchUrl)) {
-                output = {};
+                const output: Record<string, any> = {};
                 const keys = _.keysIn(this.widget.definition.fetchUrl);
                 for (let i = 0; i < data.length; i += 1) {
                     output[keys[i]] = data[i];
                 }
-            } else {
-                [output] = data;
+                return output;
             }
+
+            let output = data;
+            [output] = data;
             return output;
         });
     }
 
-    handleUrl(prefix, url) {
+    handleUrl(prefix: string, url: string) {
         let baseUrl = url.substring(prefix.length);
 
         let params = {};
@@ -54,9 +61,9 @@ export default class WidgetDataFetcher {
         return { url: baseUrl, params };
     }
 
-    fetchByUrl(url) {
-        const fetchUrl = _.replace(url, getUrlRegExString('config'), (match, configName) => {
-            return this.widget.configuration ? this.widget.configuration[configName] : 'NA';
+    fetchByUrl(url: string) {
+        const fetchUrl = _.replace(url, getUrlRegExString('config'), (_match, configName) => {
+            return this.widget.configuration ? (this.widget.configuration[configName] as string) : 'NA';
         });
 
         if (url.indexOf('[manager]') >= 0) {
@@ -70,7 +77,8 @@ export default class WidgetDataFetcher {
             return this.toolbox.getInternal().doGet(data.url, data);
         }
         // User external if the url is not manager based
-        return this.toolbox.getExternal().doGet(fetchUrl);
+        // TODO(RD-6121) Fix it so that it's not necessary to pass `undefined`.
+        return this.toolbox.getExternal(undefined).doGet(fetchUrl);
     }
 
     fetchByFunc() {
