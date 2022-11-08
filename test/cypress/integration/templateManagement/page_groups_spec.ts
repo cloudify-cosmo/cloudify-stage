@@ -34,7 +34,6 @@ describe('Page groups segment', () => {
             }
         ]);
 
-        cy.mockLogin();
         cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups')
@@ -89,7 +88,6 @@ describe('Page groups segment', () => {
     it('removes page from within the table', () => {
         cy.removeUserPageGroups();
         createPageGroup();
-        cy.mockLogin();
         cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups')
@@ -113,7 +111,6 @@ describe('Page groups segment', () => {
     it('removes page group', () => {
         cy.removeUserPageGroups();
         createPageGroup();
-        cy.mockLogin();
         cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups').parent().contains('tr', 'Test group').find('.remove').click();
@@ -125,7 +122,6 @@ describe('Page groups segment', () => {
     it('edits page group', () => {
         cy.removeUserPageGroups();
         createPageGroup();
-        cy.mockLogin();
         cy.goToTemplateManagement();
 
         cy.contains('.header', 'Page groups').parent().contains('tr', 'Test group').find('.edit').click();
@@ -151,7 +147,6 @@ describe('Page groups segment', () => {
 
     it('creates new page group', () => {
         cy.removeUserPageGroups();
-        cy.mockLogin();
         cy.goToTemplateManagement();
 
         cy.contains('Create page group').click();

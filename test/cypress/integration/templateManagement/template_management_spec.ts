@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import { testPageUrl } from 'test/cypress/support/commands';
 
 describe('Template management', () => {
     const nonAdminUser = {
@@ -22,8 +23,6 @@ describe('Template management', () => {
     });
 
     it('is available for admin users', () => {
-        cy.mockLogin();
-
         cy.goToTemplateManagement();
 
         cy.location('pathname').should('be.equal', '/console/template_management');
@@ -35,6 +34,6 @@ describe('Template management', () => {
         cy.contains('.segment', 'Page groups');
 
         cy.contains('Close').click();
-        cy.location('pathname').should('be.equal', '/console/page/dashboard');
+        cy.location('pathname').should('be.equal', testPageUrl);
     });
 });
