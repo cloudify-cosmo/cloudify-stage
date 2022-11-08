@@ -15,8 +15,8 @@ Packager:       Cloudify Platform Ltd.
 
 BuildRequires:  nodejs >= 16.16.0, rsync
 %if "%{arch}" == "arm64"
-BuildRequires:  centos-release-scl
-BuildRequires:  devtoolset-7-gcc-c++
+# BuildRequires:  centos-release-scl
+# BuildRequires:  devtoolset-7-gcc-c++
 BuildRequires:  gcc
 BuildRequires:  gcc-c++, libsass, libpng-devel
 %endif
