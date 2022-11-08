@@ -16,12 +16,15 @@ describe('Deployments View widget', () => {
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentId = `${specPrefix}deployment_id`;
     const deploymentName = `${specPrefix}deployment_name`;
+    const labelName = `${specPrefix}labelName`;
+    const labelVal = `${specPrefix}labelVal`;
+
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
-        labelsToShow: [],
+        labelsToShow: ['rendered-inside'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
@@ -45,7 +48,7 @@ describe('Deployments View widget', () => {
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentId, exampleSiteName)
-            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }]);
+            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }, { [labelName]: labelVal }]);
     });
 
     beforeEach(() => {
@@ -79,6 +82,10 @@ describe('Deployments View widget', () => {
     const widgetConfigurationHelpers = {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
         toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+
+        getLabelsDropdown: () => cy.contains('List of labels').parent().find('[role="listbox"]'),
+        toggleLabelsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+
         mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
 
@@ -120,6 +127,34 @@ describe('Deployments View widget', () => {
                 cy.contains(deploymentName);
                 cy.contains(blueprintName);
                 cy.contains(exampleSiteName).should('not.exist');
+            });
+        });
+
+        it('should allow changing displayed labels', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    fieldsToShow: without(widgetConfiguration.fieldsToShow, 'blueprintName', 'location')
+                }
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(labelName).should('not.exist');
+            });
+
+            cy.log('Show some columns');
+            cy.editWidgetConfiguration(widgetId, () => {
+                widgetConfigurationHelpers.toggleLabelsDropdown();
+                widgetConfigurationHelpers.getLabelsDropdown().within(() => {
+                    cy.get('[role="option"]').contains(labelVal).click();
+                });
+                widgetConfigurationHelpers.toggleFieldsDropdown();
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(labelVal);
+                cy.contains(labelName);
             });
         });
 
