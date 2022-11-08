@@ -2,7 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import type { Visibility } from '../../common/src/types';
 import MarketplaceModal from './MarketplaceModal';
-import type { DataTableConfiguration } from '../../../tsc-dist/app/utils/GenericConfig';
+import type { DataTableConfiguration } from '../../../app/utils/GenericConfig';
 
 const t = Stage.Utils.getT('widgets.plugins');
 
