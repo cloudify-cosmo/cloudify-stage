@@ -1,5 +1,6 @@
 import Consts from 'app/utils/consts';
 import type { ClientConfig } from 'backend/routes/Config.types';
+import { testPageUrl } from 'test/cypress/support/commands';
 import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
@@ -17,7 +18,7 @@ describe('Login', () => {
     it('succeeds and redirects when provided credentials are valid, license is active and redirect query parameter is specified', () => {
         cy.activate().usePageMock();
 
-        const redirectUrl = '/console/page/test_page';
+        const redirectUrl = testPageUrl;
         cy.visit(`/console/login?redirect=${redirectUrl}`);
 
         cy.login();

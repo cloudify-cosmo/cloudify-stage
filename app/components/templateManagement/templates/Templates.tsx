@@ -161,12 +161,12 @@ Templates.propTypes = {
                 tenants: PropTypes.arrayOf(PropTypes.string)
             }),
             id: PropTypes.string,
-            pages: PropTypes.arrayOf(PropTypes.string),
+            pages: PropTypes.arrayOf(PropTypes.shape({})),
             updatedAt: PropTypes.string,
             updatedBy: PropTypes.string
         })
     ),
-    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({})) })
+    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.string) })
 };
 
 Templates.defaultProps = {
