@@ -16,8 +16,8 @@ describe('Deployments View widget', () => {
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentId = `${specPrefix}deployment_id`;
     const deploymentName = `${specPrefix}deployment_name`;
-    const labelName = `${specPrefix}labelName`;
-    const labelVal = `${specPrefix}labelVal`;
+    const labelName = `${specPrefix}label_name`;
+    const labelVal = `${specPrefix}label_val`;
 
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
@@ -83,8 +83,8 @@ describe('Deployments View widget', () => {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
         toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
 
-        getLabelsDropdown: () => cy.contains('List of labels').parent().find('[role="listbox"]'),
-        toggleLabelsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+        getLabelsDropdown: () => cy.contains('List of labels').parent().find('[role="combobox"]'),
+        toggleLabelsDropdown: () => widgetConfigurationHelpers.getLabelsDropdown().click(),
 
         mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
@@ -130,7 +130,7 @@ describe('Deployments View widget', () => {
             });
         });
 
-        it('should allow changing displayed labels', () => {
+        it('should allow changing displayed labels in columns', () => {
             useDeploymentsViewWidget({
                 configurationOverrides: {
                     fieldsToShow: without(widgetConfiguration.fieldsToShow, 'blueprintName', 'location')
@@ -142,13 +142,13 @@ describe('Deployments View widget', () => {
                 cy.contains(labelName).should('not.exist');
             });
 
-            cy.log('Show some columns');
+            cy.log('Show a label');
             cy.editWidgetConfiguration(widgetId, () => {
                 widgetConfigurationHelpers.toggleLabelsDropdown();
                 widgetConfigurationHelpers.getLabelsDropdown().within(() => {
-                    cy.get('[role="option"]').contains(labelVal).click();
+                    cy.get('[role="listbox"]').contains(labelName).click();
                 });
-                widgetConfigurationHelpers.toggleFieldsDropdown();
+                widgetConfigurationHelpers.toggleLabelsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
