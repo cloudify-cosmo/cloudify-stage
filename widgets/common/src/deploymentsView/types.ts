@@ -36,7 +36,7 @@ export interface Deployment {
     sub_environments_count: number;
     /** Can be null when there are no subenvironments */
     sub_environments_status: DeploymentStatus | null;
-    labels?: Label[];
+    labels?: Omit<Label, 'isInSystem'>[];
     /* eslint-enable camelcase */
 }
 
