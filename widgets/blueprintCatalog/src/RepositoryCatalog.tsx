@@ -107,6 +107,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             zip_url,
             main_blueprint
         } = item;
+        const isBlueprintUploaded = data.uploadedBlueprints.includes(name);
 
         return (
             <div key={id}>
@@ -177,20 +178,18 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
-                                {data.uploadedBlueprints.includes(name) ? (
+                                {isBlueprintUploaded ? (
                                     <Button
-                                        content="Open"
-                                        onClick={event => {
-                                            event.stopPropagation();
+                                        content={t('buttons.open')}
+                                        onClick={() => {
                                             onOpenBlueprintPage(name);
                                         }}
                                         title={t('actions.openBlueprint')}
                                     />
                                 ) : (
                                     <Button
-                                        content="Upload"
-                                        onClick={event => {
-                                            event.stopPropagation();
+                                        content={t('buttons.upload')}
+                                        onClick={() => {
                                             onUpload(name, zip_url, image_url, main_blueprint);
                                         }}
                                         title={t('actions.uploadBlueprint')}

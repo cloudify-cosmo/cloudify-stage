@@ -945,6 +945,10 @@
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
             "description": "Shows blueprints catalog",
+            "buttons": {
+                "upload": "Upload",
+                "open": "Open"
+            },
             "actions": {
                 "openBlueprintRepository": "Open blueprint repository",
                 "openDocumentation": "Open documentation",
