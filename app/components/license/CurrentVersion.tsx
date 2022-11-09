@@ -4,18 +4,7 @@ import _ from 'lodash';
 import React from 'react';
 
 import { Icon, Header, Message, Segment, Table } from '../basic';
-import { VersionResponse } from '../../../backend/handler/AuthHandler.types';
-
-type VersionProperty =
-    | 'build'
-    | 'commit'
-    | 'date'
-    | 'distribution'
-    | 'distro'
-    | 'distro_release'
-    | 'edition'
-    | 'version'
-    | 'full_version';
+import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 interface Version extends VersionResponse {
     distro: string;
@@ -48,7 +37,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
             <Table basic="very" size="large" celled>
                 <Table.Body>
                     {_.map(fields, field => {
-                        const value = version[field.name as VersionProperty];
+                        const value = version[field.name as keyof Version];
 
                         return !!field.hide && field.hide(value) ? null : (
                             <Table.Row key={field.header}>
