@@ -16,12 +16,20 @@ interface CurrentVersionProps {
     version: Version;
 }
 
+interface Field {
+    name: string;
+    header: string;
+    icon: SemanticICONS;
+    format: (string?: string) => string;
+    hide?: (value?: string) => boolean;
+}
+
 export default function CurrentVersion({ version }: CurrentVersionProps) {
     version.distro = _.join([version.distribution, version.distro_release], ' ');
     version.full_version = `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
          (${_.capitalize(version.edition)})`;
 
-    const fields = [
+    const fields: Field[] = [
         { name: 'full_version', header: i18n.t('licenseManagement.version', 'Version'), icon: 'star', format: String },
         {
             name: 'distro',
@@ -44,7 +52,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
                                 <Table.Cell width={5}>
                                     <Header as="h4">
                                         <Icon
-                                            name={field.icon as SemanticICONS}
+                                            name={field.icon}
                                             size="large"
                                             style={{ display: 'inline-block', float: 'left' }}
                                         />
