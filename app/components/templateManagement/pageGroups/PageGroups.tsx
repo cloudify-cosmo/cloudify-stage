@@ -108,7 +108,6 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                 <DataTable.Column width="10%" />
 
                 {pageGroups.map(item => (
-                    // @ts-ignore RowExpandable returns void
                     <DataTable.RowExpandable key={item.id} expanded={selectedItemId === item.id}>
                         <DataTable.Row
                             key={item.id}
