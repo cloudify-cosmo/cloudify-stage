@@ -35,10 +35,6 @@ describe('Blueprints widget', () => {
         return cy.get(`#blueprintsTable_${blueprintName}`);
     }
 
-    function getBlueprintMainFile() {
-        return cy.getWidget('blueprintSources').contains('Main').parent();
-    }
-
     describe('for specific blueprint', () => {
         before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
 
@@ -344,7 +340,12 @@ describe('Blueprints widget', () => {
 
                 const blueprintName = `${blueprintNamePrefix}_default_file`;
                 cy.get('input[name=blueprintName]').clear().type(blueprintName);
+                cy.interceptSp('PUT', `/blueprints/${blueprintName}`).as('createBlueprintRequest');
                 cy.get('.button.ok').click();
+
+                cy.wait('@createBlueprintRequest').its('response.body').should('contain', {
+                    main_file_name: 'read-secret-blueprint.yaml'
+                });
 
                 const getBlueprint = `/blueprints/${blueprintName}`;
                 const responses = ['uploading', 'extracting', 'parsing', 'uploaded'].map(state => ({ state }));
@@ -355,7 +356,6 @@ describe('Blueprints widget', () => {
                 cy.contains('3/5: Extracting blueprint...');
                 cy.contains('4/5: Parsing blueprint...');
                 closeDeployModal();
-                getBlueprintMainFile().contains('read-secret-blueprint.yaml');
             });
 
             it('with manually specified blueprint file', () => {
@@ -364,10 +364,14 @@ describe('Blueprints widget', () => {
 
                 cy.get('input[name=blueprintName]').clear().type(blueprintName);
                 cy.get('div[name=blueprintYamlFile] input').type(blueprintFileName);
+                cy.interceptSp('PUT', `/blueprints/${blueprintName}`).as('createBlueprintRequest');
                 cy.get('.button.ok').click();
 
+                cy.wait('@createBlueprintRequest').its('response.body').should('contain', {
+                    main_file_name: blueprintFileName
+                });
+
                 closeDeployModal();
-                getBlueprintMainFile().contains(blueprintFileName);
             });
 
             it('and handle upload errors', () => {
