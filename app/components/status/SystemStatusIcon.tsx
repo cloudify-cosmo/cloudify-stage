@@ -1,12 +1,12 @@
 import React from 'react';
 
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
-import { ClusterServiceStatus } from '../shared/cluster/types';
+import type { ClusterServiceStatus } from '../shared/cluster/types';
 
 export interface SystemStatusIconProps {
-    systemStatus: keyof typeof ClusterServiceStatus;
+    systemStatus: ClusterServiceStatus | undefined;
 }
 
-export default function SystemStatusIcon({ systemStatus = 'Unknown' }: SystemStatusIconProps) {
-    return <ClusterStatusIcon status={ClusterServiceStatus[systemStatus]} />;
+export default function SystemStatusIcon({ systemStatus }: SystemStatusIconProps) {
+    return <ClusterStatusIcon status={systemStatus} />;
 }

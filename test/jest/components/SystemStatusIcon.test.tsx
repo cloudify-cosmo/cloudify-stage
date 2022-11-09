@@ -3,6 +3,7 @@
 import { mount } from 'enzyme';
 import SystemStatusIcon from 'components/status/SystemStatusIcon';
 import * as BasicComponents from 'components/basic';
+import { ClusterServiceStatus } from 'components/shared/cluster/types';
 
 describe('(Component) SystemStatusIcon', () => {
     let wrapper;
@@ -11,20 +12,20 @@ describe('(Component) SystemStatusIcon', () => {
     const { Icon } = Stage.Basic;
 
     beforeEach(() => {
-        systemStatus = 'OK';
+        systemStatus = ClusterServiceStatus.OK;
 
         wrapper = mount(<SystemStatusIcon systemStatus={systemStatus} />);
     });
 
     it('renders with available status', () => {
-        systemStatus = 'OK';
+        systemStatus = ClusterServiceStatus.OK;
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);
         expect(wrapper.find(Icon).instance().props.color).toBe('green'); // Green icon
     });
 
     it('renders with unavailable status', () => {
-        systemStatus = 'Fail';
+        systemStatus = ClusterServiceStatus.Fail;
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);
         expect(wrapper.find(Icon).instance().props.color).toBe('red'); // Red icon
@@ -38,7 +39,7 @@ describe('(Component) SystemStatusIcon', () => {
     });
 
     it('renders with degraded status', () => {
-        systemStatus = 'Degraded';
+        systemStatus = ClusterServiceStatus.Degraded;
         wrapper.setProps({ systemStatus });
         expect(wrapper).toHaveLength(1);
         expect(wrapper.find(Icon).instance().props.color).toBe('yellow'); // Yellow icon
