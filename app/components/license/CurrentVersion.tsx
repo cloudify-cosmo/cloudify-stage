@@ -4,20 +4,7 @@ import _ from 'lodash';
 import React from 'react';
 
 import { Icon, Header, Message, Segment, Table } from '../basic';
-
-interface Version {
-    build?: string;
-    commit?: string;
-    date?: string;
-    distribution?: string;
-    distro?: string;
-    // eslint-disable-next-line camelcase
-    distro_release?: string;
-    edition?: string;
-    version?: string;
-    // eslint-disable-next-line camelcase
-    full_version?: string;
-}
+import { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 type VersionProperty =
     | 'build'
@@ -30,11 +17,17 @@ type VersionProperty =
     | 'version'
     | 'full_version';
 
+interface Version extends VersionResponse {
+    distro: string;
+    // eslint-disable-next-line camelcase
+    full_version: string;
+}
+
 interface CurrentVersionProps {
     version: Version;
 }
 
-export default function CurrentVersion({ version = {} }: CurrentVersionProps) {
+export default function CurrentVersion({ version }: CurrentVersionProps) {
     version.distro = _.join([version.distribution, version.distro_release], ' ');
     version.full_version = `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
          (${_.capitalize(version.edition)})`;
