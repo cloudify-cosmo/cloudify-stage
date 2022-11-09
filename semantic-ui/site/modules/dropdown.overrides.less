@@ -36,11 +36,16 @@
         }
 
         &.multiple {
-            padding: (@relative11px / 2) @relative5px;
-            height: @dropdownHeight;
+            min-height: @dropdownHeight;
 
             &.search {
-                max-height: @dropdownHeight + @relative1px;
+                max-height: @dropdownHeight;
+                overflow-y: inherit;
+            }
+
+            & > .label {
+                padding-left: unit(6 / 11, em);
+                padding-right: unit(8 / 11, em);
             }
         }
     }

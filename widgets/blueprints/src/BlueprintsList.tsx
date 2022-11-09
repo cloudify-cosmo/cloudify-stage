@@ -192,7 +192,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} error />
                     </div>
                     <h2>Multiple select dropdown</h2>
-                    <div style={{ display: 'flex', gap: '24px' }}>
+                    <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
                         <Form.Dropdown selection multiple options={friendOptions} />
                         <Form.Dropdown selection multiple options={friendOptions} search placeholder="Search" />
                         <Form.Dropdown selection multiple options={friendOptions} placeholder="Placeholder" />
