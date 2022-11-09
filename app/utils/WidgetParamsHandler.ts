@@ -28,7 +28,7 @@ export default class WidgetParamsHandler {
         this.widget = widget;
     }
 
-    buildParamsToSend(userRequestedParams) {
+    buildParamsToSend(userRequestedParams?) {
         // Map grid params to params
         const gridParams = this.mapGridParamsToParams();
         const fetchParams = this.buildFilterParams();

@@ -2,14 +2,11 @@ import type { GetPagesResponse } from 'backend/routes/Templates.types';
 
 describe('Page management', () => {
     before(() => {
-        cy.activate().removeUserPages();
-        cy.mockLogin();
+        cy.activate().removeUserPages().goToTemplateManagement();
     });
 
     it('allows admin users to create and modify pages', () => {
         const pageName = 'Page 1';
-
-        cy.goToTemplateManagement();
 
         cy.get('.createPageButton').click();
 

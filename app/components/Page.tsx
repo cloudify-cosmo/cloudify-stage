@@ -3,8 +3,6 @@ import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import type { ConnectedProps } from 'react-redux';
 import { connect } from 'react-redux';
-import type { AnyAction } from 'redux';
-import type { ThunkDispatch } from 'redux-thunk';
 
 import styled from 'styled-components';
 import { setEditMode } from '../actions/config';
@@ -30,6 +28,7 @@ import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { PageContent } from './shared/widgets';
 import { collapsedSidebarWidth } from './sidebar/SideBar';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 export interface PageOwnProps {
     pageId: string;
@@ -179,7 +178,7 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>, ownProps: PageOwnProps) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps) => {
     return {
         onPageNameChange: (page: PageDefinition, newName: string) => {
             dispatch(changePageMenuItemName(page.id, newName));

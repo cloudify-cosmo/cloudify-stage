@@ -4,9 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import type { ThunkDispatch } from 'redux-thunk';
 import styled from 'styled-components';
-import type { AnyAction } from 'redux';
 import type { ClientConfig } from '../../backend/routes/Config.types';
 
 import { login } from '../actions/manager/auth';
@@ -17,6 +15,7 @@ import StageUtils from '../utils/stageUtils';
 import LargeLogo from './banner/LargeLogo';
 import LogoLabel from './banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from './basic';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
@@ -209,7 +208,7 @@ const mapStateToProps = (state: ReduxState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
         onLogin: (username: string, password: string, redirect?: string) => {
             dispatch(login(username, password, redirect));

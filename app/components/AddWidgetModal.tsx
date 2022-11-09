@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { updateWidgetDefinition } from '../actions/widgets';
+import { updateWidgetDefinition } from '../actions/widgetDefinitions';
 import GenericConfig from '../utils/GenericConfig';
 import { useBoolean, useResettableState } from '../utils/hooks';
 import LoaderUtils from '../utils/LoaderUtils';
