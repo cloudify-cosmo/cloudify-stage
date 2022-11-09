@@ -1,20 +1,25 @@
 import type { ReactNode } from 'react';
 
+import { groupBy } from 'lodash';
 import type { DeploymentsViewColumnId } from './columns';
 import { deploymentsViewColumnDefinitions } from './columns';
 import type { Deployment } from '../types';
 import { LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
 
+const { Label } = Stage.Basic;
+
 const renderDeploymentRow =
     (
         toolbox: Stage.Types.Toolbox,
         fieldsToShow: DeploymentsViewColumnId[],
-        selectedDeployment: Deployment | undefined
+        selectedDeployment: Deployment | undefined,
+        labelsToShow: string[]
     ) =>
     (deployment: Deployment) => {
         const { DataTable } = Stage.Basic;
         const progressUnderline = getDeploymentProgressUnderline(deployment);
+        const labelsDict = groupBy(deployment.labels, 'key');
 
         return [
             <DataTable.Row
@@ -25,6 +30,13 @@ const renderDeploymentRow =
             >
                 {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
+                ))}
+                {labelsToShow.map(labelKey => (
+                    <DataTable.Data key={labelKey}>
+                        {labelsDict[labelKey]?.map(({ value }) => (
+                            <Label>{value}</Label>
+                        ))}
+                    </DataTable.Data>
                 ))}
             </DataTable.Row>,
             progressUnderline && (

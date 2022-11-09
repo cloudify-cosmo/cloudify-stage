@@ -66,7 +66,8 @@ const deploymentPropertiesToInclude = (<T extends (keyof Deployment)[]>(keys: T)
     'sub_services_count',
     'sub_services_status',
     'sub_environments_count',
-    'sub_environments_status'
+    'sub_environments_status',
+    'labels'
 ]);
 
 type MustBeTrue<T extends true> = T;
@@ -222,6 +223,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                             totalSize={deploymentsResult.data.metadata.pagination.total}
                             deployments={deploymentsResult.data.items}
                             fieldsToShow={widget.configuration.fieldsToShow}
+                            labelsToShow={widget.configuration.labelsToShow}
                             selectedDeployment={selectedOrFallbackDeployment}
                         />
                     </DeploymentsTableContainer>

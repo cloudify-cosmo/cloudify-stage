@@ -5,8 +5,8 @@ import CommonDropdown from './CommonDropdown';
 import ResourceTypeContext from '../filters/resourceTypeContext';
 
 interface KeyDropdownProps extends KeyAndValueDropdownProps {
-    onChange: (value: string) => void;
-    value: string;
+    value: string | string[];
+    multiple?: boolean;
 }
 
 const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
@@ -14,7 +14,8 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
     innerRef,
     onChange,
     toolbox,
-    value
+    value,
+    multiple
 }) => {
     const { i18n } = Stage;
     const resourceType = useContext(ResourceTypeContext);
@@ -33,6 +34,7 @@ const KeyDropdown: FunctionComponent<KeyDropdownProps> = ({
             additionLabel={`${i18n.t('widgets.common.labels.newKey')} `}
             allowAdditions={allowAdditions}
             value={value}
+            multiple={multiple}
         />
     );
 };
