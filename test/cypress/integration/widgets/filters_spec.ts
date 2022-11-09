@@ -289,6 +289,9 @@ describe('Filters widget', () => {
     it('should support "Only my resources" setting', () => {
         cy.interceptSp('GET', { pathname: '/filters/deployments', query: { created_by: 'admin' } }).as('getRequest');
 
+        // NOTE: Wait until Filters widget is fully loaded
+        cy.contains('Filter name');
+
         cy.contains('Show only my resources').click();
 
         cy.wait('@getRequest');
@@ -614,8 +617,7 @@ describe('Filters widget', () => {
             cy.wait('@createRequest').then(({ request }) => verifyRequestRules(request, testRules));
 
             cy.log('Filter rules form population verification');
-            cy.getSearchInput().clear().type(filterId);
-            cy.get('.loading').should('not.exist');
+            searchFilter(filterId);
             openEditFilterModal();
 
             cy.get('.modal').within(() => verifyRulesForm(testRules));

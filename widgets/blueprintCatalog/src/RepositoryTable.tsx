@@ -5,6 +5,7 @@ import Utils from './utils';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
+import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataTable, Icon } = Stage.Basic;
 const t = Utils.getWidgetTranslation();
@@ -22,7 +23,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
 
     return (
         <DataTable
@@ -88,12 +89,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
                         <DataTable.Data textAlign="center" className="rowActions">
-                            <Icon
-                                name="github"
-                                bordered
-                                onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                title={t('actions.openBlueprintRepository')}
-                            />
+                            <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}

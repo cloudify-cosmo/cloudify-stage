@@ -3,9 +3,7 @@ import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import type { PageDefinition } from './page';
-import type { PageMenuItem } from './pageMenu';
-import { createPagesFromTemplate } from './pageMenu';
+import { createPagesFromTemplate, createPagesMap } from './pageMenu';
 import type { SetAppErrorAction, SetAppLoadingAction } from './app';
 import { setAppLoading, setAppError } from './app';
 import Internal from '../utils/Internal';
@@ -98,27 +96,15 @@ export function reloadUserAppData(): ReduxThunkAction<
         dispatch(setAppLoading(true));
 
         return dispatch(loadOrCreateUserAppData()).then(() => {
-            const getPageById = (pages: PageMenuItem[], pageId?: string | null) => {
-                // TODO(RD-5591): I suspect a bug here. We should probably take into account Page Groups as well
-                return _.find(pages, { id: pageId }) as PageDefinition | undefined;
-            };
-
             const state = getState();
             const { currentPageId } = state.app;
-            const { pages } = state;
-            const page = getPageById(pages, currentPageId);
+            const { pages: pageMenuItems } = state;
 
-            if (!page) {
-                dispatch(push(Consts.PAGE_PATH.HOME));
-            } else if (page.isDrillDown) {
-                const parent = getPageById(pages, page.parent);
-                if (!parent) {
-                    dispatch(push(Consts.PAGE_PATH.HOME));
-                } else {
-                    dispatch(push(`/page/${parent.id}`));
-                }
-            }
+            const pagesMap = createPagesMap(pageMenuItems);
+            const pagePath =
+                currentPageId && pagesMap[currentPageId] ? `/page/${currentPageId}` : Consts.PAGE_PATH.HOME;
 
+            dispatch(push(pagePath));
             dispatch(setAppLoading(false));
         });
     };

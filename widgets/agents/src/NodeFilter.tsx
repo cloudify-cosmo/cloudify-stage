@@ -121,7 +121,7 @@ export default class NodeFilter extends React.Component {
     };
 
     fetchData(fetchUrl, params, optionsField) {
-        const { toolbox } = this.props;
+        const { manager } = this.props;
         const { errors: stateErrors } = this.state;
 
         const loading = `${optionsField}Loading`;
@@ -129,8 +129,7 @@ export default class NodeFilter extends React.Component {
         errors[optionsField] = null;
         this.setState({ [loading]: true, [optionsField]: [], errors });
 
-        toolbox
-            .getManager()
+        manager
             .doGet(fetchUrl, { params })
             .then(data => {
                 let ids = _.chain(data.items || [])
@@ -315,7 +314,6 @@ NodeFilter.propTypes = {
         nodeId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
         nodeInstanceId: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired
     }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
     onChange: PropTypes.func,
     allowMultiple: PropTypes.bool,
     allowMultipleBlueprints: PropTypes.bool,

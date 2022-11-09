@@ -60,6 +60,7 @@ const mockGettingStarted = (modalEnabled: boolean) =>
 const collapseSidebar = () => cy.get('.breadcrumb').click();
 
 export const testPageName = 'Test Page';
+export const testPageUrl = '/console/page/test_page';
 
 interface LoginOptions {
     username?: string;
@@ -325,10 +326,13 @@ const commands = {
     usePageMock: (
         widgetIds?: string | string[],
         widgetConfiguration: any = {},
-        { widgetsWidth = 8 }: { widgetsWidth?: number } = {}
+        {
+            widgetsWidth = 8,
+            stubTemplatesResponse = true
+        }: { widgetsWidth?: number; stubTemplatesResponse?: boolean } = {}
     ) => {
         const widgetIdsArray = castArray(widgetIds);
-        cy.intercept('GET', '/console/templates', []);
+        if (stubTemplatesResponse) cy.intercept('GET', '/console/templates', []);
         return cy.intercept('GET', '/console/ua', {
             appDataVersion: Consts.APP_VERSION,
             appData: {

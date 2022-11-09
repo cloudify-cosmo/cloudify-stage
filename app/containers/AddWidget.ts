@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import type { ComponentProps, ComponentType } from 'react';
 import { connect } from 'react-redux';
-import { checkIfWidgetIsUsed, installWidget, replaceWidget, uninstallWidget } from '../actions/widgets';
+import { checkIfWidgetIsUsed, installWidget, replaceWidget, uninstallWidget } from '../actions/widgetDefinitions';
 import AddWidgetModal from '../components/AddWidgetModal';
 import Consts from '../utils/consts';
 import stageUtils from '../utils/stageUtils';

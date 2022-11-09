@@ -6,6 +6,14 @@ All built-in widgets resides in [this](.) directory.
 
 Documentation for them is available [here](https://docs.cloudify.co/staging/dev/working_with/console/widgets/).
 
+Each widget has `README.md` file in root folder (e.g. [widgets/blueprints/README.md](../widgets/blueprints/README.md)
+). That file should be in sync with widget description page from [User Documentation]((https://docs.cloudify.co/staging/dev/working_with/console/widgets/)) .
+
+To update widgets' documentation - instead of modifying `README.md` files directly - you have to:
+1. Update it in [docs.getcloudify.org repository](https://github.com/cloudify-cosmo/docs.getcloudify.org/tree/master/content/working_with/console/widgets)
+2. Execute `npm run docWidgets` in this repository. Configuration for update script can be found in:
+   [scripts/readmesConfig.json](./../scripts/readmesConfig.json).
+
 ## Custom widgets
 
 This section describes how to create a new widget.
