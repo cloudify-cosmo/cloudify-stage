@@ -4,8 +4,7 @@ import thunk from 'redux-thunk';
 import fetchMock from 'fetch-mock';
 import timeKeeper from 'timekeeper';
 import { applyMiddleware, createStore } from 'redux';
-import type { Reducer, AnyAction } from 'redux';
-import type { ThunkDispatch } from 'redux-thunk';
+import type { Reducer } from 'redux';
 
 import { getManagerData, login, logout } from 'actions/manager/auth';
 import { ActionType } from 'actions/types';
@@ -13,16 +12,15 @@ import type { ManagerData } from 'reducers/managerReducer';
 import managerReducer, { emptyState } from 'reducers/managerReducer';
 import licenseReducer from 'reducers/managerReducer/licenseReducer';
 import type { ReduxState } from 'reducers';
+import type { ReduxThunkDispatch } from 'configureStore';
 import rbac from '../../resources/rbac';
 import versions from '../../resources/versions';
 import licenses from '../../resources/licenses';
 
 describe('(Reducer) Manager', () => {
-    const mockStore = configureMockStore<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>([thunk]);
+    const mockStore = configureMockStore<Partial<ReduxState>, ReduxThunkDispatch>([thunk]);
     const createStoreAsMockStore = (reducer: Reducer) =>
-        <MockStoreEnhanced<Partial<ReduxState>, ThunkDispatch<ReduxState, never, AnyAction>>>(
-            createStore(reducer, {}, applyMiddleware(thunk))
-        );
+        <MockStoreEnhanced<Partial<ReduxState>, ReduxThunkDispatch>>createStore(reducer, {}, applyMiddleware(thunk));
     const mockDate = new Date(2019, 4, 6);
 
     const username = 'admin';

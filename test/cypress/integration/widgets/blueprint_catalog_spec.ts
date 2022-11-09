@@ -56,4 +56,24 @@ describe('Blueprints catalog widget', () => {
             cy.contains('Description').should('not.exist');
         });
     });
+
+    it('should show different icons depending on blueprint repository URL', () => {
+        cy.intercept('/console/external/content*', { fixture: 'blueprints/blueprintsCatalog.json' }).as(
+            'blueprintsCatalog'
+        );
+        cy.usePageMock('blueprintCatalog', {
+            jsonPath: 'test', // this is required to avoid using default mock
+            displayStyle: 'table',
+            fieldsToShow: ['Name', 'Description']
+        }).mockLogin();
+        const iconNames = ['gitlab', 'bitbucket', 'git'];
+
+        cy.get('.blueprintCatalogWidget').within(() => {
+            iconNames.forEach(iconName => {
+                cy.get(`tr[class$="${iconName}"]`).within(() => {
+                    cy.get('i[title="Open blueprint repository"]').should('have.class', iconName);
+                });
+            });
+        });
+    });
 });

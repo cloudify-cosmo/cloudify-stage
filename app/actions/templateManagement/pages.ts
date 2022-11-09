@@ -1,16 +1,21 @@
-// @ts-nocheck File not migrated fully to TS
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
 import _ from 'lodash';
-import type { ThunkAction } from 'redux-thunk';
-import type { AnyAction } from 'redux';
-import type { ReduxThunkAction } from '../types';
+import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
+import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
 
-type Page = ReduxState['templates']['pagesDef'][string] & { id: string; oldId?: string };
+type Page = TemplatePageDefinition & { id: string; oldId?: string };
+
+export type AddPageAction = PayloadAction<Page, ActionType.ADD_TEMPLATE_PAGE>;
+export type RemovePageAction = PayloadAction<string, ActionType.REMOVE_TEMPLATE_PAGE>;
+export type SetDrillDownWarningActiveAction = PayloadAction<boolean, ActionType.PAGE_MANAGEMENT_DRILLDOWN_WARN>;
+export type SetPageEditModeAction = PayloadAction<boolean, ActionType.PAGE_MANAGEMENT_SET_EDIT_MODE>;
+export type PageAction = AddPageAction | RemovePageAction | SetDrillDownWarningActiveAction | SetPageEditModeAction;
 
 export function createPageId(name: string, pageDefs: ReduxState['templates']['pagesDef']) {
     const ids = _.keysIn(pageDefs);
@@ -33,24 +38,26 @@ export function createPageId(name: string, pageDefs: ReduxState['templates']['pa
     return newPageId;
 }
 
-export function addPage(page: Page) {
+export function addPage(page: Page): AddPageAction {
     return {
         type: ActionType.ADD_TEMPLATE_PAGE,
-        page
+        payload: page
     };
 }
 
-export function savePage(page: Page): ReduxThunkAction {
+export function savePage(page: Page): ReduxThunkAction<Promise<CallHistoryMethodAction>> {
     return dispatch => dispatch(persistPage(page)).then(() => dispatch(push('/template_management')));
 }
 
-export function persistPage(page: Page): ReduxThunkAction {
+export function persistPage(page: Page): ReduxThunkAction<Promise<AddPageAction>> {
     return (dispatch, getState) => {
         function prepareWidgetData(widget: SimpleWidgetObj) {
             return _.pick(widget, 'name', 'width', 'height', 'x', 'y', 'configuration', 'definition');
         }
 
         const body = _(page).pick('id', 'oldId', 'name', 'icon', 'layout').cloneDeep();
+
+        // @ts-ignore TODO(RD-5591): Seems like it's intentional here to end up with non SimpleWidgetObj type
         forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
@@ -66,20 +73,23 @@ export function persistPage(page: Page): ReduxThunkAction {
     };
 }
 
-export function removePage(pageId: string) {
+export function removePage(pageId: string): RemovePageAction {
     return {
         type: ActionType.REMOVE_TEMPLATE_PAGE,
-        pageId
+        payload: pageId
     };
 }
 
-export function setDrillDownWarningActive(show: boolean) {
+export function setDrillDownWarningActive(show: boolean): SetDrillDownWarningActiveAction {
     return {
         type: ActionType.PAGE_MANAGEMENT_DRILLDOWN_WARN,
-        show
+        payload: show
     };
 }
 
-export function setPageEditMode(isPageEditMode: boolean) {
-    return { type: ActionType.PAGE_MANAGEMENT_SET_EDIT_MODE, isPageEditMode };
+export function setPageEditMode(isPageEditMode: boolean): SetPageEditModeAction {
+    return {
+        type: ActionType.PAGE_MANAGEMENT_SET_EDIT_MODE,
+        payload: isPageEditMode
+    };
 }

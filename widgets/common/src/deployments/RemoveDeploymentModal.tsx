@@ -39,7 +39,7 @@ const RemoveDeploymentModal: FunctionComponent<RemoveDeploymentModalProps> = ({
     );
 
     function deleteDeployment() {
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         const deleteAction = force ? 'doForceDelete' : 'doDelete';
 
         clearErrors();
