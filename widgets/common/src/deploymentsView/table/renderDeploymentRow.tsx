@@ -1,12 +1,13 @@
 import type { ReactNode } from 'react';
 
 import { groupBy } from 'lodash';
-import { Label } from 'semantic-ui-react';
 import type { DeploymentsViewColumnId } from './columns';
 import { deploymentsViewColumnDefinitions } from './columns';
 import type { Deployment } from '../types';
 import { LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
+
+const { Label } = Stage.Basic;
 
 const renderDeploymentRow =
     (
