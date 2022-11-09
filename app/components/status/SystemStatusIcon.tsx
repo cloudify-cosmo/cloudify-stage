@@ -3,7 +3,7 @@ import React from 'react';
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
 import { ClusterServiceStatus } from '../shared/cluster/types';
 
-interface SystemStatusIconProps {
+export interface SystemStatusIconProps {
     systemStatus: keyof typeof ClusterServiceStatus;
 }
 
