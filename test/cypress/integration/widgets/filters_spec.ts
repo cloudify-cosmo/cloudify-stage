@@ -115,6 +115,7 @@ describe('Filters widget', () => {
     function searchFilter(name: string) {
         cy.getSearchInput().clear().type(name);
         cy.get('.loading').should('not.exist');
+        cy.contains('table', name).should('be.visible');
     }
 
     describe('should provide basic functionality:', () => {
