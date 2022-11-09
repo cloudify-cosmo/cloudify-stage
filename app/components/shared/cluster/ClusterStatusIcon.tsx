@@ -6,16 +6,15 @@ import { Icon } from '../../basic';
 import { ClusterServiceStatus } from './types';
 
 interface ClusterStatusIconProps {
-    status: keyof typeof ClusterServiceStatus;
+    status: ClusterServiceStatus;
 }
 const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status }) => {
-    const clusterServiceStatus = ClusterServiceStatus[status];
     let color: SemanticCOLORS = 'grey';
-    if (clusterServiceStatus === ClusterServiceStatus.Fail) {
+    if (status === ClusterServiceStatus.Fail) {
         color = 'red';
-    } else if (clusterServiceStatus === ClusterServiceStatus.Degraded) {
+    } else if (status === ClusterServiceStatus.Degraded) {
         color = 'yellow';
-    } else if (clusterServiceStatus === ClusterServiceStatus.OK) {
+    } else if (status === ClusterServiceStatus.OK) {
         color = 'green';
     }
 

@@ -1,15 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
+import { ClusterServiceStatus } from '../shared/cluster/types';
 
-export default function SystemStatusIcon({ systemStatus }) {
-    return <ClusterStatusIcon status={systemStatus} />;
+interface SystemStatusIconProps {
+    systemStatus: keyof typeof ClusterServiceStatus;
 }
-SystemStatusIcon.propTypes = {
-    systemStatus: PropTypes.string
-};
-SystemStatusIcon.defaultProps = {
-    systemStatus: ''
-};
+
+export default function SystemStatusIcon({ systemStatus = 'Unknown' }: SystemStatusIconProps) {
+    return <ClusterStatusIcon status={ClusterServiceStatus[systemStatus]} />;
+}

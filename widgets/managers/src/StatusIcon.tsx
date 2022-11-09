@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
+import { ClusterServiceStatus } from '../../../app/components/shared/cluster/types';
+
 export default function StatusIcon({ isFetching, status: { status, services } }) {
     const { Icon, Popup } = Stage.Basic;
     const { ClusterStatusIcon, ClusterServicesOverview } = Stage.Shared;
@@ -12,7 +14,7 @@ export default function StatusIcon({ isFetching, status: { status, services } })
             wide
             trigger={
                 <div>
-                    <ClusterStatusIcon status={status} />
+                    <ClusterStatusIcon status={ClusterServiceStatus[status]} />
                 </div>
             }
         >
