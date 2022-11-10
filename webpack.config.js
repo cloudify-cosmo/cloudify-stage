@@ -17,8 +17,8 @@ const CONTEXT_PATH = '/console';
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
     const isDevelopment = argv.mode === 'development';
-    const isSingleWidgetBuild = !!argv.widget;
-    const widgetName = argv.widget;
+    const isSingleWidgetBuild = !!env.widget;
+    const widgetName = env.widget;
     const mode = isProduction ? 'production' : 'development';
     const context = path.join(__dirname);
     const devtool = isProduction ? undefined : 'eval-source-map';
