@@ -7,7 +7,7 @@ import SystemStatusIcon from '../../components/status/SystemStatusIcon';
 const mapStateToProps = state => {
     const systemStatus = _.get(state.manager, 'clusterStatus.status');
     return {
-        systemStatus: systemStatus,
+        systemStatus,
         maintenanceStatus: _.get(state.manager, 'maintenance')
     };
 };
