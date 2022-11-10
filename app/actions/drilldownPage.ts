@@ -2,10 +2,10 @@ import _ from 'lodash';
 import { setDrilldownContext } from './drilldownContext';
 import { addLayoutToPage } from './page';
 import { createDrilldownPage, selectPage } from './pageMenu';
+import type { TemplatePageDefinition } from './templateManagement/pages';
 import { setDrillDownWarningActive } from './templateManagement/pages';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import type { TemplatePageDefinition } from '../reducers/templatesReducer';
 import type { Widget } from '../utils/StageAPI';
 
 export type AddDrilldownPageAction = PayloadAction<

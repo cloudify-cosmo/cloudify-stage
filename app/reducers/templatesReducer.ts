@@ -1,12 +1,9 @@
 import _ from 'lodash';
 import type { Reducer } from 'redux';
-import type { PageDefinition } from '../actions/page';
 import { ActionType } from '../actions/types';
 import type { LayoutDefinitionsAction } from '../actions/layoutDefinitions';
 import type { LayoutDefinitions } from '../utils/layoutDefinitionsLoader';
 import type { TemplateManagementAction } from '../actions/templateManagement';
-
-export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 
 export interface TemplatesState {
     templatesDef: LayoutDefinitions['templatesDef'];
