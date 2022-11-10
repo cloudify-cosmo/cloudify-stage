@@ -86,6 +86,9 @@ pipeline {
                 echo "Install dependencies"
                 sh 'npm run beforebuild'
                 archiveFolder('~/.npm', "${WORKSPACE}/${STAGE_DIR}/package-lock.json ${WORKSPACE}/${STAGE_DIR}/backend/package-lock.json", 'stage-mb', 'npm_dir', '/mnt/data')
+                echo "Build single widget"
+                sh 'npm run build:widget executions'
+                sh 'test ${WORKSPACE}/${STAGE_DIR}/dist/executions.zip'
                 echo "Build application"
                 sh 'npm run build'
               }
