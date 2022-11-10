@@ -5,6 +5,7 @@ import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
+import { createPagesMap } from '../pageMenu';
 
 export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
 // TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
@@ -40,13 +41,14 @@ function fetchClusterStatusFailure(error: any): FetchClusterStatusFailureAction 
     };
 }
 
-function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[]) {
-    const currentPage = pages.find(page => page.id === pageId);
+function isClusterStatusWidgetOnPage(pageId: string | null, pageMenuItems: PageMenuItem[]) {
+    const pagesMap = createPagesMap(pageMenuItems);
     const clusterStatusWidgetDefinitionName = 'highAvailability';
-
+    let currentPage;
     let widgetPresent = false;
+
+    if (pageId) currentPage = pagesMap[pageId];
     if (currentPage) {
-        // @ts-ignore: TODO(RD-5591) Iterate not only over widgets, but also over page groups
         forEachWidget(currentPage, widget => {
             if (widget.definition === clusterStatusWidgetDefinitionName) widgetPresent = true;
             return widget;
