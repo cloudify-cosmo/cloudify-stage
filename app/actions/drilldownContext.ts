@@ -1,6 +1,10 @@
 import type { PayloadAction } from './types';
 import { ActionType } from './types';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
+
+export interface DrilldownContext {
+    pageName?: string;
+    context?: Record<string, any>;
+}
 
 export type SetDrilldownContextAction = PayloadAction<DrilldownContext[], ActionType.SET_DRILLDOWN_CONTEXT>;
 export type PopDrilldownContextAction = PayloadAction<number, ActionType.POP_DRILLDOWN_CONTEXT>;

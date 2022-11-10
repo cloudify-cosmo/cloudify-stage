@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import styled from 'styled-components';
 import { setEditMode } from '../actions/config';
+import type { DrilldownContext } from '../actions/drilldownContext';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import type { LayoutSection, PageDefinition } from '../actions/page';
 import {
@@ -20,7 +21,6 @@ import {
 import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import type { ReduxState } from '../reducers';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import type { WidgetDefinition } from '../utils/StageAPI';
 import StageUtils from '../utils/stageUtils';
 import { Button, EditableLabel } from './basic';
