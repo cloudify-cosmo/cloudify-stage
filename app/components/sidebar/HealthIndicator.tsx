@@ -34,7 +34,7 @@ const dropdownMenuStyle = { padding: 5 };
 
 const HealthIndicator: FunctionComponent = () => {
     const dispatch = useDispatch();
-    const systemStatus: keyof typeof ClusterServiceStatus | undefined = useSelector(
+    const systemStatus: ClusterServiceStatus | undefined = useSelector(
         (state: ReduxState) => state.manager.clusterStatus.status
     );
 

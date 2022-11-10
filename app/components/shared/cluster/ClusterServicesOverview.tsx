@@ -58,9 +58,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                         key={serviceName}
                                         style={{
                                             backgroundColor: clusterServiceBgColor(
-                                                ClusterServiceStatus[
-                                                    service.status as keyof typeof ClusterServiceStatus
-                                                ]
+                                                ClusterServiceStatus[service.status as ClusterServiceStatus]
                                             )
                                         }}
                                     >

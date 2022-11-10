@@ -2,16 +2,16 @@
 import type { clusterServiceEnum, clusterNodeStatusEnum, nodeServiceStatusEnum } from './consts';
 
 export enum ClusterServiceStatus {
-    OK,
-    Fail,
-    Degraded,
-    Unknown
+    OK = 'OK',
+    Fail = 'Fail',
+    Degraded = 'Degraded',
+    Unknown = 'Unknown'
 }
 
 export type ClusterService = keyof typeof clusterServiceEnum;
 
 export interface ClusterServiceData {
-    status: keyof typeof ClusterServiceStatus;
+    status: ClusterServiceStatus;
     nodes: Record<string, ClusterNodeData>;
     is_external: boolean;
 }

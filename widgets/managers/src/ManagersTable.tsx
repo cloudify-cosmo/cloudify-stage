@@ -129,14 +129,8 @@ function ManagersTable({ data, toolbox, widget }) {
                     const inSelectedManagers = _.includes(selectedManagers, manager.id);
                     const managerStatus = _.get(statuses, manager.id, {
                         isFetching: false,
-                        status: {
-                            status: undefined,
-                            services: {}
-                        }
+                        status: {}
                     });
-                    managerStatus.status.status = managerStatus.status.status
-                        ? ClusterServiceStatus[managerStatus.status.status]
-                        : managerStatus.status.status;
 
                     return (
                         <DataTable.Row
