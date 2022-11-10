@@ -1,7 +1,7 @@
 import { i18nPrefix } from './common';
 import type { DeploymentsViewColumnId } from './table';
 import { deploymentsViewColumnDefinitions, deploymentsViewColumnIds } from './table';
-import DeploymentLabelConfigurationInput from './DeploymentLabeLConfigurationInput';
+import DeploymentLabelConfigurationInput from './DeploymentLabelConfigurationInput';
 
 export interface SharedDeploymentsViewWidgetConfiguration {
     /** In seconds */
