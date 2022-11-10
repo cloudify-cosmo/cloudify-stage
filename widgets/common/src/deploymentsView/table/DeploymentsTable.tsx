@@ -93,7 +93,9 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                     <DataTable.Column key={labelKey} name={labelKey} label={labelKey} />
                 ))}
 
-                {deployments.flatMap(renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, keysOfLabelsToShow))}
+                {deployments.flatMap(
+                    renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, keysOfLabelsToShow)
+                )}
             </DataTable>
         </TableContainer>
     );
