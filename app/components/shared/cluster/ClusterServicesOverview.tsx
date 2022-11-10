@@ -56,9 +56,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                 return (
                                     <Table.Row
                                         key={serviceName}
-                                        style={{
-                                            backgroundColor: clusterServiceBgColor(service.status)
-                                        }}
+                                        style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                     >
                                         <Table.Cell>
                                             {clickable && isSystemHealthPagePresent ? (
