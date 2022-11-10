@@ -23,7 +23,7 @@ interface ClusterServicesOverviewProps {
 }
 const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> = ({
     services = _.mapValues(clusterServiceEnum, () => ({
-        status: ClusterServiceStatus[ClusterServiceStatus.Unknown],
+        status: ClusterServiceStatus.Unknown,
         is_external: false
     })),
     clickable = false,
@@ -57,9 +57,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                     <Table.Row
                                         key={serviceName}
                                         style={{
-                                            backgroundColor: clusterServiceBgColor(
-                                                ClusterServiceStatus[service.status as ClusterServiceStatus]
-                                            )
+                                            backgroundColor: clusterServiceBgColor(service.status)
                                         }}
                                     >
                                         <Table.Cell>

@@ -12,7 +12,7 @@ import SideBarDropdownItem from './SideBarDropdownItem';
 
 const t = StageUtils.getT('users');
 
-const statusToDotColor = (systemStatus: keyof typeof ClusterServiceStatus | undefined) => {
+const statusToDotColor = (systemStatus: ClusterServiceStatus | undefined) => {
     const dotColors = {
         [ClusterServiceStatus.Fail]: 'red',
         [ClusterServiceStatus.Degraded]: 'yellow'
@@ -22,9 +22,8 @@ const statusToDotColor = (systemStatus: keyof typeof ClusterServiceStatus | unde
         return dotColors[ClusterServiceStatus.Fail];
     }
 
-    const clusterServiceStatus = ClusterServiceStatus[systemStatus];
-    if (clusterServiceStatus === ClusterServiceStatus.Degraded || clusterServiceStatus === ClusterServiceStatus.Fail) {
-        return dotColors[clusterServiceStatus];
+    if (systemStatus === ClusterServiceStatus.Degraded || systemStatus === ClusterServiceStatus.Fail) {
+        return dotColors[systemStatus];
     }
 
     return undefined;
