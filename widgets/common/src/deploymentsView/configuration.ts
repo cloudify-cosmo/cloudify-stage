@@ -8,7 +8,7 @@ export interface SharedDeploymentsViewWidgetConfiguration {
     customPollingTime: number;
     mapHeight: number;
     fieldsToShow: DeploymentsViewColumnId[];
-    labelsToShow: string[];
+    keysOfLabelsToShow: string[];
     pageSize: number;
     sortColumn: string;
     sortAscending: boolean;
@@ -43,8 +43,8 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
     },
     {
-        id: 'labelsToShow',
-        name: tConfiguration('labelsToShow.name'),
+        id: 'keysOfLabelsToShow',
+        name: tConfiguration('keysOfLabelsToShow.name'),
         placeHolder: tConfiguration('fieldsToShow.placeholder'),
         default: [],
         type: Stage.Basic.GenericField.CUSTOM_TYPE,

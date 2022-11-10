@@ -1090,7 +1090,7 @@
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
                 },
-                "labelsToShow": {
+                "keysOfLabelsToShow": {
                   "name": "List of labels' keys to show in the table as columns",
                   "placeholder": "Select keys from the list"
                 },
