@@ -16,7 +16,7 @@ import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { clearWidgetsData } from './widgetData';
 import { minimizeTabWidgets } from './widgets';
-import type { TemplatePageDefinition } from '../reducers/templatesReducer';
+import type { TemplatePageDefinition } from './templateManagement/pages';
 
 export enum InsertPosition {
     Before,

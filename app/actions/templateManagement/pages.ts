@@ -3,13 +3,13 @@ import { push } from 'connected-react-router';
 import _ from 'lodash';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
-import type { SimpleWidgetObj } from '../page';
+import type { SimpleWidgetObj, PageDefinition } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
-import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
 import type { PutPagesRequestBody } from '../../../backend/routes/Templates.types';
 
+export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 type Page = TemplatePageDefinition & { id: string; oldId?: string };
 
 export type AddPageAction = PayloadAction<Page, ActionType.ADD_TEMPLATE_PAGE>;
