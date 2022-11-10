@@ -50,9 +50,7 @@ const ClusterServicesList: FunctionComponent = () => {
                             {index === 0 && (
                                 <DataTable.Data
                                     rowSpan={numberOfNodes}
-                                    style={{
-                                        backgroundColor: clusterServiceBgColor(service.status)
-                                    }}
+                                    style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                 >
                                     <ClusterService isExternal={service.is_external} name={clusterServiceName} />
                                 </DataTable.Data>
