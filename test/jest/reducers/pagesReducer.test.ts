@@ -15,7 +15,6 @@ import type { CreateDrilldownPageAction } from 'actions/pageMenu';
 import { changePageMenuItemName, removePageWithChildren } from 'actions/pageMenu';
 import drilldownContextReducer from 'reducers/drilldownContextReducer';
 import pageReducer from 'reducers/pageReducer';
-import type { TemplatePageDefinition } from 'reducers/templatesReducer';
 import type { Widget } from 'utils/StageAPI';
 import GenericConfig from 'utils/GenericConfig';
 import type { AddWidgetAction, MinimizeTabWidgetsAction } from 'actions/widgets';
@@ -23,6 +22,7 @@ import type { SetDrilldownContextAction } from 'actions/drilldownContext';
 import type { ClearWidgetDataAction } from 'actions/widgetData';
 import type { EnhancedWidgetDefinition } from 'actions/widgetDefinitions';
 import type { ReduxStore, ReduxThunkDispatch } from 'configureStore';
+import type { TemplatePageDefinition } from 'actions/templateManagement/pages';
 
 const mockStore = configureMockStore<Partial<ReduxState>, ReduxThunkDispatch>([thunk]);
 

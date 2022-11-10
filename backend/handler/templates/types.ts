@@ -108,7 +108,7 @@ export interface CreatePageData {
 }
 
 export interface UpdatePageData<WD = WidgetDefinition> extends Omit<CreatePageData, 'layout'> {
-    oldId: string;
+    oldId?: string;
     icon?: string;
     layout: LayoutSection<WD>[];
 }
