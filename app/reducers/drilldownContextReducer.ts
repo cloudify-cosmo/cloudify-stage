@@ -1,12 +1,7 @@
 import type { Reducer } from 'redux';
 
 import { ActionType } from '../actions/types';
-import type { DrilldownContextAction } from '../actions/drilldownContext';
-
-export interface DrilldownContext {
-    pageName?: string;
-    context?: Record<string, any>;
-}
+import type { DrilldownContext, DrilldownContextAction } from '../actions/drilldownContext';
 
 const drillDownContext: Reducer<DrilldownContext[], DrilldownContextAction> = (state = [], action) => {
     let newState: DrilldownContext[];
