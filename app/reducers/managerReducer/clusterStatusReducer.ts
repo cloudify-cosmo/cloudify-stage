@@ -18,7 +18,7 @@ const clusterStatus: Reducer<ClusterStatusData, ClusterStatusAction> = (state = 
             return {
                 isFetching: false,
                 error: undefined,
-                status: action.payload.status,
+                status: action.payload.status as ClusterServiceStatus,
                 services: action.payload.services || state.services
             };
         case ActionType.FETCH_CLUSTER_STATUS_FAILURE:
