@@ -6,7 +6,7 @@ import { Icon } from '../../basic';
 import { ClusterServiceStatus } from './types';
 
 interface ClusterStatusIconProps {
-    status: ClusterServiceStatus | undefined;
+    status?: ClusterServiceStatus;
 }
 const ClusterStatusIcon: FunctionComponent<ClusterStatusIconProps> = ({ status }) => {
     let color: SemanticCOLORS = 'grey';
