@@ -86,12 +86,16 @@ describe('Deployments widget', () => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
             });
-            cy.getSearchInput().clear();
+            cy.getSearchInput().clear().blur();
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
             before(() => {
                 cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
+            });
+
+            beforeEach(() => {
+                cy.visitTestPage();
             });
 
             const getMockedResponse = (deployments: unknown[] = []) => ({
@@ -112,8 +116,6 @@ describe('Deployments widget', () => {
             it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
                 const mockedResponse = getMockedResponse([]);
                 mockDeploymentsResponse(mockedResponse);
-
-                cy.refreshTemplate();
 
                 cy.contains('No Deployments Yet').should('be.visible');
 
@@ -146,8 +148,6 @@ describe('Deployments widget', () => {
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
 
-                cy.visitTestPage();
-
                 cy.contains(displayName).should('be.visible');
                 cy.contains('No Deployments Yet').should('not.exist');
             });
@@ -157,8 +157,6 @@ describe('Deployments widget', () => {
             cy.interceptSp('GET', { pathname: '/deployments', query: { blueprint_id: blueprintName } }).as(
                 'getFilteredDeployments'
             );
-
-            cy.refreshPage();
 
             cy.editWidgetConfiguration('deployments', () =>
                 cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
