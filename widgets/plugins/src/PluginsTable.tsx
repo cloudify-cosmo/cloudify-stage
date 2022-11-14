@@ -142,7 +142,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             key={item.id}
                             selected={item.isSelected}
                             onClick={() => selectPlugin(item)}
-                            onMouseOver={setHoveredPlugin as any} // TODO: How does it work? :(, probably a bug
+                            onMouseOver={setHoveredPlugin as any} // TODO(RD-6366) Set hovered state properly
                             onMouseOut={clearHoveredPlugin}
                         >
                             <DataTable.Data>
