@@ -8,6 +8,7 @@ import widgets from './widgetsReducer';
 import type { LayoutSection, PageDefinition, TabAction, TabContent, LayoutSectionAction } from '../actions/page';
 import { forAllWidgets, forEachWidget, isWidgetsSection } from '../actions/page';
 import type {
+    AddPageAction,
     AddPageGroupAction,
     CreateDrilldownPageAction,
     PageMenuItem,
@@ -227,9 +228,9 @@ const pageMenuItemsReducer: Reducer<
     switch (action.type) {
         case ActionType.ADD_PAGE:
         case ActionType.CREATE_DRILLDOWN_PAGE:
-            return [...state, createPage(action as CreateDrilldownPageAction)];
+            return [...state, createPage(action)];
         case ActionType.ADD_PAGE_GROUP:
-            return [...state, createPageGroup(action as AddPageGroupAction)];
+            return [...state, createPageGroup(action)];
         case ActionType.ADD_PAGE_TO_GROUP: {
             let newState = cloneDeep(state);
             const pageToAdd = _.find(state, { id: action.payload.pageId });
@@ -338,7 +339,7 @@ const pageMenuItemsReducer: Reducer<
 
 export default pageMenuItemsReducer;
 
-function createPage(action: CreateDrilldownPageAction): PageDefinition {
+function createPage(action: CreateDrilldownPageAction | AddPageAction): PageDefinition {
     return {
         id: action.payload.newPageId,
         name: action.payload.page.name,
