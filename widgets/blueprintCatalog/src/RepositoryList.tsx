@@ -144,6 +144,11 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
         this.setState({ showReadmeModal: false });
     };
 
+    openBlueprintPage = (blueprintId: string) => {
+        const { toolbox, widget } = this.props;
+        toolbox.drillDown(widget, 'blueprint', { blueprintId });
+    };
+
     refreshData() {
         const { toolbox } = this.props;
         toolbox.refresh();
@@ -180,6 +185,7 @@ export default class RepositoryList extends React.Component<RepositoryListProps,
                     onSelect={this.selectItem}
                     onUpload={this.handleUpload}
                     onReadme={this.showReadmeModal}
+                    onOpenBlueprintPage={this.openBlueprintPage}
                     readmeLoading={readmeLoading}
                     noDataMessage={t('noDataMessage')}
                 />

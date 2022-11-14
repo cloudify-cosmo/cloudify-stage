@@ -13,6 +13,7 @@ import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, 
 import EditModeBubble from '../../EditModeBubble';
 import { PageContent } from '../../shared/widgets';
 import { setTemplateManagementActive } from '../../../actions/templateManagement';
+import type { TemplatePageDefinition } from '../../../actions/templateManagement/pages';
 import { savePage, setDrillDownWarningActive, setPageEditMode } from '../../../actions/templateManagement/pages';
 import StageUtils from '../../../utils/stageUtils';
 import { useErrors } from '../../../utils/hooks';
@@ -20,7 +21,6 @@ import type { LayoutSection, SimpleWidgetObj, TabContent } from '../../../action
 import { forEachWidget, getWidgetDefinitionById } from '../../../actions/page';
 import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
-import type { TemplatePageDefinition } from '../../../reducers/templatesReducer';
 import useCreatePageId from './useCreatePageId';
 import IconSelection from '../../sidebar/IconSelection';
 import { expandedSidebarWidth } from '../../sidebar/SideBar';
