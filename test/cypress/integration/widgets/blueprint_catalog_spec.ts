@@ -47,7 +47,7 @@ describe('Blueprints catalog widget', () => {
     it('should allow to customize fields to show', () => {
         cy.editWidgetConfiguration('blueprintCatalog', () => {
             cy.clearMultipleDropdown('List of fields to show');
-            return cy.setMultipleDropdownValues('List of fields to show', ['Name', 'Created']);
+            cy.setMultipleDropdownValues('List of fields to show', ['Name', 'Created']);
         });
         cy.get('.blueprintCatalogWidget').within(() => {
             cy.contains('Name').should('be.visible');

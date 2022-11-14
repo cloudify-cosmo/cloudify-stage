@@ -171,7 +171,7 @@ describe('Deployments widget', () => {
 
             cy.editWidgetConfiguration('deployments', () => {
                 cy.get('div[name="displayStyle"]').click();
-                return cy.get('div[option-value="list"]').click();
+                cy.get('div[option-value="list"]').click();
             });
 
             cy.get('table.deploymentsTable').should('not.exist');

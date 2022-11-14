@@ -47,20 +47,13 @@ const commands = {
 
         cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
         cy.get('.editWidgetModal').within(() => {
-            fnWithinEditWidgetModal(); // .then(() => {
-            if (save) {
-                // cy.intercept({ pathname: '/console/ua', method: 'POST' }).as('uaSaveRequest');
-                cy.get(`button.ok`).click();
-                // cy.wait('@uaSaveRequest');
-            } else {
-                cy.get(`button.cancel`).click();
-            }
-            // });
+            fnWithinEditWidgetModal();
+            cy.get(`button${save ? '.ok' : '.cancel'}`).click();
         });
 
         return cy.exitEditMode();
     },
-    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) => {
+    setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
         cy.editWidgetConfiguration(widgetId, () =>
             cy
                 .getField(fieldName)
@@ -68,11 +61,9 @@ const commands = {
                 .as('toggle')
                 .then($div => {
                     if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
-                        return cy.get('@toggle').click();
-                    return null;
+                        cy.get('@toggle').click();
                 })
-        );
-    },
+        ),
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
         cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>

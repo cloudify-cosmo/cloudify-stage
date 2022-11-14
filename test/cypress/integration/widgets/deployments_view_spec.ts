@@ -113,7 +113,7 @@ describe('Deployments View widget', () => {
                 widgetConfigurationHelpers.getFieldsDropdown().within(() => {
                     cy.get('[role="option"]').contains('Blueprint name').click();
                 });
-                return widgetConfigurationHelpers.toggleFieldsDropdown();
+                widgetConfigurationHelpers.toggleFieldsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
@@ -134,7 +134,7 @@ describe('Deployments View widget', () => {
 
             cy.editWidgetConfiguration(widgetId, () => {
                 // NOTE: after clearing the input, 0 is automatically inserted. {home}{del} removes the leading 0
-                return widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
+                widgetConfigurationHelpers.mapHeightInput().clear().type(`${newHeight}{home}{del}`);
             });
 
             verifyMapHeight(newHeight);

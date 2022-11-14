@@ -61,7 +61,7 @@ describe('Create deployment button widget should allow configuring', () => {
                 cy.get(`[role="listbox"] > *`).click();
             });
             selectLabelValue('k8s');
-            return selectLabelValue('docker');
+            selectLabelValue('docker');
         });
         cy.clickButton('Create deployment');
         cy.get('div.deployBlueprintModal').within(() => {
