@@ -137,7 +137,7 @@ export default class NodesTable extends React.Component {
                                     selected={node.isSelected}
                                     onClick={() => this.selectNode(node)}
                                 >
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <NodeTypeIcon typeHierarchy={node.type_hierarchy} />
                                     </DataTable.Data>
                                     <DataTable.Data>
