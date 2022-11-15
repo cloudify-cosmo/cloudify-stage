@@ -5,14 +5,14 @@ import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
+import { createPagesMap } from '../pageMenu';
+import type { ClusterServices } from '../../components/shared/cluster/types';
 
 export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
-// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
 export type FetchClusterStatusSuccessAction = PayloadAction<
-    { status: any; services: any },
+    { status: string; services?: ClusterServices },
     ActionType.FETCH_CLUSTER_STATUS_SUCCESS
 >;
-// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly / Change action name?
 export type FetchClusterStatusFailureAction = PayloadAction<any, ActionType.FETCH_CLUSTER_STATUS_FAILURE>;
 export type ClusterStatusAction =
     | FetchClusterStatusRequestAction
@@ -25,8 +25,7 @@ function fetchClusterStatusRequest(): FetchClusterStatusRequestAction {
     };
 }
 
-// TODO(RD-5591/RD-5755): Add proper typings once Cluster Status API is typed properly
-function fetchClusterStatusSuccess(status: any, services: any): FetchClusterStatusSuccessAction {
+function fetchClusterStatusSuccess(status: string, services?: ClusterServices): FetchClusterStatusSuccessAction {
     return {
         type: ActionType.FETCH_CLUSTER_STATUS_SUCCESS,
         payload: { status, services }
@@ -40,13 +39,14 @@ function fetchClusterStatusFailure(error: any): FetchClusterStatusFailureAction 
     };
 }
 
-function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[]) {
-    const currentPage = pages.find(page => page.id === pageId);
+function isClusterStatusWidgetOnPage(pageId: string | null, pageMenuItems: PageMenuItem[]) {
+    const pagesMap = createPagesMap(pageMenuItems);
     const clusterStatusWidgetDefinitionName = 'highAvailability';
-
+    let currentPage;
     let widgetPresent = false;
+
+    if (pageId) currentPage = pagesMap[pageId];
     if (currentPage) {
-        // @ts-ignore: TODO(RD-5591) Iterate not only over widgets, but also over page groups
         forEachWidget(currentPage, widget => {
             if (widget.definition === clusterStatusWidgetDefinitionName) widgetPresent = true;
             return widget;
@@ -56,6 +56,10 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pages: PageMenuItem[
     return widgetPresent;
 }
 
+interface GetClusterStatusResponse {
+    status: string;
+    services: ClusterServices;
+}
 export function getClusterStatus(
     summaryOnly = false
 ): ReduxThunkAction<
@@ -68,7 +72,7 @@ export function getClusterStatus(
         const fetchOnlySummary = summaryOnly && !isClusterStatusWidgetOnPage(app.currentPageId, pages);
         dispatch(fetchClusterStatusRequest());
         return managerAccessor
-            .doGet(`/cluster-status?summary=${fetchOnlySummary}`)
+            .doGet<GetClusterStatusResponse>(`/cluster-status?summary=${fetchOnlySummary}`)
             .then(data => {
                 const { services, status } = data;
                 dispatch(fetchClusterStatusSuccess(status, fetchOnlySummary ? undefined : services));
