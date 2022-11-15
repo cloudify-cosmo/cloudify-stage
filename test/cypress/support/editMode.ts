@@ -34,6 +34,7 @@ const commands = {
         cy.enterEditMode();
 
         cy.contains('Add Page').click();
+        cy.contains('This page is empty');
         cy.get('.breadcrumb').within(() => {
             cy.get('.pageTitle').click();
             cy.get('.pageTitle.input input').clear().type(pageName);
