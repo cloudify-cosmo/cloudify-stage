@@ -1,3 +1,5 @@
+import { minutesToMs } from '../../support/resource_commons';
+
 describe('Blueprints catalog widget', () => {
     const blueprintName = 'AWS-Basics-VM-Setup';
 
@@ -36,6 +38,16 @@ describe('Blueprints catalog widget', () => {
 
         cy.contains('.segment', blueprintName).contains('Upload').click();
         cy.contains('.ui.label.section.active.pageTitle', blueprintName);
+    });
+
+    it.only('should open uploaded blueprint succesfully', () => {
+        cy.contains('.segment', blueprintName).contains('Upload').click();
+        cy.contains('.ui.label.section.active.pageTitle', blueprintName, { timeout: minutesToMs(1) });
+
+        cy.go('back');
+
+        cy.contains('button', 'Open').click();
+        cy.contains('.ui.label', blueprintName);
     });
 
     it('should allow to change display style', () => {
