@@ -89,7 +89,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{description}</DataTable.Data>
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
-                        <DataTable.Data className="center aligned rowActions">
+                        <DataTable.Data textAlign="center" className="rowActions">
                             <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}

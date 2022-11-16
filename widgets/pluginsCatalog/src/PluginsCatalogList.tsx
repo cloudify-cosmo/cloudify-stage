@@ -174,7 +174,7 @@ const PluginsCatalogList: FunctionComponent<PluginsCatalogListProps> = ({ toolbo
                             <DataTable.Data>{item.description}</DataTable.Data>
                             <DataTable.Data>{item.version}</DataTable.Data>
                             <DataTable.Data>{item.uploadedVersion ?? '-'}</DataTable.Data>
-                            <DataTable.Data className="center aligned">{getActionColumnContent(item)}</DataTable.Data>
+                            <DataTable.Data textAlign="center">{getActionColumnContent(item)}</DataTable.Data>
                         </DataTable.Row>
                     );
                 })}

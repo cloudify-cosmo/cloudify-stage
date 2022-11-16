@@ -108,7 +108,6 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                 <DataTable.Column width="10%" />
 
                 {pageGroups.map(item => (
-                    // @ts-ignore RowExpandable returns void
                     <DataTable.RowExpandable key={item.id} expanded={selectedItemId === item.id}>
                         <DataTable.Row
                             key={item.id}
@@ -133,7 +132,7 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
                             </DataTable.Data>
                             <DataTable.Data>{item.updatedBy}</DataTable.Data>
-                            <DataTable.Data style={{ textAlign: 'center' }}>
+                            <DataTable.Data textAlign="center">
                                 {item.custom && (
                                     <>
                                         <PopupConfirm

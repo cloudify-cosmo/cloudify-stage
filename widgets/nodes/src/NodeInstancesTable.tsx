@@ -67,7 +67,7 @@ export default class NodeInstancesTable extends React.Component {
                                     <CopyToClipboardButton text={instance.id} className="rightFloated" />
                                 </DataTable.Data>
                                 <DataTable.Data>{instance.state}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         bordered
                                         link
