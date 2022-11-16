@@ -20,39 +20,6 @@ interface BlueprintListState {
     force: boolean;
 }
 
-const friendOptions = [
-    {
-        key: 'Jenny Hess',
-        text: 'Jenny Hess',
-        value: 'Jenny Hess'
-    },
-    {
-        key: 'Elliot Fu',
-        text: 'Elliot Fu',
-        value: 'Elliot Fu'
-    },
-    {
-        key: 'Stevie Feliciano',
-        text: 'Stevie Feliciano',
-        value: 'Stevie Feliciano'
-    },
-    {
-        key: 'Christian',
-        text: 'Christian',
-        value: 'Christian'
-    },
-    {
-        key: 'Matt',
-        text: 'Matt',
-        value: 'Matt'
-    },
-    {
-        key: 'Justen Kitsune',
-        text: 'Justen Kitsune',
-        value: 'Justen Kitsune'
-    }
-];
-
 type ForceCheckboxState = Pick<BlueprintListState, 'force'>;
 
 export default class BlueprintList extends React.Component<BlueprintListProps, BlueprintListState> {
@@ -172,7 +139,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage, Form } = Stage.Basic;
+        const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -182,30 +149,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
         return (
             <div>
-                <Form>
-                    <h2>Single select dropdown</h2>
-                    <div style={{ display: 'flex', gap: '24px' }}>
-                        <Form.Dropdown selection options={friendOptions} />
-                        <Form.Dropdown selection options={friendOptions} search placeholder="Search" />
-                        <Form.Dropdown selection options={friendOptions} placeholder="Placeholder" />
-                        <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} disabled />
-                        <Form.Dropdown selection options={friendOptions} value={friendOptions[0].value} error />
-                    </div>
-                    <h2>Multiple select dropdown</h2>
-                    <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
-                        <Form.Dropdown selection multiple options={friendOptions} />
-                        <Form.Dropdown selection multiple options={friendOptions} search placeholder="Search" />
-                        <Form.Dropdown selection multiple options={friendOptions} placeholder="Placeholder" />
-                        <Form.Dropdown
-                            selection
-                            multiple
-                            options={friendOptions}
-                            value={[friendOptions[0].value]}
-                            disabled
-                        />
-                    </div>
-                </Form>
-                <div style={{ height: '500px' }} />
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <div className="uploadBlueprintButton">
