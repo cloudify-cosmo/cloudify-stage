@@ -40,7 +40,7 @@ describe('Blueprints catalog widget', () => {
         cy.contains('.ui.label.section.active.pageTitle', blueprintName);
     });
 
-    it.only('should open uploaded blueprint succesfully', () => {
+    it('should open uploaded blueprint succesfully', () => {
         cy.contains('.segment', blueprintName).contains('Upload').click();
         cy.contains('.ui.label.section.active.pageTitle', blueprintName, { timeout: minutesToMs(1) });
 
