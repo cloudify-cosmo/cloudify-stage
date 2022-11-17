@@ -1,7 +1,7 @@
 export interface InputsTableProps {
     data: {
-        blueprintId: string | string[];
-        deploymentId: string | string[];
+        blueprintId: string | string[] | null | undefined;
+        deploymentId: string | string[] | null | undefined;
         items: {
             description: string;
             name: string;

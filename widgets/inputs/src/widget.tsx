@@ -1,8 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { InputsTableProps } from './InputsTable';
 import InputsTable from './InputsTable';
 
-Stage.defineWidget({
+export interface InputsTableData {
+    inputs: InputsTableProps['data']['items'];
+}
+
+Stage.defineWidget<unknown, InputsTableData, Record<string, unknown>>({
     id: 'inputs',
     name: 'Deployment Inputs',
     description: 'This widget shows the deployment inputs',
@@ -16,7 +19,7 @@ Stage.defineWidget({
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
-    fetchData(widget, toolbox) {
+    fetchData(_widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
@@ -60,14 +63,14 @@ Stage.defineWidget({
         return Promise.resolve({ inputs: [] });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (_.isEmpty(data) || !data) {
             return <Loading />;
         }
 
-        const formattedData = {
+        const formattedData: InputsTableProps['data'] = {
             ...data,
             items: data.inputs,
             deploymentId: toolbox.getContext().getValue('deploymentId'),
