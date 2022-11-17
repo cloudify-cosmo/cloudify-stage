@@ -1148,7 +1148,12 @@
                                     "help": "Specify a text which will be appended to each deployment name"
                                 }
                             },
-                            "steps": {
+                            "deploySteps": {
+                                "validatingData": "1/3: Validating data...",
+                                "fetchingEnvironments": "2/3: Fetching environments list...",
+                                "creatingDeployments": "3/3: Creating deployments..."
+                            },
+                            "deployAndInstallSteps": {
                                 "validatingData": "1/4: Validating data...",
                                 "fetchingEnvironments": "2/4: Fetching environments list...",
                                 "creatingDeployments": "3/4: Creating deployments...",
