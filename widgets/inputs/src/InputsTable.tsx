@@ -1,7 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
+export interface InputsTableProps {
+    data: {
+        blueprintId: string | string[];
+        deploymentId: string | string[];
+        items: {
+            description: string;
+            name: string;
+            value: any; // Stage.PropTypes.anydata
+        }[];
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget;
+}
 
-export default class InputsTable extends React.Component {
-    constructor(props, context) {
+export interface InputsTableState {
+    error: null; // Error is never different from null in this widget
+}
+
+export default class InputsTable extends React.Component<InputsTableProps, InputsTableState> {
+    constructor(props: InputsTableProps, context: unknown) {
         super(props, context);
         this.state = {
             error: null
@@ -13,7 +29,7 @@ export default class InputsTable extends React.Component {
         toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: InputsTableProps, nextState: InputsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -22,7 +38,7 @@ export default class InputsTable extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: InputsTableProps) {
         const { data } = this.props;
         if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
@@ -47,7 +63,7 @@ export default class InputsTable extends React.Component {
         const { data } = this.props;
         const { error } = this.state;
         const { items: inputs } = data;
-        const compareNames = (a, b) => {
+        const compareNames = (a: { name: string }, b: { name: string }) => {
             if (a.name > b.name) return 1;
             if (b.name > a.name) return -1;
             return 0;
@@ -86,19 +102,3 @@ export default class InputsTable extends React.Component {
         );
     }
 }
-
-InputsTable.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: Stage.PropTypes.StringOrArray,
-        deploymentId: Stage.PropTypes.StringOrArray,
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                description: PropTypes.string,
-                name: PropTypes.string,
-                value: Stage.PropTypes.AnyData
-            })
-        )
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
