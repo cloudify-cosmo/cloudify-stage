@@ -1,22 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { noop } from 'lodash';
 import React from 'react';
 import i18n from 'i18next';
 import Const from '../../../utils/consts';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../../basic';
 
-export default function TenantList({ custom, onDelete, style, tenants }) {
+interface TenantListProps {
+    custom: boolean;
+    onDelete: (tenant: string) => any;
+    tenants: string[];
+    style?: React.CSSProperties;
+}
+
+export default function TenantList({ custom = false, onDelete = noop, style, tenants = [] }: TenantListProps) {
     return (
         <Segment style={style}>
             <Icon name="male" /> Tenants
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
-                {tenants.map(item => {
+                {tenants.map(tenant => {
                     return (
-                        <List.Item key={item}>
-                            {item === Const.DEFAULT_ALL ? 'all' : item}
+                        <List.Item key={tenant}>
+                            {tenant === Const.DEFAULT_ALL ? 'all' : tenant}
 
                             {custom && _.size(tenants) > 1 && (
                                 <PopupConfirm
@@ -25,14 +29,14 @@ export default function TenantList({ custom, onDelete, style, tenants }) {
                                             link
                                             name="remove"
                                             className="right floated"
-                                            onClick={e => e.stopPropagation()}
+                                            onClick={(event: Event) => event.stopPropagation()}
                                         />
                                     }
                                     content={i18n.t(
                                         'templates.templateManagement.tenantsList.removeConfirm',
                                         'Are you sure to remove this tenant from template?'
                                     )}
-                                    onConfirm={() => onDelete(item)}
+                                    onConfirm={() => onDelete(tenant)}
                                 />
                             )}
                         </List.Item>
@@ -47,17 +51,3 @@ export default function TenantList({ custom, onDelete, style, tenants }) {
         </Segment>
     );
 }
-
-TenantList.propTypes = {
-    custom: PropTypes.bool,
-    onDelete: PropTypes.func,
-    style: PropTypes.shape({}),
-    tenants: PropTypes.arrayOf(PropTypes.string)
-};
-
-TenantList.defaultProps = {
-    custom: false,
-    onDelete: _.noop,
-    style: {},
-    tenants: []
-};

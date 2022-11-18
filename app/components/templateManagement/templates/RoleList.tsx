@@ -1,21 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { noop } from 'lodash';
 import React from 'react';
 import i18n from 'i18next';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../../basic';
 
-export default function RoleList({ custom, onDelete, roles, style }) {
+interface RoleListProps {
+    custom: boolean;
+    onDelete: (role: string) => any;
+    roles: string[];
+    style?: React.CSSProperties;
+}
+
+export default function RoleList({ custom = false, onDelete = noop, roles = [], style }: RoleListProps) {
     return (
         <Segment style={style}>
             <Icon name="student" /> Roles
             <Divider />
             <List divided relaxed verticalAlign="middle" className="light">
-                {roles.map(item => {
+                {roles.map(role => {
                     return (
-                        <List.Item key={item}>
-                            {item}
+                        <List.Item key={role}>
+                            {role}
 
                             {custom && _.size(roles) > 1 && (
                                 <PopupConfirm
@@ -24,14 +28,14 @@ export default function RoleList({ custom, onDelete, roles, style }) {
                                             link
                                             name="remove"
                                             className="right floated"
-                                            onClick={e => e.stopPropagation()}
+                                            onClick={(event: Event) => event.stopPropagation()}
                                         />
                                     }
                                     content={i18n.t(
                                         'templates.templateManagement.roleList.removeConfirm',
                                         'Are you sure to remove this role from template?'
                                     )}
-                                    onConfirm={() => onDelete(item)}
+                                    onConfirm={() => onDelete(role)}
                                 />
                             )}
                         </List.Item>
@@ -44,17 +48,3 @@ export default function RoleList({ custom, onDelete, roles, style }) {
         </Segment>
     );
 }
-
-RoleList.propTypes = {
-    custom: PropTypes.bool,
-    onDelete: PropTypes.func,
-    roles: PropTypes.arrayOf(PropTypes.string),
-    style: PropTypes.shape({})
-};
-
-RoleList.defaultProps = {
-    custom: false,
-    onDelete: _.noop,
-    roles: [],
-    style: {}
-};

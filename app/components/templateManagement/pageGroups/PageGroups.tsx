@@ -17,7 +17,7 @@ import Internal from '../../../utils/Internal';
 const tTemplates = StageUtils.getT('templates');
 const tPageGroupManagement = StageUtils.composeT(tTemplates, 'pageGroupManagement');
 
-interface PageGroup {
+export interface PageGroup {
     id: string;
     name: string;
     icon: SemanticICONS;
