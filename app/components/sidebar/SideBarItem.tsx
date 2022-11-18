@@ -67,7 +67,14 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
                         <Icon
                             name="dropdown"
                             rotated={expanded ? undefined : 'counterclockwise'}
-                            style={{ position: 'absolute', right: 12, margin: 0 }}
+                            style={{
+                                position: 'absolute',
+                                right: 12,
+                                margin: 0,
+                                height: 13,
+                                width: 15,
+                                fontSize: '14px'
+                            }}
                         />
                     )}
                 </SideBarAnimatedItemWrapper>
