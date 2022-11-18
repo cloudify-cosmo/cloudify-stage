@@ -139,7 +139,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage } = Stage.Basic;
+        const { ErrorMessage, Message } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -150,7 +150,78 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
+                <h2>Message with children</h2>
+                <div style={{ display: 'flex', gap: '24px' }}>
+                    <Message onDismiss={() => {}}>
+                        {/* .message || .message > .content || .message > p */}
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                    <Message onDismiss={() => {}} info>
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                    <Message onDismiss={() => {}} negative>
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                    <Message onDismiss={() => {}} warning>
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                    <Message onDismiss={() => {}} success>
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                    <Message onDismiss={() => {}} icon="cog">
+                        We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes.
+                    </Message>
+                </div>
+                <h2>Message without children</h2>
+                <div style={{ display: 'flex', gap: '24px' }}>
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                    />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                        info
+                    />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                        negative
+                    />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                        warning
+                    />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                        success
+                    />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Sample header"
+                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
+                        the changes."
+                        icon="cog"
+                    />
+                </div>
                 <div className="uploadBlueprintButton">
                     <BlueprintUploadActionsMenu
                         upward={false}
