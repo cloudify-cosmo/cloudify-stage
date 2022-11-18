@@ -1,3 +1,4 @@
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import _ from 'lodash';
 import React from 'react';
 import i18n from 'i18next';
@@ -6,7 +7,7 @@ import { useBoolean, useErrors, useResettableState } from '../../../utils/hooks'
 import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../../basic';
 
 export interface CreatePageModalProps {
-    onCreatePage: (pageName: string) => Promise<any>;
+    onCreatePage: (pageName: string) => Promise<void | CallHistoryMethodAction>;
 }
 
 export default function CreatePageModal({ onCreatePage }: CreatePageModalProps) {

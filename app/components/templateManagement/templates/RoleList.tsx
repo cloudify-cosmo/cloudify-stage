@@ -2,12 +2,10 @@ import { noop } from 'lodash';
 import React from 'react';
 import i18n from 'i18next';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../../basic';
+import type { CommonListProps } from './types';
 
-interface RoleListProps {
-    custom: boolean;
-    onDelete: (role: string) => any;
+interface RoleListProps extends CommonListProps {
     roles: string[];
-    style?: React.CSSProperties;
 }
 
 export default function RoleList({ custom = false, onDelete = noop, roles = [], style }: RoleListProps) {

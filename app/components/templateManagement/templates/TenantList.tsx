@@ -3,12 +3,10 @@ import React from 'react';
 import i18n from 'i18next';
 import Const from '../../../utils/consts';
 import { Segment, Icon, Divider, List, Message, PopupConfirm } from '../../basic';
+import type { CommonListProps } from './types';
 
-interface TenantListProps {
-    custom: boolean;
-    onDelete: (tenant: string) => any;
+interface TenantListProps extends CommonListProps {
     tenants: string[];
-    style?: React.CSSProperties;
 }
 
 export default function TenantList({ custom = false, onDelete = noop, style, tenants = [] }: TenantListProps) {

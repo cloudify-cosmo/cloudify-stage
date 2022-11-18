@@ -127,11 +127,11 @@ export default function TemplateManagement() {
     }
 
     function onSelectTemplate({ id }: Template) {
-        setTemplates(setSelected<Template>(templates, id));
+        setTemplates(setSelected(templates, id));
     }
 
     function onSelectPage({ id }: Page) {
-        setPages(setSelected<Page>(pages, id));
+        setPages(setSelected(pages, id));
     }
 
     function startLoading() {
