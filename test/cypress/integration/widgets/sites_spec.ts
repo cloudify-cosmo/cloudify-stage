@@ -119,7 +119,7 @@ describe('Sites Management', () => {
     };
 
     before(() => {
-        cy.activate().deleteAllUsersAndTenants().usePageMock(widgetId).mockLogin().waitUntilLoaded();
+        cy.activate().deleteAllUsersAndTenants().usePageMock(widgetId).mockLogin();
     });
 
     beforeEach(() => {
