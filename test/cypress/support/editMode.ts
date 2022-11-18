@@ -1,5 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
+import { secondsToMs } from 'test/cypress/support/resource_commons';
 
 declare global {
     namespace Cypress {
@@ -20,34 +21,45 @@ const commands = {
         });
     },
     exitEditMode: () => cy.get('.editModeSidebar').contains('Exit').click(),
+    waitUntilLayoutUpdated: (functionToExecuteBeforeWaiting: () => void) => {
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
+        functionToExecuteBeforeWaiting();
+        cy.wait('@updateUserApps', { timeout: secondsToMs(10) });
+    },
     addWidget: (widgetId: string) => {
         cy.enterEditMode();
 
-        cy.contains('Add Widget').click();
-        cy.get(`*[data-id=${widgetId}]`).click();
-        cy.contains('Add selected widgets').click();
+        cy.waitUntilLayoutUpdated(() => {
+            cy.contains('Add Widget').click();
+            cy.get(`*[data-id=${widgetId}]`).click();
+            cy.contains('Add selected widgets').click();
+        });
 
         return cy.exitEditMode();
     },
     addPage: (pageName: string) => {
         cy.enterEditMode();
 
-        cy.contains('Add Page').click();
-        cy.get('.breadcrumb').within(() => {
-            cy.get('.pageTitle').click();
-            cy.get('.pageTitle.input input').clear().type(pageName);
+        cy.waitUntilLayoutUpdated(() => {
+            cy.contains('Add Page').click();
+            cy.get('.breadcrumb').within(() => {
+                cy.get('.pageTitle').click();
+                cy.get('.pageTitle.input input').clear().type(pageName);
+            });
+            cy.contains('Add Widgets').click();
         });
-        cy.contains('Add Widgets').click();
 
         return cy.exitEditMode();
     },
-    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void, save = true) => {
+    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void) => {
         cy.enterEditMode();
 
-        cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
-        cy.get('.editWidgetModal').within(() => {
-            fnWithinEditWidgetModal();
-            cy.get(`button${save ? '.ok' : '.cancel'}`).click();
+        cy.waitUntilLayoutUpdated(() => {
+            cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
+            cy.get('.editWidgetModal').within(() => {
+                fnWithinEditWidgetModal();
+                cy.get('button.ok').click();
+            });
         });
 
         return cy.exitEditMode();
