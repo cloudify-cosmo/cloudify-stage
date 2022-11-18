@@ -48,20 +48,19 @@ function consumeEvent(event: React.MouseEvent) {
     event.preventDefault();
 }
 
-const RemoveIcon = styled(Icon)`
+const RemoveIcon = styled(Icon).attrs(({ isSubItem }) => ({
+    right: isSubItem ? '10px' : '2px',
+    top: isSubItem ? '0' : '15px'
+}))`
     position: absolute;
-    top: 15px;
-    right: 0;
+    top: ${props => props.top};
+    right: ${props => props.right};
     visibility: hidden;
     float: right;
     line-height: 8px !important;
     font-size: 10px !important;
     ${SideBarItemWrapper}:hover & {
         visibility: visible;
-    }
-    &.subitem {
-        top: 0;
-        right: 10px;
     }
 `;
 
@@ -288,7 +287,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds
                                     consumeEvent(event);
                                     onItemRemoved(pageMenuItem);
                                 }}
-                                className={subItem ? 'subitem' : ''}
+                                isSubItem={subItem}
                             />
                         )}
                     </>
