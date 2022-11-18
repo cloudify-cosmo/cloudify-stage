@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import _ from 'lodash';
+import { isEmpty, includes, filter, find, map, pick, reject, without } from 'lodash';
 import log from 'loglevel';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -61,43 +61,37 @@ export default function TemplateManagement() {
             internal.doGet<GetPageGroupsResponse>('/templates/page-groups')
         ])
             .then(data => {
-                const selectedTemplate = _.find(templates, { selected: true });
-                const selectedPage = _.find(pages, { selected: true });
+                const selectedTemplate = find(templates, { selected: true });
+                const selectedPage = find(pages, { selected: true });
 
                 const [templateList, pageList, pageGroupList] = data;
 
-                const preparedTemplates: Template[] = _.map(templateList, template => {
-                    return {
-                        ...template,
-                        pages: templateDefs[template.id].pages,
-                        selected: template.id === selectedTemplate?.id
-                    };
-                });
+                const preparedTemplates: Template[] = templateList.map(template => ({
+                    ...template,
+                    pages: templateDefs[template.id].pages,
+                    selected: template.id === selectedTemplate?.id
+                }));
 
-                const preparedPages = _.map(_.compact(pageList), page => {
-                    return {
-                        ...page,
-                        ..._.pick(pageDefs[page.id], 'name', 'icon'),
-                        templates: _.map(
-                            _.filter(preparedTemplates, template =>
-                                _.find(template.pages, { id: page.id, type: 'page' })
-                            ),
-                            'id'
-                        ),
-                        pageGroups: _(pageGroupDefs)
-                            .pickBy(pageGroup => _.includes(pageGroup.pages, page.id))
-                            .keys()
-                            .value(),
-                        selected: page.id === selectedPage?.id
-                    };
-                });
+                const preparedPages = pageList.map(page => ({
+                    ...page,
+                    ...pick(pageDefs[page.id], 'name', 'icon'),
+                    templates: map(
+                        filter(preparedTemplates, template => find(template.pages, { id: page.id, type: 'page' })),
+                        'id'
+                    ),
+                    pageGroups: _(pageGroupDefs)
+                        .pickBy(pageGroup => includes(pageGroup.pages, page.id))
+                        .keys()
+                        .value(),
+                    selected: page.id === selectedPage?.id
+                }));
 
-                const preparedPageGroups = _.compact(pageGroupList).map(pageGroup => ({
+                const preparedPageGroups = pageGroupList.map(pageGroup => ({
                     ...pageGroup,
                     ...pageGroupDefs[pageGroup.id],
-                    templates: _.map(
-                        _.filter(preparedTemplates, template =>
-                            _.find(template.pages, { id: pageGroup.id, type: 'pageGroup' })
+                    templates: map(
+                        filter(preparedTemplates, template =>
+                            find(template.pages, { id: pageGroup.id, type: 'pageGroup' })
                         ),
                         'id'
                     )
@@ -123,7 +117,7 @@ export default function TemplateManagement() {
     }, [templateDefs, pageDefs, pageGroupDefs]);
 
     function setSelected<Item extends { id: string; selected: boolean }>(collection: Item[], id: string) {
-        return _.map(collection, item => ({ ...item, selected: !item.selected && item.id === id }));
+        return map(collection, item => ({ ...item, selected: !item.selected && item.id === id }));
     }
 
     function onSelectTemplate({ id }: Template) {
@@ -197,7 +191,7 @@ export default function TemplateManagement() {
             id: templateName.trim(),
             data: {
                 roles: templateRoles,
-                tenants: _.isEmpty(templateTenants) ? [Const.DEFAULT_ALL] : templateTenants
+                tenants: isEmpty(templateTenants) ? [Const.DEFAULT_ALL] : templateTenants
             },
             pages: templatePages
         };
@@ -210,19 +204,19 @@ export default function TemplateManagement() {
     }
 
     function onRemoveTemplatePageMenuItem(template: Template, pageMenuItem: PageItem) {
-        template.pages = _.reject(template.pages, pageMenuItem);
+        template.pages = reject(template.pages, pageMenuItem);
 
         return onUpdateTemplate(template);
     }
 
     function onRemoveTemplateRole(template: Template, role: string) {
-        template.data.roles = _.without(template.data.roles, role);
+        template.data.roles = without(template.data.roles, role);
 
         return onUpdateTemplate(template);
     }
 
     function onRemoveTemplateTenant(template: Template, tenant: string) {
-        template.data.tenants = _.without(template.data.tenants, tenant);
+        template.data.tenants = without(template.data.tenants, tenant);
 
         return onUpdateTemplate(template);
     }
@@ -236,7 +230,7 @@ export default function TemplateManagement() {
     }
 
     function canDeletePage(page: Page) {
-        return _.isEmpty(page.templates)
+        return isEmpty(page.templates)
             ? null
             : i18n.t('templates.pageManagement.cantDelete', 'Page is used by the templates and cannot be deleted');
     }
