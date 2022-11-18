@@ -1141,6 +1141,64 @@ describe('Deployments View widget', () => {
         const siteFilterName = `in-${siteName}`;
         const deploymentIds = Array.from({ length: 2 }).map((_, i) => `${specPrefix}_${siteName}_deployment_${i + 1}`);
 
+        function testDeployOnWithAction(actionType: 'deploy' | 'install') {
+            cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
+
+            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
+            widgetHeader.openDeployOnModal();
+
+            const labelKey = 'label_key';
+            const labelValue = 'label_value';
+            const name = 'service';
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Blueprint', blueprintName);
+
+                cy.getField('Name suffix').find('input').type(`${name}`);
+
+                cy.openAccordionSection('Deployment Metadata');
+                cy.getField('Labels').find('.selection').click();
+                cy.get('div[name=labelKey] > input').type(labelKey);
+                cy.get('div[name=labelValue] > input').type(labelValue);
+                cy.get('[aria-label=Add]').click();
+                cy.get('a.label').should('be.visible');
+
+                if (actionType === 'install') {
+                    cy.clickButton('Install');
+                } else {
+                    cy.contains('.dropdown', 'Install')
+                        .click() // open dropdown
+                        .within(() => cy.contains('.item', 'Deploy').click());
+                    cy.clickButton('Deploy');
+                }
+            });
+
+            cy.wait('@searchDeployments');
+            cy.wait('@createDeploymentGroup').then(({ request }) => {
+                expect(request.body.blueprint_id).to.eq(blueprintName);
+                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
+                expect(request.body.new_deployments).to.deep.equal(
+                    deploymentIds.map(id => ({
+                        id: '{uuid}',
+                        display_name: `{blueprint_id}-${name}`,
+                        labels: [{ 'csys-obj-parent': id }],
+                        runtime_only_evaluation: false,
+                        skip_plugins_validation: false
+                    }))
+                );
+            });
+
+            if (actionType === 'install') {
+                cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'install');
+
+                cy.contains('.modal', 'Group execution started').within(() => {
+                    cy.contains('Go to Executions page');
+                    cy.contains('Close').click();
+                });
+            } else {
+                cy.get('.modal').should('not.exist');
+            }
+        }
+
         before(() => {
             cy.deleteSite(siteName, { ignoreFailure: true })
                 .createSite({ name: siteName })
@@ -1188,49 +1246,11 @@ describe('Deployments View widget', () => {
         });
 
         it('should allow to create child deployments on filtered deployments', () => {
-            cy.interceptSp('POST', '/searches/deployments').as('searchDeployments');
+            testDeployOnWithAction('deploy');
+        });
 
-            useDeploymentsViewWidget({ configurationOverrides: { filterId: siteFilterName } });
-            widgetHeader.openDeployOnModal();
-
-            const labelKey = 'label_key';
-            const labelValue = 'label_value';
-            const name = 'service';
-            cy.get('.modal').within(() => {
-                cy.setSearchableDropdownValue('Blueprint', blueprintName);
-
-                cy.getField('Name suffix').find('input').type(`${name}`);
-
-                cy.openAccordionSection('Deployment Metadata');
-                cy.getField('Labels').find('.selection').click();
-                cy.get('div[name=labelKey] > input').type(labelKey);
-                cy.get('div[name=labelValue] > input').type(labelValue);
-                cy.get('[aria-label=Add]').click();
-                cy.get('a.label').should('be.visible');
-
-                cy.clickButton('Install');
-            });
-
-            cy.wait('@searchDeployments');
-            cy.wait('@createDeploymentGroup').then(({ request }) => {
-                expect(request.body.blueprint_id).to.eq(blueprintName);
-                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
-                expect(request.body.new_deployments).to.deep.equal(
-                    deploymentIds.map(id => ({
-                        id: '{uuid}',
-                        display_name: `{blueprint_id}-${name}`,
-                        labels: [{ 'csys-obj-parent': id }],
-                        runtime_only_evaluation: false,
-                        skip_plugins_validation: false
-                    }))
-                );
-            });
-            cy.wait('@startExecutionGroup').its('response.body.workflow_id').should('be.equal', 'install');
-
-            cy.contains('.modal', 'Group execution started').within(() => {
-                cy.contains('Go to Executions page');
-                cy.contains('Close').click();
-            });
+        it('should allow to create and install child deployments on filtered deployments', () => {
+            testDeployOnWithAction('install');
         });
     });
 });
