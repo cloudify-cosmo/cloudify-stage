@@ -3,6 +3,11 @@ import { minutesToMs } from '../../support/resource_commons';
 describe('Blueprints catalog widget', () => {
     const blueprintName = 'AWS-Basics-VM-Setup';
 
+    function uploadBlueprint(timeout?: number) {
+        cy.contains('.segment', blueprintName).contains('Upload').click();
+        cy.contains('.ui.label.section.active.pageTitle', blueprintName, { timeout });
+    }
+
     before(() =>
         cy
             .activate()
@@ -36,13 +41,11 @@ describe('Blueprints catalog widget', () => {
         cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'uploaded' });
         cy.interceptSp('PATCH', `/blueprints/${blueprintName}/icon`, { state: 'uploaded' });
 
-        cy.contains('.segment', blueprintName).contains('Upload').click();
-        cy.contains('.ui.label.section.active.pageTitle', blueprintName);
+        uploadBlueprint();
     });
 
     it('should open a page for uploaded blueprint successfully', () => {
-        cy.contains('.segment', blueprintName).contains('Upload').click();
-        cy.contains('.ui.label.section.active.pageTitle', blueprintName, { timeout: minutesToMs(1) });
+        uploadBlueprint(minutesToMs(1));
 
         cy.go('back');
 
