@@ -1,3 +1,23 @@
 /*******************************
         Site Overrides
 *******************************/
+
+.ui.message {
+    & > .close.icon {
+        // TODO Norbert: To verify with Alona if that's a correct approach
+        // If not, adjustments of message padding will be necessary (currently icon can overlap with the text)
+        font-size: @relative7px;
+    }
+
+    &.icon {
+        & {
+            align-items: flex-start;
+        }
+
+        & > .icon:not(.close) {
+            // TODO Norbert: Add note about magic `30` number or extract a separate variable for it
+            margin-right: unit((@horizontalPadding * @emSize) / 30, em);
+            margin-top: unit((@relative2px * @emSize) / 30, em);
+        }
+    }
+}
