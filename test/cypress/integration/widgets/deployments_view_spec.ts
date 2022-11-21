@@ -24,7 +24,7 @@ describe('Deployments View widget', () => {
     const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
-        labelsToShow: ['rendered-inside'],
+        keysOfLabelsToShow: ['rendered-inside'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
