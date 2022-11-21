@@ -6,7 +6,7 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import type { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
@@ -47,14 +47,14 @@ function consumeEvent(event: React.MouseEvent) {
     event.stopPropagation();
     event.preventDefault();
 }
+interface RemoveIconProps {
+    isSubItem: boolean;
+}
 
-const RemoveIcon = styled(Icon).attrs(({ isSubItem }) => ({
-    right: isSubItem ? '10px' : '2px',
-    top: isSubItem ? '0' : '15px'
-}))`
+const RemoveIcon = styled(Icon)<RemoveIconProps>`
     position: absolute;
-    top: ${props => props.top};
-    right: ${props => props.right};
+    top: 15px;
+    right: 2px;
     visibility: hidden;
     float: right;
     line-height: 8px !important;
@@ -62,6 +62,13 @@ const RemoveIcon = styled(Icon).attrs(({ isSubItem }) => ({
     ${SideBarItemWrapper}:hover & {
         visibility: visible;
     }
+
+    ${({ isSubItem }) =>
+        isSubItem &&
+        css`
+            right: 10px;
+            top: 0;
+        `}
 `;
 
 const EditIcon = styled(Icon)`
