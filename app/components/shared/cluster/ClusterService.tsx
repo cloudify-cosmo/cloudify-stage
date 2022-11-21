@@ -11,28 +11,26 @@ interface ClusterServiceProps {
     isExternal: boolean;
 }
 
-const ClusterWrapper = styled.div`
+const ClusterServiceWrapper = styled.div`
     vertical-align: middle;
     padding: 10px;
     overflow: auto;
 `;
 
-const ClusterHeader = styled(Header)`
-    margin: 0;
-}`;
-
-const ClusterIcon = styled(Icon)`
+const ClusterServiceHeader = styled(Header)`
     &&&& {
-        display: inline-block;
-        margin-right: 0.75rem;
+        margin: 0;
+        font-size: 16px;
     }
 `;
 
-const ClusterText = styled.span`
-    font-size: 16px;
+const ClusterServiceIcon = styled(Icon)`
+    &&&& {
+        font-size: 16px;
+    }
 `;
 
-const ClusterLabel = styled(Label)`
+const ClusterServiceLabel = styled(Label)`
     margin-left: 10px;
     float: right;
 `;
@@ -41,13 +39,12 @@ const ClusterService: FunctionComponent<ClusterServiceProps> = ({ name, isExtern
     const icon = clusterServiceIcon(name);
 
     return (
-        <ClusterWrapper>
-            <ClusterHeader floated="left">
-                <ClusterIcon name={icon} size="large" />
-                <ClusterText> {i18n.t(`cluster.${name}`)} </ClusterText>
-            </ClusterHeader>
-            {isExternal && <ClusterLabel color="black">External</ClusterLabel>}
-        </ClusterWrapper>
+        <ClusterServiceWrapper>
+            <ClusterServiceHeader floated="left">
+                <ClusterServiceIcon name={icon} size="large" /> {i18n.t(`cluster.${name}`)}
+            </ClusterServiceHeader>
+            {isExternal && <ClusterServiceLabel color="black">External</ClusterServiceLabel>}
+        </ClusterServiceWrapper>
     );
 };
 export default ClusterService;
