@@ -9,9 +9,10 @@
         }
 
         & > .icon:not(.close) {
-            // TODO Norbert: Add note about magic `30` number or extract a separate variable for it
-            margin-right: unit((@horizontalPadding * @emSize) / 30, em);
-            margin-top: unit((@relative2px * @emSize) / 30, em);
+            @relativeIconSizeScaling: @emSize / 30;
+
+            margin-right: @horizontalPadding * @relativeIconSizeScaling;
+            margin-top: @relative2px * @relativeIconSizeScaling;
         }
     }
 }
