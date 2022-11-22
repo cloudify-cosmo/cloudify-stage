@@ -1,4 +1,7 @@
 import Consts from 'app/utils/consts';
+import { testPageUrl } from 'test/cypress/support/commands';
+import type { ClientConfig } from 'backend/routes/Config.types';
+import type { GetUserAppResponse } from 'backend/routes/UserApp.types';
 import type { ClientConfig } from 'backend/routes/Config.types';
 import { secondsToMs } from '../support/resource_commons';
 
@@ -6,6 +9,8 @@ describe('Login', () => {
     function forceLogin(options?: Parameters<typeof cy.login>[0]) {
         cy.login({ ...options, forceVisitLoginPage: true });
     }
+
+    beforeEach(() => cy.interceptWithoutCaching('/console/config'));
 
     it('succeeds when provided credentials are valid and license is active', () => {
         cy.activate().usePageMock();
@@ -32,12 +37,10 @@ describe('Login', () => {
             const currentAppDataVersion = Consts.APP_VERSION;
             const fetchUserAppsTimeout = secondsToMs(20);
 
-            cy.intercept('GET', '/console/ua', req => {
-                req.reply(res => {
-                    res.body.appDataVersion = currentAppDataVersion - 1;
-                    res.send(res.body);
-                });
-            }).as('fetchUserApps');
+            cy.interceptWithoutCaching('/console/ua', (userAppsData: GetUserAppResponse) => ({
+                ...userAppsData,
+                appDataVersion: currentAppDataVersion - 1
+            })).as('fetchUserApps');
             cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
             cy.intercept('POST', '/console/ua').as('updateUserApps');
 
@@ -84,13 +87,10 @@ describe('Login', () => {
 
         const ssoUrl = '/sso-redirect';
         cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.intercept('GET', '/console/config', req => {
-            req.on('response', res => {
-                const responseBody = res.body as ClientConfig;
-                responseBody.app.saml.enabled = true;
-                responseBody.app.saml.ssoUrl = ssoUrl;
-                res.send(responseBody);
-            });
+        cy.interceptWithoutCaching('/console/config', (clientConfig: ClientConfig) => {
+            clientConfig.app.saml.enabled = true;
+            clientConfig.app.saml.ssoUrl = ssoUrl;
+            return clientConfig;
         });
 
         cy.visit('/console/login').waitUntilAppLoaded();
