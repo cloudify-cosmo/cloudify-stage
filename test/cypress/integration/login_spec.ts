@@ -1,7 +1,7 @@
 import Consts from 'app/utils/consts';
 import { testPageUrl } from 'test/cypress/support/commands';
 import type { ClientConfig } from 'backend/routes/Config.types';
-import type { UserAppsData } from 'backend/db/models/UserAppsModel.types';
+import type { GetUserAppResponse } from 'backend/routes/UserApp.types';
 import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
@@ -36,10 +36,10 @@ describe('Login', () => {
             const currentAppDataVersion = Consts.APP_VERSION;
             const fetchUserAppsTimeout = secondsToMs(20);
 
-            cy.interceptWithoutCaching('/console/ua', (userAppsData: UserAppsData) => {
-                userAppsData.appDataVersion = currentAppDataVersion - 1;
-                return userAppsData;
-            }).as('fetchUserApps');
+            cy.interceptWithoutCaching('/console/ua', (userAppsData: GetUserAppResponse) => ({
+                ...userAppsData,
+                appDataVersion: currentAppDataVersion - 1
+            })).as('fetchUserApps');
             cy.intercept('GET', '/console/templates/initial').as('fetchTemplateId');
             cy.intercept('POST', '/console/ua').as('updateUserApps');
 
