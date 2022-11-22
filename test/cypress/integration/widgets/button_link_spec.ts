@@ -48,7 +48,6 @@ describe('Button link widget', () => {
 
         it('basicness', () => {
             const basicButtonToggleName = 'Basic button';
-            cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, false);
             cy.getWidget(widgetId).find('button').should('not.have.class', 'basic');
             cy.setBooleanConfigurationField(widgetId, basicButtonToggleName, true);
             cy.getWidget(widgetId).find('button').should('have.class', 'basic');
@@ -56,7 +55,6 @@ describe('Button link widget', () => {
 
         it('full height', () => {
             const fullHeightToggleName = 'Full height';
-            cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, false);
             cy.getWidget(widgetId).find('button').should('not.have.attr', 'style');
             cy.setBooleanConfigurationField(widgetId, fullHeightToggleName, true);
             cy.getWidget(widgetId).find('button').should('have.attr', 'style').and('include', 'height: 100%');
