@@ -1,6 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import { secondsToMs } from 'test/cypress/support/resource_commons';
+import { secondsToMs } from './resource_commons';
 
 declare global {
     namespace Cypress {
