@@ -1,5 +1,4 @@
 import Consts from 'app/utils/consts';
-import type { ClientConfig } from 'backend/routes/Config.types';
 import { testPageUrl } from 'test/cypress/support/commands';
 import { secondsToMs } from '../support/resource_commons';
 
@@ -85,13 +84,10 @@ describe('Login', () => {
 
         const ssoUrl = '/sso-redirect';
         cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.intercept('GET', '/console/config', req => {
-            req.on('response', res => {
-                const responseBody = res.body as ClientConfig;
-                responseBody.app.saml.enabled = true;
-                responseBody.app.saml.ssoUrl = ssoUrl;
-                res.send(responseBody);
-            });
+        cy.modifyConfigResponseBody(responseBody => {
+            responseBody.app.saml.enabled = true;
+            responseBody.app.saml.ssoUrl = ssoUrl;
+            return responseBody;
         });
 
         cy.visit('/console/login').waitUntilAppLoaded();

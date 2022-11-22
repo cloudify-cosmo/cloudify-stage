@@ -21,6 +21,7 @@ import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/typ
 import { castArray, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
+import './config';
 import './deployments';
 import './editMode';
 import './executions';

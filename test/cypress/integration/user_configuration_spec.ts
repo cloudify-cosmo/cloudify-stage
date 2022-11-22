@@ -11,12 +11,9 @@ describe('User configuration', () => {
     };
 
     function mockConfigResponse() {
-        cy.intercept('/console/config', req => {
-            req.on('response', res => {
-                const responseBody = res.body;
-                responseBody.app.whiteLabel = userConfig.whiteLabel;
-                res.send(responseBody);
-            });
+        cy.modifyConfigResponseBody(responseBody => {
+            responseBody.app.whiteLabel = userConfig.whiteLabel;
+            return responseBody;
         });
     }
 
