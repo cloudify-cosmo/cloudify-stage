@@ -139,7 +139,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
-        const { ErrorMessage, Message } = Stage.Basic;
+        const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;
 
@@ -151,63 +151,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
-                <h2>Message without children</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '350px' }}>
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        info
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        negative
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        warning
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        success
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Sample header"
-                        content="We just updated our privacy policy here to better service our customers. We recommend reviewing
-                        the changes."
-                        icon="cog"
-                        style={{ margin: 0 }}
-                    />
-                    <Message
-                        onDismiss={() => {}}
-                        header="Cannot render widget"
-                        content="For more details see the browser console"
-                        error
-                    />
-                </div>
-                <div style={{ marginBottom: '250px' }} />
                 <div className="uploadBlueprintButton">
                     <BlueprintUploadActionsMenu
                         upward={false}
