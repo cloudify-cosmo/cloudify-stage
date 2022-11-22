@@ -152,7 +152,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
 
                 <h2>Message without children</h2>
-                <div style={{ display: 'flex', gap: '24px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '350px' }}>
                     <Message
                         onDismiss={() => {}}
                         header="Sample header"
@@ -176,8 +176,6 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         negative
                         style={{ margin: 0 }}
                     />
-                </div>
-                <div style={{ display: 'flex', gap: '24px', marginTop: '24px' }}>
                     <Message
                         onDismiss={() => {}}
                         header="Sample header"
@@ -202,7 +200,14 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
                         icon="cog"
                         style={{ margin: 0 }}
                     />
+                    <Message
+                        onDismiss={() => {}}
+                        header="Cannot render widget"
+                        content="For more details see the browser console"
+                        error
+                    />
                 </div>
+                <div style={{ marginBottom: '250px' }} />
                 <div className="uploadBlueprintButton">
                     <BlueprintUploadActionsMenu
                         upward={false}
