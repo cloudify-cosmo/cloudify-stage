@@ -3,7 +3,7 @@
 *******************************/
 
 @hoveredCheckedCheckboxColor: @blueHover;
-@disabledCheckboxColor: fade(#ebebeb, 90%);
+@disabledCheckboxColor: fade(@lightGrey, 90%);
 @defaultBorderProperties: 1px solid;
 
 .ui.checkbox {
@@ -121,8 +121,8 @@
         &&.disabled {
             label {
                 &::before {
-                    background-color: fade(#ebebeb, 51%) !important;
-                    border: @defaultBorderProperties #ebebeb !important;
+                    background-color: fade(@lightGrey, 51%) !important;
+                    border: @defaultBorderProperties @lightGrey !important;
                 }
 
                 &::after {
