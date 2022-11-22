@@ -4,11 +4,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import type { Dispatch } from 'redux';
 import styled from 'styled-components';
 import type { ClientConfig } from '../../backend/routes/Config.types';
 
-import { login } from '../actions/managers';
+import { login } from '../actions/manager/auth';
 import type { ReduxState } from '../reducers';
 import renderMultilineText from '../utils/shared/renderMultilineText';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
@@ -16,6 +15,7 @@ import StageUtils from '../utils/stageUtils';
 import LargeLogo from './banner/LargeLogo';
 import LogoLabel from './banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from './basic';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
@@ -208,7 +208,7 @@ const mapStateToProps = (state: ReduxState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
         onLogin: (username: string, password: string, redirect?: string) => {
             dispatch(login(username, password, redirect));

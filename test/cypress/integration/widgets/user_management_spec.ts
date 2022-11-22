@@ -14,8 +14,6 @@ describe('User management widget', () => {
     beforeEach(() => cy.deleteUser(username));
 
     describe('when authentication service is not available', () => {
-        beforeEach(() => cy.intercept('GET', '/auth/users/me', { statusCode: 401 }));
-
         it('should allow to manage users', () => {
             cy.deleteUserGroup(group).addUserGroup(group).usePageMock(widgetId).mockLogin();
 

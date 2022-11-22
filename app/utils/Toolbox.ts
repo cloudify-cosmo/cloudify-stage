@@ -2,10 +2,11 @@
 
 import _ from 'lodash';
 import 'proxy-polyfill';
-import type { AnyAction, Store, Unsubscribe } from 'redux';
+import type { Unsubscribe } from 'redux';
 
+import type { DrilldownHandler } from 'cloudify-ui-components/toolbox';
 import { drillDownToPage } from '../actions/drilldownPage';
-import { selectPageByName, selectHomePage, selectParentPage } from '../actions/pageMenu';
+import { selectHomePage, selectPageByName, selectParentPage } from '../actions/pageMenu';
 
 import EventBus from './EventBus';
 import Context from './Context';
@@ -14,9 +15,10 @@ import External from './External';
 import Internal from './Internal';
 import WidgetBackend from './WidgetBackend';
 import type { ReduxState } from '../reducers';
+import type { ReduxStore } from '../configureStore';
 
 class Toolbox implements Stage.Types.Toolbox {
-    private readonly store: Store<ReduxState>;
+    private readonly store: ReduxStore;
 
     public readonly unsubscribe: Unsubscribe;
 
@@ -28,7 +30,7 @@ class Toolbox implements Stage.Types.Toolbox {
 
     private context!: Context;
 
-    constructor(store: Store<ReduxState>) {
+    constructor(store: ReduxStore) {
         // Save the link to the store on the context (so we can dispatch to it later)
         this.store = store;
         this.initFromStore();
@@ -49,28 +51,25 @@ class Toolbox implements Stage.Types.Toolbox {
 
     drillDown: Stage.Types.Toolbox['drillDown'] = (widget, defaultTemplate, drilldownContext, drilldownPageName) => {
         this.store.dispatch(
-            drillDownToPage(
-                widget,
-                this.templates.pagesDef[defaultTemplate],
-                drilldownContext,
-                drilldownPageName
-                // NOTE: redux's type do not handle thunks well
-            ) as unknown as AnyAction
+            drillDownToPage(widget, this.templates.pagesDef[defaultTemplate], drilldownContext, drilldownPageName)
         );
     };
 
+    getDrilldownHandler(): DrilldownHandler {
+        return (pageId: string, drilldownContext: Record<string, any>, drilldownPageTitle: string) =>
+            this.drillDown(this.getWidget(), pageId, drilldownContext, drilldownPageTitle);
+    }
+
     goToHomePage() {
-        // NOTE: redux's type do not handle thunks well
-        this.store.dispatch(selectHomePage() as unknown as AnyAction);
+        this.store.dispatch(selectHomePage());
     }
 
     goToParentPage() {
-        // NOTE: redux's type do not handle thunks well
-        this.store.dispatch(selectParentPage() as unknown as AnyAction);
+        this.store.dispatch(selectParentPage());
     }
 
     goToPage: Stage.Types.Toolbox['goToPage'] = (pageName, context) => {
-        this.store.dispatch(selectPageByName(pageName, context) as unknown as AnyAction);
+        this.store.dispatch(selectPageByName(pageName, context));
     };
 
     getEventBus() {
@@ -122,7 +121,7 @@ class Toolbox implements Stage.Types.Toolbox {
 
 let toolbox: Toolbox | null = null;
 
-const createToolbox = (store: Store<ReduxState>) => {
+const createToolbox = (store: ReduxStore) => {
     toolbox = new Toolbox(store);
 };
 

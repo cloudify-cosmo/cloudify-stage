@@ -16,7 +16,7 @@ describe('User flow', () => {
         });
     }
 
-    it.skip('installs deployment from scratch', () => {
+    it('installs deployment from scratch', () => {
         cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
@@ -76,7 +76,7 @@ describe('User flow', () => {
         cy.containsActiveTab('Getting Started');
 
         cy.contains('Loading').should('not.exist');
-        cy.get('button').not('.disabled').contains('Upload').click();
+        cy.contains('button:not(.disabled)', 'Upload').click();
 
         cy.contains('Uploading');
 

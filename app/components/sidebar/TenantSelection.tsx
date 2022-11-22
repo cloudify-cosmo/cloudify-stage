@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { InputOnChangeData } from 'semantic-ui-react';
 
 import { Dropdown, Input, Loading } from '../basic';
-import { changeTenant, getTenants } from '../../actions/tenants';
+import { changeTenant, getTenants } from '../../actions/manager/tenants';
 import { useResettableState } from '../../utils/hooks';
 import type { ReduxState } from '../../reducers';
 import StageUtils from '../../utils/stageUtils';
@@ -25,8 +25,8 @@ const TenantSelection: FunctionComponent = () => {
         dispatch(getTenants());
     }
 
-    function onTenantSelected(tenant: { name: string }) {
-        dispatch(changeTenant(tenant.name));
+    function onTenantSelected(tenant: string) {
+        dispatch(changeTenant(tenant));
     }
 
     function handleTenantSearch(e: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) {
@@ -35,11 +35,11 @@ const TenantSelection: FunctionComponent = () => {
     }
 
     const filteredTenants = _(tenants.items || [])
-        .filter(tenant => _.includes(tenant.name, search))
+        .filter(tenant => _.includes(tenant, search))
         .sortBy('name')
         .value();
 
-    const selectedTenant = tenants.selected || _.get(tenants, 'items[0].name');
+    const selectedTenant = tenants.selected || tenants.items?.[0];
 
     return (
         <SideBarDropdownItem
@@ -56,10 +56,10 @@ const TenantSelection: FunctionComponent = () => {
                     <>
                         {filteredTenants.map(tenant => (
                             <Dropdown.Item
-                                key={tenant.name}
-                                text={tenant.name}
-                                selected={tenant.name === selectedTenant}
-                                active={tenant.name === selectedTenant}
+                                key={tenant}
+                                text={tenant}
+                                selected={tenant === selectedTenant}
+                                active={tenant === selectedTenant}
                                 onClick={() => onTenantSelected(tenant)}
                             />
                         ))}

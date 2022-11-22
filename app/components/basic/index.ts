@@ -94,17 +94,6 @@ const Leaflet = {
 
 type AnyProps = Record<string, any>;
 
-// TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
-const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyProps> & {
-    Row: React.FC<AnyProps>;
-    Column: React.FC<AnyProps>;
-    Data: React.FC<AnyProps>;
-    Action: React.FC<AnyProps>;
-    Filter: React.FC<AnyProps>;
-    RowExpandable: React.FC<AnyProps>;
-    DataExpandable: React.FC<AnyProps>;
-};
-
 // TODO(RD-5718) Remove once DataSegment component is fully migrated to TypeScript
 const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {
     Item: React.FC<AnyProps>;
@@ -127,7 +116,7 @@ export {
     DateInput,
     DateRangeInput,
     DataSegmentWithTemporaryProps as DataSegment,
-    DataTableWithTemporaryProps as DataTable,
+    DataTable,
     Dimmer,
     Divider,
     Dropdown,

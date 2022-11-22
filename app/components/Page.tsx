@@ -3,11 +3,10 @@ import { cloneDeep, isEqual } from 'lodash';
 import React, { Component } from 'react';
 import type { ConnectedProps } from 'react-redux';
 import { connect } from 'react-redux';
-import type { AnyAction } from 'redux';
-import type { ThunkDispatch } from 'redux-thunk';
 
 import styled from 'styled-components';
 import { setEditMode } from '../actions/config';
+import type { DrilldownContext } from '../actions/drilldownContext';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import type { LayoutSection, PageDefinition } from '../actions/page';
 import {
@@ -22,7 +21,6 @@ import {
 import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import type { ReduxState } from '../reducers';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import type { WidgetDefinition } from '../utils/StageAPI';
 import StageUtils from '../utils/stageUtils';
 import { Button, EditableLabel } from './basic';
@@ -30,6 +28,7 @@ import Breadcrumbs from './Breadcrumbs';
 import EditModeBubble from './EditModeBubble';
 import { PageContent } from './shared/widgets';
 import { collapsedSidebarWidth } from './sidebar/SideBar';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 export interface PageOwnProps {
     pageId: string;
@@ -181,7 +180,7 @@ const mapStateToProps = (state: ReduxState, ownProps: PageOwnProps) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<ReduxState, never, AnyAction>, ownProps: PageOwnProps) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps) => {
     return {
         onPageNameChange: (page: PageDefinition, newName: string) => {
             dispatch(changePageMenuItemName(page.id, newName));

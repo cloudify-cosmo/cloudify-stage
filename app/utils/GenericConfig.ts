@@ -85,7 +85,7 @@ export interface SortColumnConfiguration {
 }
 
 export interface SortAscendingConfiguration {
-    sortAscending: string;
+    sortAscending: boolean;
 }
 
 export type DataTableConfiguration = PageSizeConfiguration & SortColumnConfiguration & SortAscendingConfiguration;

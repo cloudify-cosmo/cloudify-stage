@@ -109,7 +109,6 @@ export default class SnapshotsTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         const { Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility } = Stage.Basic;
-        const { VerticallyAlignedCell } = Stage.Shared;
 
         return (
             <div className="snapshotsTableDiv">
@@ -141,16 +140,14 @@ export default class SnapshotsTable extends React.Component {
                                 selected={item.isSelected}
                                 onClick={() => this.selectSnapshot(item)}
                             >
-                                <DataTable.Data>
-                                    <VerticallyAlignedCell>
-                                        {item.id}
-                                        <ResourceVisibility visibility={item.visibility} className="rightFloated" />
-                                    </VerticallyAlignedCell>
+                                <DataTable.Data verticalAlign="flexMiddle">
+                                    {item.id}
+                                    <ResourceVisibility visibility={item.visibility} className="rightFloated" />
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.status}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         name="undo"
                                         title="Restore"

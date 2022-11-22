@@ -1,14 +1,9 @@
 describe('Page preview', () => {
     before(() => {
-        cy.activate('valid_trial_license');
-        cy.mockLogin();
+        cy.activate('valid_trial_license').goToTemplateManagement();
     });
 
     it('should allow to switch tabs and maximize widgets', () => {
-        cy.get('.loader').should('be.not.visible');
-
-        cy.goToTemplateManagement();
-
         cy.get('.segment:contains(Pages)').contains('tr', 'deployment').find('.search').click();
 
         // Verify tabs switching works

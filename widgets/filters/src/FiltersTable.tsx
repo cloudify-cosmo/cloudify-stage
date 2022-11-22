@@ -58,7 +58,6 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 totalSize={data.total}
                 pageSize={widget.configuration.pageSize}
                 searchable
-                sortable
             >
                 <DataTable.Column width="60%" label={tColumn('name')} name="id" />
                 <DataTable.Column width="40%" label={tColumn('creator')} name="created_by" />
