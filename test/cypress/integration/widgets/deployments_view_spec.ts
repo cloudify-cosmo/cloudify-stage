@@ -17,7 +17,7 @@ describe('Deployments View widget', () => {
     const deploymentId = `${specPrefix}deployment_id`;
     const deploymentName = `${specPrefix}deployment_name`;
     const labelName = `${specPrefix}label_name`;
-    const labelVal = `${specPrefix}label_val`;
+    const labelValue = `${specPrefix}label_val`;
 
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
@@ -48,7 +48,7 @@ describe('Deployments View widget', () => {
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentId, exampleSiteName)
-            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }, { [labelName]: labelVal }]);
+            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }, { [labelName]: labelValue }]);
     });
 
     beforeEach(() => {
@@ -146,14 +146,14 @@ describe('Deployments View widget', () => {
             cy.editWidgetConfiguration(widgetId, () => {
                 widgetConfigurationHelpers.toggleLabelsDropdown();
                 widgetConfigurationHelpers.getLabelsDropdown().within(() => {
-                    cy.get('[role="listbox"]').contains(labelName).click();
+                    cy.contains('[role="listbox"]', labelName).click();
                 });
                 widgetConfigurationHelpers.toggleLabelsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
-                cy.contains(labelVal);
+                cy.contains(labelValue);
                 cy.contains(labelName);
             });
         });
