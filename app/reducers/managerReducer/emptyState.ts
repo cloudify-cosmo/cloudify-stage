@@ -13,7 +13,7 @@ export default {
     },
     clusterStatus: {},
     lastUpdated: null,
-    license: {},
+    license: { data: null },
     maintenance: '',
     permissions: {},
     roles: [],

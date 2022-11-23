@@ -1,16 +1,25 @@
-import * as types from './types';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
+import type { PayloadAction } from './types';
+import { ActionType } from './types';
 
-export function setDrilldownContext(drilldownContext: DrilldownContext[]) {
+export interface DrilldownContext {
+    pageName?: string;
+    context?: Record<string, any>;
+}
+
+export type SetDrilldownContextAction = PayloadAction<DrilldownContext[], ActionType.SET_DRILLDOWN_CONTEXT>;
+export type PopDrilldownContextAction = PayloadAction<number, ActionType.POP_DRILLDOWN_CONTEXT>;
+export type DrilldownContextAction = SetDrilldownContextAction | PopDrilldownContextAction;
+
+export function setDrilldownContext(drilldownContext: DrilldownContext[]): SetDrilldownContextAction {
     return {
-        type: types.SET_DRILLDOWN_CONTEXT,
-        drilldownContext
+        type: ActionType.SET_DRILLDOWN_CONTEXT,
+        payload: drilldownContext
     };
 }
 
-export function popDrilldownContext(count = 1) {
+export function popDrilldownContext(count = 1): PopDrilldownContextAction {
     return {
-        type: types.POP_DRILLDOWN_CONTEXT,
-        count
+        type: ActionType.POP_DRILLDOWN_CONTEXT,
+        payload: count
     };
 }

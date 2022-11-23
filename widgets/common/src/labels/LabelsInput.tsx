@@ -5,7 +5,7 @@ import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import KeyDropdown from './KeyDropdown';
-import type { Label } from './types';
+import type { Label, LabelWithSystemData } from './types';
 import ValueDropdown from './ValueDropdown';
 import { isLabelModifiable } from './common';
 
@@ -26,7 +26,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     const [fetchingReservedKeys, setFetchingReservedKeys, unsetFetchingReservedKeys] = useBoolean();
 
     useEffect(() => {
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
@@ -62,7 +62,9 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 
     const [addingLabel, setAddingLabel, unsetAddingLabel] = useBoolean();
     const { reservedKeys, fetchingReservedKeys } = useReservedKeys(toolbox);
-    const [labels, setLabels, resetLabels] = useResettableState(hideInitialLabels ? [] : initialLabels);
+    const [labels, setLabels, resetLabels] = useResettableState<LabelWithSystemData[]>(
+        hideInitialLabels ? [] : initialLabels
+    );
     const [open, toggleOpen] = useToggle();
     const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
     const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
@@ -94,7 +96,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 
     function onAddLabel() {
         function isLabelInSystem() {
-            const actions = new DeploymentActions(toolbox);
+            const actions = new DeploymentActions(toolbox.getManager());
             return actions
                 .doGetLabel(newLabelKey, newLabelValue)
                 .then(({ items }) => !_.isEmpty(items))

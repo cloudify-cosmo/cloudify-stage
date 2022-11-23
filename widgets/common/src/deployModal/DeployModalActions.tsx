@@ -27,13 +27,15 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
     const { ApproveButton, Button, Dropdown } = Stage.Basic;
 
     if (!showDeployButton) {
-        <ApproveButton
-            onClick={onInstall}
-            disabled={loading}
-            content={t('buttons.deployAndInstall')}
-            icon="cogs"
-            className="green"
-        />;
+        return (
+            <ApproveButton
+                onClick={onInstall}
+                disabled={loading}
+                content={t('buttons.deployAndInstall')}
+                icon="cogs"
+                className="green"
+            />
+        );
     }
     return (
         <Button.Group color="green">

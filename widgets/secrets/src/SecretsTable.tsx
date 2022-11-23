@@ -252,7 +252,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
         const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
-        const { VerticallyAlignedCell, TextEllipsis } = Stage.Shared;
+        const { TextEllipsis } = Stage.Shared;
         const { data, toolbox, widget } = this.props;
         const { allowedVisibilitySettings } = Stage.Common.Consts;
 
@@ -282,20 +282,18 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     {data.items.map(item => {
                         return (
                             <DataTable.Row key={item.key}>
-                                <DataTable.Data>
-                                    <VerticallyAlignedCell>
-                                        <TextEllipsis maxWidth="400px">{item.key}</TextEllipsis>
-                                        <ResourceVisibility
-                                            visibility={item.visibility}
-                                            onSetVisibility={visibility => {
-                                                this.setSecretVisibility(item.key, visibility);
-                                            }}
-                                            allowedSettingTo={allowedVisibilitySettings}
-                                            className="rightFloated"
-                                        />
-                                    </VerticallyAlignedCell>
+                                <DataTable.Data verticalAlign="flexMiddle">
+                                    <TextEllipsis maxWidth="400px">{item.key}</TextEllipsis>
+                                    <ResourceVisibility
+                                        visibility={item.visibility}
+                                        onSetVisibility={visibility => {
+                                            this.setSecretVisibility(item.key, visibility);
+                                        }}
+                                        allowedSettingTo={allowedVisibilitySettings}
+                                        className="rightFloated"
+                                    />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <SecretValue
                                         canShowSecret={canShowSecret}
                                         secretKey={item.key}
@@ -319,7 +317,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data>{item.tenant_name}</DataTable.Data>
-                                <DataTable.Data className="center aligned rowActions">
+                                <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         bordered
                                         link

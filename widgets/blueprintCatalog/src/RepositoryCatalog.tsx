@@ -6,6 +6,7 @@ import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
+import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataSegment, Grid, Button, Header } = Stage.Basic;
 const t = Utils.getWidgetTranslation('blueprintCatalog');
@@ -44,18 +45,6 @@ const StyledGridColumnButtons = styled(Grid.Column)`
     }
 `;
 
-const StyledLinkButton = styled(Button)`
-    &&&& {
-        padding: 0;
-        margin-right: 10px;
-        font-size: 22px;
-        background: none;
-        &:hover {
-            color: #1b1f23;
-        }
-    }
-`;
-
 const StyledGridRowHeader = styled(Grid.Row)`
     &&&& {
         display: flex;
@@ -80,17 +69,24 @@ const StyledText = styled.p`
     font-size: 12px;
 `;
 
+const StyledGridWrapper = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
+    grid-gap: 20px;
+`;
+
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
     onUpload = noop,
+    onOpenBlueprintPage = noop,
     readmeLoading = null,
     data,
     noDataMessage,
     onReadme,
     widget
 }) => {
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
     const showCreated = fieldsToShow.includes(t('configuration.fieldsToShow.items.created'));
@@ -111,9 +107,10 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             zip_url,
             main_blueprint
         } = item;
+        const isBlueprintUploaded = data.uploadedBlueprints.includes(name);
 
         return (
-            <Grid.Column key={id}>
+            <div key={id}>
                 <StyledDataSegment
                     selected={isSelected}
                     onClick={(event: Event) => {
@@ -166,12 +163,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                     <Grid container>
                         <Grid.Row className="noPadded" style={{ marginBottom: '1rem' }}>
                             <StyledGridColumnButtons width="8">
-                                <StyledLinkButton
-                                    circular
-                                    icon="github"
-                                    onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                    title={t('actions.openBlueprintRepository')}
-                                />
+                                <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
 
                                 <Button
                                     circular
@@ -186,44 +178,31 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                                 />
                             </StyledGridColumnButtons>
                             <Grid.Column width="8" textAlign="right" className="noPadded">
-                                <Button
-                                    disabled={data.uploadedBlueprints.includes(name)}
-                                    content="Upload"
-                                    onClick={event => {
-                                        event.stopPropagation();
-                                        onUpload(name, zip_url, image_url, main_blueprint);
-                                    }}
-                                    title={t('actions.uploadBlueprint')}
-                                />
+                                {isBlueprintUploaded ? (
+                                    <Button
+                                        content={t('buttons.open')}
+                                        onClick={() => {
+                                            onOpenBlueprintPage(name);
+                                        }}
+                                        title={t('actions.openBlueprint')}
+                                    />
+                                ) : (
+                                    <Button
+                                        content={t('buttons.upload')}
+                                        onClick={() => {
+                                            onUpload(name, zip_url, image_url, main_blueprint);
+                                        }}
+                                        title={t('actions.uploadBlueprint')}
+                                    />
+                                )}
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>
                 </StyledDataSegment>
-            </Grid.Column>
+            </div>
         );
+        /* eslint-enable camelcase */
     });
-    /* eslint-enable camelcase */
-
-    const catalogRows = [];
-    let row: typeof catalogItems = [];
-    _.each(catalogItems, (catalogItem, index) => {
-        row.push(catalogItem);
-        if ((index + 1) % 3 === 0) {
-            catalogRows.push(
-                <Grid.Row key={catalogRows.length + 1} columns="3">
-                    {row}
-                </Grid.Row>
-            );
-            row = [];
-        }
-    });
-    if (row.length > 0) {
-        catalogRows.push(
-            <Grid.Row key={catalogRows.length + 1} columns="3">
-                {row}
-            </Grid.Row>
-        );
-    }
 
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
@@ -237,7 +216,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <Grid>{catalogRows}</Grid>
+            <StyledGridWrapper>{catalogItems}</StyledGridWrapper>
         </DataSegment>
     );
 };

@@ -25,6 +25,10 @@ export default class Manager extends Internal {
         return this.managerData?.version?.distro_release ?? null;
     }
 
+    getDistribution() {
+        return `${this.getDistributionName().toLowerCase()} ${this.getDistributionRelease().toLowerCase()}`;
+    }
+
     isCommunityEdition() {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }

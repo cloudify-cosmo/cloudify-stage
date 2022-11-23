@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import log from 'loglevel';
-import { getMaintenanceStatus } from '../actions/managers';
-import { getClusterStatus } from '../actions/clusterStatus';
+import { getMaintenanceStatus } from '../actions/manager/maintenance';
+import { getClusterStatus } from '../actions/manager/clusterStatus';
 import StageUtils from './stageUtils';
 
 let singleton = null;

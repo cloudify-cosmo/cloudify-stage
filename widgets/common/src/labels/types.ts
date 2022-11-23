@@ -1,6 +1,9 @@
 export interface Label {
     key: string;
     value: string;
+}
+
+export interface LabelWithSystemData extends Label {
     isInSystem?: boolean;
 }
 

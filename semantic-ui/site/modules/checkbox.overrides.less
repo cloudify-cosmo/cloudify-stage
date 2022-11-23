@@ -2,8 +2,8 @@
          Site Overrides
 *******************************/
 
-@hoveredCheckedCheckboxColor: #0077ff;
-@disabledCheckboxColor: rgba(235, 235, 235, 0.9);
+@hoveredCheckedCheckboxColor: @blueHover;
+@disabledCheckboxColor: fade(@lightGrey, 90%);
 @defaultBorderProperties: 1px solid;
 
 .ui.checkbox {
@@ -121,8 +121,8 @@
         &&.disabled {
             label {
                 &::before {
-                    background-color: rgba(235, 235, 235, 0.51) !important;
-                    border: @defaultBorderProperties #ebebeb !important;
+                    background-color: fade(@lightGrey, 51%) !important;
+                    border: @defaultBorderProperties @lightGrey !important;
                 }
 
                 &::after {

@@ -5,7 +5,6 @@ describe('Admin flow', () => {
 
     before(() => {
         cy.activate().login().deleteAllUsersAndTenants().deleteUserGroup(groupName);
-        cy.intercept('GET', '/auth/users/me', { statusCode: 401 });
     });
 
     it('manages groups, tenants and users', () => {

@@ -250,7 +250,7 @@ class UserGroupsTable extends React.Component {
                                             {item.tenantCount}
                                         </Label>
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <MenuAction
                                             item={item}
                                             onEditTenants={this.showEditTenantsModal}

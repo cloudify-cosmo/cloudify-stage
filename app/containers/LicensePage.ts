@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import Manager from '../utils/Manager';
 import LicensePage from '../components/LicensePage';
-import { setLicense } from '../actions/license';
+import { setLicense } from '../actions/manager/license';
 import Consts from '../utils/consts';
 import Auth from '../utils/auth';
 import stageUtils from '../utils/stageUtils';
