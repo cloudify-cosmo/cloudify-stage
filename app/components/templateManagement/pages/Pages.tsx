@@ -1,8 +1,8 @@
-import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import i18n from 'i18next';
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { CreatePageModalProps } from './CreatePageModal';
 import CreatePageModal from './CreatePageModal';
 import TemplateList from '../common/TemplateList';
 import { DataTable, Header, Icon, PopupConfirm, Segment } from '../../basic';
@@ -13,11 +13,11 @@ import ItemsCount from '../common/ItemsCount';
 const tTemplates = StageUtils.getT('templates');
 const tPageManagement = StageUtils.composeT(tTemplates, 'pageManagement');
 
-interface Page {
+export interface Page {
     custom: boolean;
     id: string;
     name: string;
-    icon: SemanticICONS;
+    icon?: SemanticICONS;
     selected: boolean;
     templates: string[];
     pageGroups: string[];
@@ -25,9 +25,9 @@ interface Page {
     updatedBy: string;
 }
 
-interface PagesProps {
+export interface PagesProps {
     onCanDeletePage: (page: Page) => void;
-    onCreatePage: (pageName: string) => Promise<void>;
+    onCreatePage: CreatePageModalProps['onCreatePage'];
     onDeletePage: (page: Page) => void;
     onEditPage: (page: Page) => void;
     onPreviewPage: (page: Page) => void;
@@ -36,12 +36,12 @@ interface PagesProps {
 }
 
 const Pages: FunctionComponent<PagesProps> = ({
-    onCanDeletePage = noop,
-    onCreatePage = noop,
-    onDeletePage = noop,
-    onEditPage = noop,
-    onPreviewPage = noop,
-    onSelectPage = noop,
+    onCanDeletePage,
+    onCreatePage,
+    onDeletePage,
+    onEditPage,
+    onPreviewPage,
+    onSelectPage,
     pages = []
 }) => {
     return (
@@ -62,7 +62,6 @@ const Pages: FunctionComponent<PagesProps> = ({
 
                 {pages.map(item => {
                     return (
-                        // @ts-ignore DataTable.RowExpandable returns void
                         <DataTable.RowExpandable key={item.id} expanded={item.selected}>
                             <DataTable.Row key={item.id} selected={item.selected} onClick={() => onSelectPage(item)}>
                                 <DataTable.Data>
@@ -100,7 +99,7 @@ const Pages: FunctionComponent<PagesProps> = ({
                                                     'Are you sure to remove this page?'
                                                 )}
                                                 onConfirm={() => onDeletePage(item)}
-                                                onCanConfirm={() => onCanDeletePage(item) as undefined}
+                                                onCanConfirm={() => onCanDeletePage(item)}
                                                 onCancel={undefined}
                                                 defaultOpen={false}
                                             />
