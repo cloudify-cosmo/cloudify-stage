@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import userConfig from '../fixtures/configuration/userConfig.json';
 
 describe('User configuration', () => {
@@ -11,12 +12,9 @@ describe('User configuration', () => {
     };
 
     function mockConfigResponse() {
-        cy.intercept('/console/config', req => {
-            req.on('response', res => {
-                const responseBody = res.body;
-                responseBody.app.whiteLabel = userConfig.whiteLabel;
-                res.send(responseBody);
-            });
+        cy.interceptWithoutCaching('/console/config', (clientConfig: ClientConfig) => {
+            clientConfig.app.whiteLabel = userConfig.whiteLabel;
+            return clientConfig;
         });
     }
 

@@ -1,26 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
+import type { CallHistoryMethodAction } from 'connected-react-router';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 import i18n from 'i18next';
+import type { StrictInputProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useResettableState } from '../../../utils/hooks';
 import { ApproveButton, Button, CancelButton, Form, Icon, Modal } from '../../basic';
 
-export default function CreatePageModal({ onCreatePage, pageName: initialPageName }) {
-    const [pageName, setPageName] = useState(initialPageName);
+export interface CreatePageModalProps {
+    onCreatePage: (pageName: string) => Promise<void | CallHistoryMethodAction>;
+}
+
+export default function CreatePageModal({ onCreatePage }: CreatePageModalProps) {
+    const [pageName, setPageName, resetPageName] = useResettableState('');
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [loading, setLoading, unsetLoading] = useBoolean();
-    const [open, setOpen, unsetOpen] = useResettableState();
+    const [open, setOpen, unsetOpen] = useBoolean();
 
     function openModal() {
         setOpen();
         unsetLoading();
-        setPageName(initialPageName);
+        resetPageName();
         clearErrors();
     }
 
     function submitCreate() {
-        const errorsObject = {};
+        const errorsObject: { pageName?: string } = {};
 
         if (_.isEmpty(_.trim(pageName))) {
             errorsObject.pageName = i18n.t(
@@ -43,9 +47,9 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
         });
     }
 
-    function handleInputChange(proxy, field) {
+    const handleInputChange: StrictInputProps['onChange'] = (_event, field) => {
         setPageName(field.value);
-    }
+    };
 
     const trigger = (
         <Button content="Create page" icon="file outline" labelPosition="left" className="createPageButton" />
@@ -67,7 +71,7 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton onClick={() => setOpen(false)} disabled={loading} />
+                <CancelButton onClick={unsetOpen} disabled={loading} />
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={loading}
@@ -78,13 +82,3 @@ export default function CreatePageModal({ onCreatePage, pageName: initialPageNam
         </Modal>
     );
 }
-
-CreatePageModal.propTypes = {
-    onCreatePage: PropTypes.func.isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
-    pageName: PropTypes.string
-};
-
-CreatePageModal.defaultProps = {
-    pageName: ''
-};
