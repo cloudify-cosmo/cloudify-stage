@@ -449,7 +449,7 @@ describe('Create Deployment modal handles deployment inputs', () => {
         });
     });
 
-    describe('with deployment_id constraint', () => {
+    describe.skip('with deployment_id constraint', () => {
         it('when deployment is not present', () => {
             selectBlueprintInModal('with_deployment_id_constraint');
             cy.getField('node_id_from_deployment').within(() => verifyNumberOfOptions(0, false, ''));
