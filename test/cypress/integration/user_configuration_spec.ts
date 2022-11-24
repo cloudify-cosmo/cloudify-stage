@@ -12,7 +12,7 @@ describe('User configuration', () => {
     };
 
     function mockConfigResponse() {
-        cy.interceptWithoutCaching('/console/config', (clientConfig: ClientConfig) => {
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
             clientConfig.app.whiteLabel = userConfig.whiteLabel;
             return clientConfig;
         });

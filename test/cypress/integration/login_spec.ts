@@ -37,8 +37,8 @@ describe('Login', () => {
             const currentAppDataVersion = Consts.APP_VERSION;
             const fetchUserAppsTimeout = secondsToMs(20);
 
-            cy.interceptWithoutCaching('/console/ua', (userAppsData: GetUserAppResponse) => ({
-                ...userAppsData,
+            cy.interceptWithoutCaching<GetUserAppResponse>('/console/ua', userAppsData => ({
+                ...userAppsData!,
                 appDataVersion: currentAppDataVersion - 1
             })).as('fetchUserApps');
             cy.intercept('GET', '/console/templates/select?tenant=default_tenant').as('fetchTemplateId');
@@ -87,7 +87,7 @@ describe('Login', () => {
 
         const ssoUrl = '/sso-redirect';
         cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.interceptWithoutCaching('/console/config', (clientConfig: ClientConfig) => {
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
             clientConfig.app.saml.enabled = true;
             clientConfig.app.saml.ssoUrl = ssoUrl;
             return clientConfig;
