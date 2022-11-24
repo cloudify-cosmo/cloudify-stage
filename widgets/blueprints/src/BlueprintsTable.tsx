@@ -45,7 +45,7 @@ export default function BlueprintsTable({
                     id={`${tableName}_${item.id}`}
                     key={item.id}
                     selected={item.isSelected}
-                    onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : null}
+                    onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : undefined}
                 >
                     <DataTable.Data>
                         {Blueprints.Actions.isUploaded(item) && (
@@ -76,7 +76,7 @@ export default function BlueprintsTable({
                         <div className="ui green horizontal label">{item.depCount}</div>
                     </DataTable.Data>
 
-                    <DataTable.Data className="center aligned rowActions">
+                    <DataTable.Data textAlign="center" className="rowActions">
                         {Blueprints.Actions.isCompleted(item) && (
                             <>
                                 {Blueprints.Actions.isUploaded(item) && (

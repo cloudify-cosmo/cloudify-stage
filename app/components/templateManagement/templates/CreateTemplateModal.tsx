@@ -22,18 +22,18 @@ function toId(item: PageMenuItem) {
 
 type AccordionSection = 'pages' | 'pageGroups';
 
-interface CreateTemplateModalProps {
-    initialTemplateName: string;
-    initialTenants: string[];
-    initialRoles: string[];
-    initialPageMenuItems: PageMenuItem[];
+export interface CreateTemplateModalProps {
+    initialTemplateName?: string;
+    initialTenants?: string[];
+    initialRoles?: string[];
+    initialPageMenuItems?: PageMenuItem[];
     trigger: ModalProps['trigger'];
     onCreateTemplate: (
         templateName: string,
         roles: string[],
         tenants: string[],
         selectedPageMenuItems: PageMenuItem[]
-    ) => Promise<void>;
+    ) => Promise<any>;
 }
 
 const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({

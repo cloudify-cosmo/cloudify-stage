@@ -14,6 +14,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
     onUpload = Promise.resolve,
+    onOpenBlueprintPage = noop,
     readmeLoading = null,
     data,
     noDataMessage,
@@ -88,7 +89,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{description}</DataTable.Data>
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
-                        <DataTable.Data className="center aligned rowActions">
+                        <DataTable.Data textAlign="center" className="rowActions">
                             <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
@@ -101,17 +102,27 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                     onReadme(name, readme_url);
                                 }}
                             />
-                            <Icon
-                                name="upload"
-                                disabled={isBlueprintUploaded}
-                                link={!isBlueprintUploaded}
-                                title={t('actions.uploadBlueprint')}
-                                bordered
-                                onClick={(event: Event) => {
-                                    event.stopPropagation();
-                                    onUpload(name, zip_url, image_url, main_blueprint);
-                                }}
-                            />
+                            {isBlueprintUploaded ? (
+                                <Icon
+                                    link={!isBlueprintUploaded}
+                                    name="arrow right"
+                                    title={t('actions.openBlueprint')}
+                                    bordered
+                                    onClick={() => {
+                                        onOpenBlueprintPage(name);
+                                    }}
+                                />
+                            ) : (
+                                <Icon
+                                    name="upload"
+                                    link={!isBlueprintUploaded}
+                                    title={t('actions.uploadBlueprint')}
+                                    bordered
+                                    onClick={() => {
+                                        onUpload(name, zip_url, image_url, main_blueprint);
+                                    }}
+                                />
+                            )}
                         </DataTable.Data>
                     </DataTable.Row>
                     /* eslint-enable camelcase */

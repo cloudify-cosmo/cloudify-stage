@@ -223,7 +223,7 @@ class UserGroupsTable extends React.Component {
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
                                     {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
                                         ) : (
@@ -250,7 +250,7 @@ class UserGroupsTable extends React.Component {
                                             {item.tenantCount}
                                         </Label>
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <MenuAction
                                             item={item}
                                             onEditTenants={this.showEditTenantsModal}

@@ -275,14 +275,14 @@ export default class ExecutionsTable extends React.Component {
                                     <DataTable.Data style={{ wordBreak: 'break-word' }}>
                                         {item.created_by}
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <SystemWorkflowIcon execution={item} />
                                         <DryRunIcon execution={item} />
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <ExecutionStatus execution={item} />
                                     </DataTable.Data>
-                                    <DataTable.Data className="center aligned">
+                                    <DataTable.Data textAlign="center">
                                         <PopupMenu className="menuAction">
                                             <Menu pointing vertical>
                                                 <Menu.Item

@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import { useState } from 'react';
 import type { Visibility } from '../../common/src/types';
 import MarketplaceModal from './MarketplaceModal';
+import type { DataTableConfiguration } from '../../../app/utils/GenericConfig';
 
 const t = Stage.Utils.getT('widgets.plugins');
 
@@ -28,7 +29,7 @@ interface PluginsTableProps {
         total: number;
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
+    widget: Stage.Types.Widget<DataTableConfiguration>;
 }
 
 const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, widget }) => {
@@ -42,7 +43,6 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     const [selectedPlugin, setSelectedPlugin] = useState<PluginItem | null>(null);
 
     useRefreshEvent(toolbox, 'plugins:refresh');
-
     function fetchGridData(fetchParams: any) {
         return toolbox.refresh(fetchParams);
     }
@@ -103,7 +103,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
     }
 
     const { DataTable, Dropdown, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
-    const { IdPopup, VerticallyAlignedCell } = Stage.Shared;
+    const { IdPopup } = Stage.Shared;
     const { DeleteConfirm } = Stage.Common.Components;
     const { UploadModal, Icon: PluginIcon } = Stage.Common.Plugins;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
@@ -142,7 +142,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             key={item.id}
                             selected={item.isSelected}
                             onClick={() => selectPlugin(item)}
-                            onMouseOver={setHoveredPlugin}
+                            onMouseOver={setHoveredPlugin as any} // TODO(RD-6366) Set hovered state properly
                             onMouseOut={clearHoveredPlugin}
                         >
                             <DataTable.Data>
@@ -151,16 +151,14 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             <DataTable.Data>
                                 <PluginIcon src={item.icon} />
                             </DataTable.Data>
-                            <DataTable.Data>
-                                <VerticallyAlignedCell>
-                                    {item.title || item.package_name}
-                                    <ResourceVisibility
-                                        visibility={item.visibility}
-                                        onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
-                                        allowedSettingTo={allowedVisibilitySettings}
-                                        className="rightFloated"
-                                    />
-                                </VerticallyAlignedCell>
+                            <DataTable.Data verticalAlign="flexMiddle">
+                                {item.title || item.package_name}
+                                <ResourceVisibility
+                                    visibility={item.visibility}
+                                    onSetVisibility={visibility => setPluginVisibility(item.id, visibility)}
+                                    allowedSettingTo={allowedVisibilitySettings}
+                                    className="rightFloated"
+                                />
                             </DataTable.Data>
                             <DataTable.Data>{item.package_name}</DataTable.Data>
                             <DataTable.Data>{item.package_version}</DataTable.Data>
@@ -169,7 +167,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                             <DataTable.Data>{item.distribution_release}</DataTable.Data>
                             <DataTable.Data>{item.uploaded_at}</DataTable.Data>
                             <DataTable.Data>{item.created_by}</DataTable.Data>
-                            <DataTable.Data className="center aligned rowActions">
+                            <DataTable.Data textAlign="center" className="rowActions">
                                 <Icon
                                     name="download"
                                     link
