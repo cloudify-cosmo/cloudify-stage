@@ -1,3 +1,4 @@
+import 'dd-trace/init';
 import type { Server } from 'http';
 import app from './app';
 import { SERVER_HOST, SERVER_PORT } from './consts';
