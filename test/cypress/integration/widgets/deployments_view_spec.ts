@@ -16,8 +16,8 @@ describe('Deployments View widget', () => {
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentId = `${specPrefix}deployment_id`;
     const deploymentName = `${specPrefix}deployment_name`;
-    const labelName = `${specPrefix}label_name`;
-    const labelValue = `${specPrefix}label_val`;
+    const prefixedLabelName = `${specPrefix}label_name`;
+    const prefixedLabelValue = `${specPrefix}label_val`;
 
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
@@ -48,7 +48,10 @@ describe('Deployments View widget', () => {
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentId, exampleSiteName)
-            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }, { [labelName]: labelValue }]);
+            .setLabels(deploymentId, [
+                { 'rendered-inside': 'details-panel' },
+                { [prefixedLabelName]: prefixedLabelValue }
+            ]);
     });
 
     beforeEach(() => {
@@ -139,22 +142,22 @@ describe('Deployments View widget', () => {
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
-                cy.contains(labelName).should('not.exist');
+                cy.contains(prefixedLabelName).should('not.exist');
             });
 
             cy.log('Show a label');
             cy.editWidgetConfiguration(widgetId, () => {
                 widgetConfigurationHelpers.toggleLabelsDropdown();
                 widgetConfigurationHelpers.getLabelsDropdown().within(() => {
-                    cy.contains('[role="listbox"]', labelName).click();
+                    cy.contains('[role="listbox"]', prefixedLabelName).click();
                 });
                 widgetConfigurationHelpers.toggleLabelsDropdown();
             });
 
             getDeploymentsViewTable().within(() => {
                 cy.contains(deploymentName);
-                cy.contains(labelValue);
-                cy.contains(labelName);
+                cy.contains(prefixedLabelValue);
+                cy.contains(prefixedLabelName);
             });
         });
 
