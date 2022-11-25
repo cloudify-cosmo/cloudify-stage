@@ -98,7 +98,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         resetPreviewData();
         resetInputs();
 
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         actions
             .doGet({ id: deploymentId }, { _include: _.join(['id', 'blueprint_id', 'inputs']) })
             .then(setDeployment)
@@ -136,7 +136,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         const inputsMap = getInputsMap(inputsPlanForUpdate, deploymentInputs);
         const blueprintId = blueprint.id === deployment.blueprint_id && _.isEmpty(inputsMap) ? null : blueprint.id;
 
-        const actions = new DeploymentActions(toolbox);
+        const actions = new DeploymentActions(toolbox.getManager());
         actions
             .doUpdate(
                 deployment.id,

@@ -1,10 +1,12 @@
 import type { ComponentProps } from 'react';
+import type { Field } from '../../common/src/types';
 import Consts from './consts';
 import Utils from './utils';
 
 const t = Utils.getWidgetTranslation('buttons');
 
 type ModalType = 'deploy' | 'delete';
+type ForceCheckboxState = Pick<BlueprintActionButtonsState, 'force'>;
 
 const { Button } = Stage.Basic;
 const { ErrorPopup } = Stage.Shared;
@@ -62,8 +64,7 @@ export default class BlueprintActionButtons extends React.Component<
         _event,
         field
     ) => {
-        // @ts-expect-error Form.fieldNameValue is not converted to TS yet
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+        this.setState(Stage.Basic.Form.fieldNameValue(field as Field) as ForceCheckboxState);
     };
 
     deleteBlueprint = () => {

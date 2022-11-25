@@ -3,6 +3,7 @@ import 'isomorphic-fetch';
 import JSZip from 'jszip';
 import _ from 'lodash';
 import log from 'loglevel';
+import type { Http, QueryParams, RequestOptions } from 'cloudify-ui-components/toolbox';
 import { LICENSE_ERR, UNAUTHORIZED_ERR } from './ErrorCodes';
 import Interceptor from './Interceptor';
 
@@ -17,17 +18,6 @@ Text form of class hierarchy diagram to be used at: https://yuml.me/diagram/nofu
 [Internal]<-[Manager|doGetFull();getCurrentUsername();getCurrentUserRole();getDistributionName();getDistributionRelease();getManagerUrl();getSelectedTenant();getSystemRoles();isCommunityEdition()]
 
 */
-
-type QueryParams = Record<string, any>;
-
-interface RequestOptions<RequestBody, RequestParams extends QueryParams> {
-    params?: RequestParams;
-    body?: RequestBody;
-    headers?: Record<string, any>;
-    parseResponse?: boolean;
-    withCredentials?: boolean;
-    validateAuthentication?: boolean;
-}
 
 function getContentType(type?: string) {
     return { 'content-type': type || 'application/json' };
@@ -49,7 +39,7 @@ function getFilenameFromHeaders(headers: Headers, fallbackFilename: string) {
     return fallbackFilename;
 }
 
-export default class External {
+export default class External implements Http {
     constructor(protected managerData: any) {}
 
     doGet<ResponseBody = any, RequestQueryParams extends QueryParams = QueryParams>(
@@ -75,14 +65,14 @@ export default class External {
 
     doPut<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
-        requestOptions: RequestOptions<RequestBody, RequestQueryParams>
+        requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'put', requestOptions);
     }
 
     doPatch<ResponseBody = any, RequestBody = any, RequestQueryParams extends QueryParams = QueryParams>(
         url: string,
-        requestOptions: RequestOptions<RequestBody, RequestQueryParams>
+        requestOptions?: RequestOptions<RequestBody, RequestQueryParams>
     ) {
         return this.ajaxCall<ResponseBody, RequestBody, RequestQueryParams>(url, 'PATCH', requestOptions);
     }

@@ -1,15 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Reducer } from 'redux';
+import { ActionType } from '../actions/types';
+import type { ContextAction } from '../actions/context';
 
-import * as types from '../actions/types';
+export type ContextData = Record<string, any>;
 
-const context = (state = {}, action) => {
+const context: Reducer<ContextData, ContextAction> = (state = {}, action) => {
     let newState;
     switch (action.type) {
-        case types.SET_CONTEXT_VALUE:
+        case ActionType.SET_CONTEXT_VALUE:
             newState = { ...state };
-            newState[action.key] = action.value;
+            newState[action.payload.key] = action.payload.value;
             return newState;
-        case types.CLEAR_CONTEXT:
+        case ActionType.CLEAR_CONTEXT:
             return {};
         default:
             return state;

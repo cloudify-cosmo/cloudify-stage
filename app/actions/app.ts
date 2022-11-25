@@ -1,40 +1,44 @@
-// @ts-nocheck File not migrated fully to TS
-import log from 'loglevel';
-import * as types from './types';
-import { setAppError, setAppLoading } from './appState';
-import { loadTemplates } from './templates';
-import { loadWidgetDefinitions } from './widgets';
+import { push } from 'connected-react-router';
+import type { CallHistoryMethodAction } from 'connected-react-router';
+import type { PayloadAction, ReduxThunkAction } from './types';
+import { ActionType } from './types';
+import type { ClearContextAction } from './context';
+import { clearContext } from './context';
+import Consts from '../utils/consts';
 
-import { loadOrCreateUserAppData } from './userApp';
-import { getIdentityProviders } from './managers';
-import { getClusterStatus } from './clusterStatus';
+export type SetAppLoadingAction = PayloadAction<boolean, ActionType.SET_APP_LOADING>;
+export type SetAppErrorAction = PayloadAction<string | null, ActionType.SET_APP_ERROR>;
+export type StoreCurrentPageAction = PayloadAction<string, ActionType.STORE_CURRENT_PAGE>;
 
-export function intialPageLoad() {
-    return (dispatch /* , getState */) => {
-        dispatch(setAppLoading(true));
+export type AppAction = SetAppLoadingAction | SetAppErrorAction | StoreCurrentPageAction;
 
-        return Promise.all([
-            dispatch(loadTemplates()),
-            dispatch(loadWidgetDefinitions()),
-            dispatch(getClusterStatus()),
-            dispatch(getIdentityProviders())
-        ])
-            .then(() => dispatch(loadOrCreateUserAppData()))
-            .then(() => {
-                dispatch(setAppLoading(false));
-                dispatch(setAppError(null));
-            })
-            .catch(e => {
-                log.error('Error initializing user data. Cannot load page', e);
-                dispatch(setAppLoading(false));
-                return Promise.reject(e);
-            });
+export function storeCurrentPageId(pageId: string): StoreCurrentPageAction {
+    return {
+        type: ActionType.STORE_CURRENT_PAGE,
+        payload: pageId
     };
 }
 
-export function storeCurrentPageId(pageId) {
+export function setAppLoading(isLoading: boolean): SetAppLoadingAction {
     return {
-        type: types.STORE_CURRENT_PAGE,
-        pageId
+        type: ActionType.SET_APP_LOADING,
+        payload: isLoading
+    };
+}
+
+export function setAppError(error: string | null): SetAppErrorAction {
+    return {
+        type: ActionType.SET_APP_ERROR,
+        payload: error
+    };
+}
+
+export function showAppError(
+    error: string
+): ReduxThunkAction<void, ClearContextAction | SetAppErrorAction | CallHistoryMethodAction> {
+    return dispatch => {
+        dispatch(clearContext());
+        dispatch(setAppError(error));
+        dispatch(push(Consts.PAGE_PATH.ERROR));
     };
 }

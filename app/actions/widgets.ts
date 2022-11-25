@@ -1,113 +1,75 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Action } from 'redux';
+import type { PayloadAction } from './types';
+import { ActionType } from './types';
+import type { WidgetDefinition } from '../utils/StageAPI';
+import type { SimpleWidgetObj } from './page';
 
-import Internal from '../utils/Internal';
-import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
-import * as types from './types';
-import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
+export type AddWidgetAction = PayloadAction<
+    {
+        pageId: string;
+        layoutSectionIndex: number;
+        tabIndex: number | null;
+        widget: Partial<SimpleWidgetObj>;
+        widgetDefinition: WidgetDefinition;
+    },
+    ActionType.ADD_WIDGET
+>;
+export type UpdateWidgetAction = PayloadAction<
+    { pageId: string; widgetId: string; params: Partial<WidgetDefinition> },
+    ActionType.UPDATE_WIDGET
+>;
+export type RemoveWidgetAction = PayloadAction<{ pageId: string; widgetId: string }, ActionType.REMOVE_WIDGET>;
+export type MinimizeTabWidgetsAction = Action<ActionType.MINIMIZE_TAB_WIDGETS>;
+export type MinimizeWidgetsAction = Action<ActionType.MINIMIZE_WIDGETS>;
 
-export function storeWidgetDefinitions(widgetDefinitions) {
+export type WidgetAction =
+    | AddWidgetAction
+    | UpdateWidgetAction
+    | RemoveWidgetAction
+    | MinimizeTabWidgetsAction
+    | MinimizeWidgetsAction;
+
+export function addWidget(
+    pageId: string,
+    layoutSectionIndex: number,
+    tabIndex: number | null,
+    widget: Partial<SimpleWidgetObj>,
+    widgetDefinition: WidgetDefinition
+): AddWidgetAction {
     return {
-        type: types.STORE_WIDGETS,
-        widgetDefinitions
+        type: ActionType.ADD_WIDGET,
+        payload: {
+            pageId,
+            layoutSectionIndex,
+            tabIndex,
+            widget,
+            widgetDefinition
+        }
     };
 }
 
-export function loadWidgetDefinitions() {
-    return (dispatch, getState) =>
-        widgetDefinitionLoader.load(getState().manager).then(result => dispatch(storeWidgetDefinitions(result)));
-}
-
-export function addWidget(pageId, layoutSection, tab, widget, widgetDefinition) {
+export function updateWidget(pageId: string, widgetId: string, params: Partial<WidgetDefinition>): UpdateWidgetAction {
     return {
-        type: types.ADD_WIDGET,
-        pageId,
-        layoutSection,
-        tab,
-        widget,
-        widgetDefinition
+        type: ActionType.UPDATE_WIDGET,
+        payload: { pageId, widgetId, params }
     };
 }
 
-export function updateWidget(pageId, widgetId, params) {
+export function removeWidget(pageId: string, widgetId: string): RemoveWidgetAction {
     return {
-        type: types.UPDATE_WIDGET,
-        pageId,
-        widgetId,
-        params
+        type: ActionType.REMOVE_WIDGET,
+        payload: { pageId, widgetId }
     };
 }
 
-export function removeWidget(pageId, widgetId) {
+export function minimizeTabWidgets(): MinimizeTabWidgetsAction {
     return {
-        type: types.REMOVE_WIDGET,
-        pageId,
-        widgetId
+        type: ActionType.MINIMIZE_TAB_WIDGETS
     };
 }
 
-export function minimizeTabWidgets() {
+export function minimizeWidgets(): MinimizeWidgetsAction {
     return {
-        type: types.MINIMIZE_TAB_WIDGETS
-    };
-}
-
-export function minimizeWidgets() {
-    return {
-        type: types.MINIMIZE_WIDGETS
-    };
-}
-
-function setInstallWidget(widgetDefinition) {
-    return {
-        type: types.INSTALL_WIDGET,
-        widgetDefinition
-    };
-}
-
-export function installWidget(widgetFile, widgetUrl) {
-    return (dispatch, getState) =>
-        widgetDefinitionLoader
-            .install(widgetFile, widgetUrl, getState().manager)
-            .then(widgetDefinition => dispatch(setInstallWidget(widgetDefinition)));
-}
-
-export function setUninstallWidget(widgetId) {
-    return {
-        type: types.UNINSTALL_WIDGET,
-        widgetId
-    };
-}
-
-export function uninstallWidget(widgetId) {
-    return (dispatch, getState) =>
-        widgetDefinitionLoader
-            .uninstall(widgetId, getState().manager)
-            .then(() => dispatch(setUninstallWidget(widgetId)));
-}
-
-export function updateWidgetDefinition(widgetId, widgetDefinition) {
-    return dispatch =>
-        dispatch({
-            type: types.UPDATE_WIDGET_DEFINITION,
-            widgetDefinition,
-            widgetId
-        });
-}
-
-export function replaceWidget(widgetId, widgetFile, widgetUrl) {
-    return (dispatch, getState) =>
-        widgetDefinitionLoader.update(widgetId, widgetFile, widgetUrl, getState().manager).then(widgetDefinition =>
-            dispatch({
-                type: types.UPDATE_WIDGET_DEFINITION,
-                widgetDefinition,
-                widgetId
-            })
-        );
-}
-
-export function checkIfWidgetIsUsed(widgetId) {
-    return (dispatch, getState) => {
-        const internal = new Internal(getState().manager);
-        return internal.doGet<GetWidgetsUsedResponse>(`/widgets/${widgetId}/used`);
+        type: ActionType.MINIMIZE_WIDGETS
     };
 }

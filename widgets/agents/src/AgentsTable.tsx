@@ -156,8 +156,8 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                 </DataTable>
 
                 <ValidateAgentsModal
-                    toolbox={toolbox}
-                    widget={widget}
+                    manager={toolbox.getManager()}
+                    drilldownHandler={toolbox.getDrilldownHandler()}
                     open={showModal && modal === AgentsTable.Modals.VALIDATE_AGENT}
                     deploymentId={data.deploymentId}
                     nodeId={data.nodeId}
@@ -168,8 +168,8 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                 />
 
                 <InstallAgentsModal
-                    toolbox={toolbox}
-                    widget={widget}
+                    manager={toolbox.getManager()}
+                    drilldownHandler={toolbox.getDrilldownHandler()}
                     open={showModal && modal === AgentsTable.Modals.INSTALL_AGENT}
                     deploymentId={data.deploymentId}
                     nodeId={data.nodeId}

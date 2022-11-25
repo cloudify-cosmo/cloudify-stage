@@ -22,18 +22,18 @@ function toId(item: PageMenuItem) {
 
 type AccordionSection = 'pages' | 'pageGroups';
 
-interface CreateTemplateModalProps {
-    initialTemplateName: string;
-    initialTenants: string[];
-    initialRoles: string[];
-    initialPageMenuItems: PageMenuItem[];
+export interface CreateTemplateModalProps {
+    initialTemplateName?: string;
+    initialTenants?: string[];
+    initialRoles?: string[];
+    initialPageMenuItems?: PageMenuItem[];
     trigger: ModalProps['trigger'];
     onCreateTemplate: (
         templateName: string,
         roles: string[],
         tenants: string[],
         selectedPageMenuItems: PageMenuItem[]
-    ) => Promise<void>;
+    ) => Promise<any>;
 }
 
 const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
@@ -46,7 +46,7 @@ const CreateTemplateModal: FunctionComponent<CreateTemplateModalProps> = ({
 }) => {
     const allAvailablePages = useSelector((state: ReduxState) => Object.keys(state.templates.pagesDef));
     const allAvailablePageGroups = useSelector((state: ReduxState) => Object.keys(state.templates.pageGroupsDef));
-    const allAvailableTenants = useSelector((state: ReduxState) => _.map(state.manager.tenants.items, 'name'));
+    const allAvailableTenants = useSelector((state: ReduxState) => state.manager.tenants.items);
     const allAvailableRoles = useSelector((state: ReduxState) => state.manager.roles);
     const [loading, setLoading, unsetLoading] = useBoolean();
     const [tenants, setTenants, resetTenants] = useInput(initialTenants);

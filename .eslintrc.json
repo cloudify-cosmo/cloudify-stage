@@ -1,7 +1,8 @@
 {
+    "extends": ["./node_modules/cloudify-ui-common-configs/eslint-common-backend.json"],
     "overrides": [
         {
-            "files": ["./*.{js,ts}", "backend/*.js", "scripts/*.js"],
+            "files": ["./*.{js,ts}", "scripts/*.js"],
             "extends": [
                 "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
                 "./.eslintrc.temp-overrides.json"
@@ -10,7 +11,9 @@
                 "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
                 "no-console": "off",
                 "security/detect-child-process": "off",
-                "no-process-exit": "off"
+                "no-process-exit": "off",
+                "xss/no-mixed-html": "off",
+                "security-node/detect-crlf": "off"
             }
         },
         {
@@ -138,44 +141,18 @@
         {
             "files": "./backend/**/*.ts",
             "extends": [
-                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
-                "plugin:node/recommended-module",
                 "./.eslintrc.temp-overrides.json"
             ],
             "rules": {
                 "prefer-promise-reject-errors": "off",
-                "node/no-missing-require": ["error", { "tryExtensions": [".js", ".ts", ".json"] }],
-                "node/no-missing-import": ["error", { "tryExtensions": [".js", ".ts", ".json"] }]
-            }
-        },
-        {
-            "files": "./backend/**/*.ts",
-            "excludedFiles": ["./backend/test/**", "./backend/**/__mocks__/*"],
-            "parser": "@typescript-eslint/parser",
-            "rules": {
-                "@typescript-eslint/no-floating-promises": "error"
-            },
-            "parserOptions": {
-                "project": "./backend/tsconfig.json"
+                "node/no-missing-require": ["error", { "tryExtensions": [".js", ".ts", ".json"] }]
             }
         },
         {
             "files": "./backend/test/**/*.ts",
-            "extends": [
-                "./node_modules/cloudify-ui-common-configs/eslint-common-node.json",
-                "./node_modules/cloudify-ui-common-configs/eslint-common-jest.json",
-                "plugin:node/recommended-module",
-                "./.eslintrc.temp-overrides.json"
-            ],
             "rules": {
                 "global-require": "off",
-                "no-console": "off",
-                "node/no-missing-import": [
-                    "error",
-                    { "tryExtensions": [".js", ".json", ".ts"], "resolvePaths": ["backend", ".."] }
-                ],
-                "import/no-unresolved": "off",
-                "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+                "no-console": "off"
             }
         }
     ]

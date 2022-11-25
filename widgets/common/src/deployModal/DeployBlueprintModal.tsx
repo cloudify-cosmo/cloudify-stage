@@ -1,10 +1,10 @@
 import type { ComponentProps, FunctionComponent } from 'react';
 import type { BlueprintDeployParams } from '../blueprints/BlueprintActions';
+import BlueprintActions from '../blueprints/BlueprintActions';
 import type { WorkflowOptions } from '../deployments/DeploymentActions';
+import DeploymentActions from '../deployments/DeploymentActions';
 import type { WorkflowParameters } from '../executeWorkflow';
 import GenericDeployModal from './GenericDeployModal';
-import BlueprintActions from '../blueprints/BlueprintActions';
-import DeploymentActions from '../deployments/DeploymentActions';
 import { getErrorObject } from '../inputs/utils/errors';
 
 const t = (key: string, options?: Record<string, any>) =>
@@ -25,7 +25,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
     }
 
     function waitForDeploymentIsCreated(deploymentId: string, { deploymentName }: BlueprintDeployParams) {
-        const deploymentActions = new DeploymentActions(toolbox);
+        const deploymentActions = new DeploymentActions(toolbox.getManager());
 
         return deploymentActions
             .waitUntilCreated(deploymentId)
@@ -39,7 +39,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
         installWorkflowParameters?: WorkflowParameters,
         installWorkflowOptions?: WorkflowOptions
     ) {
-        const deploymentActions = new DeploymentActions(toolbox);
+        const deploymentActions = new DeploymentActions(toolbox.getManager());
 
         return deploymentActions
             .doExecute(deploymentId, 'install', installWorkflowParameters, installWorkflowOptions)

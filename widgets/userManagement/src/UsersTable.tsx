@@ -10,6 +10,8 @@ import type { UserViewItem } from './widget';
 import IsAdminCheckbox from './IsAdminCheckbox';
 import type { User, UserManagementWidget } from './widget.types';
 import getWidgetT from './getWidgetT';
+import InviteModal from './InviteModal';
+import AuthServiceActions from './authServiceActions';
 
 const t = getWidgetT();
 const tColumn = (key: string) => t(`columns.${key}`);
@@ -29,6 +31,7 @@ interface UsersTableState {
     groups: string[];
     usernameDuringActivation: string;
     usernameDuringRoleSetting: string;
+    isAuthServiceAvailable: boolean | null;
 }
 
 function getNames(response: NamedResourceResponse) {
@@ -47,12 +50,17 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             tenants: [],
             groups: [],
             usernameDuringActivation: '',
-            usernameDuringRoleSetting: ''
+            usernameDuringRoleSetting: '',
+            isAuthServiceAvailable: null
         };
     }
 
     componentDidMount() {
         const { toolbox } = this.props;
+        const authServiceActions = new AuthServiceActions(toolbox);
+        authServiceActions.isAuthServiceAvailable().then(isAuthServiceAvailable => {
+            this.setState({ isAuthServiceAvailable });
+        });
         toolbox.getEventBus().on('users:refresh', this.refreshData, this);
     }
 
@@ -150,7 +158,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             });
     }
 
-    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
+    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -279,12 +287,15 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             tenants,
             user,
             usernameDuringActivation,
-            usernameDuringRoleSetting
+            usernameDuringRoleSetting,
+            isAuthServiceAvailable
         } = this.state;
         const { data, toolbox, widget } = this.props;
         const { Checkbox, Confirm, DataTable, ErrorMessage, Label, Loader } = Stage.Basic;
         const { PasswordModal, TextEllipsis } = Stage.Shared;
         const tableName = 'usersTable';
+
+        if (isAuthServiceAvailable === null) return <Stage.Basic.Loading />;
 
         return (
             <div>
@@ -314,7 +325,6 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     <DataTable.Column label={tColumn('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
-                        /* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                             <DataTable.Row
                                 id={`${tableName}_${item.username}`}
@@ -326,7 +336,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                     <TextEllipsis maxWidth="450px">{item.username}</TextEllipsis>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.last_login_at}</DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <IsAdminCheckbox
                                         onAdminUserChange={() =>
                                             this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
@@ -338,7 +348,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     {/* TODO (RD-2100): create better way to block current user state change */}
                                     {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
@@ -355,7 +365,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         />
                                     )}
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     {/* TODO (RD-2100): propose way to block current user state change */}
                                     <Checkbox
                                         checked={item.show_getting_started}
@@ -385,18 +395,17 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         {item.tenantCount}
                                     </Label>
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <ActionsMenu item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
-                            {/* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */}
                             <DataTable.DataExpandable key={item.username}>
                                 <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
                             </DataTable.DataExpandable>
                         </DataTable.RowExpandable>
                     ))}
                     <DataTable.Action>
-                        <CreateModal toolbox={toolbox} />
+                        {isAuthServiceAvailable ? <InviteModal toolbox={toolbox} /> : <CreateModal toolbox={toolbox} />}
                     </DataTable.Action>
                 </DataTable>
 

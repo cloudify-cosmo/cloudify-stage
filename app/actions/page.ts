@@ -1,37 +1,28 @@
 import { compact, each, find, map } from 'lodash';
-import type { AnyAction } from 'redux';
-import type { ThunkAction } from 'redux-thunk';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
-    WidgetsSection as BackendWidgetsSection
+    WidgetsSection as BackendWidgetsSection,
+    LayoutSection as BackendLayoutSection
 } from '../../backend/handler/templates/types';
 import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
-import * as types from './types';
+import type { ReduxThunkAction, PayloadAction } from './types';
+import { ActionType } from './types';
 import { addWidget } from './widgets';
 import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
+import type { EnhancedWidgetDefinition } from './widgetDefinitions';
 
 // TODO(RD-1645): rename type to Widget
 // TODO(RD-1649): rename the added field to `definitionId`
 export type SimpleWidgetObj = Omit<Widget, 'definition'> & { definition: string };
-
-export interface WidgetsSection extends Omit<BackendWidgetsSection, 'content'> {
-    content: SimpleWidgetObj[];
-}
-
-export interface TabContent extends Omit<BackendTabContent, 'widgets'> {
-    widgets: SimpleWidgetObj[];
-}
-
-export interface TabsSection extends Omit<BackendTabsSection, 'content'> {
-    content: TabContent[];
-}
-
-export type LayoutSection = WidgetsSection | TabsSection;
+export type WidgetsSection = BackendWidgetsSection<SimpleWidgetObj>;
+export type TabContent = BackendTabContent<SimpleWidgetObj>;
+export type TabsSection = BackendTabsSection<SimpleWidgetObj>;
+export type LayoutSection = BackendLayoutSection<SimpleWidgetObj>;
 
 export function isWidgetsSection(layoutSection: LayoutSection): layoutSection is WidgetsSection {
     return layoutSection.type === 'widgets';
@@ -48,36 +39,72 @@ export interface PageDefinition extends Omit<AppDataPage, 'icon' | 'layout'> {
     layout: LayoutSection[];
 }
 
-export function addTab(pageId: string, layoutSection: number) {
+export type AddTabAction = PayloadAction<{ pageId: string; layoutSectionIndex: number }, ActionType.ADD_TAB>;
+export type RemoveTabAction = PayloadAction<
+    { pageId: string; layoutSectionIndex: number; tabIndex: number },
+    ActionType.REMOVE_TAB
+>;
+export type UpdateTabAction = PayloadAction<
+    { pageId: string; layoutSectionIndex: number; tabIndex: number; name: string; isDefault: boolean },
+    ActionType.UPDATE_TAB
+>;
+export type MoveTabAction = PayloadAction<
+    { pageId: string; layoutSectionIndex: number; oldTabIndex: number; newTabIndex: number },
+    ActionType.MOVE_TAB
+>;
+export type ChangePageDescriptionAction = PayloadAction<
+    { pageId: string; description: string },
+    ActionType.CHANGE_PAGE_DESCRIPTION
+>;
+export type AddLayoutSectionAction = PayloadAction<
+    { pageId: string; layoutSection: LayoutSection; index: number },
+    ActionType.ADD_LAYOUT_SECTION
+>;
+export type RemoveLayoutSectionAction = PayloadAction<
+    { pageId: string; layoutSectionIndex: number },
+    ActionType.REMOVE_LAYOUT_SECTION
+>;
+
+export type TabAction = AddTabAction | RemoveTabAction | UpdateTabAction | MoveTabAction;
+export type LayoutSectionAction = ChangePageDescriptionAction | AddLayoutSectionAction | RemoveLayoutSectionAction;
+
+export function addTab(pageId: string, layoutSectionIndex: number): AddTabAction {
     return {
-        type: types.ADD_TAB,
-        pageId,
-        layoutSection
+        type: ActionType.ADD_TAB,
+        payload: { pageId, layoutSectionIndex }
     } as const;
 }
 
-export function removeTab(pageId: string, layoutSection: number, tabIndex: number) {
+export function removeTab(pageId: string, layoutSectionIndex: number, tabIndex: number): RemoveTabAction {
     return {
-        type: types.REMOVE_TAB,
-        pageId,
-        layoutSection,
-        tabIndex
+        type: ActionType.REMOVE_TAB,
+        payload: { pageId, layoutSectionIndex, tabIndex }
     } as const;
 }
 
-export function updateTab(pageId: string, layoutSection: number, tabIndex: number, name: string, isDefault: boolean) {
+export function updateTab(
+    pageId: string,
+    layoutSectionIndex: number,
+    tabIndex: number,
+    name: string,
+    isDefault: boolean
+): UpdateTabAction {
     return {
-        type: types.UPDATE_TAB,
-        pageId,
-        layoutSection,
-        tabIndex,
-        name,
-        isDefault
+        type: ActionType.UPDATE_TAB,
+        payload: { pageId, layoutSectionIndex, tabIndex, name, isDefault }
     } as const;
 }
 
-export function moveTab(pageId: string, layoutSection: number, oldTabIndex: number, newTabIndex: number) {
-    return { type: types.MOVE_TAB, pageId, layoutSection, oldTabIndex, newTabIndex } as const;
+export function moveTab(
+    pageId: string,
+    layoutSectionIndex: number,
+    oldTabIndex: number,
+    newTabIndex: number
+): MoveTabAction {
+    return {
+        type: ActionType.MOVE_TAB,
+        payload: { pageId, layoutSectionIndex, oldTabIndex, newTabIndex }
+    } as const;
 }
 
 export function forAllWidgets(
@@ -118,21 +145,17 @@ export function getWidgetDefinitionById(
     return find(definitions, { id: definitionId });
 }
 
-export function changePageDescription(pageId: string, newDescription: string) {
+export function changePageDescription(pageId: string, description: string): ChangePageDescriptionAction {
     return {
-        type: types.CHANGE_PAGE_DESCRIPTION,
-        pageId,
-        description: newDescription
+        type: ActionType.CHANGE_PAGE_DESCRIPTION,
+        payload: { pageId, description }
     };
 }
 
-export function addLayoutToPage(
-    page: Pick<PageDefinition, 'layout'>,
-    pageId: string
-): ThunkAction<void, ReduxState, never, AnyAction> {
+export function addLayoutToPage(page: Pick<PageDefinition, 'layout'>, pageId: string): ReduxThunkAction {
     return (dispatch, getState) => {
         const { widgetDefinitions } = getState();
-        const widgetsToLoad: Record<string, WidgetDefinition<any, any, Record<string, unknown>>> = {};
+        const widgetsToLoad: Record<string, EnhancedWidgetDefinition> = {};
         forEachWidget(page, widget => {
             const widgetDefinition = find(widgetDefinitions, { id: widget.definition });
             if (widgetDefinition && !widgetDefinition.loaded) {
@@ -140,22 +163,33 @@ export function addLayoutToPage(
             }
             return widget;
         });
-        return Promise.all(map(widgetsToLoad, WidgetDefinitionsLoader.loadWidget)).then(loadedWidgetDefinitions => {
+        const promises = map(widgetsToLoad, widgetToLoad => WidgetDefinitionsLoader.loadWidget(widgetToLoad));
+        return Promise.all(promises).then(loadedWidgetDefinitions => {
             forEachWidget(page, (widget, layoutSectionIdx, tabIdx) => {
                 const widgetDefinition =
                     find(loadedWidgetDefinitions, { id: widget.definition }) ??
                     find(getState().widgetDefinitions, { id: widget.definition });
-                dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
+                if (widgetDefinition) dispatch(addWidget(pageId, layoutSectionIdx, tabIdx, widget, widgetDefinition));
                 return widget;
             });
         });
     };
 }
 
-export function addLayoutSectionToPage(pageId: string, layoutSection: LayoutSection, position: number) {
-    return { type: types.ADD_LAYOUT_SECTION, pageId, layoutSection, position };
+export function addLayoutSectionToPage(
+    pageId: string,
+    layoutSection: LayoutSection,
+    index: number
+): AddLayoutSectionAction {
+    return {
+        type: ActionType.ADD_LAYOUT_SECTION,
+        payload: { pageId, layoutSection, index }
+    };
 }
 
-export function removeLayoutSectionFromPage(pageId: string, layoutSection: number) {
-    return { type: types.REMOVE_LAYOUT_SECTION, pageId, layoutSection };
+export function removeLayoutSectionFromPage(pageId: string, layoutSectionIndex: number): RemoveLayoutSectionAction {
+    return {
+        type: ActionType.REMOVE_LAYOUT_SECTION,
+        payload: { pageId, layoutSectionIndex }
+    };
 }

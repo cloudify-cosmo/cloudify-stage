@@ -1,17 +1,20 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import { createStore, applyMiddleware } from 'redux';
-import type { Reducer } from 'redux';
+import type { Reducer, AnyAction } from 'redux';
 import timeKeeper from 'timekeeper';
 
+import type { TenantsData } from 'reducers/managerReducer/tenantsReducer';
 import tenantsReducer from 'reducers/managerReducer/tenantsReducer';
-import { getTenants, selectTenant } from 'actions/tenants';
-import * as types from 'actions/types';
+import { getTenants, selectTenant } from 'actions/manager/tenants';
+import { ActionType } from 'actions/types';
 
 import fetchMock from 'fetch-mock';
 import log from 'loglevel';
+import type { ReduxState } from 'reducers';
+import type { ReduxThunkDispatch } from 'configureStore';
 
-const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore<Partial<ReduxState>, ReduxThunkDispatch>([thunk]);
 
 const time = new Date(1);
 
@@ -37,13 +40,13 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: types.REQ_TENANTS },
+            { type: ActionType.FETCH_TENANTS_REQUEST },
             {
-                type: types.RES_TENANTS,
-                tenants: {
-                    items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }]
-                },
-                receivedAt: Date.now()
+                type: ActionType.FETCH_TENANTS_SUCCESS,
+                payload: {
+                    tenants: ['aaa', 'bbb', 'ccc'],
+                    receivedAt: Date.now()
+                }
             }
         ];
 
@@ -65,16 +68,18 @@ describe('(Reducer) Tenants', () => {
         });
 
         const expectedActions = [
-            { type: types.REQ_TENANTS },
+            { type: ActionType.FETCH_TENANTS_REQUEST },
             {
-                type: types.ERR_TENANTS,
-                error: 'Error fetching tenants',
-                receivedAt: Date.now()
+                type: ActionType.FETCH_TENANTS_FAILURE,
+                payload: {
+                    error: 'Error fetching tenants',
+                    receivedAt: Date.now()
+                }
             }
         ];
 
         const store = mockStore({});
-        store.replaceReducer(tenantsReducer as Reducer<unknown>);
+        store.replaceReducer(tenantsReducer as Reducer);
 
         return store.dispatch(getTenants()).catch(() => {
             // return of async actions
@@ -92,7 +97,7 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
+        const store = createStore<TenantsData, AnyAction, any, any>(tenantsReducer, {}, applyMiddleware(thunk));
 
         return store.dispatch(getTenants()).catch(() => {
             // return of async actions
@@ -114,13 +119,13 @@ describe('(Reducer) Tenants', () => {
             headers: { 'content-type': 'application/json' }
         });
 
-        const store = createStore(tenantsReducer, {}, applyMiddleware(thunk));
+        const store = createStore<TenantsData, AnyAction, any, any>(tenantsReducer, {}, applyMiddleware(thunk));
 
         return store.dispatch(getTenants()).then(() => {
             // return of async actions
             expect(store.getState()).toEqual({
                 isFetching: false,
-                items: [{ name: 'aaa' }, { name: 'bbb' }, { name: 'ccc' }],
+                items: ['aaa', 'bbb', 'ccc'],
                 selected: 'aaa',
                 lastUpdated: Date.now()
             });

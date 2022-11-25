@@ -122,8 +122,8 @@ const EditWidgetModal: FunctionComponent<EditWidgetModalProps> = ({
             </Modal.Content>
 
             <Modal.Actions>
-                <ApproveButton onClick={onApprove} />
                 <CancelButton onClick={onDeny} />
+                <ApproveButton onClick={onApprove} />
             </Modal.Actions>
         </Modal>
     );

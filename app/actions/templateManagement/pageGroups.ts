@@ -1,20 +1,34 @@
 import type { SemanticICONS } from 'semantic-ui-react';
-import * as types from '../types';
+import type { PayloadAction } from '../types';
+import { ActionType } from '../types';
 
-export function deletePageGroup(pageGroupId: string) {
+export type DeletePageGroupAction = PayloadAction<string, ActionType.REMOVE_TEMPLATE_PAGE_GROUP>;
+export type CreatePageGroupAction = PayloadAction<
+    { pageGroupId: string; name: string; pages: string[]; icon?: SemanticICONS },
+    ActionType.CREATE_TEMPLATE_PAGE_GROUP
+>;
+export type UpdatePageGroupAction = PayloadAction<
+    { pageGroupId: string; newId: string; name: string; pages: string[]; icon?: SemanticICONS },
+    ActionType.UPDATE_TEMPLATE_PAGE_GROUP
+>;
+export type PageGroupAction = DeletePageGroupAction | CreatePageGroupAction | UpdatePageGroupAction;
+
+export function deletePageGroup(pageGroupId: string): DeletePageGroupAction {
     return {
-        type: types.REMOVE_TEMPLATE_PAGE_GROUP,
-        pageGroupId
+        type: ActionType.REMOVE_TEMPLATE_PAGE_GROUP,
+        payload: pageGroupId
     };
 }
 
-export function createPageGroup(pageGroupId: string, name: string, pages: string[], icon?: SemanticICONS) {
+export function createPageGroup(
+    pageGroupId: string,
+    name: string,
+    pages: string[],
+    icon?: SemanticICONS
+): CreatePageGroupAction {
     return {
-        type: types.CREATE_TEMPLATE_PAGE_GROUP,
-        pageGroupId,
-        name,
-        pages,
-        icon
+        type: ActionType.CREATE_TEMPLATE_PAGE_GROUP,
+        payload: { pageGroupId, name, pages, icon }
     };
 }
 
@@ -24,13 +38,9 @@ export function updatePageGroup(
     name: string,
     pages: string[],
     icon?: SemanticICONS
-) {
+): UpdatePageGroupAction {
     return {
-        type: types.UPDATE_TEMPLATE_PAGE_GROUP,
-        pageGroupId,
-        newId,
-        name,
-        pages,
-        icon
+        type: ActionType.UPDATE_TEMPLATE_PAGE_GROUP,
+        payload: { pageGroupId, newId, name, pages, icon }
     };
 }

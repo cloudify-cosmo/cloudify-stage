@@ -87,7 +87,9 @@
         },
         "secrets": {
             "invalidEmail": "Please enter a valid email address",
-            "invalidPort": "Please enter a valid port number"
+            "invalidPort": "Please enter a valid port number",
+            "secretsAlreadyExist": "Secrets already exist",
+            "overrideSecrets": "Override secrets"
         },
         "summary": {
             "taskListTitle": "Task List",
@@ -115,7 +117,6 @@
                 "uploadingErrorMessageSuffix": "blueprint upload error"
             }
         },
-        "welcomeText": "Welcome to Cloudify: your open source,\nmulti-cloud orchestration platform.\n\nWe’ll start by setting up your cloud environment\nin the following easy steps. Ready? Let’s go.\n\nNote: this process can take up to 5 minutes,\nand you will need your API access keys.",
         "welcomeLogoLabel": "CLOUDIFY",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
@@ -944,10 +945,15 @@
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
             "description": "Shows blueprints catalog",
+            "buttons": {
+                "upload": "Upload",
+                "open": "Open"
+            },
             "actions": {
                 "openBlueprintRepository": "Open blueprint repository",
                 "openDocumentation": "Open documentation",
-                "uploadBlueprint": "Upload blueprint"
+                "uploadBlueprint": "Upload blueprint",
+                "openBlueprint": "Open blueprint"
             },
             "configuration": {
                 "jsonPath": {
@@ -1089,6 +1095,10 @@
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
                 },
+                "labelsToShow": {
+                  "name": "List of labels' keys to show in the table as columns",
+                  "placeholder": "Select keys from the list"
+                },
                 "mapOpenByDefault": {
                     "name": "Show map by default"
                 },
@@ -1138,7 +1148,12 @@
                                     "help": "Specify a text which will be appended to each deployment name"
                                 }
                             },
-                            "steps": {
+                            "deploySteps": {
+                                "validatingData": "1/3: Validating data...",
+                                "fetchingEnvironments": "2/3: Fetching environments list...",
+                                "creatingDeployments": "3/3: Creating deployments..."
+                            },
+                            "deployAndInstallSteps": {
                                 "validatingData": "1/4: Validating data...",
                                 "fetchingEnvironments": "2/4: Fetching environments list...",
                                 "creatingDeployments": "3/4: Creating deployments...",
@@ -1350,6 +1365,10 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "nodesStats": {
+            "name": "Nodes statistics",
+            "description": "This widget shows number of node instances in different states"
+        },
         "pluginsCatalog": {
             "name": "Plugins Catalog",
             "description": "Shows plugins catalog",
@@ -1506,6 +1525,16 @@
                     "isAdmin": {
                         "label": "Admin",
                         "note": "Admin users have full permissions to all tenants on the manager."
+                    }
+                }
+            },
+            "inviteModal": {
+                "button": "Invite",
+                "header": "Invite user",
+                "inputs": {
+                    "email": {
+                        "label": "E-mail",
+                        "error": "Please provide valid e-mail"
                     }
                 }
             },
@@ -1693,6 +1722,39 @@
                 },
                 "deleteModal": {
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                }
+            }
+        },
+        "text": {
+            "name": "Text box",
+            "description": "Adds text box",
+            "configuration": {
+                "header": {
+                    "name": "Header",
+                    "default": "Header text"
+                },
+                "content": {
+                    "name": "Content",
+                    "description": "Markdown is supported",
+                    "default": "Markdown supported content. Update in widget configuration."
+                },
+                "headerTextColor": {
+                    "name": "Header text color"
+                },
+                "headerTextSize": {
+                    "name": "Header text size [px]"
+                },
+                "headerTextFont": {
+                    "name": "Header text font"
+                },
+                "contentTextColor": {
+                    "name": "Content text color"
+                },
+                "contentTextSize": {
+                    "name": "Content text size [px]"
+                },
+                "contentTextFont": {
+                    "name": "Content text font"
                 }
             }
         },

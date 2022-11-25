@@ -7,15 +7,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
 import { useBoolean } from '../utils/hooks';
-import { getTenants } from '../actions/tenants';
+import { getTenants } from '../actions/manager/tenants';
 import Auth from '../utils/auth';
 import Consts from '../utils/consts';
-import { getManagerData, getUserData, logout } from '../actions/managers';
+import type { LogoutAction } from '../actions/manager/auth';
+import { getManagerData, getUserData, logout } from '../actions/manager/auth';
 import Layout from '../containers/layout/Layout';
 import LicensePage from '../containers/LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type { GetAuthUserResponse } from '../../backend/routes/Auth.types';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 class NoTenantsError extends Error {}
 
@@ -26,7 +27,7 @@ const AuthRoutes: FunctionComponent = () => {
     );
     const isLicenseRequired = useSelector(state => get(state, 'manager.license.isRequired', false));
     const isProductOperational = useSelector(state => Auth.isProductOperational(get(state, 'manager.license', {})));
-    const dispatch = useDispatch();
+    const dispatch: ReduxThunkDispatch<LogoutAction> = useDispatch();
 
     useEffect(() => {
         SplashLoadingScreen.turnOn();
@@ -34,7 +35,7 @@ const AuthRoutes: FunctionComponent = () => {
         dispatch(getManagerData())
             .then(() => dispatch(getTenants()))
             .then(() => dispatch(getUserData()))
-            .then(({ tenantsRoles, role }: GetAuthUserResponse) => {
+            .then(({ tenantsRoles, role }) => {
                 if (isEmpty(tenantsRoles) && role !== Consts.ROLE.SYS_ADMIN) throw new NoTenantsError();
                 setManagerDataFetched();
             })

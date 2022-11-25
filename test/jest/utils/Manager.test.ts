@@ -26,11 +26,7 @@ describe('(Utils) Manager', () => {
             },
             tenants: {
                 isFetching: false,
-                items: [
-                    {
-                        name: 'default_tenant'
-                    }
-                ],
+                items: ['default_tenant'],
                 selected: 'default_tenant',
                 lastUpdated: 1602478990905
             },

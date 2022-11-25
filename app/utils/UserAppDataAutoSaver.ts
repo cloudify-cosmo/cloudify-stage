@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import { debounce, get, isEqual } from 'lodash';
 import log from 'loglevel';
-import { saveUserAppData } from '../actions/userAppCommon';
+import { saveUserAppData } from '../actions/userApp';
 
 const autoSaverWaitInterval = 1000;
 let singleton = null;

@@ -42,12 +42,10 @@ import {
     VisibilityField,
     VisibilityIcon
 } from 'cloudify-ui-components';
-import type { InferProps } from 'prop-types';
 import type { ComponentType } from 'react';
 
 import { CircleMarker, FeatureGroup, Map, Marker, Popup as LeafletPopup, TileLayer, Tooltip } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
-import type { StrictConfirmProps } from 'semantic-ui-react';
 import {
     Accordion,
     Breadcrumb,
@@ -94,29 +92,7 @@ const Leaflet = {
     MarkerClusterGroup
 };
 
-// TODO(RD-5712) Remove once Confirm component is fully migrated to TypeScript
-const ConfirmWithCorrectProps = Confirm as unknown as ComponentType<StrictConfirmProps>;
-
-// TODO(RD-5716) Remove once ErrorMessage component is fully migrated to TypeScript
-const ErrorMessageWithCorrectReturnType = ErrorMessage as unknown as ComponentType<
-    InferProps<typeof ErrorMessage['propTypes']>
->;
-
 type AnyProps = Record<string, any>;
-
-// TODO(RD-5720) Remove once DataInput component is fully migrated to TypeScript
-const DateInputWithTemporaryProps = DateInput as unknown as ComponentType<AnyProps>;
-
-// TODO(RD-5719) Remove once DataTable component is fully migrated to TypeScript
-const DataTableWithTemporaryProps = DataTable as unknown as ComponentType<AnyProps> & {
-    Row: React.FC<AnyProps>;
-    Column: React.FC<AnyProps>;
-    Data: React.FC<AnyProps>;
-    Action: React.FC<AnyProps>;
-    Filter: React.FC<AnyProps>;
-    RowExpandable: React.FC<AnyProps>;
-    DataExpandable: React.FC<AnyProps>;
-};
 
 // TODO(RD-5718) Remove once DataSegment component is fully migrated to TypeScript
 const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {
@@ -134,18 +110,18 @@ export {
     Card,
     Checkbox,
     Checkmark,
-    ConfirmWithCorrectProps as Confirm,
+    Confirm,
     Container,
     CopyToClipboardButton,
-    DateInputWithTemporaryProps as DateInput,
+    DateInput,
     DateRangeInput,
     DataSegmentWithTemporaryProps as DataSegment,
-    DataTableWithTemporaryProps as DataTable,
+    DataTable,
     Dimmer,
     Divider,
     Dropdown,
     EditableLabel,
-    ErrorMessageWithCorrectReturnType as ErrorMessage,
+    ErrorMessage,
     Form,
     FullScreenSegment,
     GenericField,

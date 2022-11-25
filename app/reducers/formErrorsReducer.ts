@@ -1,5 +1,6 @@
 import type { Reducer } from 'redux';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
+import type { FormErrorsAction } from '../actions/formErrors';
 
 export type FieldError = string | undefined;
 export type FieldErrors = Record<string, FieldError>;
@@ -13,20 +14,23 @@ type FormErrors = Record<string, FieldErrors>;
  *     }
  * }
  */
-const formErrorsReducer: Reducer<FormErrors | undefined> = (state = {}, action) => {
+const formErrorsReducer: Reducer<FormErrors | undefined, FormErrorsAction> = (state = {}, action) => {
     switch (action.type) {
-        case types.SET_FIELD_ERROR: {
-            const { [action.formName]: fieldErrors = {}, ...restState } = state;
-            const { [action.fieldName]: fieldName, ...restFieldErrors } = fieldErrors;
+        case ActionType.SET_FIELD_ERROR: {
+            const { [action.payload.formName]: fieldErrors = {}, ...restState } = state;
+            const { [action.payload.fieldName]: fieldName, ...restFieldErrors } = fieldErrors;
 
-            if (!action.message) {
-                return { ...restState, [action.formName]: restFieldErrors };
+            if (!action.payload.message) {
+                return { ...restState, [action.payload.formName]: restFieldErrors };
             }
 
-            return { ...restState, [action.formName]: { ...restFieldErrors, [action.fieldName]: action.message } };
+            return {
+                ...restState,
+                [action.payload.formName]: { ...restFieldErrors, [action.payload.fieldName]: action.payload.message }
+            };
         }
-        case types.CLEAN_FORM_ERRORS: {
-            const { [action.formName]: _value, ...restState } = state;
+        case ActionType.CLEAN_FORM_ERRORS: {
+            const { [action.payload]: _value, ...restState } = state;
 
             return restState;
         }

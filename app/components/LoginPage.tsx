@@ -3,19 +3,19 @@ import { parse } from 'query-string';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
+import type { ClientConfig } from '../../backend/routes/Config.types';
 
-import type { Dispatch } from 'redux';
+import { login } from '../actions/manager/auth';
 import type { ReduxState } from '../reducers';
-
-import { login } from '../actions/managers';
+import renderMultilineText from '../utils/shared/renderMultilineText';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import StageUtils from '../utils/stageUtils';
-import renderMultilineText from '../utils/shared/renderMultilineText';
 import LargeLogo from './banner/LargeLogo';
 import LogoLabel from './banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from './basic';
-import type { ClientConfig } from '../../backend/routes/Config.types';
+import type { ReduxThunkDispatch } from '../configureStore';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
@@ -85,7 +85,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const errors: Errors = {};
 
         if (isSamlEnabled) {
-            // eslint-disable-next-line scanjs-rules/assign_to_href
+            // eslint-disable-next-line xss/no-location-href-assign
             window.location.href = samlSsoUrl;
         }
 
@@ -208,7 +208,7 @@ const mapStateToProps = (state: ReduxState) => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
         onLogin: (username: string, password: string, redirect?: string) => {
             dispatch(login(username, password, redirect));

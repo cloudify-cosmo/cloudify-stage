@@ -1,9 +1,11 @@
 import type { Reducer } from 'redux';
-import * as types from '../actions/types';
+import { ActionType } from '../actions/types';
+import type { AppAction } from '../actions/app';
+import type { LogoutAction, LoginSuccessAction } from '../actions/manager/auth';
 
 export interface AppData {
     loading: boolean;
-    error: string | null;
+    error?: string | null;
     currentPageId: string | null;
 }
 
@@ -13,18 +15,18 @@ const appEmptyState: AppData = {
     currentPageId: null
 };
 
-const app: Reducer<AppData> = (state = appEmptyState, action) => {
+const app: Reducer<AppData, AppAction | LoginSuccessAction | LogoutAction> = (state = appEmptyState, action) => {
     switch (action.type) {
-        case types.SET_APP_LOADING:
-            return { ...state, loading: action.isLoading };
-        case types.SET_APP_ERROR:
-            return { ...state, error: action.error, loading: false };
-        case types.STORE_CURRENT_PAGE:
-            return { ...state, currentPageId: action.pageId };
-        case types.RES_LOGIN:
+        case ActionType.SET_APP_LOADING:
+            return { ...state, loading: action.payload };
+        case ActionType.SET_APP_ERROR:
+            return { ...state, error: action.payload, loading: false };
+        case ActionType.STORE_CURRENT_PAGE:
+            return { ...state, currentPageId: action.payload };
+        case ActionType.LOGIN_SUCCESS:
             return { ...state, loading: true };
-        case types.LOGOUT:
-            return { ...state, error: action.error, loading: false };
+        case ActionType.LOGOUT:
+            return { ...state, error: action.payload.error, loading: false };
         default:
             return state;
     }

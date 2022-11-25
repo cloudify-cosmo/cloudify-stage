@@ -1,31 +1,46 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import v4 from 'uuid/v4';
-import * as types from '../actions/types';
+import type { Reducer } from 'redux';
+import { ActionType } from '../actions/types';
 import StageUtils from '../utils/stageUtils';
+import type { WidgetAction } from '../actions/widgets';
+import type { DrilldownPageAction } from '../actions/drilldownPage';
+import type { SimpleWidgetObj } from '../actions/page';
 
-const widget = (state = {}, action) => {
+const emptyWidget: SimpleWidgetObj = {
+    id: '',
+    configuration: {},
+    definition: '',
+    drillDownPages: {},
+    name: '',
+    height: 0,
+    width: 0,
+    x: 0,
+    y: 0,
+    maximized: false
+};
+
+const widget: Reducer<SimpleWidgetObj, WidgetAction | DrilldownPageAction> = (state = emptyWidget, action) => {
     let newState;
     switch (action.type) {
-        case types.UPDATE_WIDGET:
-            return { ...state, ...action.params };
-        case types.MINIMIZE_WIDGETS:
-        case types.MINIMIZE_TAB_WIDGETS:
+        case ActionType.UPDATE_WIDGET:
+            return { ...state, ...action.payload.params };
+        case ActionType.MINIMIZE_WIDGETS:
+        case ActionType.MINIMIZE_TAB_WIDGETS:
             return { ...state, maximized: false };
-        case types.ADD_DRILLDOWN_PAGE:
-            newState = { ...state, drillDownPages: { ...state.drillDownPages } };
-            newState.drillDownPages[action.drillDownName] = action.drillDownPageId;
+        case ActionType.ADD_DRILLDOWN_PAGE:
+            newState = { ...state, drillDownPages: { ...state?.drillDownPages } };
+            newState.drillDownPages[action.payload.drillDownPageName] = action.payload.drillDownPageId;
             return newState;
         default:
             return state;
     }
 };
 
-const widgets = (state = [], action) => {
+const widgets: Reducer<SimpleWidgetObj[], WidgetAction | DrilldownPageAction> = (state = [], action) => {
     switch (action.type) {
-        case types.ADD_WIDGET:
-            if (!action.widgetDefinition) {
+        case ActionType.ADD_WIDGET:
+            if (!action.payload.widgetDefinition) {
                 return state;
             }
 
@@ -33,33 +48,33 @@ const widgets = (state = [], action) => {
                 ...state,
                 {
                     id: v4(),
-                    ..._.pick(action.widget, 'name', 'x', 'y'),
-                    width: action.widget.width || action.widgetDefinition.initialWidth,
-                    height: action.widget.height || action.widgetDefinition.initialHeight,
-                    definition: action.widgetDefinition.id,
+                    ..._.pick(action.payload.widget, 'name', 'x', 'y'),
+                    width: action.payload.widget.width || action.payload.widgetDefinition.initialWidth,
+                    height: action.payload.widget.height || action.payload.widgetDefinition.initialHeight,
+                    definition: action.payload.widgetDefinition.id,
                     configuration: {
-                        ...StageUtils.buildConfig(action.widgetDefinition),
-                        ...action.widget.configuration
+                        ...StageUtils.buildConfig(action.payload.widgetDefinition),
+                        ...action.payload.widget.configuration
                     },
                     drillDownPages: {},
                     maximized: false
-                }
+                } as SimpleWidgetObj
             ];
-        case types.UPDATE_WIDGET:
+        case ActionType.UPDATE_WIDGET:
             return state.map(w => {
-                if (w.id === action.widgetId) {
+                if (w.id === action.payload.widgetId) {
                     return widget(w, action);
                 }
                 return w;
             });
-        case types.MINIMIZE_WIDGETS:
-        case types.MINIMIZE_TAB_WIDGETS:
+        case ActionType.MINIMIZE_WIDGETS:
+        case ActionType.MINIMIZE_TAB_WIDGETS:
             return state.map(w => widget(w, action));
-        case types.REMOVE_WIDGET:
-            return _.reject(state, { id: action.widgetId });
-        case types.ADD_DRILLDOWN_PAGE:
+        case ActionType.REMOVE_WIDGET:
+            return _.reject(state, { id: action.payload.widgetId });
+        case ActionType.ADD_DRILLDOWN_PAGE:
             return state.map(w => {
-                if (w.id === action.widgetId) {
+                if (w.id === action.payload.widgetId) {
                     return widget(w, action);
                 }
                 return w;

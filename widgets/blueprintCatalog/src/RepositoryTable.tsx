@@ -5,6 +5,7 @@ import Utils from './utils';
 import Consts from './consts';
 import type { RepositoryViewProps } from './types';
 import ExternalBlueprintImage from './ExternalBlueprintImage';
+import RepositoryLinkButton from './RepositoryLinkButton';
 
 const { DataTable, Icon } = Stage.Basic;
 const t = Utils.getWidgetTranslation();
@@ -13,6 +14,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
     onUpload = Promise.resolve,
+    onOpenBlueprintPage = noop,
     readmeLoading = null,
     data,
     noDataMessage,
@@ -22,7 +24,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
     // Show pagination only in case when data is provided from GitHub
     const pageSize = data.source === Consts.GITHUB_DATA_SOURCE ? widget.configuration.pageSize : data.total;
     const totalSize = data.source === Consts.GITHUB_DATA_SOURCE ? data.total : -1;
-    const { fieldsToShow } = widget.configuration;
+    const { fieldsToShow, displayStyle } = widget.configuration;
 
     return (
         <DataTable
@@ -87,13 +89,8 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         <DataTable.Data>{description}</DataTable.Data>
                         <DataTable.Data>{created_at}</DataTable.Data>
                         <DataTable.Data>{updated_at}</DataTable.Data>
-                        <DataTable.Data className="center aligned rowActions">
-                            <Icon
-                                name="github"
-                                bordered
-                                onClick={() => Stage.Utils.Url.redirectToPage(html_url)}
-                                title={t('actions.openBlueprintRepository')}
-                            />
+                        <DataTable.Data textAlign="center" className="rowActions">
+                            <RepositoryLinkButton url={html_url} displayStyle={displayStyle} />
                             <Icon
                                 name={isReadmeLoading ? 'spinner' : 'info'}
                                 link={!isReadmeLoading}
@@ -105,17 +102,27 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                     onReadme(name, readme_url);
                                 }}
                             />
-                            <Icon
-                                name="upload"
-                                disabled={isBlueprintUploaded}
-                                link={!isBlueprintUploaded}
-                                title={t('actions.uploadBlueprint')}
-                                bordered
-                                onClick={(event: Event) => {
-                                    event.stopPropagation();
-                                    onUpload(name, zip_url, image_url, main_blueprint);
-                                }}
-                            />
+                            {isBlueprintUploaded ? (
+                                <Icon
+                                    link={!isBlueprintUploaded}
+                                    name="arrow right"
+                                    title={t('actions.openBlueprint')}
+                                    bordered
+                                    onClick={() => {
+                                        onOpenBlueprintPage(name);
+                                    }}
+                                />
+                            ) : (
+                                <Icon
+                                    name="upload"
+                                    link={!isBlueprintUploaded}
+                                    title={t('actions.uploadBlueprint')}
+                                    bordered
+                                    onClick={() => {
+                                        onUpload(name, zip_url, image_url, main_blueprint);
+                                    }}
+                                />
+                            )}
                         </DataTable.Data>
                     </DataTable.Row>
                     /* eslint-enable camelcase */
