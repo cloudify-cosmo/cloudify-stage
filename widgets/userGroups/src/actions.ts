@@ -103,11 +103,11 @@ export default class Actions {
     }
 
     // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
-    isUserGroupTheOnlyAdminGroup(group: UserGroup, groups: any, username = this.currentUsername) {
+    isUserGroupTheOnlyAdminGroup(group: UserGroup, groups: UserGroup[], username = this.currentUsername) {
         if (includes(group.users, username)) {
             const currentUserAdminGroups = filter(
                 groups,
-                group => includes(group.users, username) && group.role === Stage.Common.Consts.sysAdminRole
+                userGroup => includes(userGroup.users, username) && userGroup.role === Stage.Common.Consts.sysAdminRole
             );
             return size(currentUserAdminGroups) === 1;
         }

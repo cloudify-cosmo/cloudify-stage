@@ -8,7 +8,5 @@ export declare namespace UserGroupManagmentWidget {
 
     export type Data = Stage.Types.PaginatedResponse<UserGroup>;
 
-    export interface Configuration extends PollingTimeConfiguration, DataTableConfiguration {
-        isLdapEnabled: boolean;
-    }
+    export type Configuration = PollingTimeConfiguration & DataTableConfiguration;
 }

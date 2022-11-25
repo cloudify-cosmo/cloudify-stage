@@ -5,13 +5,19 @@ import Actions from './actions';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.user');
 
+export interface Users {
+    items?: {
+        username: string;
+    }[];
+}
+
 interface UsersModalProps {
     group: UserGroup;
     groups: UserGroup[];
     onHide: () => void;
     open: boolean;
     toolbox: Stage.Types.Toolbox;
-    users: any;
+    users: Users;
 }
 
 export default function UsersModal({ onHide, group, groups, open, toolbox, users }: UsersModalProps) {

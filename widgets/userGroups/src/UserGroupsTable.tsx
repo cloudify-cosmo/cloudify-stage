@@ -6,18 +6,16 @@ import GroupDetails from './GroupDetails';
 import { menuActions } from './consts';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
+import type { Users } from './UsersModal';
 import type { UserGroup, UserGroupManagmentWidget } from './widget.types';
 import MenuAction from './MenuAction';
 import type { ReduxState } from '../../../app/reducers';
-import type { UserGroupViewItem } from './widget';
+import type { UserGroupData } from './widget';
 
 const t = Stage.Utils.getT('widgets.userGroups');
 
 interface UserGroupsTableProps {
-    data: {
-        items: UserGroupViewItem[];
-        total: number;
-    };
+    data: UserGroupData;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget<UserGroupManagmentWidget.Configuration>;
     isLdapEnabled: boolean;
@@ -28,7 +26,7 @@ interface UserGroupsTableState {
     modalType: string;
     group: UserGroup | null;
     tenants: string[];
-    users: string[];
+    users: Users;
     settingGroupRoleLoading: boolean | string;
 }
 
@@ -42,7 +40,7 @@ class UserGroupsTable extends React.Component<UserGroupsTableProps, UserGroupsTa
             modalType: '',
             group: null,
             tenants: [],
-            users: [],
+            users: {},
             settingGroupRoleLoading: false
         };
     }
@@ -176,25 +174,27 @@ class UserGroupsTable extends React.Component<UserGroupsTableProps, UserGroupsTa
         toolbox.loading(true);
 
         const actions = new Actions(toolbox);
-        actions
-            .doDelete(group!.name)
-            .then(() => {
-                if (group && actions.isLogoutToBePerformed(group, data.items, group.users)) {
-                    toolbox.getEventBus().trigger('menu.users:logout');
-                } else {
+        if (group) {
+            actions
+                .doDelete(group.name)
+                .then(() => {
+                    if (actions.isLogoutToBePerformed(group, data.items, group.users)) {
+                        toolbox.getEventBus().trigger('menu.users:logout');
+                    } else {
+                        this.hideModal();
+                        this.setState({ error: null });
+                        toolbox.loading(false);
+                        toolbox.refresh();
+                        toolbox.getEventBus().trigger('users:refresh');
+                        toolbox.getEventBus().trigger('tenants:refresh');
+                    }
+                })
+                .catch((err: { message: string }) => {
                     this.hideModal();
-                    this.setState({ error: null });
+                    this.setState({ error: err.message });
                     toolbox.loading(false);
-                    toolbox.refresh();
-                    toolbox.getEventBus().trigger('users:refresh');
-                    toolbox.getEventBus().trigger('tenants:refresh');
-                }
-            })
-            .catch((err: { message: string }) => {
-                this.hideModal();
-                this.setState({ error: err.message });
-                toolbox.loading(false);
-            });
+                });
+        }
     };
 
     refreshData() {

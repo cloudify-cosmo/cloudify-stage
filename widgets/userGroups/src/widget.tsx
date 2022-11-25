@@ -10,7 +10,7 @@ export interface UserGroupViewItem extends UserGroup {
     isAdmin: boolean;
 }
 
-interface FormattedData {
+export interface UserGroupData {
     items: UserGroupViewItem[];
     total: number;
 }
@@ -48,7 +48,7 @@ Stage.defineWidget<
 
         const selectedUserGroup = toolbox.getContext().getValue('userGroup');
 
-        const formattedData: FormattedData = {
+        const formattedData: UserGroupData = {
             items: map(data.items, item => {
                 return {
                     ...item,
