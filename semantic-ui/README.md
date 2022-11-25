@@ -1,17 +1,17 @@
 ## Custom icons font
 
 Custom icon font is being used for storing custom icons.  
-It enables us to use newly created icons within the application framework
+It enables us to use newly created icons within the application framework.
 
 ### Using custom icons
 
-We can use custom icons in a different way, depending on the used component
+We can use custom icons in a different way, depending on the used component.
 
 1. Using `Icon` component with `name` prop
 
-    > **_NOTE:_** This method may require inserting @ts-ignore annotation
+    > **_NOTE:_** This method may require inserting @ts-ignore annotation.
 
-    We can pass custom icon name to the `name` prop
+    We can pass custom icon name to the `name` prop.
 
     Example
 
@@ -20,7 +20,7 @@ We can use custom icons in a different way, depending on the used component
     ```
 
 1. Using `Icon` components with `className` prop  
-   We can pass custom icon name to the `className` prop
+   We can pass custom icon name to the `className` prop.
 
     Example
 
@@ -29,9 +29,9 @@ We can use custom icons in a different way, depending on the used component
     ```
 
 1. Using `Button` components with `icon` prop  
-   `icon` prop can be either a name of the icon or an object that contains properties passed down to the `Icon` component (e.g. `className`)
+   `icon` prop can be either a name of the icon or an object that contains properties passed down to the `Icon` component (e.g. `className`).
 
-    > **_NOTE:_** Passing plain icon name to the `icon` prop may require inserting @ts-ignore annotation
+    > **_NOTE:_** Passing plain icon name to the `icon` prop may require inserting @ts-ignore annotation.
 
     Example of passing icon name
 
@@ -71,4 +71,4 @@ We can use custom icons in a different way, depending on the used component
 
 After project recompilation, newly added icons should be available to use.
 
-> **_NOTE:_** During the process all icons will be prefixed with `cloudify-`. <br /> So if you added a `plant` icon, it will be available under the `cloudify-plant` name
+> **_NOTE:_** During the process all icons will be prefixed with `cloudify-`. <br /> So if you added a `plant` icon, it will be available under the `cloudify-plant` name.
