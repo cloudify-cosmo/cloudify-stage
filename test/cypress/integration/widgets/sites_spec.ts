@@ -69,8 +69,7 @@ describe('Sites Management', () => {
         cy.get('.list > .content').contains(site.error);
 
         // Close modal
-        cy.get('.actions > .basic').as('cancelButton');
-        cy.get('@cancelButton').click();
+        cy.clickButton('Cancel');
     };
 
     const verifySiteRow = (index: number, site: Site) => {
