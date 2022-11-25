@@ -77,4 +77,5 @@ spec:
   imagePullSecrets:
     - name: dockerhub
   nodeSelector:
-    instance-type: spot-xlarge
+    instance-type: on-demand
+    intent: jenkins
