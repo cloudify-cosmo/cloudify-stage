@@ -68,7 +68,7 @@ export default class Actions {
             .doDelete('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName } });
     }
 
-    doUpdateTenant(tenantName: string, groupName: any, role: string) {
+    doUpdateTenant(tenantName: string, groupName: string, role: string) {
         return this.toolbox
             .getManager()
             .doPatch('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName, role } });
