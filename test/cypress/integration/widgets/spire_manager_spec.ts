@@ -144,7 +144,7 @@ describe('Spire Manager widget', () => {
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
         cy.get('.modal').should('be.visible');
-        cy.get('.actions > .positive').click();
+        cy.get('.actions > button.ok').click();
         cy.wait('@postExecutions').its('request.body').should('contain', {
             deployment_id: 'london',
             workflow_id: 'install'
@@ -164,7 +164,7 @@ describe('Spire Manager widget', () => {
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
         cy.get('.modal').should('be.visible');
-        cy.get('.actions > .positive').click();
+        cy.get('.actions > button.ok').click();
 
         waitForExecutionsRequest('rome');
         waitForExecutionsRequest('london');

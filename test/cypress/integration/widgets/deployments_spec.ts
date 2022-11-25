@@ -229,7 +229,7 @@ describe('Deployments widget', () => {
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.contains('Skip heal').click();
             cy.contains('Skip drift check').click();
-            cy.get('button.blue.ok').click();
+            cy.clickButton('Preview');
         });
 
         cy.get('.updateDetailsModal').within(() => {
@@ -237,7 +237,7 @@ describe('Deployments widget', () => {
                 cy.get('td:nth-child(2)').should('have.text', '9123');
                 cy.get('td:nth-child(3)').should('have.text', '9321');
             });
-            cy.get('button.ok').click();
+            cy.clickButton('Update');
         });
 
         cy.wait('@updateDeployment').then(({ request }) => {

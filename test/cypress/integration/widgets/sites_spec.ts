@@ -41,7 +41,7 @@ describe('Sites Management', () => {
 
         cy.get('.required > .field > .ui > input').as('name');
         cy.get('form :nth-child(2) > .field > .ui > input').as('location');
-        cy.get('.actions > .positive').as('createButton');
+        cy.get('.actions > button.ok').as('createButton');
         cy.get('.modal > :nth-child(1) > .green').as('visibility');
 
         cy.get('@name').type(site.name).should('have.value', site.name);
@@ -150,7 +150,7 @@ describe('Sites Management', () => {
         cy.get('.modal > :nth-child(1) > .green').click();
 
         // submit
-        cy.get('.actions > .positive').click();
+        cy.get('.actions > button.ok').click();
 
         verifySiteRow(1, { name, location: '0.0, -0.8789062500000001', visibility: 'private' });
     });
@@ -183,7 +183,7 @@ describe('Sites Management', () => {
         cy.get('.modal form :nth-child(2) > .field > .ui > input').clear();
 
         // Click update
-        cy.get('.actions > .positive').click();
+        cy.get('.actions > button.ok').click();
 
         verifySiteRow(1, { name: newName, location: '' });
     });
@@ -202,7 +202,7 @@ describe('Sites Management', () => {
         cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', location);
 
         // Click update
-        cy.get('.actions > .positive').click();
+        cy.get('.actions > button.ok').click();
 
         verifySiteRow(1, { name: siteWithLocation.name, location });
     });
