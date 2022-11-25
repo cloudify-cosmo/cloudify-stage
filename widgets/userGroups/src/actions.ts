@@ -107,7 +107,7 @@ export default class Actions {
         if (includes(group.users, username)) {
             const currentUserAdminGroups = filter(
                 groups,
-                g => includes(g.users, username) && g.role === Stage.Common.Consts.sysAdminRole
+                group => includes(group.users, username) && group.role === Stage.Common.Consts.sysAdminRole
             );
             return size(currentUserAdminGroups) === 1;
         }
