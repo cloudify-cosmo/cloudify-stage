@@ -1,4 +1,3 @@
-import React from 'react';
 import type { ReactElement } from 'react';
 
 import BlueprintState from './BlueprintState';
@@ -27,7 +26,7 @@ export default function BlueprintsCatalog({
                 <DataSegment.Item
                     selected={item.isSelected}
                     className="fullHeight"
-                    onClick={(event: React.MouseEvent) => {
+                    onClick={event => {
                         event.stopPropagation();
                         onSelectBlueprint(item);
                     }}

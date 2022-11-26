@@ -1,6 +1,5 @@
 import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
-import React from 'react';
 import styled from 'styled-components';
 
 import Consts from './consts';
@@ -114,7 +113,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             <div key={id}>
                 <StyledDataSegment
                     selected={isSelected}
-                    onClick={(event: React.MouseEvent) => {
+                    onClick={event => {
                         event.stopPropagation();
                         onSelect(item);
                     }}
