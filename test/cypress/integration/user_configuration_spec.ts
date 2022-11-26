@@ -18,6 +18,13 @@ describe('User configuration', () => {
         });
     }
 
+    function verifyLogoUrl(selector: string) {
+        cy.log('Verifying logoUrl...');
+        cy.location('protocol').then(protocol =>
+            cy.get(selector).should('have.css', 'background-image', `url("${protocol}//test.com/logo.png")`)
+        );
+    }
+
     before(cy.activate);
 
     describe('allows to customize Login page', () => {
@@ -29,8 +36,7 @@ describe('User configuration', () => {
         });
 
         it('logo', () => {
-            cy.log('Verifying logoUrl...');
-            cy.get('.loginContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
+            verifyLogoUrl('.loginContainer .logo');
         });
 
         it('colors', () => {
@@ -69,8 +75,7 @@ describe('User configuration', () => {
         });
 
         it('logo', () => {
-            cy.log('Verifying logoUrl...');
-            cy.get('.sidebarContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
+            verifyLogoUrl('.sidebarContainer .logo');
         });
 
         it('version details', () => {

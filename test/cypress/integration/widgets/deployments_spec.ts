@@ -86,7 +86,7 @@ describe('Deployments widget', () => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
             });
-            cy.getSearchInput().clear();
+            cy.getSearchInput().clear().blur();
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
@@ -132,11 +132,12 @@ describe('Deployments widget', () => {
             });
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
+                const displayName = 'deploymentDisplayName';
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
                     created_by: 'admin',
-                    display_name: 'Test',
+                    display_name: displayName,
                     id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
                     inputs: { webserver_port: 8000 },
                     latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
@@ -146,6 +147,8 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
+
+                cy.contains(displayName).should('be.visible');
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
@@ -155,11 +158,9 @@ describe('Deployments widget', () => {
                 'getFilteredDeployments'
             );
 
-            cy.refreshPage();
-
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName);
-            });
+            cy.editWidgetConfiguration('deployments', () =>
+                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
+            );
 
             cy.wait('@getFilteredDeployments');
         });
