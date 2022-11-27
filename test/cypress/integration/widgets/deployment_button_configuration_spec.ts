@@ -20,12 +20,11 @@ describe('Create deployment button widget should allow configuring', () => {
         return cy.get(`div[name="${divName}"]`).click();
     };
 
-    const selectLabelValue = (value: string) => {
+    const selectLabelValue = (value: string) =>
         openDropdown('labelValue').within(() => {
             cy.get('input').type(value);
             cy.contains(`New value ${value}`).click();
         });
-    };
 
     it('color', () => {
         const color = 'red';

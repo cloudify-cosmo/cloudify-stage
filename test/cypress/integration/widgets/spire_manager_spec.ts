@@ -29,7 +29,6 @@ describe('Spire Manager widget', () => {
             fixture: 'cluster_status/fail.json',
             delay
         }).as('getClusterStatusForNewYork');
-        cy.interceptSp('POST', '/executions', {}).as('postExecutions');
 
         cy.refreshPage();
 
@@ -140,6 +139,8 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to execute workflow on spire deployment', () => {
+        cy.interceptSp('POST', '/executions', {}).as('postExecutions');
+
         cy.get(':nth-child(2) > :nth-child(6) > span > .cogs').click();
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
@@ -153,9 +154,13 @@ describe('Spire Manager widget', () => {
     });
 
     it('allows to do bulk workflow execution on spire deployments', () => {
+        cy.interceptSp('POST', '/executions', request => {
+            request.alias = `postExecutions-${request.body.deployment_id}`;
+            request.reply({});
+        });
+
         const waitForExecutionsRequest = (id: string) =>
-            cy.wait('@postExecutions').its('request.body').should('contain', {
-                deployment_id: id,
+            cy.wait(`@postExecutions-${id}`).its('request.body').should('contain', {
                 workflow_id: 'install'
             });
 
@@ -166,9 +171,9 @@ describe('Spire Manager widget', () => {
         cy.get('.modal').should('be.visible');
         cy.get('.actions > .positive').click();
 
-        waitForExecutionsRequest('rome');
-        waitForExecutionsRequest('london');
         waitForExecutionsRequest('new-york');
+        waitForExecutionsRequest('london');
+        waitForExecutionsRequest('rome');
 
         cy.get('.modal').should('not.exist');
     });
