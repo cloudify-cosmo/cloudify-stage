@@ -25,13 +25,11 @@
     top: 1px;
     right: 2px;
     background: white;
-    opacity: 1;
     height: 19px;
     z-index: 1;
 }
 
 .executions-graph-toolbar i {
-    padding: 0 2px;
     margin-right: 0;
     vertical-align: top;
 }
