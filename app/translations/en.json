@@ -1608,6 +1608,8 @@
             "deleteConfirm": "Are you sure you want to remove label"
         },
         "userGroups": {
+            "name": "User group management",
+            "description": "This widget shows a list of available user groups and allow managing them",
             "columns": {
                 "groupName": "Group",
                 "ldapGroup": "LDAP group",
