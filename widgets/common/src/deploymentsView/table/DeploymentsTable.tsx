@@ -37,7 +37,7 @@ interface DeploymentsTableProps {
     pageSize: number;
     totalSize: number;
     fieldsToShow: DeploymentsViewColumnId[];
-    labelsToShow: string[];
+    keysOfLabelsToShow: string[];
     selectedDeployment: Deployment | undefined;
 }
 
@@ -49,7 +49,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
     loadingIndicatorVisible,
     deployments,
     fieldsToShow,
-    labelsToShow,
+    keysOfLabelsToShow,
     pageSize,
     totalSize,
     selectedDeployment
@@ -89,11 +89,13 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                     );
                 })}
 
-                {labelsToShow.map(labelKey => (
+                {keysOfLabelsToShow.map(labelKey => (
                     <DataTable.Column key={labelKey} name={labelKey} label={labelKey} />
                 ))}
 
-                {deployments.flatMap(renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, labelsToShow))}
+                {deployments.flatMap(
+                    renderDeploymentRow(toolbox, fieldsToShow, selectedDeployment, keysOfLabelsToShow)
+                )}
             </DataTable>
         </TableContainer>
     );
