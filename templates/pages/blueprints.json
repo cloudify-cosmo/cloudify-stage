@@ -1,6 +1,6 @@
 {
     "name": "Blueprints",
-    "icon": "copy outline",
+    "icon": "cloudify-stack",
     "layout": [
         {
             "type": "widgets",
