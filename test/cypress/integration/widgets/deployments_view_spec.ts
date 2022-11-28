@@ -410,31 +410,28 @@ describe('Deployments View widget', () => {
             const filterFieldLabel = 'Name of the saved filter to apply';
 
             cy.log('Show only precious deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.setSearchableDropdownValue(filterFieldLabel, filterId);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(filterFieldLabel, filterId));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
 
             cy.log('Show all deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.clearSearchableDropdown(filterFieldLabel);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.clearSearchableDropdown(filterFieldLabel));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
 
             cy.log('Invalid filter id');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.getField(filterFieldLabel)
+            cy.editWidgetConfiguration(widgetId, () =>
+                cy
+                    .getField(filterFieldLabel)
                     .click()
                     .within(() => {
                         cy.get('input').type('some-very-gibberish-filter-id');
                         // NOTE: there should not be such a filter
                         cy.contains('No results found');
-                    });
-            });
+                    })
+            );
         });
 
         it('should return an error when the filter ID saved in the configuration is invalid', () => {

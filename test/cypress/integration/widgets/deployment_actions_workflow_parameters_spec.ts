@@ -89,7 +89,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         });
     });
 
-    it('scaling_group', () => {
+    it.skip('scaling_group', () => {
         openWorkflowParametersModal('scaling_group');
         cy.getField('scaling_group_all').within(() => {
             verifyNumberOfOptions(3);
