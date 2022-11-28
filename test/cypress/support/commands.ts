@@ -99,7 +99,7 @@ type License =
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
-        cy.get('.widget').should('exist');
+        cy.get('.widgetContent *').should('exist');
         cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },

@@ -54,9 +54,7 @@ describe('Blueprints catalog widget', () => {
     });
 
     it('should allow to change display style', () => {
-        cy.editWidgetConfiguration('blueprintCatalog', () => {
-            cy.setMultipleDropdownValues('Display style', ['Table']);
-        });
+        cy.editWidgetConfiguration('blueprintCatalog', () => cy.setMultipleDropdownValues('Display style', ['Table']));
 
         cy.get('.blueprintCatalogWidget table').should('be.visible');
     });
