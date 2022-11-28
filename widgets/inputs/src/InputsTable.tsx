@@ -5,7 +5,7 @@ export interface InputsTableProps {
         items: {
             description: string;
             name: string;
-            value: any; // Stage.PropTypes.anydata
+            value: unknown; // Stage.PropTypes.anydata
         }[];
     };
     toolbox: Stage.Types.Toolbox;
