@@ -1,14 +1,14 @@
 import { i18nPrefix } from './common';
 import type { DeploymentsViewColumnId } from './table';
 import { deploymentsViewColumnDefinitions, deploymentsViewColumnIds } from './table';
-import DeploymentLabelConfigurationInput from './DeploymentLabeLConfigurationInput';
+import DeploymentLabelConfigurationInput from './DeploymentLabelConfigurationInput';
 
 export interface SharedDeploymentsViewWidgetConfiguration {
     /** In seconds */
     customPollingTime: number;
     mapHeight: number;
     fieldsToShow: DeploymentsViewColumnId[];
-    labelsToShow: string[];
+    keysOfLabelsToShow: string[];
     pageSize: number;
     sortColumn: string;
     sortAscending: boolean;
@@ -43,8 +43,8 @@ export const sharedConfiguration: Stage.Types.WidgetConfigurationDefinition[] = 
         type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
     },
     {
-        id: 'labelsToShow',
-        name: tConfiguration('labelsToShow.name'),
+        id: 'keysOfLabelsToShow',
+        name: tConfiguration('keysOfLabelsToShow.name'),
         placeHolder: tConfiguration('fieldsToShow.placeholder'),
         default: [],
         type: Stage.Basic.GenericField.CUSTOM_TYPE,

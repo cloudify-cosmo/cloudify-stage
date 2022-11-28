@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import Actions from './actions';
 import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
 import type { RolesAssignment } from '../../common/src/tenants/utils';
@@ -68,7 +69,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
     const availableTenantsPromise = useRef<AvailableTenantsPromise | null>(null);
 
     function submitCreate() {
-        if (_.isEmpty(groupName)) {
+        if (isEmpty(groupName)) {
             const validationMessage = t('validation.groupName');
             setErrors({ groupName: validationMessage });
             return;
@@ -80,7 +81,7 @@ const CreateModal = ({ toolbox, isLdapEnabled = false }: CreateModalProps) => {
         const actions = new Actions(toolbox);
         actions
             .doCreate(groupName, ldapGroup, Stage.Common.Roles.Utils.getSystemRole(isAdmin))
-            .then(() => actions.doHandleTenants(groupName, tenants, [], []))
+            .then(() => actions.doHandleTenants(groupName, tenants, [], {}))
             .then(() => {
                 clearErrors();
                 doClose();
