@@ -1,6 +1,6 @@
 {
   "name": "System Logs",
-  "icon": "file alternate outline",
+  "icon": "cloudify-file-logs",
   "layout": [
     {
       "type": "widgets",

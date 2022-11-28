@@ -69,7 +69,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         <DataTable.Data style={{ wordBreak: 'break-word' }}>{filter.id}</DataTable.Data>
                         <DataTable.Data>{filter.created_by}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(filter.created_at)}</DataTable.Data>
-                        <DataTable.Data textAlign="center">
+                        <DataTable.Data>
                             <Checkbox checked={filter.is_system_filter} disabled />
                         </DataTable.Data>
                         <DataTable.Data>

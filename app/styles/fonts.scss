@@ -1,0 +1,26 @@
+// TODO(RD-5687): Upon finalising theming changes, font faces below should be extracted to cloudify-ui-common-frontend
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../node_modules/cloudify-ui-common-frontend/fonts/Roboto/Roboto-Regular.ttf');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../node_modules/cloudify-ui-common-frontend/fonts/Roboto/Roboto-Medium.ttf');
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../node_modules/cloudify-ui-common-frontend/fonts/Roboto/Roboto-Bold.ttf');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'cloudify-icons';
+    src: url('../../semantic-ui/fonts/cloudify-icons/cloudify-icons.ttf?75470793') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

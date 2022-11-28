@@ -305,7 +305,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                         toolbox={toolbox}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data textAlign="center">
+                                <DataTable.Data>
                                     <Checkbox
                                         checked={item.is_hidden_value}
                                         onChange={() => this.onIsHiddenValueChange(item.key, !item.is_hidden_value)}

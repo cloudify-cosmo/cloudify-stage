@@ -85,7 +85,7 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
             {expanded && (
                 <>
                     {canEnterEditMode && (
-                        <SideBarItem icon="edit" label={t('enterEditMode')} subItem onClick={handleEditModeClick} />
+                        <SideBarItem icon="pencil" label={t('enterEditMode')} subItem onClick={handleEditModeClick} />
                     )}
                     {canEnterTemplateManagement && (
                         <SideBarItem
