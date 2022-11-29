@@ -1,15 +1,11 @@
-import type { OutputsAndCapabilitiesItem, OutputsTableProps } from './OutputsTable';
+import type { OutputsTableProps } from './OutputsTable';
 import OutputsTable from './OutputsTable';
-import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
-Stage.defineWidget<
-    unknown,
-    { outputsAndCapabilities: OutputsAndCapabilitiesItem[] },
-    PollingTimeConfiguration & { showCapabilities: boolean }
->({
+Stage.defineWidget<unknown, { outputsAndCapabilities: OutputsAndCapabilitiesItem[] }, OutputsTableConfiguration>({
     id: 'outputs',
-    name: 'Deployment Outputs/Capabilities',
-    description: 'This widget shows the deployment outputs and capabilities',
+    name: Stage.i18n.t('widgets.outputs.name'),
+    description: Stage.i18n.t('widgets.outputs.description'),
     initialWidth: 8,
     initialHeight: 20,
     color: 'blue',

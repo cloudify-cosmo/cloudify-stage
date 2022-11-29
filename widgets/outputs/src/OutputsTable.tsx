@@ -1,11 +1,4 @@
-import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
-
-export interface OutputsAndCapabilitiesItem {
-    description: string;
-    isOutput: boolean;
-    name: string;
-    value: unknown;
-}
+import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
 export interface OutputsTableProps {
     data: {
@@ -14,7 +7,7 @@ export interface OutputsTableProps {
         outputsAndCapabilities: OutputsAndCapabilitiesItem[];
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget<PollingTimeConfiguration>;
+    widget: Stage.Types.Widget<OutputsTableConfiguration>;
 }
 
 export interface OutputTableState {
