@@ -1,12 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-/* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
-
-import _ from 'lodash';
-
+import { filter, get, concat } from 'lodash';
 import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
+
+type RequestParams = Record<string, any>;
+type RequestBody = Record<string, any>;
+type Fetcher = (parameters: RequestParams) => Promise<any>;
+
+type BuildActualUrl = Internal['buildActualUrl'];
+type DoFetchFull<T> = (fetcher: Fetcher, params?: RequestParams, data?: { items: any[] }, size?: number) => Promise<T>;
 
 export default class Manager extends Internal {
     getCurrentUsername() {
@@ -33,9 +36,9 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl(url, data?) {
+    getManagerUrl: BuildActualUrl = (url, data?) => {
         return this.buildActualUrl(url, data);
-    }
+    };
 
     getSelectedTenant() {
         return this.managerData?.tenants?.selected ?? null;
@@ -43,42 +46,39 @@ export default class Manager extends Internal {
 
     getSystemRoles() {
         const roles = this.managerData?.roles ?? null;
-        return _.filter(roles, role => role.type === 'system_role');
+        return filter(roles, role => role.type === 'system_role');
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data?) {
+    buildActualUrl: BuildActualUrl = (url, data?) => {
         const path = `/sp${getUrlWithQueryString(url, data)}`;
         return StageUtils.Url.url(path);
-    }
+    };
 
-    doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
+    doFetchFull: DoFetchFull<T> = (fetcher, params = {}, fullData = { items: [] }, size = 0) => {
         const fetchParams = {
             ...params,
             _size: 1000,
             _offset: size
         };
 
-        const pr = fetcher(fetchParams);
+        return fetcher(fetchParams).then(data => {
+            const cumulativeSize: number = size + data.items.length;
+            const totalSize: number = get(data, 'metadata.pagination.total', 0);
 
-        return pr.then(data => {
-            const cumulativeSize = size + data.items.length;
-            const totalSize = _.get(data, 'metadata.pagination.total');
-
-            fullData.items = _.concat(fullData.items, data.items);
+            fullData.items = concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
                 return this.doFetchFull(fetcher, fetchParams, fullData, cumulativeSize);
             }
             return fullData;
         });
-    }
+    };
 
-    doPostFull(url, params, body) {
+    doPostFull = (url: string, params: RequestParams, body: RequestBody) => {
         return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
-    }
+    };
 
-    doGetFull(url, params) {
+    doGetFull = (url: string, params: RequestParams) => {
         return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
-    }
+    };
 }
