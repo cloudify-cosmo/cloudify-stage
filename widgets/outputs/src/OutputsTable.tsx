@@ -1,23 +1,31 @@
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
+export interface OutputsAndCapabilitiesItem {
+    description: string;
+    isOutput: boolean;
+    name: string;
+    value: unknown;
+}
+
 export interface OutputsTableProps {
     data: {
         blueprintId: string;
         deploymentId: string;
-        outputsAndCapabilities: {
-            description: string;
-            isOutput: boolean;
-            name: string;
-            value: unknown;
-        }[];
+        outputsAndCapabilities: OutputsAndCapabilitiesItem[];
     };
-    toolbox: Stage.PropTypes.Toolbox.isRequired;
-    widget: Stage.PropTypes.Widget.isRequired;
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<PollingTimeConfiguration>;
 }
 
-export default class OutputsTable extends React.Component {
-    constructor(props, context) {
+export interface OutputTableState {
+    sortColumn: string;
+    sortAscending: boolean;
+}
+
+export default class OutputsTable extends React.Component<OutputsTableProps, OutputTableState> {
+    constructor(props: OutputsTableProps, context: unknown) {
         super(props, context);
         this.state = {
-            error: null,
             sortColumn: 'name',
             sortAscending: true
         };
@@ -28,7 +36,7 @@ export default class OutputsTable extends React.Component {
         toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: OutputsTableProps, nextState: OutputTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -37,7 +45,7 @@ export default class OutputsTable extends React.Component {
         );
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: OutputsTableProps) {
         const { data } = this.props;
         if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
@@ -56,26 +64,27 @@ export default class OutputsTable extends React.Component {
 
     render() {
         const { data } = this.props;
-        const { error, sortAscending, sortColumn } = this.state;
+        const { sortAscending, sortColumn } = this.state;
         const { blueprintId, deploymentId, outputsAndCapabilities } = data;
-        const NO_DATA_MESSAGE =
-            "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.";
-        const { Button, DataTable, ErrorMessage, Header } = Stage.Basic;
+        const NO_DATA_MESSAGE = Stage.i18n.t('widgets.outputs.noData');
+        const { Button, DataTable, Header } = Stage.Basic;
         const ParameterValue = Stage.Common.Components.Parameter.Value;
         const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DataTable
                     className="outputsTable"
                     noDataAvailable={_.isEmpty(outputsAndCapabilities)}
                     noDataMessage={NO_DATA_MESSAGE}
                     fetchData={({ gridParams }) => this.setState(_.pick(gridParams, 'sortColumn', 'sortAscending'))}
                 >
-                    <DataTable.Column label="Name" name="name" width="35%" />
-                    <DataTable.Column label="Type" name="isOutput" />
+                    <DataTable.Column
+                        label={Stage.i18n.t('widgets.outputs.tableColumns.name')}
+                        name="name"
+                        width="35%"
+                    />
+                    <DataTable.Column label={Stage.i18n.t('widgets.outputs.tableColumns.type')} name="isOutput" />
                     <DataTable.Column
                         label={
                             <span>
@@ -95,7 +104,11 @@ export default class OutputsTable extends React.Component {
                                         <Header.Subheader>{outputOrCapability.description}</Header.Subheader>
                                     </Header>
                                 </DataTable.Data>
-                                <DataTable.Data>{outputOrCapability.isOutput ? 'Output' : 'Capability'}</DataTable.Data>
+                                <DataTable.Data>
+                                    {outputOrCapability.isOutput
+                                        ? Stage.i18n.t('widgets.outputs.types.output')
+                                        : Stage.i18n.t('widgets.outputs.types.capability')}
+                                </DataTable.Data>
                                 <DataTable.Data>
                                     <ParameterValue value={outputOrCapability.value} />
                                 </DataTable.Data>
@@ -105,7 +118,7 @@ export default class OutputsTable extends React.Component {
                     <DataTable.Action>
                         {!_.isEmpty(outputsAndCapabilities) && (
                             <Button
-                                content="Export to JSON"
+                                content={Stage.i18n.t('widgets.outputs.exportButton')}
                                 icon="external share"
                                 labelPosition="left"
                                 onClick={() =>
