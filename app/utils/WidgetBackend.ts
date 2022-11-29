@@ -1,21 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Internal from './Internal';
 import consts from './consts';
+import type { ManagerData } from '../reducers/managerReducer';
 
 export default class WidgetBackend extends Internal {
-    constructor(widgetId, data) {
+    widgetId: string;
+
+    constructor(widgetId: string, data: ManagerData) {
         super(data);
         this.widgetId = widgetId;
     }
 
     buildHeaders() {
-        const headers = super.buildHeaders();
+        const headers = super.buildHeaders() as Record<string, unknown>;
         headers[consts.WIDGET_ID_HEADER] = this.widgetId;
         return headers;
     }
 
-    buildActualUrl(path, data) {
+    buildActualUrl: Internal['buildActualUrl'] = (path, data) => {
         return super.buildActualUrl(`/wb/${path}`, data);
-    }
+    };
 }
