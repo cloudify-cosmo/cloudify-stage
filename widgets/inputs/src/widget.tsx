@@ -1,3 +1,4 @@
+import { get, isEmpty, map } from 'lodash';
 import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 import type { InputItem, InputsTableProps } from './InputsTable';
 import InputsTable from './InputsTable';
@@ -33,10 +34,10 @@ Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
             );
 
             return Promise.all([deploymentInputsPromise, blueprintInputsPromise]).then(data => {
-                const deploymentInputs = _.get(data[0], 'inputs', {});
-                const blueprintsInputs = _.get(data[1], 'plan.inputs', {});
+                const deploymentInputs = get(data[0], 'inputs', {});
+                const blueprintsInputs = get(data[1], 'plan.inputs', {});
                 return Promise.resolve({
-                    inputs: _.map(deploymentInputs, (inputObject, inputName) => ({
+                    inputs: map(deploymentInputs, (inputObject, inputName) => ({
                         name: inputName,
                         value: inputObject,
                         description: blueprintsInputs[inputName].description || ''
@@ -50,9 +51,9 @@ Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
                 .getManager()
                 .doGet(`/blueprints/${blueprintId}?_include=plan`)
                 .then(data => {
-                    const deploymentInputs = _.get(data, 'plan.inputs', {});
+                    const deploymentInputs = get(data, 'plan.inputs', {});
                     return Promise.resolve({
-                        inputs: _.map(deploymentInputs, (inputObject, inputName) => ({
+                        inputs: map(deploymentInputs, (inputObject, inputName) => ({
                             name: inputName,
                             value: inputObject.default,
                             description: inputObject.description || ''
@@ -67,7 +68,7 @@ Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data) || !data) {
+        if (isEmpty(data) || !data) {
             return <Loading />;
         }
 
