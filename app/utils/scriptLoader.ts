@@ -4,8 +4,6 @@ import StageUtils from './stageUtils';
 export default class ScriptLoader {
     protected path: string;
 
-    private loaded = false;
-
     constructor(scriptPath: string) {
         this.path = StageUtils.Url.url(scriptPath);
     }
@@ -22,7 +20,6 @@ export default class ScriptLoader {
             }
             scriptObj.onload = () => {
                 log.log(this.path, 'loaded');
-                this.loaded = true;
                 resolve(undefined);
             };
             scriptObj.onerror = () => {
