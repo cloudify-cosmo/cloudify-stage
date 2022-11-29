@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import { trim } from 'lodash';
 import { types } from 'cloudify-ui-common-frontend';
 
 export default class JsonUtils {
@@ -12,7 +12,7 @@ export default class JsonUtils {
             stringifiedValue = JSON.stringify(value, null, indented ? 2 : 0);
         }
 
-        return _.trim(stringifiedValue, '"');
+        return trim(stringifiedValue, '"');
     }
 
     static toType: typeof types.toType = obj => {
