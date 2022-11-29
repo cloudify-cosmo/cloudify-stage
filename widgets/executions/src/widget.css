@@ -1,5 +1,6 @@
 /* Tasks Graph */
-.executionsWidget svg g, .ui.modal svg g {
+.executionsWidget svg g,
+.ui.modal svg g {
     pointer-events: all !important;
 }
 
@@ -19,16 +20,16 @@
 
 .executions-graph-toolbar {
     position: absolute;
+    display: flex;
+    gap: 2px;
     top: 1px;
     right: 2px;
     background: white;
-    opacity: 1;
     height: 19px;
     z-index: 1;
 }
 
 .executions-graph-toolbar i {
-    padding: 0 2px;
     margin-right: 0;
     vertical-align: top;
 }
@@ -36,7 +37,8 @@
 .ui.modal .executions-graph-toolbar {
     height: 16px;
     padding-top: 1px;
-    right: 1px;
+    top: 8px;
+    right: 4px;
 }
 
 /* g containers */
