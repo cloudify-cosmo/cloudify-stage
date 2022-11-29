@@ -41,7 +41,6 @@ describe('Sites Management', () => {
 
         cy.get('.required > .field > .ui > input').as('name');
         cy.get('form :nth-child(2) > .field > .ui > input').as('location');
-        cy.get('.actions > .positive').as('createButton');
         cy.get('.modal > :nth-child(1) > .green').as('visibility');
 
         cy.get('@name').type(site.name).should('have.value', site.name);
@@ -50,7 +49,7 @@ describe('Sites Management', () => {
             cy.get('@location').type(site.location).should('have.value', site.location);
         }
 
-        cy.get('@createButton').click();
+        cy.clickButton('Create');
     };
 
     const createValidSite = (site: Site) => {
@@ -69,8 +68,7 @@ describe('Sites Management', () => {
         cy.get('.list > .content').contains(site.error);
 
         // Close modal
-        cy.get('.actions > .basic').as('cancelButton');
-        cy.get('@cancelButton').click();
+        cy.clickButton('Cancel');
     };
 
     const verifySiteRow = (index: number, site: Site) => {
@@ -151,7 +149,7 @@ describe('Sites Management', () => {
         cy.get('.modal > :nth-child(1) > .green').click();
 
         // submit
-        cy.get('.actions > .positive').click();
+        cy.clickButton('Create');
 
         verifySiteRow(1, { name, location, visibility: 'private' });
     });
@@ -183,8 +181,7 @@ describe('Sites Management', () => {
         cy.get('.modal form :nth-child(1) > .field > .ui > input').clear().type(newName).should('have.value', newName);
         cy.get('.modal form :nth-child(2) > .field > .ui > input').clear();
 
-        // Click update
-        cy.get('.actions > .positive').click();
+        cy.clickButton('Update');
 
         verifySiteRow(1, { name: newName, location: '' });
     });
@@ -202,8 +199,7 @@ describe('Sites Management', () => {
 
         cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', location);
 
-        // Click update
-        cy.get('.actions > .positive').click();
+        cy.clickButton('Update');
 
         verifySiteRow(1, { name: siteWithLocation.name, location });
     });

@@ -22,7 +22,7 @@ describe('User group management widget', () => {
         cy.log('Creating new group');
         cy.get('.userGroupsWidget .add').click();
         cy.get('input[name=groupName]').type(groupName);
-        cy.get('button.positive').click();
+        cy.clickButton('Add');
 
         cy.log('Verifying Admin checkbox is working');
         cy.contains('tr', groupName).within(() => {

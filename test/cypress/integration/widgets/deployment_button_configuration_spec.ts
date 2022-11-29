@@ -58,7 +58,7 @@ describe('Create deployment button widget should allow configuring', () => {
             openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
-                cy.get(`[role="listbox"] > *`).click();
+                cy.get(`[role="listbox"].visible > *`).click();
             });
             selectLabelValue('k8s');
             selectLabelValue('docker');
