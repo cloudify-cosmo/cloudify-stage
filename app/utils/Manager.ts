@@ -1,15 +1,11 @@
 import { filter, get, concat } from 'lodash';
+
+import type { QueryStringParams } from '../../backend/sharedUtils';
 import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
-
-type RequestParams = Record<string, any>;
-type RequestBody = Record<string, any>;
-type Fetcher = (parameters: RequestParams) => Promise<any>;
-
-type BuildActualUrl = Internal['buildActualUrl'];
-type DoFetchFull<T> = (fetcher: Fetcher, params?: RequestParams, data?: { items: any[] }, size?: number) => Promise<T>;
+import type { PaginatedResponse } from '../../backend/types';
 
 export default class Manager extends Internal {
     getCurrentUsername() {
@@ -36,8 +32,8 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl: BuildActualUrl = (url, data?) => {
-        return this.buildActualUrl(url, data);
+    getManagerUrl: typeof this['buildActualUrl'] = (url, params) => {
+        return this.buildActualUrl(url, params);
     };
 
     getSelectedTenant() {
@@ -49,12 +45,26 @@ export default class Manager extends Internal {
         return filter(roles, role => role.type === 'system_role');
     }
 
-    buildActualUrl: BuildActualUrl = (url, data?) => {
-        const path = `/sp${getUrlWithQueryString(url, data)}`;
+    buildActualUrl: typeof getUrlWithQueryString = (url, params) => {
+        const path = `/sp${getUrlWithQueryString(url, params)}`;
         return StageUtils.Url.url(path);
     };
 
-    doFetchFull: DoFetchFull<T> = (fetcher, params = {}, fullData = { items: [] }, size = 0) => {
+    doFetchFull<ResponseBodyItem>(
+        fetcher: (params: QueryStringParams) => Promise<PaginatedResponse<ResponseBodyItem>>,
+        params: QueryStringParams = {},
+        fullData: PaginatedResponse<ResponseBodyItem> = {
+            items: [],
+            metadata: {
+                pagination: {
+                    offset: 0,
+                    size: 0,
+                    total: 0
+                }
+            }
+        },
+        size = 0
+    ): Promise<PaginatedResponse<ResponseBodyItem>> {
         const fetchParams = {
             ...params,
             _size: 1000,
@@ -62,23 +72,28 @@ export default class Manager extends Internal {
         };
 
         return fetcher(fetchParams).then(data => {
-            const cumulativeSize: number = size + data.items.length;
-            const totalSize: number = get(data, 'metadata.pagination.total', 0);
+            const cumulativeSize = size + data.items.length;
+            const totalSize: number = get(data, 'metadata.pagination.total');
 
             fullData.items = concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
                 return this.doFetchFull(fetcher, fetchParams, fullData, cumulativeSize);
             }
+
             return fullData;
         });
-    };
+    }
 
-    doPostFull = (url: string, params: RequestParams, body: RequestBody) => {
+    doPostFull<ResponseBody, RequestQueryParams extends QueryStringParams>(
+        url: string,
+        body: ResponseBody,
+        params?: RequestQueryParams
+    ) {
         return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
-    };
+    }
 
-    doGetFull = (url: string, params: RequestParams) => {
+    doGetFull<RequestQueryParams extends QueryStringParams>(url: string, params?: RequestQueryParams) {
         return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
-    };
+    }
 }
