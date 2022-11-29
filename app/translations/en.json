@@ -1696,7 +1696,11 @@
         "inputs": {
             "name": "Deployment Inputs",
             "description": "This widget shows the deployment inputs",
-            "noData": "There are no Inputs available. Probably there's no deployment created, yet."
+            "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
+            "columnLabels": {
+              "name": "Name",
+              "value": "Value"
+            }
         },
         "tenants": {
             "name": "Tenants management",

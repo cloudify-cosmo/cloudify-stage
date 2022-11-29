@@ -60,11 +60,11 @@ export default class InputsTable extends React.Component<InputsTableProps> {
         return (
             <div>
                 <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
-                    <DataTable.Column label="Name" width="35%" />
+                    <DataTable.Column label={Stage.i18n.t('widgets.inputs.columnLabels.name')} width="35%" />
                     <DataTable.Column
                         label={
                             <span>
-                                Value <ParameterValueDescription />
+                                {Stage.i18n.t('widgets.inputs.columnLabels.value')} <ParameterValueDescription />
                             </span>
                         }
                         width="65%"
