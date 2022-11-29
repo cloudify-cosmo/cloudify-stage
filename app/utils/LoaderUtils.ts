@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import log from 'loglevel';
 import fetch from 'isomorphic-fetch';
@@ -8,11 +6,11 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 
 export default class LoaderUtils {
-    static getResourceUrl(path, isUserResource) {
+    static getResourceUrl(path: string, isUserResource?: boolean) {
         return `${isUserResource ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH}/${path}`;
     }
 
-    static fetchResource(path, isUserResource) {
+    static fetchResource(path: string, isUserResource?: boolean) {
         return fetch(StageUtils.Url.url(LoaderUtils.getResourceUrl(path, isUserResource)), {
             credentials: 'same-origin'
         }).then(response => {
@@ -22,7 +20,7 @@ export default class LoaderUtils {
                 //       to handle all fetches (templates, widgets) it should not be stopped on single failure.
                 return Promise.resolve();
             }
-            const contentType = _.toLower(response.headers.get('content-type'));
+            const contentType = _.toLower(response.headers.get('content-type') || undefined);
             return contentType.indexOf('application/json') >= 0 ? response.json() : response.text();
         });
     }
