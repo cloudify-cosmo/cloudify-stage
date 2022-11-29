@@ -7,6 +7,17 @@ import StageUtils from './stageUtils';
 import Consts from './consts';
 import type { PaginatedResponse } from '../../backend/types';
 
+const emptyPaginatedResponse: PaginatedResponse<any> = {
+    items: [],
+    metadata: {
+        pagination: {
+            offset: 0,
+            size: 0,
+            total: 0
+        }
+    }
+};
+
 export default class Manager extends Internal {
     getCurrentUsername() {
         return this.managerData?.auth?.username ?? null;
@@ -53,16 +64,7 @@ export default class Manager extends Internal {
     doFetchFull<ResponseBodyItem>(
         fetcher: (params: QueryStringParams) => Promise<PaginatedResponse<ResponseBodyItem>>,
         params: QueryStringParams = {},
-        fullData: PaginatedResponse<ResponseBodyItem> = {
-            items: [],
-            metadata: {
-                pagination: {
-                    offset: 0,
-                    size: 0,
-                    total: 0
-                }
-            }
-        },
+        fullData: PaginatedResponse<ResponseBodyItem> = emptyPaginatedResponse,
         size = 0
     ): Promise<PaginatedResponse<ResponseBodyItem>> {
         const fetchParams = {
