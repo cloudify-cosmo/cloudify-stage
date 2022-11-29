@@ -43,7 +43,7 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl: typeof this['buildActualUrl'] = (url, params) => {
+    getManagerUrl: Manager['buildActualUrl'] = (url, params) => {
         return this.buildActualUrl(url, params);
     };
 
