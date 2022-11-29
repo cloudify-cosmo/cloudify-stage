@@ -1,3 +1,4 @@
+import { isEmpty, isEqual } from 'lodash';
 import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
 export interface InputItem {
@@ -24,7 +25,7 @@ export default class InputsTable extends React.Component<InputsTableProps> {
 
     shouldComponentUpdate(nextProps: InputsTableProps) {
         const { data, widget } = this.props;
-        return !_.isEqual(widget, nextProps.widget) || !_.isEqual(data, nextProps.data);
+        return !isEqual(widget, nextProps.widget) || !isEqual(data, nextProps.data);
     }
 
     componentDidUpdate(prevProps: InputsTableProps) {
@@ -59,7 +60,7 @@ export default class InputsTable extends React.Component<InputsTableProps> {
 
         return (
             <div>
-                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
+                <DataTable className="inputsTable" noDataAvailable={isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column label={Stage.i18n.t('widgets.inputs.columnLabels.name')} width="35%" />
                     <DataTable.Column
                         label={
