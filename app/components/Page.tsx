@@ -43,6 +43,10 @@ const StyledContainer = styled.div`
     }
 `;
 
+const StyledPageHeader = styled.div`
+    padding-left: 10px;
+`;
+
 class Page extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
         return !isEqual(this.props, nextProps);
@@ -71,6 +75,7 @@ class Page extends Component<PageProps, never> {
             _(page.layout).flatMap('content').find({ maximized: true }) ||
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
+        const showPageDescription = page.description || isEditMode;
         document.body.style.overflow = hasMaximizedWidget ? 'hidden' : 'inherit';
         window.scroll(0, 0);
 
@@ -78,23 +83,25 @@ class Page extends Component<PageProps, never> {
             <StyledContainer
                 className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}
             >
-                <Breadcrumbs
-                    pagesList={pagesList}
-                    onPageNameChange={onPageNameChange}
-                    isEditMode={isEditMode}
-                    onPageSelected={onPageSelected}
-                />
-                <div>
-                    <EditableLabel
-                        value={page.description}
-                        placeholder={i18n.t('page.description', 'Page description')}
-                        className="pageDescription"
-                        enabled={isEditMode}
-                        onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
-                        inputSize="mini"
+                <StyledPageHeader>
+                    <Breadcrumbs
+                        pagesList={pagesList}
+                        onPageNameChange={onPageNameChange}
+                        isEditMode={isEditMode}
+                        onPageSelected={onPageSelected}
                     />
-                </div>
-                <div className="ui divider" />
+
+                    {showPageDescription && (
+                        <EditableLabel
+                            value={page.description}
+                            placeholder={i18n.t('page.description')}
+                            className="pageDescription"
+                            enabled={isEditMode}
+                            onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
+                            inputSize="mini"
+                        />
+                    )}
+                </StyledPageHeader>
                 <PageContent
                     page={page}
                     onWidgetUpdated={onWidgetUpdated}
@@ -110,12 +117,7 @@ class Page extends Component<PageProps, never> {
                 />
                 {isEditMode && (
                     <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
-                        <Button
-                            basic
-                            content={i18n.t('editMode.exit', 'Exit')}
-                            icon="sign out"
-                            onClick={onEditModeExit}
-                        />
+                        <Button basic content={i18n.t('editMode.exit')} icon="sign out" onClick={onEditModeExit} />
                     </EditModeBubble>
                 )}
             </StyledContainer>

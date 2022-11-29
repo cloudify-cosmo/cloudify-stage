@@ -1,25 +1,45 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEqual } from 'lodash';
+
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupDetails from './GroupDetails';
 import { menuActions } from './consts';
 import TenantsModal from './TenantsModal';
 import UsersModal from './UsersModal';
-import GroupPropType from './props/GroupPropType';
+import type { Users } from './UsersModal';
+import type { UserGroup, UserGroupManagmentWidget } from './widget.types';
 import MenuAction from './MenuAction';
+import type { ReduxState } from '../../../app/reducers';
+import type { UserGroupData } from './widget';
 
 const t = Stage.Utils.getT('widgets.userGroups');
 
-class UserGroupsTable extends React.Component {
-    constructor(props, context) {
+interface UserGroupsTableProps {
+    data: UserGroupData;
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<UserGroupManagmentWidget.Configuration>;
+    isLdapEnabled: boolean;
+}
+interface UserGroupsTableState {
+    error: string | null;
+    showModal: boolean;
+    modalType: string;
+    group: UserGroup | null;
+    tenants: string[];
+    users: Users;
+    settingGroupRoleLoading: boolean | string;
+}
+
+class UserGroupsTable extends React.Component<UserGroupsTableProps, UserGroupsTableState> {
+    constructor(props: UserGroupsTableProps, context: any) {
         super(props, context);
 
         this.state = {
             error: null,
             showModal: false,
             modalType: '',
-            group: {},
-            tenants: {},
+            group: null,
+            tenants: [],
             users: {},
             settingGroupRoleLoading: false
         };
@@ -30,13 +50,9 @@ class UserGroupsTable extends React.Component {
         toolbox.getEventBus().on('userGroups:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: UserGroupsTableProps, nextState: UserGroupsTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -44,7 +60,7 @@ class UserGroupsTable extends React.Component {
         toolbox.getEventBus().off('userGroups:refresh', this.refreshData);
     }
 
-    setRole(group, changeToAdmin) {
+    setRole(group: UserGroup, changeToAdmin: boolean) {
         const { modalType, showModal } = this.state;
         const { toolbox } = this.props;
         toolbox.loading(true);
@@ -66,13 +82,13 @@ class UserGroupsTable extends React.Component {
                     toolbox.getEventBus().trigger('users:refresh');
                 }
             })
-            .catch(err => {
+            .catch((err: { message: any }) => {
                 this.setState({ error: err.message, settingGroupRoleLoading: false });
                 toolbox.loading(false);
             });
     }
 
-    getAvailableTenants(value, group) {
+    getAvailableTenants(value: string, group: UserGroup) {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -83,13 +99,13 @@ class UserGroupsTable extends React.Component {
                 this.setState({ error: null, group, tenants, modalType: value, showModal: true });
                 toolbox.loading(false);
             })
-            .catch(err => {
+            .catch((err: { message: string }) => {
                 this.setState({ error: err.message });
                 toolbox.loading(false);
             });
     }
 
-    getAvailableUsers(value, group) {
+    getAvailableUsers(value: string, group: UserGroup) {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -100,18 +116,18 @@ class UserGroupsTable extends React.Component {
                 this.setState({ error: null, group, users, modalType: value, showModal: true });
                 toolbox.loading(false);
             })
-            .catch(err => {
+            .catch((err: { message: string }) => {
                 this.setState({ error: err.message });
                 toolbox.loading(false);
             });
     }
 
-    fetchData = fetchParams => {
+    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    showModal = (value, group) => {
+    showModal = (value: string, group: UserGroup) => {
         const { data, toolbox } = this.props;
         const actions = new Actions(toolbox);
 
@@ -132,23 +148,23 @@ class UserGroupsTable extends React.Component {
         }
     };
 
-    showEditTenantsModal = group => {
+    showEditTenantsModal = (group: UserGroup) => {
         this.getAvailableTenants(menuActions.editTenants, group);
     };
 
-    showEditUsersModal = group => {
+    showEditUsersModal = (group: UserGroup) => {
         this.getAvailableUsers(menuActions.editUsers, group);
     };
 
-    showDeleteModal = group => {
+    showDeleteModal = (group: UserGroup) => {
         this.setState({ group, modalType: menuActions.delete, showModal: true });
     };
 
-    hideModal = newState => {
-        this.setState({ showModal: false, ...newState });
+    hideModal = () => {
+        this.setState({ showModal: false });
     };
 
-    handleError = message => {
+    handleError = (message: string) => {
         this.setState({ error: message });
     };
 
@@ -158,23 +174,27 @@ class UserGroupsTable extends React.Component {
         toolbox.loading(true);
 
         const actions = new Actions(toolbox);
-        actions
-            .doDelete(group.name)
-            .then(() => {
-                if (actions.isLogoutToBePerformed(group, data.items, group.users)) {
-                    toolbox.getEventBus().trigger('menu.users:logout');
-                } else {
-                    this.hideModal({ error: null });
+        if (group) {
+            actions
+                .doDelete(group.name)
+                .then(() => {
+                    if (actions.isLogoutToBePerformed(group, data.items, group.users)) {
+                        toolbox.getEventBus().trigger('menu.users:logout');
+                    } else {
+                        this.hideModal();
+                        this.setState({ error: null });
+                        toolbox.loading(false);
+                        toolbox.refresh();
+                        toolbox.getEventBus().trigger('users:refresh');
+                        toolbox.getEventBus().trigger('tenants:refresh');
+                    }
+                })
+                .catch((err: { message: string }) => {
+                    this.hideModal();
+                    this.setState({ error: err.message });
                     toolbox.loading(false);
-                    toolbox.refresh();
-                    toolbox.getEventBus().trigger('users:refresh');
-                    toolbox.getEventBus().trigger('tenants:refresh');
-                }
-            })
-            .catch(err => {
-                this.hideModal({ error: err.message });
-                toolbox.loading(false);
-            });
+                });
+        }
     };
 
     refreshData() {
@@ -182,9 +202,9 @@ class UserGroupsTable extends React.Component {
         toolbox.refresh();
     }
 
-    selectUserGroup(userGroup) {
+    selectUserGroup(userGroup: string) {
         const { toolbox } = this.props;
-        const selectedUserGroup = toolbox.getContext().getValue('userGroup');
+        const selectedUserGroup: string = toolbox.getContext().getValue('userGroup');
         toolbox.getContext().setValue('userGroup', userGroup === selectedUserGroup ? null : userGroup);
     }
 
@@ -223,7 +243,7 @@ class UserGroupsTable extends React.Component {
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
                                     {isLdapEnabled && <DataTable.Data>{item.ldap_dn}</DataTable.Data>}
-                                    <DataTable.Data textAlign="center">
+                                    <DataTable.Data>
                                         {settingGroupRoleLoading === item.name ? (
                                             <Loader active inline size="mini" />
                                         ) : (
@@ -274,54 +294,47 @@ class UserGroupsTable extends React.Component {
                         <CreateModal toolbox={toolbox} isLdapEnabled={isLdapEnabled} />
                     </DataTable.Action>
                 </DataTable>
+                {group && (
+                    <>
+                        <UsersModal
+                            open={modalType === menuActions.editUsers && showModal}
+                            group={group}
+                            groups={data.items}
+                            users={users}
+                            onHide={this.hideModal}
+                            toolbox={toolbox}
+                        />
 
-                <UsersModal
-                    open={modalType === menuActions.editUsers && showModal}
-                    group={group}
-                    groups={data.items}
-                    users={users}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                        <TenantsModal
+                            open={modalType === menuActions.editTenants && showModal}
+                            group={group}
+                            tenants={tenants}
+                            onHide={this.hideModal}
+                            toolbox={toolbox}
+                        />
 
-                <TenantsModal
-                    open={modalType === menuActions.editTenants && showModal}
-                    group={group}
-                    tenants={tenants}
-                    onHide={this.hideModal}
-                    toolbox={toolbox}
-                />
+                        <Confirm
+                            content={t('confirm.deleteGroup', { groupName: group.name })}
+                            open={modalType === menuActions.delete && showModal}
+                            onConfirm={this.deleteUserGroup}
+                            onCancel={this.hideModal}
+                        />
 
-                <Confirm
-                    content={t('confirm.deleteGroup', { groupName: group.name })}
-                    open={modalType === menuActions.delete && showModal}
-                    onConfirm={this.deleteUserGroup}
-                    onCancel={this.hideModal}
-                />
-
-                <Confirm
-                    content={t('confirm.defaultGroup', { groupName: group.name })}
-                    open={modalType === menuActions.setDefaultGroupRole && showModal}
-                    onConfirm={() => this.setRole(group, false)}
-                    onCancel={this.hideModal}
-                />
+                        <Confirm
+                            content={t('confirm.defaultGroup', { groupName: group.name })}
+                            open={modalType === menuActions.setDefaultGroupRole && showModal}
+                            onConfirm={() => this.setRole(group, false)}
+                            onCancel={this.hideModal}
+                        />
+                    </>
+                )}
             </div>
         );
     }
 }
 
-UserGroupsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(GroupPropType),
-        total: PropTypes.number.isRequired
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
-    isLdapEnabled: PropTypes.bool.isRequired
-};
-
 export default connectToStore(
-    state => ({
+    (state: ReduxState) => ({
         isLdapEnabled: Stage.Utils.Idp.isLdap(state.manager)
     }),
     {}
