@@ -1,3 +1,4 @@
+import { chain, isEmpty, isEqual, pick, reverse } from 'lodash';
 import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
 export interface OutputsTableProps {
@@ -31,11 +32,7 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
 
     shouldComponentUpdate(nextProps: OutputsTableProps, nextState: OutputTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentDidUpdate(prevProps: OutputsTableProps) {
@@ -68,9 +65,9 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
             <div>
                 <DataTable
                     className="outputsTable"
-                    noDataAvailable={_.isEmpty(outputsAndCapabilities)}
+                    noDataAvailable={isEmpty(outputsAndCapabilities)}
                     noDataMessage={NO_DATA_MESSAGE}
-                    fetchData={({ gridParams }) => this.setState(_.pick(gridParams, 'sortColumn', 'sortAscending'))}
+                    fetchData={({ gridParams }) => this.setState(pick(gridParams, 'sortColumn', 'sortAscending'))}
                 >
                     <DataTable.Column
                         label={Stage.i18n.t('widgets.outputs.tableColumns.name')}
@@ -86,9 +83,9 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                         }
                         width="65%"
                     />
-                    {_.chain(outputsAndCapabilities)
+                    {chain(outputsAndCapabilities)
                         .sortBy(sortColumn)
-                        .thru(sortedData => (sortAscending ? sortedData : _.reverse(sortedData)))
+                        .thru(sortedData => (sortAscending ? sortedData : reverse(sortedData)))
                         .map(outputOrCapability => (
                             <DataTable.Row key={outputOrCapability.name}>
                                 <DataTable.Data>
@@ -109,7 +106,7 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                         ))
                         .value()}
                     <DataTable.Action>
-                        {!_.isEmpty(outputsAndCapabilities) && (
+                        {!isEmpty(outputsAndCapabilities) && (
                             <Button
                                 content={Stage.i18n.t('widgets.outputs.exportButton')}
                                 icon="external share"
