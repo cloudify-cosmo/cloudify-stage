@@ -1,0 +1,18 @@
+/*******************************
+        Site Overrides
+*******************************/
+
+.ui.message {
+    &.icon {
+        & {
+            align-items: flex-start;
+        }
+
+        & > .icon:not(.close) {
+            @relativeIconSizeScaling: @emSize / 30;
+
+            margin-right: @horizontalPadding * @relativeIconSizeScaling;
+            margin-top: @relative2px * @relativeIconSizeScaling;
+        }
+    }
+}

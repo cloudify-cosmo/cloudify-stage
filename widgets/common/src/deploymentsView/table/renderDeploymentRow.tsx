@@ -14,7 +14,7 @@ const renderDeploymentRow =
         toolbox: Stage.Types.Toolbox,
         fieldsToShow: DeploymentsViewColumnId[],
         selectedDeployment: Deployment | undefined,
-        labelsToShow: string[]
+        keysOfLabelsToShow: string[]
     ) =>
     (deployment: Deployment) => {
         const { DataTable } = Stage.Basic;
@@ -31,7 +31,7 @@ const renderDeploymentRow =
                 {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
                 ))}
-                {labelsToShow.map(labelKey => (
+                {keysOfLabelsToShow.map(labelKey => (
                     <DataTable.Data key={labelKey}>
                         {labelsDict[labelKey]?.map(({ value }) => (
                             <Label>{value}</Label>

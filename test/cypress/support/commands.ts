@@ -48,7 +48,7 @@ const getCommonHeaders = () => ({
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptWithoutCaching('/console/auth/user', (authUserResponse: GetAuthUserResponse) => {
+    cy.interceptWithoutCaching<GetAuthUserResponse>('/console/auth/user', authUserResponse => {
         const responseBody = {
             ...authUserResponse,
             showGettingStarted: modalEnabled
@@ -98,12 +98,9 @@ type License =
 
 const commands = {
     waitUntilPageLoaded: () => {
-        cy.waitUntilLayoutUpdated(() => {
-            cy.log('Wait for widgets loaders to disappear');
-            cy.get('.widget').should('exist');
-            cy.contains('Loading...').should('not.exist');
-        });
-
+        cy.log('Wait for widgets loaders to disappear');
+        cy.get('.widgetContent *').should('exist');
+        cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },
     waitUntilWidgetsDataLoaded: () => cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist'),
@@ -418,7 +415,10 @@ const commands = {
 
         return cy.intercept(routeMatcher, routeHandler);
     },
-    interceptWithoutCaching: (url: RouteMatcher, responseBodyInterceptor: (responseBody: any) => any = identity) =>
+    interceptWithoutCaching: <ResponseBody>(
+        url: RouteMatcher,
+        responseBodyInterceptor: (responseBody: ResponseBody) => ResponseBody = identity
+    ) =>
         cy.intercept(url, request => {
             // NOTE: Deleting `if-none-match` header to avoid getting "304 Not Modified" response
             //       which doesn't have any data in the body. For details check:

@@ -1,16 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { difference, map } from 'lodash';
+import type { DropdownProps } from 'semantic-ui-react';
+import type { UserGroup } from './widget.types';
 import Actions from './actions';
-import GroupPropType from './props/GroupPropType';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.user');
 
-export default function UsersModal({ onHide, group, groups, open, toolbox, users }) {
+export interface Users {
+    items?: {
+        username: string;
+    }[];
+}
+
+interface UsersModalProps {
+    group: UserGroup;
+    groups: UserGroup[];
+    onHide: () => void;
+    open: boolean;
+    toolbox: Stage.Types.Toolbox;
+    users: Users;
+}
+
+export default function UsersModal({ onHide, group, groups, open, toolbox, users }: UsersModalProps) {
     const { useState } = React;
     const { useBoolean, useErrors, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [editedUsers, setEditedUsers] = useState([]);
+    const [editedUsers, setEditedUsers] = useState<UserGroup['users']>([]);
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [waitingForConfirmation, setWaitingForConfirmation] = useState(false);
 
@@ -28,8 +43,8 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
 
     function submitUsers() {
         const actions = new Actions(toolbox);
-        const usersToAdd = _.difference(editedUsers, group.users);
-        const usersToRemove = _.difference(group.users, editedUsers);
+        const usersToAdd = difference(editedUsers, group.users);
+        const usersToRemove = difference(group.users, editedUsers);
 
         if (!waitingForConfirmation && actions.isLogoutToBePerformed(group, groups, usersToRemove)) {
             setWaitingForConfirmation(true);
@@ -55,14 +70,14 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
             .finally(unsetLoading);
     }
 
-    function handleInputChange(proxy, { value }) {
-        setEditedUsers(value);
+    const handleInputChange: DropdownProps['onChange'] = (_event, { value }) => {
+        setEditedUsers(value as UserGroup['users']);
         setWaitingForConfirmation(false);
-    }
+    };
 
     const { ApproveButton, CancelButton, Form, Icon, Message, Modal } = Stage.Basic;
 
-    const options = _.map(users.items, item => {
+    const options = map(users.items, item => {
         return { text: item.username, value: item.username, key: item.username };
     });
 
@@ -112,14 +127,3 @@ export default function UsersModal({ onHide, group, groups, open, toolbox, users
         </Modal>
     );
 }
-
-UsersModal.propTypes = {
-    group: GroupPropType.isRequired,
-    groups: PropTypes.arrayOf(GroupPropType).isRequired,
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    users: PropTypes.shape({
-        items: PropTypes.arrayOf(PropTypes.object)
-    }).isRequired
-};

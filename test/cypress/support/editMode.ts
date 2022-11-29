@@ -1,6 +1,5 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import { secondsToMs } from './resource_commons';
 
 declare global {
     namespace Cypress {
@@ -21,67 +20,55 @@ const commands = {
         });
     },
     exitEditMode: () => cy.get('.editModeSidebar').contains('Exit').click(),
-    waitUntilLayoutUpdated: (functionToExecuteBeforeWaiting: () => void) => {
-        cy.intercept('POST', '/console/ua').as('updateUserApps');
-        functionToExecuteBeforeWaiting();
-        cy.wait('@updateUserApps', { timeout: secondsToMs(10) });
-    },
     addWidget: (widgetId: string) => {
         cy.enterEditMode();
 
-        cy.waitUntilLayoutUpdated(() => {
-            cy.contains('Add Widget').click();
-            cy.get(`*[data-id=${widgetId}]`).click();
-            cy.contains('Add selected widgets').click();
-        });
+        cy.contains('Add Widget').click();
+        cy.waitUntilWidgetsDataLoaded();
+        cy.get(`*[data-id=${widgetId}]`).click();
+        cy.contains('Add selected widgets').click();
 
         return cy.exitEditMode();
     },
     addPage: (pageName: string) => {
         cy.enterEditMode();
 
-        cy.waitUntilLayoutUpdated(() => {
-            cy.contains('Add Page').click();
-            cy.get('.breadcrumb').within(() => {
-                cy.get('.pageTitle').click();
-                cy.get('.pageTitle.input input').clear().type(pageName);
-            });
-            cy.contains('Add Widgets').click();
+        cy.contains('Add Page').click();
+        cy.contains('This page is empty');
+        cy.get('.breadcrumb').within(() => {
+            cy.get('.pageTitle').click();
+            cy.get('.pageTitle.input input').clear().type(pageName);
         });
+        cy.contains('Add Widgets').click();
 
         return cy.exitEditMode();
     },
-    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void) => {
+    editWidgetConfiguration: (widgetId: string, fnWithinEditWidgetModal: () => void, save = true) => {
         cy.enterEditMode();
 
-        cy.waitUntilLayoutUpdated(() => {
-            cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
-            cy.get('.editWidgetModal').within(() => {
-                fnWithinEditWidgetModal();
-                cy.get('button.ok').click();
-            });
+        cy.get(`.${widgetId}Widget .widgetEditButtons .editWidgetIcon`).click({ force: true });
+        cy.get('.editWidgetModal').within(() => {
+            fnWithinEditWidgetModal();
+            cy.get(`button${save ? '.ok' : '.cancel'}`).click();
         });
 
         return cy.exitEditMode();
     },
     setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName)
+        cy.editWidgetConfiguration(widgetId, () =>
+            cy
+                .getField(fieldName)
                 .find('div.checkbox')
                 .as('toggle')
                 .then($div => {
                     if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
                         cy.get('@toggle').click();
-                });
-        }),
+                })
+        ),
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName).find('input').clear().type(value);
-        }),
+        cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.setSearchableDropdownValue(fieldName, value);
-        })
+        cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(fieldName, value))
 };
 
 addCommands(commands);

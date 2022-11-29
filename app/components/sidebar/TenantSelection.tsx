@@ -43,7 +43,7 @@ const TenantSelection: FunctionComponent = () => {
 
     return (
         <SideBarDropdownItem
-            icon="user circle"
+            icon="cloudify-user-cog"
             label={selectedTenant || t('noTenants')}
             onClose={clearSearch}
             onOpen={refreshTenants}
