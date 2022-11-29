@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
 
 import _ from 'lodash';
@@ -7,6 +6,10 @@ import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
+
+type BuildActualUrl = Internal['buildActualUrl'];
+type RequestParams = Record<string, any>;
+type RequestBody = Record<string, any>;
 
 export default class Manager extends Internal {
     getCurrentUsername() {
@@ -33,9 +36,9 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl(url, data?) {
+    getManagerUrl: BuildActualUrl = (url, data?) => {
         return this.buildActualUrl(url, data);
-    }
+    };
 
     getSelectedTenant() {
         return this.managerData?.tenants?.selected ?? null;
@@ -46,11 +49,10 @@ export default class Manager extends Internal {
         return _.filter(roles, role => role.type === 'system_role');
     }
 
-    // eslint-disable-next-line class-methods-use-this
-    buildActualUrl(url, data?) {
+    buildActualUrl: BuildActualUrl = (url, data?) => {
         const path = `/sp${getUrlWithQueryString(url, data)}`;
         return StageUtils.Url.url(path);
-    }
+    };
 
     doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
         const fetchParams = {
@@ -62,8 +64,8 @@ export default class Manager extends Internal {
         const pr = fetcher(fetchParams);
 
         return pr.then(data => {
-            const cumulativeSize = size + data.items.length;
-            const totalSize = _.get(data, 'metadata.pagination.total');
+            const cumulativeSize: number = size + data.items.length;
+            const totalSize: number = _.get(data, 'metadata.pagination.total', 0);
 
             fullData.items = _.concat(fullData.items, data.items);
 
@@ -74,11 +76,11 @@ export default class Manager extends Internal {
         });
     }
 
-    doPostFull(url, params, body) {
+    doPostFull = (url: string, params: RequestParams, body: RequestBody) => {
         return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
-    }
+    };
 
-    doGetFull(url, params) {
+    doGetFull = (url: string, params: RequestParams) => {
         return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
-    }
+    };
 }
