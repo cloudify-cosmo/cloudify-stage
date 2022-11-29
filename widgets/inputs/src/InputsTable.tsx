@@ -1,41 +1,30 @@
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+
+export interface InputItem {
+    description: string;
+    name: string;
+    value: unknown;
+}
+
 export interface InputsTableProps {
     data: {
         blueprintId: string | string[] | null | undefined;
         deploymentId: string | string[] | null | undefined;
-        items: {
-            description: string;
-            name: string;
-            value: unknown; // Stage.PropTypes.anydata
-        }[];
+        items: InputItem[];
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
+    widget: Stage.Types.Widget<PollingTimeConfiguration>;
 }
 
-export interface InputsTableState {
-    error: null; // Error is never different from null in this widget
-}
-
-export default class InputsTable extends React.Component<InputsTableProps, InputsTableState> {
-    constructor(props: InputsTableProps, context: unknown) {
-        super(props, context);
-        this.state = {
-            error: null
-        };
-    }
-
+export default class InputsTable extends React.Component<InputsTableProps> {
     componentDidMount() {
         const { toolbox } = this.props;
         toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps: InputsTableProps, nextState: InputsTableState) {
+    shouldComponentUpdate(nextProps: InputsTableProps) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !_.isEqual(widget, nextProps.widget) || !_.isEqual(data, nextProps.data);
     }
 
     componentDidUpdate(prevProps: InputsTableProps) {
@@ -56,12 +45,11 @@ export default class InputsTable extends React.Component<InputsTableProps, Input
     }
 
     render() {
-        const NO_DATA_MESSAGE = "There are no Inputs available. Probably there's no deployment created, yet.";
-        const { DataTable, ErrorMessage, Header } = Stage.Basic;
+        const NO_DATA_MESSAGE = Stage.i18n.t('widgets.inputs.noData');
+        const { DataTable, Header } = Stage.Basic;
         const ParameterValue = Stage.Common.Components.Parameter.Value;
         const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
         const { data } = this.props;
-        const { error } = this.state;
         const { items: inputs } = data;
         const compareNames = (a: { name: string }, b: { name: string }) => {
             if (a.name > b.name) return 1;
@@ -71,8 +59,6 @@ export default class InputsTable extends React.Component<InputsTableProps, Input
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
                 <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
                     <DataTable.Column label="Name" width="35%" />
                     <DataTable.Column

@@ -1693,6 +1693,11 @@
                 }
             }
         },
+        "inputs": {
+            "name": "Deployment Inputs",
+            "description": "This widget shows the deployment inputs",
+            "noData": "There are no Inputs available. Probably there's no deployment created, yet."
+        },
         "tenants": {
             "name": "Tenants management",
             "description": "This widget shows a list of available tenants, and allow managing them",
