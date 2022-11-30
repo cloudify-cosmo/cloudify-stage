@@ -1,5 +1,12 @@
+import { minutesToMs } from '../../support/resource_commons';
+
 describe('Blueprints catalog widget', () => {
     const blueprintName = 'AWS-Basics-VM-Setup';
+
+    function uploadBlueprint(timeout?: number) {
+        cy.contains('.segment', blueprintName).contains('Upload').click();
+        cy.contains('.ui.label.section.active.pageTitle', blueprintName, { timeout });
+    }
 
     before(() =>
         cy
@@ -34,14 +41,20 @@ describe('Blueprints catalog widget', () => {
         cy.interceptSp('GET', `/blueprints/${blueprintName}`, { state: 'uploaded' });
         cy.interceptSp('PATCH', `/blueprints/${blueprintName}/icon`, { state: 'uploaded' });
 
-        cy.contains('.segment', blueprintName).contains('Upload').click();
-        cy.contains('.ui.label.section.active.pageTitle', blueprintName);
+        uploadBlueprint();
+    });
+
+    it('should open a page for uploaded blueprint successfully', () => {
+        uploadBlueprint(minutesToMs(1));
+
+        cy.go('back');
+
+        cy.contains('button', 'Open').click();
+        cy.contains('.ui.label', blueprintName);
     });
 
     it('should allow to change display style', () => {
-        cy.editWidgetConfiguration('blueprintCatalog', () => {
-            cy.setMultipleDropdownValues('Display style', ['Table']);
-        });
+        cy.editWidgetConfiguration('blueprintCatalog', () => cy.setMultipleDropdownValues('Display style', ['Table']));
 
         cy.get('.blueprintCatalogWidget table').should('be.visible');
     });

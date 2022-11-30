@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import styled from 'styled-components';
 import { setEditMode } from '../actions/config';
+import type { DrilldownContext } from '../actions/drilldownContext';
 import { setDrilldownContext } from '../actions/drilldownContext';
 import type { LayoutSection, PageDefinition } from '../actions/page';
 import {
@@ -20,7 +21,6 @@ import {
 import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
 import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
 import type { ReduxState } from '../reducers';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import type { WidgetDefinition } from '../utils/StageAPI';
 import StageUtils from '../utils/stageUtils';
 import { Button, EditableLabel } from './basic';
@@ -41,6 +41,10 @@ const StyledContainer = styled.div`
     .widget.maximize {
         margin-left: ${collapsedSidebarWidth};
     }
+`;
+
+const StyledPageHeader = styled.div`
+    padding-left: 10px;
 `;
 
 class Page extends Component<PageProps, never> {
@@ -71,6 +75,7 @@ class Page extends Component<PageProps, never> {
             _(page.layout).flatMap('content').find({ maximized: true }) ||
             _(page.layout).flatMap('content').flatMap('widgets').find({ maximized: true });
 
+        const showPageDescription = page.description || isEditMode;
         document.body.style.overflow = hasMaximizedWidget ? 'hidden' : 'inherit';
         window.scroll(0, 0);
 
@@ -78,23 +83,25 @@ class Page extends Component<PageProps, never> {
             <StyledContainer
                 className={StageUtils.combineClassNames('fullHeight', hasMaximizedWidget && 'maximizeWidget')}
             >
-                <Breadcrumbs
-                    pagesList={pagesList}
-                    onPageNameChange={onPageNameChange}
-                    isEditMode={isEditMode}
-                    onPageSelected={onPageSelected}
-                />
-                <div>
-                    <EditableLabel
-                        value={page.description}
-                        placeholder={i18n.t('page.description', 'Page description')}
-                        className="pageDescription"
-                        enabled={isEditMode}
-                        onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
-                        inputSize="mini"
+                <StyledPageHeader>
+                    <Breadcrumbs
+                        pagesList={pagesList}
+                        onPageNameChange={onPageNameChange}
+                        isEditMode={isEditMode}
+                        onPageSelected={onPageSelected}
                     />
-                </div>
-                <div className="ui divider" />
+
+                    {showPageDescription && (
+                        <EditableLabel
+                            value={page.description}
+                            placeholder={i18n.t('page.description')}
+                            className="pageDescription"
+                            enabled={isEditMode}
+                            onChange={newDesc => onPageDescriptionChange(page.id, newDesc)}
+                            inputSize="mini"
+                        />
+                    )}
+                </StyledPageHeader>
                 <PageContent
                     page={page}
                     onWidgetUpdated={onWidgetUpdated}
@@ -110,12 +117,7 @@ class Page extends Component<PageProps, never> {
                 />
                 {isEditMode && (
                     <EditModeBubble onDismiss={onEditModeExit} header="Edit mode">
-                        <Button
-                            basic
-                            content={i18n.t('editMode.exit', 'Exit')}
-                            icon="sign out"
-                            onClick={onEditModeExit}
-                        />
+                        <Button basic content={i18n.t('editMode.exit')} icon="sign out" onClick={onEditModeExit} />
                     </EditModeBubble>
                 )}
             </StyledContainer>

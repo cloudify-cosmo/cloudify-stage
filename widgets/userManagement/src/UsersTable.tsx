@@ -158,7 +158,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             });
     }
 
-    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
+    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -325,7 +325,6 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                     <DataTable.Column label={tColumn('tenantCount')} width="10%" />
                     <DataTable.Column label="" width="5%" />
                     {data.items.map(item => (
-                        /* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */
                         <DataTable.RowExpandable key={item.username} expanded={item.isSelected}>
                             <DataTable.Row
                                 id={`${tableName}_${item.username}`}
@@ -337,7 +336,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                     <TextEllipsis maxWidth="450px">{item.username}</TextEllipsis>
                                 </DataTable.Data>
                                 <DataTable.Data>{item.last_login_at}</DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data>
                                     <IsAdminCheckbox
                                         onAdminUserChange={() =>
                                             this.invokeAction(MenuAction.SET_ADMIN_USER_ROLE_ACTION, item)
@@ -349,7 +348,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         usernameDuringRoleSetting={usernameDuringRoleSetting}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data>
                                     {/* TODO (RD-2100): create better way to block current user state change */}
                                     {usernameDuringActivation === item.username ? (
                                         <Loader active inline size="mini" />
@@ -366,7 +365,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         />
                                     )}
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data>
                                     {/* TODO (RD-2100): propose way to block current user state change */}
                                     <Checkbox
                                         checked={item.show_getting_started}
@@ -396,11 +395,10 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                         {item.tenantCount}
                                     </Label>
                                 </DataTable.Data>
-                                <DataTable.Data className="center aligned">
+                                <DataTable.Data textAlign="center">
                                     <ActionsMenu item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
-                            {/* @ts-ignore TODO(RD-5719) DataTable not migrated to TS yet */}
                             <DataTable.DataExpandable key={item.username}>
                                 <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
                             </DataTable.DataExpandable>

@@ -1,0 +1,134 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@hoveredCheckedCheckboxColor: @blueHover;
+@disabledCheckboxColor: fade(@lightGrey, 90%);
+@defaultBorderProperties: 1px solid;
+
+.ui.checkbox {
+    input:checked {
+        ~ label::after {
+            color: @checkboxActiveCheckColor;
+        }
+    }
+
+    &:hover {
+        input:checked {
+            ~ label {
+                &::before {
+                    border-color: @hoveredCheckedCheckboxColor;
+                }
+
+                &::after {
+                    color: @hoveredCheckedCheckboxColor;
+                }
+            }
+        }
+
+        &.radio {
+            input:checked {
+                ~ label {
+                    &::after {
+                        background-color: @hoveredCheckedCheckboxColor;
+                    }
+                }
+            }
+        }
+    }
+
+    &.disabled {
+        label {
+            &::before {
+                background: @white;
+                border-color: @disabledCheckboxColor !important;
+            }
+
+            &::after {
+                color: @disabledCheckboxColor !important;
+            }
+        }
+    }
+
+    &.radio {
+        label {
+            padding-top: @relative2px;
+        }
+
+        &.disabled {
+            label {
+                &::after {
+                    background-color: @disabledCheckboxColor !important;
+                }
+            }
+        }
+    }
+
+    &.toggle {
+        label {
+            padding-left: 48px;
+            padding-top: @relative1px;
+
+            &::before {
+                border: @defaultBorderProperties @checkboxBorderColor;
+            }
+
+            &::after {
+                top: 1px;
+            }
+        }
+
+        &:hover,
+        &:focus {
+            label {
+                &::before {
+                    border: @defaultBorderProperties @checkboxHoverBorderColor;
+                }
+            }
+        }
+
+        input:focus {
+            ~ label::before {
+                border: @defaultBorderProperties @checkboxHoverBorderColor;
+            }
+        }
+
+        &.checked {
+            input ~ label {
+                &::before {
+                    border: @defaultBorderProperties @checkboxActiveCheckColor;
+                    background-color: fade(@blue, 10%) !important;
+                }
+
+                &::after {
+                    background-color: @checkboxActiveCheckColor !important;
+                }
+            }
+
+            &:hover {
+                input ~ label {
+                    &::before {
+                        border: @defaultBorderProperties @hoveredCheckedCheckboxColor;
+                    }
+
+                    &::after {
+                        background-color: @hoveredCheckedCheckboxColor !important;
+                    }
+                }
+            }
+        }
+
+        &&.disabled {
+            label {
+                &::before {
+                    background-color: fade(@lightGrey, 51%) !important;
+                    border: @defaultBorderProperties @lightGrey !important;
+                }
+
+                &::after {
+                    background-color: @disabledCheckboxColor !important;
+                }
+            }
+        }
+    }
+}

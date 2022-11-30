@@ -223,7 +223,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                             totalSize={deploymentsResult.data.metadata.pagination.total}
                             deployments={deploymentsResult.data.items}
                             fieldsToShow={widget.configuration.fieldsToShow}
-                            labelsToShow={widget.configuration.labelsToShow}
+                            keysOfLabelsToShow={widget.configuration.keysOfLabelsToShow}
                             selectedDeployment={selectedOrFallbackDeployment}
                         />
                     </DeploymentsTableContainer>

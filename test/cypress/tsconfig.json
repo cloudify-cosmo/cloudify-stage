@@ -12,7 +12,7 @@
 
         // Cypress forces using inlineSourceMap
         "sourceMap": false,
-        "types": ["cypress"],
+        "types": ["cypress", "node"],
         "baseUrl": ".",
         "paths": {
             "*": ["../../*"]

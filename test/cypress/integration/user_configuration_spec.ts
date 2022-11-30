@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import userConfig from '../fixtures/configuration/userConfig.json';
 
 describe('User configuration', () => {
@@ -11,13 +12,17 @@ describe('User configuration', () => {
     };
 
     function mockConfigResponse() {
-        cy.intercept('/console/config', req => {
-            req.on('response', res => {
-                const responseBody = res.body;
-                responseBody.app.whiteLabel = userConfig.whiteLabel;
-                res.send(responseBody);
-            });
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
+            clientConfig.app.whiteLabel = userConfig.whiteLabel;
+            return clientConfig;
         });
+    }
+
+    function verifyLogoUrl(selector: string) {
+        cy.log('Verifying logoUrl...');
+        cy.location('protocol').then(protocol =>
+            cy.get(selector).should('have.css', 'background-image', `url("${protocol}//test.com/logo.png")`)
+        );
     }
 
     before(cy.activate);
@@ -31,8 +36,7 @@ describe('User configuration', () => {
         });
 
         it('logo', () => {
-            cy.log('Verifying logoUrl...');
-            cy.get('.loginContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
+            verifyLogoUrl('.loginContainer .logo');
         });
 
         it('colors', () => {
@@ -71,8 +75,7 @@ describe('User configuration', () => {
         });
 
         it('logo', () => {
-            cy.log('Verifying logoUrl...');
-            cy.get('.sidebarContainer .logo').should('have.css', 'background-image', `url("http://test.com/logo.png")`);
+            verifyLogoUrl('.sidebarContainer .logo');
         });
 
         it('version details', () => {

@@ -162,10 +162,10 @@ function ManagersTable({ data, toolbox, widget }) {
                                     toolbox={toolbox}
                                 />
                             </DataTable.Data>
-                            <DataTable.Data className="center aligned">
+                            <DataTable.Data textAlign="center">
                                 <StatusIcon status={managerStatus.status} isFetching={managerStatus.isFetching} />
                             </DataTable.Data>
-                            <DataTable.Data className="center aligned">
+                            <DataTable.Data textAlign="center">
                                 <ConsoleIcon manager={manager} />
                                 <RefreshIcon
                                     manager={manager}
