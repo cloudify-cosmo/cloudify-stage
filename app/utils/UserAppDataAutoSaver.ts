@@ -1,13 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
 import { debounce, get, isEqual } from 'lodash';
 import log from 'loglevel';
+import type { Unsubscribe } from 'redux';
 import { saveUserAppData } from '../actions/userApp';
+import type { ReduxStore } from '../configureStore';
+import type { ReduxState } from '../reducers';
+import type { AuthData } from '../reducers/managerReducer/authReducer';
 
 const autoSaverWaitInterval = 1000;
-let singleton = null;
+let singleton: UserAppDataAutoSaver | null = null;
 
 export default class UserAppDataAutoSaver {
-    constructor(store) {
+    store: ReduxStore;
+
+    isActive: boolean;
+
+    unsubscribe: Unsubscribe;
+
+    pages?: ReduxState['pages'];
+
+    username?: AuthData['username'];
+
+    role?: AuthData['role'];
+
+    constructor(store: ReduxStore) {
         this.store = store;
         this.isActive = false;
 
@@ -61,7 +76,7 @@ export default class UserAppDataAutoSaver {
         }
     }
 
-    static create(store) {
+    static create(store: ReduxStore) {
         singleton = new UserAppDataAutoSaver(store);
     }
 
