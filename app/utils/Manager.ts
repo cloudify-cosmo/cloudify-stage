@@ -87,15 +87,14 @@ export default class Manager extends Internal {
         });
     }
 
-    doPostFull<ResponseBody, RequestQueryParams extends QueryStringParams>(
-        url: string,
-        body: ResponseBody,
-        params?: RequestQueryParams
-    ) {
-        return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
+    doPostFull<ResponseBodyItem>(url: string, body: Record<string, any>, params?: QueryStringParams) {
+        return this.doFetchFull<ResponseBodyItem>(
+            currentParams => this.doPost(url, { params: currentParams, body }),
+            params
+        );
     }
 
-    doGetFull<RequestQueryParams extends QueryStringParams>(url: string, params?: RequestQueryParams) {
-        return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
+    doGetFull<ResponseBodyItem>(url: string, params?: QueryStringParams) {
+        return this.doFetchFull<ResponseBodyItem>(currentParams => this.doGet(url, { params: currentParams }), params);
     }
 }
