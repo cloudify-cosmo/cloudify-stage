@@ -372,7 +372,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         cy.contains('.modal', 'Deploy blueprint');
     });
 
-    describe.skip('create installable blueprint on submit from', () => {
+    describe('create installable blueprint on submit from', () => {
         beforeEach(() => {
             cy.mockLogin();
             openTerraformModal();

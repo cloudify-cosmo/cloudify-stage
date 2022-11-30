@@ -1,0 +1,88 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@inputBorderColor: @lightGrey;
+@inputHoverBorderColor: @grey;
+
+.ui.input {
+    &.disabled {
+        & > input,
+        &.labeled .label,
+        &.icon > i.icon {
+            color: fade(@grey, 45%);
+        }
+    }
+
+    &:not(.disabled) {
+        & > input {
+            &:hover {
+                border-color: @inputHoverBorderColor;
+            }
+
+            &:focus {
+                border-color: @downBorderColor;
+            }
+        }
+
+        &.loading {
+            & > input {
+                background-color: fade(@blue, 10%) !important;
+            }
+        }
+    }
+
+    &.labeled {
+        &.left {
+            & > input {
+                & {
+                    border-left-color: @inputBorderColor !important;
+                }
+
+                &:hover {
+                    border-left-color: @inputHoverBorderColor !important;
+                }
+
+                &:focus {
+                    border-left-color: @downBorderColor !important;
+                }
+            }
+
+            .ui.label {
+                line-height: @inputLineHeight;
+            }
+        }
+    }
+
+    &.action {
+        & > input {
+            &:hover {
+                border-right-color: @inputHoverBorderColor !important;
+            }
+        }
+    }
+
+    &.icon:not(.loading) {
+        & > i.icon {
+            &::before {
+                width: @iconSize;
+                font-size: @iconFontSize;
+                left: @iconTextOffset;
+                right: @iconBorderOffset;
+            }
+        }
+
+        &.left > i.icon {
+            &::before {
+                left: @iconBorderOffset;
+                right: @iconTextOffset;
+            }
+        }
+    }
+
+    &.loading {
+        & > i.icon {
+            margin-right: @relative4px;
+        }
+    }
+}

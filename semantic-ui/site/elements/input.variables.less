@@ -1,0 +1,25 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@padding: @inputVerticalPadding @inputHorizontalPadding;
+
+@disabledOpacity: 1;
+
+@downBorderColor: @blue;
+@downBackground: transparent;
+
+@iconFontSize: @relative15px;
+@iconSize: 1em;
+@iconOpacity: 1;
+@iconSizeInPx: 15px;
+@iconBorderOffsetInPx: 10px;
+@iconTextOffsetInPx: 5px;
+// NOTE: Unit calculations below is translating pixels into scallable "em" values
+// This approach is being used by semantic-ui-less library for implementation of e.g. @relative2px variable
+// For more details, take a look on: https://github.com/Semantic-Org/Semantic-UI-LESS/blob/master/themes/default/globals/site.variables#L614
+@iconBorderOffset: unit((@iconBorderOffsetInPx / @iconSizeInPx), em);
+@iconTextOffset: unit((@iconTextOffsetInPx / @iconSizeInPx), em);
+@iconWidth: @iconFontSize + unit((@iconBorderOffsetInPx + @iconTextOffsetInPx) / @emSize, em);
+
+@loaderLineColor: fade(@grey, 40%);

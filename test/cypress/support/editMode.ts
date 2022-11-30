@@ -24,6 +24,7 @@ const commands = {
         cy.enterEditMode();
 
         cy.contains('Add Widget').click();
+        cy.waitUntilWidgetsDataLoaded();
         cy.get(`*[data-id=${widgetId}]`).click();
         cy.contains('Add selected widgets').click();
 
@@ -33,6 +34,7 @@ const commands = {
         cy.enterEditMode();
 
         cy.contains('Add Page').click();
+        cy.contains('This page is empty');
         cy.get('.breadcrumb').within(() => {
             cy.get('.pageTitle').click();
             cy.get('.pageTitle.input input').clear().type(pageName);
@@ -53,23 +55,20 @@ const commands = {
         return cy.exitEditMode();
     },
     setBooleanConfigurationField: (widgetId: string, fieldName: string, isSet: boolean) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName)
+        cy.editWidgetConfiguration(widgetId, () =>
+            cy
+                .getField(fieldName)
                 .find('div.checkbox')
                 .as('toggle')
                 .then($div => {
                     if ((isSet && !$div.hasClass('checked')) || (!isSet && $div.hasClass('checked')))
                         cy.get('@toggle').click();
-                });
-        }),
+                })
+        ),
     setStringConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.getField(fieldName).find('input').clear().type(value);
-        }),
+        cy.editWidgetConfiguration(widgetId, () => cy.getField(fieldName).find('input').clear().type(value)),
     setSearchableDropdownConfigurationField: (widgetId: string, fieldName: string, value: string) =>
-        cy.editWidgetConfiguration(widgetId, () => {
-            cy.setSearchableDropdownValue(fieldName, value);
-        })
+        cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(fieldName, value))
 };
 
 addCommands(commands);

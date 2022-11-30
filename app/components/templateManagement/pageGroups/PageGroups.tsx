@@ -13,11 +13,12 @@ import PageGroupModal from './PageGroupModal';
 import { createPageGroup, deletePageGroup, updatePageGroup } from '../../../actions/templateManagement/pageGroups';
 import type { ReduxState } from '../../../reducers';
 import Internal from '../../../utils/Internal';
+import type { PostPageGroupsRequestBody, PutPageGroupsRequestBody } from '../../../../backend/routes/Templates.types';
 
 const tTemplates = StageUtils.getT('templates');
 const tPageGroupManagement = StageUtils.composeT(tTemplates, 'pageGroupManagement');
 
-interface PageGroup {
+export interface PageGroup {
     id: string;
     name: string;
     icon: SemanticICONS;
@@ -46,11 +47,12 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
     function handleRemovePage(groupId: string, pageId: string) {
         const body = {
             id: groupId,
+            icon: pageGroupDefs[groupId].icon,
             name: pageGroupDefs[groupId].name,
             pages: _.without(pageGroupDefs[groupId].pages, pageId)
         };
         return internal
-            .doPut(`/templates/page-groups/${groupId}`, { body })
+            .doPut<never, PutPageGroupsRequestBody>(`/templates/page-groups/${groupId}`, { body })
             .then(() => dispatch(updatePageGroup(groupId, groupId, body.name, body.pages)));
     }
 
@@ -69,11 +71,11 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
             id,
             name,
             pages: pageIds,
-            icon
+            icon: icon || ''
         };
 
         return internal
-            .doPost('/templates/page-groups', { body })
+            .doPost<never, PostPageGroupsRequestBody>('/templates/page-groups', { body })
             .then(() => dispatch(createPageGroup(id, name, pageIds, icon)));
     }
 
@@ -84,11 +86,11 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
             id: newId,
             name,
             pages: pageIds,
-            icon
+            icon: icon || ''
         };
 
         return internal
-            .doPut(`/templates/page-groups/${id}`, { body })
+            .doPut<never, PutPageGroupsRequestBody>(`/templates/page-groups/${id}`, { body })
             .then(() => dispatch(updatePageGroup(id, newId, name, pageIds, icon)));
     }
 
@@ -108,7 +110,6 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                 <DataTable.Column width="10%" />
 
                 {pageGroups.map(item => (
-                    // @ts-ignore RowExpandable returns void
                     <DataTable.RowExpandable key={item.id} expanded={selectedItemId === item.id}>
                         <DataTable.Row
                             key={item.id}
@@ -133,7 +134,7 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
                             </DataTable.Data>
                             <DataTable.Data>{item.updatedBy}</DataTable.Data>
-                            <DataTable.Data style={{ textAlign: 'center' }}>
+                            <DataTable.Data textAlign="center">
                                 {item.custom && (
                                     <>
                                         <PopupConfirm

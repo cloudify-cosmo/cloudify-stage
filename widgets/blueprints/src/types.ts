@@ -41,7 +41,7 @@ export interface BlueprintsViewProps {
     data: BlueprintDataResponse;
     widget: Stage.Types.Widget<BlueprintsWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
-    fetchData: (params: Stage.Types.GridParams) => void;
+    fetchData: (params: { gridParams: Stage.Types.GridParams }) => void;
     onSelectBlueprint: (blueprint: ExtendedBlueprint) => void;
     onDeleteBlueprint: (blueprint: ExtendedBlueprint) => void;
     onCreateDeployment: (blueprint: ExtendedBlueprint) => void;

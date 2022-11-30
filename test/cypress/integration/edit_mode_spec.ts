@@ -133,7 +133,7 @@ describe('Edit mode', () => {
                     cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
                     cy.contains('.label', 'File');
                 });
-                cy.get('.actions button.positive').click();
+                cy.get('.actions button.ok').click();
             });
             if (addToPage) {
                 cy.get(`*[data-id=${widgetFileName}]`).click();

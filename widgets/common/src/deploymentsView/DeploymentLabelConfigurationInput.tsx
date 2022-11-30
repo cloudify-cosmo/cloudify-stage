@@ -13,7 +13,7 @@ const DeploymentLabelConfigurationInput: FunctionComponent<Stage.Types.CustomCon
         <ResourceTypeContext.Provider value="deployments">
             <KeyDropdown
                 onChange={(newValue: string[]) => {
-                    onChange(undefined, { name, value: newValue });
+                    onChange(undefined, { name, value: newValue || [] });
                 }}
                 value={value}
                 toolbox={widgetlessToolbox}

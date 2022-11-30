@@ -37,7 +37,7 @@ function getPages(folder: string, custom: boolean) {
                 return null;
             }
         })
-        .reject(_.isNull)
+        .compact()
         .value();
 }
 

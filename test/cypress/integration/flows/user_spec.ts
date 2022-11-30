@@ -12,11 +12,11 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
             cy.get('textarea').type(secretName);
-            cy.get('button.positive').click();
+            cy.clickButton('Create');
         });
     }
 
-    it.skip('installs deployment from scratch', () => {
+    it('installs deployment from scratch', () => {
         cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 

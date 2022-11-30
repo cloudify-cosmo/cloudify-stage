@@ -1,0 +1,74 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@defaultButtonBackgroundColor: @backgroundColor;
+@defaultButtonTextColor: @textColor;
+
+.basicButtonStyling(@hoverTextColor; @hoverBackgroundColor; @focusTextColor; @focusBackgroundColor) {
+    box-shadow: 0 0 0 @borderBoxShadowWidth @hoverTextColor inset !important;
+
+    &:not(:disabled) {
+        &:hover {
+            color: @hoverTextColor !important;
+            background-color: @hoverBackgroundColor !important;
+        }
+
+        &:active,
+        &:focus {
+            color: @focusTextColor !important;
+            background-color: @focusBackgroundColor !important;
+        }
+    }
+}
+
+.ui.button {
+    &:not(.icon) {
+        min-width: 90px;
+    }
+
+    &:not(.icon) > .icon:not(.button):not(.dropdown) {
+        // NOTE: Previously icon had 14px height, so after changing it to 17px we have to realign it
+        // We can't do it automatically, as it would result in modifying height of the icon buttons
+        @additionalIconOffset: unit(1.5 / 17, em);
+
+        position: relative;
+        font-size: @relative17px;
+        top: @additionalIconOffset;
+        margin-top: @additionalIconOffset * -2 !important;
+    }
+
+    &.disabled,
+    &:disabled {
+        background-color: @defaultButtonBackgroundColor;
+        color: @defaultButtonTextColor;
+    }
+
+    &.basic {
+        &.green {
+            .basicButtonStyling(@green, fade(@green, 10%), #199436, fade(@green, 20%));
+        }
+
+        &.red {
+            .basicButtonStyling(@red, fade(@red, 10%), #b13836, fade(@red, 20%));
+        }
+
+        &.blue {
+            .basicButtonStyling(@blue, fade(@blue, 10%), #0066da,fade(@blue, 20%));
+        }
+
+        &.disabled,
+        &:disabled {
+            color: @defaultButtonTextColor !important;
+            box-shadow: 0 0 0 @borderBoxShadowWidth @defaultButtonTextColor !important;
+        }
+    }
+
+    &.dropdown {
+        text-align: center;
+
+        .dropdown.icon {
+            margin-left: 0.5em;
+        }
+    }
+}

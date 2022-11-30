@@ -26,7 +26,7 @@ export default function BlueprintsCatalog({
                 <DataSegment.Item
                     selected={item.isSelected}
                     className="fullHeight"
-                    onClick={(event: Event) => {
+                    onClick={event => {
                         event.stopPropagation();
                         onSelectBlueprint(item);
                     }}

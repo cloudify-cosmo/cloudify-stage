@@ -40,7 +40,13 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
     return (
         <>
             {!_.isEmpty(header) && header}
-            <Table celled basic="very" collapsing className="servicesData" style={{ position: 'relative' }}>
+            <Table
+                celled
+                basic="very"
+                collapsing
+                className="servicesData"
+                style={{ position: 'relative', width: '100%' }}
+            >
                 <Table.Body>
                     {isFetching && <LoadingOverlay />}
                     {fetchingError && (
