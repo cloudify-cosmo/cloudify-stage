@@ -5,12 +5,17 @@ import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGri
 import type { Toolbox, Widget } from './StageAPI';
 import type { QueryStringParams } from '../../backend/sharedUtils';
 
+export interface FetchParams {
+    gridParams: Stage.Types.GridParams;
+    filterParams: QueryStringParams;
+}
+
 export default class WidgetParamsHandler {
     toolbox: Toolbox;
 
-    widget: Widget;
+    widget: Widget<Stage.Types.GridParams>;
 
-    fetchParams: QueryStringParams;
+    fetchParams: FetchParams;
 
     constructor(widget: Widget, toolbox: Toolbox) {
         // TODO Norbert: See if the initialization below is necessary
@@ -67,7 +72,7 @@ export default class WidgetParamsHandler {
         return !isEqual(this.fetchParams.filterParams, oldFilterParams);
     }
 
-    updateGridParams(newGridParams: QueryStringParams) {
+    updateGridParams(newGridParams: Stage.Types.GridParams) {
         Object.assign(this.fetchParams.gridParams, newGridParams);
     }
 
