@@ -1,9 +1,10 @@
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 
 import type { LicenseResponse } from '../../backend/handler/AuthHandler.types';
 import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
@@ -15,7 +16,12 @@ import CurrentLicense from './license/CurrentLicense';
 import EulaLink from './license/EulaLink';
 import UploadLicense from './license/UploadLicense';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type Manager from '../utils/Manager';
+import Manager from '../utils/Manager';
+import { setLicense } from '../actions/manager/license';
+import Auth from '../utils/auth';
+import type { ReduxThunkDispatch } from '../configureStore';
+import type { ReduxState } from '../reducers';
+import type { PaginatedResponse } from '../../backend/types';
 
 interface LicenseSwitchButtonProps {
     color: ButtonProps['color'];
@@ -36,12 +42,6 @@ function LicenseSwitchButton({ color, isEditLicenseActive, onClick }: LicenseSwi
         />
     );
 }
-
-LicenseSwitchButton.propTypes = {
-    color: PropTypes.string.isRequired,
-    isEditLicenseActive: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired
-};
 
 interface DescriptionMessageProps {
     canUploadLicense: boolean;
@@ -170,21 +170,13 @@ function DescriptionMessage({
     }
 }
 
-DescriptionMessage.propTypes = {
-    canUploadLicense: PropTypes.bool.isRequired,
-    isTrial: PropTypes.bool.isRequired,
-    isEditLicenseActive: PropTypes.bool.isRequired,
-    onLicenseButtonClick: PropTypes.func.isRequired,
-    status: PropTypes.oneOf([Consts.LICENSE.EMPTY, Consts.LICENSE.EXPIRED, Consts.LICENSE.ACTIVE]).isRequired
-};
-
 export interface LicensePageProps {
     canUploadLicense: boolean;
     isProductOperational: boolean;
-    onLicenseChange: (license: string) => void;
+    onLicenseChange: (license: LicenseResponse | null) => void;
     onGoToApp: ButtonProps['onClick'];
     status: LicenseStatus;
-    license: LicenseResponse;
+    license: LicenseResponse | null;
     manager: Manager;
 }
 
@@ -194,7 +186,7 @@ interface LicensePageState {
     isEditLicenseActive: boolean;
     license: string;
 }
-export default class LicensePage extends Component<LicensePageProps, LicensePageState> {
+class LicensePage extends Component<LicensePageProps, LicensePageState> {
     constructor(props: LicensePageProps) {
         super(props);
 
@@ -215,10 +207,10 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         const { manager, onLicenseChange } = this.props;
         this.setState({ isLoading: true });
         return manager
-            .doGet('/license')
+            .doGet<PaginatedResponse<LicenseResponse>>('/license')
             .then(data => {
-                const license = _.get(data, 'items[0]', {});
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license) });
+                const license = data?.items?.[0] || null;
+                this.setState({ isLoading: false, error: null, isEditLicenseActive: !!license });
                 onLicenseChange(license);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
@@ -257,7 +249,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         const { license: licenseObject, canUploadLicense, isProductOperational, onGoToApp, status } = this.props;
         const { license: licenseString, error, isLoading, isEditLicenseActive } = this.state;
 
-        const isTrial = !_.isEmpty(licenseObject) ? licenseObject.trial : false;
+        const isTrial = licenseObject ? licenseObject.trial : false;
 
         return (
             <FullScreenSegment>
@@ -319,3 +311,30 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         );
     }
 }
+
+const mapStateToProps = (state: ReduxState) => {
+    const { manager } = state;
+    const { license } = manager;
+    const managerAccessor = new Manager(manager);
+
+    return {
+        canUploadLicense: StageUtils.isUserAuthorized(Consts.permissions.LICENSE_UPLOAD, manager),
+        isProductOperational: Auth.isProductOperational(license),
+        license: license.data,
+        status: license.status || Consts.LICENSE.EMPTY,
+        manager: managerAccessor
+    };
+};
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
+    return {
+        onLicenseChange: (license: LicenseResponse | null) => {
+            dispatch(setLicense(license));
+        },
+        onGoToApp: () => {
+            dispatch(push(Consts.PAGE_PATH.HOME));
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LicensePage);
