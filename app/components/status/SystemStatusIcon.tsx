@@ -4,7 +4,7 @@ import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
 import type { ClusterServiceStatus } from '../shared/cluster/types';
 
 export interface SystemStatusIconProps {
-    systemStatus: ClusterServiceStatus;
+    systemStatus?: ClusterServiceStatus;
 }
 
 export default function SystemStatusIcon({ systemStatus }: SystemStatusIconProps) {
