@@ -15,8 +15,6 @@ interface RunWorkflowModalProps {
     toolbox: Stage.Types.Toolbox;
 }
 
-type WorkflowsResponse = Stage.Types.PaginatedResponse<Workflow>;
-
 const tModal = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.runWorkflow.modal`);
 
 const getWorkflowsOptions = (workflows: Workflow[]) => {
@@ -52,7 +50,7 @@ const RunWorkflowModal: FunctionComponent<RunWorkflowModalProps> = ({ filterRule
 
         searchActions
             .doListAllWorkflows(filterRules)
-            .then((data: WorkflowsResponse) => setWorkflows(data.items))
+            .then(data => setWorkflows(data.items))
             .catch(setMessageAsError)
             .finally(turnOffLoading);
     }, []);
