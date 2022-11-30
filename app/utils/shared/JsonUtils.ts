@@ -15,19 +15,11 @@ export default class JsonUtils {
         return trim(stringifiedValue, '"');
     }
 
-    static toType: typeof types.toType = obj => {
-        return types.toType(obj);
-    };
+    static toType = types.toType;
 
-    static toCloudifyType: typeof types.toCloudifyType = obj => {
-        return types.toCloudifyType(obj);
-    };
+    static toCloudifyType = types.toCloudifyType;
 
-    static getStringValue: typeof types.getStringValue = (value: string) => {
-        return types.getStringValue(value);
-    };
+    static getStringValue = types.getStringValue;
 
-    static getTypedValue: typeof types.getStringValue = value => {
-        return types.getTypedValue(value);
-    };
+    static getTypedValue = types.getTypedValue;
 }
