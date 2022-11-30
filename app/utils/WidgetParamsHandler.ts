@@ -1,11 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-import { pick, replace, isEmpty, isBoolean, isFunction } from 'lodash';
+import { forIn, pick, replace, isEqual, isEmpty, isBoolean, isFunction } from 'lodash';
 import log from 'loglevel';
 
 import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
+import type { Toolbox, Widget } from './StageAPI';
+import type { QueryStringParams } from '../../backend/sharedUtils';
 
 export default class WidgetParamsHandler {
-    constructor(widget, toolbox) {
+    toolbox: Toolbox;
+
+    widget: Widget;
+
+    fetchParams: QueryStringParams;
+
+    constructor(widget: Widget, toolbox: Toolbox) {
+        // TODO Norbert: See if the initialization below is necessary
         this.widget = widget;
         this.toolbox = toolbox;
 
@@ -24,11 +32,11 @@ export default class WidgetParamsHandler {
         this.runFetchParamsIfNeeded();
     }
 
-    update(widget) {
+    update(widget: Widget) {
         this.widget = widget;
     }
 
-    buildParamsToSend(userRequestedParams?) {
+    buildParamsToSend(userRequestedParams?: string) {
         // Map grid params to params
         const gridParams = this.mapGridParamsToParams();
         const fetchParams = this.buildFilterParams();
@@ -36,7 +44,7 @@ export default class WidgetParamsHandler {
         let params = { ...gridParams, ...fetchParams };
 
         // If user stated params, replace the grid params and pick the ones we need from the real params
-        if (!isEmpty(userRequestedParams)) {
+        if (userRequestedParams && !isEmpty(userRequestedParams)) {
             // If user stated he wanted gridParams, then add the grid params fields
             const userParamsResolved = replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(
                 ','
@@ -59,7 +67,7 @@ export default class WidgetParamsHandler {
         return !isEqual(this.fetchParams.filterParams, oldFilterParams);
     }
 
-    updateGridParams(newGridParams) {
+    updateGridParams(newGridParams: QueryStringParams) {
         Object.assign(this.fetchParams.gridParams, newGridParams);
     }
 
@@ -67,15 +75,15 @@ export default class WidgetParamsHandler {
         if (isFunction(this.widget.definition.fetchParams)) {
             try {
                 this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
-            } catch (e) {
-                log.error('Error processing fetch params', e);
-                throw new Error('Error processing fetch params', e);
+            } catch (err) {
+                log.error('Error processing fetch params', err);
+                throw new Error('Error processing fetch params', err as ErrorOptions);
             }
         }
     }
 
     buildFilterParams() {
-        const params = {};
+        const params: QueryStringParams = {};
         forIn(this.fetchParams.filterParams, (value, key) => {
             if (isBoolean(value) || !isEmpty(value)) {
                 params[key] = value;
@@ -96,9 +104,9 @@ export default class WidgetParamsHandler {
         if (isFunction(this.widget.definition.mapGridParams)) {
             try {
                 params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
-            } catch (e) {
-                log.error('Error processing match grid params', e);
-                throw new Error('Error processing match grid params', e);
+            } catch (err) {
+                log.error('Error processing match grid params', err);
+                throw new Error('Error processing match grid params', err as ErrorOptions);
             }
         } else {
             params = mapGridParamsToManagerGridParams(this.fetchParams.gridParams);
