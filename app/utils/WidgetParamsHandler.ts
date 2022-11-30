@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
+import { pick, replace, isEmpty, isBoolean, isFunction } from 'lodash';
 import log from 'loglevel';
 
 import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
@@ -36,16 +36,14 @@ export default class WidgetParamsHandler {
         let params = { ...gridParams, ...fetchParams };
 
         // If user stated params, replace the grid params and pick the ones we need from the real params
-        if (!_.isEmpty(userRequestedParams)) {
+        if (!isEmpty(userRequestedParams)) {
             // If user stated he wanted gridParams, then add the grid params fields
-            const userParamsResolved = _.replace(
-                userRequestedParams,
-                'gridParams',
-                '_sort,_size,_offset,_search'
-            ).split(',');
+            const userParamsResolved = replace(userRequestedParams, 'gridParams', '_sort,_size,_offset,_search').split(
+                ','
+            );
 
             // Pick only the values that the user asked for
-            params = _.pick(params, userParamsResolved);
+            params = pick(params, userParamsResolved);
         }
 
         return params;
@@ -58,7 +56,7 @@ export default class WidgetParamsHandler {
         this.runFetchParamsIfNeeded();
 
         // Check if the filter params have changed
-        return !_.isEqual(this.fetchParams.filterParams, oldFilterParams);
+        return !isEqual(this.fetchParams.filterParams, oldFilterParams);
     }
 
     updateGridParams(newGridParams) {
@@ -66,7 +64,7 @@ export default class WidgetParamsHandler {
     }
 
     runFetchParamsIfNeeded() {
-        if (_.isFunction(this.widget.definition.fetchParams)) {
+        if (isFunction(this.widget.definition.fetchParams)) {
             try {
                 this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
             } catch (e) {
@@ -78,8 +76,8 @@ export default class WidgetParamsHandler {
 
     buildFilterParams() {
         const params = {};
-        _.forIn(this.fetchParams.filterParams, (value, key) => {
-            if (_.isBoolean(value) || !_.isEmpty(value)) {
+        forIn(this.fetchParams.filterParams, (value, key) => {
+            if (isBoolean(value) || !isEmpty(value)) {
                 params[key] = value;
             }
         });
@@ -88,14 +86,14 @@ export default class WidgetParamsHandler {
     }
 
     mapGridParamsToParams() {
-        if (_.isEmpty(this.fetchParams.gridParams)) {
+        if (isEmpty(this.fetchParams.gridParams)) {
             return {};
         }
 
         let params = {};
 
         // If we have a mapping function run it
-        if (_.isFunction(this.widget.definition.mapGridParams)) {
+        if (isFunction(this.widget.definition.mapGridParams)) {
             try {
                 params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (e) {

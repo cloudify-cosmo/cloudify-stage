@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 
-import _ from 'lodash';
+import { get } from 'lodash';
 import log from 'loglevel';
 import { getMaintenanceStatus } from '../actions/manager/maintenance';
 import { getClusterStatus } from '../actions/manager/clusterStatus';
@@ -19,7 +19,7 @@ export default class StatusPoller {
     }
 
     getManagerIp() {
-        return _.get(this.store.getState(), 'config.manager.ip');
+        return get(this.store.getState(), 'config.manager.ip');
     }
 
     start() {
