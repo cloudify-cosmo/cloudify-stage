@@ -1,15 +1,22 @@
-/* eslint no-underscore-dangle: ["error", { "allow": ["_size", "_offset"] }] */
+import { filter, get, concat } from 'lodash';
 
-import _ from 'lodash';
-
+import type { QueryStringParams } from '../../backend/sharedUtils';
 import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
+import type { PaginatedResponse } from '../../backend/types';
 
-type BuildActualUrl = Internal['buildActualUrl'];
-type RequestParams = Record<string, any>;
-type RequestBody = Record<string, any>;
+const emptyPaginatedResponse: PaginatedResponse<any> = {
+    items: [],
+    metadata: {
+        pagination: {
+            offset: 0,
+            size: 0,
+            total: 0
+        }
+    }
+};
 
 export default class Manager extends Internal {
     getCurrentUsername() {
@@ -36,8 +43,8 @@ export default class Manager extends Internal {
         return this.managerData?.version?.edition === Consts.EDITION.COMMUNITY;
     }
 
-    getManagerUrl: BuildActualUrl = (url, data?) => {
-        return this.buildActualUrl(url, data);
+    getManagerUrl: Manager['buildActualUrl'] = (url, params) => {
+        return this.buildActualUrl(url, params);
     };
 
     getSelectedTenant() {
@@ -46,41 +53,48 @@ export default class Manager extends Internal {
 
     getSystemRoles() {
         const roles = this.managerData?.roles ?? null;
-        return _.filter(roles, role => role.type === 'system_role');
+        return filter(roles, role => role.type === 'system_role');
     }
 
-    buildActualUrl: BuildActualUrl = (url, data?) => {
-        const path = `/sp${getUrlWithQueryString(url, data)}`;
+    buildActualUrl: typeof getUrlWithQueryString = (url, params) => {
+        const path = `/sp${getUrlWithQueryString(url, params)}`;
         return StageUtils.Url.url(path);
     };
 
-    doFetchFull(fetcher, params = {}, fullData = { items: [] }, size = 0) {
+    doFetchFull<ResponseBodyItem>(
+        fetcher: (params: QueryStringParams) => Promise<PaginatedResponse<ResponseBodyItem>>,
+        params: QueryStringParams = {},
+        fullData: PaginatedResponse<ResponseBodyItem> = emptyPaginatedResponse,
+        size = 0
+    ): Promise<PaginatedResponse<ResponseBodyItem>> {
         const fetchParams = {
             ...params,
             _size: 1000,
             _offset: size
         };
 
-        const pr = fetcher(fetchParams);
+        return fetcher(fetchParams).then(data => {
+            const cumulativeSize = size + data.items.length;
+            const totalSize: number = get(data, 'metadata.pagination.total');
 
-        return pr.then(data => {
-            const cumulativeSize: number = size + data.items.length;
-            const totalSize: number = _.get(data, 'metadata.pagination.total', 0);
-
-            fullData.items = _.concat(fullData.items, data.items);
+            fullData.items = concat(fullData.items, data.items);
 
             if (totalSize > cumulativeSize) {
                 return this.doFetchFull(fetcher, fetchParams, fullData, cumulativeSize);
             }
+
             return fullData;
         });
     }
 
-    doPostFull = (url: string, params: RequestParams, body: RequestBody) => {
-        return this.doFetchFull(currentParams => this.doPost(url, { params: currentParams, body }), params);
-    };
+    doPostFull<ResponseBodyItem>(url: string, body: Record<string, any>, params?: QueryStringParams) {
+        return this.doFetchFull<ResponseBodyItem>(
+            currentParams => this.doPost(url, { params: currentParams, body }),
+            params
+        );
+    }
 
-    doGetFull = (url: string, params: RequestParams) => {
-        return this.doFetchFull(currentParams => this.doGet(url, { params: currentParams }), params);
-    };
+    doGetFull<ResponseBodyItem>(url: string, params?: QueryStringParams) {
+        return this.doFetchFull<ResponseBodyItem>(currentParams => this.doGet(url, { params: currentParams }), params);
+    }
 }

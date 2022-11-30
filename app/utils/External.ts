@@ -108,18 +108,19 @@ export default class External implements Http {
         return new Promise<ResponseBody>((resolve, reject) => {
             // Call upload method
             const xhr = new XMLHttpRequest();
-            xhr.addEventListener('error', e => {
-                log.error('xhr upload error', e, xhr.responseText);
+            xhr.addEventListener('error', event => {
+                log.error('xhr upload error', event, xhr.responseText);
 
                 try {
                     const response = JSON.parse(xhr.responseText);
                     if (response.message) {
                         reject({ message: StageUtils.resolveMessage(response.message) });
                     } else {
-                        // @ts-expect-error legacy solution carried from JS
-                        reject({ message: e.message });
+                        reject({
+                            message: `Cannot upload data to ${url}. For more details see the browser console.`
+                        });
                     }
-                } catch (err) {
+                } catch (err: any) {
                     log.error('Cannot parse upload error', err, xhr.responseText);
                     reject({ message: xhr.responseText || err.message });
                 }
@@ -137,7 +138,7 @@ export default class External implements Http {
                         reject({ message: StageUtils.resolveMessage(response.message) });
                         return;
                     }
-                } catch (err) {
+                } catch (err: any) {
                     log.error('Cannot parse upload response', err, xhr.responseText);
                     reject({ message: xhr.responseText || err.message });
                 }
