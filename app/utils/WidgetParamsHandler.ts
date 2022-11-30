@@ -82,7 +82,7 @@ export default class WidgetParamsHandler {
                 this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
             } catch (err) {
                 log.error('Error processing fetch params', err);
-                throw new Error('Error processing fetch params', err as ErrorOptions);
+                throw new Error('Error processing fetch params', err);
             }
         }
     }
@@ -111,7 +111,7 @@ export default class WidgetParamsHandler {
                 params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (err) {
                 log.error('Error processing match grid params', err);
-                throw new Error('Error processing match grid params', err as ErrorOptions);
+                throw new Error('Error processing match grid params', err);
             }
         } else {
             params = mapGridParamsToManagerGridParams(this.fetchParams.gridParams);
