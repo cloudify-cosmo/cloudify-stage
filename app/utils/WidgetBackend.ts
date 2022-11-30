@@ -11,7 +11,7 @@ export default class WidgetBackend extends Internal {
     }
 
     buildHeaders() {
-        const headers = super.buildHeaders() as Record<string, unknown>;
+        const headers = super.buildHeaders();
         headers[consts.WIDGET_ID_HEADER] = this.widgetId;
         return headers;
     }
