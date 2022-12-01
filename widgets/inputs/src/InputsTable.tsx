@@ -67,7 +67,7 @@ export default class InputsTable extends React.Component<InputsTableProps> {
                     <DataTable.Column
                         label={
                             <span>
-                                {t('columns.value')} <ParameterValueDescription />
+                                {translateInputsWidget('columns.value')} <ParameterValueDescription />
                             </span>
                         }
                         width="65%"
