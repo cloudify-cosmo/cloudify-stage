@@ -139,9 +139,6 @@ export interface AddWidgetModalProps {
     onWidgetUsed: (widgetId: string) => Promise<GetWidgetsUsedResponse>;
 }
 
-AddWidgetModal.defaultProps = {
-    addButtonTitle: null
-};
 function AddWidgetModal({
     addButtonTitle,
     canInstallWidgets,
@@ -551,8 +548,6 @@ function AddWidgetModal({
     );
 }
 
-// NOTE: AddWidgetModal is not exported directly from this file and cannot be used as a type in the emitted declarations
-/** @type {import('react').ComponentType<import('prop-types').InferProps<typeof AddWidgetModal['propTypes']>>} */
 const MemoizedAddWidgetModal = React.memo(AddWidgetModal, isEqual);
 
 const mapStateToProps = (state: ReduxState) => {
