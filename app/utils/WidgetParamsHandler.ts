@@ -18,7 +18,6 @@ export default class WidgetParamsHandler {
     fetchParams: FetchParams;
 
     constructor(widget: Widget, toolbox: Toolbox) {
-        // TODO Norbert: See if the initialization below is necessary
         this.widget = widget;
         this.toolbox = toolbox;
 

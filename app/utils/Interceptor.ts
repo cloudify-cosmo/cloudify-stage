@@ -5,9 +5,7 @@ import Consts from './consts';
 import { clearContext } from '../actions/context';
 import type { ReduxStore } from '../configureStore';
 
-type InterceptorSingleton = Interceptor | null;
-
-let singleton: InterceptorSingleton = null;
+let singleton: Interceptor | null = null;
 
 export default class Interceptor {
     store: ReduxStore;
