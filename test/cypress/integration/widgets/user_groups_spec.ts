@@ -55,8 +55,9 @@ describe('User group management widget', () => {
         cy.contains('tr', groupName).contains('.label.blue', '1');
 
         cy.log('Verifying group users and tenants can be removed');
-        cy.contains('tr', groupName).click();
+        cy.contains('tr td', groupName).click();
         cy.get('.remove').click({ multiple: true });
+
         cy.contains('No users available');
         cy.contains('No tenants available');
         cy.contains('tr', groupName).within(() => {

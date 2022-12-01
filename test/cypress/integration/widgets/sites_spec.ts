@@ -143,7 +143,7 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        const location = '0.013732910024768903, -0.8789062500000001';
+        const location = '0.05218505137865288, -0.8789062500000001';
         cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', location);
 
         cy.get('.modal').within(() => {
@@ -190,7 +190,7 @@ describe('Sites Management', () => {
     });
 
     it('update a site with location changed with map', () => {
-        const location = '32.11282228909443, 33.92578125000001';
+        const location = '32.145385562629315, 33.92578125000001';
 
         cy.createSite(siteWithLocation);
         refreshSiteManagementPage();
