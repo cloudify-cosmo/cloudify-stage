@@ -21,8 +21,11 @@ describe('User group management widget', () => {
     it('should allow to manage a group', () => {
         cy.log('Creating new group');
         cy.get('.userGroupsWidget .add').click();
-        cy.get('input[name=groupName]').type(groupName);
-        cy.clickButton('Add');
+
+        cy.get('.modal').within(() => {
+            cy.get('input[name=groupName]').type(groupName);
+            cy.clickButton('Add');
+        });
 
         cy.log('Verifying Admin checkbox is working');
         cy.contains('tr', groupName).within(() => {
