@@ -1,4 +1,4 @@
-import { chain, isEmpty, isEqual, pick, reverse } from 'lodash';
+import { chain, isEmpty, isEqual, reverse } from 'lodash';
 import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
 export interface OutputsTableProps {
@@ -15,6 +15,8 @@ export interface OutputTableState {
     sortColumn: string;
     sortAscending: boolean;
 }
+
+export const translateOutputsWidget = Stage.Utils.getT('widgets.outputs');
 
 export default class OutputsTable extends React.Component<OutputsTableProps, OutputTableState> {
     constructor(props: OutputsTableProps, context: unknown) {
@@ -56,7 +58,7 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
         const { data } = this.props;
         const { sortAscending, sortColumn } = this.state;
         const { blueprintId, deploymentId, outputsAndCapabilities } = data;
-        const NO_DATA_MESSAGE = Stage.i18n.t('widgets.outputs.noData');
+        const NO_DATA_MESSAGE = translateOutputsWidget('noData');
         const { Button, DataTable, Header } = Stage.Basic;
         const ParameterValue = Stage.Common.Components.Parameter.Value;
         const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
@@ -67,14 +69,15 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                     className="outputsTable"
                     noDataAvailable={isEmpty(outputsAndCapabilities)}
                     noDataMessage={NO_DATA_MESSAGE}
-                    fetchData={({ gridParams }) => this.setState(pick(gridParams, 'sortColumn', 'sortAscending'))}
+                    fetchData={({ gridParams }) => {
+                        this.setState(oldState => ({
+                            sortAscending: gridParams.sortAscending || oldState.sortAscending,
+                            sortColumn: gridParams.sortColumn || oldState.sortColumn
+                        }));
+                    }}
                 >
-                    <DataTable.Column
-                        label={Stage.i18n.t('widgets.outputs.tableColumns.name')}
-                        name="name"
-                        width="35%"
-                    />
-                    <DataTable.Column label={Stage.i18n.t('widgets.outputs.tableColumns.type')} name="isOutput" />
+                    <DataTable.Column label={translateOutputsWidget('columns.name')} name="name" width="35%" />
+                    <DataTable.Column label={translateOutputsWidget('columns.type')} name="isOutput" />
                     <DataTable.Column
                         label={
                             <span>
@@ -96,8 +99,8 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {outputOrCapability.isOutput
-                                        ? Stage.i18n.t('widgets.outputs.types.output')
-                                        : Stage.i18n.t('widgets.outputs.types.capability')}
+                                        ? translateOutputsWidget('types.output')
+                                        : translateOutputsWidget('types.capability')}
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     <ParameterValue value={outputOrCapability.value} />
@@ -108,7 +111,7 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                     <DataTable.Action>
                         {!isEmpty(outputsAndCapabilities) && (
                             <Button
-                                content={Stage.i18n.t('widgets.outputs.exportButton')}
+                                content={translateOutputsWidget('exportButton')}
                                 icon="external share"
                                 labelPosition="left"
                                 onClick={() =>

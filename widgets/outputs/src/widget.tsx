@@ -2,7 +2,11 @@ import type { OutputsTableProps } from './OutputsTable';
 import OutputsTable from './OutputsTable';
 import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
-Stage.defineWidget<unknown, { outputsAndCapabilities: OutputsAndCapabilitiesItem[] }, OutputsTableConfiguration>({
+interface Data {
+    outputsAndCapabilities: OutputsAndCapabilitiesItem[];
+}
+
+Stage.defineWidget<unknown, Data, OutputsTableConfiguration>({
     id: 'outputs',
     name: Stage.i18n.t('widgets.outputs.name'),
     description: Stage.i18n.t('widgets.outputs.description'),

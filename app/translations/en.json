@@ -1430,7 +1430,7 @@
             "output": "Output",
             "capability": "Capability"
           },
-          "tableColumns": {
+          "columns": {
             "name": "Name",
             "type": "Type"
           }
