@@ -17,7 +17,7 @@ export interface InputsTableProps {
     widget: Stage.Types.Widget<PollingTimeConfiguration>;
 }
 
-const t = Stage.Utils.getT('widgets.inputs');
+export const translateInputsWidget = Stage.Utils.getT('widgets.inputs');
 
 export default class InputsTable extends React.Component<InputsTableProps> {
     componentDidMount() {
@@ -48,7 +48,7 @@ export default class InputsTable extends React.Component<InputsTableProps> {
     }
 
     render() {
-        const NO_DATA_MESSAGE = t('noData');
+        const NO_DATA_MESSAGE = translateInputsWidget('noData');
         const { DataTable, Header } = Stage.Basic;
         const ParameterValue = Stage.Common.Components.Parameter.Value;
         const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
@@ -63,7 +63,7 @@ export default class InputsTable extends React.Component<InputsTableProps> {
         return (
             <div>
                 <DataTable className="inputsTable" noDataAvailable={isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
-                    <DataTable.Column label={t('columns.name')} width="35%" />
+                    <DataTable.Column label={translateInputsWidget('columns.name')} width="35%" />
                     <DataTable.Column
                         label={
                             <span>

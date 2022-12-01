@@ -1,7 +1,7 @@
 import { get, isEmpty, map } from 'lodash';
 import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 import type { InputItem, InputsTableProps } from './InputsTable';
-import InputsTable from './InputsTable';
+import InputsTable, { translateInputsWidget } from './InputsTable';
 
 export interface InputsTableData {
     inputs: InputItem[];
@@ -9,8 +9,8 @@ export interface InputsTableData {
 
 Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
     id: 'inputs',
-    name: Stage.i18n.t('widgets.inputs.name'),
-    description: Stage.i18n.t('widgets.inputs.description'),
+    name: translateInputsWidget('name'),
+    description: translateInputsWidget('description'),
     initialWidth: 8,
     initialHeight: 16,
     color: 'teal',
