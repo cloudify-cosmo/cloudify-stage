@@ -18,9 +18,9 @@ export default class WidgetParamsHandler {
         this.fetchParams = {
             gridParams: {
                 currentPage: 1,
-                pageSize: this.widget.configuration.pageSize,
-                sortColumn: this.widget.configuration.sortColumn,
-                sortAscending: this.widget.configuration.sortAscending
+                pageSize: widget.configuration.pageSize,
+                sortColumn: widget.configuration.sortColumn,
+                sortAscending: widget.configuration.sortAscending
             },
             filterParams: {}
         };
@@ -71,10 +71,13 @@ export default class WidgetParamsHandler {
     runFetchParamsIfNeeded() {
         if (isFunction(this.widget.definition.fetchParams)) {
             try {
-                this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
+                this.fetchParams.filterParams = this.widget.definition.fetchParams(
+                    this.widget as Widget<Record<string, keyof Stage.Types.GridParams>>,
+                    this.toolbox
+                );
             } catch (err) {
                 log.error('Error processing fetch params', err);
-                throw new Error('Error processing fetch params', err);
+                throw new Error('Error processing fetch params');
             }
         }
     }
@@ -103,7 +106,7 @@ export default class WidgetParamsHandler {
                 params = this.widget.definition.mapGridParams(this.fetchParams.gridParams);
             } catch (err) {
                 log.error('Error processing match grid params', err);
-                throw new Error('Error processing match grid params', err);
+                throw new Error('Error processing match grid params');
             }
         } else {
             params = mapGridParamsToManagerGridParams(this.fetchParams.gridParams);
