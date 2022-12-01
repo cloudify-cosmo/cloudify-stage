@@ -10,8 +10,6 @@ const autoSaverWaitInterval = 1000;
 let singleton: UserAppDataAutoSaver | null = null;
 
 export default class UserAppDataAutoSaver {
-    store: ReduxStore;
-
     isActive: boolean;
 
     unsubscribe: Unsubscribe;
@@ -22,8 +20,7 @@ export default class UserAppDataAutoSaver {
 
     role?: AuthData['role'];
 
-    constructor(store: ReduxStore) {
-        this.store = store;
+    constructor(private store: ReduxStore) {
         this.isActive = false;
 
         this.initFromStore();

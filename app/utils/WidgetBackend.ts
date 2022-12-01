@@ -3,11 +3,8 @@ import consts from './consts';
 import type { ManagerData } from '../reducers/managerReducer';
 
 export default class WidgetBackend extends Internal {
-    widgetId: string;
-
-    constructor(widgetId: string, data: ManagerData) {
+    constructor(private widgetId: string, data: ManagerData) {
         super(data);
-        this.widgetId = widgetId;
     }
 
     buildHeaders() {

@@ -8,11 +8,7 @@ import type { ReduxStore } from '../configureStore';
 let singleton: Interceptor | null = null;
 
 export default class Interceptor {
-    store: ReduxStore;
-
-    constructor(store: ReduxStore) {
-        this.store = store;
-    }
+    constructor(private store: ReduxStore) {}
 
     handle401() {
         this.store.dispatch(clearContext());

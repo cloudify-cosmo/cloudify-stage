@@ -11,16 +11,9 @@ export interface FetchParams {
 }
 
 export default class WidgetParamsHandler {
-    toolbox: Toolbox;
-
-    widget: Widget<Stage.Types.GridParams>;
-
     fetchParams: FetchParams;
 
-    constructor(widget: Widget, toolbox: Toolbox) {
-        this.widget = widget;
-        this.toolbox = toolbox;
-
+    constructor(private widget: Widget<Stage.Types.GridParams>, private toolbox: Toolbox) {
         // initialize params
         this.fetchParams = {
             gridParams: {

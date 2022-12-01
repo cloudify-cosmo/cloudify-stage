@@ -10,8 +10,6 @@ type StatusPollerSingleton = StatusPoller | null;
 let singleton: StatusPollerSingleton = null;
 
 export default class StatusPoller {
-    store: ReduxStore;
-
     pollerTimer?: NodeJS.Timeout;
 
     fetchMaintenanceStatusPromise?: CancelablePromise<void>;
@@ -22,8 +20,7 @@ export default class StatusPoller {
 
     interval: number;
 
-    constructor(store: ReduxStore) {
-        this.store = store;
+    constructor(private store: ReduxStore) {
         this.isActive = false;
         this.interval = store.getState().config.app.maintenancePollingInterval;
     }
