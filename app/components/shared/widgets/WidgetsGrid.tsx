@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
 
 import Grid from '../../layout/Grid';
