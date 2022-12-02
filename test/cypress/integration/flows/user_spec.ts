@@ -66,7 +66,7 @@ describe('User flow', () => {
         cy.get('#gridContent > .nodeContainer').should('have.length', 3);
     });
 
-    it('uploads blueprint using first journey buttons', () => {
+    it.skip('uploads blueprint using first journey buttons', () => {
         cy.killRunningExecutions().deleteDeployments('', true);
         cy.visitPage('Dashboard');
 
