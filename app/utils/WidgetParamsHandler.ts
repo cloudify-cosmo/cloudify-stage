@@ -13,7 +13,7 @@ export interface FetchParams {
 export default class WidgetParamsHandler {
     fetchParams: FetchParams;
 
-    constructor(private widget: Widget<Stage.Types.GridParams>, private toolbox: Toolbox) {
+    constructor(private widget: Widget<Stage.Types.GridParams & Record<string, unknown>>, private toolbox: Toolbox) {
         // initialize params
         this.fetchParams = {
             gridParams: {
@@ -71,10 +71,7 @@ export default class WidgetParamsHandler {
     runFetchParamsIfNeeded() {
         if (isFunction(this.widget.definition.fetchParams)) {
             try {
-                this.fetchParams.filterParams = this.widget.definition.fetchParams(
-                    this.widget as Widget<Record<string, keyof Stage.Types.GridParams>>,
-                    this.toolbox
-                );
+                this.fetchParams.filterParams = this.widget.definition.fetchParams(this.widget, this.toolbox);
             } catch (err) {
                 log.error('Error processing fetch params', err);
                 throw new Error('Error processing fetch params');
