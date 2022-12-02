@@ -3,11 +3,8 @@ import StageUtils from './stageUtils';
 export default class StyleLoader {
     path: string;
 
-    loaded: boolean;
-
     constructor(stylePath: string) {
         this.path = StageUtils.Url.url(stylePath);
-        this.loaded = false;
     }
 
     load() {
@@ -17,7 +14,6 @@ export default class StyleLoader {
             styleObj.setAttribute('type', 'text/css');
             styleObj.setAttribute('href', this.path);
             styleObj.onload = () => {
-                this.loaded = true;
                 resolve(undefined);
             };
 
