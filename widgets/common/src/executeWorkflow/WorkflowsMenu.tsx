@@ -108,7 +108,6 @@ const WorkflowsMenu: FunctionComponent<WorkflowsMenuProps> = ({
     const showOnlyDefaultWorkflows = size(workflowsGroups) === 1;
     const popupMenuProps: Partial<ComponentProps<typeof PopupMenu>> = !trigger
         ? {
-              bordered: true,
               icon: 'cogs',
               help: i18n.t('widgets.common.deployments.workflowsMenu.tooltip'),
               offset: [0, 5]
