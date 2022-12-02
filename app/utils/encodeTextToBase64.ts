@@ -1,7 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
 const codeExpression = /%([0-9A-F]{2})/g;
 
-const getChar = (part, hex) => String.fromCharCode(parseInt(hex, 16));
+const getChar = (_part: string, hex: string) => String.fromCharCode(parseInt(hex, 16));
 
 /**
  * Encodes text to base64 with unicode support.
@@ -12,7 +11,7 @@ const getChar = (part, hex) => String.fromCharCode(parseInt(hex, 16));
  * @param {string} text text that may contain any unicode characters
  * @returns base64 encoded text
  */
-const encodeTextToBase64 = text => {
+const encodeTextToBase64 = (text: string) => {
     const escapedText = encodeURIComponent(text);
     const convertedText = escapedText.replace(codeExpression, getChar);
     return btoa(convertedText);

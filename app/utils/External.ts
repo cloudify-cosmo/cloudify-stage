@@ -290,7 +290,7 @@ export default class External implements Http {
 
         if (validateAuthentication && this.isUnauthorized(response)) {
             const interceptor = Interceptor.getInterceptor();
-            interceptor.handle401();
+            interceptor?.handle401();
             return Promise.reject(UNAUTHORIZED_ERR);
         }
 
@@ -303,7 +303,7 @@ export default class External implements Http {
 
                 if (this.isLicenseError(response, resJson)) {
                     const interceptor = Interceptor.getInterceptor();
-                    interceptor.handleLicenseError(resJson.error_code);
+                    interceptor?.handleLicenseError(resJson.error_code);
                     return Promise.reject(LICENSE_ERR);
                 }
                 return Promise.reject({
