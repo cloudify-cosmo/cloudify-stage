@@ -130,7 +130,7 @@ describe('User management widget', () => {
             cy.getField('E-mail').find('input').clear().type(email);
         }
 
-        it.only('should allow to invite users', () => {
+        it('should allow to invite users', () => {
             cy.intercept('GET', '/auth/users/me', {
                 email: 'moomin@moominvalley.fi',
                 selected_manager_address: 'moominpappa.moominvalley.fi',
