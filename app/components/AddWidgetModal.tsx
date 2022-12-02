@@ -107,12 +107,12 @@ const StyledItem = styled(Item)`
 let nameIndex = 0;
 
 type Category = Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>;
-interface CategoryObject {
+interface CategoryCount {
     name: Category;
     count: number;
 }
 function generateCategories(widgets: EnhancedWidgetDefinition[]) {
-    const categories = widgets.reduce((result: CategoryObject[], next) => {
+    const categories = widgets.reduce((result: CategoryCount[], next) => {
         (next.categories || [GenericConfig.CATEGORY.OTHERS]).forEach(category => {
             if (!next.loaded) return;
             const idx = result.findIndex(current => current.name === category);
@@ -159,7 +159,7 @@ function AddWidgetModal({
     const [thumbnailWidget, setThumbnailWidget, resetThumbnailWidget] =
         useResettableState<EnhancedWidgetDefinition | null>(null);
     const [usedByList, setUsedByList, resetUsedByList] = useResettableState<GetWidgetsUsedResponse>([]);
-    const [categories, setCategories] = useState<CategoryObject[]>(generateCategories(widgetDefinitions));
+    const [categories, setCategories] = useState(generateCategories(widgetDefinitions));
     const [selectedCategory, setSelectedCategory] = useState<Category>(GenericConfig.CATEGORY.ALL);
     const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState<string[]>([]);
     const [open, setOpen, unsetOpen] = useBoolean();
