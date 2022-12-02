@@ -151,7 +151,6 @@ export default class SnapshotsTable extends React.Component {
                                     <Icon
                                         name="undo"
                                         title="Restore"
-                                        bordered
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.restoreSnapshot)}
@@ -159,14 +158,12 @@ export default class SnapshotsTable extends React.Component {
                                     <Icon
                                         name="download"
                                         title="Download"
-                                        bordered
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.downloadSnapshot)}
                                     />
                                     <Icon
                                         name="trash"
-                                        bordered
                                         disabled={!isRemovable}
                                         link={isRemovable}
                                         title="Delete"

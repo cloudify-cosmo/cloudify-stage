@@ -156,7 +156,6 @@ export default class SitesTable extends React.Component {
                                                     <Icon
                                                         name="crosshairs"
                                                         link
-                                                        bordered
                                                         className="rightFloated"
                                                         onClick={event => event.stopPropagation()}
                                                     />
@@ -185,14 +184,12 @@ export default class SitesTable extends React.Component {
                                 </DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
-                                        bordered
                                         link
                                         name="edit"
                                         title="Update site"
                                         onClick={() => this.onUpdateSite(item)}
                                     />
                                     <Icon
-                                        bordered
                                         link
                                         name="trash"
                                         title="Delete site"

@@ -16,10 +16,7 @@ export default class ConsoleIcon extends React.Component {
 
         return (
             manager.ip && (
-                <Popup
-                    trigger={<Icon name="computer" link bordered onClick={this.handleClick} />}
-                    content="Open Console"
-                />
+                <Popup trigger={<Icon name="computer" link onClick={this.handleClick} />} content="Open Console" />
             )
         );
     }
