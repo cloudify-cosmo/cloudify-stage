@@ -1,5 +1,5 @@
 import type { OutputsTableProps } from './OutputsTable';
-import OutputsTable from './OutputsTable';
+import OutputsTable, { translateOutputsWidget } from './OutputsTable';
 import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
 
 interface Data {
@@ -8,8 +8,8 @@ interface Data {
 
 Stage.defineWidget<unknown, Data, OutputsTableConfiguration>({
     id: 'outputs',
-    name: Stage.i18n.t('widgets.outputs.name'),
-    description: Stage.i18n.t('widgets.outputs.description'),
+    name: translateOutputsWidget('name'),
+    description: translateOutputsWidget('description'),
     initialWidth: 8,
     initialHeight: 20,
     color: 'blue',
@@ -125,7 +125,7 @@ Stage.defineWidget<unknown, Data, OutputsTableConfiguration>({
 
         const formattedData: OutputsTableProps['data'] = {
             outputsAndCapabilities: data.outputsAndCapabilities,
-            deploymentId: toolbox.getContext().getValue('deploymentId') as string, // this might be null or array of strings?
+            deploymentId: toolbox.getContext().getValue('deploymentId'),
             blueprintId: toolbox.getContext().getValue('blueprintId')
         };
 

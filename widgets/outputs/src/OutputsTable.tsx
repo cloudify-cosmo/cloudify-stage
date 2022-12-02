@@ -4,21 +4,21 @@ import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './ty
 export interface OutputsTableProps {
     data: {
         blueprintId: string;
-        deploymentId: string;
+        deploymentId: string | string[] | undefined | null;
         outputsAndCapabilities: OutputsAndCapabilitiesItem[];
     };
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget<OutputsTableConfiguration>;
 }
 
-export interface OutputTableState {
+export interface OutputsTableState {
     sortColumn: string;
     sortAscending: boolean;
 }
 
 export const translateOutputsWidget = Stage.Utils.getT('widgets.outputs');
 
-export default class OutputsTable extends React.Component<OutputsTableProps, OutputTableState> {
+export default class OutputsTable extends React.Component<OutputsTableProps, OutputsTableState> {
     constructor(props: OutputsTableProps, context: unknown) {
         super(props, context);
         this.state = {
@@ -32,7 +32,7 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
         toolbox.getEventBus().on('outputs:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps: OutputsTableProps, nextState: OutputTableState) {
+    shouldComponentUpdate(nextProps: OutputsTableProps, nextState: OutputsTableState) {
         const { data, widget } = this.props;
         return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
