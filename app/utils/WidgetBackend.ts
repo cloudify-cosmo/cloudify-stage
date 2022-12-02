@@ -7,11 +7,11 @@ export default class WidgetBackend extends Internal {
         super(data);
     }
 
-    buildHeaders() {
+    buildHeaders: Internal['buildHeaders'] = () => {
         const headers = super.buildHeaders();
         headers[consts.WIDGET_ID_HEADER] = this.widgetId;
         return headers;
-    }
+    };
 
     buildActualUrl: Internal['buildActualUrl'] = (path, data) => {
         return super.buildActualUrl(`/wb/${path}`, data);
