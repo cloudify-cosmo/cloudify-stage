@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import type { PostAuthUsersInviteRequestBody } from 'widgets/userManagement/src/authServiceActions';
 
 describe('User management widget', () => {
     const widgetId = 'userManagement';
@@ -129,7 +130,7 @@ describe('User management widget', () => {
             cy.getField('E-mail').find('input').clear().type(email);
         }
 
-        it('should allow to invite users', () => {
+        it.only('should allow to invite users', () => {
             cy.intercept('GET', '/auth/users/me', {
                 email: 'moomin@moominvalley.fi',
                 selected_manager_address: 'moominpappa.moominvalley.fi',
@@ -155,11 +156,19 @@ describe('User management widget', () => {
                 verifyEmailFieldError();
 
                 typeEmail(invitedUserEmail);
+
+                cy.contains('Admin').click();
+
+                cy.setMultipleDropdownValues('Tenants', [Consts.DEFAULT_TENANT]);
+                cy.setSingleDropdownValue('Choose a role for tenant default_tenant:', 'operations');
+
                 cy.clickButton('Invite');
                 cy.wait('@postUsersInvite').then(({ request }) => {
                     expect(request.body).to.deep.equal({
-                        email: invitedUserEmail
-                    });
+                        email: invitedUserEmail,
+                        role_name: Consts.ROLE.SYS_ADMIN,
+                        tenants: [{ role_name: 'operations', tenant_name: Consts.DEFAULT_TENANT }]
+                    } as PostAuthUsersInviteRequestBody);
                 });
             });
 
