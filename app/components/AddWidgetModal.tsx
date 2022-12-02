@@ -44,6 +44,7 @@ import EditModeButton from './EditModeButton';
 import InstallWidgetModal from './InstallWidgetModal';
 import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 import type GenericConfigType from '../utils/GenericConfig';
+import type { ObjectKeys } from '../utils/types';
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;
@@ -106,7 +107,7 @@ const StyledItem = styled(Item)`
 
 let nameIndex = 0;
 
-type Category = Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>;
+type Category = ObjectKeys<typeof GenericConfigType['CATEGORY']>;
 interface CategoryCount {
     name: Category;
     count: number;
