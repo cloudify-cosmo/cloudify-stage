@@ -4,7 +4,7 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 
 export default class Internal extends External {
-    buildHeaders() {
+    buildHeaders: External['buildHeaders'] = () => {
         if (!this.managerData) {
             return {};
         }
@@ -14,7 +14,7 @@ export default class Internal extends External {
         };
 
         return headers;
-    }
+    };
 
     buildActualUrl(path: string, data: Record<string, any>) {
         return super.buildActualUrl(StageUtils.Url.url(path), data);
