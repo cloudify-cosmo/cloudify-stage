@@ -7,7 +7,6 @@ import * as BasicComponents from 'components/basic';
 describe('(Component) SystemStatusIcon', () => {
     let wrapper;
     let systemStatus;
-    global.Stage = { Basic: BasicComponents };
     const { Icon } = Stage.Basic;
 
     beforeEach(() => {

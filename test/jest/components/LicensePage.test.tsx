@@ -8,11 +8,9 @@ import type { SemanticICONS } from 'semantic-ui-react';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
-import moment from 'moment';
 import Consts from 'utils/consts';
 import type { LicensePageProps } from 'components/LicensePage';
 import ConnectedLicensePage, { LicensePage } from 'components/LicensePage';
-import * as BasicComponents from 'components/basic';
 
 import { createToolbox } from 'utils/Toolbox';
 import type { LicenseStatus, LicenseData } from 'reducers/managerReducer';
@@ -26,9 +24,6 @@ import type { LicenseResponse, VersionResponse } from '../../../backend/handler/
 describe('(Component) LicensePage', () => {
     let licensePageComponent: ReactWrapper<LicensePageProps>;
     let messageContainerComponent: ReactWrapper;
-    (global as any).Stage = { Basic: BasicComponents };
-    (global as any).moment = (timestamp: moment.Moment, inputPattern: string) =>
-        moment(timestamp, inputPattern).utcOffset(0);
 
     const verifyProps = (
         canUploadLicense: boolean,
