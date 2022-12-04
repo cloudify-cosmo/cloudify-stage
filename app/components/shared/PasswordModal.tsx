@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import i18n from 'i18next';
@@ -32,27 +31,18 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
     }, [open]);
 
     const submitPassword = () => {
-        const errorsFound = {};
+        const errorsFound: { password?: string; confirmPassword?: string } = {};
 
         if (_.isEmpty(password)) {
-            errorsFound.password = i18n.t(
-                'users.changePasswordModal.errors.noPassword',
-                'Please provide user password'
-            );
+            errorsFound.password = i18n.t('users.changePasswordModal.errors.noPassword');
         }
 
         if (_.isEmpty(confirmPassword)) {
-            errorsFound.confirmPassword = i18n.t(
-                'users.changePasswordModal.errors.noPasswordConfirmation',
-                'Please provide password confirmation'
-            );
+            errorsFound.confirmPassword = i18n.t('users.changePasswordModal.errors.noPasswordConfirmation');
         }
 
         if (!_.isEmpty(password) && !_.isEmpty(confirmPassword) && password !== confirmPassword) {
-            errorsFound.confirmPassword = i18n.t(
-                'users.changePasswordModal.errors.passwordsMismatch',
-                'Passwords do not match'
-            );
+            errorsFound.confirmPassword = i18n.t('users.changePasswordModal.errors.passwordsMismatch');
         }
 
         if (!_.isEmpty(errorsFound)) {
@@ -87,28 +77,24 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
         <Modal open={open} onClose={() => onHide()} className="userPasswordModal">
             <Modal.Header>
                 <Icon name="lock" />
-                {i18n.t('users.changePasswordModal.header', 'Change password for {{username}}', {
+                {i18n.t('users.changePasswordModal.header', {
                     username: username || loggedInUsername
                 })}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={loading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field
-                        label={i18n.t('users.changePasswordModal.password', 'Password')}
-                        error={errors.password}
-                        required
-                    >
+                    <Form.Field label={i18n.t('users.changePasswordModal.password')} error={errors.password} required>
                         <Form.Input
                             name="password"
                             type="password"
                             value={password}
-                            onChange={(event, { value }) => setPassword(value)}
+                            onChange={(_event, { value }) => setPassword(value)}
                         />
                     </Form.Field>
 
                     <Form.Field
-                        label={i18n.t('users.changePasswordModal.passwordConfirm', 'Confirm password')}
+                        label={i18n.t('users.changePasswordModal.passwordConfirm')}
                         error={errors.confirmPassword}
                         required
                     >
@@ -116,7 +102,7 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
                             name="confirmPassword"
                             type="password"
                             value={confirmPassword}
-                            onChange={(event, { value }) => setConfirmPassword(value)}
+                            onChange={(_event, { value }) => setConfirmPassword(value)}
                         />
                     </Form.Field>
                 </Form>
@@ -127,7 +113,7 @@ const PasswordModal: React.FunctionComponent<PasswordModalProps> = ({ onHide, op
                 <ApproveButton
                     onClick={onApprove}
                     disabled={loading}
-                    content={i18n.t('users.changePasswordModal.change', 'Change')}
+                    content={i18n.t('users.changePasswordModal.change')}
                     icon="lock"
                 />
             </Modal.Actions>

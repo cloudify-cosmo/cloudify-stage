@@ -144,8 +144,9 @@ describe('Spire Manager widget', () => {
         cy.get(':nth-child(2) > :nth-child(6) > span > .cogs').click();
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
-        cy.get('.modal').should('be.visible');
-        cy.clickButton('Execute');
+        cy.get('.modal').within(() => {
+            cy.clickButton('Execute');
+        });
         cy.wait('@postExecutions').its('request.body').should('contain', {
             deployment_id: 'london',
             workflow_id: 'install'
@@ -168,8 +169,9 @@ describe('Spire Manager widget', () => {
         cy.get('div.actionField > div:nth-child(2) > button').click();
         cy.get('.popupMenu').should('be.visible');
         cy.get('[option-value="install"]').click();
-        cy.get('.modal').should('be.visible');
-        cy.clickButton('Execute');
+        cy.get('.modal').within(() => {
+            cy.clickButton('Execute');
+        });
 
         waitForExecutionsRequest('new-york');
         waitForExecutionsRequest('london');

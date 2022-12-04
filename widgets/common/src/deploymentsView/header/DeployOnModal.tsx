@@ -2,7 +2,6 @@ import type { FunctionComponent } from 'react';
 import type { WorkflowParameters } from '../../executeWorkflow';
 import GenericDeployModal from '../../deployModal/GenericDeployModal';
 import type { FilterRule } from '../../filters/types';
-import type { DeploymentsResponse } from '../types';
 import type { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
 import { i18nPrefix, parentDeploymentLabelKey } from '../common';
 import { getGroupIdForBatchAction } from './common';
@@ -26,7 +25,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     function fetchEnvironments() {
         return new SearchActions(toolbox)
             .doListAllDeployments(filterRules, { _include: 'id' })
-            .then((response: DeploymentsResponse) => response.items.map(item => item.id));
+            .then(response => response.items.map(item => item.id));
     }
 
     function createDeploymentGroup(environments: string[], deploymentParameters: BlueprintDeployParams) {

@@ -52,7 +52,6 @@ Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, E
 
         return (
             <Graph
-                // @ts-expect-error Graph is not converted to TS yet
                 type={Graph.BAR_CHART_TYPE}
                 data={formattedData}
                 charts={charts}
