@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import SystemStatusIcon from '../../components/status/SystemStatusIcon';
 import type { ReduxState } from '../../reducers';
 
-const mapStateToProps = (state: { manager: ReduxState['manager'] }) => {
+const mapStateToProps = (state: ReduxState) => {
     const systemStatus = state.manager.clusterStatus.status;
     return {
         systemStatus,
