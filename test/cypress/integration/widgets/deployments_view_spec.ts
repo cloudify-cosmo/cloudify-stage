@@ -577,6 +577,7 @@ describe('Deployments View widget', () => {
             useDeploymentsViewWidget();
 
             cy.location('pathname').then(pathname => cy.visit(`${pathname}?filterId=csys-environment-filter`));
+            cy.waitUntilLoaded();
 
             cy.contains('button', 'csys-environment').should('be.visible');
             cy.get('button[title="Clear selected filter"]').should('be.visible');
