@@ -1,3 +1,4 @@
+import { castArray } from 'lodash';
 import type { OutputsTableProps } from './OutputsTable';
 import OutputsTable, { translateOutputsWidget } from './OutputsTable';
 import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
@@ -125,7 +126,7 @@ Stage.defineWidget<unknown, Data, OutputsTableConfiguration>({
 
         const formattedData: OutputsTableProps['data'] = {
             outputsAndCapabilities: data.outputsAndCapabilities,
-            deploymentId: toolbox.getContext().getValue('deploymentId'),
+            deploymentId: castArray(toolbox.getContext().getValue('deploymentId'))[0],
             blueprintId: toolbox.getContext().getValue('blueprintId')
         };
 
