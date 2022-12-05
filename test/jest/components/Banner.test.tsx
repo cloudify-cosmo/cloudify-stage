@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
 
 import React from 'react';
@@ -11,20 +10,20 @@ import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from 'utils/consts';
 import Banner from 'components/banner/Banner';
-import * as BasicComponents from 'components/basic';
 
 import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
 import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
+import type { ReduxStore } from 'configureStore';
+import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 
 describe('(Component) Banner', () => {
     let bannerComponent: ReactWrapper | null = null;
-    global.Stage = { Basic: BasicComponents };
 
     const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
-        const headerBanner = bannerComponent?.find('HeaderBanner');
+        const headerBanner: ReactWrapper<HeaderBannerProps> | undefined = bannerComponent?.find('HeaderBanner');
         expect(headerBanner?.props().productName).toBe(productName);
         expect(headerBanner?.props().productVersion).toBe(productVersion);
         expect(headerBanner?.props().licenseEdition).toBe(licenseEdition);
@@ -90,7 +89,7 @@ describe('(Component) Banner', () => {
                 }
             }
         });
-        createToolbox(store);
+        createToolbox(store as ReduxStore);
 
         const componentsTree = mount(
             <Provider store={store}>
