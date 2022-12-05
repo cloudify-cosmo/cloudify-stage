@@ -2,7 +2,7 @@
 /* eslint-disable jest/expect-expect */
 
 import React from 'react';
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import { isUndefined, isEmpty } from 'lodash';
 
 import { Provider } from 'react-redux';
@@ -20,41 +20,41 @@ import i18nInit from '../i18n';
 import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) Banner', () => {
-    let bannerComponent = null;
+    let bannerComponent: ReactWrapper | null = null;
     global.Stage = { Basic: BasicComponents };
 
     const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
-        const headerBanner = bannerComponent.find('HeaderBanner');
-        expect(headerBanner.props().productName).toBe(productName);
-        expect(headerBanner.props().productVersion).toBe(productVersion);
-        expect(headerBanner.props().licenseEdition).toBe(licenseEdition);
+        const headerBanner = bannerComponent?.find('HeaderBanner');
+        expect(headerBanner?.props().productName).toBe(productName);
+        expect(headerBanner?.props().productVersion).toBe(productVersion);
+        expect(headerBanner?.props().licenseEdition).toBe(licenseEdition);
     };
 
     const verifyTag = (isPresent = false, tag: string | null = null, isLinked = false) => {
-        const tagComponent = bannerComponent.find('LicenseLabel');
+        const tagComponent = bannerComponent?.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
-            const labelComponent = bannerComponent.find('Label');
+            const labelComponent = bannerComponent?.find('Label');
             if (isEmpty(tag)) {
                 expect(labelComponent).toHaveLength(0);
             } else {
-                expect(labelComponent.text()).toBe(tag);
-                const linkComponent = tagComponent.find('Link');
+                expect(labelComponent?.text()).toBe(tag);
+                const linkComponent = tagComponent?.find('Link');
                 expect(linkComponent).toHaveLength(isLinked ? 1 : 0);
                 if (isLinked) {
-                    expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.LICENSE);
+                    expect(linkComponent?.props().to).toBe(Consts.PAGE_PATH.LICENSE);
                 }
             }
         }
     };
 
     const verifyFullName = (fullName: string) => {
-        const headerComponent = bannerComponent.find('Header');
-        expect(headerComponent.text()).toBe(fullName);
+        const headerComponent = bannerComponent?.find('Header');
+        expect(headerComponent?.text()).toBe(fullName);
 
-        const linkComponent = bannerComponent.find('Link').first();
+        const linkComponent = bannerComponent?.find('Link').first();
         expect(linkComponent).toHaveLength(1);
-        expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
+        expect(linkComponent?.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
     const getLicenseEdition = (license: Partial<LicenseResponse>) => {
