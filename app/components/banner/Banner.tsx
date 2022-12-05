@@ -14,10 +14,10 @@ interface BannerProps {
 
 function Banner({ className = '' }: BannerProps) {
     const isCommunity =
-        useSelector((state: ReduxState) => state.manager.version.edition || Consts.EDITION.PREMIUM) ===
+        useSelector((state: ReduxState) => state.manager.version.edition ?? Consts.EDITION.PREMIUM) ===
         Consts.EDITION.COMMUNITY;
-    const licenseEdition = useSelector((state: ReduxState) => state.manager.license.data?.license_edition || '');
-    const productVersion = useSelector((state: ReduxState) => state.manager.version.version || '');
+    const licenseEdition = useSelector((state: ReduxState) => state.manager.license.data?.license_edition ?? '');
+    const productVersion = useSelector((state: ReduxState) => state.manager.version.version ?? '');
     const theme = useContext(ThemeContext) || {};
     const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
 
