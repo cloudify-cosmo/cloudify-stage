@@ -12,6 +12,12 @@
               "width": 12,
               "height": 24,
               "definition": "secrets"
+            },
+            {
+              "name": "Secret Providers Management",
+              "width": 12,
+              "height": 24,
+              "definition": "secretProviders"
             }
           ]
         },
