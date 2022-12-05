@@ -1422,18 +1422,18 @@
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
         "outputs": {
-          "name": "Deployment Outputs/Capabilities",
-          "description": "This widget shows the deployment outputs and capabilities",
-          "noData": "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.",
-          "exportButton": "Export to JSON",
-          "types": {
-            "output": "Output",
-            "capability": "Capability"
-          },
-          "columns": {
-            "name": "Name",
-            "type": "Type"
-          }
+            "name": "Deployment Outputs/Capabilities",
+            "description": "This widget shows the deployment outputs and capabilities",
+            "noData": "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.",
+            "exportButton": "Export to JSON",
+            "types": {
+                "output": "Output",
+                "capability": "Capability"
+            },
+            "columns": {
+                "name": "Name",
+                "type": "Type"
+            }
         },
         "secrets": {
             "columns": {
