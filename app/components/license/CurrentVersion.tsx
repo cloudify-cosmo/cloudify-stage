@@ -1,6 +1,6 @@
 import type { SemanticICONS } from 'semantic-ui-react';
 import i18n from 'i18next';
-import _ from 'lodash';
+import { join, compact, capitalize, startCase, isEmpty, map } from 'lodash';
 import React from 'react';
 
 import { Icon, Header, Message, Segment, Table } from '../basic';
@@ -27,9 +27,9 @@ interface Field {
 export default function CurrentVersion({ version }: CurrentVersionProps) {
     const extendedVersion: ExtendedVersion = {
         ...version,
-        distro: _.join([version.distribution, version.distro_release], ' '),
-        full_version: `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
-         (${_.capitalize(version.edition)})`
+        distro: join([version.distribution, version.distro_release], ' '),
+        full_version: `${join(compact([version.version, version.build, version.date, version.commit]), ' ')}
+         (${capitalize(version.edition)})`
     };
 
     const fields: Field[] = [
@@ -38,16 +38,16 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
             name: 'distro',
             header: i18n.t('licenseManagement.distribution', 'Distribution'),
             icon: 'linux',
-            format: _.startCase,
-            hide: _.isEmpty
+            format: startCase,
+            hide: isEmpty
         }
     ];
 
-    return !_.isEmpty(version) ? (
+    return !isEmpty(version) ? (
         <Segment>
             <Table basic="very" size="large" celled>
                 <Table.Body>
-                    {_.map(fields, field => {
+                    {map(fields, field => {
                         const value = extendedVersion[field.name as keyof ExtendedVersion];
 
                         return !!field.hide && field.hide(value) ? null : (
