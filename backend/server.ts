@@ -1,6 +1,5 @@
 import type { Server } from 'http';
 import app from './app';
-import { SERVER_HOST, SERVER_PORT } from './consts';
 import DBConnection from './db/Connection';
 import { init as initWidgetsHandler } from './handler/WidgetsHandler';
 import { init as initTemplatesHandler } from './handler/templates';
@@ -8,6 +7,7 @@ import { getLogger } from './handler/LoggerHandler';
 import { isDevelopmentOrTest } from './utils';
 
 import { init, getMode } from './serverSettings';
+import { getConfig } from './config';
 
 const logger = getLogger('Server');
 
@@ -21,14 +21,15 @@ export default DBConnection.init()
     .then(() => {
         logger.info('Widgets and templates data initialized successfully.');
         return new Promise((resolve, reject) => {
-            const server = app.listen(SERVER_PORT, SERVER_HOST);
+            const { host, port } = getConfig().app.backend;
+            const server = app.listen(port, host);
             server.on('error', reject);
             server.on('listening', () => {
                 logger.info(`Server started in mode ${getMode()}`);
                 if (isDevelopmentOrTest) {
                     logger.info('Server started for development');
                 }
-                logger.info(`Stage runs on ${SERVER_HOST}:${SERVER_PORT}!`);
+                logger.info(`Stage runs on ${host}:${port}!`);
                 resolve(server);
             });
         });

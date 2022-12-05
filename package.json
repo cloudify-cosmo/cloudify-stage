@@ -32,7 +32,7 @@
         "cy:open": "cypress open --e2e --browser electron",
         "cy:open-ct": "cypress open --component --browser electron",
         "coverageCheck": "nyc check-coverage",
-        "devServer": "cross-env NODE_ENV=development ts-node devServer.ts",
+        "devServer": "cross-env NODE_ENV=development ts-node -O {\\\"resolveJsonModule\\\":true} devServer.ts",
         "docWidgets": "node scripts/updateReadmes.js",
         "e2e": "cypress run",
         "generate:icons-font": "fontello-cli open --config ./semantic-ui/fontello.config.json",
