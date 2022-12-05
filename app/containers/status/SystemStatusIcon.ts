@@ -1,12 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import SystemStatusIcon from '../../components/status/SystemStatusIcon';
+import type { ReduxState } from '../../reducers';
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: ReduxState) => {
+    const systemStatus = state.manager.clusterStatus.status;
     return {
-        systemStatus: _.get(state.manager, 'clusterStatus.status'),
-        maintenanceStatus: _.get(state.manager, 'maintenance')
+        systemStatus,
+        maintenanceStatus: state.manager.maintenance
     };
 };
 
