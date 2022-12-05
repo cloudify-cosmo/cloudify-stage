@@ -17,7 +17,7 @@ interface CurrentVersionProps {
 }
 
 interface Field {
-    name: string;
+    name: keyof ExtendedVersion;
     header: string;
     icon: SemanticICONS;
     format: (string?: string) => string;
