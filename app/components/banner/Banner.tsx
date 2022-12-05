@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -7,17 +6,18 @@ import { HeaderBanner } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import Consts from '../../utils/consts';
 import LicenseLabel from '../LicenseLabel';
+import type { ReduxState } from '../../reducers';
 
 interface BannerProps {
     className?: string;
 }
 
 function Banner({ className = '' }: BannerProps) {
-    const isCommunity = useSelector(
-        state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
-    );
-    const licenseEdition = useSelector(state => _.get(state, 'manager.license.data.license_edition', ''));
-    const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
+    const isCommunity =
+        useSelector((state: ReduxState) => state.manager.version.edition || Consts.EDITION.PREMIUM) ===
+        Consts.EDITION.COMMUNITY;
+    const licenseEdition = useSelector((state: ReduxState) => state.manager.license.data?.license_edition || '');
+    const productVersion = useSelector((state: ReduxState) => state.manager.version.version || '');
     const theme = useContext(ThemeContext) || {};
     const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
 
