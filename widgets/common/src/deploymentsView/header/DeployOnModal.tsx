@@ -2,7 +2,6 @@ import type { FunctionComponent } from 'react';
 import type { WorkflowParameters } from '../../executeWorkflow';
 import GenericDeployModal from '../../deployModal/GenericDeployModal';
 import type { FilterRule } from '../../filters/types';
-import type { DeploymentsResponse } from '../types';
 import type { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
 import { i18nPrefix, parentDeploymentLabelKey } from '../common';
 import { getGroupIdForBatchAction } from './common';
@@ -18,7 +17,7 @@ interface DeployOnModalProps {
     onHide: () => void;
 }
 
-const t = Stage.Utils.getT(`${i18nPrefix}.header`);
+const tModal = Stage.Utils.getT(`${i18nPrefix}.header.bulkActions.deployOn.modal`);
 
 const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, toolbox, onHide }) => {
     const [executionStarted, setExecutionStarted] = Stage.Hooks.useBoolean();
@@ -26,7 +25,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
     function fetchEnvironments() {
         return new SearchActions(toolbox)
             .doListAllDeployments(filterRules, { _include: 'id' })
-            .then((response: DeploymentsResponse) => response.items.map(item => item.id));
+            .then(response => response.items.map(item => item.id));
     }
 
     function createDeploymentGroup(environments: string[], deploymentParameters: BlueprintDeployParams) {
@@ -69,25 +68,38 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
             open
             onHide={onHide}
             i18nHeaderKey={`${i18nPrefix}.header.bulkActions.deployOn.modal.header`}
-            deployValidationMessage={t('bulkActions.deployOn.modal.steps.validatingData')}
-            deployAndInstallSteps={[
+            showDeployButton
+            deployValidationMessage={tModal('deploySteps.validatingData')}
+            deploySteps={[
                 {
-                    message: t('bulkActions.deployOn.modal.steps.fetchingEnvironments'),
+                    message: tModal('deploySteps.fetchingEnvironments'),
                     executeStep: fetchEnvironments
                 },
                 {
-                    message: t('bulkActions.deployOn.modal.steps.creatingDeployments'),
+                    message: tModal('deploySteps.creatingDeployments'),
+                    executeStep: createDeploymentGroup
+                },
+                { executeStep: closeModal }
+            ]}
+            deployAndInstallValidationMessage={tModal('deployAndInstallSteps.validatingData')}
+            deployAndInstallSteps={[
+                {
+                    message: tModal('deployAndInstallSteps.fetchingEnvironments'),
+                    executeStep: fetchEnvironments
+                },
+                {
+                    message: tModal('deployAndInstallSteps.creatingDeployments'),
                     executeStep: createDeploymentGroup
                 },
                 {
-                    message: t('bulkActions.deployOn.modal.steps.installingDeployments'),
+                    message: tModal('deployAndInstallSteps.installingDeployments'),
                     executeStep: startInstallWorkflow
                 },
                 { executeStep: setExecutionStarted }
             ]}
             showDeploymentNameInput
-            deploymentNameLabel={t('bulkActions.deployOn.modal.inputs.name.label')}
-            deploymentNameHelp={t('bulkActions.deployOn.modal.inputs.name.help')}
+            deploymentNameLabel={tModal('inputs.name.label')}
+            deploymentNameHelp={tModal('inputs.name.help')}
         />
     );
 };

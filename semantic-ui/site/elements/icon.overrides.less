@@ -1,0 +1,18 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+/* NOTE: This styling is required for custom cloudify icons */
+
+[class^='cloudify-']:before,
+[class*=' cloudify-']:before {
+    font-family: 'cloudify-icons';
+}
+
+/* NOTE: While updating custom cloudify icons, override classes below with the content of the generated cloudify-icons-codes.css file */
+
+.cloudify-stack:before { content: '\e800'; } /* '' */
+.cloudify-dashboard:before { content: '\e801'; } /* '' */
+.cloudify-cogs-connected:before { content: '\e802'; } /* '' */
+.cloudify-file-logs:before { content: '\e803'; } /* '' */
+.cloudify-user-cog:before { content: '\e804'; } /* '' */

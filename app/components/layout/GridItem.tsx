@@ -11,6 +11,7 @@ interface GridItemProps {
     y?: number;
     width?: number;
     height?: number;
+    maximized?: boolean;
 }
 
 export default class GridItem extends Component<GridItemProps> {

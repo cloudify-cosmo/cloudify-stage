@@ -3,12 +3,13 @@ import { push } from 'connected-react-router';
 import _ from 'lodash';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
-import type { SimpleWidgetObj } from '../page';
+import type { SimpleWidgetObj, PageDefinition } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
-import type { TemplatePageDefinition } from '../../reducers/templatesReducer';
+import type { PutPagesRequestBody } from '../../../backend/routes/Templates.types';
 
+export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 type Page = TemplatePageDefinition & { id: string; oldId?: string };
 
 export type AddPageAction = PayloadAction<Page, ActionType.ADD_TEMPLATE_PAGE>;
@@ -57,12 +58,12 @@ export function persistPage(page: Page): ReduxThunkAction<Promise<AddPageAction>
 
         const body = _(page).pick('id', 'oldId', 'name', 'icon', 'layout').cloneDeep();
 
-        // @ts-ignore TODO(RD-5591): Seems like it's intentional here to end up with non SimpleWidgetObj type
+        // @ts-ignore It's intentional to end up with non Partial<SimpleWidgetObj> type
         forEachWidget(body, prepareWidgetData);
 
         const internal = new Internal(getState().manager);
         return internal
-            .doPut('/templates/pages', { body })
+            .doPut<never, PutPagesRequestBody>('/templates/pages', { body })
             .then(() => {
                 dispatch(removePage(page.id));
                 if (page.oldId && page.oldId !== page.id) {

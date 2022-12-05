@@ -21,8 +21,11 @@ describe('User group management widget', () => {
     it('should allow to manage a group', () => {
         cy.log('Creating new group');
         cy.get('.userGroupsWidget .add').click();
-        cy.get('input[name=groupName]').type(groupName);
-        cy.get('button.positive').click();
+
+        cy.get('.modal').within(() => {
+            cy.get('input[name=groupName]').type(groupName);
+            cy.clickButton('Add');
+        });
 
         cy.log('Verifying Admin checkbox is working');
         cy.contains('tr', groupName).within(() => {
@@ -52,8 +55,9 @@ describe('User group management widget', () => {
         cy.contains('tr', groupName).contains('.label.blue', '1');
 
         cy.log('Verifying group users and tenants can be removed');
-        cy.contains('tr', groupName).click();
+        cy.contains('tr td', groupName).click();
         cy.get('.remove').click({ multiple: true });
+
         cy.contains('No users available');
         cy.contains('No tenants available');
         cy.contains('tr', groupName).within(() => {

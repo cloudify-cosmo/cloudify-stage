@@ -5,10 +5,10 @@ import log from 'loglevel';
 import { stringify } from 'query-string';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
-import type { DrilldownContext } from '../reducers/drilldownContextReducer';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import Internal from '../utils/Internal';
 import { clearContext } from './context';
+import type { DrilldownContext } from './drilldownContext';
 import { popDrilldownContext } from './drilldownContext';
 import type { PageDefinition } from './page';
 import { addLayoutToPage } from './page';
@@ -16,7 +16,8 @@ import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { clearWidgetsData } from './widgetData';
 import { minimizeTabWidgets } from './widgets';
-import type { TemplatePageDefinition } from '../reducers/templatesReducer';
+import type { TemplatePageDefinition } from './templateManagement/pages';
+import type { LayoutPageGroupDefinition } from '../utils/layoutDefinitionsLoader';
 
 export enum InsertPosition {
     Before,
@@ -34,9 +35,11 @@ export interface PageGroup {
 
 export type PageMenuItem = PageDefinition | PageGroup;
 
-export type AddPageAction = PayloadAction<{ page: Partial<PageDefinition>; newPageId: string }, ActionType.ADD_PAGE>;
-// TODO(RD-5591): Fix any
-export type AddPageGroupAction = PayloadAction<{ pageGroup: any; id: string }, ActionType.ADD_PAGE_GROUP>;
+type PageToAdd = Partial<PageDefinition> & Pick<PageDefinition, 'name'>;
+type PageGroupToAdd = Partial<LayoutPageGroupDefinition> & Pick<LayoutPageGroupDefinition, 'name'>;
+
+export type AddPageAction = PayloadAction<{ page: PageToAdd; newPageId: string }, ActionType.ADD_PAGE>;
+export type AddPageGroupAction = PayloadAction<{ pageGroup: PageGroupToAdd; id: string }, ActionType.ADD_PAGE_GROUP>;
 export type AddPageToGroupAction = PayloadAction<{ pageGroupId: string; pageId: string }, ActionType.ADD_PAGE_TO_GROUP>;
 export type CreateDrilldownPageAction = PayloadAction<
     { page: TemplatePageDefinition; newPageId: string },
@@ -66,14 +69,14 @@ export type PageMenuAction =
     | RemovePageMenuItemAction
     | ReorderPageMenuAction;
 
-export function createPage(page: Partial<PageDefinition>, newPageId: string): AddPageAction {
+export function createPage(page: PageToAdd, newPageId: string): AddPageAction {
     return {
         type: ActionType.ADD_PAGE,
         payload: { page, newPageId }
     };
 }
 
-function createPageGroup(pageGroup: any, id: string): AddPageGroupAction {
+function createPageGroup(pageGroup: PageGroupToAdd, id: string): AddPageGroupAction {
     return {
         type: ActionType.ADD_PAGE_GROUP,
         payload: { pageGroup, id }

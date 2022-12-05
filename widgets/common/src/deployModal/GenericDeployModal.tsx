@@ -1,6 +1,7 @@
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
+import { isEmpty } from 'lodash';
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
@@ -601,6 +602,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             showDeploymentNameInput,
             showDeployButton,
             showSitesInput,
+            deploySteps,
             deploymentNameLabel,
             deploymentNameHelp,
             blueprintFilterRules
@@ -844,7 +846,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
                 <DeployModalActions
                     loading={loading}
-                    showDeployButton={showDeployButton}
+                    showDeployButton={showDeployButton && !isEmpty(deploySteps)}
                     onCancel={this.onCancel}
                     onInstall={this.onDeployAndInstall}
                     onDeploy={this.onDeploy}

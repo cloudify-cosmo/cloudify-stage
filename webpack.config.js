@@ -17,8 +17,8 @@ const CONTEXT_PATH = '/console';
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
     const isDevelopment = argv.mode === 'development';
-    const isSingleWidgetBuild = !!argv.widget;
-    const widgetName = argv.widget;
+    const isSingleWidgetBuild = !!env.widget;
+    const widgetName = env.widget;
     const mode = isProduction ? 'production' : 'development';
     const context = path.join(__dirname);
     const devtool = isProduction ? undefined : 'eval-source-map';
@@ -76,6 +76,25 @@ module.exports = (env, argv) => {
 
                         options: {
                             importLoaders: 1
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader'
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            lessOptions: {
+                                math: 'always'
+                            }
                         }
                     }
                 ]
@@ -263,7 +282,11 @@ module.exports = (env, argv) => {
                 alias: {
                     // Necessary to use the same version of React when developing components locally
                     // @see https://github.com/facebook/react/issues/13991#issuecomment-435587809
-                    react: `${__dirname}/node_modules/react`
+                    react: `${__dirname}/node_modules/react`,
+                    // Necessary to map semantic react ui theming paths
+                    // @see "Configuring Webpack for theming" https://react.semantic-ui.com/theming/
+                    '../../theme.config$': `${__dirname}/semantic-ui/theme.config`,
+                    '../semantic-ui/site': `${__dirname}/semantic-ui/site`
                 },
                 fallback: {
                     // Required by the cypress, as from the webpack@5.x.x is not including node.js core modules by default

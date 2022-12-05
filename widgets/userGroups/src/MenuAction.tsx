@@ -1,19 +1,14 @@
 import type { FunctionComponent } from 'react';
+import type { UserGroup } from './widget.types';
 
 const { PopupMenu, Menu } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.menu');
 
-interface Item {
-    name: string;
-    tenants: unknown;
-    users: string[];
-}
-
 interface MenuActionProps {
-    item: Item;
-    onDelete: (item: Item) => void;
-    onEditTenants: (item: Item) => void;
-    onEditUsers: (item: Item) => void;
+    item: UserGroup;
+    onDelete: (item: UserGroup) => void;
+    onEditTenants: (item: UserGroup) => void;
+    onEditUsers: (item: UserGroup) => void;
 }
 
 const MenuAction: FunctionComponent<MenuActionProps> = ({ item, onEditUsers, onEditTenants, onDelete }) => {

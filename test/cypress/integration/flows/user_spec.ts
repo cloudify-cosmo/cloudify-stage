@@ -12,11 +12,11 @@ describe('User flow', () => {
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
             cy.get('textarea').type(secretName);
-            cy.get('button.positive').click();
+            cy.clickButton('Create');
         });
     }
 
-    it.skip('installs deployment from scratch', () => {
+    it('installs deployment from scratch', () => {
         cy.deleteDeployments(resourceName, true).deleteBlueprints(resourceName, true);
         cy.deletePlugins().deleteSecrets('some_key_').deleteSecrets('openstack_config__lab1_tenantA');
 
@@ -66,7 +66,7 @@ describe('User flow', () => {
         cy.get('#gridContent > .nodeContainer').should('have.length', 3);
     });
 
-    it('uploads blueprint using first journey buttons', () => {
+    it.skip('uploads blueprint using first journey buttons', () => {
         cy.killRunningExecutions().deleteDeployments('', true);
         cy.visitPage('Dashboard');
 

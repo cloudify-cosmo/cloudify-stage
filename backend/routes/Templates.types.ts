@@ -24,7 +24,7 @@ export type PostPageGroupsRequestBody = CreatePageGroupData;
 
 export type PutPageGroupsRequestBody = UpdatePageGroupData;
 
-export type GetPagesResponse = (Page | null)[];
+export type GetPagesResponse = Page[];
 
 export type PostPagesRequestBody = CreatePageData;
 

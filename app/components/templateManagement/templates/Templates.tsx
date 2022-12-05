@@ -1,19 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
 import PageMenuItemsList from './PageMenuItemsList';
 import RoleList from './RoleList';
 import TenantList from './TenantList';
+import type { CreateTemplateModalProps } from './CreateTemplateModal';
 import CreateTemplateModal from './CreateTemplateModal';
 import Const from '../../../utils/consts';
 import { Button, DataTable, Header, Icon, Label, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 
+import type { PageItem, Template as BackendTemplate } from '../../../../backend/handler/templates/types';
+import type { TenantsData } from '../../../reducers/managerReducer/tenantsReducer';
+
 const tTemplates = StageUtils.getT('templates');
 const tTemplateManagement = StageUtils.composeT(tTemplates, 'templateManagement');
 
+export type Template = BackendTemplate & { pages: PageItem[]; selected: boolean };
+
+export interface TemplatesProps {
+    onCreateTemplate: CreateTemplateModalProps['onCreateTemplate'];
+    onDeleteTemplate: (template: Template) => void;
+    onModifyTemplate: (
+        item: Template,
+        templateName: string,
+        templateRoles: string[],
+        templateTenants: string[],
+        templatePages: PageItem[]
+    ) => Promise<void>;
+    onRemoveTemplatePage: (template: Template, pageMenuItem: PageItem) => Promise<void>;
+    onRemoveTemplateRole: (template: Template, role: string) => Promise<void>;
+    onRemoveTemplateTenant: (template: Template, tenant: string) => Promise<void>;
+    onSelectTemplate: (template: Template) => void;
+    templates: Template[];
+    tenants: TenantsData;
+}
 export default function Templates({
     onCreateTemplate,
     onDeleteTemplate,
@@ -22,9 +41,9 @@ export default function Templates({
     onRemoveTemplateRole,
     onRemoveTemplateTenant,
     onSelectTemplate,
-    templates,
-    tenants
-}) {
+    templates = [],
+    tenants = { items: [] }
+}: TemplatesProps) {
     return (
         <Segment color="blue">
             <Header dividing as="h5">
@@ -39,21 +58,21 @@ export default function Templates({
                 <DataTable.Column label={tTemplateManagement('table.updatedBy')} width="15%" />
                 <DataTable.Column width="10%" />
 
-                {templates.map(item => {
-                    const data = item.data || { roles: [], tenants: [] };
+                {templates.map(template => {
+                    const data = template.data || { roles: [], tenants: [] };
                     const tenantsCount =
                         _.indexOf(data.tenants, Const.DEFAULT_ALL) >= 0 ? _.size(tenants.items) : _.size(data.tenants);
 
                     return (
-                        <DataTable.RowExpandable key={item.id} expanded={item.selected}>
+                        <DataTable.RowExpandable key={template.id} expanded={template.selected}>
                             <DataTable.Row
-                                key={item.id}
-                                selected={item.selected}
-                                onClick={() => onSelectTemplate(item)}
+                                key={template.id}
+                                selected={template.selected}
+                                onClick={() => onSelectTemplate(template)}
                             >
                                 <DataTable.Data>
                                     <Header as="a" size="small">
-                                        {item.id}
+                                        {template.id}
                                     </Header>
                                 </DataTable.Data>
                                 <DataTable.Data>
@@ -70,29 +89,35 @@ export default function Templates({
                                     </Label>
                                 </DataTable.Data>
                                 <DataTable.Data>
-                                    {item.updatedAt && StageUtils.Time.formatLocalTimestamp(item.updatedAt)}
+                                    {template.updatedAt && StageUtils.Time.formatLocalTimestamp(template.updatedAt)}
                                 </DataTable.Data>
-                                <DataTable.Data>{item.updatedBy}</DataTable.Data>
+                                <DataTable.Data>{template.updatedBy}</DataTable.Data>
                                 <DataTable.Data className="center aligned rowActions">
-                                    {item.custom && (
+                                    {template.custom && (
                                         <div>
                                             <PopupConfirm
-                                                trigger={<Icon name="remove" link onClick={e => e.stopPropagation()} />}
+                                                trigger={
+                                                    <Icon
+                                                        name="remove"
+                                                        link
+                                                        onClick={(event: Event) => event.stopPropagation()}
+                                                    />
+                                                }
                                                 content={tTemplateManagement('removeConfirm')}
-                                                onConfirm={() => onDeleteTemplate(item)}
+                                                onConfirm={() => onDeleteTemplate(template)}
                                             />
                                             <CreateTemplateModal
-                                                initialTemplateName={item.id}
-                                                initialPageMenuItems={item.pages}
+                                                initialTemplateName={template.id}
+                                                initialPageMenuItems={template.pages}
                                                 initialRoles={data.roles}
                                                 initialTenants={data.tenants}
-                                                onCreateTemplate={(...args) => onModifyTemplate(item, ...args)}
+                                                onCreateTemplate={(...args) => onModifyTemplate(template, ...args)}
                                                 trigger={
                                                     <Icon
                                                         name="edit"
                                                         link
                                                         className="updateTemplateIcon"
-                                                        onClick={e => e.stopPropagation()}
+                                                        onClick={(event: Event) => event.stopPropagation()}
                                                     />
                                                 }
                                             />
@@ -101,24 +126,24 @@ export default function Templates({
                                 </DataTable.Data>
                             </DataTable.Row>
 
-                            <DataTable.DataExpandable key={item.id}>
+                            <DataTable.DataExpandable key={template.id}>
                                 <Segment.Group horizontal>
                                     <PageMenuItemsList
-                                        pages={item.pages}
-                                        custom={item.custom}
-                                        onDelete={page => onRemoveTemplatePage(item, page)}
+                                        pages={template.pages}
+                                        custom={template.custom}
+                                        onDelete={page => onRemoveTemplatePage(template, page)}
                                         style={{ width: '33%' }}
                                     />
                                     <RoleList
                                         roles={data.roles}
-                                        custom={item.custom}
-                                        onDelete={role => onRemoveTemplateRole(item, role)}
+                                        custom={template.custom}
+                                        onDelete={role => onRemoveTemplateRole(template, role)}
                                         style={{ width: '33%' }}
                                     />
                                     <TenantList
                                         tenants={data.tenants}
-                                        custom={item.custom}
-                                        onDelete={tenant => onRemoveTemplateTenant(item, tenant)}
+                                        custom={template.custom}
+                                        onDelete={tenant => onRemoveTemplateTenant(template, tenant)}
                                         style={{ width: '33%' }}
                                     />
                                 </Segment.Group>
@@ -144,39 +169,3 @@ export default function Templates({
         </Segment>
     );
 }
-
-Templates.propTypes = {
-    onCreateTemplate: PropTypes.func,
-    onDeleteTemplate: PropTypes.func,
-    onModifyTemplate: PropTypes.func,
-    onRemoveTemplatePage: PropTypes.func,
-    onRemoveTemplateRole: PropTypes.func,
-    onRemoveTemplateTenant: PropTypes.func,
-    onSelectTemplate: PropTypes.func,
-    templates: PropTypes.arrayOf(
-        PropTypes.shape({
-            custom: PropTypes.bool,
-            data: PropTypes.shape({
-                roles: PropTypes.arrayOf(PropTypes.string),
-                tenants: PropTypes.arrayOf(PropTypes.string)
-            }),
-            id: PropTypes.string,
-            pages: PropTypes.arrayOf(PropTypes.shape({})),
-            updatedAt: PropTypes.string,
-            updatedBy: PropTypes.string
-        })
-    ),
-    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.string) })
-};
-
-Templates.defaultProps = {
-    onCreateTemplate: _.noop,
-    onDeleteTemplate: _.noop,
-    onModifyTemplate: _.noop,
-    onRemoveTemplatePage: _.noop,
-    onRemoveTemplateRole: _.noop,
-    onRemoveTemplateTenant: _.noop,
-    onSelectTemplate: _.noop,
-    templates: [],
-    tenants: { items: [] }
-};

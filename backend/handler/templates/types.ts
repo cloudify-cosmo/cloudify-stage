@@ -77,7 +77,7 @@ export interface PageGroupFileContent<Icon = string> extends CommonFileContent {
     pages: string[];
 }
 
-export type PageGroup<Icon = string> = Required<PageGroupFileContent<Icon>>;
+export interface PageGroup<Icon = string> extends Required<PageGroupFileContent<Icon>>, CommonIdentityData {}
 
 export interface CreatePageGroupData {
     id: string;
@@ -108,7 +108,7 @@ export interface CreatePageData {
 }
 
 export interface UpdatePageData<WD = WidgetDefinition> extends Omit<CreatePageData, 'layout'> {
-    oldId: string;
+    oldId?: string;
     icon?: string;
     layout: LayoutSection<WD>[];
 }

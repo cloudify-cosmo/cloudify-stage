@@ -58,7 +58,6 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 totalSize={data.total}
                 pageSize={widget.configuration.pageSize}
                 searchable
-                sortable
             >
                 <DataTable.Column width="60%" label={tColumn('name')} name="id" />
                 <DataTable.Column width="40%" label={tColumn('creator')} name="created_by" />
@@ -70,7 +69,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         <DataTable.Data style={{ wordBreak: 'break-word' }}>{filter.id}</DataTable.Data>
                         <DataTable.Data>{filter.created_by}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(filter.created_at)}</DataTable.Data>
-                        <DataTable.Data className="center aligned">
+                        <DataTable.Data>
                             <Checkbox checked={filter.is_system_filter} disabled />
                         </DataTable.Data>
                         <DataTable.Data>

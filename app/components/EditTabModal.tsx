@@ -36,13 +36,13 @@ export default function EditTabModal({ tab, trigger, onTabUpdate }) {
             </Modal.Content>
 
             <Modal.Actions>
+                <CancelButton onClick={unsetOpen} />
                 <ApproveButton
                     onClick={() => {
                         onTabUpdate(name, isDefault);
                         unsetOpen();
                     }}
                 />
-                <CancelButton onClick={unsetOpen} />
             </Modal.Actions>
         </Modal>
     );

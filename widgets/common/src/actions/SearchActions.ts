@@ -1,3 +1,5 @@
+import type { Deployment } from '../deploymentsView/types';
+import type { Workflow } from '../executeWorkflow';
 import type { FilterRule } from '../filters/types';
 
 type ResourceName = 'blueprints' | 'deployments' | 'workflows';
@@ -23,8 +25,11 @@ export default class SearchActions {
             .doPost(`/searches/${resourceName}`, { params, body: { filter_rules: filterRules } });
     }
 
-    private doListAll(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
-        return this.toolbox.getManager().doPostFull(`/searches/${resourceName}`, params, { filter_rules: filterRules });
+    private doListAll<ResponseBody>(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
+        return this.toolbox.getManager().doPostFull<ResponseBody>(`/searches/${resourceName}`, {
+            filter_rules: filterRules,
+            params
+        });
     }
 
     static searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {
@@ -45,7 +50,7 @@ export default class SearchActions {
     }
 
     doListAllDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doListAll('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
+        return this.doListAll<Deployment>('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
     }
 
     doListBlueprints(filterRules: FilterRule[], params?: ListBlueprintsParams) {
@@ -53,6 +58,6 @@ export default class SearchActions {
     }
 
     doListAllWorkflows(filterRules: FilterRule[], params?: Params) {
-        return this.doListAll('workflows', filterRules, params);
+        return this.doListAll<Workflow>('workflows', filterRules, params);
     }
 }
