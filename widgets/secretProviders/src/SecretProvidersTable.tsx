@@ -37,8 +37,8 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 sortColumn={sortColumn}
                 sortAscending={sortAscending}
             >
-                <DataTable.Column label={t('columns.name')} name={dataSortingKeys.value} />
-                <DataTable.Column label={t('columns.type')} name={dataSortingKeys.description} />
+                <DataTable.Column label={t('columns.name')} name={dataSortingKeys.name} />
+                <DataTable.Column label={t('columns.type')} name={dataSortingKeys.type} />
                 <DataTable.Column label={t('columns.dateCreated')} name={dataSortingKeys.createdAt} width="156px" />
                 <DataTable.Column label={t('columns.dateUpdated')} name={dataSortingKeys.updatedAt} width="156px" />
                 <DataTable.Column label="" width="10%" />
