@@ -1,11 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
-
 import StageUtils from './stageUtils';
 
 export default class StyleLoader {
-    constructor(stylePath) {
+    path: string;
+
+    constructor(stylePath: string) {
         this.path = StageUtils.Url.url(stylePath);
-        this.loaded = false;
     }
 
     load() {
@@ -15,8 +14,7 @@ export default class StyleLoader {
             styleObj.setAttribute('type', 'text/css');
             styleObj.setAttribute('href', this.path);
             styleObj.onload = () => {
-                this.loaded = true;
-                resolve();
+                resolve(undefined);
             };
 
             document.getElementsByTagName('head')[0].appendChild(styleObj);

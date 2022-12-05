@@ -35,7 +35,7 @@ export function resetPages(): ReduxThunkAction<
 > {
     return dispatch => {
         const autoSaver = UserAppDataAutoSaver.getAutoSaver();
-        autoSaver.stop();
+        autoSaver?.stop();
         // First clear the pages
         dispatch(setAppLoading(true));
         dispatch(setPages([]));
@@ -52,8 +52,10 @@ export function resetPages(): ReduxThunkAction<
                 throw err;
             })
             .finally(() => {
-                autoSaver.initFromStore();
-                autoSaver.start();
+                if (autoSaver) {
+                    autoSaver.initFromStore();
+                    autoSaver.start();
+                }
             });
     };
 }

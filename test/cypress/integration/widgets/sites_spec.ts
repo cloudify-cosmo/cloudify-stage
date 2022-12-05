@@ -39,17 +39,18 @@ describe('Sites Management', () => {
         cy.get('.actionField > .ui').as('createSiteButton');
         cy.get('@createSiteButton').click();
 
-        cy.get('.required > .field > .ui > input').as('name');
-        cy.get('form :nth-child(2) > .field > .ui > input').as('location');
-        cy.get('.modal > :nth-child(1) > .green').as('visibility');
+        cy.get('.modal').within(() => {
+            cy.get('.required > .field > .ui > input').as('name');
+            cy.get('form :nth-child(2) > .field > .ui > input').as('location');
 
-        cy.get('@name').type(site.name).should('have.value', site.name);
+            cy.get('@name').type(site.name).should('have.value', site.name);
 
-        if (site.location) {
-            cy.get('@location').type(site.location).should('have.value', site.location);
-        }
+            if (site.location) {
+                cy.get('@location').type(site.location).should('have.value', site.location);
+            }
 
-        cy.clickButton('Create');
+            cy.clickButton('Create');
+        });
     };
 
     const createValidSite = (site: Site) => {
@@ -142,14 +143,16 @@ describe('Sites Management', () => {
         // use map to specify location
         cy.get('form :nth-child(2) > .field > .ui > button').click();
         cy.get('.leaflet-container').click();
-        const location = '0.013732910024768903, -0.8789062500000001';
+        const location = '0.05218505137865288, -0.8789062500000001';
         cy.get('form :nth-child(2) > .field > .ui > input').should('have.value', location);
 
-        // change visibility
-        cy.get('.modal > :nth-child(1) > .green').click();
+        cy.get('.modal').within(() => {
+            // change visibility
+            cy.get('.header .icon.green').click();
 
-        // submit
-        cy.clickButton('Create');
+            // submit
+            cy.clickButton('Create');
+        });
 
         verifySiteRow(1, { name, location, visibility: 'private' });
     });
@@ -187,7 +190,7 @@ describe('Sites Management', () => {
     });
 
     it('update a site with location changed with map', () => {
-        const location = '32.11282228909443, 33.92578125000001';
+        const location = '32.145385562629315, 33.92578125000001';
 
         cy.createSite(siteWithLocation);
         refreshSiteManagementPage();
