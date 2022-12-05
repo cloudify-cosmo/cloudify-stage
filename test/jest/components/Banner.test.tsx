@@ -15,19 +15,20 @@ import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
+import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) Banner', () => {
     let bannerComponent = null;
     global.Stage = { Basic: BasicComponents };
 
-    const verifyProps = (isExpired, isTrial, productName, productVersion, licenseEdition) => {
+    const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
         const headerBanner = bannerComponent.find('HeaderBanner');
         expect(headerBanner.props().productName).toBe(productName);
         expect(headerBanner.props().productVersion).toBe(productVersion);
         expect(headerBanner.props().licenseEdition).toBe(licenseEdition);
     };
 
-    const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
+    const verifyTag = (isPresent = false, tag: string | null = null, isLinked = false) => {
         const tagComponent = bannerComponent.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
@@ -45,7 +46,7 @@ describe('(Component) Banner', () => {
         }
     };
 
-    const verifyFullName = fullName => {
+    const verifyFullName = (fullName: string) => {
         const headerComponent = bannerComponent.find('Header');
         expect(headerComponent.text()).toBe(fullName);
 
@@ -54,15 +55,15 @@ describe('(Component) Banner', () => {
         expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
-    const getLicenseEdition = license => {
+    const getLicenseEdition = (license: LicenseResponse) => {
         return license.license_edition || '';
     };
 
-    const getLicenseState = (data, isRequired, status) => {
+    const getLicenseState = (data: LicenseResponse, isRequired: boolean, status) => {
         return { data, isRequired, status };
     };
 
-    const getWhiteLabel = showVersionDetails => {
+    const getWhiteLabel = (showVersionDetails?: boolean) => {
         return {
             showVersionDetails: _.isUndefined(showVersionDetails) ? true : showVersionDetails
         };
@@ -104,7 +105,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, null);
         });
@@ -119,7 +120,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify 4.6');
             verifyTag(true, null);
         });
@@ -130,7 +131,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, true, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Trial', true);
         });
@@ -141,7 +142,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel(true);
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(true, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Expired', true);
         });
@@ -152,7 +153,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(true, true, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Expired', true);
         });
@@ -165,7 +166,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.community, whiteLabel);
 
-            verifyProps(false, false, 'Cloudify', '19.02.22~community', edition);
+            verifyProps('Cloudify', '19.02.22~community', edition);
             verifyFullName('Cloudify');
             verifyTag(true, 'Community', false);
         });
@@ -179,7 +180,7 @@ describe('(Component) Banner', () => {
 
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(true, true, productName, '4.6', edition);
+            verifyProps(productName, '4.6', edition);
             verifyFullName('VNFM');
             verifyTag(false, null);
         });
@@ -192,7 +193,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '4.6.4-dev1' }, whiteLabel);
 
-            verifyProps(false, true, 'Cloudify', '4.6.4-dev1', edition);
+            verifyProps('Cloudify', '4.6.4-dev1', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Trial', true);
         });
@@ -210,7 +211,7 @@ describe('(Component) Banner', () => {
                 whiteLabel
             );
 
-            verifyProps(false, true, 'Cloudify', '5.1.2432-build123-commit-42342', edition);
+            verifyProps('Cloudify', '5.1.2432-build123-commit-42342', edition);
             verifyFullName('Cloudify Spire 5.1');
             verifyTag(true, 'Trial', true);
         });
@@ -221,7 +222,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '4te3s1t' }, whiteLabel);
 
-            verifyProps(false, true, 'Cloudify', '4te3s1t', edition);
+            verifyProps('Cloudify', '4te3s1t', edition);
             verifyFullName('Cloudify Spire');
             verifyTag(true, 'Trial', true);
         });
@@ -232,7 +233,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '' }, whiteLabel);
 
-            verifyProps(false, true, 'Cloudify', '', edition);
+            verifyProps('Cloudify', '', edition);
             verifyFullName('Cloudify Spire');
             verifyTag(true, 'Trial', true);
         });
