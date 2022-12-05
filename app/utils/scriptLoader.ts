@@ -1,17 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
 import log from 'loglevel';
 import StageUtils from './stageUtils';
 
 export default class ScriptLoader {
     protected path: string;
 
-    private loaded = false;
-
     constructor(scriptPath: string) {
         this.path = StageUtils.Url.url(scriptPath);
     }
 
-    load(id?, rejectOnError?) {
+    load(id?: string, rejectOnError?: boolean) {
         log.log(`Loading javascript from ${this.path}...`);
 
         return new Promise((resolve, reject) => {
@@ -23,8 +20,7 @@ export default class ScriptLoader {
             }
             scriptObj.onload = () => {
                 log.log(this.path, 'loaded');
-                this.loaded = true;
-                resolve();
+                resolve(undefined);
             };
             scriptObj.onerror = () => {
                 if (rejectOnError) {

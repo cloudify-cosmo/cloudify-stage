@@ -1,8 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { identity } from 'lodash';
+import React from 'react';
 import {
     LineChart,
     Line,
@@ -17,6 +14,59 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts';
+import type { XAxisProps, YAxisProps } from 'recharts';
+import type { CategoricalChartProps } from 'recharts/types/chart/generateCategoricalChart';
+
+export interface GraphProps {
+    /**
+     * charts configuration (see class description for format details)
+     */
+    charts: {
+        name: string;
+        label: string;
+        axisLabel: string;
+    }[];
+
+    /**
+     * data charts input data (see class description for the format details)
+     */
+    data: Record<string, unknown>[];
+
+    /**
+     * graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
+     */
+    type: typeof Graph.LINE_CHART_TYPE | typeof Graph.BAR_CHART_TYPE | typeof Graph.AREA_CHART_TYPE;
+
+    /**
+     * function to be called on graph click
+     */
+    onClick: React.ComponentProps<typeof LineChart | typeof BarChart | typeof AreaChart>['onClick'];
+
+    /**
+     * should show legend
+     */
+    showLegend?: boolean;
+
+    /**
+     * syncId to sync tooltip position (see recharts documentation for details)
+     */
+    syncId?: CategoricalChartProps['syncId'];
+
+    /**
+     * X-axis key name, must match key in data object
+     */
+    xDataKey?: XAxisProps['dataKey'];
+
+    /**
+     * whether to allow decimals in Y-axis tick
+     */
+    yAxisAllowDecimals?: boolean;
+
+    /**
+     * format of Y-axis tick label
+     */
+    yAxisDataFormatter?: YAxisProps['tickFormatter'];
+}
 
 /**
  * Graph is a component to present data in form of line or bar charts.
@@ -61,89 +111,10 @@ import {
  *
  * ## Usage
  *
- * ### Bar chart
+ * See {@link test/cypress/components/Graph_spec.tsx}
  *
- * ```
- * let data = [
- *     {time: '10:00', value: 300},
- *     {time: '11:00', value: 100},
- *     {time: '12:00', value: 80},
- *     {time: '13:00', value: 40},
- *     {time: '14:00', value: 30}
- * ];
- * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'Number of fruits', axisLabel:''}]} data={data} type={Graph.BAR_CHART_TYPE} />);
- * ```
- *
- * ### Line chart
- *
- * ```
- * let data = [
- *      {time: '17:30', value: 1},
- *      {time: '17:40', value: 2},
- *      {time: '17:50', value: 1},
- *      {time: '18:00', value: 3},
- *      {time: '18:10', value: 5},
- *      {time: '18:20', value: 8},
- *      {time: '18:30', value: 5}
- * ];
- * return (<Graph dataTimeFormat='HH:mm' charts={[{name:'value', label:'CPU load'}]} data={data} type={Graph.LINE_CHART_TYPE} />);
- * ```
- *
- * ### Area chart
- *
- * ```
- * let data = [
- *      {time: '17:30', value: 1},
- *      {time: '17:40', value: 2},
- *      {time: '17:50', value: 1},
- *      {time: '18:00', value: 3},
- *      {time: '18:10', value: 5},
- *      {time: '18:20', value: 8},
- *      {time: '18:30', value: 5}
- * ];
- * return (<Graph charts={[{name:'value', label='CPU load'}]} data={data} type={Graph.AREA_CHART_TYPE} />);
- * ```
- *
- *
- * ### Line chart - multi-charts, one Y-axis per chart
- *
- * ```
- * let data = [
- *      {cpu_total_system: 3.5,
- *       loadavg_processes_running: 3.071428571428572,
- *       memory_MemFree: 146003090.2857143,
- *       time: "2017-09-26 11:00:00"},
- *      ...
- * ];
- *
- * let charts = [
- *      {name: "cpu_total_system", label: "CPU - System [%]", axisLabel:""},
- *      {name: "memory_MemFree", label: "Memory - Free [Bytes]", axisLabel:""},
- *      {name: "loadavg_processes_running", label: "Load [%]", axisLabel:""}
- * ]
- *
- * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
- * ```
- *
- * ### Line chart - multi-charts, one Y-axis
- *
- * ```
- * let data = [
- *      {cpu_total_system: 3.5,
- *       cpu_total_user: 5.23,
- *       loadavg_processes_running: 3.071428571428572,
- *       time: "2017-09-26 11:20:00"},
- *      ...
- * ];
- *
- * let charts = [
- *      {name: "metrics", label: "metrics", axisLabel:"", fieldNames: ["cpu_total_system","cpu_total_user","loadavg_processes_running"]}
- * ]
- *
- * return (<Graph charts={charts} data={data} type={Graph.LINE_CHART_TYPE} />);
- * ```
  */
-export default class Graph extends Component {
+export default class Graph extends React.Component<GraphProps> {
     /**
      * default X-axis data key
      */
@@ -152,22 +123,32 @@ export default class Graph extends Component {
     /**
      * line chart
      */
-    static LINE_CHART_TYPE = 'line';
+    static LINE_CHART_TYPE = 'line' as const;
 
     /**
      * bar chart
      */
-    static BAR_CHART_TYPE = 'bar';
+    static BAR_CHART_TYPE = 'bar' as const;
 
     /**
      * area chart
      */
-    static AREA_CHART_TYPE = 'area';
+    static AREA_CHART_TYPE = 'area' as const;
 
     /**
      * maximum number of charts
      */
     static MAX_NUMBER_OF_CHARTS = 5;
+
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = {
+        onClick: _.noop,
+        showLegend: true,
+        syncId: '',
+        xDataKey: Graph.DEFAULT_X_DATA_KEY,
+        yAxisAllowDecimals: true,
+        yAxisDataFormatter: identity
+    };
 
     render() {
         const { charts, data, onClick, showLegend, syncId, type, xDataKey, yAxisAllowDecimals, yAxisDataFormatter } =
@@ -191,7 +172,7 @@ export default class Graph extends Component {
         const ChartComponent = CHART_COMPONENTS[type];
         const DrawingComponent = DRAWING_COMPONENTS[type];
 
-        const chartElements = [];
+        const chartElements: JSX.Element[] = [];
         let index = 0;
         _.each(_.slice(charts, 0, Graph.MAX_NUMBER_OF_CHARTS), chart => {
             const COLOR = COLORS[index];
@@ -211,6 +192,7 @@ export default class Graph extends Component {
             );
             chartElements.push(yaxisComponent);
             chartElements.push(
+                // @ts-ignore There's invalid typing in recharts as it works properly
                 <DrawingComponent
                     key={chart.name}
                     isAnimationActive={false}
@@ -238,77 +220,3 @@ export default class Graph extends Component {
         );
     }
 }
-
-Graph.propTypes = {
-    /**
-     * charts configuration (see class description for format details)
-     */
-    charts: PropTypes.arrayOf(
-        PropTypes.shape({
-            name: PropTypes.string,
-            label: PropTypes.string,
-            axisLabel: PropTypes.string
-        })
-    ).isRequired,
-
-    /**
-     * data charts input data (see class description for the format details)
-     */
-    data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-
-    /**
-     * graph chart type ({@link Graph.LINE_CHART_TYPE}, {@link Graph.BAR_CHART_TYPE} or {@link Graph.AREA_CHART_TYPE})
-     */
-    type: PropTypes.string.isRequired,
-
-    /**
-     * function to be called on graph click
-     */
-    onClick: PropTypes.func,
-
-    /**
-     * should show legend
-     */
-    showLegend: PropTypes.bool,
-
-    /**
-     * syncId to sync tooltip position (see recharts documentation for details)
-     */
-    syncId: PropTypes.string,
-
-    /**
-     * stylesheet for X-axis tick
-     */
-    xAxisTick: PropTypes.shape({}),
-
-    /**
-     * X-axis key name, must match key in data object
-     */
-    xDataKey: PropTypes.string,
-
-    /**
-     * whether to allow decimals in Y-axis tick
-     */
-    yAxisAllowDecimals: PropTypes.bool,
-
-    /**
-     * format of Y-axis tick label
-     */
-    yAxisDataFormatter: PropTypes.func,
-
-    /**
-     * stylesheet for Y-axis tick
-     */
-    yAxisTick: PropTypes.shape({})
-};
-
-Graph.defaultProps = {
-    onClick: _.noop,
-    showLegend: true,
-    syncId: '',
-    xAxisTick: { fontSize: '10px' },
-    xDataKey: Graph.DEFAULT_X_DATA_KEY,
-    yAxisAllowDecimals: true,
-    yAxisDataFormatter: _.noop,
-    yAxisTick: { fontSize: '10px' }
-};
