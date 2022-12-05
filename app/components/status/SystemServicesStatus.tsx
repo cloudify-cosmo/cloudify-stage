@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
-import { clusterServiceEnum, ClusterServiceStatus, clusterServiceStatuses } from '../shared/cluster/consts';
+import { clusterServiceEnum, clusterServiceStatuses } from '../shared/cluster/consts';
+import { ClusterServiceStatus } from '../shared/cluster/types';
 
 export default function SystemServicesStatus({ services, isFetching, fetchingError }) {
     return (
