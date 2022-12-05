@@ -1,7 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
 
+import React from 'react';
 import { mount } from 'enzyme';
+import { isUndefined, isEmpty } from 'lodash';
 
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
@@ -15,7 +17,7 @@ import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
-import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
+import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) Banner', () => {
     let bannerComponent = null;
@@ -33,7 +35,7 @@ describe('(Component) Banner', () => {
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
             const labelComponent = bannerComponent.find('Label');
-            if (_.isEmpty(tag)) {
+            if (isEmpty(tag)) {
                 expect(labelComponent).toHaveLength(0);
             } else {
                 expect(labelComponent.text()).toBe(tag);
@@ -55,21 +57,27 @@ describe('(Component) Banner', () => {
         expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
-    const getLicenseEdition = (license: LicenseResponse) => {
+    const getLicenseEdition = (license: Partial<LicenseResponse>) => {
         return license.license_edition || '';
     };
 
-    const getLicenseState = (data: LicenseResponse, isRequired: boolean, status) => {
+    type LicenseStatus = 'no_license' | 'expired_license' | 'active_license';
+
+    const getLicenseState = (data: Partial<LicenseResponse>, isRequired: boolean, status: LicenseStatus) => {
         return { data, isRequired, status };
     };
 
     const getWhiteLabel = (showVersionDetails?: boolean) => {
         return {
-            showVersionDetails: _.isUndefined(showVersionDetails) ? true : showVersionDetails
+            showVersionDetails: isUndefined(showVersionDetails) ? true : showVersionDetails
         };
     };
 
-    const mockStoreAndRender = (license, version, whiteLabel) => {
+    const mockStoreAndRender = (
+        license: { data: Partial<LicenseResponse>; isRequired: boolean; status: LicenseStatus },
+        version: Partial<VersionResponse>,
+        whiteLabel: { showVersionDetails: boolean }
+    ) => {
         const mockStore = configureMockStore();
         const store = mockStore({
             manager: {
