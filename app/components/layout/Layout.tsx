@@ -39,8 +39,8 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
         const { doLogout, initialPageLoad } = this.props;
         initialPageLoad()
             .then(() => {
-                StatusPoller.getPoller().start();
-                UserAppDataAutoSaver.getAutoSaver().start();
+                StatusPoller.getPoller()?.start();
+                UserAppDataAutoSaver.getAutoSaver()?.start();
                 this.setState({ initialized: true });
             })
             .catch(e => {
@@ -59,8 +59,8 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
     }
 
     componentWillUnmount() {
-        StatusPoller.getPoller().stop();
-        UserAppDataAutoSaver.getAutoSaver().stop();
+        StatusPoller.getPoller()?.stop();
+        UserAppDataAutoSaver.getAutoSaver()?.stop();
     }
 
     render() {
