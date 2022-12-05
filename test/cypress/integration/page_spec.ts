@@ -38,13 +38,7 @@ describe('Page', () => {
     });
 
     it('should allow to switch tabs and maximize widgets', () => {
-        let uaUpdateCall = 1;
-        function clickAndWaitForUaUpdate(selector: string) {
-            cy.intercept('POST', '/console/ua').as(`updateUserApps${uaUpdateCall}`);
-            cy.get(selector).click({ force: true });
-            cy.wait(`@updateUserApps${uaUpdateCall}`);
-            uaUpdateCall += 1;
-        }
+        cy.intercept('POST', '/console/ua').as('updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status');
         cy.contains('.widgetName', 'Blueprints');
@@ -61,9 +55,11 @@ describe('Page', () => {
         cy.visitPage('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
+        cy.wait('@updateUserApps');
 
         cy.log('Verify widget maximize button works for widgets inside tabs');
-        clickAndWaitForUaUpdate('.blueprintsWidget .expand');
+        cy.get('.blueprintsWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.contains('.widgetName', 'Catalog').should('not.be.visible');
@@ -74,7 +70,8 @@ describe('Page', () => {
         verifyAllWidgetsVisible();
 
         cy.log('Verify widget maximize button works for top level widgets');
-        clickAndWaitForUaUpdate('.blueprintCatalogWidget .expand');
+        cy.get('.blueprintCatalogWidget .expand').click({ force: true });
+        cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
@@ -88,7 +85,8 @@ describe('Page', () => {
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
         cy.log('Verify widget collapse button works');
-        clickAndWaitForUaUpdate('.blueprintCatalogWidget .compress');
+        cy.get('.blueprintCatalogWidget .compress').click({ force: true });
+        cy.wait('@updateUserApps');
 
         verifyAllWidgetsVisible();
     });
