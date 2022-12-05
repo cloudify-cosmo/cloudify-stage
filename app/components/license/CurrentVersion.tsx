@@ -6,14 +6,14 @@ import React from 'react';
 import { Icon, Header, Message, Segment, Table } from '../basic';
 import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
-interface Version extends VersionResponse {
+interface ExtendedVersion extends Partial<VersionResponse> {
     distro: string;
     // eslint-disable-next-line camelcase
     full_version: string;
 }
 
 interface CurrentVersionProps {
-    version: Version;
+    version: Partial<VersionResponse>;
 }
 
 interface Field {
@@ -25,9 +25,12 @@ interface Field {
 }
 
 export default function CurrentVersion({ version }: CurrentVersionProps) {
-    version.distro = _.join([version.distribution, version.distro_release], ' ');
-    version.full_version = `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
-         (${_.capitalize(version.edition)})`;
+    const extendedVersion: ExtendedVersion = {
+        ...version,
+        distro: _.join([version.distribution, version.distro_release], ' '),
+        full_version: `${_.join(_.compact([version.version, version.build, version.date, version.commit]), ' ')}
+         (${_.capitalize(version.edition)})`
+    };
 
     const fields: Field[] = [
         { name: 'full_version', header: i18n.t('licenseManagement.version', 'Version'), icon: 'star', format: String },
@@ -45,7 +48,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
             <Table basic="very" size="large" celled>
                 <Table.Body>
                     {_.map(fields, field => {
-                        const value = version[field.name as keyof Version];
+                        const value = extendedVersion[field.name as keyof ExtendedVersion];
 
                         return !!field.hide && field.hide(value) ? null : (
                             <Table.Row key={field.header}>
