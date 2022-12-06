@@ -17,7 +17,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
     const { pageSize, sortColumn, sortAscending } = configuration;
     const totalSize = data?.metadata?.pagination?.total;
 
-    const fetchTableData = (fetchParams: any) => {
+    const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         toolbox.refresh(fetchParams);
     };
 
