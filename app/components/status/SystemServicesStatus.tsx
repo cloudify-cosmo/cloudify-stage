@@ -1,12 +1,15 @@
-import { mapValues } from 'lodash';
 import React from 'react';
-
-import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import { connect } from 'react-redux';
+import { mapValues } from 'lodash';
+import SystemStatusHeader from './SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
 import { clusterServiceEnum } from '../shared/cluster/consts';
 import { ClusterServiceStatus } from '../shared/cluster/types';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import type { ClusterServices, ClusterServiceData } from '../shared/cluster/types';
+import type { ReduxState } from '../../reducers';
+import type { ReduxThunkDispatch } from '../../configureStore';
 
 const defaultServices = mapValues(clusterServiceEnum, () => {
     const clusterServiceData: ClusterServiceData = {
@@ -17,12 +20,12 @@ const defaultServices = mapValues(clusterServiceEnum, () => {
 });
 
 export interface SystemServicesStatusProps {
-    services: ClusterServices;
-    isFetching: boolean;
-    fetchingError: string;
+    services?: ClusterServices;
+    isFetching?: boolean;
+    fetchingError?: string;
 }
 
-export default function SystemServicesStatus({
+function SystemServicesStatus({
     services = defaultServices,
     isFetching = false,
     fetchingError = ''
@@ -43,3 +46,21 @@ export default function SystemServicesStatus({
         />
     );
 }
+
+const mapStateToProps = (state: ReduxState) => {
+    return {
+        services: state.manager.clusterStatus.services,
+        isFetching: state.manager.clusterStatus.isFetching,
+        fetchingError: state.manager.clusterStatus.error
+    };
+};
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
+    return {
+        onStatusRefresh: () => {
+            dispatch(getClusterStatus());
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SystemServicesStatus);
