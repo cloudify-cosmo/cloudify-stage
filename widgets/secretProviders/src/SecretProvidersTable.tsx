@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
-import SecretProvidersTableHeader from './SecretProvidersTableHeader';
 import { dataSortingKeys, tableRefreshEvent } from './SecretProvidersTable.consts';
 import type { SecretProvidersWidget } from './widget.types';
 
-const { DataTable, Icon } = Stage.Basic;
+const { DataTable, Icon, Button } = Stage.Basic;
 const { Time } = Stage.Utils;
 const t = Stage.Utils.getT(`widgets.secretProviders.table`);
 
@@ -37,7 +36,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 sortAscending={sortAscending}
             >
                 <DataTable.Action>
-                    <SecretProvidersTableHeader />
+                    <Button labelPosition="left" icon="add" content={t('buttons.create')} />
                 </DataTable.Action>
 
                 <DataTable.Column label={t('columns.name')} name={dataSortingKeys.name} />
