@@ -9,7 +9,7 @@ export default {
         commit: null,
         distribution: 'centos',
         distro_release: 'Core'
-    } as VersionResponse,
+    },
     community: {
         edition: 'community',
         version: '19.02.22~community',
@@ -18,5 +18,5 @@ export default {
         commit: null,
         distribution: 'centos',
         distro_release: 'Core'
-    } as VersionResponse
-};
+    }
+} as Record<string, VersionResponse>;
