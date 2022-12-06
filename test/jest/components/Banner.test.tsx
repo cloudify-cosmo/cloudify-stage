@@ -1,23 +1,22 @@
 /* eslint-disable jest/expect-expect */
 
 import React from 'react';
-import { mount, ReactWrapper } from 'enzyme';
+import { mount } from 'enzyme';
+import type { ReactWrapper } from 'enzyme';
 import { isUndefined, isEmpty } from 'lodash';
-
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from 'utils/consts';
+import type { ReduxStore } from 'configureStore';
+import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
-
 import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
 import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
-import type { ReduxStore } from 'configureStore';
-import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 
 describe('(Component) Banner', () => {
     let bannerComponent: ReactWrapper | null = null;
