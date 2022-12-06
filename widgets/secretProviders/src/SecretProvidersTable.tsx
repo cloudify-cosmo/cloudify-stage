@@ -15,7 +15,7 @@ interface SecretProvidersTableProps {
 
 const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersTableProps) => {
     const { pageSize, sortColumn, sortAscending } = configuration;
-    const totalSize = data?.metadata?.pagination?.total;
+    const totalSize = data?.metadata.pagination.total;
 
     const fetchTableData = (fetchParams: any) => {
         toolbox.refresh(fetchParams);

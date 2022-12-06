@@ -21,5 +21,5 @@ export declare namespace SecretProvidersWidget {
 
     export type Data = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;
 
-    export type DataSortingKeys = 'provider_name' | 'provider_type' | 'created_at' | 'updated_at';
+    export type DataSortingKeys = Pick<DataItem, 'name' | 'type' | 'created_at' | 'updated_at'>;
 }
