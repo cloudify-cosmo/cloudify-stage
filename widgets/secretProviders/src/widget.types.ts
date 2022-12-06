@@ -19,7 +19,7 @@ export declare namespace SecretProvidersWidget {
 
     export type Configuration = PollingTimeConfiguration & DataTableConfiguration;
 
-    export type Data = Stage.Types.WidgetData<Stage.Types.PaginatedResponse<DataItem>>;
+    export type Data = Stage.Types.PaginatedResponse<DataItem>;
 
     export type DataSortingKeys = Pick<DataItem, 'name' | 'type' | 'created_at' | 'updated_at'>;
 }

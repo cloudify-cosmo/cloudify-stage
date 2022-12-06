@@ -14,7 +14,7 @@ interface SecretProvidersTableProps {
 
 const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersTableProps) => {
     const { pageSize, sortColumn, sortAscending } = configuration;
-    const totalSize = data?.metadata.pagination.total;
+    const totalSize = data.metadata.pagination.total;
 
     const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         toolbox.refresh(fetchParams);
@@ -45,7 +45,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 <DataTable.Column label={t('columns.dateUpdated')} name={dataSortingKeys.updatedAt} width="156px" />
                 <DataTable.Column label="" width="10%" />
 
-                {data?.items?.map(secretProvider => (
+                {data.items.map(secretProvider => (
                     <DataTable.Row key={secretProvider.id}>
                         <DataTable.Data>{secretProvider.name}</DataTable.Data>
                         <DataTable.Data>{secretProvider.type}</DataTable.Data>

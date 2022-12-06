@@ -1,4 +1,4 @@
-describe('Tokens widget', () => {
+describe('Secret Providers widget', () => {
     const widgetId = 'secretProviders';
     const widgetConfiguration = {
         pollingTime: 3,
