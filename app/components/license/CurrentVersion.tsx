@@ -48,7 +48,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
             <Table basic="very" size="large" celled>
                 <Table.Body>
                     {map(fields, field => {
-                        const value = extendedVersion[field.name as keyof ExtendedVersion];
+                        const value = extendedVersion[field.name];
 
                         return !!field.hide && field.hide(value) ? null : (
                             <Table.Row key={field.header}>
