@@ -28,7 +28,6 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
 
     return (
         <>
-            <SecretProvidersTableHeader />
             <DataTable
                 fetchData={fetchTableData}
                 noDataMessage={t('noSecretProviders')}
@@ -37,6 +36,10 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 sortColumn={sortColumn}
                 sortAscending={sortAscending}
             >
+                <DataTable.Action>
+                    <SecretProvidersTableHeader />
+                </DataTable.Action>
+
                 <DataTable.Column label={t('columns.name')} name={dataSortingKeys.name} />
                 <DataTable.Column label={t('columns.type')} name={dataSortingKeys.type} />
                 <DataTable.Column label={t('columns.dateCreated')} name={dataSortingKeys.createdAt} width="156px" />
