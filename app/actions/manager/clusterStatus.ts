@@ -6,11 +6,11 @@ import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
 import { createPagesMap } from '../pageMenu';
-import type { ClusterServices } from '../../components/shared/cluster/types';
+import type { ClusterServices, ClusterServiceStatus } from '../../components/shared/cluster/types';
 
 export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
 export type FetchClusterStatusSuccessAction = PayloadAction<
-    { status: string; services?: ClusterServices },
+    { status: ClusterServiceStatus; services?: ClusterServices },
     ActionType.FETCH_CLUSTER_STATUS_SUCCESS
 >;
 export type FetchClusterStatusFailureAction = PayloadAction<any, ActionType.FETCH_CLUSTER_STATUS_FAILURE>;
@@ -25,7 +25,10 @@ function fetchClusterStatusRequest(): FetchClusterStatusRequestAction {
     };
 }
 
-function fetchClusterStatusSuccess(status: string, services?: ClusterServices): FetchClusterStatusSuccessAction {
+function fetchClusterStatusSuccess(
+    status: ClusterServiceStatus,
+    services?: ClusterServices
+): FetchClusterStatusSuccessAction {
     return {
         type: ActionType.FETCH_CLUSTER_STATUS_SUCCESS,
         payload: { status, services }
@@ -57,7 +60,7 @@ function isClusterStatusWidgetOnPage(pageId: string | null, pageMenuItems: PageM
 }
 
 interface GetClusterStatusResponse {
-    status: string;
+    status: ClusterServiceStatus;
     services: ClusterServices;
 }
 export function getClusterStatus(
