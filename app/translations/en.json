@@ -1426,10 +1426,10 @@
             "description": "This widget allows configuring new, modifying existing, and deleting secret providers.",
             "table": {
                 "columns": {
-                    "name": "Provider Name",
-                    "type": "Provider Type",
-                    "dateCreated": "Date Created",
-                    "dateUpdated": "Date Updated"
+                    "name": "Provider name",
+                    "type": "Provider type",
+                    "dateCreated": "Date created",
+                    "dateUpdated": "Date updated"
                 },
                 "noSecretProviders": "There are no Secret Providers available. Click \"Create\" to add Secret Provider.",
                 "buttons": {
