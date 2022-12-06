@@ -35,10 +35,8 @@ function SystemStatusHeader({ onStatusRefresh, isFetching }: SystemStatusHeaderP
 }
 
 const mapStateToProps = (state: ReduxState) => {
-    return {
-        isFetching: state.manager.clusterStatus.isFetching,
-        fetchingError: state.manager.clusterStatus.error
-    };
+    const { isFetching, error: fetchingError } = state.manager.clusterStatus;
+    return { isFetching, fetchingError };
 };
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {

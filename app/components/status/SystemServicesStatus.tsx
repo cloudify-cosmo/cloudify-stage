@@ -48,11 +48,8 @@ function SystemServicesStatus({
 }
 
 const mapStateToProps = (state: ReduxState) => {
-    return {
-        services: state.manager.clusterStatus.services,
-        isFetching: state.manager.clusterStatus.isFetching,
-        fetchingError: state.manager.clusterStatus.error
-    };
+    const { services, isFetching, error: fetchingError } = state.manager.clusterStatus;
+    return { services, isFetching, fetchingError };
 };
 
 const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
