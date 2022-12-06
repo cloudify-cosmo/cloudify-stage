@@ -114,7 +114,7 @@ describe('Filter', () => {
 
             cy.searchInDeploymentsWidget(deploymentName);
             // Triggering mouseout event just after the click to hide the tooltip
-            cy.get('.deploymentActionsMenu').click().trigger('mouseout');
+            cy.contains('.row', deploymentName).find('.deploymentActionsMenu').click().trigger('mouseout');
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
 
