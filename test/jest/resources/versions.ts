@@ -1,6 +1,6 @@
 import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
-export default {
+const versinos: Record<string, VersionResponse> = {
     premium: {
         edition: 'premium',
         version: '4.6',
@@ -19,4 +19,6 @@ export default {
         distribution: 'centos',
         distro_release: 'Core'
     }
-} as Record<string, VersionResponse>;
+};
+
+export default versinos;
