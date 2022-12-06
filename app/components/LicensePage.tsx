@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import type { ChangeEvent } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
@@ -228,7 +229,10 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         this.setState({ error: null });
     }
 
-    onLicenseEdit(_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) {
+    onLicenseEdit(
+        _event: ChangeEvent<HTMLTextAreaElement>,
+        field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]
+    ) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         const licenseString = fieldNameValue.license as string;
         this.setState({ license: licenseString });
@@ -286,7 +290,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
 
                     {canUploadLicense && isEditLicenseActive ? (
                         <UploadLicense
-                            error={error}
+                            error={error ?? ''}
                             isLoading={isLoading}
                             license={licenseString}
                             onChange={this.onLicenseEdit}
