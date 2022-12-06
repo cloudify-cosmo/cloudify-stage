@@ -1,6 +1,8 @@
+import { ClusterServiceStatus } from 'app/components/shared/cluster/types';
+
 export const styles = {
-    Degraded: 'background-color: rgb(251, 189, 8);',
-    OK: 'background-color: rgb(33, 186, 69);',
-    Fail: 'background-color: rgb(219, 40, 40);',
-    Unknown: 'background-color: rgb(170, 170, 170);'
+    [ClusterServiceStatus.Degraded]: 'background-color: rgb(251, 189, 8);',
+    [ClusterServiceStatus.OK]: 'background-color: rgb(33, 186, 69);',
+    [ClusterServiceStatus.Fail]: 'background-color: rgb(219, 40, 40);',
+    [ClusterServiceStatus.Unknown]: 'background-color: rgb(170, 170, 170);'
 };

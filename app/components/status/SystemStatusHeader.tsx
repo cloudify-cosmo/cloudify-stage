@@ -1,11 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
 import i18n from 'i18next';
+import type { ButtonProps } from 'semantic-ui-react';
 import { Button, Header } from '../basic';
 import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
 
-export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
+export interface SystemStatusHeaderProps {
+    onStatusRefresh: ButtonProps['onClick'];
+    isFetching: boolean;
+}
+
+export default function SystemStatusHeader({ onStatusRefresh, isFetching }: SystemStatusHeaderProps) {
     return (
         <div style={{ verticalAlign: 'middle', overflow: 'hidden' }}>
             <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
@@ -24,7 +28,3 @@ export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
         </div>
     );
 }
-SystemStatusHeader.propTypes = {
-    onStatusRefresh: PropTypes.func.isRequired,
-    isFetching: PropTypes.bool.isRequired
-};
