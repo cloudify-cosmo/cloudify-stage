@@ -43,13 +43,13 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 <DataTable.Column label={t('columns.dateUpdated')} name={dataSortingKeys.updatedAt} width="156px" />
                 <DataTable.Column label="" width="10%" />
 
-                {data?.items?.map(dataItem => (
-                    <DataTable.Row key={dataItem.id}>
-                        <DataTable.Data>{dataItem.name}</DataTable.Data>
-                        <DataTable.Data>{dataItem.type}</DataTable.Data>
+                {data?.items?.map(secretProvider => (
+                    <DataTable.Row key={secretProvider.id}>
+                        <DataTable.Data>{secretProvider.name}</DataTable.Data>
+                        <DataTable.Data>{secretProvider.type}</DataTable.Data>
 
-                        <DataTable.Data>{Time.formatTimestamp(dataItem.created_at)}</DataTable.Data>
-                        <DataTable.Data>{Time.formatTimestamp(dataItem.updated_at)}</DataTable.Data>
+                        <DataTable.Data>{Time.formatTimestamp(secretProvider.created_at)}</DataTable.Data>
+                        <DataTable.Data>{Time.formatTimestamp(secretProvider.updated_at)}</DataTable.Data>
                         <DataTable.Data>
                             <Icon name="edit" title={t('buttons.removeSecretProvider')} />
                             <Icon name="trash" title={t('buttons.updateSecretProvider')} />
