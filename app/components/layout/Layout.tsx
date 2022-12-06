@@ -2,13 +2,18 @@ import i18n from 'i18next';
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
+import { connect } from 'react-redux';
+import type { ReduxState } from '../../reducers';
+import type { ReduxThunkDispatch } from '../../configureStore';
 
+import intialPageLoad from '../../actions/initialPageLoad';
+import { logout } from '../../actions/manager/auth';
+import stageUtils from '../../utils/stageUtils';
 import Home from '../Home';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
-
 import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import ScrollToTop from './ScrollToTop';
@@ -25,7 +30,7 @@ export interface LayoutState {
     initialized: boolean;
 }
 
-export default class Layout extends Component<LayoutProps, LayoutState> {
+class Layout extends Component<LayoutProps, LayoutState> {
     static initialState = {
         initialized: false
     };
@@ -106,3 +111,26 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
         );
     }
 }
+
+const mapStateToProps = (state: ReduxState) => {
+    return {
+        isLoading: state.app.loading,
+        isUserAuthorizedForTemplateManagement:
+            state.manager &&
+            state.manager.permissions &&
+            stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager)
+    };
+};
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
+    return {
+        initialPageLoad: () => {
+            return dispatch(intialPageLoad());
+        },
+        doLogout: (err: string) => {
+            return dispatch(logout(err));
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
