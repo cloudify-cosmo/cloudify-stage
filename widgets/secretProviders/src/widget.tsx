@@ -31,5 +31,3 @@ Stage.defineWidget<never, SecretProvidersWidget.Data, SecretProvidersWidget.Conf
         return <SecretProvidersTable configuration={widget.configuration} data={data} toolbox={toolbox} />;
     }
 });
-
-export {};
