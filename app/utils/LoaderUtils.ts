@@ -7,7 +7,8 @@ import StageUtils from './stageUtils';
 
 export default class LoaderUtils {
     static getResourceUrl(path: string, isUserResource?: boolean) {
-        return isUserResource ? Consts.USER_DATA_PATH : `${Consts.APP_DATA_PATH}/${path}`;
+        const resourceBasePath = isUserResource ? Consts.USER_DATA_PATH : Consts.APP_DATA_PATH;
+        return `${resourceBasePath}/${path}`;
     }
 
     static fetchResource(path: string, isUserResource?: boolean) {
