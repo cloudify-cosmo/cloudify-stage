@@ -1904,6 +1904,13 @@
                 "download": "Download",
                 "delete": "Delete"
             }
+        },
+        "managers": {
+            "actions": {
+                "openConsole": "Open Console",
+                "refreshStatus": "Refresh Status",
+                "refreshStatusInProgress": "Status refresh in progress..."
+            }
         }
     },
     "input": {
