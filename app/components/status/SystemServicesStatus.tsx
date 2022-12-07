@@ -18,9 +18,9 @@ const defaultServices = mapValues(clusterServiceEnum, () => {
 });
 
 export default function SystemServicesStatus() {
-    const services = useSelector((state: ReduxState) => state.manager.clusterStatus.services) ?? defaultServices;
-    const isFetching = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching) ?? false;
-    const fetchingError = useSelector((state: ReduxState) => state.manager.clusterStatus.error) ?? '';
+    const services = useSelector((state: ReduxState) => state.manager.clusterStatus.services ?? defaultServices);
+    const isFetching = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching ?? false);
+    const fetchingError = useSelector((state: ReduxState) => state.manager.clusterStatus.error ?? '');
     return (
         <ClusterStatusOverview
             clickable
