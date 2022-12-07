@@ -16,7 +16,7 @@ interface CurrentVersionProps {
     version: Partial<VersionResponse>;
 }
 
-interface Field {
+interface VersionField {
     name: keyof ExtendedVersion;
     header: string;
     icon: SemanticICONS;
@@ -32,7 +32,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
          (${capitalize(version.edition)})`
     };
 
-    const fields: Field[] = [
+    const fields: VersionField[] = [
         { name: 'full_version', header: i18n.t('licenseManagement.version', 'Version'), icon: 'star', format: String },
         {
             name: 'distro',
