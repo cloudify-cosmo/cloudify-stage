@@ -1549,6 +1549,10 @@
                     "email": {
                         "label": "E-mail",
                         "error": "Please provide valid e-mail"
+                    },
+                    "isAdmin": {
+                        "label": "Admin",
+                        "note": "Admin users have full permissions to all tenants on the manager."
                     }
                 }
             },
@@ -1707,6 +1711,15 @@
                 "tooltip": {
                     "label": "Number of executions"
                 }
+            }
+        },
+        "inputs": {
+            "name": "Deployment Inputs",
+            "description": "This widget shows the deployment inputs",
+            "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
+            "columns": {
+              "name": "Name",
+              "value": "Value"
             }
         },
         "tenants": {

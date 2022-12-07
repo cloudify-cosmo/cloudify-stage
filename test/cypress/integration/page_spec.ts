@@ -55,6 +55,7 @@ describe('Page', () => {
         cy.visitPage('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
+        cy.wait('@updateUserApps');
 
         cy.log('Verify widget maximize button works for widgets inside tabs');
         cy.get('.blueprintsWidget .expand').click({ force: true });
