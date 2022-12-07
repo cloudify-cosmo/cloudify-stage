@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import type { ReduxState } from '../../reducers';
-
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
 
 export default function SystemStatusIcon() {
