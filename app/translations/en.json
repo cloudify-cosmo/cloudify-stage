@@ -1897,6 +1897,13 @@
                 "updateSite": "Update site",
                 "deleteSite": "Delete site"
             }
+        },
+        "snapshots": {
+            "actions": {
+                "restore": "Restore",
+                "download": "Download",
+                "delete": "Delete"
+            }
         }
     },
     "input": {
