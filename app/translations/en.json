@@ -1891,6 +1891,12 @@
                 "showNodeInstances": "Show node instances status"
             },
             "noDeploymentSelected": "No deployment selected"
+        },
+        "sites": {
+            "actions": {
+                "updateSite": "Update site",
+                "deleteSite": "Delete site"
+            }
         }
     },
     "input": {
