@@ -1,9 +1,8 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import log from 'loglevel';
-import PropTypes from 'prop-types';
 import React, { useEffect, useRef } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     ApproveButton,
     CancelButton,
@@ -26,25 +25,41 @@ import Consts from '../../utils/consts';
 
 import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
+import type { Execution } from '../../utils/shared/ExecutionUtils';
 import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
+import type { ReduxState } from '../../reducers';
 
 const POLLING_INTERVAL = 2000;
 
 const tConfirmModal = StageUtils.getT('maintenanceMode.confirmModal');
 const tExecutions = StageUtils.composeT(tConfirmModal, 'executions');
 
-function MaintenanceModeModal({
-    activeExecutions,
-    manager,
-    onCancelExecution,
-    onClose,
-    onFetchActiveExecutions,
-    onHide,
-    onMaintenanceActivate,
-    onMaintenanceDeactivate,
-    show
-}) {
+interface MaintenanceModeModalProps {
+    show: boolean;
+    onHide: () => void;
+}
+
+export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeModalProps) {
+    const dispatch = useDispatch();
+    const manager = useSelector((state: ReduxState) => state.manager);
+    const activeExecutions = useSelector((state: ReduxState) => state.manager.activeExecutions ?? {});
+    const onMaintenanceActivate = () => {
+        return dispatch(switchMaintenance(manager, true));
+    };
+    const onMaintenanceDeactivate = () => {
+        return dispatch(switchMaintenance(manager, false));
+    };
+    const onFetchActiveExecutions = () => {
+        return dispatch(getActiveExecutions(manager));
+    };
+    const onCancelExecution = (execution: Execution, action) => {
+        return dispatch(cancelExecution(manager, execution, action));
+    };
+    const onClose = () => {
+        return dispatch(setActiveExecutions({}));
+    };
+
     const [loading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
@@ -148,7 +163,7 @@ function MaintenanceModeModal({
         return true;
     }
 
-    function handleCancelExecution(execution, action) {
+    function handleCancelExecution(execution: Execution, action) {
         onCancelExecution(execution, action)
             .then(() => {
                 loadPendingExecutions();
@@ -258,71 +273,3 @@ function MaintenanceModeModal({
         </Modal>
     );
 }
-
-MaintenanceModeModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    manager: PropTypes.shape({ maintenance: PropTypes.string }).isRequired,
-    onCancelExecution: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onHide: PropTypes.func.isRequired,
-    onMaintenanceActivate: PropTypes.func.isRequired,
-    onMaintenanceDeactivate: PropTypes.func.isRequired,
-    onFetchActiveExecutions: PropTypes.func.isRequired,
-    activeExecutions: PropTypes.shape({
-        items: PropTypes.shape({
-            blueprint_id: PropTypes.string,
-            deployment_id: PropTypes.string,
-            id: PropTypes.string,
-            is_system_workflow: PropTypes.string,
-            map: PropTypes.func,
-            workflow_id: PropTypes.string
-        })
-    })
-};
-
-MaintenanceModeModal.defaultProps = {
-    activeExecutions: {}
-};
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        manager: state.manager,
-        show: ownProps.show,
-        onHide: ownProps.onHide,
-        activeExecutions: state.manager.activeExecutions
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {
-        onMaintenanceActivate: manager => {
-            return dispatch(switchMaintenance(manager, true));
-        },
-        onMaintenanceDeactivate: manager => {
-            return dispatch(switchMaintenance(manager, false));
-        },
-        onFetchActiveExecutions: manager => {
-            return dispatch(getActiveExecutions(manager));
-        },
-        onCancelExecution: (manager, execution, action) => {
-            return dispatch(cancelExecution(manager, execution, action));
-        },
-        onClose: () => {
-            return dispatch(setActiveExecutions({}));
-        }
-    };
-};
-
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-    return {
-        ...stateProps,
-        ...ownProps,
-        ...dispatchProps,
-        onMaintenanceActivate: () => dispatchProps.onMaintenanceActivate(stateProps.manager),
-        onMaintenanceDeactivate: () => dispatchProps.onMaintenanceDeactivate(stateProps.manager),
-        onFetchActiveExecutions: () => dispatchProps.onFetchActiveExecutions(stateProps.manager),
-        onCancelExecution: (execution, action) => dispatchProps.onCancelExecution(stateProps.manager, execution, action)
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(MaintenanceModeModal);

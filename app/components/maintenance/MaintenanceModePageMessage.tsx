@@ -1,6 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 
@@ -9,7 +7,6 @@ import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';
-
 import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
 
@@ -30,7 +27,7 @@ export default class MaintenanceModePageMessage extends Component<
     MaintenanceModePageMessageProps,
     MaintenanceModePageMessageState
 > {
-    constructor(props, context) {
+    constructor(props: MaintenanceModePageMessageProps, context: Record<string, any>) {
         super(props, context);
 
         this.state = {
@@ -40,7 +37,7 @@ export default class MaintenanceModePageMessage extends Component<
 
     componentDidMount() {
         const { onGetClusterStatus } = this.props;
-        StatusPoller.getPoller().start();
+        StatusPoller.getPoller()?.start();
         onGetClusterStatus();
     }
 
@@ -52,7 +49,7 @@ export default class MaintenanceModePageMessage extends Component<
     }
 
     componentWillUnmount() {
-        StatusPoller.getPoller().stop();
+        StatusPoller.getPoller()?.stop();
     }
 
     render() {
