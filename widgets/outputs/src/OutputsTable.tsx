@@ -4,7 +4,7 @@ import type { OutputsAndCapabilitiesItem, OutputsWidgetConfiguration } from './t
 export interface OutputsTableProps {
     data: {
         blueprintId: string;
-        deploymentId: string | string[] | undefined | null;
+        deploymentId: string;
         outputsAndCapabilities: OutputsAndCapabilitiesItem[];
     };
     toolbox: Stage.Types.Toolbox;
