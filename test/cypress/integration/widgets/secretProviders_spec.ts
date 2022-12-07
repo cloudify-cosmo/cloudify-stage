@@ -6,19 +6,21 @@ describe('Secret Providers widget', () => {
     };
 
     before(() => {
-        cy.activate('valid_trial_license').usePageMock(widgetId, widgetConfiguration).mockLogin();
         cy.fixture('secret_providers/secret_providers').then(secretProviders => {
+            const numberOfSecretProviders = secretProviders.length;
+
             cy.interceptSp('GET', '/secrets-providers*', {
                 items: secretProviders,
                 metadata: {
                     pagination: {
-                        total: 1,
-                        size: 1,
+                        total: numberOfSecretProviders,
+                        size: numberOfSecretProviders,
                         offset: 0
                     }
                 }
             });
         });
+        cy.activate('valid_trial_license').usePageMock(widgetId, widgetConfiguration).mockLogin();
     });
 
     it('should allow to list secret providers', () => {
