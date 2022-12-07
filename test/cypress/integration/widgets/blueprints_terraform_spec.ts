@@ -212,7 +212,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         );
     });
 
-    it.skip('validate secret creation on form submission', () => {
+    it('validate secret creation on form submission', () => {
         openTerraformModal();
 
         const blueprintName = `${blueprintNamePrefix}_1212`;
@@ -328,7 +328,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         });
     });
 
-    it.skip('handle template URL authentication', () => {
+    it('handle template URL authentication', () => {
         const blueprintName = `${blueprintNamePrefix}_terraform_url_auth`;
         const username = 'username';
         const password = 'password';
@@ -372,7 +372,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         cy.contains('.modal', 'Deploy blueprint');
     });
 
-    describe.skip('create installable blueprint on submit from', () => {
+    describe('create installable blueprint on submit from', () => {
         beforeEach(() => {
             cy.mockLogin();
             openTerraformModal();
