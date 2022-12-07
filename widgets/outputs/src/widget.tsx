@@ -1,13 +1,13 @@
 import { castArray } from 'lodash';
 import type { OutputsTableProps } from './OutputsTable';
 import OutputsTable, { translateOutputsWidget } from './OutputsTable';
-import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
+import type { OutputsAndCapabilitiesItem, OutputsWidgetConfiguration } from './types';
 
 interface Data {
     outputsAndCapabilities: OutputsAndCapabilitiesItem[];
 }
 
-Stage.defineWidget<unknown, Data, OutputsTableConfiguration>({
+Stage.defineWidget<unknown, Data, OutputsWidgetConfiguration>({
     id: 'outputs',
     name: translateOutputsWidget('name'),
     description: translateOutputsWidget('description'),

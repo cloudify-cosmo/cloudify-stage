@@ -1,5 +1,5 @@
 import { chain, isEmpty, isEqual, reverse } from 'lodash';
-import type { OutputsAndCapabilitiesItem, OutputsTableConfiguration } from './types';
+import type { OutputsAndCapabilitiesItem, OutputsWidgetConfiguration } from './types';
 
 export interface OutputsTableProps {
     data: {
@@ -8,7 +8,7 @@ export interface OutputsTableProps {
         outputsAndCapabilities: OutputsAndCapabilitiesItem[];
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget<OutputsTableConfiguration>;
+    widget: Stage.Types.Widget<OutputsWidgetConfiguration>;
 }
 
 export interface OutputsTableState {

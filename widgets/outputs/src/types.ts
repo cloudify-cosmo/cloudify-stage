@@ -7,4 +7,4 @@ export interface OutputsAndCapabilitiesItem {
     value: unknown;
 }
 
-export type OutputsTableConfiguration = PollingTimeConfiguration & { showCapabilities: boolean };
+export type OutputsWidgetConfiguration = PollingTimeConfiguration & { showCapabilities: boolean };
