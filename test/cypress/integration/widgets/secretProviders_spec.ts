@@ -21,7 +21,7 @@ describe('Secret Providers widget', () => {
         });
     });
 
-    it('should allow to create secret provider', () => {
+    it('should allow to list secret providers', () => {
         cy.contains('Secret Provider 1').should('be.visible');
         cy.contains('Secret Provider 2').should('be.visible');
     });
