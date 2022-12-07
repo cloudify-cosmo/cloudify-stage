@@ -1,6 +1,6 @@
 import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
-const versinos: Record<string, VersionResponse> = {
+const versions: Record<string, VersionResponse> = {
     premium: {
         edition: 'premium',
         version: '4.6',
@@ -21,4 +21,4 @@ const versinos: Record<string, VersionResponse> = {
     }
 };
 
-export default versinos;
+export default versions;
