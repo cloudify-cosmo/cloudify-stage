@@ -26,10 +26,13 @@ export default class SearchActions {
     }
 
     private doListAll<ResponseBody>(resourceName: ResourceName, filterRules: FilterRule[], params?: Params) {
-        return this.toolbox.getManager().doPostFull<ResponseBody>(`/searches/${resourceName}`, {
-            filter_rules: filterRules,
+        return this.toolbox.getManager().doPostFull<ResponseBody>(
+            `/searches/${resourceName}`,
+            {
+                filter_rules: filterRules
+            },
             params
-        });
+        );
     }
 
     static searchAlsoByDeploymentName(params?: ListDeploymentsParams): ListDeploymentsParams | undefined {

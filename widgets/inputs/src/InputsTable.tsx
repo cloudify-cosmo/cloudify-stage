@@ -1,28 +1,36 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEmpty, isEqual } from 'lodash';
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
-export default class InputsTable extends React.Component {
-    constructor(props, context) {
-        super(props, context);
-        this.state = {
-            error: null
-        };
-    }
+export interface InputItem {
+    description: string;
+    name: string;
+    value: unknown;
+}
 
+export interface InputsTableProps {
+    data: {
+        blueprintId: string | string[] | null | undefined;
+        deploymentId: string | string[] | null | undefined;
+        items: InputItem[];
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<PollingTimeConfiguration>;
+}
+
+export const translateInputsWidget = Stage.Utils.getT('widgets.inputs');
+
+export default class InputsTable extends React.Component<InputsTableProps> {
     componentDidMount() {
         const { toolbox } = this.props;
         toolbox.getEventBus().on('inputs:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: InputsTableProps) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(data, nextProps.data);
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: InputsTableProps) {
         const { data } = this.props;
         if (data.deploymentId !== prevProps.data.deploymentId || data.blueprintId !== prevProps.data.blueprintId) {
             this.refreshData();
@@ -40,14 +48,13 @@ export default class InputsTable extends React.Component {
     }
 
     render() {
-        const NO_DATA_MESSAGE = "There are no Inputs available. Probably there's no deployment created, yet.";
-        const { DataTable, ErrorMessage, Header } = Stage.Basic;
+        const NO_DATA_MESSAGE = translateInputsWidget('noData');
+        const { DataTable, Header } = Stage.Basic;
         const ParameterValue = Stage.Common.Components.Parameter.Value;
         const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
         const { data } = this.props;
-        const { error } = this.state;
         const { items: inputs } = data;
-        const compareNames = (a, b) => {
+        const compareNames = (a: { name: string }, b: { name: string }) => {
             if (a.name > b.name) return 1;
             if (b.name > a.name) return -1;
             return 0;
@@ -55,14 +62,12 @@ export default class InputsTable extends React.Component {
 
         return (
             <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-
-                <DataTable className="inputsTable" noDataAvailable={_.isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
-                    <DataTable.Column label="Name" width="35%" />
+                <DataTable className="inputsTable" noDataAvailable={isEmpty(inputs)} noDataMessage={NO_DATA_MESSAGE}>
+                    <DataTable.Column label={translateInputsWidget('columns.name')} width="35%" />
                     <DataTable.Column
                         label={
                             <span>
-                                Value <ParameterValueDescription />
+                                {translateInputsWidget('columns.value')} <ParameterValueDescription />
                             </span>
                         }
                         width="65%"
@@ -86,19 +91,3 @@ export default class InputsTable extends React.Component {
         );
     }
 }
-
-InputsTable.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: Stage.PropTypes.StringOrArray,
-        deploymentId: Stage.PropTypes.StringOrArray,
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                description: PropTypes.string,
-                name: PropTypes.string,
-                value: Stage.PropTypes.AnyData
-            })
-        )
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

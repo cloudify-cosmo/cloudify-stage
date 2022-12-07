@@ -7,7 +7,8 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
-import { clusterServiceBgColor, clusterServiceEnum, ClusterServiceStatus } from './consts';
+import { clusterServiceBgColor, clusterServiceEnum } from './consts';
+import { ClusterServiceStatus } from './types';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
 import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
