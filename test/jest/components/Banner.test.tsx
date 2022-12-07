@@ -12,6 +12,7 @@ import Consts from 'utils/consts';
 import type { ReduxStore } from 'configureStore';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
+import type { LicenseStatus } from 'reducers/managerReducer';
 import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
@@ -58,8 +59,6 @@ describe('(Component) Banner', () => {
     const getLicenseEdition = (license: Partial<LicenseResponse>) => {
         return license.license_edition || '';
     };
-
-    type LicenseStatus = 'no_license' | 'expired_license' | 'active_license';
 
     const getLicenseState = (data: Partial<LicenseResponse>, isRequired: boolean, status: LicenseStatus) => {
         return { data, isRequired, status };
