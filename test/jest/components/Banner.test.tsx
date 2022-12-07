@@ -19,7 +19,7 @@ import i18nInit from '../i18n';
 import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) Banner', () => {
-    let bannerComponent: ReactWrapper | null = null;
+    let bannerComponent: ReactWrapper | undefined;
 
     const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
         const headerBanner: ReactWrapper<HeaderBannerProps> | undefined = bannerComponent?.find('HeaderBanner');
