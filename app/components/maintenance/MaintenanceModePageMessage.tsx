@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 
 import Banner from '../banner/Banner';
-import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import SystemStatusHeader from '../status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';
