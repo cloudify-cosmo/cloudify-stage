@@ -7,7 +7,7 @@ import { getLogger } from './handler/LoggerHandler';
 import { isDevelopmentOrTest } from './utils';
 
 import { init, getMode } from './serverSettings';
-import { getConfig } from './config';
+import { getBackendConfig } from './config';
 
 const logger = getLogger('Server');
 
@@ -21,7 +21,7 @@ export default DBConnection.init()
     .then(() => {
         logger.info('Widgets and templates data initialized successfully.');
         return new Promise((resolve, reject) => {
-            const { host, port } = getConfig().app.backend;
+            const { host, port } = getBackendConfig();
             const server = app.listen(port, host);
             server.on('error', reject);
             server.on('listening', () => {

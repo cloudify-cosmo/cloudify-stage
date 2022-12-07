@@ -5,9 +5,9 @@ import getWebpackConfig from './webpack.config';
 import startWidgetBackendWatcher from './scripts/widgetBackendWatcher';
 
 import { CONTEXT_PATH } from './backend/consts';
-import { getConfig } from './backend/config';
+import { getBackendConfig } from './backend/config';
 
-const { backend } = getConfig().app;
+const backend = getBackendConfig();
 
 const webpackConfig = getWebpackConfig({}, { mode: 'development' });
 
