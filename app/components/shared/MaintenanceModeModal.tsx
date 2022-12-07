@@ -25,8 +25,7 @@ import Consts from '../../utils/consts';
 
 import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
-import type { CancelAction } from '../../utils/shared/ExecutionUtils';
-import type { Execution } from '../../utils/shared/ExecutionUtils';
+import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils';
 import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
 import type { ReduxState } from '../../reducers';
