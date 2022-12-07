@@ -25,10 +25,12 @@ import Consts from '../../utils/consts';
 
 import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
+import type { CancelAction } from '../../utils/shared/ExecutionUtils';
 import type { Execution } from '../../utils/shared/ExecutionUtils';
 import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
 import type { ReduxState } from '../../reducers';
+import type { ActiveExecutions } from '../../actions/manager/maintenance';
 
 const POLLING_INTERVAL = 2000;
 
@@ -43,7 +45,9 @@ interface MaintenanceModeModalProps {
 export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeModalProps) {
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
-    const activeExecutions = useSelector((state: ReduxState) => state.manager.activeExecutions ?? {});
+    const activeExecutions: ActiveExecutions | null = useSelector(
+        (state: ReduxState) => state.manager.activeExecutions ?? null
+    );
     const onMaintenanceActivate = () => {
         return dispatch(switchMaintenance(manager, true));
     };
@@ -53,11 +57,11 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
     const onFetchActiveExecutions = () => {
         return dispatch(getActiveExecutions(manager));
     };
-    const onCancelExecution = (execution: Execution, action) => {
+    const onCancelExecution = (execution: Execution, action: CancelAction) => {
         return dispatch(cancelExecution(manager, execution, action));
     };
     const onClose = () => {
-        return dispatch(setActiveExecutions({}));
+        return dispatch(setActiveExecutions(null));
     };
 
     const [loading, setLoading, unsetLoading] = useBoolean();
@@ -101,7 +105,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                 log.log('Maintenance data fetched');
                 startPolling();
             })
-            .catch(err => {
+            .catch((err: any) => {
                 setErrors(err.message);
                 startPolling();
             });
@@ -127,7 +131,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                 unsetLoading();
                 onHide();
             })
-            .catch(err => {
+            .catch((err: any) => {
                 setMessageAsError(err);
                 unsetLoading();
             });
@@ -140,7 +144,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                 unsetLoading();
                 onHide();
             })
-            .catch(err => {
+            .catch((err: any) => {
                 setMessageAsError(err);
                 unsetLoading();
             });
@@ -163,7 +167,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
         return true;
     }
 
-    function handleCancelExecution(execution: Execution, action) {
+    function handleCancelExecution(execution: Execution, action: CancelAction) {
         onCancelExecution(execution, action)
             .then(() => {
                 loadPendingExecutions();
@@ -181,11 +185,11 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                 )}
             </Modal.Header>
 
-            {errors || !_.isEmpty(activeExecutions.items) ? (
+            {errors || !_.isEmpty(activeExecutions?.items) ? (
                 <Modal.Content>
                     <ErrorMessage error={errors} />
 
-                    {!_.isEmpty(activeExecutions.items) && (
+                    {!_.isEmpty(activeExecutions?.items) && (
                         <>
                             <Message content={tConfirmModal('activeExecutionsDelay')} info />
 
@@ -198,7 +202,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                                 <DataTable.Column label={tExecutions('status', 'Status')} width="15%" />
                                 <DataTable.Column label={tExecutions('action', 'Action')} />
 
-                                {activeExecutions.items.map(item => {
+                                {activeExecutions?.items.map(item => {
                                     return (
                                         <DataTable.Row key={item.id}>
                                             <DataTable.Data>{item.blueprint_id}</DataTable.Data>
@@ -239,11 +243,11 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                                                         <Menu.Item
                                                             content={tExecutions('killCancel', 'Kill Cancel')}
                                                             icon={<Icon name="stop" color="red" />}
-                                                            name={ExecutionUtils.KILL_CANCEL_EXECUTION}
+                                                            name={ExecutionUtils.KILL_CANCEL_ACTION}
                                                             onClick={() =>
                                                                 handleCancelExecution(
                                                                     item,
-                                                                    ExecutionUtils.KILL_CANCEL_EXECUTION
+                                                                    ExecutionUtils.KILL_CANCEL_ACTION
                                                                 )
                                                             }
                                                         />
