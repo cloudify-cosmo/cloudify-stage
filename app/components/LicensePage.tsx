@@ -190,7 +190,7 @@ export interface LicensePageProps {
 }
 
 interface LicensePageState {
-    error: string | null;
+    error?: string;
     isLoading: boolean;
     isEditLicenseActive: boolean;
     license: string;
@@ -200,7 +200,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         super(props);
 
         this.state = {
-            error: null,
+            error: undefined,
             isLoading: false,
             isEditLicenseActive: false,
             license: ''
@@ -219,14 +219,14 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
             .doGet('/license')
             .then(data => {
                 const license = _.get(data, 'items[0]', {});
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: _.isEmpty(license) });
+                this.setState({ isLoading: false, error: undefined, isEditLicenseActive: _.isEmpty(license) });
                 onLicenseChange(license);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
     }
 
     onErrorDismiss() {
-        this.setState({ error: null });
+        this.setState({ error: undefined });
     }
 
     onLicenseEdit(
@@ -246,7 +246,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
         return manager
             .doPut('/license', { body: license })
             .then(data => {
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
+                this.setState({ isLoading: false, error: undefined, isEditLicenseActive: false });
                 onLicenseChange(data);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
@@ -290,7 +290,7 @@ export default class LicensePage extends Component<LicensePageProps, LicensePage
 
                     {canUploadLicense && isEditLicenseActive ? (
                         <UploadLicense
-                            error={error ?? ''}
+                            error={error}
                             isLoading={isLoading}
                             license={licenseString}
                             onChange={this.onLicenseEdit}
