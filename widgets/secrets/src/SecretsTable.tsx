@@ -321,13 +321,13 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                     <Icon
                                         link
                                         name="edit"
-                                        title="Update secret"
+                                        title={t('actions.updateSecret')}
                                         onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
                                         link
                                         name="trash"
-                                        title="Delete secret"
+                                        title={t('actions.deleteSecret')}
                                         onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>

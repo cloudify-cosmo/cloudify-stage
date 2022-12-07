@@ -1096,8 +1096,8 @@
                     "placeholder": "Select fields from the list"
                 },
                 "keysOfLabelsToShow": {
-                  "name": "List of labels' keys to show in the table as columns",
-                  "placeholder": "Select keys from the list"
+                    "name": "List of labels' keys to show in the table as columns",
+                    "placeholder": "Select keys from the list"
                 },
                 "mapOpenByDefault": {
                     "name": "Show map by default"
@@ -1430,6 +1430,10 @@
                 "updated": "Updated",
                 "creator": "Creator",
                 "tenant": "Tenant"
+            },
+            "actions": {
+                "updateSecret": "Update secret",
+                "deleteSecret": "Delete secret"
             }
         },
         "serviceButton": {
@@ -1704,8 +1708,8 @@
             "description": "This widget shows the deployment inputs",
             "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
             "columns": {
-              "name": "Name",
-              "value": "Value"
+                "name": "Name",
+                "value": "Value"
             }
         },
         "tenants": {
