@@ -167,6 +167,15 @@ Package tarball archive contains the following resources:
 
 RPM package has all the files present in tarball package. In addition all files from [packaging/files](./packaging/files) directory are installed. 
 
+### Docker images
+
+Stage uses two docker images - the backend app server, and the frontend static files server.
+You can use them together with any Cloudify Manager RESTService and database, however usually you will want a nginx proxy in front.
+
+To build them, refer to:
+* [The frontend Dockerfile](./Dockerfile)
+* [The backend Dockerfile](./Dockerfile.backend)
+
 ## Tests
 
 Go to [test/README.md](./test/README.md).
