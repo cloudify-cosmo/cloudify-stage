@@ -1,6 +1,8 @@
 import i18n from 'i18next';
 import React, { useEffect } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
+import { push } from 'connected-react-router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Banner from '../banner/Banner';
 import SystemStatusHeader from '../status/SystemStatusHeader';
@@ -10,24 +12,23 @@ import StatusPoller from '../../utils/StatusPoller';
 import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
 import { useBoolean } from '../../utils/hooks';
+import type { ReduxState } from '../../reducers';
+import StageUtils from '../../utils/stageUtils';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
-export interface MaintenanceModePageMessageProps {
-    canMaintenanceMode: boolean;
-    isFetchingClusterStatus: boolean;
-    maintenanceStatus: string;
-    navigateToHome: () => void;
-    onGetClusterStatus: () => void;
-    showServicesStatus: boolean;
-}
+export default function MaintenanceModePageMessage() {
+    const isFetchingClusterStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
+    const maintenanceStatus = useSelector((state: ReduxState) => state.manager.maintenance);
+    const canMaintenanceMode = useSelector((state: ReduxState) =>
+        StageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager)
+    );
+    const showServicesStatus = useSelector((state: ReduxState) =>
+        StageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager)
+    );
+    const dispatch = useDispatch();
+    const navigateToHome = () => dispatch(push(Consts.PAGE_PATH.HOME));
+    const onGetClusterStatus = () => dispatch(getClusterStatus());
 
-export default function MaintenanceModePageMessage({
-    onGetClusterStatus,
-    canMaintenanceMode,
-    isFetchingClusterStatus,
-    showServicesStatus,
-    maintenanceStatus,
-    navigateToHome
-}: MaintenanceModePageMessageProps) {
     const [maintenanceModalVisible, showMaintenanceModal, hideMaintenanceModal] = useBoolean(false);
 
     useEffect(() => {
