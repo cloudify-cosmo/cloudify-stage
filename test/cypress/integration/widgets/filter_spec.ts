@@ -96,11 +96,12 @@ describe('Filter', () => {
         beforeEach(() => cy.setBlueprintContext(blueprintName));
 
         it('deployment creation and removal', () => {
+            const deploymentName = `${blueprintName}-deployment`;
+            cy.interceptSp('DELETE', `/deployments/${deploymentName}`).as('deleteDeployment');
             cy.get('.blueprintsWidget').within(() => {
                 cy.getSearchInput().scrollIntoView().clear().type(blueprintName);
                 getBlueprintSegment(blueprintName).find('.rocket').click();
             });
-            const deploymentName = `${blueprintName}-deployment`;
             cy.get('input[name=deploymentName]').type(deploymentName);
             cy.openAccordionSection('Advanced');
             cy.get('input[name=deploymentId]').clear().type(deploymentName);
@@ -117,6 +118,7 @@ describe('Filter', () => {
             cy.contains('.row', deploymentName).find('.deploymentActionsMenu').click().trigger('mouseout');
             cy.contains('Force Delete').click();
             cy.contains('Yes').click();
+            cy.wait('@deleteDeployment');
 
             cy.contains('.deploymentsWidget .row', deploymentName).should('not.exist');
 
