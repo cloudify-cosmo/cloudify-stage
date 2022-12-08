@@ -32,7 +32,7 @@ export default function MaintenanceModePageMessage() {
     const [maintenanceModalVisible, showMaintenanceModal, hideMaintenanceModal] = useBoolean(false);
 
     useEffect(() => {
-        StatusPoller.getPoller()!.start();
+        StatusPoller.getPoller().start();
         onGetClusterStatus();
 
         return () => {
