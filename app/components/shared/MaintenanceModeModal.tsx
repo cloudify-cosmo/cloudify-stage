@@ -70,14 +70,14 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
     const fetchDataPromise = useRef<CancelablePromise<unknown> | null>(null);
 
     function stopFetchingData() {
-        if (fetchDataPromise.current !== null) {
+        if (fetchDataPromise.current) {
             fetchDataPromise.current.cancel();
         }
     }
 
     function stopPolling() {
         log.log('Stop polling maintenance data');
-        if (pollingTimeout.current !== null) {
+        if (pollingTimeout.current) {
             clearTimeout(pollingTimeout.current);
         }
     }
