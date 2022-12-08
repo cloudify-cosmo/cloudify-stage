@@ -30,6 +30,7 @@ import StageUtils from '../../utils/stageUtils';
 import ExecutionStatus from './ExecutionStatus';
 import type { ReduxState } from '../../reducers';
 import type { ActiveExecutions } from '../../actions/manager/maintenance';
+import type { CancelablePromise } from '../../utils/types';
 
 const POLLING_INTERVAL = 2000;
 
@@ -66,18 +67,20 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
     const [loading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
 
-    const pollingTimeout = useRef(null);
-    const fetchDataPromise = useRef();
+    const pollingTimeout = useRef<NodeJS.Timeout | null>(null);
+    const fetchDataPromise = useRef<CancelablePromise<unknown> | null>(null);
 
     function stopFetchingData() {
-        if (fetchDataPromise.current) {
+        if (fetchDataPromise.current !== null) {
             fetchDataPromise.current.cancel();
         }
     }
 
     function stopPolling() {
         log.log('Stop polling maintenance data');
-        clearTimeout(pollingTimeout.current);
+        if (pollingTimeout.current !== null) {
+            clearTimeout(pollingTimeout.current);
+        }
     }
 
     function startPolling() {
