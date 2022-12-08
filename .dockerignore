@@ -1,0 +1,22 @@
+doc
+jenkins
+test
+.git
+
+# .gitignore contents:
+.eslintcache
+.idea
+.vscode
+.history
+.tmp
+.nyc_output
+.DS_Store
+.fontello-session
+coverage-*
+conf/me.json
+/dist
+/tsc-dist
+userData
+node_modules
+widgets/*/backend.ts
+stage.tar.gz
