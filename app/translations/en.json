@@ -1437,6 +1437,9 @@
                     "updateSecretPRovider": "Update Secret Provider",
                     "create": "Create"
                 }
+            },
+            "deleteModal": {
+                "content": "Are you sure you want to delete the Secret Provider with ID '{{secretProviderId}}'?"
             }
         },
         "secrets": {

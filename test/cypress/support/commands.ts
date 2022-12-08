@@ -32,6 +32,7 @@ import './plugins';
 
 import { secondsToMs } from './resource_commons';
 import './secrets';
+import './secret_providers';
 import './sites';
 import './snapshots';
 import './templates';

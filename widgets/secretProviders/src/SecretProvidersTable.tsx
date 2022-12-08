@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import RemoveSecretProviderButton from './RemoveSecretProviderButton';
 import { dataSortingKeys, tableRefreshEvent } from './SecretProvidersTable.consts';
 import type { SecretProvidersWidget } from './widget.types';
 
@@ -52,9 +53,9 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
 
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.created_at)}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.updated_at)}</DataTable.Data>
-                        <DataTable.Data>
+                        <DataTable.Data textAlign="center">
                             <Icon name="edit" title={t('buttons.removeSecretProvider')} />
-                            <Icon name="trash" title={t('buttons.updateSecretProvider')} />
+                            <RemoveSecretProviderButton secretProvider={secretProvider} toolbox={toolbox} />
                         </DataTable.Data>
                     </DataTable.Row>
                 ))}
