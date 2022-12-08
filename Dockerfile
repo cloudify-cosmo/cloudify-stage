@@ -35,5 +35,5 @@ WORKDIR /home/stage
 COPY --from=builder /app/dist/static /home/stage/static
 
 # -f = nodaemon
-# -p 3000 = listen on port 3000, all interfaces
-CMD ["busybox", "httpd", "-f", "-p", "3000"]
+# -p 8188 = listen on port 8188, all interfaces
+CMD ["busybox", "httpd", "-f", "-p", "8188"]
