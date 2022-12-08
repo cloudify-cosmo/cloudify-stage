@@ -16,7 +16,7 @@ try {
     const caPath = _.get(getConfig(), 'app.ssl.ca');
     caFile = caPath ? fs.readFileSync(caPath) : null;
 } catch (e) {
-    throw new Error('Could not setup ssl ca, error loading file.');
+    throw new Error(`Could not setup ssl ca, error loading file: ${e}`);
 }
 
 export function getManagerUrl() {

@@ -1,0 +1,48 @@
+# Stage backend
+# This describes the stage backend image, which contains a nodejs app
+# acting as the server proxy and widgets backend.
+# Build this with e.g.: `docker build -f Dockerfile.backend . -t stage_backend`
+
+FROM node:16
+
+# envvars are used in the entrypoint script
+# db settings
+ENV POSTGRES_DB=cloudify_db
+ENV POSTGRES_HOST=postgresql
+ENV POSTGRES_USER=cloudify
+ENV POSTGRES_PASSWORD=cloudify
+
+# stage backend needs to be able to reach restservice at this address, port 53333
+ENV RESTSERVICE_ADDRESS=localhost
+
+# by default, listen on all interfaces
+ENV LISTEN_HOST="0.0.0.0"
+
+WORKDIR /app
+
+# Install build dependencies up front, so that those layers can still be cached
+# if just the backend source code changes. This will only need to be rebuilt
+# when the dependencies themselves change.
+COPY package.json /app/
+COPY package-lock.json /app/
+COPY backend/package.json /app/backend/
+COPY backend/package-lock.json /app/backend/
+
+# We do need node_modules to be stored in the resulting image, hence not
+# mounting node_modules as cache here.
+RUN npm run ci:backend
+
+# We'll also need to build frontend code here, because the stage backend is what
+# serves the actual widget code.
+# First, install prerequisities - those don't need to be in the resulting image,
+# because they're only build-time dependencies (e.g. webpack).
+RUN --mount=type=cache,target=/app/node_modules \
+    npm run ci:frontend
+
+# Copy the actual source code - backend and frontend - and build frontend
+# artifacts, including widgets and templates.
+COPY . /app
+RUN --mount=type=cache,target=/app/node_modules \
+    npm run build
+
+ENTRYPOINT /app/packaging/entrypoint.sh
