@@ -1,12 +1,13 @@
-import { mapValues } from 'lodash';
 import React from 'react';
-
-import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import { useSelector } from 'react-redux';
+import { mapValues } from 'lodash';
+import SystemStatusHeader from './SystemStatusHeader';
 import { Table } from '../basic';
 import ClusterStatusOverview from '../shared/cluster/ClusterServicesOverview';
 import { clusterServiceEnum } from '../shared/cluster/consts';
 import { ClusterServiceStatus } from '../shared/cluster/types';
-import type { ClusterServices, ClusterServiceData } from '../shared/cluster/types';
+import type { ClusterServiceData } from '../shared/cluster/types';
+import type { ReduxState } from '../../reducers';
 
 const defaultServices = mapValues(clusterServiceEnum, () => {
     const clusterServiceData: ClusterServiceData = {
@@ -16,17 +17,10 @@ const defaultServices = mapValues(clusterServiceEnum, () => {
     return clusterServiceData;
 });
 
-export interface SystemServicesStatusProps {
-    services: ClusterServices;
-    isFetching: boolean;
-    fetchingError: string;
-}
-
-export default function SystemServicesStatus({
-    services = defaultServices,
-    isFetching = false,
-    fetchingError = ''
-}: SystemServicesStatusProps) {
+export default function SystemServicesStatus() {
+    const services = useSelector((state: ReduxState) => state.manager.clusterStatus.services ?? defaultServices);
+    const isFetching = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching ?? false);
+    const fetchingError = useSelector((state: ReduxState) => state.manager.clusterStatus.error ?? '');
     return (
         <ClusterStatusOverview
             clickable
