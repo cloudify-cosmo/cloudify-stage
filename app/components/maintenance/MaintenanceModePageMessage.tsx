@@ -19,7 +19,7 @@ import { getClusterStatus } from '../../actions/manager/clusterStatus';
 export default function MaintenanceModePageMessage() {
     const isFetchingClusterStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
     const maintenanceStatus = useSelector((state: ReduxState) => state.manager.maintenance);
-    const maintenanceMode = useSelector((state: ReduxState) =>
+    const maintenanceModePermitted = useSelector((state: ReduxState) =>
         StageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager)
     );
     const showServicesStatus = useSelector((state: ReduxState) =>
@@ -59,7 +59,9 @@ export default function MaintenanceModePageMessage() {
 
                 <p>{i18n.t('maintenanceMode.message')}</p>
 
-                {maintenanceMode && <MaintenanceModeActivationButton activate={false} onClick={showMaintenanceModal} />}
+                {maintenanceModePermitted && (
+                    <MaintenanceModeActivationButton activate={false} onClick={showMaintenanceModal} />
+                )}
 
                 {showServicesStatus && (
                     <div style={{ fontSize: '1rem' }}>
@@ -71,7 +73,9 @@ export default function MaintenanceModePageMessage() {
                 )}
             </MessageContainer>
 
-            {maintenanceMode && <MaintenanceModeModal show={maintenanceModalVisible} onHide={hideMaintenanceModal} />}
+            {maintenanceModePermitted && (
+                <MaintenanceModeModal show={maintenanceModalVisible} onHide={hideMaintenanceModal} />
+            )}
         </FullScreenSegment>
     );
 }
