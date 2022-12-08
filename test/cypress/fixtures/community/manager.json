@@ -211,6 +211,7 @@
       "widget_pluginsNum": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_pluginUploadButton": ["sys_admin", "manager", "user"],
       "widget_secrets": ["sys_admin", "manager", "user", "operations", "viewer"],
+      "widget_secretProviders": ["sys_admin", "manager", "user", "operations"],
       "widget_serversNum": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_sites": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_sitesMap": ["sys_admin", "manager", "user", "operations", "viewer"],

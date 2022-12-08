@@ -1,15 +1,20 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import i18n from 'i18next';
-import type { ButtonProps } from 'semantic-ui-react';
+import type { MouseEvent } from 'react';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import { Button, Header } from '../basic';
-import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
+import SystemStatusIcon from './SystemStatusIcon';
+import type { ReduxState } from '../../reducers';
 
-export interface SystemStatusHeaderProps {
-    onStatusRefresh: ButtonProps['onClick'];
-    isFetching: boolean;
-}
+export default function SystemStatusHeader() {
+    const isFetching = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
+    const dispatch = useDispatch();
 
-export default function SystemStatusHeader({ onStatusRefresh, isFetching }: SystemStatusHeaderProps) {
+    const onStatusRefresh = (event: MouseEvent) => {
+        event.stopPropagation();
+        dispatch(getClusterStatus());
+    };
     return (
         <div style={{ verticalAlign: 'middle', overflow: 'hidden' }}>
             <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">

@@ -1,12 +1,9 @@
 import React from 'react';
-
+import { useSelector } from 'react-redux';
+import type { ReduxState } from '../../reducers';
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
-import type { ClusterServiceStatus } from '../shared/cluster/types';
 
-export interface SystemStatusIconProps {
-    systemStatus?: ClusterServiceStatus;
-}
-
-export default function SystemStatusIcon({ systemStatus }: SystemStatusIconProps) {
+export default function SystemStatusIcon() {
+    const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
     return <ClusterStatusIcon status={systemStatus} />;
 }

@@ -30,8 +30,11 @@ The following section describes different configuration files used in cloudify-s
 This file is meant to be updated by manager installer -
 it is not going to be installed in case of upgrade or patch.
 
+* `backend` - object, Stage backend configuration details
+  * `host` - string, backend host
+  * `port` - number, backend port
 * `db` - object, Stage PostgreSQL DB connection configuration
-  * `url` - string or array, DB URL or array of DB URLs 
+  * `url` - string or array, DB URL or array of DB URLs
 
 ## DB Options (`db.options.json`)
 
