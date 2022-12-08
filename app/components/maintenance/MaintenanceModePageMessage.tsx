@@ -44,7 +44,7 @@ export default function MaintenanceModePageMessage() {
         if (maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
             navigateToHome();
         }
-    }, [maintenanceStatus, navigateToHome]);
+    }, [maintenanceStatus]);
 
     SplashLoadingScreen.turnOff();
 
