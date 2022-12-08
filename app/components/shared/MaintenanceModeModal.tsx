@@ -1,5 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
+import { isEmpty } from 'lodash';
 import log from 'loglevel';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -184,11 +184,11 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                 )}
             </Modal.Header>
 
-            {errors || !_.isEmpty(activeExecutions?.items) ? (
+            {errors || !isEmpty(activeExecutions?.items) ? (
                 <Modal.Content>
                     <ErrorMessage error={errors} />
 
-                    {!_.isEmpty(activeExecutions?.items) && (
+                    {!isEmpty(activeExecutions?.items) && (
                         <>
                             <Message content={tConfirmModal('activeExecutionsDelay')} info />
 
