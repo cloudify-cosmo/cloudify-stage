@@ -24,5 +24,7 @@ describe('Secret Providers widget', () => {
 
     it('should allow to delete secret providers', () => {
         cy.contains('Secret_Provider_1').parent().find('.trash').click();
+        cy.contains('Yes').click();
+        cy.contains('Secret_Provider_1').should('not.exist');
     });
 });
