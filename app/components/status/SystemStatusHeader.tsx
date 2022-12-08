@@ -1,11 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import i18n from 'i18next';
+import type { MouseEvent } from 'react';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 import { Button, Header } from '../basic';
-import SystemStatusIcon from '../../containers/status/SystemStatusIcon';
+import SystemStatusIcon from './SystemStatusIcon';
+import type { ReduxState } from '../../reducers';
 
-export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
+export default function SystemStatusHeader() {
+    const isFetching = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
+    const dispatch = useDispatch();
+
+    const onStatusRefresh = (event: MouseEvent) => {
+        event.stopPropagation();
+        dispatch(getClusterStatus());
+    };
     return (
         <div style={{ verticalAlign: 'middle', overflow: 'hidden' }}>
             <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
@@ -24,7 +33,3 @@ export default function SystemStatusHeader({ onStatusRefresh, isFetching }) {
         </div>
     );
 }
-SystemStatusHeader.propTypes = {
-    onStatusRefresh: PropTypes.func.isRequired,
-    isFetching: PropTypes.bool.isRequired
-};

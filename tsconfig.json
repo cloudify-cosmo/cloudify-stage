@@ -2,6 +2,7 @@
     "compilerOptions": {
         "noEmit": true,
         "esModuleInterop": true,
+        "resolveJsonModule": true,
         // The flag below is being used to handle the webpack-dev-server@4.x.x typing issue.
         // The issue is explained in more details here: https://github.com/aurelia/cli/issues/700
         "skipLibCheck": true
