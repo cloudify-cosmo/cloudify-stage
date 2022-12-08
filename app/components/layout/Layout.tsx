@@ -35,8 +35,8 @@ export default function Layout() {
     useEffect(() => {
         dispatch(intialPageLoad())
             .then(() => {
-                StatusPoller.getPoller()?.start();
-                UserAppDataAutoSaver.getAutoSaver()?.start();
+                StatusPoller.getPoller()!.start();
+                UserAppDataAutoSaver.getAutoSaver()!.start();
                 setInitialized(true);
             })
             .catch((err: string) => {
@@ -54,8 +54,8 @@ export default function Layout() {
             });
 
         return () => {
-            StatusPoller.getPoller()?.stop();
-            UserAppDataAutoSaver.getAutoSaver()?.stop();
+            StatusPoller.getPoller()!.stop();
+            UserAppDataAutoSaver.getAutoSaver()!.stop();
         };
     }, []);
 
