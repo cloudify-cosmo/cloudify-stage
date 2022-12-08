@@ -55,14 +55,9 @@ export default function MaintenanceModePageMessage() {
             </HeaderBar>
 
             <MessageContainer wide>
-                <Header as="h2">{i18n.t('maintenanceMode.header', 'Maintenance mode')}</Header>
+                <Header as="h2">{i18n.t('maintenanceMode.header')}</Header>
 
-                <p>
-                    {i18n.t(
-                        'maintenanceMode.message',
-                        'Server is on maintenance mode and is not available at the moment.'
-                    )}
-                </p>
+                <p>{i18n.t('maintenanceMode.message')}</p>
 
                 {canMaintenanceMode && (
                     <MaintenanceModeActivationButton activate={false} onClick={showMaintenanceModal} />
