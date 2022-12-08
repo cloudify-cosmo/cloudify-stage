@@ -9,11 +9,9 @@ import { ThemeProvider } from 'styled-components';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from 'utils/consts';
-import type { ReduxStore } from 'configureStore';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
 import type { LicenseStatus } from 'reducers/managerReducer';
-import { createToolbox } from 'utils/Toolbox';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
@@ -87,7 +85,6 @@ describe('(Component) Banner', () => {
                 }
             }
         });
-        createToolbox(store as ReduxStore);
 
         const componentsTree = mount(
             <Provider store={store}>
