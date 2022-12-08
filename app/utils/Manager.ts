@@ -64,7 +64,7 @@ export default class Manager extends Internal {
     doFetchFull<ResponseBodyItem>(
         fetcher: (params: QueryStringParams) => Promise<PaginatedResponse<ResponseBodyItem>>,
         params: QueryStringParams = {},
-        fullData: PaginatedResponse<ResponseBodyItem> = emptyPaginatedResponse,
+        fullData: PaginatedResponse<ResponseBodyItem> = { ...emptyPaginatedResponse },
         size = 0
     ): Promise<PaginatedResponse<ResponseBodyItem>> {
         const fetchParams = {
