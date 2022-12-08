@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import { isEmpty } from 'lodash';
 import log from 'loglevel';
 import React, { useEffect, useRef } from 'react';
@@ -22,7 +21,6 @@ import {
     switchMaintenance
 } from '../../actions/manager/maintenance';
 import Consts from '../../utils/consts';
-
 import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils';
@@ -31,6 +29,7 @@ import ExecutionStatus from './ExecutionStatus';
 import type { ReduxState } from '../../reducers';
 import type { ActiveExecutions } from '../../actions/manager/maintenance';
 import type { CancelablePromise } from '../../utils/types';
+import type { ReduxThunkDispatch } from '../../configureStore';
 
 const POLLING_INTERVAL = 2000;
 
@@ -43,7 +42,7 @@ interface MaintenanceModeModalProps {
 }
 
 export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeModalProps) {
-    const dispatch = useDispatch();
+    const dispatch: ReduxThunkDispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
     const activeExecutions: ActiveExecutions | null = useSelector(
         (state: ReduxState) => state.manager.activeExecutions ?? null
