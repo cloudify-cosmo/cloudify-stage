@@ -1,8 +1,8 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
-import type { Visibility } from '../../../widgets/common/src/types';
-import type { BlueprintUploadParameters } from '../../../widgets/common/src/blueprints/BlueprintActions';
+import BlueprintActions from '../../../app/widgets/common/blueprints/BlueprintActions';
+import type { Visibility } from '../../../app/widgets/common/types';
+import type { BlueprintUploadParameters } from '../../../app/widgets/common/blueprints/BlueprintActions';
 
 declare global {
     namespace Cypress {

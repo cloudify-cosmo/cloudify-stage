@@ -2,8 +2,8 @@
 import BlueprintActions, {
     InProgressBlueprintStates,
     CompletedBlueprintStates
-} from 'common/src/blueprints/BlueprintActions';
-import PollHelper from 'common/src/utils/PollHelper';
+} from 'widgets/common/blueprints/BlueprintActions';
+import PollHelper from 'widgets/common/utils/PollHelper';
 
 jest.mock('common/src/utils/PollHelper');
 

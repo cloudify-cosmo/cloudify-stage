@@ -5,7 +5,7 @@ import type { FilterWidget } from './types';
 import FilterAddModal from './FilterAddModal';
 import FilterCloneModal from './FilterCloneModal';
 import FilterEditModal from './FilterEditModal';
-import type { Filter, FilterUsage, FilterRule } from '../../common/src/filters/types';
+import type { Filter, FilterUsage, FilterRule } from '../../../app/widgets/common/filters/types';
 
 interface FiltersTableData {
     filters: Filter[];

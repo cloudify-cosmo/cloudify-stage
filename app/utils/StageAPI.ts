@@ -20,6 +20,7 @@ import type StageUtils from './stageUtils';
 // NOTE: make sure the types are registered globally
 import './types';
 import type { ManagerData } from '../reducers/managerReducer';
+import type StageCommon from '../widgets/common';
 
 type StagePropTypes = typeof StagePropTypes;
 type StageHooks = typeof StageHooks;
@@ -230,26 +231,9 @@ declare global {
         const ComponentToHtmlString: (element: ReactElement) => string;
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
-
-        // NOTE: Common items are defined in widgets/common
-        /** Common widget utilities */
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface Common {}
-        let Common: Common;
-        const defineCommon: (definition: any) => void;
-
-        // NOTE: Additional PropTypes are defined in widgets
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface PropTypes extends StagePropTypes {}
-        const PropTypes: PropTypes;
-        const definePropTypes: (definition: Record<string, any>) => void;
-
-        // NOTE: Additional hooks are defined in widgets
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface Hooks extends StageHooks {}
-        /** Reusable utility hooks */
-        const Hooks: Hooks;
-        const defineHooks: (definition: Record<string, any>) => void;
+        const Common: typeof StageCommon;
+        const PropTypes: typeof StagePropTypes;
+        const Hooks: typeof StageHooks;
 
         /**
          * Well-known entries that can be stored in the widgets' context.

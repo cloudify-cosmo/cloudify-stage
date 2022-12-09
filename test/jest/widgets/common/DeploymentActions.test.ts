@@ -1,6 +1,6 @@
-import DeploymentActions from 'common/src/deployments/DeploymentActions';
-import PollHelper from 'common/src/utils/PollHelper';
-import ExecutionActions from 'common/src/executions/ExecutionActions';
+import DeploymentActions from 'widgets/common/deployments/DeploymentActions';
+import PollHelper from 'widgets/common/utils/PollHelper';
+import ExecutionActions from 'widgets/common/executions/ExecutionActions';
 
 jest.mock('common/src/utils/PollHelper');
 const wait = jest.fn(() => Promise.resolve());
