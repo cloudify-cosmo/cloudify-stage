@@ -87,7 +87,6 @@ export default function LabelsTable({ data, toolbox }) {
                                 <Icon
                                     name="edit"
                                     link
-                                    bordered
                                     title={i18n.t('widgets.labels.columns.actions.edit')}
                                     onClick={() => {
                                         setLabelInEdit(item);
@@ -98,7 +97,6 @@ export default function LabelsTable({ data, toolbox }) {
                                 <Icon
                                     name="trash"
                                     link
-                                    bordered
                                     title={i18n.t('widgets.labels.columns.actions.delete')}
                                     onClick={() => setLabelToDelete(item)}
                                     disabled={!Labels.isLabelModifiable(item.key)}
@@ -111,11 +109,10 @@ export default function LabelsTable({ data, toolbox }) {
                                     name="check"
                                     color="green"
                                     link={currentLabelIsValid}
-                                    bordered
                                     onClick={updateLabelValue}
                                     disabled={!currentLabelIsValid}
                                 />
-                                <Icon name="cancel" color="red" link bordered onClick={stopLabelEdit} />
+                                <Icon name="cancel" color="red" link onClick={stopLabelEdit} />
                             </DataTable.Data>
                         )}
                     </DataTable.Row>

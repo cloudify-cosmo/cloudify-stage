@@ -1448,6 +1448,10 @@
                 "updated": "Updated",
                 "creator": "Creator",
                 "tenant": "Tenant"
+            },
+            "actions": {
+                "updateSecret": "Update secret",
+                "deleteSecret": "Delete secret"
             }
         },
         "serviceButton": {
@@ -1722,8 +1726,8 @@
             "description": "This widget shows the deployment inputs",
             "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
             "columns": {
-              "name": "Name",
-              "value": "Value"
+                "name": "Name",
+                "value": "Value"
             }
         },
         "tenants": {
@@ -1905,6 +1909,26 @@
                 "showNodeInstances": "Show node instances status"
             },
             "noDeploymentSelected": "No deployment selected"
+        },
+        "sites": {
+            "actions": {
+                "updateSite": "Update site",
+                "deleteSite": "Delete site"
+            }
+        },
+        "snapshots": {
+            "actions": {
+                "restore": "Restore",
+                "download": "Download",
+                "delete": "Delete"
+            }
+        },
+        "managers": {
+            "actions": {
+                "openConsole": "Open Console",
+                "refreshStatus": "Refresh Status",
+                "refreshStatusInProgress": "Status refresh in progress..."
+            }
         }
     },
     "input": {
