@@ -41,21 +41,21 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
             return (
                 <div>
                     <pre className="forceMaxWidth">{showSecretValue}</pre>
-                    <Icon bordered link name="hide" title="Hide secret value" onClick={onHide} />
+                    <Icon link name="hide" title="Hide secret value" onClick={onHide} />
                 </div>
             );
         }
         return (
             <Popup position="top right" on="hover">
                 <Popup.Trigger>
-                    <Icon bordered name="dont" color="red" />
+                    <Icon name="dont" color="red" />
                 </Popup.Trigger>
                 User `{currentUsername}` is not permitted to show the secret `{secretKey} in the tenant `
                 {selectedTenant}` .
             </Popup>
         );
     }
-    return <Icon bordered link name="unhide" title="Show secret value" onClick={onShow} />;
+    return <Icon link name="unhide" title="Show secret value" onClick={onShow} />;
 };
 
 interface SecretsTableProps {
@@ -319,17 +319,15 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                 <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
-                                        bordered
                                         link
                                         name="edit"
-                                        title="Update secret"
+                                        title={t('actions.updateSecret')}
                                         onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
-                                        bordered
                                         link
                                         name="trash"
-                                        title="Delete secret"
+                                        title={t('actions.deleteSecret')}
                                         onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>

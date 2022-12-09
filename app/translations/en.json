@@ -1096,8 +1096,8 @@
                     "placeholder": "Select fields from the list"
                 },
                 "keysOfLabelsToShow": {
-                  "name": "List of labels' keys to show in the table as columns",
-                  "placeholder": "Select keys from the list"
+                    "name": "List of labels' keys to show in the table as columns",
+                    "placeholder": "Select keys from the list"
                 },
                 "mapOpenByDefault": {
                     "name": "Show map by default"
@@ -1421,6 +1421,24 @@
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
+        "secretProviders": {
+            "name": "Secret Providers Management",
+            "description": "This widget allows configuring new, modifying existing, and deleting secret providers.",
+            "table": {
+                "columns": {
+                    "name": "Provider name",
+                    "type": "Provider type",
+                    "dateCreated": "Date created",
+                    "dateUpdated": "Date updated"
+                },
+                "noSecretProviders": "There are no Secret Providers available. Click \"Create\" to add Secret Provider.",
+                "buttons": {
+                    "removeSecretProvider": "Delete Secret Provider",
+                    "updateSecretPRovider": "Update Secret Provider",
+                    "create": "Create"
+                }
+            }
+        },
         "secrets": {
             "columns": {
                 "key": "Key",
@@ -1430,6 +1448,10 @@
                 "updated": "Updated",
                 "creator": "Creator",
                 "tenant": "Tenant"
+            },
+            "actions": {
+                "updateSecret": "Update secret",
+                "deleteSecret": "Delete secret"
             }
         },
         "serviceButton": {
@@ -1704,8 +1726,8 @@
             "description": "This widget shows the deployment inputs",
             "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
             "columns": {
-              "name": "Name",
-              "value": "Value"
+                "name": "Name",
+                "value": "Value"
             }
         },
         "tenants": {
@@ -1887,6 +1909,26 @@
                 "showNodeInstances": "Show node instances status"
             },
             "noDeploymentSelected": "No deployment selected"
+        },
+        "sites": {
+            "actions": {
+                "updateSite": "Update site",
+                "deleteSite": "Delete site"
+            }
+        },
+        "snapshots": {
+            "actions": {
+                "restore": "Restore",
+                "download": "Download",
+                "delete": "Delete"
+            }
+        },
+        "managers": {
+            "actions": {
+                "openConsole": "Open Console",
+                "refreshStatus": "Refresh Status",
+                "refreshStatusInProgress": "Status refresh in progress..."
+            }
         }
     },
     "input": {

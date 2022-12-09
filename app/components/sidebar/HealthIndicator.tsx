@@ -5,7 +5,7 @@ import { Icon } from '../basic';
 import SideBarItemIcon from './SideBarItemIcon';
 import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/manager/clusterStatus';
-import SystemServicesStatus from '../../containers/status/SystemServicesStatus';
+import SystemServicesStatus from '../status/SystemServicesStatus';
 import { ClusterServiceStatus } from '../shared/cluster/types';
 import type { ReduxState } from '../../reducers';
 import SideBarDropdownItem from './SideBarDropdownItem';
