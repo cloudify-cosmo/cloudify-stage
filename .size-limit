@@ -1,7 +1,7 @@
 [
     {
         "name": "Main JS bundle",
-        "limit": "335 KB",
+        "limit": "509 KB",
         "gzip": false,
         "path": "dist/static/js/main.bundle.js"
     },
@@ -13,7 +13,7 @@
     },
     {
         "name": "Widgets",
-        "limit": "3.00 MB",
+        "limit": "2.62 MB",
         "gzip": false,
         "running": false,
         "path": [
