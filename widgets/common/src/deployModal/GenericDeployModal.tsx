@@ -20,7 +20,7 @@ import type {
     WorkflowOptions
 } from '../executeWorkflow';
 import type { DropdownValue, Field } from '../types';
-import type { BlueprintDeployParams } from '../blueprints/BlueprintActions';
+import type { BlueprintDeployParams, FullBlueprintData } from '../blueprints/BlueprintActions';
 import type { Label } from '../labels/types';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
 import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
@@ -161,7 +161,7 @@ const defaultProps: Partial<GenericDeployModalProps> = {
 type GenericDeployModalState = {
     activeSection: any;
     areSecretsMissing: boolean;
-    blueprint: any;
+    blueprint: FullBlueprintData | typeof GenericDeployModal.EMPTY_BLUEPRINT;
     deploymentId: string;
     deploymentInputs: Record<string, unknown>;
     deploymentName: string;
@@ -256,6 +256,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onDryRunChange = this.onDryRunChange.bind(this);
         this.onQueueChange = this.onQueueChange.bind(this);
         this.onScheduleChange = this.onScheduleChange.bind(this);
+
+        this.shouldRequireDeployOnDropdown = this.shouldRequireDeployOnDropdown.bind(this);
     }
 
     componentDidMount() {
@@ -524,6 +526,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return _.isEmpty(blueprintId);
     }
 
+    shouldRequireDeployOnDropdown() {
+        const { blueprint } = this.state;
+        // eslint-disable-next-line
+        console.log(blueprint);
+    }
+
     selectBlueprint(id: DropdownValue) {
         if (!_.isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
@@ -632,6 +640,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             selectedApproveButton
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
+        this.shouldRequireDeployOnDropdown();
 
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
@@ -699,6 +708,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 />
                             </Form.Field>
                         )}
+
                         <Accordion fluid>
                             <AccordionSectionWithDivider
                                 title={t('sections.deploymentInputs')}
@@ -708,7 +718,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             >
                                 <DeploymentInputs
                                     toolbox={toolbox}
-                                    blueprint={blueprint}
+                                    blueprint={blueprint as FullBlueprintData}
                                     onYamlFileChange={this.handleYamlFileChange}
                                     fileLoading={fileLoading}
                                     onDeploymentInputChange={this.handleDeploymentInputChange}
