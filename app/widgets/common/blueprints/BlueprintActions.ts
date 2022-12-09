@@ -10,6 +10,7 @@ import type {
     PutSourceListYamlResponse
 } from '../../../../backend/routes/SourceBrowser.types';
 import StageUtils from '../../../utils/stageUtils';
+import generateUploadFormData from './generateUploadFormData';
 
 class BlueprintUploadError extends Error {
     constructor(message: string | null, public state: string) {
@@ -146,11 +147,6 @@ export const CompletedBlueprintStates = {
     Invalid: 'invalid'
 };
 
-const UploadBlueprintFormDataProperties = {
-    Params: 'params',
-    BlueprintArchive: 'blueprint_archive'
-};
-
 export default class BlueprintActions {
     static isUploaded(blueprint: { state: string }) {
         return blueprint.state === CompletedBlueprintStates.Uploaded;
@@ -159,17 +155,6 @@ export default class BlueprintActions {
     static isCompleted(blueprint: { state: string }) {
         return Object.values(CompletedBlueprintStates).includes(blueprint.state);
     }
-
-    static generateUploadFormData = (params: BlueprintUploadParameters, blueprintFile?: File | Blob): FormData => {
-        const formData = new FormData();
-        formData.append(UploadBlueprintFormDataProperties.Params, JSON.stringify(params));
-
-        if (blueprintFile) {
-            formData.append(UploadBlueprintFormDataProperties.BlueprintArchive, blueprintFile);
-        }
-
-        return formData;
-    };
 
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}
 
@@ -298,12 +283,12 @@ export default class BlueprintActions {
                 parseResponse: false,
                 compressFile,
                 onFileUpload: blueprintFile => {
-                    const formData = BlueprintActions.generateUploadFormData(params, blueprintFile);
+                    const formData = generateUploadFormData(params, blueprintFile);
                     return formData;
                 }
             });
         } else {
-            const formData = BlueprintActions.generateUploadFormData(params);
+            const formData = generateUploadFormData(params);
 
             await this.toolbox.getManager().doPut(`/blueprints/${blueprintName}`, {
                 body: formData
