@@ -96,7 +96,6 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                 link={!isReadmeLoading}
                                 title={t('actions.openDocumentation')}
                                 loading={isReadmeLoading}
-                                bordered={!isReadmeLoading}
                                 onClick={(event: Event) => {
                                     event.stopPropagation();
                                     onReadme(name, readme_url);
@@ -107,7 +106,6 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                     link={!isBlueprintUploaded}
                                     name="arrow right"
                                     title={t('actions.openBlueprint')}
-                                    bordered
                                     onClick={() => {
                                         onOpenBlueprintPage(name);
                                     }}
@@ -117,7 +115,6 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                                     name="upload"
                                     link={!isBlueprintUploaded}
                                     title={t('actions.uploadBlueprint')}
-                                    bordered
                                     onClick={() => {
                                         onUpload(name, zip_url, image_url, main_blueprint);
                                     }}

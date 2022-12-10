@@ -59,8 +59,8 @@ export default function DeploymentActionsMenu({
         content: translate(item.name),
         disabled: !isUserAuthorized(item.permission, managerState) || !isAvailable(item, workflows)
     }));
-    const popupMenuProps: { bordered?: boolean; help?: string; offset?: [number, number] } = !trigger
-        ? { bordered: true, help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
+    const popupMenuProps: { help?: string; offset?: [number, number] } = !trigger
+        ? { help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
         : {};
 
     const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
