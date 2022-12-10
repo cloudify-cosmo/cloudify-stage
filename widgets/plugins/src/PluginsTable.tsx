@@ -171,7 +171,6 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                 <Icon
                                     name="download"
                                     link
-                                    bordered
                                     title={t('download')}
                                     onClick={(event: Event) => downloadPlugin(item, event)}
                                     style={{ marginBottom: 4 }}
@@ -179,7 +178,6 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                                 <Icon
                                     name="trash"
                                     link
-                                    bordered
                                     title={t('delete')}
                                     onClick={(event: Event) => deletePluginConfirm(item, event)}
                                 />

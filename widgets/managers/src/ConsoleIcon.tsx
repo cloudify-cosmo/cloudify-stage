@@ -1,5 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 
+const t = Stage.Utils.getT('widgets.managers.actions');
+
 export default class ConsoleIcon extends React.Component {
     handleClick = event => {
         const { redirectToPage, url } = Stage.Utils.Url;
@@ -16,10 +18,7 @@ export default class ConsoleIcon extends React.Component {
 
         return (
             manager.ip && (
-                <Popup
-                    trigger={<Icon name="computer" link bordered onClick={this.handleClick} />}
-                    content="Open Console"
-                />
+                <Popup trigger={<Icon name="computer" link onClick={this.handleClick} />} content={t('openConsole')} />
             )
         );
     }
