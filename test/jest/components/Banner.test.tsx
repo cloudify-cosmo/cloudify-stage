@@ -18,40 +18,40 @@ import versions from '../resources/versions';
 import i18nInit from '../i18n';
 
 describe('(Component) Banner', () => {
-    let bannerComponent: ReactWrapper | undefined;
+    let bannerComponent: ReactWrapper;
 
     const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
-        const headerBanner: ReactWrapper<HeaderBannerProps> | undefined = bannerComponent?.find('HeaderBanner');
-        expect(headerBanner?.props().productName).toBe(productName);
-        expect(headerBanner?.props().productVersion).toBe(productVersion);
-        expect(headerBanner?.props().licenseEdition).toBe(licenseEdition);
+        const headerBanner: ReactWrapper<HeaderBannerProps> = bannerComponent.find('HeaderBanner');
+        expect(headerBanner.props().productName).toBe(productName);
+        expect(headerBanner.props().productVersion).toBe(productVersion);
+        expect(headerBanner.props().licenseEdition).toBe(licenseEdition);
     };
 
     const verifyTag = (isPresent = false, tag: string | null = null, isLinked = false) => {
-        const tagComponent = bannerComponent?.find('LicenseLabel');
+        const tagComponent = bannerComponent.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
-            const labelComponent = bannerComponent?.find('Label');
+            const labelComponent = bannerComponent.find('Label');
             if (isEmpty(tag)) {
                 expect(labelComponent).toHaveLength(0);
             } else {
-                expect(labelComponent?.text()).toBe(tag);
-                const linkComponent = tagComponent?.find('Link');
+                expect(labelComponent.text()).toBe(tag);
+                const linkComponent = tagComponent.find('Link');
                 expect(linkComponent).toHaveLength(isLinked ? 1 : 0);
                 if (isLinked) {
-                    expect(linkComponent?.props().to).toBe(Consts.PAGE_PATH.LICENSE);
+                    expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.LICENSE);
                 }
             }
         }
     };
 
     const verifyFullName = (fullName: string) => {
-        const headerComponent = bannerComponent?.find('Header');
-        expect(headerComponent?.text()).toBe(fullName);
+        const headerComponent = bannerComponent.find('Header');
+        expect(headerComponent.text()).toBe(fullName);
 
-        const linkComponent = bannerComponent?.find('Link').first();
+        const linkComponent = bannerComponent.find('Link').first();
         expect(linkComponent).toHaveLength(1);
-        expect(linkComponent?.props().to).toBe(Consts.PAGE_PATH.HOME);
+        expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
     const getLicenseEdition = (license: Partial<ReduxState['manager']['license']['data']>) => {
