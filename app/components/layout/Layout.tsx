@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,9 +18,10 @@ import StatusPoller from '../../utils/StatusPoller';
 import UserAppDataAutoSaver from '../../utils/UserAppDataAutoSaver';
 import ScrollToTop from './ScrollToTop';
 import TemplateManagement from '../templateManagement/TemplateManagement';
+import { useBoolean } from '../../utils/hooks';
 
 export default function Layout() {
-    const [initialized, setInitialized] = useState(false);
+    const [initialized, setInitialized] = useBoolean(false);
     const isLoading = useSelector((state: ReduxState) => state.app.loading);
     const isUserAuthorizedForTemplateManagement = useSelector(
         (state: ReduxState) =>
@@ -37,7 +38,7 @@ export default function Layout() {
             .then(() => {
                 StatusPoller.getPoller()!.start();
                 UserAppDataAutoSaver.getAutoSaver()!.start();
-                setInitialized(true);
+                setInitialized();
             })
             .catch((err: string) => {
                 switch (err) {
