@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
+import type { ReduxState } from 'reducers';
 import Consts from 'utils/consts';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
@@ -15,7 +16,6 @@ import type { LicenseStatus } from 'reducers/managerReducer';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
-import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) Banner', () => {
     let bannerComponent: ReactWrapper | undefined;
@@ -54,11 +54,15 @@ describe('(Component) Banner', () => {
         expect(linkComponent?.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
-    const getLicenseEdition = (license: Partial<LicenseResponse>) => {
-        return license.license_edition || '';
+    const getLicenseEdition = (license: Partial<ReduxState['manager']['license']['data']>) => {
+        return license?.license_edition || '';
     };
 
-    const getLicenseState = (data: Partial<LicenseResponse>, isRequired: boolean, status: LicenseStatus) => {
+    const getLicenseState = (
+        data: ReduxState['manager']['license']['data'] | null,
+        isRequired: boolean,
+        status: LicenseStatus
+    ) => {
         return { data, isRequired, status };
     };
 
@@ -69,9 +73,9 @@ describe('(Component) Banner', () => {
     };
 
     const mockStoreAndRender = (
-        license: { data: Partial<LicenseResponse>; isRequired: boolean; status: LicenseStatus },
-        version: Partial<VersionResponse>,
-        whiteLabel: { showVersionDetails: boolean }
+        license: ReduxState['manager']['license'],
+        version: ReduxState['manager']['version'],
+        whiteLabel: Pick<ReduxState['config']['app']['whiteLabel'], 'showVersionDetails'>
     ) => {
         const mockStore = configureMockStore();
         const store = mockStore({
@@ -163,7 +167,7 @@ describe('(Component) Banner', () => {
 
     describe('does not show full name', () => {
         it('with community tag when version edition is community', () => {
-            const license = getLicenseState({}, false, Consts.LICENSE.EMPTY);
+            const license = getLicenseState(null, false, Consts.LICENSE.EMPTY);
             const edition = getLicenseEdition({});
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.community, whiteLabel);
