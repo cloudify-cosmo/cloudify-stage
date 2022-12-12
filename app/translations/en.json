@@ -1421,6 +1421,20 @@
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
+        "outputs": {
+            "name": "Deployment Outputs/Capabilities",
+            "description": "This widget shows the deployment outputs and capabilities",
+            "noData": "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.",
+            "exportButton": "Export to JSON",
+            "types": {
+                "output": "Output",
+                "capability": "Capability"
+            },
+            "columns": {
+                "name": "Name",
+                "type": "Type"
+            }
+        },
         "secretProviders": {
             "name": "Secret Providers Management",
             "description": "This widget allows configuring new, modifying existing, and deleting secret providers.",
@@ -1451,6 +1465,10 @@
                 "updated": "Updated",
                 "creator": "Creator",
                 "tenant": "Tenant"
+            },
+            "actions": {
+                "updateSecret": "Update secret",
+                "deleteSecret": "Delete secret"
             }
         },
         "serviceButton": {
@@ -1908,6 +1926,26 @@
                 "showNodeInstances": "Show node instances status"
             },
             "noDeploymentSelected": "No deployment selected"
+        },
+        "sites": {
+            "actions": {
+                "updateSite": "Update site",
+                "deleteSite": "Delete site"
+            }
+        },
+        "snapshots": {
+            "actions": {
+                "restore": "Restore",
+                "download": "Download",
+                "delete": "Delete"
+            }
+        },
+        "managers": {
+            "actions": {
+                "openConsole": "Open Console",
+                "refreshStatus": "Refresh Status",
+                "refreshStatusInProgress": "Status refresh in progress..."
+            }
         }
     },
     "input": {
