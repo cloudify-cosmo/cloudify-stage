@@ -29,9 +29,11 @@ import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
+import type { ListDeploymentsParams } from '../actions/SearchActions';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
+const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
 
 type Blueprint = {
     description?: string;
@@ -161,7 +163,7 @@ const defaultProps: Partial<GenericDeployModalProps> = {
 type GenericDeployModalState = {
     activeSection: any;
     areSecretsMissing: boolean;
-    blueprint: FullBlueprintData | typeof GenericDeployModal.EMPTY_BLUEPRINT;
+    blueprint: typeof GenericDeployModal.EMPTY_BLUEPRINT | FullBlueprintData;
     deploymentId: string;
     deploymentInputs: Record<string, unknown>;
     deploymentName: string;
@@ -239,6 +241,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         this.state = GenericDeployModal.initialState;
 
+        // TODO Norbert: Migrate functions within this component to arrow ones, to omit the requirement of binding 'this'
         this.selectBlueprint = this.selectBlueprint.bind(this);
 
         this.handleDeploymentInputChange = this.handleDeploymentInputChange.bind(this);
@@ -256,8 +259,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onDryRunChange = this.onDryRunChange.bind(this);
         this.onQueueChange = this.onQueueChange.bind(this);
         this.onScheduleChange = this.onScheduleChange.bind(this);
-
-        this.shouldRequireDeployOnDropdown = this.shouldRequireDeployOnDropdown.bind(this);
     }
 
     componentDidMount() {
@@ -526,12 +527,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return _.isEmpty(blueprintId);
     }
 
-    shouldRequireDeployOnDropdown() {
-        const { blueprint } = this.state;
-        // eslint-disable-next-line
-        console.log(blueprint);
-    }
-
     selectBlueprint(id: DropdownValue) {
         if (!_.isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
@@ -640,7 +635,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             selectedApproveButton
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
-        this.shouldRequireDeployOnDropdown();
+
+        const shouldRequireDeployOnDropdown = !isEmpty(
+            (blueprint as FullBlueprintData)?.requirements?.parent_capabilities
+        );
 
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
@@ -705,6 +703,31 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     onChange={(_: ChangeEvent<HTMLInputElement>, { value }: { value: string }) =>
                                         this.setState({ deploymentName: value })
                                     }
+                                />
+                            </Form.Field>
+                        )}
+
+                        {shouldRequireDeployOnDropdown && (
+                            // TODO: Add ability to handle this field by form
+                            <Form.Field
+                                error={errors.blueprintName}
+                                label={t('inputs.deployOn.label')}
+                                placeholder={t('inputs.deployOn.placeholder')}
+                                required
+                            >
+                                <DynamicDropdown
+                                    value={null}
+                                    name="deployOn"
+                                    fetchUrl="/deployments?_include=id,display_name"
+                                    searchParams={deploymentSearchParams}
+                                    clearable={false}
+                                    // eslint-disable-next-line
+                                    onChange={value => console.log(value)}
+                                    textFormatter={item =>
+                                        Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })
+                                    }
+                                    toolbox={toolbox}
+                                    prefetch
                                 />
                             </Form.Field>
                         )}

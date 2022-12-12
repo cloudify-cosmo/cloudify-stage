@@ -612,6 +612,10 @@
                             "label": "Blueprint",
                             "help": "Select the blueprint based on which this deployment will be created."
                         },
+                        "deployOn": {
+                            "label": "Deploy On",
+                            "placeholder": "Select a parent"
+                        },
                         "siteName": {
                             "label": "Site name",
                             "help": "Specify a site to which this deployment will be assigned."

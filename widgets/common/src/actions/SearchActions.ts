@@ -4,7 +4,7 @@ import type { FilterRule } from '../filters/types';
 
 type ResourceName = 'blueprints' | 'deployments' | 'workflows';
 type Params = Record<string, any>;
-type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
+export type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
     // eslint-disable-next-line camelcase
     _search_name?: string;
     _include?: string;
