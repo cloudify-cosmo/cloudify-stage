@@ -49,7 +49,7 @@ const RemoveTokenButton = ({ token, toolbox }: RemoveTokenButtonProps) => {
 
     return (
         <>
-            <Icon bordered link name="trash" title={t('table.buttons.removeToken')} onClick={showModal} />
+            <Icon link name="trash" title={t('table.buttons.removeToken')} onClick={showModal} />
             {isModalVisible && (
                 <DeleteModal open content={deleteModalContent} onCancel={hideModal} onConfirm={removeToken} />
             )}

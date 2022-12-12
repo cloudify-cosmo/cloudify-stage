@@ -153,7 +153,6 @@ export default class NodesTable extends React.Component {
                                                     <Icon
                                                         name="sitemap"
                                                         link
-                                                        bordered
                                                         className="rightFloated"
                                                         onClick={event => event.stopPropagation()}
                                                     />

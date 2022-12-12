@@ -5,6 +5,8 @@ import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 import SnapshotPropType from './props/SnapshotPropType';
 
+const t = Stage.Utils.getT('widgets.snapshots');
+
 export default class SnapshotsTable extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -150,26 +152,23 @@ export default class SnapshotsTable extends React.Component {
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         name="undo"
-                                        title="Restore"
-                                        bordered
+                                        title={t('actions.restore')}
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.restoreSnapshot)}
                                     />
                                     <Icon
                                         name="download"
-                                        title="Download"
-                                        bordered
+                                        title={t('actions.download')}
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.downloadSnapshot)}
                                     />
                                     <Icon
                                         name="trash"
-                                        bordered
                                         disabled={!isRemovable}
                                         link={isRemovable}
-                                        title="Delete"
+                                        title={t('actions.delete')}
                                         onClick={_.wrap(item, this.deleteSnapshotConfirm)}
                                     />
                                 </DataTable.Data>
