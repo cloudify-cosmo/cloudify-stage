@@ -1,5 +1,5 @@
-import type { LabelInputType } from '../../../../app/widgets/common/labels/types';
-import { isLabelModifiable } from '../../../../app/widgets/common/labels/common';
+import type { LabelInputType } from 'app/widgets/common/labels/types';
+import { isLabelModifiable } from 'app/widgets/common/labels/common';
 
 describe('Deployment Action Buttons widget', () => {
     const blueprintName = 'deployment_action_buttons_test';
