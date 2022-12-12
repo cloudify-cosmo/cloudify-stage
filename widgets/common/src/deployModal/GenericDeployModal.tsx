@@ -185,6 +185,7 @@ type GenericDeployModalState = {
     schedule: boolean;
     scheduledTime: string;
     selectedApproveButton: ApproveButtons;
+    requiresDeployOnDropdown: boolean;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -209,7 +210,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         is_available: true
     };
 
-    static initialState = {
+    static initialState: GenericDeployModalState = {
         blueprint: GenericDeployModal.EMPTY_BLUEPRINT,
         deploymentInputs: {},
         deploymentName: '',
@@ -233,7 +234,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         queue: false,
         schedule: false,
         scheduledTime: '',
-        selectedApproveButton: ApproveButtons.install
+        selectedApproveButton: ApproveButtons.install,
+        requiresDeployOnDropdown: false
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -550,7 +552,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             getInputFieldInitialValue(parameterData.default, parameterData.type)
                         ),
                         errors: {},
-                        loading: false
+                        loading: false,
+                        requiresDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
@@ -632,13 +635,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             queue,
             schedule,
             scheduledTime,
-            selectedApproveButton
+            selectedApproveButton,
+            requiresDeployOnDropdown
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
-
-        const shouldRequireDeployOnDropdown = !isEmpty(
-            (blueprint as FullBlueprintData)?.requirements?.parent_capabilities
-        );
 
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
@@ -707,7 +707,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             </Form.Field>
                         )}
 
-                        {shouldRequireDeployOnDropdown && (
+                        {requiresDeployOnDropdown && (
                             // TODO: Add ability to handle this field by form
                             <Form.Field
                                 error={errors.blueprintName}
