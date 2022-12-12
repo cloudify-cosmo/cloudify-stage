@@ -7,7 +7,7 @@ export default function DeploymentIdInputField({
     onChange,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = '/searches/deployments?_include=id,display_name';
+    const fetchUrl = '/deployments?_include=id,display_name';
 
     return (
         <DynamicDropdown
