@@ -7,7 +7,6 @@ describe('Secret Providers widget', () => {
     function getSecretProviderRow(name: string) {
         return cy.contains(name).parent();
     }
-    // TODO improve this tests
     before(() => {
         cy.fixture('secret_providers/secret_providers').then(secretProviders => {
             const { name, type, visibility } = secretProviders[0];
