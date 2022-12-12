@@ -13,6 +13,7 @@ import Consts from 'utils/consts';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
 import type { LicenseStatus } from 'reducers/managerReducer';
+import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
@@ -54,15 +55,11 @@ describe('(Component) Banner', () => {
         expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
-    const getLicenseEdition = (license: Partial<ReduxState['manager']['license']['data']>) => {
+    const getLicenseEdition = (license: LicenseResponse | null) => {
         return license?.license_edition || '';
     };
 
-    const getLicenseState = (
-        data: ReduxState['manager']['license']['data'] | null,
-        isRequired: boolean,
-        status: LicenseStatus
-    ) => {
+    const getLicenseState = (data: LicenseResponse | null, isRequired: boolean, status: LicenseStatus) => {
         return { data, isRequired, status };
     };
 
@@ -168,7 +165,7 @@ describe('(Component) Banner', () => {
     describe('does not show full name', () => {
         it('with community tag when version edition is community', () => {
             const license = getLicenseState(null, false, Consts.LICENSE.EMPTY);
-            const edition = getLicenseEdition({});
+            const edition = getLicenseEdition(null);
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.community, whiteLabel);
 
