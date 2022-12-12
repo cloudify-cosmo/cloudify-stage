@@ -1,5 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
+import type { SecretProvidersWidget } from '../../../widgets/secretProviders/src/widget.types';
 
 declare global {
     namespace Cypress {
@@ -8,14 +9,9 @@ declare global {
         export interface Chainable extends GetCypressChainableFromCommands<typeof commands> {}
     }
 }
-export interface SecretProvider {
-    name: string;
-    type: string;
-    visibility: string;
-}
 
 const commands = {
-    createSecretProvider: (secretProvider: SecretProvider) => {
+    createSecretProvider: (secretProvider: Partial<SecretProvidersWidget.DataItem>) => {
         const { name, type, visibility } = secretProvider;
         return cy.cfyRequest('/secrets-providers', 'PUT', null, { name, type, visibility });
     },

@@ -28,7 +28,6 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
             .getManager()
             .doDelete(`/secrets-providers/${secretProvider.id}`)
             .then(() => {
-                setDeletingStatus(RequestStatus.SUBMITTED);
                 toolbox.getEventBus().trigger(tableRefreshEvent);
             })
             .catch(() => {

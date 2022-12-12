@@ -54,7 +54,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.created_at)}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.updated_at)}</DataTable.Data>
                         <DataTable.Data textAlign="center">
-                            <Icon name="edit" title={t('buttons.removeSecretProvider')} />
+                            <Icon name="edit" title={t('buttons.updateSecretPRovider')} />
                             <RemoveSecretProviderButton secretProvider={secretProvider} toolbox={toolbox} />
                         </DataTable.Data>
                     </DataTable.Row>
