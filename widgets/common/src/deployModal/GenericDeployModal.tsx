@@ -186,6 +186,7 @@ type GenericDeployModalState = {
     scheduledTime: string;
     selectedApproveButton: ApproveButtons;
     requiresDeployOnDropdown: boolean;
+    deployOn: string;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -235,7 +236,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         schedule: false,
         scheduledTime: '',
         selectedApproveButton: ApproveButtons.install,
-        requiresDeployOnDropdown: false
+        requiresDeployOnDropdown: false,
+        deployOn: ''
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -636,7 +638,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             schedule,
             scheduledTime,
             selectedApproveButton,
-            requiresDeployOnDropdown
+            requiresDeployOnDropdown,
+            deployOn
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
@@ -708,7 +711,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         )}
 
                         {requiresDeployOnDropdown && (
-                            // TODO: Add ability to handle this field by form
+                            // TODO: Add validation to this field
+                            // TODO: Add ability to send correct data from this dropdown
                             <Form.Field
                                 error={errors.blueprintName}
                                 label={t('inputs.deployOn.label')}
@@ -716,13 +720,12 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 required
                             >
                                 <DynamicDropdown
-                                    value={null}
+                                    value={deployOn}
                                     name="deployOn"
                                     fetchUrl="/deployments?_include=id,display_name"
                                     searchParams={deploymentSearchParams}
                                     clearable={false}
-                                    // eslint-disable-next-line
-                                    onChange={value => console.log(value)}
+                                    onChange={value => this.setState({ deployOn: value as string })}
                                     textFormatter={item =>
                                         Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })
                                     }
