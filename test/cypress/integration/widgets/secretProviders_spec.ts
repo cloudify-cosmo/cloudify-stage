@@ -7,12 +7,9 @@ describe('Secret Providers widget', () => {
     // TODO improve this tests
     before(() => {
         cy.fixture('secret_providers/secret_providers').then(secretProviders => {
+            const { name, type, visibility } = secretProviders[0];
             cy.activate('valid_trial_license')
-                .createSecretProvider({
-                    name: secretProviders[0].name,
-                    type: secretProviders[0].type,
-                    visibility: secretProviders[0].visibility
-                })
+                .createSecretProvider({ name, type, visibility })
                 .usePageMock(widgetId, widgetConfiguration)
                 .mockLogin();
         });
