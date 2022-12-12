@@ -16,11 +16,8 @@ export interface SecretProvider {
 
 const commands = {
     createSecretProvider: (secretProvider: SecretProvider) => {
-        return cy.cfyRequest('/secrets-providers', 'PUT', null, {
-            name: secretProvider.name,
-            type: secretProvider.type,
-            visibility: secretProvider.visibility
-        });
+        const { name, type, visibility } = secretProvider;
+        return cy.cfyRequest('/secrets-providers', 'PUT', null, { name, type, visibility });
     },
 
     getSecretProvider: (key: string) => cy.cfyRequest(`/secrets-providers/${key}`, 'GET'),
