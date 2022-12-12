@@ -237,6 +237,7 @@ declare global {
 
         /**
          * Well-known entries that can be stored in the widgets' context.
+         * TODO: (RD-6559) narrow down any-s
          */
         interface ContextEntries {
             deploymentId: string | string[] | null;
