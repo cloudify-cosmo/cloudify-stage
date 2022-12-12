@@ -1,6 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import type { SecretProvidersWidget } from '../../../widgets/secretProviders/src/widget.types';
+import type { SecretProvidersWidget } from 'widgets/secretProviders/src/widget.types';
 
 declare global {
     namespace Cypress {
