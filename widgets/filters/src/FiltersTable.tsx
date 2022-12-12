@@ -76,14 +76,12 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                             <Icon
                                 name="clone"
                                 link
-                                bordered
                                 title={tColumn('actions.clone')}
                                 onClick={() => setFilterToClone(filter)}
                             />
                             <Icon
                                 name="edit"
                                 link={!filter.is_system_filter}
-                                bordered
                                 disabled={filter.is_system_filter}
                                 title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'edit'}`)}
                                 onClick={() => setFilterToEdit(filter)}
@@ -91,7 +89,6 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                             <Icon
                                 name="trash"
                                 link={!filter.is_system_filter}
-                                bordered
                                 disabled={filter.is_system_filter}
                                 title={tColumn(`actions.${filter.is_system_filter ? 'systemFilter' : 'delete'}`)}
                                 onClick={() => setFilterIdToDelete(filter.id)}
