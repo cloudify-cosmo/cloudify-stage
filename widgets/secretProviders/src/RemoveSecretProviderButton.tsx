@@ -42,7 +42,6 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
     return (
         <>
             <Icon
-                bordered
                 link
                 name="trash"
                 title={translateSecretProviders('table.buttons.removeSecretProvider')}
