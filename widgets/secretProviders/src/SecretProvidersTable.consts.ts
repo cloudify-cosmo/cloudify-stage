@@ -7,3 +7,8 @@ export const dataSortingKeys: Record<string, keyof SecretProvidersWidget.DataSor
     createdAt: 'created_at',
     updatedAt: 'updated_at'
 } as const;
+const translationSecretProvider = Stage.Utils.getT('widgets.secretProviders');
+
+export const translateSecretProviders = (key: string, params?: Record<string, any>) => {
+    return translationSecretProvider(key, params);
+};
