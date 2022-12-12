@@ -1,5 +1,5 @@
 @use 'sass:math';
-@import '../../../../node_modules/cloudify-ui-common-frontend/styles/colors';
+@import '~cloudify-ui-common-frontend/styles/colors';
 
 $deploymentStatusColors: (
     // NOTE: use Semantic UI colors
