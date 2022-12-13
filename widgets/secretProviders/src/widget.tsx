@@ -1,6 +1,6 @@
 import type { SecretProvidersWidget } from './widget.types';
 import SecretProvidersTable from './SecretProvidersTable';
-import { translateSecretProviders } from './SecretProvidersTable.consts';
+import { translateSecretProviders } from './SecretProvidersTable.utils';
 
 Stage.defineWidget<never, SecretProvidersWidget.Data, SecretProvidersWidget.Configuration>({
     id: 'secretProviders',

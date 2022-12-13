@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import RemoveSecretProviderButton from './RemoveSecretProviderButton';
-import { dataSortingKeys, tableRefreshEvent, translateSecretProviders } from './SecretProvidersTable.consts';
+import { dataSortingKeys, tableRefreshEvent } from './SecretProvidersTable.consts';
+import { translateSecretProviders } from './SecretProvidersTable.utils';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { DataTable, Icon, Button } = Stage.Basic;

@@ -1,4 +1,5 @@
-import { tableRefreshEvent, translateSecretProviders } from './SecretProvidersTable.consts';
+import { translateSecretProviders } from './SecretProvidersTable.utils';
+import { tableRefreshEvent } from './SecretProvidersTable.consts';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { Icon, Confirm: DeleteModal } = Stage.Basic;
