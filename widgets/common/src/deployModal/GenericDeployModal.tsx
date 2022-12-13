@@ -185,7 +185,7 @@ type GenericDeployModalState = {
     schedule: boolean;
     scheduledTime: string;
     selectedApproveButton: ApproveButtons;
-    requiresDeployOnDropdown: boolean;
+    showDeployOnDropdown: boolean;
     deployOn: string;
 };
 
@@ -236,7 +236,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         schedule: false,
         scheduledTime: '',
         selectedApproveButton: ApproveButtons.install,
-        requiresDeployOnDropdown: false,
+        showDeployOnDropdown: false,
         deployOn: ''
     };
 
@@ -555,7 +555,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        requiresDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
@@ -572,15 +572,27 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     validateInputs() {
         return new Promise<void>((resolve, reject) => {
-            const { blueprint, deploymentId, deploymentName, deploymentInputs: stateDeploymentInputs } = this.state;
+            const {
+                blueprint,
+                deploymentId,
+                deploymentName,
+                deploymentInputs: stateDeploymentInputs,
+                showDeployOnDropdown,
+                deployOn
+            } = this.state;
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
             const errors: Errors = {};
 
             if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
                 errors.deploymentName = t('errors.noDeploymentName');
             }
+
             if (showDeploymentIdInput && _.isEmpty(deploymentId)) {
                 errors.deploymentId = t('errors.noDeploymentId');
+            }
+
+            if (showDeployOnDropdown && _.isEmpty(deployOn)) {
+                errors.deployOn = t('errors.noDeployOn');
             }
 
             if (_.isEmpty(blueprint.id)) {
@@ -638,7 +650,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             schedule,
             scheduledTime,
             selectedApproveButton,
-            requiresDeployOnDropdown,
+            showDeployOnDropdown,
             deployOn
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
@@ -710,11 +722,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             </Form.Field>
                         )}
 
-                        {requiresDeployOnDropdown && (
-                            // TODO: Add validation to this field
+                        {showDeployOnDropdown && (
                             // TODO: Add ability to send correct data from this dropdown
                             <Form.Field
-                                error={errors.blueprintName}
+                                error={errors.deployOn}
                                 label={t('inputs.deployOn.label')}
                                 placeholder={t('inputs.deployOn.placeholder')}
                                 required
