@@ -53,7 +53,8 @@ export default function PageContent({
             {isEmpty(page.layout) ? (
                 <EmptyContainerMessage isEditMode={isEditMode} containerTypeLabel="page" />
             ) : (
-                map(page.layout, (layoutSection, layoutSectionIdx) => (
+                page.layout.map((layoutSection, layoutSectionIdx) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <React.Fragment key={layoutSectionIdx}>
                         {isEditMode && (
                             <div style={{ marginBottom: 15 }}>
@@ -76,7 +77,7 @@ export default function PageContent({
                                         onLayoutSectionAdded(
                                             {
                                                 type: Consts.LAYOUT_TYPE.TABS,
-                                                content: map(new Array(2), () => ({ name: 'New Tab', widgets: [] }))
+                                                content: new Array(2).map(() => ({ name: 'New Tab', widgets: [] }))
                                             },
                                             layoutSectionIdx
                                         )
