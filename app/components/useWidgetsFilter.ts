@@ -12,7 +12,7 @@ export default function useWidgetsFilter() {
     );
 
     return (widgets: SimpleWidgetObj[]) =>
-        _.filter(widgets, widget => {
+        widgets.filter(widget => {
             if (!widget.definition) {
                 return false;
             }
