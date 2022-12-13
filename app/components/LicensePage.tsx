@@ -211,7 +211,7 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
             .doGet<PaginatedResponse<LicenseResponse>>('/license')
             .then(data => {
                 const license = data?.items?.[0] || null;
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: !license });
+                this.setState({ isLoading: false, error: undefined, isEditLicenseActive: !license });
                 onLicenseChange(license);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
