@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
 import { tableRefreshEvent, translateSecretProviders } from './SecretProvidersTable.consts';
-import { RequestStatus } from './types';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { Icon, Confirm: DeleteModal } = Stage.Basic;
@@ -14,30 +12,19 @@ interface RemoveSecretProviderButtonProps {
 
 const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretProviderButtonProps) => {
     const [isModalVisible, showModal, hideModal] = useBoolean();
-    const [deletingStatus, setDeletingStatus] = useState<RequestStatus>(RequestStatus.INITIAL);
     const deleteModalContent = translateSecretProviders('deleteModal.content', {
         secretProviderId: secretProvider.id
     });
 
     const removeSecretProvider = () => {
-        setDeletingStatus(RequestStatus.SUBMITTING);
-
         toolbox
             .getManager()
             .doDelete(`/secrets-providers/${secretProvider.id}`)
             .then(() => {
                 toolbox.getEventBus().trigger(tableRefreshEvent);
-            })
-            .catch(() => {
-                setDeletingStatus(RequestStatus.ERROR);
+                hideModal();
             });
     };
-
-    useEffect(() => {
-        if (deletingStatus === RequestStatus.SUBMITTED) {
-            hideModal();
-        }
-    }, [deletingStatus]);
 
     return (
         <>
