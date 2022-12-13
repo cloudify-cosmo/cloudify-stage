@@ -1,12 +1,13 @@
+const widgetId = 'secretProviders';
+const widgetConfiguration = {
+    pollingTime: 3,
+    pageSize: 0 // NOTE: Setting page size to 0 to list all secret providers and be able to find the one created in test
+};
+function getSecretProviderRow(name: string) {
+    return cy.contains(name).parent();
+}
+
 describe('Secret Providers widget', () => {
-    const widgetId = 'secretProviders';
-    const widgetConfiguration = {
-        pollingTime: 3,
-        pageSize: 0 // NOTE: Setting page size to 0 to list all secret providers and be able to find the one created in test
-    };
-    function getSecretProviderRow(name: string) {
-        return cy.contains(name).parent();
-    }
     before(() => {
         cy.fixture('secret_providers/secret_providers').then(secretProviders => {
             const { name, type, visibility } = secretProviders[0];
