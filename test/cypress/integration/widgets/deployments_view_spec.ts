@@ -1,5 +1,6 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
+import type { ObjectKeys } from 'app/utils/types';
 import type { FilterRule } from 'app/widgets/common/filters/types';
 import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
@@ -952,8 +953,7 @@ describe('Deployments View widget', () => {
         } as const;
         const mapDeploymentsPrefix = `${deploymentName}_map`;
         /** Uses the same ID and display name for the deployment */
-        const getSiteDeploymentId = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
-            `${mapDeploymentsPrefix}_${siteName}`;
+        const getSiteDeploymentId = (siteName: ObjectKeys<typeof siteNames>) => `${mapDeploymentsPrefix}_${siteName}`;
 
         before(() => {
             Object.values(siteNames)

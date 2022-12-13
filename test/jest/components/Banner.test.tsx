@@ -18,7 +18,6 @@ import i18nInit from '../i18n';
 
 describe('(Component) Banner', () => {
     let bannerComponent = null;
-    global.Stage = { Basic: BasicComponents };
 
     const verifyProps = (isCommunity, isExpired, isTrial, productName, productVersion, licenseEdition) => {
         const headerBanner = bannerComponent.find('HeaderBanner');
