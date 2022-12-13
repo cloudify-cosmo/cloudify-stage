@@ -12,7 +12,7 @@ import Auth from '../utils/auth';
 import Consts from '../utils/consts';
 import type { LogoutAction } from '../actions/manager/auth';
 import { getManagerData, getUserData, logout } from '../actions/manager/auth';
-import Layout from '../containers/layout/Layout';
+import Layout from './layout/Layout';
 import LicensePage from './LicensePage';
 import MaintenanceMode from './maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';

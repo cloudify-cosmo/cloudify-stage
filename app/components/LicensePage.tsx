@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
+import type { ChangeEvent } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
@@ -181,7 +182,7 @@ export interface LicensePageProps {
 }
 
 interface LicensePageState {
-    error: string | null;
+    error?: string;
     isLoading: boolean;
     isEditLicenseActive: boolean;
     license: string;
@@ -191,7 +192,7 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
         super(props);
 
         this.state = {
-            error: null,
+            error: undefined,
             isLoading: false,
             isEditLicenseActive: false,
             license: ''
@@ -210,17 +211,20 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
             .doGet<PaginatedResponse<LicenseResponse>>('/license')
             .then(data => {
                 const license = data?.items?.[0] || null;
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: !license });
+                this.setState({ isLoading: false, error: undefined, isEditLicenseActive: !license });
                 onLicenseChange(license);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
     }
 
     onErrorDismiss() {
-        this.setState({ error: null });
+        this.setState({ error: undefined });
     }
 
-    onLicenseEdit(_proxy: any, field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]) {
+    onLicenseEdit(
+        _event: ChangeEvent<HTMLTextAreaElement>,
+        field: Parameters<typeof Stage.Basic.Form.fieldNameValue>[0]
+    ) {
         const fieldNameValue = Stage.Basic.Form.fieldNameValue(field);
         const licenseString = fieldNameValue.license as string;
         this.setState({ license: licenseString });
@@ -234,7 +238,7 @@ export class LicensePage extends Component<LicensePageProps, LicensePageState> {
         return manager
             .doPut('/license', { body: license })
             .then(data => {
-                this.setState({ isLoading: false, error: null, isEditLicenseActive: false });
+                this.setState({ isLoading: false, error: undefined, isEditLicenseActive: false });
                 onLicenseChange(data);
             })
             .catch(error => this.setState({ isLoading: false, error: error.message }));
