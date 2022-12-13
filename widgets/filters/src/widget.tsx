@@ -9,7 +9,6 @@ Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetCo
     description: Stage.i18n.t('widgets.filters.description'),
     initialWidth: 12,
     initialHeight: 22,
-    color: 'olive',
     isReact: true,
     hasStyle: false,
     hasReadme: true,

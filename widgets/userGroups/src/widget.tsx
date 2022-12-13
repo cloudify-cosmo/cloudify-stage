@@ -25,7 +25,6 @@ Stage.defineWidget<
     description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
-    color: 'violet',
     fetchUrl: '[manager]/user-groups?_get_data=true[params]',
     isReact: true,
     hasReadme: true,
