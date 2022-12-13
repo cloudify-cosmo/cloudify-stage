@@ -9,12 +9,17 @@ import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils'
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 import type { PaginatedResponse } from '../../../backend/types';
 
-type ActiveExecutions = PaginatedResponse<
-    Required<Pick<Execution, 'id' | 'workflow_id' | 'status' | 'status_display' | 'blueprint_id' | 'deployment_id'>>
+export type ActiveExecutions = PaginatedResponse<
+    Required<
+        Pick<
+            Execution,
+            'id' | 'workflow_id' | 'status' | 'status_display' | 'blueprint_id' | 'deployment_id' | 'is_system_workflow'
+        >
+    >
 >;
 
 export type SetMaintenanceStatusAction = PayloadAction<string, ActionType.SET_MAINTENANCE_STATUS>;
-export type SetActiveExecutionsAction = PayloadAction<ActiveExecutions, ActionType.SET_ACTIVE_EXECUTIONS>;
+export type SetActiveExecutionsAction = PayloadAction<ActiveExecutions | null, ActionType.SET_ACTIVE_EXECUTIONS>;
 export type SetCancelExecutionAction = PayloadAction<
     { execution: Execution; action: CancelAction },
     ActionType.SET_CANCEL_EXECUTION
@@ -56,7 +61,7 @@ export function switchMaintenance(
         });
 }
 
-export function setActiveExecutions(activeExecutions: ActiveExecutions): SetActiveExecutionsAction {
+export function setActiveExecutions(activeExecutions: ActiveExecutions | null): SetActiveExecutionsAction {
     return {
         type: ActionType.SET_ACTIVE_EXECUTIONS,
         payload: activeExecutions

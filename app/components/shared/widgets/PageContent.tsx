@@ -5,7 +5,7 @@ import _ from 'lodash';
 import i18n from 'i18next';
 import WidgetsList from './WidgetsList';
 import { Confirm } from '../../basic';
-import AddWidget from '../../../containers/AddWidget';
+import AddWidgetModal from '../../AddWidgetModal';
 import './PageContent.css';
 import Tabs from '../../Tabs';
 import useWidgetsFilter from '../../useWidgetsFilter';
@@ -72,7 +72,7 @@ export default function PageContent({
                                 <>
                                     {isEditMode && (
                                         <>
-                                            <AddWidget
+                                            <AddWidgetModal
                                                 addButtonTitle={i18n.t(
                                                     'editMode.addWidget.addToContainerButtonTitle',
                                                     'Add widget to this widgets container'

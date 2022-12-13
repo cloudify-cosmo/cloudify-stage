@@ -69,7 +69,7 @@ export interface LicenseResponse {
     capabilities: string[] | null;
     cloudify_version: string | null;
     customer_id: string;
-    expiration_date: string;
+    expiration_date: string | null;
     expired: boolean;
     license_edition: string;
     trial: boolean;
