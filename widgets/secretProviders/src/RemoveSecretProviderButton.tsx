@@ -23,6 +23,9 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
             .then(() => {
                 toolbox.getEventBus().trigger(tableRefreshEvent);
                 hideModal();
+            })
+            .catch(err => {
+                log.error(err);
             });
     };
 
