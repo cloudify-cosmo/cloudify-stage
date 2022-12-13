@@ -30,6 +30,7 @@ import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
 import type { ListDeploymentsParams } from '../actions/SearchActions';
+import { parentDeploymentLabelKey } from '../deploymentsView/common';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -186,7 +187,7 @@ type GenericDeployModalState = {
     scheduledTime: string;
     selectedApproveButton: ApproveButtons;
     showDeployOnDropdown: boolean;
-    deployOn: string;
+    deploymentIdToDeployOn: string;
 };
 
 class GenericDeployModal extends React.Component<GenericDeployModalProps, GenericDeployModalState> {
@@ -237,7 +238,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         scheduledTime: '',
         selectedApproveButton: ApproveButtons.install,
         showDeployOnDropdown: false,
-        deployOn: ''
+        deploymentIdToDeployOn: ''
     };
 
     constructor(props: GenericDeployModalProps) {
@@ -506,8 +507,13 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             siteName,
             skipPluginsValidation,
             visibility,
-            deploymentInputs
+            deploymentInputs,
+            deploymentIdToDeployOn
         } = this.state;
+
+        const deploymentLabels = deploymentIdToDeployOn
+            ? [...labels, { key: parentDeploymentLabelKey, value: deploymentIdToDeployOn }]
+            : labels;
 
         return {
             blueprintId: blueprint.id,
@@ -515,7 +521,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentName,
             inputs: getInputsMap(blueprint.plan.inputs, deploymentInputs),
             visibility,
-            labels,
+            labels: deploymentLabels,
             skipPluginsValidation,
             siteName,
             runtimeOnlyEvaluation
@@ -578,7 +584,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 deploymentName,
                 deploymentInputs: stateDeploymentInputs,
                 showDeployOnDropdown,
-                deployOn
+                deploymentIdToDeployOn
             } = this.state;
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
             const errors: Errors = {};
@@ -591,8 +597,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                 errors.deploymentId = t('errors.noDeploymentId');
             }
 
-            if (showDeployOnDropdown && _.isEmpty(deployOn)) {
-                errors.deployOn = t('errors.noDeployOn');
+            if (showDeployOnDropdown && _.isEmpty(deploymentIdToDeployOn)) {
+                errors.deploymentIdToDeployOn = t('errors.noDeploymentIdToDeployOn');
             }
 
             if (_.isEmpty(blueprint.id)) {
@@ -651,7 +657,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             scheduledTime,
             selectedApproveButton,
             showDeployOnDropdown,
-            deployOn
+            deploymentIdToDeployOn
         } = this.state;
         const { DEPLOYMENT_SECTIONS } = GenericDeployModal;
 
@@ -723,20 +729,19 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         )}
 
                         {showDeployOnDropdown && (
-                            // TODO: Add ability to send correct data from this dropdown
                             <Form.Field
-                                error={errors.deployOn}
-                                label={t('inputs.deployOn.label')}
-                                placeholder={t('inputs.deployOn.placeholder')}
+                                error={errors.deploymentIdToDeployOn}
+                                label={t('inputs.deploymentIdToDeployOn.label')}
+                                placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
                                 required
                             >
                                 <DynamicDropdown
-                                    value={deployOn}
-                                    name="deployOn"
+                                    value={deploymentIdToDeployOn}
+                                    name="deploymentIdToDeployOn"
                                     fetchUrl="/deployments?_include=id,display_name"
                                     searchParams={deploymentSearchParams}
                                     clearable={false}
-                                    onChange={value => this.setState({ deployOn: value as string })}
+                                    onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
                                     textFormatter={item =>
                                         Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })
                                     }
