@@ -20,6 +20,7 @@ import type StageUtils from './stageUtils';
 // NOTE: make sure the types are registered globally
 import './types';
 import type { ManagerData } from '../reducers/managerReducer';
+import type { ObjectKeys } from './types';
 
 type StagePropTypes = typeof StagePropTypes;
 type StageHooks = typeof StageHooks;
@@ -121,7 +122,7 @@ export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinitio
 export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
-    categories: Stage.Types.ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
+    categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
@@ -137,7 +138,7 @@ export interface CommonWidgetDefinition<Params, Data, Configuration> {
     initialConfiguration: StageWidgetConfigurationDefinition[];
     initialHeight: number;
     initialWidth: number;
-    permission: Stage.Types.ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
+    permission: ObjectKeys<typeof GenericConfigType['CUSTOM_WIDGET_PERMISSIONS']> | string;
     showBorder: boolean;
     showHeader: boolean;
     supportedEditions: string[];
@@ -291,8 +292,6 @@ declare global {
             >;
             type PaginatedResponse<ResponseItem> = CloudifyPaginatedResponse<ResponseItem>;
             type ReduxState = import('../reducers').ReduxState;
-
-            type ObjectKeys<T extends Record<string, any>> = T[keyof T];
         }
     }
 }
