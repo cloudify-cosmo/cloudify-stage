@@ -14,7 +14,7 @@ import type { LogoutAction } from '../actions/manager/auth';
 import { getManagerData, getUserData, logout } from '../actions/manager/auth';
 import Layout from '../containers/layout/Layout';
 import LicensePage from './LicensePage';
-import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
+import MaintenanceMode from './maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import type { ReduxThunkDispatch } from '../configureStore';
 
