@@ -13,7 +13,7 @@ import Consts from '../utils/consts';
 import type { LogoutAction } from '../actions/manager/auth';
 import { getManagerData, getUserData, logout } from '../actions/manager/auth';
 import Layout from './layout/Layout';
-import LicensePage from '../containers/LicensePage';
+import LicensePage from './LicensePage';
 import MaintenanceMode from '../containers/maintenance/MaintenanceModePageMessage';
 import SplashLoadingScreen from '../utils/SplashLoadingScreen';
 import type { ReduxThunkDispatch } from '../configureStore';
