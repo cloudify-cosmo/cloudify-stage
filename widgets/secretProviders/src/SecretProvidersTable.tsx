@@ -42,18 +42,10 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                     <Button labelPosition="left" icon="add" content={translation('buttons.create')} />
                 </DataTable.Action>
 
-                <DataTable.Column label={translation('columns.name')} name={dataSortingKeys.name} width="30%" />
+                <DataTable.Column label={translation('columns.name')} name={dataSortingKeys.name} />
                 <DataTable.Column label={translation('columns.type')} name={dataSortingKeys.type} />
-                <DataTable.Column
-                    label={translation('columns.dateCreated')}
-                    name={dataSortingKeys.createdAt}
-                    width="156px"
-                />
-                <DataTable.Column
-                    label={translation('columns.dateUpdated')}
-                    name={dataSortingKeys.updatedAt}
-                    width="156px"
-                />
+                <DataTable.Column label={translation('columns.dateCreated')} name={dataSortingKeys.createdAt} />
+                <DataTable.Column label={translation('columns.dateUpdated')} name={dataSortingKeys.updatedAt} />
                 <DataTable.Column label="" width="10%" />
 
                 {data.items.map(secretProvider => (
