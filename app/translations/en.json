@@ -1453,7 +1453,17 @@
                 }
             },
             "deleteModal": {
-                "content": "Are you sure you want to delete the Secret Provider with ID '{{secretProviderId}}'?"
+                "content": "Are you sure you want to delete the Secret Provider with ID '{{secretProviderId}}'?",
+                "buttons": {
+                    "confirm": "Yes",
+                    "cancel": "No"
+                }
+            },
+            "warningModal": {
+                "content": "Unable to delete the Secret provider '{{secretProviderId}}' because it has secrets assigned.",
+                "buttons": {
+                    "cancel": "Cancel"
+                }
             }
         },
         "secrets": {

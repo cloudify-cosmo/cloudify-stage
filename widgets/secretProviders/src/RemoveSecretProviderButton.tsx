@@ -2,9 +2,9 @@ import { translateSecretProviders } from './widget.utils';
 import { tableRefreshEvent } from './widget.consts';
 import type { SecretProvidersWidget } from './widget.types';
 
-const { Icon, Confirm: DeleteModal } = Stage.Basic;
+const { Icon, Modal, Button, ErrorMessage } = Stage.Basic;
 
-const { useBoolean } = Stage.Hooks;
+const { useBoolean, useResettableState } = Stage.Hooks;
 
 interface RemoveSecretProviderButtonProps {
     secretProvider: SecretProvidersWidget.DataItem;
@@ -12,23 +12,74 @@ interface RemoveSecretProviderButtonProps {
 }
 
 const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretProviderButtonProps) => {
-    const [isModalVisible, showModal, hideModal] = useBoolean();
-    const deleteModalContent = translateSecretProviders('deleteModal.content', {
+    const deleteModalContent = translateSecretProviders('deleteModal.content', { secretProviderId: secretProvider.id });
+    const warningModalContent = translateSecretProviders('warningModal.content', {
         secretProviderId: secretProvider.id
     });
+    const [error, setError, clearError] = useResettableState<string | null>(null);
 
-    const removeSecretProvider = () => {
+    const [isWarningModalOpen, openWarningModal, closeWarningModal] = useBoolean();
+    const [isDeleteModalOpen, openDeleteModal, closeDeleteModal] = useBoolean();
+
+    const checkSecretProvider = () => {
+        clearError();
+
+        toolbox
+            .getManager()
+            .doGet(`/secrets?_include=provider_name`)
+            .then(secrets => {
+                if (secrets.items.some((secret: any) => secret.provider_name === secretProvider.name)) {
+                    openWarningModal();
+                } else {
+                    openDeleteModal();
+                }
+            })
+            .catch(err => {
+                log.error(err);
+                setError(err);
+            });
+    };
+
+    const deleteSecretProvider = () => {
         toolbox
             .getManager()
             .doDelete(`/secrets-providers/${secretProvider.id}`)
             .then(() => {
                 toolbox.getEventBus().trigger(tableRefreshEvent);
-                hideModal();
+                closeDeleteModal();
             })
             .catch(err => {
                 log.error(err);
+                setError(err);
             });
     };
+
+    const ErrorMsg = <ErrorMessage error={error} onDismiss={clearError} />;
+
+    const DeleteSecretProviderModal = (
+        <Modal open={isDeleteModalOpen} onConfirm={deleteSecretProvider} onCancel={closeDeleteModal}>
+            <Modal.Header style={{ border: 'none' }}>{deleteModalContent}</Modal.Header>
+            {error && <Modal.Content>{ErrorMsg}</Modal.Content>}
+            <Modal.Actions>
+                <Button content={translateSecretProviders('deleteModal.buttons.cancel')} onClick={closeDeleteModal} />
+                <Button
+                    content={translateSecretProviders('deleteModal.buttons.confirm')}
+                    onClick={deleteSecretProvider}
+                    primary
+                />
+            </Modal.Actions>
+        </Modal>
+    );
+
+    const WarningSecretProviderModal = (
+        <Modal open={isWarningModalOpen} onClose={closeWarningModal}>
+            <Modal.Header style={{ border: 'none' }}> {warningModalContent}</Modal.Header>
+            {error && <Modal.Content>{ErrorMsg}</Modal.Content>}
+            <Modal.Actions>
+                <Button content={translateSecretProviders('warningModal.buttons.cancel')} onClick={closeWarningModal} />
+            </Modal.Actions>
+        </Modal>
+    );
 
     return (
         <>
@@ -36,12 +87,10 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
                 link
                 name="trash"
                 title={translateSecretProviders('table.buttons.removeSecretProvider')}
-                onClick={showModal}
-                disable
+                onClick={checkSecretProvider}
             />
-            {isModalVisible && (
-                <DeleteModal open content={deleteModalContent} onCancel={hideModal} onConfirm={removeSecretProvider} />
-            )}
+            {DeleteSecretProviderModal}
+            {WarningSecretProviderModal}
         </>
     );
 };
