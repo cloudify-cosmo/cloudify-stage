@@ -1,7 +1,7 @@
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
-import { isEmpty } from 'lodash';
+import { compact, mapValues, noop, isEmpty } from 'lodash';
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
@@ -147,7 +147,7 @@ type GenericDeployModalProps = {
 
 const defaultProps: Partial<GenericDeployModalProps> = {
     blueprintId: '',
-    onHide: _.noop,
+    onHide: noop,
     showDeploymentNameInput: false,
     showDeploymentIdInput: false,
     showDeployButton: false,
@@ -246,7 +246,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
         this.state = GenericDeployModal.initialState;
 
-        // TODO Norbert: Migrate functions within this component to arrow ones, to omit the requirement of binding 'this'
         this.selectBlueprint = this.selectBlueprint.bind(this);
 
         this.handleDeploymentInputChange = this.handleDeploymentInputChange.bind(this);
@@ -270,7 +269,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         const { installWorkflow } = this.state;
         this.setState({
             baseInstallWorkflowParams: installWorkflow.parameters,
-            userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
+            userInstallWorkflowParams: mapValues(installWorkflow.parameters, parameterData =>
                 getInputFieldInitialValue(parameterData.default, parameterData.type)
             )
         });
@@ -417,7 +416,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             queue,
             deploymentId
         } = this.state;
-        const deploymentsList: string[] = _.compact([deploymentId]);
+        const deploymentsList: string[] = compact([deploymentId]);
         this.setState({ activeSection: -1, loading: true, errors: {} });
         return this.validateInputs()
             .then(() =>
@@ -534,11 +533,11 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     isBlueprintSelectable() {
         const { blueprintId } = this.props;
-        return _.isEmpty(blueprintId);
+        return isEmpty(blueprintId);
     }
 
     selectBlueprint(id: DropdownValue) {
-        if (!_.isEmpty(id) && typeof id === 'string') {
+        if (!isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
             const { toolbox } = this.props;
 
@@ -556,7 +555,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         blueprint,
                         installWorkflow,
                         baseInstallWorkflowParams: installWorkflow.parameters,
-                        userInstallWorkflowParams: _.mapValues(installWorkflow.parameters, parameterData =>
+                        userInstallWorkflowParams: mapValues(installWorkflow.parameters, parameterData =>
                             getInputFieldInitialValue(parameterData.default, parameterData.type)
                         ),
                         errors: {},
@@ -589,26 +588,26 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             const { showDeploymentNameInput, showDeploymentIdInput } = this.props;
             const errors: Errors = {};
 
-            if (showDeploymentNameInput && _.isEmpty(deploymentName)) {
+            if (showDeploymentNameInput && isEmpty(deploymentName)) {
                 errors.deploymentName = t('errors.noDeploymentName');
             }
 
-            if (showDeploymentIdInput && _.isEmpty(deploymentId)) {
+            if (showDeploymentIdInput && isEmpty(deploymentId)) {
                 errors.deploymentId = t('errors.noDeploymentId');
             }
 
-            if (showDeployOnDropdown && _.isEmpty(deploymentIdToDeployOn)) {
+            if (showDeployOnDropdown && isEmpty(deploymentIdToDeployOn)) {
                 errors.deploymentIdToDeployOn = t('errors.noDeploymentIdToDeployOn');
             }
 
-            if (_.isEmpty(blueprint.id)) {
+            if (isEmpty(blueprint.id)) {
                 errors.blueprintName = t('errors.noBlueprintName');
             }
 
             const inputsWithoutValue = getInputsWithoutValues(blueprint.plan.inputs, stateDeploymentInputs);
             addErrors(inputsWithoutValue, errors);
 
-            if (!_.isEmpty(errors)) {
+            if (!isEmpty(errors)) {
                 reject(errors);
             } else {
                 resolve();
