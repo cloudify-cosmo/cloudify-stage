@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import RemoveSecretProviderButton from './RemoveSecretProviderButton';
-import { dataSortingKeys, tableRefreshEvent } from './SecretProvidersTable.consts';
-import { translateSecretProviders } from './SecretProvidersTable.utils';
+import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
+import { translateSecretProviders } from './widget.utils';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { DataTable, Icon, Button } = Stage.Basic;
 const { Time } = Stage.Utils;
 
-const translation = Stage.Utils.composeT(translateSecretProviders, 'table');
+const translateTable = Stage.Utils.composeT(translateSecretProviders, 'table');
 
 interface SecretProvidersTableProps {
     configuration: SecretProvidersWidget.Configuration;
@@ -32,20 +32,20 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
         <>
             <DataTable
                 fetchData={fetchTableData}
-                noDataMessage={translation('noSecretProviders')}
+                noDataMessage={translateTable('noSecretProviders')}
                 totalSize={totalSize}
                 pageSize={pageSize}
                 sortColumn={sortColumn}
                 sortAscending={sortAscending}
             >
                 <DataTable.Action>
-                    <Button labelPosition="left" icon="add" content={translation('buttons.create')} />
+                    <Button labelPosition="left" icon="add" content={translateTable('buttons.create')} />
                 </DataTable.Action>
 
-                <DataTable.Column label={translation('columns.name')} name={dataSortingKeys.name} />
-                <DataTable.Column label={translation('columns.type')} name={dataSortingKeys.type} />
-                <DataTable.Column label={translation('columns.dateCreated')} name={dataSortingKeys.createdAt} />
-                <DataTable.Column label={translation('columns.dateUpdated')} name={dataSortingKeys.updatedAt} />
+                <DataTable.Column label={translateTable('columns.name')} name={dataSortingKeys.name} />
+                <DataTable.Column label={translateTable('columns.type')} name={dataSortingKeys.type} />
+                <DataTable.Column label={translateTable('columns.dateCreated')} name={dataSortingKeys.createdAt} />
+                <DataTable.Column label={translateTable('columns.dateUpdated')} name={dataSortingKeys.updatedAt} />
                 <DataTable.Column label="" width="10%" />
 
                 {data.items.map(secretProvider => (
@@ -56,7 +56,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.created_at)}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.updated_at)}</DataTable.Data>
                         <DataTable.Data textAlign="center">
-                            <Icon name="edit" title={translation('buttons.updateSecretProvider')} />
+                            <Icon name="edit" title={translateTable('buttons.updateSecretProvider')} />
                             <RemoveSecretProviderButton secretProvider={secretProvider} toolbox={toolbox} />
                         </DataTable.Data>
                     </DataTable.Row>
