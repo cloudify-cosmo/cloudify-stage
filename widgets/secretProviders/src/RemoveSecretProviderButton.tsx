@@ -1,5 +1,5 @@
-import { translateSecretProviders } from './SecretProvidersTable.utils';
-import { tableRefreshEvent } from './SecretProvidersTable.consts';
+import { translateSecretProviders } from './widget.utils';
+import { tableRefreshEvent } from './widget.consts';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { Icon, Confirm: DeleteModal } = Stage.Basic;
@@ -37,6 +37,7 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
                 name="trash"
                 title={translateSecretProviders('table.buttons.removeSecretProvider')}
                 onClick={showModal}
+                disable
             />
             {isModalVisible && (
                 <DeleteModal open content={deleteModalContent} onCancel={hideModal} onConfirm={removeSecretProvider} />
