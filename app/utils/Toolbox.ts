@@ -17,7 +17,7 @@ import WidgetBackend from './WidgetBackend';
 import type { ReduxState } from '../reducers';
 import type { ReduxStore } from '../configureStore';
 
-class Toolbox implements Stage.Types.Toolbox {
+export class Toolbox implements Stage.Types.Toolbox {
     private readonly store: ReduxStore;
 
     public readonly unsubscribe: Unsubscribe;

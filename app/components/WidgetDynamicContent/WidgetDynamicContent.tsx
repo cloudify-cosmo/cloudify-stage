@@ -1,34 +1,64 @@
-// @ts-nocheck File not migrated fully to TS
-
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
-import PropTypes from 'prop-types';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
-import { Message } from 'semantic-ui-react';
-import WidgetPropType from '../../utils/props/WidgetPropType';
+import type { GridParams } from 'cloudify-ui-components/typings/components/data/common/types';
+import type { ErrorMessageProps } from 'cloudify-ui-components/typings/components/elements/ErrorMessage/ErrorMessage';
 import combineClassNames from '../../utils/shared/combineClassNames';
 import { getToolbox } from '../../utils/Toolbox';
 import WidgetParamsHandler from '../../utils/WidgetParamsHandler';
-import { ErrorMessage } from '../basic';
 import WidgetErrorMessage from './WidgetErrorMessage';
+import type { ContextData } from '../../reducers/contextReducer';
+import type { Widget } from '../../utils/StageAPI';
+import type { ManagerData } from '../../reducers/managerReducer';
+import type { CancelablePromise } from '../../utils/types';
+import type { FetchWidgetDataPromises, fetchWidgetData } from '../../actions/widgetData';
 
-export default class WidgetDynamicContent extends Component {
-    private readonly containerRef: RefObject<HTMLElement>;
+export interface WidgetDynamicContentProps {
+    context: ContextData;
+    data: {
+        data: unknown;
+        error: ErrorMessageProps['error'];
+    };
+    fetchWidgetData: (...args: Parameters<typeof fetchWidgetData>) => FetchWidgetDataPromises;
+    onWidgetConfigUpdate: (config: { pageSize: number }) => void;
+    manager: ManagerData;
+    widget: Widget;
+    standalone: boolean;
+}
 
-    constructor(props) {
+interface WidgetDynamicContentState {
+    loading: boolean;
+}
+
+interface WidgetParams {
+    gridParams: GridParams;
+}
+
+export default class WidgetDynamicContent extends Component<WidgetDynamicContentProps, WidgetDynamicContentState> {
+    private readonly containerRef: RefObject<HTMLDivElement>;
+
+    private loadingTimeout?: NodeJS.Timeout;
+
+    private pollingTimeout?: NodeJS.Timeout;
+
+    private fetchDataPromise?: CancelablePromise<unknown>;
+
+    private paramsHandler: WidgetParamsHandler;
+
+    private mounted: boolean;
+
+    constructor(props: WidgetDynamicContentProps) {
         super(props);
 
-        this.containerRef = createRef<HTMLElement>();
+        this.containerRef = createRef<HTMLDivElement>();
 
         this.state = {
             loading: false
         };
-        this.loadingTimeout = null;
-        this.pollingTimeout = null;
-        this.fetchDataPromise = null;
         this.mounted = false;
+        this.paramsHandler = new WidgetParamsHandler(props.widget, this.getToolbox());
     }
 
     // In component will mount fetch the data if needed
@@ -39,12 +69,11 @@ export default class WidgetDynamicContent extends Component {
 
         log.log(`Widget '${widget.name}' mounted`);
 
-        this.paramsHandler = new WidgetParamsHandler(widget, this.getToolbox());
         this.fetchData();
         this.postRender();
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: WidgetDynamicContentProps, nextState: WidgetDynamicContentState) {
         const { context, data, manager, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -55,7 +84,7 @@ export default class WidgetDynamicContent extends Component {
         );
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: WidgetDynamicContentProps) {
         const { data, manager, widget } = this.props;
 
         if (widget.definition.loaded && !prevProps.widget.definition.loaded) {
@@ -109,7 +138,7 @@ export default class WidgetDynamicContent extends Component {
     postRender() {
         const { data, widget } = this.props;
 
-        if (widget.definition.postRender && this.containerRef.current) {
+        if (widget.definition.isReact === false && widget.definition.postRender && this.containerRef.current) {
             widget.definition.postRender(this.containerRef.current, widget, data.data, this.getToolbox());
         }
     }
@@ -124,46 +153,34 @@ export default class WidgetDynamicContent extends Component {
         this.startPolling();
     }
 
-    loadingIndicator(show) {
+    loadingIndicator(show: boolean) {
         if (this.mounted) {
             this.setState({ loading: show });
         }
     }
 
     showLoading() {
-        clearTimeout(this.loadingTimeout);
+        if (this.loadingTimeout) clearTimeout(this.loadingTimeout);
         this.loadingTimeout = setTimeout(() => this.loadingIndicator(true), 1000);
     }
 
     hideLoading() {
         const { loading } = this.state;
-        clearTimeout(this.loadingTimeout);
-        if (loading) {
-            this.loadingIndicator(false);
-        }
+        if (this.loadingTimeout) clearTimeout(this.loadingTimeout);
+        if (loading) this.loadingIndicator(false);
     }
 
     stopPolling() {
-        clearTimeout(this.pollingTimeout);
-
-        if (this.fetchDataPromise) {
-            this.fetchDataPromise.cancel();
-        }
+        if (this.pollingTimeout) clearTimeout(this.pollingTimeout);
+        if (this.fetchDataPromise) this.fetchDataPromise.cancel();
     }
 
     startPolling() {
         const { widget } = this.props;
         this.stopPolling();
 
-        let interval = widget.configuration.pollingTime || 0;
-        try {
-            interval = Number.isInteger(interval) ? interval : parseInt(interval, 10);
-        } catch (e) {
-            log.log(
-                `Polling interval doesnt have a valid value, using zero. Value is: ${widget.configuration.pollingTime}`
-            );
-            interval = 0;
-        }
+        const { pollingTime } = widget.configuration;
+        const interval: number = Number.isInteger(pollingTime) ? Number(pollingTime) : 0;
 
         if (interval > 0 && this.mounted) {
             log.log(`Polling widget '${widget.name}' - time interval: ${interval} sec`);
@@ -173,19 +190,18 @@ export default class WidgetDynamicContent extends Component {
         }
     }
 
-    updateConfiguration(params) {
+    updateConfiguration(params?: WidgetParams) {
         const { onWidgetConfigUpdate, widget } = this.props;
-        if (
-            params.gridParams &&
-            params.gridParams.pageSize &&
-            params.gridParams.pageSize !== widget.configuration.pageSize
-        ) {
-            onWidgetConfigUpdate({ pageSize: params.gridParams.pageSize });
+        const pageSize = params?.gridParams?.pageSize;
+
+        if (pageSize && pageSize !== widget.configuration.pageSize) {
+            onWidgetConfigUpdate({ pageSize });
         }
     }
 
-    fetchData(params) {
+    fetchData(params?: WidgetParams) {
         const { fetchWidgetData, widget } = this.props;
+
         if (params) {
             this.paramsHandler.updateGridParams(params.gridParams);
             this.updateConfiguration(params);
@@ -203,7 +219,7 @@ export default class WidgetDynamicContent extends Component {
             this.fetchDataPromise = promises.cancelablePromise;
 
             return promises.waitForPromise
-                .then(data => {
+                .then((data: any) => {
                     // Fixes sort issue - add grid params to metadata to cheat shouldComponentUpdate
                     if (data) {
                         let metadata = [];
@@ -280,8 +296,8 @@ export default class WidgetDynamicContent extends Component {
 
     renderWidget() {
         const { data, widget } = this.props;
-        let widgetHtml = i18n.t('widget.loading');
-        if (widget.definition && widget.definition.render) {
+        let widgetHtml: string = i18n.t('widget.loading');
+        if (widget.definition.isReact === false && widget.definition && widget.definition.render) {
             try {
                 widgetHtml = widget.definition.render(widget, data.data, data.error, this.getToolbox());
             } catch (e) {
@@ -331,22 +347,3 @@ export default class WidgetDynamicContent extends Component {
         );
     }
 }
-
-WidgetDynamicContent.propTypes = {
-    context: PropTypes.shape({}).isRequired,
-    data: PropTypes.shape({
-        // eslint-disable-next-line react/forbid-prop-types
-        data: PropTypes.any,
-        error: PropTypes.oneOfType([
-            PropTypes.string,
-            PropTypes.array,
-            PropTypes.element,
-            PropTypes.shape({ header: PropTypes.string, message: PropTypes.string })
-        ])
-    }).isRequired,
-    fetchWidgetData: PropTypes.func.isRequired,
-    onWidgetConfigUpdate: PropTypes.func.isRequired,
-    manager: PropTypes.shape({ tenants: PropTypes.shape({ selected: PropTypes.string }) }).isRequired,
-    widget: WidgetPropType.isRequired,
-    standalone: PropTypes.bool.isRequired
-};
