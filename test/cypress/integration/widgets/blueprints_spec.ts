@@ -3,7 +3,6 @@ import type { BlueprintsWidgetConfiguration } from '../../../../widgets/blueprin
 describe('Blueprints widget', () => {
     const blueprintNamePrefix = 'blueprints_test';
     const emptyBlueprintName = `${blueprintNamePrefix}_empty`;
-    const deployOnBlueprintName = `${blueprintNamePrefix}_deploy_on`;
     const blueprintsWidgetConfiguration: Partial<BlueprintsWidgetConfiguration> = {
         displayStyle: 'table',
         clickToDrillDown: true,
@@ -61,7 +60,7 @@ describe('Blueprints widget', () => {
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
-        describe.only('should allow to deploy the blueprint', () => {
+        describe('should allow to deploy the blueprint', () => {
             it('when deployOn value is not required', () => {
                 getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
@@ -104,33 +103,38 @@ describe('Blueprints widget', () => {
             });
 
             it('when deployOn value is required', () => {
-                const deploymentId = deployOnBlueprintName;
-                const deploymentName = `${deploymentId}_deploy_on`;
+                const blueprintName = `${blueprintNamePrefix}_deploy_on`;
+                const deploymentName = `${blueprintNamePrefix}_deploy_on`;
+                const parentDeploymentName = `${deploymentName}_parent`;
 
-                cy.uploadBlueprint('blueprints/deploy_on.zip', deployOnBlueprintName).refreshPage();
-                cy.interceptSp('PUT', `/deployments/${deploymentId}`).as('deploy');
+                cy.interceptSp('PUT', '/deployments/*').as('deploy');
+                cy.uploadBlueprint('blueprints/deploy_on.zip', blueprintName)
+                    .deployBlueprint(blueprintName, parentDeploymentName)
+                    .refreshPage();
 
-                getBlueprintRow(deployOnBlueprintName).find('.rocket').click();
+                getBlueprintRow(blueprintName).find('.rocket').click();
 
-                cy.get('input[name=deploymentName]').type(deploymentName);
-                // cy.setSearchableDropdownValue('deploymentIdToDeployOn', )
-                cy.get('input[name=deploymentName]').type(deploymentName);
+                cy.get('.modal').within(() => {
+                    cy.getField('Deployment name').type(deploymentName);
+                    cy.selectAndClickDeploy();
 
-                cy.contains('.modal button', 'Close').click();
+                    cy.contains(
+                        '.error.message',
+                        'Please select a deployment on which the blueprint should be deployed on'
+                    );
 
-                cy.selectAndClickDeploy();
-                cy.get('.modal').should('not.exist');
+                    cy.getField('Deploy On').within(() => {
+                        cy.get('input').click().type(parentDeploymentName);
+                        cy.get(`div[option-value*="${parentDeploymentName}"]`).click();
+                    });
+                    cy.contains('button', 'Deploy').click();
+                });
 
                 cy.wait('@deploy').then(({ request }) => {
-                    expect(request.body).to.deep.equal({
-                        blueprint_id: emptyBlueprintName,
-                        display_name: deploymentName,
-                        labels: [{ sample_key: 'sample_value' }],
-                        visibility: 'tenant',
-                        skip_plugins_validation: false,
-                        runtime_only_evaluation: false
-                    });
+                    expect(request.body.labels[0]['csys-obj-parent']).to.be.a('string');
                 });
+
+                cy.get('.modal').should('not.exist');
             });
         });
 
