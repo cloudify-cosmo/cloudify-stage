@@ -60,11 +60,11 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                     const { data_types: dataTypes, inputs: plannedDeploymentInputs } = fetchedBlueprint.plan;
 
                     _.forEach(plannedDeploymentInputs, (inputObj, inputName) => {
-                        const { type } = inputObj;
+                        const { default: defaultValue, type } = inputObj;
                         const dataType = dataTypes?.[type];
 
                         newDeploymentInputs[inputName] = getInputFieldInitialValue(
-                            currentDeploymentInputs[inputName],
+                            currentDeploymentInputs[inputName] ?? defaultValue,
                             type,
                             dataType
                         );

@@ -13,7 +13,7 @@ describe('(Widget) Blueprints', () => {
         });
         it('for single module and single level path', () => {
             const location = 'dir1';
-            expect(getResourceLocation([location], location)).toBe('');
+            expect(getResourceLocation([location], location)).toBe(location);
         });
     });
 });

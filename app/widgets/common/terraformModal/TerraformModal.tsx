@@ -208,8 +208,13 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     ) {
         return resourceLocation;
     }
-    // Remove first dir from the path ('dir1/dir2' -> 'dir2')
-    return resourceLocation.replace(/^[^/]*[/]?/, '');
+
+    if (resourceLocation.indexOf('/') >= 0) {
+        // Remove first dir from the path ('dir1/dir2' -> 'dir2')
+        return resourceLocation.replace(/^[^/]*[/]?/, '');
+    }
+
+    return resourceLocation;
 }
 interface ExistingVariableNames {
     input: string[];
