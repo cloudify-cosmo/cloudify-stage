@@ -15,9 +15,9 @@
                 },
                 {
                     "id": "9c8134b6-3ec3-4251-abb5-52ca8e6c9a61",
-                    "name": "Catalog",
-                    "definition": "blueprintCatalog",
-                    "configuration": {}
+                    "name": "Filters",
+                    "definition": "filters",
+                    "configuration": { "pollingTime": 10 }
                 }
             ]
         }, {
