@@ -1,8 +1,8 @@
 import { pick, pickBy, difference, isEqual, map, forEach } from 'lodash';
 import type { DropdownProps } from 'semantic-ui-react';
 import type { UserGroup } from './widget.types';
-import type { Role } from '../../common/src/roles/RolesPicker';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
+import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 import Actions from './actions';
 
 const RolesPicker = Stage.Common.Roles.Picker;

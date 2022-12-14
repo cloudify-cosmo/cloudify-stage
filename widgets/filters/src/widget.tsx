@@ -1,7 +1,7 @@
 import type { ComponentProps } from 'react';
 import FiltersTable from './FiltersTable';
 import type { FilterWidgetConfiguration } from './types';
-import type { Filter } from '../../common/src/filters/types';
+import type { Filter } from '../../../app/widgets/common/filters/types';
 
 Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
     id: 'filters',
@@ -9,7 +9,6 @@ Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetCo
     description: Stage.i18n.t('widgets.filters.description'),
     initialWidth: 12,
     initialHeight: 22,
-    color: 'olive',
     isReact: true,
     hasStyle: false,
     hasReadme: true,

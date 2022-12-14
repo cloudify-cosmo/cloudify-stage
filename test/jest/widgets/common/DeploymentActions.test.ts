@@ -1,12 +1,12 @@
-import DeploymentActions from 'common/src/deployments/DeploymentActions';
-import PollHelper from 'common/src/utils/PollHelper';
-import ExecutionActions from 'common/src/executions/ExecutionActions';
+import DeploymentActions from 'widgets/common/deployments/DeploymentActions';
+import PollHelper from 'widgets/common/utils/PollHelper';
+import ExecutionActions from 'widgets/common/executions/ExecutionActions';
 
-jest.mock('common/src/utils/PollHelper');
+jest.mock('widgets/common/utils/PollHelper');
 const wait = jest.fn(() => Promise.resolve());
 (<jest.Mock>PollHelper).mockImplementation(() => ({ wait }));
 
-jest.mock('common/src/executions/ExecutionActions');
+jest.mock('widgets/common/executions/ExecutionActions');
 const doGetAll = jest.fn();
 (<jest.Mock>ExecutionActions).mockImplementation(() => ({ doGetAll }));
 
