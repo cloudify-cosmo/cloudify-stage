@@ -1946,6 +1946,9 @@
         }
     },
     "input": {
+        "operation": {
+            "placeholder": "Select Operation"
+        },
         "node_type": {
             "placeholder": "Select Node Type"
         },
