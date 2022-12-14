@@ -17,8 +17,8 @@ interface props {
 
 const t = StageUtils.getT('widgets.common.deployments.deployModal');
 
-function parseCommaSeparatedValuesInBrackets(str?: string) {
-    const matches = str?.match(/\[(.*?)\]/);
+function parseCommaSeparatedValuesInBrackets(error?: string) {
+    const matches = error?.match(/\[(.*?)\]/);
     if (matches && matches.length > 1) {
         return matches[1].split(', ');
     }
