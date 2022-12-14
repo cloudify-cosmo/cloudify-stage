@@ -32,6 +32,7 @@ export interface ManagerData {
     }[];
     tenants: TenantsData;
     version: Partial<VersionResponse>;
+    activeExecutions?: any;
 }
 
 type ManagerAction =
