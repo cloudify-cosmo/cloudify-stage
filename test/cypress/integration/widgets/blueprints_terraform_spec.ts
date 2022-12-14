@@ -281,7 +281,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         });
     });
 
-    describe.only('handle getting Terraform module from git when', () => {
+    describe('handle getting Terraform module from git when', () => {
         const verifyTerraformModuleDropdownInitialized = (hasOptions: boolean) => {
             cy.getField('Terraform module folder').within(() => {
                 cy.get('.dropdown.disabled').should(hasOptions ? 'not.exist' : 'exist');
