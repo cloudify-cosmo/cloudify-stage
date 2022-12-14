@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import type { FormEvent } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, find, some, isEmpty, entries } from 'lodash';
+import { chain, entries, head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -14,7 +14,7 @@ import TerraformVariableNameInput from './TerraformVariableNameInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../../app/utils/StageAPI';
-import type { Variable, Output } from '../../../../backend/handler/TerraformHandler.types';
+import type { Output, Variable } from '../../../../backend/handler/TerraformHandler.types';
 import terraformLogo from '../../../../app/images/terraform_logo.png';
 import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';
@@ -197,8 +197,13 @@ export function getResourceLocation(templateModules: string[], resourceLocation:
     ) {
         return resourceLocation;
     }
-    // Remove first dir from the path ('dir1/dir2' -> 'dir2')
-    return resourceLocation.replace(/^[^/]*[/]?/, '');
+
+    if (resourceLocation.indexOf('/') >= 0) {
+        // Remove first dir from the path ('dir1/dir2' -> 'dir2')
+        return resourceLocation.replace(/^[^/]*[/]?/, '');
+    }
+
+    return resourceLocation;
 }
 interface ExistingVariableNames {
     input: string[];
@@ -619,9 +624,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     function reloadTemplateModules(loadedTemplateModules: any) {
         setTemplateModules(loadedTemplateModules);
-        setResourceLocation(
-            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-        );
+        setResourceLocation(head(loadedTemplateModules));
 
         clearFieldError('template');
     }
