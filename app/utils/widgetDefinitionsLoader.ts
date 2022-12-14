@@ -37,7 +37,7 @@ function getBundleLoadedWidget(custom = true) {
     return registeredWidget;
 }
 
-type WidgetListItem = WidgetData;
+type WidgetListItem = Partial<WidgetData>;
 
 export type SimpleWidgetDefinition = WidgetListItem & { loaded: boolean };
 
