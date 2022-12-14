@@ -2,8 +2,8 @@ import type { DropdownProps } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
 import Actions from './actions';
 import type { User } from './widget.types';
-import type { Role } from '../../common/src/roles/RolesPicker';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
+import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 import getWidgetT from './getWidgetT';
 
 const t = getWidgetT();

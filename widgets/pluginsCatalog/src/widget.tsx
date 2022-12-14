@@ -12,7 +12,6 @@ Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidget
     description: t('description'),
     initialWidth: 12,
     initialHeight: 20,
-    color: 'teal',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginsCatalog'),

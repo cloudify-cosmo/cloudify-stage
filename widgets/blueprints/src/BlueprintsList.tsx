@@ -4,7 +4,7 @@ import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
-import type { Field } from '../../common/src/types';
+import type { Field } from '../../../app/widgets/common/types';
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;

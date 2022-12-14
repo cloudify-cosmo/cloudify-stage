@@ -11,7 +11,6 @@ Stage.defineWidget({
     description: 'This widget shows list of installed agents',
     initialWidth: 12,
     initialHeight: 24,
-    color: 'olive',
     fetchUrl: '[manager]/agents?[params:gridParams,deployment_id,node_ids,node_instance_ids,install_methods,state]',
     isReact: true,
     hasReadme: true,

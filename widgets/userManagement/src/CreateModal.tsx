@@ -1,8 +1,8 @@
 import type { FunctionComponent } from 'react';
 import Actions from './actions';
 import type { CancelablePromise } from '../../../app/utils/types';
-import type { RolesPickerProps } from '../../common/src/roles/RolesPicker';
-import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
+import type { RolesPickerProps } from '../../../app/widgets/common/roles/RolesPicker';
+import type { TenantItem, TenantsDropdownProps } from '../../../app/widgets/common/tenants/TenantsDropdown';
 import getWidgetT from './getWidgetT';
 
 const tModal = (key: string) => getWidgetT()(`createModal.${key}`);

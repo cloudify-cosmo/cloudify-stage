@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import { useMemo, useState } from 'react';
 import { isEmpty } from 'lodash';
-import type { Filter, FilterRule } from '../../common/src/filters/types';
+import type { Filter, FilterRule } from '../../../app/widgets/common/filters/types';
 
 export interface FilterModalProps {
     initialFilter?: Filter;

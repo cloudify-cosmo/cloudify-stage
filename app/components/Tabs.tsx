@@ -22,7 +22,7 @@ const SortableMenuItem = SortableElement(Menu.Item);
 
 const t = StageUtils.getT('editMode');
 
-interface TabsProps {
+export interface TabsProps {
     tabs: TabContent[];
     isEditMode: boolean;
     onTabMoved: (oldIndex: number, newIndex: number) => void;
