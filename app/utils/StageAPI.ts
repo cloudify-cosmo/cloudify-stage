@@ -124,7 +124,7 @@ export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
     categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
-    color: SemanticCOLORS;
+    color?: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
