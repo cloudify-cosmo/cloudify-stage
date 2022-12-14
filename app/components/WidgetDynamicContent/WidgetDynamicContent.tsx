@@ -22,7 +22,7 @@ export interface WidgetDynamicContentProps {
         error: ErrorMessageProps['error'];
     };
     fetchWidgetData: (...args: Parameters<typeof fetchWidgetData>) => FetchWidgetDataPromises;
-    onWidgetConfigUpdate: (config: Record<string, unknown>) => void;
+    onWidgetConfigUpdate: (config: { pageSize: number }) => void;
     manager: ManagerData;
     widget: Widget;
     standalone: boolean;
@@ -30,6 +30,10 @@ export interface WidgetDynamicContentProps {
 
 interface WidgetDynamicContentState {
     loading: boolean;
+}
+
+interface WidgetParams {
+    gridParams: GridParams;
 }
 
 export default class WidgetDynamicContent extends Component<WidgetDynamicContentProps, WidgetDynamicContentState> {
@@ -186,15 +190,18 @@ export default class WidgetDynamicContent extends Component<WidgetDynamicContent
         }
     }
 
-    updateConfiguration(params?: { gridParams?: GridParams }) {
+    updateConfiguration(params?: WidgetParams) {
         const { onWidgetConfigUpdate, widget } = this.props;
-        if (params?.gridParams?.pageSize && params.gridParams.pageSize !== widget.configuration.pageSize) {
-            onWidgetConfigUpdate({ pageSize: params.gridParams.pageSize });
+        const pageSize = params?.gridParams?.pageSize;
+
+        if (pageSize && pageSize !== widget.configuration.pageSize) {
+            onWidgetConfigUpdate({ pageSize });
         }
     }
 
-    fetchData(params?: { gridParams: GridParams }) {
+    fetchData(params?: WidgetParams) {
         const { fetchWidgetData, widget } = this.props;
+
         if (params) {
             this.paramsHandler.updateGridParams(params.gridParams);
             this.updateConfiguration(params);
