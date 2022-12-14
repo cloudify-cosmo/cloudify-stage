@@ -68,7 +68,6 @@ const getSharedDefinition = <D extends Partial<Stage.Types.WidgetDefinition>>(d:
 export const sharedDefinition = getSharedDefinition({
     initialWidth: 12,
     initialHeight: 28,
-    color: 'purple',
     categories: [GenericConfig.CATEGORY.DEPLOYMENTS],
 
     isReact: true,

@@ -6,7 +6,6 @@ Stage.defineWidget({
     description: 'Number of running executions',
     initialWidth: 2,
     initialHeight: 8,
-    color: 'teal',
     showHeader: false,
     isReact: true,
     hasReadme: true,
