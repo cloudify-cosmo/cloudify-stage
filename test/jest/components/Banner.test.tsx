@@ -1,38 +1,39 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
 
+import React from 'react';
 import { mount } from 'enzyme';
-
+import type { ReactWrapper } from 'enzyme';
+import { isUndefined, isEmpty } from 'lodash';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
+import type { ReduxState } from 'reducers';
 import Consts from 'utils/consts';
+import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
-import * as BasicComponents from 'components/basic';
-
-import { createToolbox } from 'utils/Toolbox';
+import type { LicenseStatus } from 'reducers/managerReducer';
+import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';
 
 describe('(Component) Banner', () => {
-    let bannerComponent = null;
+    let bannerComponent: ReactWrapper;
 
-    const verifyProps = (isCommunity, isExpired, isTrial, productName, productVersion, licenseEdition) => {
-        const headerBanner = bannerComponent.find('HeaderBanner');
-        expect(headerBanner.props().isCommunity).toBe(isCommunity);
+    const verifyProps = (productName: string, productVersion: string, licenseEdition: string) => {
+        const headerBanner: ReactWrapper<HeaderBannerProps> = bannerComponent.find('HeaderBanner');
         expect(headerBanner.props().productName).toBe(productName);
         expect(headerBanner.props().productVersion).toBe(productVersion);
         expect(headerBanner.props().licenseEdition).toBe(licenseEdition);
     };
 
-    const verifyTag = (isPresent = false, tag = null, isLinked = false) => {
+    const verifyTag = (isPresent = false, tag: string | null = null, isLinked = false) => {
         const tagComponent = bannerComponent.find('LicenseLabel');
         expect(tagComponent).toHaveLength(isPresent ? 1 : 0);
         if (isPresent) {
             const labelComponent = bannerComponent.find('Label');
-            if (_.isEmpty(tag)) {
+            if (isEmpty(tag)) {
                 expect(labelComponent).toHaveLength(0);
             } else {
                 expect(labelComponent.text()).toBe(tag);
@@ -45,7 +46,7 @@ describe('(Component) Banner', () => {
         }
     };
 
-    const verifyFullName = fullName => {
+    const verifyFullName = (fullName: string) => {
         const headerComponent = bannerComponent.find('Header');
         expect(headerComponent.text()).toBe(fullName);
 
@@ -54,21 +55,25 @@ describe('(Component) Banner', () => {
         expect(linkComponent.props().to).toBe(Consts.PAGE_PATH.HOME);
     };
 
-    const getLicenseEdition = license => {
-        return license.license_edition || '';
+    const getLicenseEdition = (license: LicenseResponse | null) => {
+        return license?.license_edition || '';
     };
 
-    const getLicenseState = (data, isRequired, status) => {
+    const getLicenseState = (data: LicenseResponse | null, isRequired: boolean, status: LicenseStatus) => {
         return { data, isRequired, status };
     };
 
-    const getWhiteLabel = showVersionDetails => {
+    const getWhiteLabel = (showVersionDetails?: boolean) => {
         return {
-            showVersionDetails: _.isUndefined(showVersionDetails) ? true : showVersionDetails
+            showVersionDetails: isUndefined(showVersionDetails) ? true : showVersionDetails
         };
     };
 
-    const mockStoreAndRender = (license, version, whiteLabel) => {
+    const mockStoreAndRender = (
+        license: ReduxState['manager']['license'],
+        version: ReduxState['manager']['version'],
+        whiteLabel: Pick<ReduxState['config']['app']['whiteLabel'], 'showVersionDetails'>
+    ) => {
         const mockStore = configureMockStore();
         const store = mockStore({
             manager: {
@@ -81,7 +86,6 @@ describe('(Component) Banner', () => {
                 }
             }
         });
-        createToolbox(store);
 
         const componentsTree = mount(
             <Provider store={store}>
@@ -104,7 +108,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, false, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, null);
         });
@@ -119,7 +123,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, false, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify 4.6');
             verifyTag(true, null);
         });
@@ -130,7 +134,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, false, true, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Trial', true);
         });
@@ -141,7 +145,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel(true);
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, true, false, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Expired', true);
         });
@@ -152,7 +156,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, true, true, 'Cloudify', '4.6', edition);
+            verifyProps('Cloudify', '4.6', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Expired', true);
         });
@@ -160,12 +164,12 @@ describe('(Component) Banner', () => {
 
     describe('does not show full name', () => {
         it('with community tag when version edition is community', () => {
-            const license = getLicenseState({}, false, Consts.LICENSE.EMPTY);
-            const edition = getLicenseEdition({});
+            const license = getLicenseState(null, false, Consts.LICENSE.EMPTY);
+            const edition = getLicenseEdition(null);
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, versions.community, whiteLabel);
 
-            verifyProps(true, false, false, 'Cloudify', '19.02.22~community', edition);
+            verifyProps('Cloudify', '19.02.22~community', edition);
             verifyFullName('Cloudify');
             verifyTag(true, 'Community', false);
         });
@@ -179,7 +183,7 @@ describe('(Component) Banner', () => {
 
             mockStoreAndRender(license, versions.premium, whiteLabel);
 
-            verifyProps(false, true, true, productName, '4.6', edition);
+            verifyProps(productName, '4.6', edition);
             verifyFullName('VNFM');
             verifyTag(false, null);
         });
@@ -192,7 +196,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '4.6.4-dev1' }, whiteLabel);
 
-            verifyProps(false, false, true, 'Cloudify', '4.6.4-dev1', edition);
+            verifyProps('Cloudify', '4.6.4-dev1', edition);
             verifyFullName('Cloudify Spire 4.6');
             verifyTag(true, 'Trial', true);
         });
@@ -210,7 +214,7 @@ describe('(Component) Banner', () => {
                 whiteLabel
             );
 
-            verifyProps(false, false, true, 'Cloudify', '5.1.2432-build123-commit-42342', edition);
+            verifyProps('Cloudify', '5.1.2432-build123-commit-42342', edition);
             verifyFullName('Cloudify Spire 5.1');
             verifyTag(true, 'Trial', true);
         });
@@ -221,7 +225,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '4te3s1t' }, whiteLabel);
 
-            verifyProps(false, false, true, 'Cloudify', '4te3s1t', edition);
+            verifyProps('Cloudify', '4te3s1t', edition);
             verifyFullName('Cloudify Spire');
             verifyTag(true, 'Trial', true);
         });
@@ -232,7 +236,7 @@ describe('(Component) Banner', () => {
             const whiteLabel = getWhiteLabel();
             mockStoreAndRender(license, { ...versions.premium, version: '' }, whiteLabel);
 
-            verifyProps(false, false, true, 'Cloudify', '', edition);
+            verifyProps('Cloudify', '', edition);
             verifyFullName('Cloudify Spire');
             verifyTag(true, 'Trial', true);
         });

@@ -6,7 +6,7 @@ import { Button } from '../basic';
 interface MaintenanceModeActivationButtonProps {
     activate: boolean;
     onClick: ButtonProps['onClick'];
-    disabled: boolean;
+    disabled?: boolean;
 }
 
 export default function MaintenanceModeActivationButton({
