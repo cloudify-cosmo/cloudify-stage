@@ -23,7 +23,6 @@ Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, PollingTimeConfig
     description: t('description'),
     initialWidth: 4,
     initialHeight: 22,
-    color: 'green',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesStats'),

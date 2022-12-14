@@ -22,7 +22,6 @@ Stage.defineWidget<UserManagementWidget.Params, UserManagementWidget.Data, UserM
     description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
-    color: 'brown',
     fetchUrl: {
         users: '[manager]/users?_get_data=true[params]'
     },

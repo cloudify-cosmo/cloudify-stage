@@ -1,6 +1,6 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import type { FilterRule } from 'widgets/common/src/filters/types';
+import type { FilterRule } from 'app/widgets/common/filters/types';
 
 declare global {
     namespace Cypress {

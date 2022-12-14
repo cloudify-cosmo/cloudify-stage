@@ -13,7 +13,6 @@ Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
     description: translateInputsWidget('description'),
     initialWidth: 8,
     initialHeight: 16,
-    color: 'teal',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('inputs'),
