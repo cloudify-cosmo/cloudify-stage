@@ -160,7 +160,7 @@ pipeline {
     stage('Run second tests group') {
       parallel {
         stage('Run tests') {
-          steps {
+          stages {
             stage('Test frontend unit'){
               steps{
                 container('node'){
