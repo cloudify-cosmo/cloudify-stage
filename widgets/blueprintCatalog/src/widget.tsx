@@ -34,6 +34,8 @@ Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintC
     initialHeight: 20,
     isReact: true,
     hasReadme: true,
+    showHeader: false,
+    showBorder: false,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintCatalog'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],
 
