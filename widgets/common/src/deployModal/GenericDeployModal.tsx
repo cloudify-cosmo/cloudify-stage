@@ -31,6 +31,7 @@ import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
 import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { parentDeploymentLabelKey } from '../deploymentsView/common';
+import { deployOnTextFormatter } from './GenericDeployModal.utils';
 
 const { i18n } = Stage;
 const t = Stage.Utils.getT('widgets.common.deployments.deployModal');
@@ -731,19 +732,17 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                             <Form.Field
                                 error={errors.deploymentIdToDeployOn}
                                 label={t('inputs.deploymentIdToDeployOn.label')}
-                                placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
                                 required
                             >
                                 <DynamicDropdown
                                     value={deploymentIdToDeployOn}
                                     name="deploymentIdToDeployOn"
                                     fetchUrl="/deployments?_include=id,display_name"
+                                    placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
                                     searchParams={deploymentSearchParams}
                                     clearable={false}
                                     onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
-                                    textFormatter={item =>
-                                        Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name })
-                                    }
+                                    textFormatter={deployOnTextFormatter}
                                     toolbox={toolbox}
                                     prefetch
                                 />
