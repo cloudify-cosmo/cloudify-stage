@@ -1,4 +1,4 @@
-import type { SiteWithPosition } from '../../common/src/map/site';
+import type { SiteWithPosition } from '../../../app/widgets/common/map/site';
 import SitesMap from './SitesMap';
 import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';
