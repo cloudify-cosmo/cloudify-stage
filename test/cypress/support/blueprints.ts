@@ -1,8 +1,8 @@
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common-cypress/support';
 import { addCommands } from 'cloudify-ui-common-cypress/support';
-import BlueprintActions from '../../../widgets/common/src/blueprints/BlueprintActions';
-import type { Visibility } from '../../../widgets/common/src/types';
-import type { BlueprintUploadParameters } from '../../../widgets/common/src/blueprints/BlueprintActions';
+import generateUploadFormData from 'app/widgets/common/blueprints/generateUploadFormData';
+import type { BlueprintUploadParameters } from '../../../app/widgets/common/blueprints/BlueprintActions';
+import type { Visibility } from '../../../app/widgets/common/types';
 
 declare global {
     namespace Cypress {
@@ -19,7 +19,7 @@ interface UploadBlueprintOptions {
 }
 
 const uploadBlueprint = (blueprintId: string, parameters: BlueprintUploadParameters, timeout?: number) => {
-    const formData = BlueprintActions.generateUploadFormData(parameters);
+    const formData = generateUploadFormData(parameters);
     return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
 };
 
@@ -33,7 +33,7 @@ const uploadBlueprintWithFile = (
         .fixture(filePath, 'binary')
         .then(binary => Cypress.Blob.binaryStringToBlob(binary))
         .then(fileContent => {
-            const formData = BlueprintActions.generateUploadFormData(parameters, fileContent);
+            const formData = generateUploadFormData(parameters, fileContent);
 
             return cy.doXhrPutRequest(`/blueprints/${blueprintId}`, formData, timeout);
         });

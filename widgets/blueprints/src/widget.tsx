@@ -15,7 +15,6 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
     description: 'Shows blueprint list',
     initialWidth: 8,
     initialHeight: 20,
-    color: 'blue',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),

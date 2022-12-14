@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'Snapshots list',
     initialWidth: 4,
     initialHeight: 16,
-    color: 'blue',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('snapshots'),

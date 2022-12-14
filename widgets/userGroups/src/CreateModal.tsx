@@ -1,8 +1,8 @@
 import { isEmpty } from 'lodash';
 import Actions from './actions';
-import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
-import type { Role } from '../../common/src/roles/RolesPicker';
+import type { TenantItem, TenantsDropdownProps } from '../../../app/widgets/common/tenants/TenantsDropdown';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
+import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
 
 const t = Stage.Utils.getT('widgets.userGroups.modals.create');
 

@@ -1,4 +1,6 @@
 import AnyData from './AnyDataPropType';
 import Widget from './WidgetPropType';
+import StringOrArray from './StringOrArray';
+import Toolbox from './Toolbox';
 
-export { AnyData, Widget };
+export { StringOrArray, Toolbox, AnyData, Widget };

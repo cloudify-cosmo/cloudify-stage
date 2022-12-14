@@ -19,7 +19,7 @@ const StatusHeader: FunctionComponent<StatusHeaderProps> = ({ nodeName, nodeType
     return (
         <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
             <Icon name={nodeIcon} />
-            {nodeName} {i18n.t('cluster.servicesStatus', 'Services Status')}
+            {nodeName} {i18n.t('cluster.servicesStatus')}
         </Header>
     );
 };
@@ -97,7 +97,7 @@ const NodeServices: FunctionComponent<NodeServicesProps> = ({ name, type, servic
             </Table>
             <CopyToClipboardButton
                 className="rightFloated"
-                content={i18n.t('cluster.copyInfo', 'Copy Raw Info')}
+                content={i18n.t('cluster.copyInfo')}
                 text={stringifiedServices}
             />
         </div>

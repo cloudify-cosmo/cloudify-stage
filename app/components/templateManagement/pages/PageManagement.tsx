@@ -121,7 +121,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         layoutSection: number,
         name: string,
         widgetDefinition: WidgetDefinition,
-        tabIndex: number
+        tabIndex: number | null
     ) => {
         const widgetInstance: SimpleWidgetObj = {
             id: v4(),
@@ -180,7 +180,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
         ) as TabContent[] | SimpleWidgetObj[];
         updatePage();
     };
-    const onTabUpdated = (layoutSection: number, tabIndex: number, name: string, isDefault: number) => {
+    const onTabUpdated = (layoutSection: number, tabIndex: number, name: string, isDefault: boolean) => {
         const tabs = page.layout[layoutSection].content as TabContent[];
         if (isDefault) {
             _.each(tabs, tab => {
