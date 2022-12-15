@@ -160,8 +160,6 @@ const defaultProps: Partial<GenericDeployModalProps> = {
     deploySteps: [],
     deployValidationMessage: '',
     deployAndInstallValidationMessage: '',
-    deploymentNameLabel: t('inputs.deploymentName.label'),
-    deploymentNameHelp: t('inputs.deploymentName.help'),
     blueprintFilterRules: []
 };
 
@@ -716,9 +714,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         {showDeploymentNameInput && (
                             <Form.Field
                                 error={errors.deploymentName}
-                                label={deploymentNameLabel}
+                                label={deploymentNameLabel ?? t('inputs.deploymentName.label')}
                                 required
-                                help={deploymentNameHelp}
+                                help={deploymentNameHelp ?? t('inputs.deploymentName.help')}
                             >
                                 <Form.Input
                                     name="deploymentName"
