@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions',
     initialWidth: 12,
     initialHeight: 3,
-    color: 'yellow',
     showHeader: false,
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],

@@ -218,6 +218,9 @@ describe('Deployments widget', () => {
     });
 
     it('should allow to update deployment', () => {
+        const anotherBlueprintName = `${blueprintName}_another`;
+        cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
+
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
@@ -225,8 +228,16 @@ describe('Deployments widget', () => {
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
+
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
+            cy.contains(anotherBlueprintName).click();
+
+            cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
+
+            cy.get('div[name=blueprintName]').click();
+            cy.contains(RegExp(`${blueprintName}$`)).click();
+
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.contains('Skip heal').click();
             cy.contains('Skip drift check').click();

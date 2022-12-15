@@ -6,8 +6,8 @@ import StageUtils from './stageUtils';
 import type { ReduxStore } from '../configureStore';
 import type { CancelablePromise } from './types';
 
-type StatusPollerSingleton = StatusPoller | null;
-let singleton: StatusPollerSingleton = null;
+type StatusPollerSingleton = StatusPoller;
+let singleton: StatusPollerSingleton;
 
 export default class StatusPoller {
     pollerTimer?: NodeJS.Timeout;

@@ -6,7 +6,6 @@ Stage.defineWidget<never, never, never>({
     description: 'Show only my resources checkbox, work with (plugins, snapshots, blueprints, deployments)',
     initialWidth: 12,
     initialHeight: 4,
-    color: 'yellow',
     showHeader: false,
     showBorder: false,
     isReact: true,

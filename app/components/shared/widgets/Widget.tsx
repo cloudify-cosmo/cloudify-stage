@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import _ from 'lodash';
 import log from 'loglevel';
@@ -7,7 +6,6 @@ import React, { Component, createRef } from 'react';
 import type { ConnectedProps, MapStateToProps } from 'react-redux';
 import { connect } from 'react-redux';
 
-import { setValue } from '../../../actions/context';
 import type { SimpleWidgetObj } from '../../../actions/page';
 import { getWidgetDefinitionById } from '../../../actions/page';
 import { fetchWidgetData as fetchWidgetDataThunk } from '../../../actions/widgetData';
@@ -21,6 +19,7 @@ import WidgetDefinitionsLoader from '../../../utils/widgetDefinitionsLoader';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
 import EditWidget from '../../EditWidget';
 import WidgetDynamicContent from '../../WidgetDynamicContent';
+import type { ReduxThunkDispatch } from '../../../configureStore';
 
 export interface WidgetOwnProps<Configuration> {
     isEditMode: boolean;
@@ -38,6 +37,8 @@ export interface WidgetOwnProps<Configuration> {
 }
 
 type WidgetProps<Configuration> = Omit<WidgetOwnProps<Configuration>, 'widget'> & PropsFromRedux;
+
+export type FetchWidgetDataProp = PropsFromRedux['fetchWidgetData'];
 
 interface WidgetState {
     hasError: boolean;
@@ -73,7 +74,10 @@ function convertReadmeParams(content: any) {
     return newContent;
 }
 
-class Widget<Configuration> extends Component<WidgetProps<Configuration>, WidgetState> {
+class Widget<Configuration extends Record<string, unknown> = Record<string, unknown>> extends Component<
+    WidgetProps<Configuration>,
+    WidgetState
+> {
     private widgetItemRef = createRef<any>();
 
     constructor(props: WidgetProps<Configuration>) {
@@ -93,9 +97,9 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
     componentDidMount() {
         const { widget, updateWidgetDefinition } = this.props;
         if (!widget.definition.loaded) {
-            WidgetDefinitionsLoader.loadWidget(widget.definition).then(widgetDefinition =>
-                updateWidgetDefinition(widgetDefinition.id, widgetDefinition)
-            );
+            WidgetDefinitionsLoader.loadWidget(widget.definition).then(widgetDefinition => {
+                if (widgetDefinition) updateWidgetDefinition(widgetDefinition.id, widgetDefinition);
+            });
         }
     }
 
@@ -123,7 +127,7 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
         }
     };
 
-    widgetConfigUpdate = (config: Partial<Configuration>) => {
+    widgetConfigUpdate = (config: Record<string, unknown>) => {
         const { onWidgetUpdated, widget } = this.props;
         if (config) {
             onWidgetUpdated?.(widget.id, { configuration: { ...widget.configuration, ...config } });
@@ -174,7 +178,6 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
             manager,
             onWidgetUpdated,
             onWidgetRemoved,
-            setContextValue,
             widget,
             widgetData,
             standalone = false
@@ -307,7 +310,6 @@ class Widget<Configuration> extends Component<WidgetProps<Configuration>, Widget
                                 context={context}
                                 manager={manager}
                                 data={widgetData}
-                                setContextValue={setContextValue}
                                 onWidgetConfigUpdate={this.widgetConfigUpdate}
                                 fetchWidgetData={fetchWidgetData}
                                 standalone={standalone}
@@ -343,11 +345,11 @@ const mapStateToProps: MapStateToProps<ReduxStateToProps<any>, WidgetOwnProps<an
     };
 };
 
-const mapDispatchToProps = {
-    setContextValue: setValue,
-    fetchWidgetData: fetchWidgetDataThunk,
-    updateWidgetDefinition: updateWidgetDefinitionThunk
-};
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => ({
+    fetchWidgetData: (...args: Parameters<typeof fetchWidgetDataThunk>) => dispatch(fetchWidgetDataThunk(...args)),
+    updateWidgetDefinition: (...args: Parameters<typeof updateWidgetDefinitionThunk>) =>
+        dispatch(updateWidgetDefinitionThunk(...args))
+});
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;

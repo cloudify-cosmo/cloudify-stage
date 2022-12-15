@@ -17,7 +17,6 @@ export default function normalizeWidgetDefinition<Params, Data, Configuration>(
 
     return {
         // Set default values for optional properties
-        color: 'blue',
         categories: [GenericConfig.CATEGORY.OTHERS],
         hasReadme: false,
         hasStyle: false,

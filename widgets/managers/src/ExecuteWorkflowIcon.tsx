@@ -1,5 +1,5 @@
 import { isEmpty, noop } from 'lodash';
-import type { WorkflowsMenuProps } from '../../common/src/executeWorkflow/WorkflowsMenu';
+import type { WorkflowsMenuProps } from '../../../app/widgets/common/executeWorkflow/WorkflowsMenu';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
