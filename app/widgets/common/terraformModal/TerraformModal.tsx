@@ -2,7 +2,7 @@ import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, entries, find, isEmpty, some } from 'lodash';
+import { chain, entries, head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -635,9 +635,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     function reloadTemplateModules(loadedTemplateModules: any) {
         setTemplateModules(loadedTemplateModules);
-        setResourceLocation(
-            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-        );
+        setResourceLocation(head(loadedTemplateModules));
 
         clearFieldError('template');
     }
