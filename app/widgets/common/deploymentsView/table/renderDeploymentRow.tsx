@@ -3,7 +3,7 @@ import React from 'react';
 
 import { groupBy } from 'lodash';
 import type { DeploymentsViewColumnId } from './columns';
-import { deploymentsViewColumnDefinitions } from './columns';
+import { getDeploymentsViewColumnDefinitions } from './columns';
 import type { Deployment } from '../types';
 import { LatestExecutionStatus } from '../types';
 import { selectDeployment } from '../common';
@@ -29,7 +29,7 @@ const renderDeploymentRow =
                 selected={deployment.id === selectedDeployment?.id}
                 onClick={() => selectDeployment(toolbox, deployment.id)}
             >
-                {Object.entries(deploymentsViewColumnDefinitions).map(([columnId, columnDefinition]) => (
+                {Object.entries(getDeploymentsViewColumnDefinitions()).map(([columnId, columnDefinition]) => (
                     <DataTable.Data key={columnId}>{columnDefinition.render(deployment)}</DataTable.Data>
                 ))}
                 {keysOfLabelsToShow.map(labelKey => (

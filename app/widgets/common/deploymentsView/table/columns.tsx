@@ -106,8 +106,11 @@ const partialDeploymentsViewColumnDefinitions: Record<
     }
 };
 
-export const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, DeploymentsViewColumnDefinition> =
-    mapValues(
+export function getDeploymentsViewColumnDefinitions(): Record<
+    DeploymentsViewColumnId,
+    DeploymentsViewColumnDefinition
+> {
+    return mapValues(
         partialDeploymentsViewColumnDefinitions,
         (columnDefinition, columnId): DeploymentsViewColumnDefinition => {
             const name = i18n.t(`${i18nColumnsPrefix}.${columnId}.name`);
@@ -124,3 +127,4 @@ export const deploymentsViewColumnDefinitions: Record<DeploymentsViewColumnId, D
             };
         }
     );
+}
