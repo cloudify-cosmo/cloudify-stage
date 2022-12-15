@@ -3,9 +3,11 @@ import RemoveSecretProviderButton from './RemoveSecretProviderButton';
 import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
 import type { SecretProvidersWidget } from './widget.types';
+import CreateSecretProviderModal from './CreateSecretProviderModal';
 
-const { DataTable, Icon, Button } = Stage.Basic;
+const { DataTable, Icon, Button, Dropdown, Menu, Item } = Stage.Basic;
 const { Time } = Stage.Utils;
+const { useBoolean } = Stage.Hooks;
 
 const translateTable = Stage.Utils.composeT(translateSecretProviders, 'table');
 
@@ -17,6 +19,7 @@ interface SecretProvidersTableProps {
 
 const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersTableProps) => {
     const { pageSize, sortColumn, sortAscending } = configuration;
+    const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
     const totalSize = data.metadata.pagination.total;
 
     const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
@@ -32,14 +35,30 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
         <>
             <DataTable
                 fetchData={fetchTableData}
-                noDataMessage={translateTable('noSecretProviders')}
                 totalSize={totalSize}
                 pageSize={pageSize}
                 sortColumn={sortColumn}
                 sortAscending={sortAscending}
+                noDataMessage={translateTable('noSecretProviders')}
             >
                 <DataTable.Action>
-                    <Button labelPosition="left" icon="add" content={translateTable('buttons.create')} />
+                    <Button
+                        labelPosition="left"
+                        icon="add"
+                        content={translateTable('buttons.create')}
+                        onClick={showCreateModal}
+                    />
+                    <Dropdown button text={translateSecretProviders('createButton.name')}>
+                        <Menu direction="left">
+                            <Item
+                                text={translateSecretProviders('createButton.options.vault')}
+                                onClick={showCreateModal}
+                                key="vault"
+                            />
+                            <Item text={translateSecretProviders('createButton.options.aws')} />
+                            <Item text={translateSecretProviders('createButton.options.gcp')} />
+                        </Menu>
+                    </Dropdown>
                 </DataTable.Action>
 
                 <DataTable.Column label={translateTable('columns.name')} name={dataSortingKeys.name} />
@@ -62,6 +81,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                     </DataTable.Row>
                 ))}
             </DataTable>
+            {isCreateModalVisible && <CreateSecretProviderModal onClose={hideCreateModal} toolbox={toolbox} />}
         </>
     );
 };

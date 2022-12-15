@@ -1464,6 +1464,49 @@
                 "buttons": {
                     "cancel": "Cancel"
                 }
+            },
+            "createButton": {
+                "name": "Create",
+                "description": "Create new Secret Provider",
+                "options": {
+                    "vault": "Vault",
+                    "aws": "AWS Secret Manager",
+                    "gcp": "GCP Secrets"
+                }
+            },
+            "createModal": {
+                "header": "Create a '{{secretProviderTitle}}' Secret Provider",
+                "buttons": {
+                    "create": "Create",
+                    "cancel": "Cancel"
+                },
+                "inputs": {
+                    "providerName": {
+                        "label": "Provider Name",
+                        "placeholder": "Provider name"
+                    },
+                    "hostname": {
+                        "label": "Vault Hostname",
+                        "placeholder": "Vault Hostname"
+                    },
+                    "authorizationToken": {
+                        "label": "Authorization Token",
+                        "placeholder": "Authorization Token"
+                    },
+                    "defaultPath": {
+                        "label": "Vault Default Path",
+                        "placeholder": "Path"
+                    }
+                },
+                "errors": {
+                    "providerName": {
+                        "required": "Provider name is required",
+                        "invalid": "The Provider name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
+                    },
+                    "hostname": "Hostname is required",
+                    "authorizationToken": "Authorization token is required",
+                    "providerNameNotUnique": "Provider name must be unique"
+                }
             }
         },
         "secrets": {
