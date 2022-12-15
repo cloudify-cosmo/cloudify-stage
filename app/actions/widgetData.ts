@@ -58,14 +58,15 @@ export function clearWidgetsData(): ClearWidgetDataAction {
     };
 }
 
+export type FetchWidgetDataPromises = {
+    cancelablePromise: CancelablePromise<unknown>;
+    waitForPromise: Promise<unknown>;
+};
 export function fetchWidgetData(
     widget: Widget,
     toolbox: Toolbox,
     paramsHandler: WidgetParamsHandler
-): ReduxThunkAction<
-    { cancelablePromise: CancelablePromise<unknown>; waitForPromise: Promise<unknown> },
-    WidgetDataAction
-> {
+): ReduxThunkAction<FetchWidgetDataPromises, WidgetDataAction> {
     return dispatch => {
         dispatch(fetchWidgetRequest(widget.id));
 

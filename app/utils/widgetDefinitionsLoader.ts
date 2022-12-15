@@ -8,6 +8,7 @@ import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
 import GenericConfig from './GenericConfig';
 import * as Hooks from './hooks';
+import Common from '../widgets/common';
 
 import Internal from './Internal';
 import LoaderUtils from './LoaderUtils';
@@ -36,7 +37,7 @@ function getBundleLoadedWidget(custom = true) {
     return registeredWidget;
 }
 
-type WidgetListItem = WidgetData;
+type WidgetListItem = Partial<WidgetData>;
 
 export type SimpleWidgetDefinition = WidgetListItem & { loaded: boolean };
 
@@ -52,21 +53,9 @@ export default class WidgetDefinitionsLoader {
             GenericConfig,
             Utils: StageUtils,
 
-            Common: {},
-            defineCommon: def => {
-                window.Stage.Common = def;
-            },
-
+            Common,
             PropTypes,
-            definePropTypes: def => {
-                Object.assign(window.Stage.PropTypes, def);
-            },
-
             Hooks,
-            defineHooks: def => {
-                Object.assign(window.Stage.Hooks, def);
-            },
-
             i18n,
             styled
         };

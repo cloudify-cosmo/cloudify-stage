@@ -1,6 +1,6 @@
-import type { FilterRule } from '../../common/src/filters/types';
+import type { FilterRule } from '../../../app/widgets/common/filters/types';
 import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
-import type { Visibility } from '../../common/src/types';
+import type { Visibility } from '../../../app/widgets/common/types';
 
 export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration, DataTableConfiguration {
     clickToDrillDown: boolean;

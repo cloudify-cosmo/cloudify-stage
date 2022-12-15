@@ -2,11 +2,11 @@ import type { FunctionComponent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 import getWidgetT from './getWidgetT';
 import AuthServiceActions from './authServiceActions';
-import type { TenantItem, TenantsDropdownProps } from '../../common/src/tenants/TenantsDropdown';
+import type { TenantItem, TenantsDropdownProps } from '../../../app/widgets/common/tenants/TenantsDropdown';
 import Actions from './actions';
 import type { CancelablePromise } from '../../../app/utils/types';
-import type { RolesPickerProps } from '../../common/src/roles/RolesPicker';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
+import type { RolesPickerProps } from '../../../app/widgets/common/roles/RolesPicker';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 
 const tModal = (key: string) => getWidgetT()(`inviteModal.${key}`);
 

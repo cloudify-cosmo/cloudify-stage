@@ -5,7 +5,7 @@ Stage.Utils = StageUtils;
 
 // NOTE: use `require` to lazily load the module after `Stage.Utils` is set
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { isSiteWithPosition } = require('../../../../../widgets/common/src/map/site');
+const { isSiteWithPosition } = require('widgets/common/map/site');
 
 describe('(Widgets common) isSiteWithPosition', () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
