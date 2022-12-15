@@ -4,6 +4,7 @@ import Help from './InputHelp';
 import InputField from './InputField';
 import getInputFieldInitialValue from './utils/getInputFieldInitialValue';
 import type { DataType, Input, OnChange } from './types';
+import type { SortOrder } from './SortOrderIcons';
 
 function normalizeValue(input: Input, inputsState: Record<string, any>, dataType: DataType) {
     if ((input.type === 'integer' || input.type === 'float') && Number.isNaN(inputsState[input.name])) {
@@ -56,25 +57,31 @@ function FormField({
     );
 }
 
-export default function InputFields({
-    inputs,
-    onChange,
-    inputsState,
-    errorsState,
-    toolbox,
-    dataTypes
-}: {
+interface InputFieldsProps {
     inputs: Record<string, any>;
     onChange: OnChange;
     inputsState: Record<string, any>;
     errorsState: Record<string, any>;
     toolbox: Stage.Types.WidgetlessToolbox;
     dataTypes?: Record<string, any>;
-}) {
+    sortOrder?: SortOrder;
+}
+export default function InputFields({
+    inputs,
+    onChange,
+    inputsState,
+    errorsState,
+    toolbox,
+    dataTypes,
+    sortOrder = 'original'
+}: InputFieldsProps) {
+    const iteratee: 'name' | undefined = sortOrder !== 'original' ? 'name' : undefined;
+    const order: 'desc' | undefined = sortOrder === 'descending' ? 'desc' : undefined;
+
     const inputFields = _(inputs)
         .map((input, name) => ({ name, ...input }))
         .reject('hidden')
-        .sortBy([input => !_.isUndefined(input.default), 'name'])
+        .orderBy(iteratee, order)
         .map(input => {
             const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes![input.type] : undefined;
             const value = normalizeValue(input, inputsState, dataType);

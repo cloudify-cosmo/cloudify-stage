@@ -1,5 +1,5 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import InputFields from '../inputs/InputFields';
@@ -8,6 +8,8 @@ import YamlFileButton from '../inputs/YamlFileButton';
 import type { BaseWorkflowInputs, OnCheckboxChange, UserWorkflowInputsState } from './types';
 import { DateInput, Divider, Form, Header, Message } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
+import type { SortOrder } from '../inputs/SortOrderIcons';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 
 const t = StageUtils.getT('widgets.common.deployments.execute');
 
@@ -74,6 +76,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduleChange,
     onScheduledTimeChange
 }) => {
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
     return (
         <>
             {_.isEmpty(baseWorkflowInputs) ? (
@@ -87,6 +90,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                         iconButton
                     />
                     <InputsHelpIcon />
+                    <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
                 </>
             )}
 
@@ -96,6 +100,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 inputsState={userWorkflowInputsState}
                 errorsState={errors}
                 toolbox={toolbox}
+                sortOrder={sortOrder}
             />
             {showInstallOptions && (
                 <>
