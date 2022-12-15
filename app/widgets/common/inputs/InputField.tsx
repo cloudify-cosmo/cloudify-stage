@@ -17,6 +17,7 @@ import NodeIdInputField from './fields/NodeIdInputField';
 import getConstraintValueFunction from './utils/getConstraintValueFunction';
 
 import type { Input, OnChange } from './types';
+import OperationNameInputField from './fields/OperationNameInputField';
 
 function isListComponentInputType(input: Input): boolean {
     return !!(input.item_type && input.type === 'list');
@@ -101,6 +102,8 @@ function InputField({
             return <CapabilityValueInputField {...commonDynamicDropdownFieldProps} />;
         case 'secret_key':
             return <SecretKeyInputField {...commonDynamicDropdownFieldProps} />;
+        case 'operation_name':
+            return <OperationNameInputField {...commonDynamicDropdownFieldProps} />;
         case 'string':
         case 'regex':
             return <StringInputField {...commonProps} />;
