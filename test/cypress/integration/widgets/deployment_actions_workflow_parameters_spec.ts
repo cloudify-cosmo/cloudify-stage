@@ -1,7 +1,15 @@
 describe('Deployment Action Buttons widget provides Execute Workflow modal and handles parameters of type', () => {
     const resourcePrefix = 'workflow_parameters_test_';
 
-    const types = ['node_id', 'node_type', 'node_instance', 'scaling_group', 'node_id_list', 'node_instance_list'];
+    const types = [
+        'node_id',
+        'node_type',
+        'node_instance',
+        'scaling_group',
+        'node_id_list',
+        'node_instance_list',
+        'operation_name'
+    ];
 
     const openWorkflowParametersModal = (type: string) => {
         const deploymentName = `${resourcePrefix}${type}_type_deployment`;
@@ -123,6 +131,15 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         cy.getField('node_instance_starts_With_node1').within(() => {
             verifyNumberOfOptions(2);
             verifyMultipleDropdown();
+        });
+    });
+
+    it('operation_name', () => {
+        openWorkflowParametersModal('operation_name');
+        cy.get('.modal').within(() => {
+            cy.getField('operation').within(() => {
+                verifyNumberOfOptions(46);
+            });
         });
     });
 });
