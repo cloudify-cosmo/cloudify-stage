@@ -71,7 +71,10 @@ export default class OutputsTable extends React.Component<OutputsTableProps, Out
                     noDataMessage={NO_DATA_MESSAGE}
                     fetchData={({ gridParams }) => {
                         this.setState(oldState => ({
-                            sortAscending: gridParams.sortAscending || oldState.sortAscending,
+                            sortAscending:
+                                gridParams.sortAscending !== undefined
+                                    ? gridParams.sortAscending
+                                    : oldState.sortAscending,
                             sortColumn: gridParams.sortColumn || oldState.sortColumn
                         }));
                     }}
