@@ -77,6 +77,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>('original');
+    const showSortOrderIcons = Object.keys(baseWorkflowInputs).length > 1;
 
     return (
         <>
@@ -91,7 +92,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                         iconButton
                     />
                     <InputsHelpIcon />
-                    <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
+                    {showSortOrderIcons && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
                 </>
             )}
 

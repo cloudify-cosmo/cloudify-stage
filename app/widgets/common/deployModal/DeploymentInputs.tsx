@@ -34,6 +34,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
 }) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>('original');
     const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
+    const showSortOrderIcons = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
 
     return (
         <>
@@ -51,13 +52,11 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                         <DataTypesButton iconButton types={blueprint.plan.data_types} />
                     )}
                     {deploymentHasInputs ? (
-                        <>
-                            <InputsHelpIcon />
-                            <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
-                        </>
+                        <InputsHelpIcon />
                     ) : (
                         <Message content={t('inputs.deploymentInputs.noInputs')} />
                     )}
+                    {showSortOrderIcons && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
                 </>
             )}
 
