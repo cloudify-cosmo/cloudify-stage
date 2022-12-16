@@ -5,9 +5,10 @@ import { translateSecretProviders } from './widget.utils';
 import type { SecretProvidersWidget } from './widget.types';
 import CreateSecretProviderModal from './CreateSecretProviderModal';
 
-const { DataTable, Icon, Button, Dropdown, Menu, Item } = Stage.Basic;
+const { DataTable, Icon, Dropdown } = Stage.Basic;
 const { Time } = Stage.Utils;
 const { useBoolean } = Stage.Hooks;
+const { Menu, Item } = Dropdown;
 
 const translateTable = Stage.Utils.composeT(translateSecretProviders, 'table');
 
@@ -42,12 +43,6 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 noDataMessage={translateTable('noSecretProviders')}
             >
                 <DataTable.Action>
-                    <Button
-                        labelPosition="left"
-                        icon="add"
-                        content={translateTable('buttons.create')}
-                        onClick={showCreateModal}
-                    />
                     <Dropdown button text={translateSecretProviders('createButton.name')}>
                         <Menu direction="left">
                             <Item
@@ -55,8 +50,6 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                                 onClick={showCreateModal}
                                 key="vault"
                             />
-                            <Item text={translateSecretProviders('createButton.options.aws')} />
-                            <Item text={translateSecretProviders('createButton.options.gcp')} />
                         </Menu>
                     </Dropdown>
                 </DataTable.Action>
