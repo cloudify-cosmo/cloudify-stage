@@ -1,16 +1,13 @@
 import React from 'react';
 import { map } from 'lodash';
-import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
+import type { HTMLProps } from 'react';
+import type { StrictIconProps } from 'semantic-ui-react';
 import { Icon } from '../../../components/basic';
+import StageUtils from '../../../utils/stageUtils';
+import translateInputs from './utils/tranlateInputs';
 
-export type SortOrder = 'original' | 'ascending' | 'descending';
-
-const sortOrderToIconMap: Record<SortOrder, SemanticICONS> = {
-    original: 'sort',
-    ascending: 'sort alphabet down',
-    descending: 'sort alphabet up'
-};
+const translate = StageUtils.composeT(translateInputs, 'buttons.sortOrder');
 
 const IconsContainer = styled.div`
     float: right;
@@ -18,21 +15,31 @@ const IconsContainer = styled.div`
     margin-top: 7px;
 `;
 
+export type SortOrder = 'original' | 'ascending' | 'descending';
+
+type SortOrderIconProps = Pick<StrictIconProps, 'name'> & Pick<HTMLProps<HTMLElement>, 'title'>;
+
 export interface SortOrderIconsProps {
     selected: SortOrder;
     onChange: (sortOrder: SortOrder) => void;
 }
 
 export default function SortOrderIcons({ onChange, selected }: SortOrderIconsProps) {
+    const sortOrderToIconMap: Record<SortOrder, SortOrderIconProps> = {
+        original: { title: translate('original'), name: 'sort' },
+        ascending: { title: translate('ascending'), name: 'sort alphabet down' },
+        descending: { title: translate('descending'), name: 'sort alphabet up' }
+    };
+
     return (
         <IconsContainer>
-            {map(sortOrderToIconMap, (icon, method: SortOrder) => (
+            {map(sortOrderToIconMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
                 <Icon
                     link
                     size="large"
-                    name={icon}
-                    color={selected === method ? 'blue' : undefined}
-                    onClick={() => onChange(method)}
+                    color={selected === sortOrder ? 'blue' : undefined}
+                    onClick={() => onChange(sortOrder)}
+                    {...iconProps}
                 />
             ))}
         </IconsContainer>
