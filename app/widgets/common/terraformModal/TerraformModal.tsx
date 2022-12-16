@@ -44,11 +44,6 @@ const TerraformLogo = styled(Image)`
     }
 `;
 
-const terraformVersionOptions = terraformVersions.map(versionOption => ({
-    text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
-    value: versionOption
-}));
-
 export const inputMaxLength = 256;
 
 function LengthLimitedDynamicTableInput({
@@ -276,6 +271,15 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 component: LengthLimitedDynamicTableInput
             }
         ],
+        undefined
+    );
+
+    const terraformVersionOptions = useMemo(
+        () =>
+            terraformVersions.map(versionOption => ({
+                text: versionOption === defaultVersion ? `${versionOption} (${t('default')})` : versionOption,
+                value: versionOption
+            })),
         undefined
     );
 

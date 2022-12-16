@@ -30,7 +30,7 @@
       "variable": "variableC",
       "source": "input",
       "name": "inputC",
-      "value": "defaultC"
+      "value": ""
     }
   ],
   "outputs": [
