@@ -60,7 +60,14 @@ function InputField({
 
     // Show only valid values in dropdown if 'valid_values' constraint is set
     if (!_.isNil(validValues)) {
-        return <ValueListInputField {...commonProps} multiple={multiple} validValues={validValues} />;
+        return (
+            <ValueListInputField
+                {...commonProps}
+                multiple={multiple}
+                validValues={validValues}
+                manager={toolbox.getManager()}
+            />
+        );
     }
 
     switch (componentType) {

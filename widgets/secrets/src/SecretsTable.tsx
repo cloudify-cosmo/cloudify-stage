@@ -213,7 +213,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         const { toolbox } = this.props;
         const { secret } = this.state;
         const secretKey = secret.key;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
         actions

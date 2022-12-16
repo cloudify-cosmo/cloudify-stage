@@ -277,6 +277,22 @@ describe('Create Deployment modal handles deployment inputs', () => {
         });
 
         it('string', () => {
+            const secretValue = 'secretValue';
+            const schema = 'schema';
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_string_secret', { value: secretValue });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_string_secret', {
+                value: `"${secretValue}"`,
+                schema
+            });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_array_secret', {
+                value: `["${secretValue}"]`,
+                schema
+            });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_object_secret', {
+                value: `{"${secretValue}": 0}`,
+                schema
+            });
+
             selectBlueprintInModal('string');
 
             cy.getField('string_no_default').within(() => {
@@ -291,7 +307,7 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 verifyTextInput('Ubuntu 18.04');
             });
 
-            cy.getField('string_constraint_valid_values').within(() => {
+            cy.getField('string_constraint_valid_values_static').within(() => {
                 cy.get('div.text').as('text').should('have.text', 'en');
                 cy.get('div.dropdown').click();
 
@@ -304,7 +320,11 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 cy.revertToDefaultValue();
                 cy.get('@text').should('have.text', 'en');
 
-                cy.get('i.dropdown.icon').as('dropdownOrClearIcon').should('be.visible').should('have.class', 'clear');
+                cy.get('i.dropdown.icon')
+                    .as('dropdownOrClearIcon')
+                    .scrollIntoView()
+                    .should('be.visible')
+                    .should('have.class', 'clear');
                 cy.get('@dropdownOrClearIcon').click();
 
                 cy.get('@text').should('not.exist');
@@ -313,6 +333,18 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 cy.revertToDefaultValue();
                 cy.get('@text').should('have.text', 'en');
             });
+
+            function verifySecretValuesField(field: string) {
+                cy.getField(field).within(() => {
+                    cy.get('div.dropdown').click();
+                    cy.get(`.menu .item[role="option"]`).should('have.length', 1).should('have.text', secretValue);
+                });
+            }
+
+            verifySecretValuesField('string_constraint_valid_values_secret_string');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_string');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_array');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_object');
 
             cy.getField('string_default').within(() => {
                 verifyTextInput('Some default string');

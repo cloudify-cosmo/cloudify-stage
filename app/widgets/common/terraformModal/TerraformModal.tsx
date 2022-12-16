@@ -524,7 +524,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         }
 
         async function createSecretsFromVariables() {
-            const secretActions = new SecretActions(toolbox);
+            const secretActions = new SecretActions(toolbox.getManager());
             const { defaultVisibility } = Consts;
             const allSecretVariables: Variable[] = [...variables, ...environment].filter(
                 variable => variable.source === 'secret'
@@ -607,7 +607,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             setProcessPhase('upload');
 
             if (urlAuthentication) {
-                const secretActions = new SecretActions(toolbox);
+                const secretActions = new SecretActions(toolbox.getManager());
                 const { defaultVisibility } = Consts;
                 await secretActions.doCreate(`${blueprintName}.username`, username, defaultVisibility, false);
                 await secretActions.doCreate(`${blueprintName}.password`, password, defaultVisibility, false);
