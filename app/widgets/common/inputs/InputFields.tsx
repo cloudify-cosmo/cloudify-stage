@@ -75,11 +75,11 @@ export default function InputFields({
     dataTypes,
     sortOrder = 'original'
 }: InputFieldsProps) {
-    const iteratee: 'name' | undefined = sortOrder !== 'original' ? 'name' : undefined;
-    const order: 'desc' | undefined = sortOrder === 'descending' ? 'desc' : undefined;
+    const iteratee: Parameters<typeof _.orderBy>[1] = sortOrder !== 'original' ? 'display_label' : undefined;
+    const order: Parameters<typeof _.orderBy>[2] = sortOrder === 'descending' ? 'desc' : undefined;
 
     const inputFields = _(inputs)
-        .map((input, name) => ({ name, ...input }))
+        .map((input, name) => ({ name, display_label: input.display_label ?? name, ...input }))
         .reject('hidden')
         .orderBy(iteratee, order)
         .map(input => {
@@ -87,6 +87,7 @@ export default function InputFields({
             const value = normalizeValue(input, inputsState, dataType);
             return (
                 <FormField
+                    key={input.name}
                     input={input}
                     value={value}
                     onChange={onChange}

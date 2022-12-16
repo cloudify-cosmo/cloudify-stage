@@ -35,6 +35,7 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
         <IconsContainer>
             {map(sortOrderToIconMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
                 <Icon
+                    key={sortOrder}
                     link
                     size="large"
                     color={selected === sortOrder ? 'blue' : undefined}
