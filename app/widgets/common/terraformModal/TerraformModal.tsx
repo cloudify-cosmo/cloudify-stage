@@ -73,8 +73,12 @@ function LengthLimitedDynamicTableInput({
     );
 }
 
-interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string> {
-    rowValues?: Variable;
+export interface VariableRow extends Omit<Variable, 'name'> {
+    name: { value: string; added?: boolean };
+}
+
+interface TerraformVariableValueInputProps extends CustomConfigurationComponentProps<string | undefined> {
+    rowValues?: VariableRow;
 }
 
 function TerraformVariableValueInput({
@@ -86,17 +90,22 @@ function TerraformVariableValueInput({
     index,
     ...rest
 }: TerraformVariableValueInputProps) {
-    const showSinglelineInput = rowValues?.source === 'secret';
+    const secretSource = rowValues?.source === 'secret';
     const { getFieldError } = useFormErrors('terraformModal');
-    const InputComponent = showSinglelineInput ? SinglelineInput : Form.Input;
+    const InputComponent = secretSource ? SinglelineInput : Form.Input;
+    const externalValue = secretSource && !rowValues?.name.added;
 
     const handleChange: InputProps['onChange'] = (event, { value: valuePassed }) => {
         onChange?.(event, { name, value: valuePassed });
     };
 
+    useEffect(() => {
+        if (externalValue) onChange(undefined, { name, value: undefined });
+    }, [externalValue]);
+
     return (
         <InputComponent
-            disabled={rowValues?.duplicated}
+            disabled={rowValues?.duplicated || externalValue}
             name={name}
             error={getFieldError(`${idPrefix}_${index}_${name}`)}
             fluid
@@ -166,26 +175,26 @@ interface ExistingVariableNames {
  *  if variable.source is different than 'input' or 'secret' mark variable.duplicated as false
  */
 function markDuplicates(
-    variables: Variable[],
-    environment: Variable[],
-    setVariables: (v: Variable[]) => void,
-    setEnvironment: (v: Variable[]) => void
+    variables: VariableRow[],
+    environment: VariableRow[],
+    setVariables: (v: VariableRow[]) => void,
+    setEnvironment: (v: VariableRow[]) => void
 ) {
     const existing: ExistingVariableNames = {
         input: [],
         secret: []
     };
 
-    function markItemDuplicated(variable: Variable, existingArray: string[]) {
-        if (existingArray.includes(variable.name)) {
+    function markItemDuplicated(variable: VariableRow, existingArray: string[]) {
+        if (existingArray.includes(variable.name.value)) {
             variable.duplicated = true;
         } else {
             variable.duplicated = false;
-            existingArray.push(variable.name);
+            existingArray.push(variable.name.value);
         }
     }
 
-    function markDuplicatesForEachIterator(row: Variable, key: number, array: Variable[]) {
+    function markDuplicatesForEachIterator(row: VariableRow, key: number, array: VariableRow[]) {
         if (row.source === 'input' || row.source === 'secret') {
             markItemDuplicated(array[key], existing[row.source]);
         } else {
@@ -201,7 +210,7 @@ function markDuplicates(
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
-    const variablesColumns = useMemo<Columns<Variable>>(
+    const variablesColumns = useMemo<Columns<VariableRow>>(
         () => [
             {
                 id: 'variable',
@@ -287,10 +296,10 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [urlAuthentication, setUrlAuthentication] = useInput(false);
     const [username, setUsername, clearUsername] = useInput('');
     const [password, setPassword, clearPassword] = useInput('');
-    const [variables, setVariables] = useState<Variable[]>([]);
-    const [environment, setEnvironment] = useState<Variable[]>([]);
+    const [variables, setVariables] = useState<VariableRow[]>([]);
+    const [environment, setEnvironment] = useState<VariableRow[]>([]);
     const [outputs, setOutputs] = useState<Output[]>([]);
-    const [variablesDeferred, setVariablesDeferred] = useState<Variable[]>([]);
+    const [variablesDeferred, setVariablesDeferred] = useState<VariableRow[]>([]);
     const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
@@ -326,9 +335,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 type: 'capability',
                 terraformOutput: outputObj.name
             }));
-            const variablesTmp: Variable[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
+            const variablesTmp: VariableRow[] = entries(variablesResponse).map(([key, variableObj]: any) => ({
                 variable: key,
-                name: variableObj.name,
+                name: { value: variableObj.name },
                 source: 'input',
                 value: '',
                 duplicated: false
@@ -387,7 +396,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     function validateVariablesSource(
-        variablesList: Variable[],
+        variablesList: VariableRow[],
         variableType: string,
         setFormError: typeof setFieldError
     ) {
@@ -405,7 +414,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     function validateVariablesName(
-        variablesList: Variable[],
+        variablesList: VariableRow[],
         variableType: string,
         setFormError: typeof setFieldError
     ) {
@@ -416,7 +425,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
             if (isEmpty(variable.name)) {
                 setFormError(variableIndex, tVariableError('nameMissing'));
-            } else if (!variable.name.match(validationStrictRegExp)) {
+            } else if (!variable.name.value.match(validationStrictRegExp)) {
                 setFormError(variableIndex, tVariableError('nameInvalid'));
             } else if (hasError) {
                 clearFieldError(variableIndex);
@@ -424,7 +433,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         });
     }
 
-    function validateVariables(variablesList: Variable[], variableType: string, setFormError = setFieldError) {
+    function validateVariables(variablesList: VariableRow[], variableType: string, setFormError = setFieldError) {
         validateIDs(variablesList, variableType, undefined, setFormError);
         validateVariablesSource(variablesList, variableType, setFormError);
         validateVariablesName(variablesList, variableType, setFormError);
@@ -519,10 +528,14 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             }
         }
 
+        function toVariables(variableRows: VariableRow[]) {
+            return variableRows.map(row => ({ ...row, name: row.name.value }));
+        }
+
         async function createSecretsFromVariables() {
             const secretActions = new SecretActions(toolbox);
             const { defaultVisibility } = Consts;
-            const allSecretVariables: Variable[] = [...variables, ...environment].filter(
+            const allSecretVariables: VariableRow[] = [...variables, ...environment].filter(
                 variable => variable.source === 'secret'
             );
 
@@ -530,9 +543,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 .filter(secretVar => !secretVar.duplicated)
                 .forEach(async secretVariable => {
                     // add secret if not exist
-                    await secretActions.doGet(secretVariable.name).catch(async () => {
+                    await secretActions.doGet(secretVariable.name.value).catch(async () => {
                         await secretActions.doCreate(
-                            secretVariable.name,
+                            secretVariable.name.value,
                             secretVariable.value,
                             defaultVisibility,
                             false
@@ -577,8 +590,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         urlAuthentication,
                         terraformVersion: version,
                         resourceLocation: getResourceLocation(templateModules, resourceLocation),
-                        variables,
-                        environmentVariables: environment,
+                        variables: toVariables(variables),
+                        environmentVariables: toVariables(environment),
                         outputs
                     })
                 ).blob();
@@ -592,8 +605,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         urlAuthentication,
                         terraformVersion: version,
                         resourceLocation: getResourceLocation(templateModules, resourceLocation),
-                        variables,
-                        environmentVariables: environment,
+                        variables: toVariables(variables),
+                        environmentVariables: toVariables(environment),
                         outputs
                     })
                 ]);
@@ -695,11 +708,11 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             .finally(unsetTemplateModulesLoading);
     };
 
-    function handleVariablesChange(modifiedVariables: Variable[]) {
+    function handleVariablesChange(modifiedVariables: VariableRow[]) {
         return markDuplicates([...modifiedVariables], [...environment], setVariables, setEnvironment);
     }
 
-    function handleEnvironmentChange(modifiedEnvironment: Variable[]) {
+    function handleEnvironmentChange(modifiedEnvironment: VariableRow[]) {
         return markDuplicates([...variables], [...modifiedEnvironment], setVariables, setEnvironment);
     }
 
