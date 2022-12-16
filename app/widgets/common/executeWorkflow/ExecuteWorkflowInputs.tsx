@@ -77,6 +77,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduledTimeChange
 }) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>('original');
+
     return (
         <>
             {_.isEmpty(baseWorkflowInputs) ? (

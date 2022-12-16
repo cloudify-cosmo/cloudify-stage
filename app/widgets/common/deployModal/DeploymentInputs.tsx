@@ -32,7 +32,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     errors,
     toolbox
 }) => {
-    const [sortingMethod, setSortingMethod] = useState<SortOrder>('original');
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
     const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
 
     return (
@@ -53,7 +53,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                     {deploymentHasInputs ? (
                         <>
                             <InputsHelpIcon />
-                            <SortOrderIcons selected={sortingMethod} onChange={setSortingMethod} />
+                            <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
                         </>
                     ) : (
                         <Message content={t('inputs.deploymentInputs.noInputs')} />
@@ -68,7 +68,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 errorsState={errors}
                 toolbox={toolbox}
                 dataTypes={blueprint.plan.data_types}
-                sortOrder={sortingMethod}
+                sortOrder={sortOrder}
             />
         </>
     );
