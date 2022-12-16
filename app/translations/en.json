@@ -1469,13 +1469,11 @@
                 "name": "Create",
                 "description": "Create new Secret Provider",
                 "options": {
-                    "vault": "Vault",
-                    "aws": "AWS Secret Manager",
-                    "gcp": "GCP Secrets"
+                    "vault": "Vault"
                 }
             },
             "createModal": {
-                "header": "Create a '{{secretProviderTitle}}' Secret Provider",
+                "header": "Create a {{secretProviderType}} Secret Provider",
                 "buttons": {
                     "create": "Create",
                     "cancel": "Cancel"

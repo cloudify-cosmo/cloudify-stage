@@ -7,9 +7,10 @@ const { Modal, Button, Form } = Stage.Basic;
 interface CreateSecretProviderModalProps {
     onClose: () => void;
     toolbox: Stage.Types.Toolbox;
+    secretProviderType: string;
 }
 
-const CreateSecretProviderModal = ({ onClose, toolbox }: CreateSecretProviderModalProps) => {
+const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: CreateSecretProviderModalProps) => {
     const { errors, setErrors, clearErrors } = useErrors();
     const [providerName, setProviderName] = useInput('');
     const [hostname, setHostname] = useInput('');
@@ -17,6 +18,9 @@ const CreateSecretProviderModal = ({ onClose, toolbox }: CreateSecretProviderMod
     const [defaultPath, setDefaultPath] = useInput('');
 
     const translateCreateModal = Stage.Utils.composeT(translateSecretProviders, 'createModal');
+    const translateCreateModalHeader = translateCreateModal('header', {
+        secretProviderType
+    });
 
     const isFormValid = () => {
         const newErrors: Record<string, string> = {};
@@ -53,7 +57,7 @@ const CreateSecretProviderModal = ({ onClose, toolbox }: CreateSecretProviderMod
                     host: hostname,
                     token: authorizationToken,
                     path: defaultPath,
-                    type: 'vault'
+                    type: secretProviderType
                 }
             })
             .then(() => {
@@ -67,7 +71,7 @@ const CreateSecretProviderModal = ({ onClose, toolbox }: CreateSecretProviderMod
 
     return (
         <Modal open onClose={onClose}>
-            <Modal.Header>{translateCreateModal('header')}</Modal.Header>
+            <Modal.Header>{translateCreateModalHeader}</Modal.Header>
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field

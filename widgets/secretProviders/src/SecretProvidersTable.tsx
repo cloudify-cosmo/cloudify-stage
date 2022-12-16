@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import RemoveSecretProviderButton from './RemoveSecretProviderButton';
 import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
@@ -20,11 +20,17 @@ interface SecretProvidersTableProps {
 
 const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersTableProps) => {
     const { pageSize, sortColumn, sortAscending } = configuration;
-    const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
     const totalSize = data.metadata.pagination.total;
+    const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
+    const [secretProviderType, setSecretProviderTypeType] = useState<string>('');
 
     const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         toolbox.refresh(fetchParams);
+    };
+
+    const handleCreateModal = (type: string) => {
+        setSecretProviderTypeType(type);
+        showCreateModal();
     };
 
     useEffect(() => {
@@ -47,8 +53,9 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                         <Menu direction="left">
                             <Item
                                 text={translateSecretProviders('createButton.options.vault')}
-                                onClick={showCreateModal}
-                                key="vault"
+                                onClick={() =>
+                                    handleCreateModal(translateSecretProviders('createButton.options.vault'))
+                                }
                             />
                         </Menu>
                     </Dropdown>
@@ -74,7 +81,13 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                     </DataTable.Row>
                 ))}
             </DataTable>
-            {isCreateModalVisible && <CreateSecretProviderModal onClose={hideCreateModal} toolbox={toolbox} />}
+            {isCreateModalVisible && (
+                <CreateSecretProviderModal
+                    onClose={hideCreateModal}
+                    toolbox={toolbox}
+                    secretProviderType={secretProviderType}
+                />
+            )}
         </>
     );
 };
