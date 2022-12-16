@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useState } from 'react';
+import { isEmpty } from 'lodash';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import DataTypesButton from '../inputs/DataTypesButton';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
@@ -33,8 +34,9 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     toolbox
 }) => {
     const [sortOrder, setSortOrder] = useState<SortOrder>('original');
-    const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
-    const showSortOrderIcons = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
+    const deploymentHasInputs = !isEmpty(blueprint.plan.inputs);
+    const deploymentHasMultipleInputs = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
+    const deploymentHasDataTypes = !isEmpty(blueprint.plan.data_types);
 
     return (
         <>
@@ -48,15 +50,13 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                             iconButton
                         />
                     )}
-                    {!_.isEmpty(blueprint.plan.data_types) && (
-                        <DataTypesButton iconButton types={blueprint.plan.data_types} />
-                    )}
+                    {deploymentHasDataTypes && <DataTypesButton iconButton types={blueprint.plan.data_types} />}
                     {deploymentHasInputs ? (
                         <InputsHelpIcon />
                     ) : (
                         <Message content={t('inputs.deploymentInputs.noInputs')} />
                     )}
-                    {showSortOrderIcons && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
+                    {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
                 </>
             )}
 

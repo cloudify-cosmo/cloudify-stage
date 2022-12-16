@@ -153,30 +153,37 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
             return cy.get('.field label').then($labels => {
                 const actualParametersLabels = _.map($labels, field => field.innerText.trim()).slice(
                     0,
-                    parameterLabelsInOriginalOrder.length
+                    parametersLabelsInOriginalOrder.length
                 );
                 expect(actualParametersLabels).deep.equal(expectedParametersLabels);
             });
         }
+        function waitForParametersLabelsToBeReordered() {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+        }
 
-        const parameterLabelsInOriginalOrder = [
+        const parametersLabelsInOriginalOrder = [
             'scaling_group_all',
             'scaling_group_from_deployment',
             'scaling_group_contains_node1',
             'script_path'
         ];
-        const parametersLabelsInAscendingOrder = [...parameterLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
-        const parametersLabelsInDescendingOrder = parametersLabelsInAscendingOrder.reverse();
+        const parametersLabelsInAscendingOrder = [...parametersLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
+        const parametersLabelsInDescendingOrder = [...parametersLabelsInAscendingOrder].reverse();
 
         openWorkflowParametersModal('scaling_group');
 
         cy.get('[title="Original order"]').click();
-        verifyParametersLabels(parameterLabelsInOriginalOrder);
+        waitForParametersLabelsToBeReordered();
+        verifyParametersLabels(parametersLabelsInOriginalOrder);
 
         cy.get('[title="Ascending alphabetical order"]').click();
+        waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInAscendingOrder);
 
         cy.get('[title="Descending alphabetical order"]').click();
+        waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInDescendingOrder);
     });
 });

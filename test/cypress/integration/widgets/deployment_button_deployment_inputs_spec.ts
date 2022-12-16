@@ -480,34 +480,41 @@ describe('Create Deployment modal handles deployment inputs', () => {
         function caseInsensitiveCompareFn(a: string, b: string) {
             return a.toLowerCase().localeCompare(b.toLowerCase());
         }
-        function verifyInputLabels(expectedInputLabels: string[]) {
+        function verifyInputsLabels(expectedInputsLabels: string[]) {
             return cy.get('.field label').then($labels => {
-                const actualInputLabels = _.map($labels, field => field.innerText.trim());
-                expect(actualInputLabels).deep.equal(expectedInputLabels);
+                const actualInputsLabels = _.map($labels, field => field.innerText.trim());
+                expect(actualInputsLabels).deep.equal(expectedInputsLabels);
             });
         }
+        function waitForInputsLabelsToBeReordered() {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+        }
 
-        const inputLabelsInOriginalOrder = [
+        const inputsLabelsInOriginalOrder = [
             'string_no_default',
             'string_constraint_pattern',
             'Valid values',
             'string_default',
             'string_default_null'
         ];
-        const inputLabelsInAscendingOrder = [...inputLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
-        const inputLabelsInDescendingOrder = inputLabelsInAscendingOrder.reverse();
+        const inputsLabelsInAscendingOrder = [...inputsLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
+        const inputsLabelsInDescendingOrder = [...inputsLabelsInAscendingOrder].reverse();
 
         selectBlueprintInModal('string');
 
         cy.withinAccordionSection('Deployment Inputs', () => {
             cy.get('[title="Original order"]').click();
-            verifyInputLabels(inputLabelsInOriginalOrder);
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInOriginalOrder);
 
             cy.get('[title="Ascending alphabetical order"]').click();
-            verifyInputLabels(inputLabelsInAscendingOrder);
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInAscendingOrder);
 
             cy.get('[title="Descending alphabetical order"]').click();
-            verifyInputLabels(inputLabelsInDescendingOrder);
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInDescendingOrder);
         });
     });
 });
