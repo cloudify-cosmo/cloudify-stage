@@ -3,7 +3,7 @@ import { flatten } from 'lodash';
 import type { DynamicDropdownInputFieldProps } from './types';
 import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
 import DynamicDropdown from '../../components/DynamicDropdown';
-import translateInputs from '../utils/tranlateInputs';
+import translateInputs from '../utils/translateInputs';
 
 export default function OperationNameInputField({
     name,

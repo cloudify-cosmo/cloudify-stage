@@ -1,7 +1,7 @@
 import React from 'react';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
-import translateInputs from '../utils/tranlateInputs';
+import translateInputs from '../utils/translateInputs';
 
 export default function CapabilityValueInputField({
     name,

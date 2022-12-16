@@ -5,7 +5,7 @@ import type { HTMLProps } from 'react';
 import type { StrictIconProps } from 'semantic-ui-react';
 import { Icon } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
-import translateInputs from './utils/tranlateInputs';
+import translateInputs from './utils/translateInputs';
 
 const translate = StageUtils.composeT(translateInputs, 'buttons.sortOrder');
 

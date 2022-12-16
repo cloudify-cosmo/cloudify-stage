@@ -6,7 +6,7 @@ import ParameterValue from '../components/parameter/ParameterValue';
 import StageUtils from '../../../utils/stageUtils';
 import { AnyData } from '../../../utils/props';
 import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
-import translateInputs from './utils/tranlateInputs';
+import translateInputs from './utils/translateInputs';
 
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
