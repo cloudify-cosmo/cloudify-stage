@@ -2,7 +2,7 @@ import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, entries, find, isEmpty, some } from 'lodash';
+import { chain, entries, head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
@@ -135,69 +135,6 @@ const dynamicTableFieldStyle = { height: 38 };
 
 type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
 
-const variablesColumns: Columns<Variable> = [
-    {
-        id: 'variable',
-        label: t('variablesTable.variable'),
-        type: GenericField.CUSTOM_TYPE,
-        component: LengthLimitedDynamicTableInput,
-        width: 3
-    },
-    {
-        id: 'source',
-        label: t('variablesTable.source'),
-        type: GenericField.CUSTOM_TYPE,
-        component: getDynamicTableDropdown([
-            { text: t('variablesTable.sources.secret'), value: 'secret' },
-            { text: t('variablesTable.sources.input'), value: 'input' },
-            { text: t('variablesTable.sources.static'), value: 'static' }
-        ]),
-        style: dynamicTableFieldStyle,
-        width: 3
-    },
-    {
-        id: 'name',
-        label: t('variablesTable.name'),
-        type: GenericField.CUSTOM_TYPE,
-        component: TerraformVariableNameInput,
-        style: dynamicTableFieldStyle,
-        width: 3
-    },
-    {
-        id: 'value',
-        label: t('variablesTable.value'),
-        type: GenericField.CUSTOM_TYPE,
-        component: TerraformVariableValueInput,
-        style: dynamicTableFieldStyle
-    }
-];
-
-const outputsColumns: Columns<Output> = [
-    {
-        id: 'name',
-        label: t('outputsTable.name'),
-        type: GenericField.CUSTOM_TYPE,
-        component: LengthLimitedDynamicTableInput
-    },
-    {
-        id: 'type',
-        label: t('outputsTable.type'),
-        type: GenericField.CUSTOM_TYPE,
-        component: getDynamicTableDropdown([
-            { text: t('outputsTable.types.output'), value: 'output' },
-            { text: t('outputsTable.types.capability'), value: 'capability' }
-        ]),
-        style: dynamicTableFieldStyle
-    },
-    {
-        id: 'terraformOutput',
-        label: t('outputsTable.terraformOutput'),
-        default: '',
-        type: GenericField.CUSTOM_TYPE,
-        component: LengthLimitedDynamicTableInput
-    }
-];
-
 export function getResourceLocation(templateModules: string[], resourceLocation: string) {
     if (
         chain(templateModules)
@@ -264,6 +201,75 @@ function markDuplicates(
 }
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
+    const variablesColumns = useMemo<Columns<Variable>>(
+        () => [
+            {
+                id: 'variable',
+                label: t('variablesTable.variable'),
+                type: GenericField.CUSTOM_TYPE,
+                component: LengthLimitedDynamicTableInput,
+                width: 3
+            },
+            {
+                id: 'source',
+                label: t('variablesTable.source'),
+                type: GenericField.CUSTOM_TYPE,
+                component: getDynamicTableDropdown([
+                    { text: t('variablesTable.sources.secret'), value: 'secret' },
+                    { text: t('variablesTable.sources.input'), value: 'input' },
+                    { text: t('variablesTable.sources.static'), value: 'static' }
+                ]),
+                style: dynamicTableFieldStyle,
+                width: 3
+            },
+            {
+                id: 'name',
+                label: t('variablesTable.name'),
+                type: GenericField.CUSTOM_TYPE,
+                component: TerraformVariableNameInput,
+                style: dynamicTableFieldStyle,
+                width: 3
+            },
+            {
+                id: 'value',
+                label: t('variablesTable.value'),
+                type: GenericField.CUSTOM_TYPE,
+                component: TerraformVariableValueInput,
+                style: dynamicTableFieldStyle
+            }
+        ],
+        undefined
+    );
+
+    const outputsColumns = useMemo<Columns<Output>>(
+        () => [
+            {
+                id: 'name',
+                label: t('outputsTable.name'),
+                type: GenericField.CUSTOM_TYPE,
+                component: LengthLimitedDynamicTableInput
+            },
+            {
+                id: 'type',
+                label: t('outputsTable.type'),
+                type: GenericField.CUSTOM_TYPE,
+                component: getDynamicTableDropdown([
+                    { text: t('outputsTable.types.output'), value: 'output' },
+                    { text: t('outputsTable.types.capability'), value: 'capability' }
+                ]),
+                style: dynamicTableFieldStyle
+            },
+            {
+                id: 'terraformOutput',
+                label: t('outputsTable.terraformOutput'),
+                default: '',
+                type: GenericField.CUSTOM_TYPE,
+                component: LengthLimitedDynamicTableInput
+            }
+        ],
+        undefined
+    );
+
     const [processPhase, setProcessPhase, stopProcess] = useResettableState<'generation' | 'upload' | null>(null);
     const [cancelConfirmVisible, showCancelConfirm, hideCancelConfirm] = useBoolean();
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
@@ -635,9 +641,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
 
     function reloadTemplateModules(loadedTemplateModules: any) {
         setTemplateModules(loadedTemplateModules);
-        setResourceLocation(
-            find(loadedTemplateModules, module => module.indexOf('terraform') >= 0 || module.indexOf('tf') >= 0)
-        );
+        setResourceLocation(head(loadedTemplateModules));
 
         clearFieldError('template');
     }

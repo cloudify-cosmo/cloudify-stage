@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import type { DeploymentsViewColumnId } from './columns';
-import { deploymentsViewColumnDefinitions, deploymentsViewColumnIds } from './columns';
+import { deploymentsViewColumnIds, getDeploymentsViewColumnDefinitions } from './columns';
 import { i18nPrefix } from '../common';
 import renderDeploymentRow from './renderDeploymentRow';
 import type { Deployment } from '../types';
@@ -78,7 +78,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 searchable
             >
                 {deploymentsViewColumnIds.map(columnId => {
-                    const columnDefinition = deploymentsViewColumnDefinitions[columnId];
+                    const columnDefinition = getDeploymentsViewColumnDefinitions()[columnId];
                     return (
                         <DataTable.Column
                             key={columnId}

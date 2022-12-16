@@ -282,10 +282,11 @@ describe('Blueprints widget should open upload from Terraform module modal and',
     });
 
     describe('handle getting Terraform module from git when', () => {
-        const terraformModuleDropdownHasOptions = (hasOptions: boolean) => {
-            const optionsAssertion = hasOptions ? 'not.exist' : 'exist';
-
-            cy.contains('Terraform module folder').parent().get(`.dropdown.disabled`).should(optionsAssertion);
+        const verifyTerraformModuleDropdownInitialized = (hasOptions: boolean) => {
+            cy.getField('Terraform module folder').within(() => {
+                cy.get('.dropdown.disabled').should(hasOptions ? 'not.exist' : 'exist');
+                cy.get('.selection > .text').should(hasOptions ? 'be.visible' : 'not.exist');
+            });
         };
 
         const typeTerraformModuleUrl = (url: string) => {
@@ -301,7 +302,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
 
             cy.get('.modal').within(() => {
                 typeTerraformModuleUrl(publicGitFileUrl);
-                terraformModuleDropdownHasOptions(true);
+                verifyTerraformModuleDropdownInitialized(true);
             });
         });
 
@@ -310,7 +311,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
 
             cy.get('.modal').within(() => {
                 typeTerraformModuleUrl(incorrectPublicGitFileUrl);
-                terraformModuleDropdownHasOptions(false);
+                verifyTerraformModuleDropdownInitialized(false);
 
                 cy.contains('The URL is not accessible').should('exist');
             });
@@ -321,7 +322,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
 
             cy.get('.modal').within(() => {
                 typeTerraformModuleUrl(privateGitFileUrl);
-                terraformModuleDropdownHasOptions(false);
+                verifyTerraformModuleDropdownInitialized(false);
 
                 cy.contains('Git Authentication failed').should('exist');
             });
