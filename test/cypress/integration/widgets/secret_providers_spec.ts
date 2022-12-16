@@ -12,6 +12,7 @@ describe('Secret Providers widget', () => {
         cy.fixture('secret_providers/secret_providers').then(secretProviders => {
             const { name, type, visibility } = secretProviders[0];
             cy.activate('valid_trial_license')
+                .deleteSecretProviders()
                 .createSecretProvider({ name, type, visibility })
                 .usePageMock(widgetId, widgetConfiguration)
                 .mockLogin();
@@ -26,5 +27,24 @@ describe('Secret Providers widget', () => {
         getSecretProviderRow('Secret_Provider_1').find('i[title="Delete Secret Provider"]').click();
         cy.contains('Yes').click();
         cy.contains('Secret_Provider_1').should('not.exist');
+    });
+
+    it('should allow to create secret providers', () => {
+        cy.getWidget(widgetId).within(() => {
+            cy.contains('Create').click();
+            cy.contains('Vault').click();
+        });
+
+        cy.get('.modal').within(() => {
+            cy.get('button').contains('Create').click();
+            cy.contains('Provider name is required').should('be.visible');
+            cy.contains('Hostname is required').should('be.visible');
+            cy.contains('Authorization token is required').should('be.visible');
+
+            cy.get('input[name="providerName"]').type('Secret_Provider_2');
+            cy.get('input[name="hostname"]').type('localhost');
+            cy.get('input[name="authorizationToken"]').type('token');
+            cy.get('button').contains('Create').click();
+        });
     });
 });

@@ -48,6 +48,7 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
         if (!isFormValid()) {
             return;
         }
+        const type = secretProviderType.toLowerCase();
 
         toolbox
             .getManager()
@@ -57,7 +58,7 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
                     host: hostname,
                     token: authorizationToken,
                     path: defaultPath,
-                    type: secretProviderType
+                    type
                 }
             })
             .then(() => {
