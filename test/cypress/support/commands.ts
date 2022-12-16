@@ -459,7 +459,7 @@ const commands = {
     openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
 
     withinAccordionSection: (sectionTitle: string, callback: () => void) => {
-        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
+        cy.getAccordionSection(sectionTitle).next('.content').within(callback);
     },
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),

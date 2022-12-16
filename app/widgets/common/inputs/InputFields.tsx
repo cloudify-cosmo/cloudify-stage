@@ -16,6 +16,17 @@ function normalizeValue(input: Input, inputsState: Record<string, any>, dataType
     return inputsState[input.name];
 }
 
+function getSortLabel(name: string, displayLabel?: string) {
+    return (displayLabel ?? name).toLowerCase();
+}
+
+function getOrderByArguments(sortOrder: SortOrder) {
+    const iteratee: Parameters<typeof _.orderBy>[1] = sortOrder !== 'original' ? 'sortLabel' : undefined;
+    const order: Parameters<typeof _.orderBy>[2] = sortOrder === 'descending' ? 'desc' : undefined;
+
+    return [iteratee, order];
+}
+
 function FormField({
     input,
     value,
@@ -75,13 +86,10 @@ export default function InputFields({
     dataTypes,
     sortOrder = 'original'
 }: InputFieldsProps) {
-    const iteratee: Parameters<typeof _.orderBy>[1] = sortOrder !== 'original' ? 'display_label' : undefined;
-    const order: Parameters<typeof _.orderBy>[2] = sortOrder === 'descending' ? 'desc' : undefined;
-
     const inputFields = _(inputs)
-        .map((input, name) => ({ name, display_label: input.display_label ?? name, ...input }))
+        .map((input, name) => ({ name, sortLabel: getSortLabel(name, input.display_label), ...input }))
         .reject('hidden')
-        .orderBy(iteratee, order)
+        .orderBy(...getOrderByArguments(sortOrder))
         .map(input => {
             const dataType = !_.isEmpty(dataTypes) && !!input.type ? dataTypes![input.type] : undefined;
             const value = normalizeValue(input, inputsState, dataType);

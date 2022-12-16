@@ -291,7 +291,7 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 verifyTextInput('Ubuntu 18.04');
             });
 
-            cy.getField('string_constraint_valid_values').within(() => {
+            cy.getField('Valid values').within(() => {
                 cy.get('div.text').as('text').should('have.text', 'en');
                 cy.get('div.dropdown').click();
 
@@ -473,6 +473,41 @@ describe('Create Deployment modal handles deployment inputs', () => {
             cy.getField('node_instance_from_deployment').within(() => verifyNumberOfOptions(4, false, ''));
             cy.getField('node_type_from_deployment').within(() => verifyNumberOfOptions(1, false, ''));
             cy.getField('scaling_group_from_deployment').within(() => verifyNumberOfOptions(3, false, ''));
+        });
+    });
+
+    it('sorting', () => {
+        function caseInsensitiveCompareFn(a: string, b: string) {
+            return a.toLowerCase().localeCompare(b.toLowerCase());
+        }
+        function verifyInputLabels(expectedInputLabels: string[]) {
+            return cy.get('.field label').then($labels => {
+                const actualInputLabels = _.map($labels, field => field.innerText.trim());
+                expect(actualInputLabels).deep.equal(expectedInputLabels);
+            });
+        }
+
+        const inputLabelsInOriginalOrder = [
+            'string_no_default',
+            'string_constraint_pattern',
+            'Valid values',
+            'string_default',
+            'string_default_null'
+        ];
+        const inputLabelsInAscendingOrder = [...inputLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
+        const inputLabelsInDescendingOrder = inputLabelsInAscendingOrder.reverse();
+
+        selectBlueprintInModal('string');
+
+        cy.withinAccordionSection('Deployment Inputs', () => {
+            cy.get('[title="Original order"]').click();
+            verifyInputLabels(inputLabelsInOriginalOrder);
+
+            cy.get('[title="Ascending alphabetical order"]').click();
+            verifyInputLabels(inputLabelsInAscendingOrder);
+
+            cy.get('[title="Descending alphabetical order"]').click();
+            verifyInputLabels(inputLabelsInDescendingOrder);
         });
     });
 });

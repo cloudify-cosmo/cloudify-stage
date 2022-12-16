@@ -25,7 +25,7 @@ export interface SortOrderIconsProps {
 }
 
 export default function SortOrderIcons({ onChange, selected }: SortOrderIconsProps) {
-    const sortOrderToIconMap: Record<SortOrder, SortOrderIconProps> = {
+    const sortOrderToIconPropsMap: Record<SortOrder, SortOrderIconProps> = {
         original: { title: translate('original'), name: 'sort' },
         ascending: { title: translate('ascending'), name: 'sort alphabet down' },
         descending: { title: translate('descending'), name: 'sort alphabet up' }
@@ -33,7 +33,7 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
 
     return (
         <IconsContainer>
-            {map(sortOrderToIconMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
+            {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
                 <Icon
                     key={sortOrder}
                     link
