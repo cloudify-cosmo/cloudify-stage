@@ -52,7 +52,7 @@ export default function TerraformVariableNameInput({
     return (
         <Form.Input
             error={getFieldError(`${idPrefix}_${index}_${name}`)}
-            value={value === null ? '' : value}
+            value={value.value === null ? '' : value.value}
             onChange={(event, data) => onChange(event, { name, value: { value: data.value } })}
             fluid
         >
