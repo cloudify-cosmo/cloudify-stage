@@ -124,8 +124,7 @@ const GettingStartedModal = () => {
 
     const handleEnvironmentClick = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
-        goToNextStep();
-        setSecretsStepIndex(0);
+        handleNextClick();
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
