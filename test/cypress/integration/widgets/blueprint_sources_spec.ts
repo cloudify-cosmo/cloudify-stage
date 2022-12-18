@@ -37,7 +37,8 @@ describe('Blueprint Sources widget', () => {
                     });
                     cy.get('@rightPane').within(() => {
                         cy.get('pre').should('not.exist');
-                        cy.get('i.grey.file.icon').should('be.visible');
+                        cy.contains('This is a folder').should('be.visible');
+                        cy.contains('Nothing to show').should('be.visible');
                     });
 
                     cy.get('@leftPane').within(() => {
