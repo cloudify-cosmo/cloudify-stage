@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isPlainObject, map, noop } from 'lodash';
+import { isPlainObject, noop } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import i18n from 'i18next';
@@ -23,6 +23,20 @@ const parseOptionValue = (value: any) => {
     return isStringifiedNumber(value) ? `"${value}"` : value;
 };
 
+function getOptionsFromSecret(secretValue: string, schema: string) {
+    if (schema) {
+        const parsedValue = JSON.parse(secretValue);
+        if (Array.isArray(parsedValue)) {
+            return parsedValue;
+        }
+        if (isPlainObject(parsedValue)) {
+            return Object.keys(parsedValue);
+        }
+        return [parsedValue];
+    }
+    return [secretValue];
+}
+
 export default function ValueListInputField(props: ValueListInputFieldProps) {
     const { Form } = Stage.Basic;
     const { name, manager, value, onChange, error, validValues, multiple = false, defaultValue } = props;
@@ -31,7 +45,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
 
     function initOptions(values: any[]) {
         setOptions(
-            map(values, validValue => {
+            values.map(validValue => {
                 const parsedOptionValue = parseOptionValue(validValue);
 
                 return {
@@ -47,22 +61,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
         if ('get_secret' in validValues) {
             new SecretActions(manager)
                 .doGet(validValues.get_secret)
-                .then(({ value: secretValue, schema }) => {
-                    let optionsToSet;
-                    if (schema) {
-                        const parsedValue = JSON.parse(secretValue);
-                        if (Array.isArray(parsedValue)) {
-                            optionsToSet = parsedValue;
-                        } else if (isPlainObject(parsedValue)) {
-                            optionsToSet = Object.keys(parsedValue);
-                        } else {
-                            optionsToSet = [parsedValue];
-                        }
-                    } else {
-                        optionsToSet = [secretValue];
-                    }
-                    initOptions(optionsToSet);
-                })
+                .then(({ value: secretValue, schema }) => initOptions(getOptionsFromSecret(secretValue, schema)))
                 .catch(noop);
         } else {
             initOptions(validValues);
