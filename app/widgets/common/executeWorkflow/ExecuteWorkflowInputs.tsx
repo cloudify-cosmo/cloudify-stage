@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
+import { isEmpty } from 'lodash';
 import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import InputFields from '../inputs/InputFields';
@@ -8,6 +9,8 @@ import YamlFileButton from '../inputs/YamlFileButton';
 import type { BaseWorkflowInputs, OnCheckboxChange, UserWorkflowInputsState } from './types';
 import { DateInput, Divider, Form, Header, Message } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
+import type { SortOrder } from '../inputs/SortOrderIcons';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 
 const t = StageUtils.getT('widgets.common.deployments.execute');
 
@@ -74,11 +77,13 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     onScheduleChange,
     onScheduledTimeChange
 }) => {
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
+    const workflowHasInputs = !isEmpty(baseWorkflowInputs);
+    const workflowHasMultipleInputs = workflowHasInputs && Object.keys(baseWorkflowInputs).length > 1;
+
     return (
         <>
-            {_.isEmpty(baseWorkflowInputs) ? (
-                <Message content={t('noParams')} />
-            ) : (
+            {workflowHasInputs ? (
                 <>
                     <YamlFileButton
                         onChange={onYamlFileChange}
@@ -88,7 +93,10 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                     />
                     <InputsHelpIcon />
                 </>
+            ) : (
+                <Message content={t('noParams')} />
             )}
+            {workflowHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
 
             <InputFields
                 inputs={baseWorkflowInputs}
@@ -96,6 +104,7 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
                 inputsState={userWorkflowInputsState}
                 errorsState={errors}
                 toolbox={toolbox}
+                sortOrder={sortOrder}
             />
             {showInstallOptions && (
                 <>

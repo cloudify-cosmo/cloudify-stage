@@ -59,6 +59,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
             if (blueprintId === customInstallWorkflowBlueprint) {
+                cy.openAccordionSection('Install');
                 cy.withinAccordionSection('Install', () => {
                     cy.getField('xxx').within(() => {
                         cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam1);
@@ -71,6 +72,7 @@ describe('Create Deployment Button widget', () => {
             }
 
             if (blueprintId === testBlueprintId) {
+                cy.openAccordionSection('Deployment Inputs');
                 cy.withinAccordionSection('Deployment Inputs', () => {
                     // check hidden input is not rendered
                     cy.get('.field')

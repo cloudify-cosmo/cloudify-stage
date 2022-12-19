@@ -507,4 +507,46 @@ describe('Create Deployment modal handles deployment inputs', () => {
             cy.getField('scaling_group_from_deployment').within(() => verifyNumberOfOptions(3, false, ''));
         });
     });
+
+    it('sorting', () => {
+        function caseInsensitiveCompareFn(a: string, b: string) {
+            return a.toLowerCase().localeCompare(b.toLowerCase());
+        }
+        function verifyInputsLabels(expectedInputsLabels: string[]) {
+            return cy.get('.field label').then($labels => {
+                const actualInputsLabels = _.map($labels, field => field.innerText.trim());
+                expect(actualInputsLabels).deep.equal(expectedInputsLabels);
+            });
+        }
+        function waitForInputsLabelsToBeReordered() {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+        }
+
+        const inputsLabelsInOriginalOrder = [
+            'string_no_default',
+            'string_constraint_pattern',
+            'Valid values',
+            'string_default',
+            'string_default_null'
+        ];
+        const inputsLabelsInAscendingOrder = [...inputsLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
+        const inputsLabelsInDescendingOrder = [...inputsLabelsInAscendingOrder].reverse();
+
+        selectBlueprintInModal('string');
+
+        cy.withinAccordionSection('Deployment Inputs', () => {
+            cy.get('[title="Original order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInOriginalOrder);
+
+            cy.get('[title="Ascending alphabetical order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInAscendingOrder);
+
+            cy.get('[title="Descending alphabetical order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInDescendingOrder);
+        });
+    });
 });
