@@ -1,9 +1,18 @@
 import i18n from 'i18next';
-import { isEmpty, includes, filter, find, map, pick, reject, without } from 'lodash';
+import { filter, find, includes, isEmpty, map, pick, reject, without } from 'lodash';
 import log from 'loglevel';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
+import type {
+    GetPageGroupsResponse,
+    GetPagesResponse,
+    GetTemplatesResponse,
+    PostPagesRequestBody,
+    PostTemplatesRequestBody,
+    PutTemplatesRequestBody
+} from 'backend/routes/Templates.types';
+import type { PageItem } from 'backend/handler/templates/types';
 import Const from '../../utils/consts';
 import { Breadcrumb, Button, Divider, ErrorMessage, Segment } from '../basic';
 import type { Page } from './pages/Pages';
@@ -20,15 +29,6 @@ import type { PageGroup } from './pageGroups/PageGroups';
 import PageGroups from './pageGroups/PageGroups';
 import type { ReduxState } from '../../reducers';
 import useCreatePageId from './pages/useCreatePageId';
-import type {
-    GetPageGroupsResponse,
-    GetPagesResponse,
-    GetTemplatesResponse,
-    PostPagesRequestBody,
-    PostTemplatesRequestBody,
-    PutTemplatesRequestBody
-} from '../../../backend/routes/Templates.types';
-import type { PageItem } from '../../../backend/handler/templates/types';
 import type { ReduxThunkDispatch } from '../../configureStore';
 
 export default function TemplateManagement() {

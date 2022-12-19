@@ -1,13 +1,13 @@
-import _ from 'lodash';
-import React, { Component } from 'react';
 import type { ChangeEvent } from 'react';
+import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
-import type { LicenseResponse } from '../../backend/handler/AuthHandler.types';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
+import type { PaginatedResponse } from 'backend/types';
 import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
 import Banner from './banner/Banner';
 import Consts from '../utils/consts';
@@ -22,7 +22,6 @@ import { setLicense } from '../actions/manager/license';
 import Auth from '../utils/auth';
 import type { ReduxThunkDispatch } from '../configureStore';
 import type { ReduxState } from '../reducers';
-import type { PaginatedResponse } from '../../backend/types';
 
 interface LicenseSwitchButtonProps {
     color: ButtonProps['color'];

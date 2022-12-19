@@ -1,13 +1,13 @@
 import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
 import _ from 'lodash';
+import type { PutPagesRequestBody } from 'backend/routes/Templates.types';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
-import type { SimpleWidgetObj, PageDefinition } from '../page';
+import type { PageDefinition, SimpleWidgetObj } from '../page';
 import { forEachWidget } from '../page';
 import Internal from '../../utils/Internal';
 import type { ReduxState } from '../../reducers';
-import type { PutPagesRequestBody } from '../../../backend/routes/Templates.types';
 
 export type TemplatePageDefinition = Pick<PageDefinition, 'name' | 'icon' | 'layout'>;
 type Page = TemplatePageDefinition & { id: string; oldId?: string };

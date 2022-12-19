@@ -1,9 +1,9 @@
+import type { GetWidgetsUsedResponse } from 'backend/routes/Widgets.types';
 import type { WidgetDefinition } from '../utils/StageAPI';
-import type { ReduxThunkAction, PayloadAction } from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import type { SimpleWidgetDefinition } from '../utils/widgetDefinitionsLoader';
 import widgetDefinitionLoader from '../utils/widgetDefinitionsLoader';
-import type { GetWidgetsUsedResponse } from '../../backend/routes/Widgets.types';
 import Internal from '../utils/Internal';
 
 export type InstallWidgetAction = PayloadAction<WidgetDefinition, ActionType.INSTALL_WIDGET>;

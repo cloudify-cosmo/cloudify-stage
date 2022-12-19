@@ -2,10 +2,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
-import type {
-    PutPluginsTitleRequestQueryParams,
-    PutPluginsTitleResponse
-} from '../../../../backend/routes/Plugins.types';
+import type { PutPluginsTitleRequestQueryParams, PutPluginsTitleResponse } from 'backend/routes/Plugins.types';
 
 const placeholders = {
     wagon: "Provide the plugin's wagon file URL or click browse to select a file",
