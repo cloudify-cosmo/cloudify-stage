@@ -1539,7 +1539,7 @@
                 "errors": {
                     "providerName": {
                         "required": "Please provide the Provider Name.",
-                        "invalid": "The Provider name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
+                        "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
                     "hostname": "Please provide vault hostname.",
                     "authorizationToken": "Please provide an authorization token.",
