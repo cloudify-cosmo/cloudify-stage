@@ -1541,8 +1541,8 @@
                         "required": "Please provide the Provider Name.",
                         "invalid": "The Provider name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Plase provide the Vault Hostname.",
-                    "authorizationToken": "Please provide the Authorization Token."
+                    "hostname": "Plase provide vault Hostname.",
+                    "authorizationToken": "Please provide an authorization Token."
                 }
             }
         },
