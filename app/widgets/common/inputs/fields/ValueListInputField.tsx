@@ -82,7 +82,7 @@ export default function ValueListInputField(props: ValueListInputFieldProps) {
                 onChange={onChange}
                 multiple={multiple}
                 defaultValue={defaultValue}
-                noResultsMessage={i18n.t('input.valid_values.noValues')}
+                noResultsMessage={i18n.t('widgets.common.inputs.types.valid_values.noValues')}
             />
             <PositionedRevertToDefaultIcon {...props} right={30} />
         </>
