@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import { tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
 
@@ -41,13 +42,16 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
 
         setErrors(newErrors);
 
-        return _.isEmpty(newErrors);
+        return isEmpty(newErrors);
     };
 
     const handleSubmit = () => {
+        clearErrors();
+
         if (!isFormValid()) {
             return;
         }
+
         const type = secretProviderType.toLowerCase();
 
         toolbox
@@ -66,7 +70,7 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
                 onClose();
             })
             .catch(() => {
-                // err
+                setErrors({ _error: translateCreateModal('errors.createError') });
             });
     };
 
@@ -98,7 +102,6 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
                     </Form.Field>
                     <Form.Field
                         label={translateCreateModal('inputs.authorizationToken.label')}
-                        placeholder={translateCreateModal('inputs.authorizationToken.placeholder')}
                         required
                         error={errors.authorizationToken}
                     >

@@ -1542,7 +1542,8 @@
                         "invalid": "The Provider name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
                     "hostname": "Plase provide vault hostname.",
-                    "authorizationToken": "Please provide an authorization token."
+                    "authorizationToken": "Please provide an authorization token.",
+                    "createError": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again."
                 }
             }
         },
