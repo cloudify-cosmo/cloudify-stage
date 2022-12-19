@@ -217,7 +217,7 @@ describe('Deployments widget', () => {
             .should('have.text', siteName);
     });
 
-    it('should allow to update deployment', () => {
+    it.only('should allow to update deployment', () => {
         const anotherBlueprintName = `${blueprintName}_another`;
         cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
 
@@ -238,7 +238,7 @@ describe('Deployments widget', () => {
             cy.get('div[name=blueprintName]').click();
             cy.contains(RegExp(`${blueprintName}$`)).click();
 
-            cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
+            cy.get('input[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.contains('Skip heal').click();
             cy.contains('Skip drift check').click();
             cy.clickButton('Preview');
