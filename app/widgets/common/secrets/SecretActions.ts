@@ -1,35 +1,34 @@
+import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Visibility } from '../types';
 
 export default class SecretActions {
-    private toolbox;
+    private manager;
 
-    constructor(toolbox: Stage.Types.WidgetlessToolbox) {
-        this.toolbox = toolbox;
+    constructor(manager: Manager) {
+        this.manager = manager;
     }
 
     doGet(key: string) {
-        return this.toolbox.getManager().doGet(`/secrets/${key}`);
+        return this.manager.doGet(`/secrets/${key}`);
     }
 
     doDelete(key: string) {
-        return this.toolbox.getManager().doDelete(`/secrets/${key}`);
+        return this.manager.doDelete(`/secrets/${key}`);
     }
 
     doCreate(key: string, value: string, visibility: Visibility, hidden: boolean) {
-        return this.toolbox
-            .getManager()
-            .doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
+        return this.manager.doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
     }
 
     doUpdate(key: string, value: string) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { body: { value } });
+        return this.manager.doPatch(`/secrets/${key}`, { body: { value } });
     }
 
     doSetIsHiddenValue(key: string, hidden: boolean) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}`, { body: { is_hidden_value: hidden } });
+        return this.manager.doPatch(`/secrets/${key}`, { body: { is_hidden_value: hidden } });
     }
 
     doSetVisibility(key: string, visibility: Visibility) {
-        return this.toolbox.getManager().doPatch(`/secrets/${key}/set-visibility`, { body: { visibility } });
+        return this.manager.doPatch(`/secrets/${key}/set-visibility`, { body: { visibility } });
     }
 }
