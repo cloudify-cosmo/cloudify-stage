@@ -6,8 +6,7 @@ import ParameterValue from '../components/parameter/ParameterValue';
 import StageUtils from '../../../utils/stageUtils';
 import { AnyData } from '../../../utils/props';
 import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
-
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+import translateInputs from './utils/translateInputs';
 
 const PropertiesPropType = PropTypes.objectOf(
     PropTypes.shape({
@@ -148,25 +147,19 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
     render() {
         const { types, iconButton } = this.props;
         const { open } = this.state;
+        const buttonTitle = translateInputs('buttons.dataTypes.title');
 
         return (
             <div>
                 {iconButton ? (
                     <Popup
-                        content={t('buttons.showDataTypes')}
-                        trigger={
-                            <Button
-                                icon="code"
-                                onClick={this.onOpen}
-                                floated="right"
-                                aria-label={t('buttons.showDataTypes')}
-                            />
-                        }
+                        content={buttonTitle}
+                        trigger={<Button icon="code" onClick={this.onOpen} floated="right" aria-label={buttonTitle} />}
                     />
                 ) : (
                     <Button
                         icon="code"
-                        content={t('buttons.showDataTypes')}
+                        content={buttonTitle}
                         onClick={this.onOpen}
                         floated="right"
                         labelPosition="left"
