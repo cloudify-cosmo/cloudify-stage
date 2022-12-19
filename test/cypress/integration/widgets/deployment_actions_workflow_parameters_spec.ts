@@ -34,12 +34,6 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         cy.get('label').click();
     };
 
-    const verifyDropdownNumberOfOptions = (number: number) => {
-        cy.get('[role="listbox"]').click();
-        cy.get(`.menu .item[role="option"]`).should('have.length', number);
-        cy.get('label').click();
-    };
-
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentActionButtons').mockLogin();
 
@@ -65,7 +59,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
                 verifyNumberOfOptions(2);
             });
             cy.getField('node2').within(() => {
-                verifyDropdownNumberOfOptions(2);
+                verifyNumberOfOptions(2);
             });
             cy.getField('node_from_deployment').within(() => {
                 verifyNumberOfOptions(4);
@@ -78,7 +72,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
                 verifyNumberOfOptions(2);
             });
             cy.getField('node_type_with_constraints').within(() => {
-                verifyDropdownNumberOfOptions(2);
+                verifyNumberOfOptions(2);
             });
             cy.getField('node_type_from_deployment').within(() => {
                 verifyNumberOfOptions(1);
@@ -118,7 +112,7 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
                 verifyMultipleDropdown();
             });
             cy.getField('node2').within(() => {
-                verifyDropdownNumberOfOptions(2);
+                verifyNumberOfOptions(2);
                 verifyMultipleDropdown();
             });
         });
