@@ -612,6 +612,10 @@
                             "label": "Blueprint",
                             "help": "Select the blueprint based on which this deployment will be created."
                         },
+                        "deploymentIdToDeployOn": {
+                            "label": "Deploy On",
+                            "placeholder": "Select a parent"
+                        },
                         "siteName": {
                             "label": "Site name",
                             "help": "Specify a site to which this deployment will be assigned."
@@ -662,6 +666,7 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "noDeploymentIdToDeployOn": "Please select a deployment on which the blueprint should be deployed on",
                         "missingSecretsHeading": "Missing Secrets Error",
                         "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
