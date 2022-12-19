@@ -1,4 +1,4 @@
-import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
+import type { PluginCatalogEntry } from 'backend/routes/Plugins.types';
 
 export type PluginDescription = PluginCatalogEntry;
 
