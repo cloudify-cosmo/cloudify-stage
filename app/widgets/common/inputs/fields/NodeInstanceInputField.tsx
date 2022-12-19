@@ -1,8 +1,8 @@
 import React from 'react';
-import i18n from 'i18next';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
 import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
+import translateInputs from '../utils/translateInputs';
 
 export default function NodeInstanceInputField({
     name,
@@ -14,7 +14,7 @@ export default function NodeInstanceInputField({
 
     return (
         <DynamicDropdown
-            placeholder={i18n.t('input.node_instance.placeholder')}
+            placeholder={translateInputs('types.node_instance.placeholder')}
             fetchUrl={fetchUrl}
             onChange={newValue => onChange?.(null, { name, value: newValue })}
             toolbox={toolbox}

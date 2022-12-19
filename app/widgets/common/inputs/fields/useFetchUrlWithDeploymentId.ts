@@ -4,10 +4,11 @@ import getConstraintValueFunction from '../utils/getConstraintValueFunction';
 import type { Constraint } from '../types';
 
 export default function useFetchUrlWithDeploymentId(fetchUrl: string, constraints: Constraint[]) {
+    const deploymentIdFromContext = useContext(DeploymentIdContext);
+
     return useMemo(() => {
         const deploymentIdFromConstraints: string | undefined =
             getConstraintValueFunction(constraints)('deployment_id');
-        const deploymentIdFromContext = useContext(DeploymentIdContext);
 
         if (!deploymentIdFromConstraints && deploymentIdFromContext) {
             const { appendQueryParam } = Stage.Utils.Url;
