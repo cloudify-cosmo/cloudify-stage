@@ -2,6 +2,7 @@ import React from 'react';
 import type { CustomConfigurationComponentProps } from '../../../utils/StageAPI';
 import type { Variable } from '../../../../backend/handler/TerraformHandler.types';
 import DynamicDropdown from '../components/DynamicDropdown';
+import type { VariableRow } from './TerraformModal';
 import { inputMaxLength } from './TerraformModal';
 import StageUtils from '../../../utils/stageUtils';
 import { useFormErrors } from '../../../utils/hooks';
@@ -9,7 +10,7 @@ import { Form } from '../../../components/basic';
 
 const t = StageUtils.getT('widgets.blueprints.terraformModal.variablesTable');
 
-interface TerraformVariableNameInputProps extends CustomConfigurationComponentProps<string> {
+interface TerraformVariableNameInputProps extends CustomConfigurationComponentProps<VariableRow['name']> {
     rowValues?: Variable;
 }
 
@@ -30,9 +31,11 @@ export default function TerraformVariableNameInput({
                 <DynamicDropdown
                     fluid
                     selection
-                    value={value}
+                    value={value.value}
                     fetchUrl="/secrets"
-                    onChange={newValue => onChange(undefined, { name, value: newValue as string })}
+                    onChange={(newValue, added) =>
+                        onChange(undefined, { name, value: { value: newValue as string, added } })
+                    }
                     clearable={false}
                     toolbox={widgetlessToolbox}
                     valueProp="key"
@@ -49,8 +52,8 @@ export default function TerraformVariableNameInput({
     return (
         <Form.Input
             error={getFieldError(`${idPrefix}_${index}_${name}`)}
-            value={value === null ? '' : value}
-            onChange={(event, data) => onChange(event, { name, ...data })}
+            value={value.value === null ? '' : value.value}
+            onChange={(event, data) => onChange(event, { name, value: { value: data.value } })}
             fluid
         >
             <input maxLength={inputMaxLength} />
