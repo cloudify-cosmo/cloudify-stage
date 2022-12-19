@@ -41,10 +41,9 @@ describe('Secret Providers widget', () => {
             cy.contains('Please provide the Provider Name.').should('be.visible');
             cy.contains('Please provide vault hostname.').should('be.visible');
             cy.contains('Please provide an authorization token').should('be.visible');
-
-            cy.get('input[name="providerName"]').type('Secret_Provider_2');
-            cy.get('input[name="hostname"]').type('localhost');
-            cy.get('input[name="authorizationToken"]').type('token');
+            cy.typeToFieldInput('Provider Name', 'Secret_Provider_2');
+            cy.typeToFieldInput('Vault Hostname', 'localhost');
+            cy.typeToFieldInput('Authorization Token', 'token');
             cy.get('button').contains('Create').click();
         });
         cy.contains('Secret_Provider_2').should('be.visible');
