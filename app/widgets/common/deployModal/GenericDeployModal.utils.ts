@@ -1,3 +1,5 @@
+import StageUtils from '../../../utils/stageUtils';
+
 interface DeployOnDropdownItem {
     id: string;
     // eslint-disable-next-line camelcase
@@ -5,5 +7,5 @@ interface DeployOnDropdownItem {
 }
 
 export const deployOnTextFormatter = (item: DeployOnDropdownItem) => {
-    return Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
+    return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
 };
