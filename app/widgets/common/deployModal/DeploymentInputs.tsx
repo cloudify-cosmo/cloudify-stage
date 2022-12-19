@@ -1,8 +1,11 @@
 import type { FunctionComponent } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
+import { isEmpty } from 'lodash';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import DataTypesButton from '../inputs/DataTypesButton';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
+import type { SortOrder } from '../inputs/SortOrderIcons';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 import InputFields from '../inputs/InputFields';
 import type { OnChange } from '../inputs/types';
 import YamlFileButton from '../inputs/YamlFileButton';
@@ -30,7 +33,11 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     errors,
     toolbox
 }) => {
-    const deploymentHasInputs = !_.isEmpty(blueprint.plan.inputs);
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
+    const deploymentHasInputs = !isEmpty(blueprint.plan.inputs);
+    const deploymentHasMultipleInputs = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
+    const deploymentHasDataTypes = !isEmpty(blueprint.plan.data_types);
+
     return (
         <>
             {blueprint.id && (
@@ -43,14 +50,13 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                             iconButton
                         />
                     )}
-                    {!_.isEmpty(blueprint.plan.data_types) && (
-                        <DataTypesButton iconButton types={blueprint.plan.data_types} />
-                    )}
+                    {deploymentHasDataTypes && <DataTypesButton iconButton types={blueprint.plan.data_types} />}
                     {deploymentHasInputs ? (
                         <InputsHelpIcon />
                     ) : (
                         <Message content={t('inputs.deploymentInputs.noInputs')} />
                     )}
+                    {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
                 </>
             )}
 
@@ -61,6 +67,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 errorsState={errors}
                 toolbox={toolbox}
                 dataTypes={blueprint.plan.data_types}
+                sortOrder={sortOrder}
             />
         </>
     );
