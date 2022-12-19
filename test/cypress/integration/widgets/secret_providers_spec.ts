@@ -37,7 +37,7 @@ describe('Secret Providers widget', () => {
         });
 
         cy.get('.modal').within(() => {
-            cy.get('button').contains('Create').click();
+            cy.clickButton('Create');
             cy.contains('Please provide the Provider Name.').should('be.visible');
             cy.contains('Please provide vault hostname.').should('be.visible');
             cy.contains('Please provide an authorization token').should('be.visible');
