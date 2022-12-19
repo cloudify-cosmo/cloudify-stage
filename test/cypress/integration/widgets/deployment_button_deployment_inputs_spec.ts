@@ -526,7 +526,11 @@ describe('Create Deployment modal handles deployment inputs', () => {
         const inputsLabelsInOriginalOrder = [
             'string_no_default',
             'string_constraint_pattern',
-            'Valid values',
+            'string_constraint_valid_values_static',
+            'string_constraint_valid_values_secret_string',
+            'string_constraint_valid_values_secret_json_string',
+            'string_constraint_valid_values_secret_json_array',
+            'string_constraint_valid_values_secret_json_object',
             'string_default',
             'string_default_null'
         ];
