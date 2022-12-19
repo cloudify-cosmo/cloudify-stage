@@ -28,7 +28,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
         toolbox.refresh(fetchParams);
     };
 
-    const handleCreateModal = (type: string) => {
+    const handleCreateMenuItemClick = (type: string) => {
         setSecretProviderTypeType(type);
         showCreateModal();
     };
@@ -54,7 +54,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                             <Item
                                 text={translateSecretProviders('createButton.options.vault')}
                                 onClick={() =>
-                                    handleCreateModal(translateSecretProviders('createButton.options.vault'))
+                                    handleCreateMenuItemClick(translateSecretProviders('createButton.options.vault'))
                                 }
                             />
                         </Menu>
