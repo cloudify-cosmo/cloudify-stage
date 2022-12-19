@@ -1521,7 +1521,7 @@
                 "inputs": {
                     "providerName": {
                         "label": "Provider Name",
-                        "placeholder": "Provider name"
+                        "placeholder": "Provider Name"
                     },
                     "hostname": {
                         "label": "Vault Hostname",
@@ -1538,12 +1538,11 @@
                 },
                 "errors": {
                     "providerName": {
-                        "required": "Provider name is required",
+                        "required": "Please provide the Provider Name.",
                         "invalid": "The Provider name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Hostname is required",
-                    "authorizationToken": "Authorization token is required",
-                    "providerNameNotUnique": "Provider name must be unique"
+                    "hostname": "Plase provide the Vault Hostname.",
+                    "authorizationToken": "Please provide the Authorization Token."
                 }
             }
         },
