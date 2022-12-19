@@ -149,7 +149,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             showSecretLoading: true
         });
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -174,7 +174,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     onIsHiddenValueChange(secretKey, isHiddenValue) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
         actions
             .doSetIsHiddenValue(secretKey, isHiddenValue)
@@ -190,7 +190,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     setSecretVisibility(secretKey, visibility) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
         actions
             .doSetVisibility(secretKey, visibility)

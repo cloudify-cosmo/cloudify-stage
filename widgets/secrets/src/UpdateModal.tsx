@@ -18,7 +18,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
         clearErrors();
         clearSecretValue();
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doGet(secret.key)
             .then(({ is_hidden_value: isHidden, value }) => {
@@ -44,7 +44,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
         // Disable the form
         setLoading();
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doUpdate(secret.key, secretValue)
             .then(() => {
