@@ -1,5 +1,5 @@
 import * as DCommon from './common';
-import { sharedConfiguration, sharedDefinition } from './configuration';
+import { getSharedConfiguration, sharedDefinition } from './configuration';
 import { DeploymentsView as DDeploymentsView } from './DeploymentsView';
 import './styles.scss';
 import { DeploymentStatus } from './types';
@@ -7,7 +7,7 @@ import { DeploymentStatus } from './types';
 export default {
     sharedDefinition,
     Common: DCommon,
-    Configuration: { sharedConfiguration },
+    Configuration: { getSharedConfiguration },
     DeploymentsView: DDeploymentsView,
     Types: { DeploymentStatus }
 };

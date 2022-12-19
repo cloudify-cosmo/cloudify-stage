@@ -1,7 +1,7 @@
 import React from 'react';
-import i18n from 'i18next';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
+import translateInputs from '../utils/translateInputs';
 
 export default function CapabilityValueInputField({
     name,
@@ -22,7 +22,7 @@ export default function CapabilityValueInputField({
         <DynamicDropdown
             name={name}
             error={error}
-            placeholder={i18n.t('input.capability_value.placeholder')}
+            placeholder={translateInputs('types.capability_value.placeholder')}
             itemsFormatter={formatDeploymentsToCapabilities}
             value={value}
             valueProp="value"

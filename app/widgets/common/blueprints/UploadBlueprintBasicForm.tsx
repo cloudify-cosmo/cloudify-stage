@@ -1,23 +1,9 @@
 // @ts-nocheck File not migrated fully to TS
-import React from 'react';
+import React, { useMemo } from 'react';
 import i18n from 'i18next';
 import PropTypes from 'prop-types';
 import { CompletedBlueprintStates, InProgressBlueprintStates } from './BlueprintActions';
 import { Form, LoadingOverlay } from '../../../components/basic';
-
-const UploadLabels = _(InProgressBlueprintStates)
-    .keyBy()
-    .mapValues(value => i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.camelCase(value)}`))
-    .value();
-
-const UploadErrorHeaders = _([
-    CompletedBlueprintStates.FailedUploading,
-    CompletedBlueprintStates.FailedExtracting,
-    CompletedBlueprintStates.FailedParsing
-])
-    .keyBy()
-    .mapValues(value => i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.camelCase(value)}`))
-    .value();
 
 export default function UploadBlueprintBasicForm({
     blueprintName,
@@ -33,14 +19,32 @@ export default function UploadBlueprintBasicForm({
     yamlFileHelp,
     yamlFiles
 }) {
+    const uploadLabels = useMemo(() =>
+        _(InProgressBlueprintStates)
+            .keyBy()
+            .mapValues(value => i18n.t(`widgets.common.blueprintUpload.uploadLabels.${_.camelCase(value)}`))
+            .value()
+    );
+
+    const uploadErrorHeaders = useMemo(() =>
+        _([
+            CompletedBlueprintStates.FailedUploading,
+            CompletedBlueprintStates.FailedExtracting,
+            CompletedBlueprintStates.FailedParsing
+        ])
+            .keyBy()
+            .mapValues(value => i18n.t(`widgets.common.blueprintUpload.errorHeaders.${_.camelCase(value)}`))
+            .value()
+    );
+
     return (
         <Form
             loading={formLoading}
-            errorMessageHeader={!_.isEmpty(errors) ? UploadErrorHeaders[uploadState] : null}
+            errorMessageHeader={!_.isEmpty(errors) ? uploadErrorHeaders[uploadState] : null}
             errors={errors}
             onErrorsDismiss={onErrorsDismiss}
         >
-            {blueprintUploading && <LoadingOverlay message={UploadLabels[uploadState]} />}
+            {blueprintUploading && <LoadingOverlay message={uploadLabels[uploadState]} />}
             {firstFormField}
             <Form.Field
                 label={i18n.t(`widgets.common.blueprintUpload.inputs.blueprintName.label`)}

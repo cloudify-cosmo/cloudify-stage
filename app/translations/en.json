@@ -644,7 +644,6 @@
                         "install": "Install"
                     },
                     "buttons": {
-                        "showDataTypes": "Show Data Types",
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
                         "install": "Install",
@@ -810,6 +809,47 @@
             "rolesPicker": {
                 "label": "Choose a role for {{resourceName}} {{resource}}:",
                 "placeholder": "Choose a role"
+            },
+            "inputs": {
+                "buttons": {
+                    "dataTypes": {
+                        "title": "Show Data Types"
+                    },
+                    "sortOrder": {
+                        "original": "Original order",
+                        "ascending": "Ascending alphabetical order",
+                        "descending": "Descending alphabetical order"
+                    }
+                },
+                "types": {
+                    "operation": {
+                        "placeholder": "Select Operation"
+                    },
+                    "node_type": {
+                        "placeholder": "Select Node Type"
+                    },
+                    "node_instance": {
+                        "placeholder": "Select Node Instance"
+                    },
+                    "scaling_group": {
+                        "placeholder": "Select Node Scaling Group"
+                    },
+                    "deployment_id": {
+                        "placeholder": "Select Deployment"
+                    },
+                    "blueprint_id": {
+                        "placeholder": "Select Blueprint"
+                    },
+                    "capability_value": {
+                        "placeholder": "Select Capability"
+                    },
+                    "secret_key": {
+                        "placeholder": "Select Secret Key"
+                    },
+                    "node_id": {
+                        "placeholder": "Select Node Id"
+                    }
+                }
             }
         },
         "agents": {
@@ -1961,35 +2001,6 @@
                 "refreshStatus": "Refresh Status",
                 "refreshStatusInProgress": "Status refresh in progress..."
             }
-        }
-    },
-    "input": {
-        "operation": {
-            "placeholder": "Select Operation"
-        },
-        "node_type": {
-            "placeholder": "Select Node Type"
-        },
-        "node_instance": {
-            "placeholder": "Select Node Instance"
-        },
-        "scaling_group": {
-            "placeholder": "Select Node Scaling Group"
-        },
-        "deployment_id": {
-            "placeholder": "Select Deployment"
-        },
-        "blueprint_id": {
-            "placeholder": "Select Blueprint"
-        },
-        "capability_value": {
-            "placeholder": "Select Capability"
-        },
-        "secret_key": {
-            "placeholder": "Select Secret Key"
-        },
-        "node_id": {
-            "placeholder": "Select Node Id"
         }
     }
 }
