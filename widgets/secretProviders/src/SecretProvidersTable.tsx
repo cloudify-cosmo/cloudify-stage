@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import RemoveSecretProviderButton from './RemoveSecretProviderButton';
 import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
+import { SecretProvidersType } from './widget.types';
 import type { SecretProvidersWidget } from './widget.types';
 import CreateSecretProviderModal from './CreateSecretProviderModal';
 
@@ -22,13 +23,13 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
     const { pageSize, sortColumn, sortAscending } = configuration;
     const totalSize = data.metadata.pagination.total;
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
-    const [secretProviderType, setSecretProviderTypeType] = useState<string>('');
+    const [secretProviderType, setSecretProviderTypeType] = useState<SecretProvidersType | null>(null);
 
     const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         toolbox.refresh(fetchParams);
     };
 
-    const handleCreateMenuItemClick = (type: string) => {
+    const handleCreateMenuItemClick = (type: SecretProvidersType) => {
         setSecretProviderTypeType(type);
         showCreateModal();
     };
@@ -53,9 +54,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                         <Menu direction="left">
                             <Item
                                 text={translateSecretProviders('createButton.options.vault')}
-                                onClick={() =>
-                                    handleCreateMenuItemClick(translateSecretProviders('createButton.options.vault'))
-                                }
+                                onClick={() => handleCreateMenuItemClick(SecretProvidersType.Vault)}
                             />
                         </Menu>
                     </Dropdown>
@@ -85,6 +84,8 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 <CreateSecretProviderModal
                     onClose={hideCreateModal}
                     toolbox={toolbox}
+                    manager={toolbox.getManager()}
+                    eventBus={toolbox.getEventBus()}
                     secretProviderType={secretProviderType}
                 />
             )}

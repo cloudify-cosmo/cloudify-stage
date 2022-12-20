@@ -1,6 +1,8 @@
+import type { EventBus, Manager } from 'cloudify-ui-components/toolbox';
 import { isEmpty } from 'lodash';
 import { tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
+import type { SecretProvidersType } from './widget.types';
 
 const { useInput, useErrors } = Stage.Hooks;
 const { Modal, Button, Form } = Stage.Basic;
@@ -8,10 +10,18 @@ const { Modal, Button, Form } = Stage.Basic;
 interface CreateSecretProviderModalProps {
     onClose: () => void;
     toolbox: Stage.Types.Toolbox;
-    secretProviderType: string;
+    manager: Manager;
+    eventBus: EventBus;
+    secretProviderType: SecretProvidersType | null;
 }
 
-const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: CreateSecretProviderModalProps) => {
+const CreateSecretProviderModal = ({
+    onClose,
+    toolbox,
+    manager,
+    eventBus,
+    secretProviderType
+}: CreateSecretProviderModalProps) => {
     const { errors, setErrors, clearErrors } = useErrors();
     const [providerName, setProviderName] = useInput('');
     const [hostname, setHostname] = useInput('');
@@ -19,16 +29,13 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
     const [defaultPath, setDefaultPath] = useInput('');
 
     const translateCreateModal = Stage.Utils.composeT(translateSecretProviders, 'createModal');
-    const translateCreateModalHeader = translateCreateModal('header', {
-        secretProviderType
-    });
 
-    const isFormValid = () => {
+    const validateForm = () => {
         const newErrors: Record<string, string> = {};
 
         if (!providerName) {
             newErrors.providerName = translateCreateModal('errors.providerName.required');
-        } else if (!/^[a-zA-Z0-9_-]+$/.test(providerName)) {
+        } else if (!Stage.Common.Consts.idRegex.test(providerName)) {
             newErrors.providerName = translateCreateModal('errors.providerName.invalid');
         }
 
@@ -48,35 +55,33 @@ const CreateSecretProviderModal = ({ onClose, toolbox, secretProviderType }: Cre
     const handleSubmit = () => {
         clearErrors();
 
-        if (!isFormValid()) {
+        if (!validateForm()) {
             return;
         }
 
-        const type = secretProviderType.toLowerCase();
-
-        toolbox
-            .getManager()
+        manager
             .doPut('/secrets-providers', {
                 body: {
                     name: providerName,
                     host: hostname,
                     token: authorizationToken,
                     path: defaultPath,
-                    type
+                    type: secretProviderType
                 }
             })
             .then(() => {
-                toolbox.getEventBus().trigger(tableRefreshEvent);
+                toolbox.refresh();
+                eventBus.trigger(tableRefreshEvent);
                 onClose();
             })
             .catch(() => {
-                setErrors({ _error: translateCreateModal('errors.createError') });
+                setErrors({ error: translateCreateModal('errors.createError') });
             });
     };
 
     return (
         <Modal open onClose={onClose}>
-            <Modal.Header>{translateCreateModalHeader}</Modal.Header>
+            <Modal.Header>{translateCreateModal('header')}</Modal.Header>
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field

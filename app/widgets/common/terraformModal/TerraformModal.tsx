@@ -133,8 +133,6 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
 
 const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
 
-const validationRegExp = /^[a-zA-Z0-9._-]*$/;
-
 const dynamicTableFieldStyle = { height: 38 };
 
 type Columns<T> = TerraformModalTableAccordionProps<T[]>['columns'];
@@ -389,7 +387,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         entities.forEach((variable, index) => {
             if (isEmpty(variable[IDkey])) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-            } else if (!variable[IDkey].match(validationRegExp)) {
+            } else if (!variable[IDkey].match(Stage.Common.Consts.idRegex)) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
             } else if (
                 some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])

@@ -1513,7 +1513,7 @@
                 }
             },
             "createModal": {
-                "header": "Create a {{secretProviderType}} Secret Provider",
+                "header": "Create a Vault Secret Provider",
                 "buttons": {
                     "create": "Create",
                     "cancel": "Cancel"
