@@ -64,7 +64,7 @@ const SecretsModal: FunctionComponent<SecretsModalProps> = ({ toolbox, onClose, 
 
         const isHiddenValue = true;
         const visibility = Consts.defaultVisibility as Visibility;
-        const actions = new SecretActions(toolbox);
+        const actions = new SecretActions(toolbox.getManager());
         Promise.all(
             keys.map(secretKey => actions.doCreate(secretKey, secretInputs[secretKey], visibility, isHiddenValue))
         )

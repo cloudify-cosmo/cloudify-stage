@@ -1,6 +1,7 @@
 import React from 'react';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
+import translateInputs from '../utils/translateInputs';
 
 export default function SecretKeyInputField({
     name,
@@ -16,7 +17,7 @@ export default function SecretKeyInputField({
         <DynamicDropdown
             name={name}
             error={error}
-            placeholder={Stage.i18n.t('input.secret_key.placeholder')}
+            placeholder={translateInputs('types.secret_key.placeholder')}
             value={value}
             valueProp="key"
             fetchUrl={fetchUrl}

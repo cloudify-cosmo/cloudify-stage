@@ -2,6 +2,7 @@ import React from 'react';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
 import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
+import translateInputs from '../utils/translateInputs';
 
 export default function ScalingGroupInputField({
     name,
@@ -14,7 +15,7 @@ export default function ScalingGroupInputField({
     return (
         <DynamicDropdown
             valueProp="name"
-            placeholder={Stage.i18n.t('input.scaling_group.placeholder')}
+            placeholder={translateInputs('types.scaling_group.placeholder')}
             fetchUrl={fetchUrl}
             onChange={newValue => onChange?.(null, { name, value: newValue })}
             toolbox={toolbox}

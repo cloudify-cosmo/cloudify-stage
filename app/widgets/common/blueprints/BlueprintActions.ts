@@ -18,6 +18,14 @@ class BlueprintUploadError extends Error {
     }
 }
 
+type BlueprintSecret = string | Record<string, unknown>;
+
+export interface BlueprintRequirements {
+    /* eslint-disable-next-line camelcase */
+    parent_capabilities: string[];
+    secrets: BlueprintSecret[];
+}
+
 /* eslint-disable camelcase */
 export interface FullBlueprintData {
     id: string;
@@ -107,6 +115,7 @@ export interface FullBlueprintData {
         resource_availability: string;
         private_resource: false;
     };
+    requirements: null | BlueprintRequirements;
 }
 /* eslint-enable camelcase */
 
