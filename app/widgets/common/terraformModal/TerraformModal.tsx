@@ -33,6 +33,7 @@ import {
     Modal
 } from '../../../components/basic';
 import { useBoolean, useFormErrors, useInput, useResettableState } from '../../../utils/hooks';
+import ID_REGEX from '../../../utils/consts';
 
 const t = StageUtils.getT('widgets.blueprints.terraformModal');
 const tError = StageUtils.composeT(t, 'errors');
@@ -387,7 +388,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         entities.forEach((variable, index) => {
             if (isEmpty(variable[IDkey])) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-            } else if (!variable[IDkey].match(Stage.Common.Consts.idRegex)) {
+            } else if (!variable[IDkey].match(ID_REGEX)) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
             } else if (
                 some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
