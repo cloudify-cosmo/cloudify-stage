@@ -31,7 +31,7 @@ export interface PageContentProps {
 }
 
 export default function PageContent({
-    onWidgetUpdated = noop,
+    onWidgetUpdated,
     onWidgetRemoved = noop,
     onWidgetAdded = noop,
     onTabAdded = noop,
