@@ -2,7 +2,10 @@
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "types": [],
-        "plugins": [{ "name": "typescript-styled-plugin" }]
+        "plugins": [{ "name": "typescript-styled-plugin" }],
+        "paths": {
+            "*": ["../*"]
+        }
     },
     "include": ["**/*", "**/*.json", "../backend/consts.ts", "../backend/serverSettings.ts", "../backend/**/types.ts",
       "../backend/**/*.types.ts", "../backend/sharedUtils.ts", "../conf/*.json"],

@@ -1,4 +1,4 @@
-import type { PostFileTextResponse, PostFileYamlResponse } from '../../../../backend/routes/File.types';
+import type { PostFileTextResponse, PostFileYamlResponse } from 'backend/routes/File.types';
 
 export default class FileActions {
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}

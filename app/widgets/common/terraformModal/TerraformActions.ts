@@ -8,7 +8,7 @@ import type {
     PostTerraformResourcesFileResponse,
     PostTerraformResourcesQueryParams,
     PostTerraformResourcesResponse
-} from '../../../../backend/routes/Terraform.types';
+} from 'backend/routes/Terraform.types';
 
 export default class TerraformActions {
     constructor(private toolbox: Stage.Types.WidgetlessToolbox) {}

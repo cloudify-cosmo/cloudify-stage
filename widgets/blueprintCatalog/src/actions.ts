@@ -1,10 +1,7 @@
+import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
+import type { GetGitHubReposTreesResponse, GetGitHubSearchRepositoriesResponse } from 'backend/routes/GitHub.types';
 import Consts from './consts';
 import type { WidgetParameters } from './types';
-import type { GetExternalContentQueryParams } from '../../../backend/routes/External.types';
-import type {
-    GetGitHubReposTreesResponse,
-    GetGitHubSearchRepositoriesResponse
-} from '../../../backend/routes/GitHub.types';
 
 export default class Actions {
     private toolbox: Stage.Types.WidgetlessToolbox;

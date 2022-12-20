@@ -1,11 +1,11 @@
 import i18n from 'i18next';
 import { constant, isEmpty, join, map } from 'lodash';
-import React from 'react';
 import type { FunctionComponent } from 'react';
+import React from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import StageUtils from '../../utils/stageUtils';
-import { Icon, Header, Segment, Table } from '../basic';
-import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
+import { Header, Icon, Segment, Table } from '../basic';
 
 interface CurrentLicenseProps {
     license: LicenseResponse | null;

@@ -1,5 +1,6 @@
 import log from 'loglevel';
 import type { Action } from 'redux';
+import type { PaginatedResponse } from 'backend/types';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import Manager from '../../utils/Manager';
@@ -10,7 +11,6 @@ import { setEditMode } from '../config';
 import type { ClearContextAction } from '../context';
 import { clearContext } from '../context';
 import { reloadUserAppData } from '../userApp';
-import type { PaginatedResponse } from '../../../backend/types';
 
 export type Tenants = string[];
 export type FetchTenantsRequestAction = Action<ActionType.FETCH_TENANTS_REQUEST>;

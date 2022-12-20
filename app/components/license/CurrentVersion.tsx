@@ -1,10 +1,10 @@
 import type { SemanticICONS } from 'semantic-ui-react';
 import i18n from 'i18next';
-import { join, compact, capitalize, startCase, isEmpty, map } from 'lodash';
+import { capitalize, compact, isEmpty, join, map, startCase } from 'lodash';
 import React from 'react';
 
-import { Icon, Header, Message, Segment, Table } from '../basic';
-import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
+import type { VersionResponse } from 'backend/handler/AuthHandler.types';
+import { Header, Icon, Message, Segment, Table } from '../basic';
 
 interface ExtendedVersion extends Partial<VersionResponse> {
     distro: string;

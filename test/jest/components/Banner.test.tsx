@@ -1,9 +1,9 @@
 /* eslint-disable jest/expect-expect */
 
 import React from 'react';
-import { mount } from 'enzyme';
 import type { ReactWrapper } from 'enzyme';
-import { isUndefined, isEmpty } from 'lodash';
+import { mount } from 'enzyme';
+import { isEmpty, isUndefined } from 'lodash';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import configureMockStore from 'redux-mock-store';
@@ -13,7 +13,7 @@ import Consts from 'utils/consts';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
 import Banner from 'components/banner/Banner';
 import type { LicenseStatus } from 'reducers/managerReducer';
-import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 import i18nInit from '../i18n';

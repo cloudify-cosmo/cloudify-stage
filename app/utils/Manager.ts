@@ -1,11 +1,11 @@
-import { filter, get, concat } from 'lodash';
+import { concat, filter, get } from 'lodash';
 
-import type { QueryStringParams } from '../../backend/sharedUtils';
+import type { QueryStringParams } from 'backend/sharedUtils';
+import type { PaginatedResponse } from 'backend/types';
 import { getUrlWithQueryString } from '../../backend/sharedUtils';
 import Internal from './Internal';
 import StageUtils from './stageUtils';
 import Consts from './consts';
-import type { PaginatedResponse } from '../../backend/types';
 
 const emptyPaginatedResponse: PaginatedResponse<any> = {
     items: [],
