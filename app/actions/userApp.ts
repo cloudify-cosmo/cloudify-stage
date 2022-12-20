@@ -1,20 +1,16 @@
 import _ from 'lodash';
 import type { CallHistoryMethodAction } from 'connected-react-router';
 import { push } from 'connected-react-router';
+import type { GetUserAppResponse, PostUserAppRequestBody, PostUserAppResponse } from 'backend/routes/UserApp.types';
+import type { AppDataPage, AppDataPageGroup } from 'backend/db/models/UserAppsModel.types';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { createPagesFromTemplate, createPagesMap } from './pageMenu';
 import type { SetAppErrorAction, SetAppLoadingAction } from './app';
-import { setAppLoading, setAppError } from './app';
+import { setAppError, setAppLoading } from './app';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
-import type {
-    GetUserAppResponse,
-    PostUserAppRequestBody,
-    PostUserAppResponse
-} from '../../backend/routes/UserApp.types';
-import type { AppDataPage, AppDataPageGroup } from '../../backend/db/models/UserAppsModel.types';
 
 type Pages = (AppDataPage | AppDataPageGroup)[];
 export type SetPagesAction = PayloadAction<{ pages: Pages; receivedAt: number }, ActionType.SET_PAGES>;

@@ -2,7 +2,10 @@
     "extends": "../tsconfig.base.json",
     "compilerOptions": {
         "types": ["react", "react-dom", "moment", "lodash"],
-        "plugins": [{ "name": "typescript-styled-plugin" }]
+        "plugins": [{ "name": "typescript-styled-plugin" }],
+        "paths": {
+            "*": ["../*"]
+        }
     },
     "include": ["**/*", "**/*.json", "../app/typings", "../app/utils/consts.ts", "../backend/routes/*.types.ts"],
     "references": [{ "path": "../app" }]

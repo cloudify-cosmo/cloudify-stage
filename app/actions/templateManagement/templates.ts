@@ -1,6 +1,6 @@
+import type { PageItem } from 'backend/handler/templates/types';
 import type { PayloadAction } from '../types';
 import { ActionType } from '../types';
-import type { PageItem } from '../../../backend/handler/templates/types';
 
 type Pages = PageItem[];
 

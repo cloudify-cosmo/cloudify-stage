@@ -1,13 +1,13 @@
 import { get, isEmpty, isEqual } from 'lodash';
 
+import type { GetAuthManagerResponse, GetAuthUserResponse } from 'backend/routes/Auth.types';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import Consts from './consts';
 import StageUtils from './stageUtils';
 import External from './External';
 import Internal from './Internal';
 import encodeTextToBase64 from './encodeTextToBase64';
-import type { ManagerData, LicenseData, LicenseStatus } from '../reducers/managerReducer';
-import type { GetAuthManagerResponse, GetAuthUserResponse } from '../../backend/routes/Auth.types';
-import type { LicenseResponse } from '../../backend/handler/AuthHandler.types';
+import type { LicenseData, LicenseStatus, ManagerData } from '../reducers/managerReducer';
 
 export default class Auth {
     static login(username: string, password: string) {

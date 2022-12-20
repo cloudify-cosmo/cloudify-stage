@@ -1,17 +1,17 @@
+import type { ThunkDispatch } from 'redux-thunk';
 import thunkMiddleware from 'redux-thunk';
 import { routerMiddleware } from 'connected-react-router';
 import type { Action, Store, StoreEnhancer } from 'redux';
-import type { ThunkDispatch } from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import type { History } from 'history';
 
 import throttle from 'lodash/throttle';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import ManagerStatePersister from './utils/ManagerStatePersister';
 
 import type { ReduxState } from './reducers';
 import createRootReducer from './reducers';
-import type { ClientConfig } from '../backend/routes/Config.types';
 import type { ReduxAction } from './actions/types';
 import { ActionType } from './actions/types';
 

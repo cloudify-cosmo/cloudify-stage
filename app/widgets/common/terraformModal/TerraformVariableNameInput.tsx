@@ -1,6 +1,6 @@
 import React from 'react';
+import type { Variable } from 'backend/handler/TerraformHandler.types';
 import type { CustomConfigurationComponentProps } from '../../../utils/StageAPI';
-import type { Variable } from '../../../../backend/handler/TerraformHandler.types';
 import DynamicDropdown from '../components/DynamicDropdown';
 import type { VariableRow } from './TerraformModal';
 import { inputMaxLength } from './TerraformModal';
