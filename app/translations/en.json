@@ -988,7 +988,9 @@
             }
         },
         "blueprintSources": {
-            "binaryFile": "File cannot be displayed."
+            "binaryFile": "File cannot be displayed.",
+            "thisIsAFolder": "This is a folder",
+            "nothingToShow": "Nothing to show."
         },
         "blueprintCatalog": {
             "name": "Blueprints Catalog",

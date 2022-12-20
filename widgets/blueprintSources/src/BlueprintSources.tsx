@@ -100,8 +100,8 @@ const RightPane = ({
 
     return (
         <Center>
-            <Bold>This is a folder</Bold>
-            Nothing to show.
+            <Bold>{t('thisIsAFolder')}</Bold>
+            {t('nothingToShow')}
         </Center>
     );
 };
