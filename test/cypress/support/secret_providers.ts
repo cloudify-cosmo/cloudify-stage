@@ -23,10 +23,8 @@ const commands = {
     deleteSecretProviders: () =>
         cy.cfyRequest('/secrets-providers', 'GET').then(response => {
             const secretProviders = response.body.items;
-            secretProviders.forEach((secretProvider: Partial<SecretProvidersWidget.DataItem>) => {
-                if (secretProvider.id) {
-                    cy.deleteSecretProvider(secretProvider.id);
-                }
+            secretProviders.forEach((secretProvider: SecretProvidersWidget.DataItem) => {
+                cy.deleteSecretProvider(secretProvider.id);
             });
         })
 };

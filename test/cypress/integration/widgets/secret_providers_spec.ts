@@ -26,7 +26,7 @@ describe('Secret Providers widget', () => {
 
     it('should allow to delete secret providers', () => {
         getSecretProviderRow('Secret_Provider_1').find('i[title="Delete Secret Provider"]').click();
-        cy.contains('Yes').click();
+        cy.clickButton('Yes');
         cy.contains('Secret_Provider_1').should('not.exist');
     });
 
@@ -44,7 +44,7 @@ describe('Secret Providers widget', () => {
             cy.typeToFieldInput('Provider Name', 'Secret_Provider_2');
             cy.typeToFieldInput('Vault Hostname', 'localhost');
             cy.typeToFieldInput('Authorization Token', 'token');
-            cy.get('button').contains('Create').click();
+            cy.clickButton('Create');
         });
         cy.contains('Secret_Provider_2').should('be.visible');
     });
