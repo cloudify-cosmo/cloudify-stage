@@ -4,7 +4,7 @@ import _, { find, includes } from 'lodash';
 import log from 'loglevel';
 import { stringify } from 'query-string';
 import type { SemanticICONS } from 'semantic-ui-react';
-import type { GetInitialTemplateIdResponse } from '../../backend/routes/Templates.types';
+import type { GetInitialTemplateIdResponse } from 'backend/routes/Templates.types';
 import { NO_PAGES_FOR_TENANT_ERR } from '../utils/ErrorCodes';
 import Internal from '../utils/Internal';
 import { clearContext } from './context';

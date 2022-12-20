@@ -1,14 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
 import i18n from 'i18next';
+import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
+import type { PutSourceListYamlQueryParams, PutSourceListYamlResponse } from 'backend/routes/SourceBrowser.types';
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
 import PollHelper from '../utils/PollHelper';
-import type { GetExternalContentQueryParams } from '../../../../backend/routes/External.types';
-import type {
-    PutSourceListYamlQueryParams,
-    PutSourceListYamlResponse
-} from '../../../../backend/routes/SourceBrowser.types';
 import StageUtils from '../../../utils/stageUtils';
 import generateUploadFormData from './generateUploadFormData';
 

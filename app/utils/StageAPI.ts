@@ -4,8 +4,8 @@ import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } f
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react';
-import type { WidgetDefinition } from '../../backend/handler/templates/types';
-import type { PaginatedResponse as CloudifyPaginatedResponse } from '../../backend/types';
+import type { WidgetDefinition } from 'backend/handler/templates/types';
+import type { PaginatedResponse as CloudifyPaginatedResponse } from 'backend/types';
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type WidgetContext from './Context';

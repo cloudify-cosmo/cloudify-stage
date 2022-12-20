@@ -1,7 +1,7 @@
 import type {
     GetSourceBrowseBlueprintArchiveResponse,
     GetSourceBrowseBlueprintFileResponse
-} from '../../../backend/routes/SourceBrowser.types';
+} from 'backend/routes/SourceBrowser.types';
 
 export default class {
     constructor(private readonly toolbox: Stage.Types.Toolbox) {}

@@ -1,5 +1,6 @@
-import { push } from 'connected-react-router';
 import type { CallHistoryMethodAction } from 'connected-react-router';
+import { push } from 'connected-react-router';
+import type { PaginatedResponse } from 'backend/types';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
 import type { ReduxState } from '../../reducers';
@@ -7,7 +8,6 @@ import Manager from '../../utils/Manager';
 import Consts from '../../utils/consts';
 import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
-import type { PaginatedResponse } from '../../../backend/types';
 
 export type ActiveExecutions = PaginatedResponse<
     Required<

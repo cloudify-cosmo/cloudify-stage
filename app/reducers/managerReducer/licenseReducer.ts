@@ -1,8 +1,8 @@
 import type { Reducer } from 'redux';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import { ActionType } from '../../actions/types';
 import Auth from '../../utils/auth';
 import type Consts from '../../utils/consts';
-import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
 import type { LicenseAction } from '../../actions/manager/license';
 
 type ValueOf<T> = T[keyof T];

@@ -1,5 +1,5 @@
+import type { GetFiltersUsageResponse } from 'backend/routes/Filters.types';
 import type { Filter, FilterRule } from './types';
-import type { GetFiltersUsageResponse } from '../../../../backend/routes/Filters.types';
 
 export default class FilterActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
