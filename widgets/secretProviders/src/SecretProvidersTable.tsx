@@ -23,7 +23,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
     const { pageSize, sortColumn, sortAscending } = configuration;
     const totalSize = data.metadata.pagination.total;
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
-    const [secretProviderType, setSecretProviderTypeType] = useState<SecretProvidersType | null>(null);
+    const [secretProviderType, setSecretProviderTypeType] = useState<SecretProvidersType>();
 
     const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         toolbox.refresh(fetchParams);
@@ -32,6 +32,9 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
     const handleCreateMenuItemClick = (type: SecretProvidersType) => {
         setSecretProviderTypeType(type);
         showCreateModal();
+    };
+    const handleOnSubmit = () => {
+        toolbox.refresh();
     };
 
     useEffect(() => {
@@ -80,13 +83,13 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                     </DataTable.Row>
                 ))}
             </DataTable>
-            {isCreateModalVisible && (
+            {isCreateModalVisible && secretProviderType && (
                 <CreateSecretProviderModal
                     onClose={hideCreateModal}
-                    toolbox={toolbox}
                     manager={toolbox.getManager()}
                     eventBus={toolbox.getEventBus()}
                     secretProviderType={secretProviderType}
+                    onSubmit={handleOnSubmit}
                 />
             )}
         </>

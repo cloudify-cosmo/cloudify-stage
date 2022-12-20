@@ -9,15 +9,15 @@ const { Modal, Button, Form } = Stage.Basic;
 
 interface CreateSecretProviderModalProps {
     onClose: () => void;
-    toolbox: Stage.Types.Toolbox;
+    onSubmit: () => void;
     manager: Manager;
     eventBus: EventBus;
-    secretProviderType: SecretProvidersType | null;
+    secretProviderType: SecretProvidersType;
 }
 
 const CreateSecretProviderModal = ({
     onClose,
-    toolbox,
+    onSubmit,
     manager,
     eventBus,
     secretProviderType
@@ -70,7 +70,7 @@ const CreateSecretProviderModal = ({
                 }
             })
             .then(() => {
-                toolbox.refresh();
+                onSubmit();
                 eventBus.trigger(tableRefreshEvent);
                 onClose();
             })
