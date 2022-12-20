@@ -1,8 +1,8 @@
 import React from 'react';
-import i18n from 'i18next';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
 import StageUtils from '../../../../utils/stageUtils';
+import translateInputs from '../utils/translateInputs';
 
 export default function DeploymentIdInputField({
     name,
@@ -10,13 +10,13 @@ export default function DeploymentIdInputField({
     onChange,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = '/searches/deployments?_include=id,display_name';
+    const fetchUrl = '/deployments?_include=id,display_name';
 
     return (
         <DynamicDropdown
             name={name}
             textFormatter={item => StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name })}
-            placeholder={i18n.t('input.deployment_id.placeholder')}
+            placeholder={translateInputs('types.deployment_id.placeholder')}
             value={value}
             fetchUrl={fetchUrl}
             onChange={newValue => onChange?.(null, { name, value: newValue })}

@@ -115,32 +115,6 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         });
     });
 
-    it('enable to enter non-existing secret', () => {
-        const validVariableName = 'abc';
-        const notExistingSecret = `${blueprintNamePrefix}_terraform_secret`;
-
-        const setNotExistingSecret = () => {
-            getSegment('Variables').within(() => {
-                cy.get('td:eq(2) input').type(notExistingSecret);
-                cy.get('[role="combobox"] .item').contains(`[new] ${notExistingSecret}`).click();
-            });
-        };
-
-        openTerraformModal();
-
-        cy.get('.modal').within(() => {
-            addFirstSegmentRow('Variables');
-
-            getSegment('Variables').within(() => {
-                cy.get('input[name=variable]').type(validVariableName);
-                selectVariableSource('Secret');
-            });
-
-            setNotExistingSecret();
-            cy.contains(notExistingSecret);
-        });
-    });
-
     it('validate variables and outputs uniqueness', () => {
         openTerraformModal();
 
@@ -212,37 +186,32 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         );
     });
 
-    it('validate secret creation on form submission', () => {
+    it('allow to use new or existing secret as variable source', () => {
         openTerraformModal();
 
         const blueprintName = `${blueprintNamePrefix}_1212`;
-        const secrets = [
-            {
-                name: `${blueprintName}_secret1`,
-                value: 'value1'
-            },
-            {
-                name: `${blueprintName}_secret2`,
-                value: 'value2'
-            }
-        ];
+        const secret1Key = `${blueprintName}_secret1`;
+        const secret1Value = 'value1';
+        const secret2Key = `${blueprintName}_secret2`;
+        const secret2Value = 'value2';
 
         cy.deleteSecrets(blueprintName);
+        cy.createSecret(secret2Key, secret2Value);
 
         addFirstSegmentRow('Variables');
         getSegment('Variables').within(() => {
             cy.get('input[name=variable]').type('key1');
             selectVariableSource('Secret');
-            cy.get('td:eq(2) input').type(`${secrets[0].name}{enter}`);
-            cy.get('td:eq(3) input').type(`${secrets[0].value}`);
+            cy.get('td:eq(2) input').type(`${secret1Key}{enter}`);
+            cy.get('td:eq(3) input').type(`${secret1Value}`);
         });
 
         addFirstSegmentRow('Environment variables');
         getSegment('Environment variables').within(() => {
             cy.get('input[name=variable]').type('key2');
             selectVariableSource('Secret');
-            cy.get('td:eq(2) input').type(`${secrets[1].name}{enter}`);
-            cy.get('td:eq(3) input').type(`${secrets[1].value}`);
+            cy.get('td:eq(2) input').type(`${secret2Key}{enter}`);
+            cy.get('td:eq(3) input').should('be.disabled');
         });
 
         cy.typeToFieldInput('Blueprint name', blueprintName);
@@ -252,10 +221,8 @@ describe('Blueprints widget should open upload from Terraform module modal and',
         cy.contains('Uploading Terraform blueprint').should('be.visible');
         cy.waitUntilNotEmpty(`blueprints?state=uploaded`, { search: blueprintName });
 
-        secrets.forEach(secret => {
-            cy.getSecret(secret.name).then(response => {
-                expect(response.body.value).to.equal(secret.value);
-            });
+        cy.getSecret(secret1Key).then(response => {
+            expect(response.body.value).to.equal(secret1Value);
         });
 
         cy.contains('.modal', 'Deploy blueprint');

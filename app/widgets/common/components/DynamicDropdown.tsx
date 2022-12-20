@@ -10,7 +10,8 @@ import {
     isEmpty,
     isFunction,
     isUndefined,
-    reject
+    reject,
+    some
 } from 'lodash';
 import VisibilitySensor from 'react-visibility-sensor';
 import './DynamicDropdown.css';
@@ -84,7 +85,7 @@ export interface DynamicDropdownProps extends Omit<DropdownProps, 'onChange'> {
     fetchAll?: boolean;
     searchParams?: string[];
     value: DropdownValue;
-    onChange: (value: DropdownValue) => void;
+    onChange: (value: DropdownValue, added: boolean) => void;
     onSearchChange?: (event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownOnSearchChangeData) => void;
     toolbox: Stage.Types.WidgetlessToolbox;
     filter?: Record<string, string>;
@@ -131,6 +132,7 @@ export default function DynamicDropdown({
         return `dynamicDropdown${instanceCount}`;
     });
     const [options, setOptions] = useState<Option[]>([]);
+    const [addedItems, setAddedItems] = useState<string[]>([]);
     const [fetchState, dispatchFetchAction] = useReducer(fetchReducer, {
         ...defaultFetchState,
         shouldLoadMore: prefetch
@@ -298,10 +300,16 @@ export default function DynamicDropdown({
                 id={id}
                 name={name}
                 allowAdditions={allowAdditions}
-                onAddItem={(_event, data) =>
-                    setOptions(latestOptions => [{ [valueProp]: data.value as string }, ...latestOptions])
+                onAddItem={(_event, data) => {
+                    setOptions(latestOptions => [{ [valueProp]: data.value as string }, ...latestOptions]);
+                    setAddedItems([...addedItems, data.value as string]);
+                }}
+                onChange={(_event, data) =>
+                    onChange(
+                        !isEmpty(data.value) ? (data.value as string | string[]) : null,
+                        !some(options, { [valueProp]: data.value }) || addedItems.includes(data.value as string)
+                    )
                 }
-                onChange={(_event, data) => onChange(!isEmpty(data.value) ? (data.value as string | string[]) : null)}
                 onSearchChange={(event, data) => {
                     setSearchQuery(data.searchQuery);
                     if (isFunction(onSearchChange)) onSearchChange(event, data);
