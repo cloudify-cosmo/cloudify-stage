@@ -217,7 +217,7 @@ describe('Deployments widget', () => {
             .should('have.text', siteName);
     });
 
-    it.only('should allow to update deployment', () => {
+    it('should allow to update deployment', () => {
         const anotherBlueprintName = `${blueprintName}_another`;
         cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
 
