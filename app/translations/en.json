@@ -848,6 +848,9 @@
                     },
                     "node_id": {
                         "placeholder": "Select Node Id"
+                    },
+                    "valid_values": {
+                        "noValues": "No values"
                     }
                 }
             }
