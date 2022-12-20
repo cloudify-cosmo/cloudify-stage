@@ -2007,7 +2007,7 @@
                     "warning": "You won't be able to show or copy the token value after closing this modal"
                 },
                 "errors": {
-                    "createError": "Couldn't create a Token, please try to submit the Token data again.",
+                    "create": "Couldn't create a Token, please try to submit the Token data again.",
                     "expirationDateInvalidFormat": "Please provide a date in 'YYYY-MM-DD HH:mm' format",
                     "expirationDateInPast": "Please provide a date later than the current date"
                 }
