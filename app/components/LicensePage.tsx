@@ -1,6 +1,5 @@
 import type { ChangeEvent } from 'react';
-import React from 'react';
-import type { Component } from 'react';
+import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
 import styled from 'styled-components';
