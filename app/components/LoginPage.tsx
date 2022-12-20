@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import styled from 'styled-components';
-import type { ClientConfig } from '../../backend/routes/Config.types';
+import type { ClientConfig } from 'backend/routes/Config.types';
 
 import { login } from '../actions/manager/auth';
 import type { ReduxState } from '../reducers';

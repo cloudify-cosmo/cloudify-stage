@@ -1,4 +1,4 @@
-import type { LicenseResponse } from '../../../backend/handler/AuthHandler.types';
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 
 const licenses: Record<string, LicenseResponse> = {
     activePayingLicense: {

@@ -3,6 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
+import type { PostPageGroupsRequestBody, PutPageGroupsRequestBody } from 'backend/routes/Templates.types';
 import { Button, DataTable, Header, Icon, PopupConfirm, Segment } from '../../basic';
 import StageUtils from '../../../utils/stageUtils';
 import { useResettableState } from '../../../utils/hooks';
@@ -13,7 +14,6 @@ import PageGroupModal from './PageGroupModal';
 import { createPageGroup, deletePageGroup, updatePageGroup } from '../../../actions/templateManagement/pageGroups';
 import type { ReduxState } from '../../../reducers';
 import Internal from '../../../utils/Internal';
-import type { PostPageGroupsRequestBody, PutPageGroupsRequestBody } from '../../../../backend/routes/Templates.types';
 
 const tTemplates = StageUtils.getT('templates');
 const tPageGroupManagement = StageUtils.composeT(tTemplates, 'pageGroupManagement');

@@ -1,10 +1,10 @@
 import log from 'loglevel';
 
+import type { PostPluginsUploadQueryParams } from 'backend/routes/Plugins.types';
 import StageUtils from '../../../utils/stageUtils';
 import type Internal from '../../../utils/Internal';
 import type Manager from '../../../utils/Manager';
 import type { BlueprintInstallationTask, PluginInstallationTask, SecretInstallationTask } from './tasks';
-import type { PostPluginsUploadQueryParams } from '../../../../backend/routes/Plugins.types';
 
 export enum TaskType {
     Plugin = 'plugin',

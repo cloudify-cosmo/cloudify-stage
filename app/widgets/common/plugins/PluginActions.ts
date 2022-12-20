@@ -1,4 +1,4 @@
-import type { PostPluginsUploadQueryParams } from '../../../../backend/routes/Plugins.types';
+import type { PostPluginsUploadQueryParams } from 'backend/routes/Plugins.types';
 
 class PluginActions {
     constructor(private readonly toolbox: Stage.Types.Toolbox) {}
