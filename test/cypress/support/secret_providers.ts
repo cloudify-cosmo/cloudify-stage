@@ -18,7 +18,15 @@ const commands = {
 
     getSecretProvider: (key: string) => cy.cfyRequest(`/secrets-providers/${key}`, 'GET'),
 
-    deleteSecretProvider: (key: string) => cy.cfyRequest(`/secrets-providers/${key}`, 'DELETE')
+    deleteSecretProvider: (key: string) => cy.cfyRequest(`/secrets-providers/${key}`, 'DELETE'),
+
+    deleteSecretProviders: () =>
+        cy.cfyRequest('/secrets-providers', 'GET').then(response => {
+            const secretProviders = response.body.items;
+            secretProviders.forEach((secretProvider: SecretProvidersWidget.DataItem) => {
+                cy.deleteSecretProvider(secretProvider.id);
+            });
+        })
 };
 
 addCommands(commands);
