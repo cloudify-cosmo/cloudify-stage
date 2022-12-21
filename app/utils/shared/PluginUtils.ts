@@ -1,5 +1,5 @@
 import { find, last } from 'lodash';
-import type { PluginCatalogEntry } from '../../../backend/routes/Plugins.types';
+import type { PluginCatalogEntry } from 'backend/routes/Plugins.types';
 
 export function getYamlUrl(plugin: Pick<PluginCatalogEntry, 'yaml_urls'>) {
     const latestDslVersion = 'cloudify_dsl_1_4';

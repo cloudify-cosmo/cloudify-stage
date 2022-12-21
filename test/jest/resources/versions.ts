@@ -1,4 +1,4 @@
-import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
+import type { VersionResponse } from 'backend/handler/AuthHandler.types';
 
 const versions: Record<string, VersionResponse> = {
     premium: {
