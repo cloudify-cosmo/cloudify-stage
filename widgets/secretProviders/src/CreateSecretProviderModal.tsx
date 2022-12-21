@@ -1,6 +1,5 @@
-import type { EventBus, Manager } from 'cloudify-ui-components/toolbox';
+import type { Manager } from 'cloudify-ui-components/toolbox';
 import { isEmpty } from 'lodash';
-import { tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
 import type { SecretProvidersType } from './widget.types';
 
@@ -11,7 +10,6 @@ interface CreateSecretProviderModalProps {
     onClose: () => void;
     onSubmit: () => void;
     manager: Manager;
-    eventBus: EventBus;
     secretProviderType: SecretProvidersType;
 }
 
@@ -19,7 +17,6 @@ const CreateSecretProviderModal = ({
     onClose,
     onSubmit,
     manager,
-    eventBus,
     secretProviderType
 }: CreateSecretProviderModalProps) => {
     const { errors, setErrors, clearErrors } = useErrors();
@@ -71,7 +68,6 @@ const CreateSecretProviderModal = ({
             })
             .then(() => {
                 onSubmit();
-                eventBus.trigger(tableRefreshEvent);
                 onClose();
             })
             .catch(() => {

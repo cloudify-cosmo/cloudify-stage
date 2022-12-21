@@ -87,7 +87,6 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                 <CreateSecretProviderModal
                     onClose={hideCreateModal}
                     manager={toolbox.getManager()}
-                    eventBus={toolbox.getEventBus()}
                     secretProviderType={secretProviderType}
                     onSubmit={handleOnSubmit}
                 />
