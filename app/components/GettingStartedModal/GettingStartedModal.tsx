@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import log from 'loglevel';
 import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
+import { isEmpty } from 'lodash';
 
 import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
@@ -96,6 +97,12 @@ const GettingStartedModal = () => {
     useEffect(() => {
         setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
     }, [cloudSetupUrlParam]);
+
+    useEffect(() => {
+        if (!isEmpty(environmentsStepData)) {
+            handleNextClick();
+        }
+    }, [environmentsStepData]);
 
     if (!StageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
