@@ -86,5 +86,6 @@ export default {
         LICENSE: '/license'
     },
 
-    EMAIL_REGEX: /^\S+@\S+\.\S+$/
+    EMAIL_REGEX: /^\S+@\S+\.\S+$/,
+    ID_REGEX: /^[a-zA-Z0-9._-]*$/
 } as const;

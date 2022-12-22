@@ -4,6 +4,7 @@ import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react
 import { Ref } from 'semantic-ui-react';
 import { chain, entries, head, isEmpty, some } from 'lodash';
 import styled from 'styled-components';
+import type { Output, Variable } from 'backend/handler/TerraformHandler.types';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import AccordionSectionWithDivider from '../components/accordion/AccordionSectionWithDivider';
 import Consts from '../Consts';
@@ -14,7 +15,6 @@ import TerraformVariableNameInput from './TerraformVariableNameInput';
 import TerraformActions from './TerraformActions';
 import terraformVersions, { defaultVersion } from './terraformVersions';
 import type { CustomConfigurationComponentProps } from '../../../utils/StageAPI';
-import type { Output, Variable } from '../../../../backend/handler/TerraformHandler.types';
 import terraformLogo from '../../../images/terraform_logo.png';
 import SinglelineInput from '../secrets/SinglelineInput';
 import './TerraformModal.css';
@@ -33,6 +33,7 @@ import {
     Modal
 } from '../../../components/basic';
 import { useBoolean, useFormErrors, useInput, useResettableState } from '../../../utils/hooks';
+import ID_REGEX from '../../../utils/consts';
 
 const t = StageUtils.getT('widgets.blueprints.terraformModal');
 const tError = StageUtils.composeT(t, 'errors');
@@ -132,8 +133,6 @@ function getDynamicTableDropdown(options: DropdownProps['options']) {
 }
 
 const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
-
-const validationRegExp = /^[a-zA-Z0-9._-]*$/;
 
 const dynamicTableFieldStyle = { height: 38 };
 
@@ -389,7 +388,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         entities.forEach((variable, index) => {
             if (isEmpty(variable[IDkey])) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
-            } else if (!variable[IDkey].match(validationRegExp)) {
+            } else if (!variable[IDkey].match(ID_REGEX)) {
                 setFormError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
             } else if (
                 some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])

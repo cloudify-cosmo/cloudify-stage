@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import Const from '../consts';
 import { getUrlWithQueryString } from '../../../backend/sharedUtils';
+import Const from '../consts';
 
 export default class UrlUtils {
     static appendQueryParam(url: string, data?: Record<string, any>) {

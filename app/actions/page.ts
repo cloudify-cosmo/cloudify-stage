@@ -1,19 +1,19 @@
 import { compact, each, find, map } from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type {
+    LayoutSection as BackendLayoutSection,
     TabContent as BackendTabContent,
     TabsSection as BackendTabsSection,
-    WidgetsSection as BackendWidgetsSection,
-    LayoutSection as BackendLayoutSection
-} from '../../backend/handler/templates/types';
+    WidgetsSection as BackendWidgetsSection
+} from 'backend/handler/templates/types';
+import type { AppDataPage } from 'backend/db/models/UserAppsModel.types';
 import type { ReduxState } from '../reducers';
 import type { Widget, WidgetDefinition } from '../utils/StageAPI';
 import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
 
-import type { ReduxThunkAction, PayloadAction } from './types';
+import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { addWidget } from './widgets';
-import type { AppDataPage } from '../../backend/db/models/UserAppsModel.types';
 import type { EnhancedWidgetDefinition } from './widgetDefinitions';
 
 // TODO(RD-1645): rename type to Widget

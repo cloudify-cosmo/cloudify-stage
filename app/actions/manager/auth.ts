@@ -1,10 +1,11 @@
 import log from 'loglevel';
-import { push } from 'connected-react-router';
 import type { CallHistoryMethodAction } from 'connected-react-router';
+import { push } from 'connected-react-router';
 import type { Action } from 'redux';
+import type { GetAuthUserResponse } from 'backend/routes/Auth.types';
+import type { ConfigResponse } from 'backend/handler/AuthHandler.types';
 import type { PayloadAction, ReduxThunkAction } from '../types';
 import { ActionType } from '../types';
-import type { GetAuthUserResponse } from '../../../backend/routes/Auth.types';
 import Auth from '../../utils/auth';
 import Consts from '../../utils/consts';
 import Manager from '../../utils/Manager';
@@ -14,7 +15,6 @@ import type { SetLicenseAction, SetLicenseRequiredAction } from './license';
 import { setLicense, setLicenseRequired } from './license';
 import type { SetVersionAction } from './version';
 import { setVersion } from './version';
-import type { ConfigResponse } from '../../../backend/handler/AuthHandler.types';
 
 export type LoginRequestAction = Action<ActionType.LOGIN_REQUEST>;
 export type LoginSuccessAction = PayloadAction<

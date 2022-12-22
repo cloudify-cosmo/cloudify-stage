@@ -57,7 +57,7 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
     const ErrorMsg = <ErrorMessage error={error} onDismiss={clearError} />;
 
     const DeleteSecretProviderModal = (
-        <Modal open={isDeleteModalOpen} onConfirm={deleteSecretProvider} onCancel={closeDeleteModal}>
+        <Modal open onConfirm={deleteSecretProvider} onCancel={closeDeleteModal}>
             <Modal.Header style={{ border: 'none' }}>{deleteModalContent}</Modal.Header>
             {error && <Modal.Content>{ErrorMsg}</Modal.Content>}
             <Modal.Actions>
@@ -72,7 +72,7 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
     );
 
     const WarningSecretProviderModal = (
-        <Modal open={isWarningModalOpen} onClose={closeWarningModal}>
+        <Modal open onClose={closeWarningModal}>
             <Modal.Header style={{ border: 'none' }}> {warningModalContent}</Modal.Header>
             {error && <Modal.Content>{ErrorMsg}</Modal.Content>}
             <Modal.Actions>
@@ -89,8 +89,8 @@ const RemoveSecretProviderButton = ({ secretProvider, toolbox }: RemoveSecretPro
                 title={translateSecretProviders('table.buttons.removeSecretProvider')}
                 onClick={checkSecretProvider}
             />
-            {DeleteSecretProviderModal}
-            {WarningSecretProviderModal}
+            {isDeleteModalOpen && DeleteSecretProviderModal}
+            {isWarningModalOpen && WarningSecretProviderModal}
         </>
     );
 };

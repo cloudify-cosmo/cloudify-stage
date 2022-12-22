@@ -8,7 +8,7 @@ describe('User flow', () => {
     });
 
     function createSecret(secretName: string) {
-        cy.contains('Create').click();
+        cy.getWidget('secrets').contains('Create').click();
         cy.get('.modal').within(() => {
             cy.get('input[name=secretKey]').type(secretName);
             cy.get('textarea').type(secretName);

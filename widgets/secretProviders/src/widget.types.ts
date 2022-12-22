@@ -23,3 +23,7 @@ export declare namespace SecretProvidersWidget {
 
     export type DataSortingKeys = Pick<DataItem, 'name' | 'type' | 'created_at' | 'updated_at'>;
 }
+
+export enum SecretProvidersType {
+    Vault = 'vault'
+}

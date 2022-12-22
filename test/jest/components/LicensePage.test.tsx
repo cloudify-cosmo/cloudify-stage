@@ -13,13 +13,13 @@ import type { LicensePageProps } from 'components/LicensePage';
 import ConnectedLicensePage, { LicensePage } from 'components/LicensePage';
 
 import { createToolbox } from 'utils/Toolbox';
-import type { LicenseStatus, LicenseData } from 'reducers/managerReducer';
+import type { LicenseData, LicenseStatus } from 'reducers/managerReducer';
 import React from 'react';
 import type { ReduxState } from 'reducers';
 import type { ReduxStore } from 'configureStore';
+import type { LicenseResponse, VersionResponse } from 'backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
-import type { LicenseResponse, VersionResponse } from '../../../backend/handler/AuthHandler.types';
 
 describe('(Component) LicensePage', () => {
     let licensePageComponent: ReactWrapper<LicensePageProps>;

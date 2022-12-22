@@ -4,6 +4,14 @@ import _ from 'lodash';
 import log from 'loglevel';
 import { renderToString } from 'react-dom/server';
 import styled from 'styled-components';
+import type {
+    GetWidgetsResponse,
+    PostWidgetsQueryParams,
+    PostWidgetsResponse,
+    PutWidgetsQueryParams,
+    PutWidgetsResponse
+} from 'backend/routes/Widgets.types';
+import type { WidgetData } from 'backend/handler/WidgetsHandler.types';
 import * as Basic from '../components/basic';
 import * as Shared from '../components/shared';
 import GenericConfig from './GenericConfig';
@@ -18,14 +26,6 @@ import ScriptLoader from './scriptLoader';
 import type { WidgetDefinition } from './StageAPI';
 import StageUtils from './stageUtils';
 import StyleLoader from './StyleLoader';
-import type {
-    GetWidgetsResponse,
-    PostWidgetsQueryParams,
-    PostWidgetsResponse,
-    PutWidgetsQueryParams,
-    PutWidgetsResponse
-} from '../../backend/routes/Widgets.types';
-import type { WidgetData } from '../../backend/handler/WidgetsHandler.types';
 import type { ManagerData } from '../reducers/managerReducer';
 
 let bundleLoadedWidgets: WidgetDefinition<any, any, any>[] = [];
