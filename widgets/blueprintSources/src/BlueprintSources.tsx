@@ -32,9 +32,14 @@ const StyledHighlightText = styled(HighlightText)`
 
 const Center = styled.div`
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100%;
+`;
+
+const Bold = styled.span`
+    font-weight: bold;
 `;
 
 interface RightPaneProps {
@@ -95,7 +100,8 @@ const RightPane = ({
 
     return (
         <Center>
-            <Icon name="file outline" size="big" color="grey" />
+            <Bold>{t('thisIsAFolder')}</Bold>
+            {t('nothingToShow')}
         </Center>
     );
 };

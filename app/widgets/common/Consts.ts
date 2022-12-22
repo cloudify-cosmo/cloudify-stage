@@ -31,7 +31,8 @@ const consts = {
     drilldownPage: {
         blueprintMarketplace: 'blueprintMarketplace'
     },
-    emailRegex: appConsts.EMAIL_REGEX
+    emailRegex: appConsts.EMAIL_REGEX,
+    idRegex: appConsts.ID_REGEX
 } as const;
 
 export default consts;

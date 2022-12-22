@@ -988,7 +988,9 @@
             }
         },
         "blueprintSources": {
-            "binaryFile": "File cannot be displayed."
+            "binaryFile": "File cannot be displayed.",
+            "thisIsAFolder": "This is a folder",
+            "nothingToShow": "Nothing to show."
         },
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
@@ -1511,6 +1513,47 @@
                 "content": "Unable to delete the Secret provider '{{secretProviderId}}' because it has secrets assigned.",
                 "buttons": {
                     "cancel": "Cancel"
+                }
+            },
+            "createButton": {
+                "name": "Create",
+                "description": "Create new Secret Provider",
+                "options": {
+                    "vault": "Vault"
+                }
+            },
+            "createModal": {
+                "header": "Create a Vault Secret Provider",
+                "buttons": {
+                    "create": "Create",
+                    "cancel": "Cancel"
+                },
+                "inputs": {
+                    "providerName": {
+                        "label": "Provider Name",
+                        "placeholder": "Provider Name"
+                    },
+                    "hostname": {
+                        "label": "Vault Hostname",
+                        "placeholder": "Vault Hostname"
+                    },
+                    "authorizationToken": {
+                        "label": "Authorization Token",
+                        "placeholder": "Authorization Token"
+                    },
+                    "defaultPath": {
+                        "label": "Vault Default Path",
+                        "placeholder": "Path"
+                    }
+                },
+                "errors": {
+                    "providerName": {
+                        "required": "Please provide the Provider Name.",
+                        "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
+                    },
+                    "hostname": "Please provide vault hostname.",
+                    "authorizationToken": "Please provide an authorization token.",
+                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again."
                 }
             }
         },
