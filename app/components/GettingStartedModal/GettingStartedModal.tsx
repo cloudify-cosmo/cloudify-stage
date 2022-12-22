@@ -131,7 +131,6 @@ const GettingStartedModal = () => {
 
     const handleEnvironmentClick = (selectedEnvironments: GettingStartedEnvironmentsData) => {
         setEnvironmentsStepData(selectedEnvironments);
-        handleNextClick();
     };
     const handleSecretsStepChange = (typedSecrets: GettingStartedSecretsData) => {
         if (secretsStepSchema) {
