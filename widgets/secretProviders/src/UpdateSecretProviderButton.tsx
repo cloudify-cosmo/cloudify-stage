@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import type { Manager } from 'cloudify-ui-components/toolbox';
-import { translateSecretProviders, validateModalForm } from './widget.utils';
+import { translateSecretProviders, translateForm, validateModalForm } from './widget.utils';
 import type { SecretProvidersWidget } from './widget.types';
 
 const { Icon, Modal, Button, Form } = Stage.Basic;
@@ -14,7 +14,6 @@ interface UpdateSecretProviderButtonProps {
 }
 
 const translateUpdateModal = Stage.Utils.composeT(translateSecretProviders, 'updateModal');
-const translateForm = Stage.Utils.composeT(translateSecretProviders, 'form');
 
 const UpdateSecretProviderButton = ({ secretProvider, manager, onSubmit }: UpdateSecretProviderButtonProps) => {
     const { errors, setErrors, clearErrors } = useErrors();

@@ -1,6 +1,6 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import { isEmpty } from 'lodash';
-import { translateSecretProviders, validateModalForm } from './widget.utils';
+import { translateSecretProviders, translateForm, validateModalForm } from './widget.utils';
 import type { SecretProvidersType } from './widget.types';
 
 const { useInput, useErrors } = Stage.Hooks;
@@ -26,7 +26,6 @@ const CreateSecretProviderModal = ({
     const [defaultPath, setDefaultPath] = useInput('');
 
     const translateCreateModal = Stage.Utils.composeT(translateSecretProviders, 'createModal');
-    const translateForm = Stage.Utils.composeT(translateSecretProviders, 'form');
 
     const formValues = { providerName, hostname, authorizationToken, defaultPath };
 

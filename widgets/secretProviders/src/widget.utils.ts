@@ -1,7 +1,7 @@
 import Consts from '../../../app/utils/consts';
 
 export const translateSecretProviders = Stage.Utils.getT('widgets.secretProviders');
-
+export const translateForm = Stage.Utils.composeT(translateSecretProviders, 'form');
 interface Form {
     providerName?: string;
     hostname: string;
