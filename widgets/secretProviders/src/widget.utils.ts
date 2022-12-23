@@ -11,9 +11,10 @@ interface Form {
 export const validateModalForm = (form: Form, isCreateModal: boolean) => {
     const errors: Record<string, string> = {};
     if (isCreateModal) {
+        const validProviderName = Consts.ID_REGEX.test(form.providerName || '');
         if (!form.providerName) {
             errors.providerName = translateSecretProviders('form.errors.providerName.required');
-        } else if (!Consts.ID_REGEX.test(form.providerName)) {
+        } else if (!validProviderName) {
             errors.providerName = translateSecretProviders('form.errors.providerName.invalid');
         }
     }
