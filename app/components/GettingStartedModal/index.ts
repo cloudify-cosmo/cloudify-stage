@@ -1,3 +1,3 @@
-import GettingStartedModal from './GettingStartedModal';
+import GettingStartedModal from './GettingStartedModalContainer';
 
 export default GettingStartedModal;
