@@ -53,4 +53,19 @@ describe('/snapshots/ua endpoint', () => {
                 expect(create).toHaveBeenCalledWith({ ...userAppRow, tenant }, { transaction });
             });
     });
+
+    it('responds with 400 on data conflict', () => {
+        mockDb({
+            sequelize: {
+                transaction: () => Promise.reject({ name: 'SequelizeUniqueConstraintError' })
+            }
+        });
+
+        return request(app)
+            .post('/console/snapshots/ua')
+            .send([])
+            .then(response => {
+                expect(response.statusCode).toBe(400);
+            });
+    });
 });
