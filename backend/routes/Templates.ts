@@ -89,7 +89,7 @@ router.get('/pages', (_req, res: Response<GetPagesResponse>, next) => {
 });
 
 router.post<never, never, PostPagesRequestBody>('/pages', (req, res, next) => {
-    PagesHandler.validateAndCreatePage(req.user!.username, req.body)
+    PagesHandler.validateAndCreatePage(req.user!.username, { ...req.body, layout: [] })
         .then(() => res.status(200).end())
         .catch(next);
 });
