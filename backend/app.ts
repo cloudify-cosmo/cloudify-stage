@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import expressStaticGzip from 'express-static-gzip';
+import type { ErrorRequestHandler, Router } from 'express';
 import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import type { ErrorRequestHandler, Router } from 'express';
 
 import { getConfig } from './config';
 import { CONTEXT_PATH } from './consts';
@@ -36,6 +36,7 @@ import UserApp from './routes/UserApp';
 import WidgetBackend from './routes/WidgetBackend';
 import Widgets from './routes/Widgets';
 import Filters from './routes/Filters';
+import Snapshots from './routes/Snapshots';
 
 const logger = LoggerHandler.getLogger('App');
 const contextPath = CONTEXT_PATH;
@@ -114,7 +115,8 @@ const authenticatedApiRoutes: Record<string, Router> = {
     terraform: Terraform,
     ua: UserApp,
     wb: WidgetBackend,
-    widgets: Widgets
+    widgets: Widgets,
+    snapshots: Snapshots
 };
 Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithCookie, router)
