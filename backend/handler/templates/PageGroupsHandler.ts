@@ -5,7 +5,7 @@ import fs, { readdirSync, readJsonSync } from 'fs-extra';
 import moment from 'moment';
 import { builtInTemplatesFolder, userTemplatesFolder } from './TemplatesHandler';
 import { getLogger } from '../LoggerHandler';
-import type { PageGroup, PageGroupFileContent, CreatePageGroupData } from './types';
+import type { CreatePageGroupData, PageGroup, PageGroupFileContent } from './types';
 
 const logger = getLogger('PageGroupsHandler');
 
@@ -36,34 +36,50 @@ function getPageGroups(path: string, custom: boolean) {
         .value();
 }
 
-export function listPageGroups() {
-    return [...getPageGroups(builtInPageGroupsDir, false), ...getPageGroups(userPageGroupsFolder, true)];
+export function getUserPageGroups() {
+    return getPageGroups(userPageGroupsFolder, true);
 }
 
-export function createPageGroup(username: string, pageGroup: CreatePageGroupData) {
-    const path = pathlib.resolve(userPageGroupsFolder, `${pageGroup.id}.json`);
+export function listPageGroups() {
+    return [...getPageGroups(builtInPageGroupsDir, false), ...getUserPageGroups()];
+}
+
+function getUserPageGroupPath(id: string) {
+    return pathlib.resolve(userPageGroupsFolder, `${id}.json`);
+}
+
+export function checkPageGroupExists(pageGroup: CreatePageGroupData) {
+    const path = getUserPageGroupPath(pageGroup.id);
     if (fs.existsSync(path)) {
         return Promise.reject(`Page group id "${pageGroup.id}" already exists`);
     }
+    return Promise.resolve();
+}
 
+export function createPageGroup(pageGroup: CreatePageGroupData, updatedBy: string, updatedAt = moment().format()) {
+    const path = getUserPageGroupPath(pageGroup.id);
     const content: PageGroupFileContent = {
         ..._.omit(pageGroup, 'id'),
-        updatedBy: username,
-        updatedAt: moment().format()
+        updatedBy,
+        updatedAt
     };
 
     return fs.writeJson(path, content, { spaces: '  ' });
 }
 
+export function validateAndCreatePageGroup(username: string, pageGroup: CreatePageGroupData) {
+    return checkPageGroupExists(pageGroup).then(() => createPageGroup(pageGroup, username));
+}
+
 export function deletePageGroup(pageGroupId: string) {
-    const path = pathlib.resolve(userPageGroupsFolder, `${pageGroupId}.json`);
+    const path = getUserPageGroupPath(pageGroupId);
 
     return fs.remove(path);
 }
 
 export function updatePageGroup(username: string, id: string, pageGroup: CreatePageGroupData) {
-    const existingFilePath = pathlib.resolve(userPageGroupsFolder, `${id}.json`);
-    const newFilePath = pathlib.resolve(userPageGroupsFolder, `${pageGroup.id}.json`);
+    const existingFilePath = getUserPageGroupPath(id);
+    const newFilePath = getUserPageGroupPath(pageGroup.id);
 
     const content: PageGroupFileContent = {
         ..._.omit(pageGroup, 'id'),

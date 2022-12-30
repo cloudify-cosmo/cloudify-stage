@@ -3,12 +3,21 @@ import app from 'app';
 import { createTemplate, getUserTemplates } from 'handler/templates/TemplatesHandler';
 import { omit, pick } from 'lodash';
 import { createPage, getUserPages } from 'handler/templates/PagesHandler';
-import type { Page, Template } from 'handler/templates/types';
+import type { Page, PageGroup, Template } from 'handler/templates/types';
+import { createPageGroup, getUserPageGroups } from 'handler/templates/PageGroupsHandler';
+import validateUniqueness from 'handler/widgets/validateUniqueness';
+import decompress from 'decompress';
+import path from 'path';
+import { importWidgetBackend } from 'handler/BackendHandler';
 import mockDb from '../mockDb';
+import type { PageGroupsSnapshot, PagesSnapshot, TemplatesSnapshot } from '../../routes/Snapshots';
 
 jest.mock('db/Connection');
 jest.mock('handler/templates/TemplatesHandler');
 jest.mock('handler/templates/PagesHandler');
+jest.mock('handler/templates/PageGroupsHandler');
+jest.mock('handler/widgets/validateUniqueness');
+jest.mock('handler/BackendHandler');
 
 describe('/snapshots/ua endpoint', () => {
     const userAppRow = {
@@ -90,6 +99,8 @@ describe('/snapshots/templates endpoint', () => {
         updatedAt: '2022-06-01T18:30:57.450Z'
     };
 
+    const templatesSnapshot: TemplatesSnapshot = [omit(template, 'name', 'custom')];
+
     it('allows to get snapshot data', () => {
         (<jest.Mock>getUserTemplates).mockReturnValue([template]);
 
@@ -97,14 +108,14 @@ describe('/snapshots/templates endpoint', () => {
             .get('/console/snapshots/templates')
             .then(response => {
                 expect(response.statusCode).toBe(200);
-                expect(response.body).toStrictEqual([omit(template, 'name', 'custom')]);
+                expect(response.body).toStrictEqual(templatesSnapshot);
             });
     });
 
     it('allows to restore snapshot data', () => {
         return request(app)
             .post('/console/snapshots/templates')
-            .send([omit(template, 'name', 'custom')])
+            .send(templatesSnapshot)
             .then(response => {
                 expect(response.statusCode).toBe(201);
                 expect(createTemplate).toHaveBeenCalledWith(
@@ -132,6 +143,8 @@ describe('/snapshots/pages endpoint', () => {
         updatedAt: '2022-06-01T18:30:57.450Z'
     };
 
+    const pagesSnapshot: PagesSnapshot = [omit(page, 'custom')];
+
     it('allows to get snapshot data', () => {
         (<jest.Mock>getUserPages).mockReturnValue([page]);
 
@@ -139,14 +152,14 @@ describe('/snapshots/pages endpoint', () => {
             .get('/console/snapshots/pages')
             .then(response => {
                 expect(response.statusCode).toBe(200);
-                expect(response.body).toStrictEqual([omit(page, 'custom')]);
+                expect(response.body).toStrictEqual(pagesSnapshot);
             });
     });
 
     it('allows to restore snapshot data', () => {
         return request(app)
             .post('/console/snapshots/pages')
-            .send([omit(page, 'custom')])
+            .send(pagesSnapshot)
             .then(response => {
                 expect(response.statusCode).toBe(201);
                 expect(createPage).toHaveBeenCalledWith(
@@ -157,6 +170,74 @@ describe('/snapshots/pages endpoint', () => {
                     page.updatedBy,
                     page.updatedAt
                 );
+            });
+    });
+});
+
+describe('/snapshots/page-groups endpoint', () => {
+    const pageGroup: PageGroup = {
+        id: 'test',
+        name: 'test',
+        custom: true,
+        pages: ['adminDash'],
+        icon: 'rocket',
+        updatedBy: 'user',
+        updatedAt: '2022-06-01T18:30:57.450Z'
+    };
+
+    const pageGroupsSnapshot: PageGroupsSnapshot = [omit(pageGroup, 'custom')];
+
+    it('allows to get snapshot data', () => {
+        (<jest.Mock>getUserPageGroups).mockReturnValue([pageGroup]);
+
+        return request(app)
+            .get('/console/snapshots/page-groups')
+            .then(response => {
+                expect(response.statusCode).toBe(200);
+                expect(response.body).toStrictEqual(pageGroupsSnapshot);
+            });
+    });
+
+    it('allows to restore snapshot data', () => {
+        return request(app)
+            .post('/console/snapshots/page-groups')
+            .send(pageGroupsSnapshot)
+            .then(response => {
+                expect(response.statusCode).toBe(201);
+                expect(createPageGroup).toHaveBeenCalledWith(
+                    expect.objectContaining(pick(pageGroup, 'name', 'pages', 'icon')),
+                    pageGroup.updatedBy,
+                    pageGroup.updatedAt
+                );
+            });
+    });
+});
+
+describe('/snapshots/widgets endpoint', () => {
+    it('allows to get snapshot data', () => {
+        return request(app)
+            .get('/console/snapshots/widgets')
+            .responseType('blob')
+            .then(response => {
+                expect(response.statusCode).toBe(200);
+                return decompress(response.body);
+            });
+    });
+
+    it('allows to restore snapshot data', () => {
+        (<jest.Mock>validateUniqueness).mockResolvedValue(null);
+        (<jest.Mock>importWidgetBackend).mockResolvedValue(null);
+        return request(app)
+            .post('/console/snapshots/widgets')
+            .attach('snapshot', path.join(__dirname, 'fixtures/snapshots/widgets.zip'))
+            .then(response => {
+                expect(response.statusCode).toBe(201);
+                expect(validateUniqueness).toHaveBeenCalledTimes(2);
+                expect(validateUniqueness).toHaveBeenCalledWith('testWidget');
+                expect(validateUniqueness).toHaveBeenCalledWith('testWidgetBackend');
+                expect(importWidgetBackend).toHaveBeenCalledTimes(2);
+                expect(importWidgetBackend).toHaveBeenCalledWith('testWidget');
+                expect(importWidgetBackend).toHaveBeenCalledWith('testWidgetBackend');
             });
     });
 });
