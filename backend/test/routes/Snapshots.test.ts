@@ -6,6 +6,7 @@ import { createPage, getUserPages } from 'handler/templates/PagesHandler';
 import type { Page, PageGroup, Template } from 'handler/templates/types';
 import { createPageGroup, getUserPageGroups } from 'handler/templates/PageGroupsHandler';
 import validateUniqueness from 'handler/widgets/validateUniqueness';
+import installFiles from 'handler/widgets/installFiles';
 import decompress from 'decompress';
 import path from 'path';
 import { importWidgetBackend } from 'handler/BackendHandler';
@@ -17,6 +18,7 @@ jest.mock('handler/templates/TemplatesHandler');
 jest.mock('handler/templates/PagesHandler');
 jest.mock('handler/templates/PageGroupsHandler');
 jest.mock('handler/widgets/validateUniqueness');
+jest.mock('handler/widgets/installFiles');
 jest.mock('handler/BackendHandler');
 
 describe('/snapshots/ua endpoint', () => {
@@ -227,6 +229,7 @@ describe('/snapshots/widgets endpoint', () => {
     it('allows to restore snapshot data', () => {
         (<jest.Mock>validateUniqueness).mockResolvedValue(null);
         (<jest.Mock>importWidgetBackend).mockResolvedValue(null);
+        (<jest.Mock>installFiles).mockResolvedValue(null);
         return request(app)
             .post('/console/snapshots/widgets')
             .attach('snapshot', path.join(__dirname, 'fixtures/snapshots/widgets.zip'))
@@ -235,6 +238,12 @@ describe('/snapshots/widgets endpoint', () => {
                 expect(validateUniqueness).toHaveBeenCalledTimes(2);
                 expect(validateUniqueness).toHaveBeenCalledWith('testWidget');
                 expect(validateUniqueness).toHaveBeenCalledWith('testWidgetBackend');
+                expect(installFiles).toHaveBeenCalledTimes(2);
+                expect(installFiles).toHaveBeenCalledWith('testWidget', expect.stringMatching('/testWidget$'));
+                expect(installFiles).toHaveBeenCalledWith(
+                    'testWidgetBackend',
+                    expect.stringMatching('/testWidgetBackend')
+                );
                 expect(importWidgetBackend).toHaveBeenCalledTimes(2);
                 expect(importWidgetBackend).toHaveBeenCalledWith('testWidget');
                 expect(importWidgetBackend).toHaveBeenCalledWith('testWidgetBackend');

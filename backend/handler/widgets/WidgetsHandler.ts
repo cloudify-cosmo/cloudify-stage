@@ -16,11 +16,12 @@ import * as BackendHandler from '../BackendHandler';
 import { getLogger } from '../LoggerHandler';
 import type { WidgetData, WidgetUsage } from '../WidgetsHandler.types';
 import validateUniqueness from './validateUniqueness';
+import installFiles from './installFiles';
 
 const logger = getLogger('WidgetHandler');
 
 const builtInWidgetsFolder = getResourcePath('widgets', false);
-const userWidgetsFolder = getResourcePath('widgets', true);
+export const userWidgetsFolder = getResourcePath('widgets', true);
 const widgetTempDir = pathlib.join(os.tmpdir(), getConfig().app.widgets.tempDir);
 
 function saveMultipartData(req: Request, multipartId = 'widget') {
@@ -31,24 +32,6 @@ function saveMultipartData(req: Request, multipartId = 'widget') {
 function saveDataFromUrl(archiveUrl: string) {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
-}
-
-// Credits to: https://geedew.com/remove-a-directory-that-is-not-empty-in-nodejs/
-
-function rmdirSync(path: string) {
-    if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(file => {
-            const curPath = `${path}/${file}`;
-            if (fs.lstatSync(curPath).isDirectory()) {
-                // recurse
-                rmdirSync(curPath);
-            } else {
-                // delete file
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
 }
 
 export function getUserWidgets() {
@@ -114,24 +97,6 @@ function validateWidget(widgetId: string, extractedDir: string) {
         });
     }
     return Promise.resolve(tempPath);
-}
-
-function installFiles(widgetId: string, tempPath: string) {
-    logger.debug('Installing widget files to the target path:', pathlib.resolve(userWidgetsFolder));
-    logger.debug('Widget temp path:', tempPath);
-
-    const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-
-    return new Promise<void>((resolve, reject) => {
-        rmdirSync(installPath);
-        fs.move(tempPath, installPath, err => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
 }
 
 function backupWidget(widgetId: string, tempPath: string) {
