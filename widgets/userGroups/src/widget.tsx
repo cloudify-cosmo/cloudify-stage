@@ -1,14 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { isEmpty, map, size, has } from 'lodash';
+import type { UserGroup, UserGroupManagmentWidget } from './widget.types';
 import UserGroupsTable from './UserGroupsTable';
 
-Stage.defineWidget({
+const t = Stage.Utils.getT('widgets.userGroups');
+export interface UserGroupViewItem extends UserGroup {
+    tenantCount: number;
+    userCount: number;
+    isSelected: boolean;
+    isAdmin: boolean;
+}
+
+export interface UserGroupData {
+    items: UserGroupViewItem[];
+    total: number;
+}
+
+Stage.defineWidget<
+    UserGroupManagmentWidget.Params,
+    UserGroupManagmentWidget.Data,
+    UserGroupManagmentWidget.Configuration
+>({
     id: 'userGroups',
-    name: 'User group management',
-    description: 'This widget shows a list of available user groups and allow managing them',
+    name: t('name'),
+    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
-    color: 'violet',
     fetchUrl: '[manager]/user-groups?_get_data=true[params]',
     isReact: true,
     hasReadme: true,
@@ -22,30 +38,28 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (!data || isEmpty(data)) {
             return <Loading />;
         }
 
         const selectedUserGroup = toolbox.getContext().getValue('userGroup');
 
-        let formattedData = data;
-        formattedData = {
-            ...data,
-            items: _.map(formattedData.items, item => {
+        const formattedData: UserGroupData = {
+            items: map(data.items, item => {
                 return {
                     ...item,
                     userCount: item.users.length,
-                    tenantCount: _.size(item.tenants),
+                    tenantCount: size(item.tenants),
                     isSelected: item.name === selectedUserGroup,
                     isAdmin:
                         item.role === Stage.Common.Consts.sysAdminRole ||
-                        _.has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
+                        has(item.group_system_roles, Stage.Common.Consts.sysAdminRole)
                 };
             }),
-            total: _.get(data, 'metadata.pagination.total', 0)
+            total: data.metadata.pagination.total
         };
 
         return <UserGroupsTable widget={widget} data={formattedData} toolbox={toolbox} />;

@@ -42,7 +42,6 @@ import {
     VisibilityField,
     VisibilityIcon
 } from 'cloudify-ui-components';
-import type { ComponentType } from 'react';
 
 import { CircleMarker, FeatureGroup, Map, Marker, Popup as LeafletPopup, TileLayer, Tooltip } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -92,14 +91,6 @@ const Leaflet = {
     MarkerClusterGroup
 };
 
-type AnyProps = Record<string, any>;
-
-// TODO(RD-5718) Remove once DataSegment component is fully migrated to TypeScript
-const DataSegmentWithTemporaryProps = DataSegment as unknown as ComponentType<AnyProps> & {
-    Item: React.FC<AnyProps>;
-    Action: React.FC<AnyProps>;
-};
-
 export {
     Accordion,
     Alert,
@@ -115,7 +106,7 @@ export {
     CopyToClipboardButton,
     DateInput,
     DateRangeInput,
-    DataSegmentWithTemporaryProps as DataSegment,
+    DataSegment,
     DataTable,
     Dimmer,
     Divider,

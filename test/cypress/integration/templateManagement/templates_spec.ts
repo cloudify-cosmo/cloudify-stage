@@ -149,6 +149,7 @@ describe('Templates segment', () => {
         });
 
         cy.get('.modal').should('not.exist');
+        cy.get('.loading').should('not.exist');
 
         cy.log('Verify template changes');
         verifyTemplateRow(

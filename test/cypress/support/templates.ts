@@ -63,6 +63,7 @@ const commands = {
         cy
             .usePageMock([], {}, { stubTemplatesResponse: false })
             .mockLoginWithoutWaiting({ visitPage: '/console/template_management' })
+            .waitUntilAppLoaded()
 };
 
 addCommands(commands);

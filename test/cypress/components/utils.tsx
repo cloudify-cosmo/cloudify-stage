@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { applyMiddleware, createStore } from 'redux';

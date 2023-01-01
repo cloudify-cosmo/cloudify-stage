@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
-import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
+import type { SharedDeploymentsViewWidgetConfiguration } from '../../../app/widgets/common/deploymentsView/configuration';
 
 export interface DeploymentsViewWidgetConfiguration extends SharedDeploymentsViewWidgetConfiguration {
     filterId?: string | null;
@@ -10,7 +10,7 @@ export interface DeploymentsViewWidgetConfiguration extends SharedDeploymentsVie
 
 const {
     Common: { i18nPrefix },
-    Configuration: { sharedConfiguration },
+    Configuration: { getSharedConfiguration },
     sharedDefinition
 } = Stage.Common.DeploymentsView;
 
@@ -22,7 +22,7 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
     description: Stage.i18n.t(`${i18nPrefix}.description`),
 
     initialConfiguration: [
-        ...sharedConfiguration,
+        ...getSharedConfiguration(),
         {
             id: 'mapOpenByDefault',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,

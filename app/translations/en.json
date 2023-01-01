@@ -612,6 +612,10 @@
                             "label": "Blueprint",
                             "help": "Select the blueprint based on which this deployment will be created."
                         },
+                        "deploymentIdToDeployOn": {
+                            "label": "Deploy On",
+                            "placeholder": "Select a parent"
+                        },
                         "siteName": {
                             "label": "Site name",
                             "help": "Specify a site to which this deployment will be assigned."
@@ -640,7 +644,6 @@
                         "install": "Install"
                     },
                     "buttons": {
-                        "showDataTypes": "Show Data Types",
                         "addMissingSecrets": "Add Missing Secrets",
                         "deploy": "Deploy",
                         "install": "Install",
@@ -663,6 +666,7 @@
                         "noBlueprintName": "Please select blueprint from the list",
                         "noDeploymentName": "Please provide deployment name",
                         "noDeploymentId": "Please provide deployment ID",
+                        "noDeploymentIdToDeployOn": "Please select a deployment on which the blueprint should be deployed on",
                         "missingSecretsHeading": "Missing Secrets Error",
                         "missingSecrets": "The following required secrets are missing in this tenant:",
                         "deploymentCreationFailed": "Deployment {{ deploymentName }} environment creation failed. {{ error }}",
@@ -805,6 +809,50 @@
             "rolesPicker": {
                 "label": "Choose a role for {{resourceName}} {{resource}}:",
                 "placeholder": "Choose a role"
+            },
+            "inputs": {
+                "buttons": {
+                    "dataTypes": {
+                        "title": "Show Data Types"
+                    },
+                    "sortOrder": {
+                        "original": "Original order",
+                        "ascending": "Ascending alphabetical order",
+                        "descending": "Descending alphabetical order"
+                    }
+                },
+                "types": {
+                    "operation": {
+                        "placeholder": "Select Operation"
+                    },
+                    "node_type": {
+                        "placeholder": "Select Node Type"
+                    },
+                    "node_instance": {
+                        "placeholder": "Select Node Instance"
+                    },
+                    "scaling_group": {
+                        "placeholder": "Select Node Scaling Group"
+                    },
+                    "deployment_id": {
+                        "placeholder": "Select Deployment"
+                    },
+                    "blueprint_id": {
+                        "placeholder": "Select Blueprint"
+                    },
+                    "capability_value": {
+                        "placeholder": "Select Capability"
+                    },
+                    "secret_key": {
+                        "placeholder": "Select Secret Key"
+                    },
+                    "node_id": {
+                        "placeholder": "Select Node Id"
+                    },
+                    "valid_values": {
+                        "noValues": "No values"
+                    }
+                }
             }
         },
         "agents": {
@@ -940,7 +988,9 @@
             }
         },
         "blueprintSources": {
-            "binaryFile": "File cannot be displayed."
+            "binaryFile": "File cannot be displayed.",
+            "thisIsAFolder": "This is a folder",
+            "nothingToShow": "Nothing to show."
         },
         "blueprintCatalog": {
             "name": "Blueprints Catalog",
@@ -1095,9 +1145,9 @@
                     "name": "List of fields to show in the table",
                     "placeholder": "Select fields from the list"
                 },
-                "labelsToShow": {
-                  "name": "List of labels' keys to show in the table as columns",
-                  "placeholder": "Select keys from the list"
+                "keysOfLabelsToShow": {
+                    "name": "List of labels' keys to show in the table as columns",
+                    "placeholder": "Select keys from the list"
                 },
                 "mapOpenByDefault": {
                     "name": "Show map by default"
@@ -1421,6 +1471,92 @@
             "delete": "Delete",
             "deleteLabel": "plugin {{name}} v{{version}}"
         },
+        "outputs": {
+            "name": "Deployment Outputs/Capabilities",
+            "description": "This widget shows the deployment outputs and capabilities",
+            "noData": "There are no Outputs/Capabilities available. Probably there's no deployment created, yet.",
+            "exportButton": "Export to JSON",
+            "types": {
+                "output": "Output",
+                "capability": "Capability"
+            },
+            "columns": {
+                "name": "Name",
+                "type": "Type"
+            }
+        },
+        "secretProviders": {
+            "name": "Secret Providers Management",
+            "description": "This widget allows configuring new, modifying existing, and deleting secret providers.",
+            "table": {
+                "columns": {
+                    "name": "Provider name",
+                    "type": "Provider type",
+                    "dateCreated": "Date created",
+                    "dateUpdated": "Date updated"
+                },
+                "noSecretProviders": "There are no Secret Providers available. Click \"Create\" to add Secret Provider.",
+                "buttons": {
+                    "removeSecretProvider": "Delete Secret Provider",
+                    "updateSecretPRovider": "Update Secret Provider",
+                    "create": "Create"
+                }
+            },
+            "deleteModal": {
+                "content": "Are you sure you want to delete the Secret Provider with ID '{{secretProviderId}}'?",
+                "buttons": {
+                    "confirm": "Yes",
+                    "cancel": "No"
+                }
+            },
+            "warningModal": {
+                "content": "Unable to delete the Secret provider '{{secretProviderId}}' because it has secrets assigned.",
+                "buttons": {
+                    "cancel": "Cancel"
+                }
+            },
+            "createButton": {
+                "name": "Create",
+                "description": "Create new Secret Provider",
+                "options": {
+                    "vault": "Vault"
+                }
+            },
+            "createModal": {
+                "header": "Create a Vault Secret Provider",
+                "buttons": {
+                    "create": "Create",
+                    "cancel": "Cancel"
+                },
+                "inputs": {
+                    "providerName": {
+                        "label": "Provider Name",
+                        "placeholder": "Provider Name"
+                    },
+                    "hostname": {
+                        "label": "Vault Hostname",
+                        "placeholder": "Vault Hostname"
+                    },
+                    "authorizationToken": {
+                        "label": "Authorization Token",
+                        "placeholder": "Authorization Token"
+                    },
+                    "defaultPath": {
+                        "label": "Vault Default Path",
+                        "placeholder": "Path"
+                    }
+                },
+                "errors": {
+                    "providerName": {
+                        "required": "Please provide the Provider Name.",
+                        "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
+                    },
+                    "hostname": "Please provide vault hostname.",
+                    "authorizationToken": "Please provide an authorization token.",
+                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again."
+                }
+            }
+        },
         "secrets": {
             "columns": {
                 "key": "Key",
@@ -1430,6 +1566,10 @@
                 "updated": "Updated",
                 "creator": "Creator",
                 "tenant": "Tenant"
+            },
+            "actions": {
+                "updateSecret": "Update secret",
+                "deleteSecret": "Delete secret"
             }
         },
         "serviceButton": {
@@ -1535,6 +1675,10 @@
                     "email": {
                         "label": "E-mail",
                         "error": "Please provide valid e-mail"
+                    },
+                    "isAdmin": {
+                        "label": "Admin",
+                        "note": "Admin users have full permissions to all tenants on the manager."
                     }
                 }
             },
@@ -1608,6 +1752,8 @@
             "deleteConfirm": "Are you sure you want to remove label"
         },
         "userGroups": {
+            "name": "User group management",
+            "description": "This widget shows a list of available user groups and allow managing them",
             "columns": {
                 "groupName": "Group",
                 "ldapGroup": "LDAP group",
@@ -1691,6 +1837,15 @@
                 "tooltip": {
                     "label": "Number of executions"
                 }
+            }
+        },
+        "inputs": {
+            "name": "Deployment Inputs",
+            "description": "This widget shows the deployment inputs",
+            "noData": "There are no Inputs available. Probably there's no deployment created, yet.",
+            "columns": {
+                "name": "Name",
+                "value": "Value"
             }
         },
         "tenants": {
@@ -1872,32 +2027,26 @@
                 "showNodeInstances": "Show node instances status"
             },
             "noDeploymentSelected": "No deployment selected"
-        }
-    },
-    "input": {
-        "node_type": {
-            "placeholder": "Select Node Type"
         },
-        "node_instance": {
-            "placeholder": "Select Node Instance"
+        "sites": {
+            "actions": {
+                "updateSite": "Update site",
+                "deleteSite": "Delete site"
+            }
         },
-        "scaling_group": {
-            "placeholder": "Select Node Scaling Group"
+        "snapshots": {
+            "actions": {
+                "restore": "Restore",
+                "download": "Download",
+                "delete": "Delete"
+            }
         },
-        "deployment_id": {
-            "placeholder": "Select Deployment"
-        },
-        "blueprint_id": {
-            "placeholder": "Select Blueprint"
-        },
-        "capability_value": {
-            "placeholder": "Select Capability"
-        },
-        "secret_key": {
-            "placeholder": "Select Secret Key"
-        },
-        "node_id": {
-            "placeholder": "Select Node Id"
+        "managers": {
+            "actions": {
+                "openConsole": "Open Console",
+                "refreshStatus": "Refresh Status",
+                "refreshStatusInProgress": "Status refresh in progress..."
+            }
         }
     }
 }

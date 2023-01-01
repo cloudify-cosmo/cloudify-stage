@@ -1,12 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React from 'react';
+import type { ChangeEvent } from 'react';
+import type { ButtonProps, FormProps } from 'semantic-ui-react';
 
-import { Button, ErrorMessage, Form, Segment } from '../basic';
+import { Button, Form, Segment } from '../basic';
 
-export default function UploadLicense({ error, isLoading, license, onChange, onErrorDismiss, onUpload }) {
+interface UploadLicenseProps {
+    error?: string;
+    isLoading: boolean;
+    license: string;
+    onChange: (event: ChangeEvent<HTMLTextAreaElement>, data: any) => void;
+    onErrorDismiss: FormProps['onErrorsDismiss'];
+    onUpload: ButtonProps['onClick'];
+}
+
+export default function UploadLicense({
+    error = '',
+    isLoading,
+    license,
+    onChange,
+    onErrorDismiss,
+    onUpload
+}: UploadLicenseProps) {
     return (
         <Segment>
             <Form
@@ -39,16 +55,3 @@ export default function UploadLicense({ error, isLoading, license, onChange, onE
         </Segment>
     );
 }
-
-UploadLicense.propTypes = {
-    error: PropTypes.string,
-    isLoading: PropTypes.bool.isRequired,
-    license: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onErrorDismiss: PropTypes.func.isRequired,
-    onUpload: PropTypes.func.isRequired
-};
-
-UploadLicense.defaultProps = {
-    error: ''
-};

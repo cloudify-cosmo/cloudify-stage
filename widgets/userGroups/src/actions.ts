@@ -1,30 +1,42 @@
-// @ts-nocheck File not migrated fully to TS
+import { map, concat, includes, filter, size, isUndefined, isEmpty } from 'lodash';
+import type { SystemRole } from '../../../app/widgets/common/roles/types';
+import type { Toolbox } from '../../../app/utils/StageAPI';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
+import type { UserGroup } from './widget.types';
 
-function isAdminGroup(group) {
+function isAdminGroup(group: UserGroup) {
     return group.role === Stage.Common.Consts.sysAdminRole;
 }
 
+export type NamedResourceResponse = Stage.Types.PaginatedResponse<{ name: string }>;
+
 export default class Actions {
-    constructor(toolbox) {
+    toolbox: Toolbox;
+
+    currentUsername: string;
+
+    currentUserRole: SystemRole;
+
+    constructor(toolbox: Toolbox) {
         this.toolbox = toolbox;
         this.currentUsername = toolbox.getManager().getCurrentUsername();
         this.currentUserRole = toolbox.getManager().getCurrentUserRole();
     }
 
-    doCreate(groupName, ldapGroup, role) {
+    doCreate(groupName: string, ldapGroup: string, role: SystemRole) {
         const body =
-            _.isUndefined(ldapGroup) || _.isEmpty(ldapGroup)
+            isUndefined(ldapGroup) || isEmpty(ldapGroup)
                 ? { group_name: groupName, role }
                 : { group_name: groupName, ldap_group_dn: ldapGroup, role };
 
         return this.toolbox.getManager().doPost('/user-groups', { body });
     }
 
-    doDelete(groupName) {
+    doDelete(groupName: string) {
         return this.toolbox.getManager().doDelete(`/user-groups/${groupName}`);
     }
 
-    doSetRole(groupName, role) {
+    doSetRole(groupName: string, role: SystemRole) {
         return this.toolbox.getManager().doPost(`/user-groups/${groupName}`, { body: { role } });
     }
 
@@ -36,49 +48,54 @@ export default class Actions {
         return this.toolbox.getManager().doGet('/tenants?_get_all_results=true&_include=name');
     }
 
-    doAddUserToGroup(username, groupName) {
+    doAddUserToGroup(username: string, groupName: string) {
         return this.toolbox.getManager().doPut('/user-groups/users', { body: { username, group_name: groupName } });
     }
 
-    doRemoveUserFromGroup(username, groupName) {
+    doRemoveUserFromGroup(username: string, groupName: string) {
         return this.toolbox.getManager().doDelete('/user-groups/users', { body: { username, group_name: groupName } });
     }
 
-    doAddTenantToGroup(tenantName, groupName, role) {
+    doAddTenantToGroup(tenantName: string, groupName: string, role: string) {
         return this.toolbox
             .getManager()
             .doPut('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName, role } });
     }
 
-    doRemoveTenantFromGroup(tenantName, groupName) {
+    doRemoveTenantFromGroup(tenantName: string, groupName: string) {
         return this.toolbox
             .getManager()
             .doDelete('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName } });
     }
 
-    doUpdateTenant(tenantName, groupName, role) {
+    doUpdateTenant(tenantName: string, groupName: string, role: string) {
         return this.toolbox
             .getManager()
             .doPatch('/tenants/user-groups', { body: { tenant_name: tenantName, group_name: groupName, role } });
     }
 
-    doHandleUsers(groupName, usersToAdd, usersToDelete) {
-        const addActions = _.map(usersToAdd, username => this.doAddUserToGroup(username, groupName));
-        const deleteActions = _.map(usersToDelete, username => this.doRemoveUserFromGroup(username, groupName));
+    doHandleUsers(groupName: string, usersToAdd: string[], usersToDelete: string[]) {
+        const addActions = map(usersToAdd, username => this.doAddUserToGroup(username, groupName));
+        const deleteActions = map(usersToDelete, username => this.doRemoveUserFromGroup(username, groupName));
 
-        return Promise.all(_.concat(addActions, deleteActions));
+        return Promise.all(concat(addActions, deleteActions));
     }
 
-    doHandleTenants(groupName, tenantsToAdd, tenantsToDelete, tenantsToUpdate) {
-        const addActions = _.map(tenantsToAdd, (role, tenant) => this.doAddTenantToGroup(tenant, groupName, role));
-        const deleteActions = _.map(tenantsToDelete, tenant => this.doRemoveTenantFromGroup(tenant, groupName));
-        const updateActions = _.map(tenantsToUpdate, (role, tenant) => this.doUpdateTenant(tenant, groupName, role));
+    doHandleTenants(
+        groupName: string,
+        tenantsToAdd: RolesAssignment,
+        tenantsToDelete: string[],
+        tenantsToUpdate: RolesAssignment
+    ) {
+        const addActions = map(tenantsToAdd, (role, tenant) => this.doAddTenantToGroup(tenant, groupName, role));
+        const deleteActions = map(tenantsToDelete, tenant => this.doRemoveTenantFromGroup(tenant, groupName));
+        const updateActions = map(tenantsToUpdate, (role, tenant) => this.doUpdateTenant(tenant, groupName, role));
 
-        return Promise.all(_.concat(addActions, deleteActions, updateActions));
+        return Promise.all(concat(addActions, deleteActions, updateActions));
     }
 
-    isUserIn(users, username = this.currentUsername) {
-        return _.includes(users, username);
+    isUserIn(users: string[], username = this.currentUsername) {
+        return includes(users, username);
     }
 
     hasCurrentUserAdminRole() {
@@ -86,13 +103,13 @@ export default class Actions {
     }
 
     // Check if user <username> belongs to group <group> and it is the only admin group he belongs to
-    isUserGroupTheOnlyAdminGroup(group, groups, username = this.currentUsername) {
-        if (_.includes(group.users, username)) {
-            const currentUserAdminGroups = _.filter(
+    isUserGroupTheOnlyAdminGroup(group: UserGroup, groups: UserGroup[], username = this.currentUsername) {
+        if (includes(group.users, username)) {
+            const currentUserAdminGroups = filter(
                 groups,
-                g => _.includes(g.users, username) && g.role === Stage.Common.Consts.sysAdminRole
+                userGroup => includes(userGroup.users, username) && userGroup.role === Stage.Common.Consts.sysAdminRole
             );
-            return _.size(currentUserAdminGroups) === 1;
+            return size(currentUserAdminGroups) === 1;
         }
         return false;
     }
@@ -101,7 +118,7 @@ export default class Actions {
     //          user <username> does not have admin role
     //          group <group> has admin rights
     //          user <username> belongs to group <group> as the only admin group
-    isLogoutToBePerformed(group, groups, users, username = this.currentUsername) {
+    isLogoutToBePerformed(group: UserGroup, groups: UserGroup[], users: string[], username = this.currentUsername) {
         return (
             this.isUserIn(users, username) &&
             !this.hasCurrentUserAdminRole() &&

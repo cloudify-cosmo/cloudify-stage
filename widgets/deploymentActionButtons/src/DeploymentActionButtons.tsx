@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
-import type { Workflow } from '../../common/src/executeWorkflow';
+import type { Workflow } from '../../../app/widgets/common/executeWorkflow';
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase

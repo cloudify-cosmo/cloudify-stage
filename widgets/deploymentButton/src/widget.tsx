@@ -1,5 +1,5 @@
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { FilterRule } from '../../../app/widgets/common/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';

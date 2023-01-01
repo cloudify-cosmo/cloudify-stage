@@ -1,6 +1,6 @@
-import type { SystemRole } from '../../common/src/roles/types';
+import type { SystemRole } from '../../../app/widgets/common/roles/types';
 import type { Toolbox } from '../../../app/utils/StageAPI';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 
 export type NamedResourceResponse = Stage.Types.PaginatedResponse<{ name: string }>;
 

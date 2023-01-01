@@ -28,7 +28,7 @@ describe('Page', () => {
     function verifyAllWidgetsVisible() {
         cy.contains('.widgetName', 'Blueprints').should('be.visible');
         cy.contains('.widgetName', 'Cluster Status').should('be.visible');
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.contains('.widgetName', 'Filters').should('be.visible');
         cy.get('.blueprintNumWidget').should('be.visible');
     }
 
@@ -55,13 +55,14 @@ describe('Page', () => {
         cy.visitPage('Admin Dashboard');
         cy.contains('.active', 'Tab1');
         cy.contains('.item:not(.active)', 'Tab2');
+        cy.wait('@updateUserApps');
 
         cy.log('Verify widget maximize button works for widgets inside tabs');
         cy.get('.blueprintsWidget .expand').click({ force: true });
         cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
-        cy.contains('.widgetName', 'Catalog').should('not.be.visible');
+        cy.contains('.widgetName', 'Filters').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
         cy.log('Verify maximize state is not saved for widgets in tabs');
@@ -69,7 +70,7 @@ describe('Page', () => {
         verifyAllWidgetsVisible();
 
         cy.log('Verify widget maximize button works for top level widgets');
-        cy.get('.blueprintCatalogWidget .expand').click({ force: true });
+        cy.get('.filtersWidget .expand').click({ force: true });
         cy.wait('@updateUserApps');
 
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
@@ -78,13 +79,13 @@ describe('Page', () => {
 
         cy.log('Verify maximize state is saved for top level widgets');
         cy.refreshTemplate();
-        cy.contains('.widgetName', 'Catalog').should('be.visible');
+        cy.contains('.widgetName', 'Filters').should('be.visible');
         cy.contains('.widgetName', 'Blueprints').should('not.be.visible');
         cy.contains('.widgetName', 'Cluster Status').should('not.be.visible');
         cy.get('.blueprintNumWidget').should('not.be.visible');
 
         cy.log('Verify widget collapse button works');
-        cy.get('.blueprintCatalogWidget .compress').click({ force: true });
+        cy.get('.filtersWidget .compress').click({ force: true });
         cy.wait('@updateUserApps');
 
         verifyAllWidgetsVisible();

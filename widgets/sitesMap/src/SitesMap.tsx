@@ -1,7 +1,7 @@
 import type { FunctionComponent, RefObject } from 'react';
 import type { Map as LeafletMap } from 'react-leaflet';
-import type { MarkerIconColor } from '../../common/src/map/MarkerIcon';
-import type { WidgetDimensions } from '../../common/src/map/widget-dimensions';
+import type { MarkerIconColor } from '../../../app/widgets/common/map/MarkerIcon';
+import type { WidgetDimensions } from '../../../app/widgets/common/map/widget-dimensions';
 import SiteControl from './SiteControl';
 import type { DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';

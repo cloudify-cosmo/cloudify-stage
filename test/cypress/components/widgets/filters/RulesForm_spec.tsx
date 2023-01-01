@@ -1,9 +1,9 @@
 import React from 'react';
-import { mount } from '@cypress/react';
+import { mount } from 'cypress/react';
 
 import '../../initAppContext';
-import 'widgets/common/src/props/Toolbox';
-import RulesForm from 'widgets/common/src/filters/RulesForm';
+import 'app/utils/props/Toolbox';
+import RulesForm from 'app/widgets/common/filters/RulesForm';
 
 describe('RulesForm', () => {
     it('renders without any fields', () => {

@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'This widget shows a list of available secrets and allow managing them',
     initialWidth: 5,
     initialHeight: 16,
-    color: 'red',
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
     hasReadme: true,

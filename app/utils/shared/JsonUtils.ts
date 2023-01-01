@@ -1,10 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
+import { trim } from 'lodash';
 import { types } from 'cloudify-ui-common-frontend';
 
 export default class JsonUtils {
-    static stringify(value, indented = false, ignoreEmpty = false) {
+    static stringify(value: any, indented = false, ignoreEmpty = false) {
         if (!ignoreEmpty && value === '') {
             return '';
         }
@@ -14,22 +12,14 @@ export default class JsonUtils {
             stringifiedValue = JSON.stringify(value, null, indented ? 2 : 0);
         }
 
-        return _.trim(stringifiedValue, '"');
+        return trim(stringifiedValue, '"');
     }
 
-    static toType(obj) {
-        return types.toType(obj);
-    }
+    static toType = types.toType;
 
-    static toCloudifyType(obj) {
-        return types.toCloudifyType(obj);
-    }
+    static toCloudifyType = types.toCloudifyType;
 
-    static getStringValue(value) {
-        return types.getStringValue(value);
-    }
+    static getStringValue = types.getStringValue;
 
-    static getTypedValue(value) {
-        return types.getTypedValue(value);
-    }
+    static getTypedValue = types.getTypedValue;
 }

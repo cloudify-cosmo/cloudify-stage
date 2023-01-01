@@ -1,25 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
-import PropTypes from 'prop-types';
+import type { FunctionComponent } from 'react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from 'i18next';
+import { connect } from 'react-redux';
 import Consts from '../utils/consts';
+import type { ReduxState } from '../reducers';
 
-export default function LinkToLogin({ portalUrl, searchQuery }) {
-    return portalUrl ? (
+interface LinkToLoginProps {
+    portalUrl?: string;
+    searchQuery?: string;
+}
+const LinkToLogin: FunctionComponent<LinkToLoginProps> = ({ portalUrl, searchQuery }) =>
+    portalUrl ? (
         <a href={portalUrl}>{i18n.t('backToApps', 'Back to apps')}</a>
     ) : (
         <Link to={{ pathname: Consts.PAGE_PATH.LOGIN, search: searchQuery }}>
             {i18n.t('backToLogin', 'Back to login')}
         </Link>
     );
-}
 
-LinkToLogin.propTypes = {
-    searchQuery: PropTypes.string.isRequired,
-    portalUrl: PropTypes.string
+const mapStateToProps = (state: ReduxState) => {
+    return {
+        portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : undefined,
+        searchQuery: state.router.location.search
+    };
 };
 
-LinkToLogin.defaultProps = {
-    portalUrl: null
-};
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LinkToLogin);

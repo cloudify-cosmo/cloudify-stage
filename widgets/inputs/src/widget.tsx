@@ -1,14 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
+import { get, isEmpty, map } from 'lodash';
+import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { InputItem, InputsTableProps } from './InputsTable';
+import InputsTable, { translateInputsWidget } from './InputsTable';
 
-import InputsTable from './InputsTable';
+export interface InputsTableData {
+    inputs: InputItem[];
+}
 
-Stage.defineWidget({
+Stage.defineWidget<unknown, InputsTableData, PollingTimeConfiguration>({
     id: 'inputs',
-    name: 'Deployment Inputs',
-    description: 'This widget shows the deployment inputs',
+    name: translateInputsWidget('name'),
+    description: translateInputsWidget('description'),
     initialWidth: 8,
     initialHeight: 16,
-    color: 'teal',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('inputs'),
@@ -16,7 +20,7 @@ Stage.defineWidget({
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
-    fetchData(widget, toolbox) {
+    fetchData(_widget, toolbox) {
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
@@ -29,10 +33,10 @@ Stage.defineWidget({
             );
 
             return Promise.all([deploymentInputsPromise, blueprintInputsPromise]).then(data => {
-                const deploymentInputs = _.get(data[0], 'inputs', {});
-                const blueprintsInputs = _.get(data[1], 'plan.inputs', {});
+                const deploymentInputs = get(data[0], 'inputs', {});
+                const blueprintsInputs = get(data[1], 'plan.inputs', {});
                 return Promise.resolve({
-                    inputs: _.map(deploymentInputs, (inputObject, inputName) => ({
+                    inputs: map(deploymentInputs, (inputObject, inputName) => ({
                         name: inputName,
                         value: inputObject,
                         description: blueprintsInputs[inputName].description || ''
@@ -46,9 +50,9 @@ Stage.defineWidget({
                 .getManager()
                 .doGet(`/blueprints/${blueprintId}?_include=plan`)
                 .then(data => {
-                    const deploymentInputs = _.get(data, 'plan.inputs', {});
+                    const deploymentInputs = get(data, 'plan.inputs', {});
                     return Promise.resolve({
-                        inputs: _.map(deploymentInputs, (inputObject, inputName) => ({
+                        inputs: map(deploymentInputs, (inputObject, inputName) => ({
                             name: inputName,
                             value: inputObject.default,
                             description: inputObject.description || ''
@@ -60,14 +64,14 @@ Stage.defineWidget({
         return Promise.resolve({ inputs: [] });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (isEmpty(data) || !data) {
             return <Loading />;
         }
 
-        const formattedData = {
+        const formattedData: InputsTableProps['data'] = {
             ...data,
             items: data.inputs,
             deploymentId: toolbox.getContext().getValue('deploymentId'),

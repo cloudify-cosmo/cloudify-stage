@@ -9,7 +9,9 @@ import type { Mode } from '../serverSettings';
 
 export type UserConfig = typeof userConfig;
 
-type AppConfig = typeof app & typeof root & typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
+export type AppConfig = typeof app &
+    typeof root &
+    typeof logging & { db: { options: typeof dbOptions } } & typeof userConfig;
 
 export interface Config {
     app: AppConfig;

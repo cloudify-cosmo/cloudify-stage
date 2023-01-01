@@ -1,0 +1,35 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+.ui.form {
+    textarea {
+        & {
+            font-family: @inputFont;
+        }
+
+        &:hover {
+            border-color: @grey;
+        }
+
+        &:focus {
+            border-color: @blue;
+        }
+    }
+
+    .field {
+        &.error {
+            .input.labeled {
+                .label {
+                    background-color: @red;
+                    color: #fff;
+                }
+
+                & > input {
+                    border-left-color: @red !important;
+                    border-right-color: @red !important;
+                }
+            }
+        }
+    }
+}

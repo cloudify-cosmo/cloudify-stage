@@ -1,13 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-import OutputsTable from './OutputsTable';
+import { castArray } from 'lodash';
+import type { OutputsTableProps } from './OutputsTable';
+import OutputsTable, { translateOutputsWidget } from './OutputsTable';
+import type { OutputsAndCapabilitiesItem, OutputsWidgetConfiguration } from './types';
 
-Stage.defineWidget({
+interface Data {
+    outputsAndCapabilities: OutputsAndCapabilitiesItem[];
+}
+
+Stage.defineWidget<unknown, Data, OutputsWidgetConfiguration>({
     id: 'outputs',
-    name: 'Deployment Outputs/Capabilities',
-    description: 'This widget shows the deployment outputs and capabilities',
+    name: translateOutputsWidget('name'),
+    description: translateOutputsWidget('description'),
     initialWidth: 8,
     initialHeight: 20,
-    color: 'blue',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('outputs'),
@@ -27,7 +32,12 @@ Stage.defineWidget({
         const deploymentId = toolbox.getContext().getValue('deploymentId');
         const blueprintId = toolbox.getContext().getValue('blueprintId');
 
-        function createEntity(name, value, object, isOutput) {
+        function createEntity(
+            name: string,
+            value: unknown,
+            object: Record<string, string>,
+            isOutput: boolean
+        ): OutputsAndCapabilitiesItem {
             return {
                 name,
                 value,
@@ -36,11 +46,11 @@ Stage.defineWidget({
             };
         }
 
-        function createOutput(name, value, object) {
+        function createOutput(name: string, value: unknown, object: Record<string, string>) {
             return createEntity(name, value, object, true);
         }
 
-        function createCapability(name, value, object) {
+        function createCapability(name: string, value: unknown, object: Record<string, string>) {
             return createEntity(name, value, object, false);
         }
 
@@ -106,16 +116,16 @@ Stage.defineWidget({
         return Promise.resolve({ outputsAndCapabilities: [] });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (_.isEmpty(data) || !data) {
             return <Loading />;
         }
 
-        const formattedData = {
+        const formattedData: OutputsTableProps['data'] = {
             outputsAndCapabilities: data.outputsAndCapabilities,
-            deploymentId: toolbox.getContext().getValue('deploymentId'),
+            deploymentId: castArray(toolbox.getContext().getValue('deploymentId'))[0],
             blueprintId: toolbox.getContext().getValue('blueprintId')
         };
 

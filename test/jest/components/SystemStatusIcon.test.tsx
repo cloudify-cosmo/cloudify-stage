@@ -1,46 +1,60 @@
-// @ts-nocheck File not migrated fully to TS
-
+import React from 'react';
 import { mount } from 'enzyme';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import type { IconProps } from 'semantic-ui-react';
 import SystemStatusIcon from 'components/status/SystemStatusIcon';
-import * as BasicComponents from 'components/basic';
+import { ClusterServiceStatus } from 'components/shared/cluster/types';
 
 describe('(Component) SystemStatusIcon', () => {
-    let wrapper;
-    let systemStatus;
-    global.Stage = { Basic: BasicComponents };
     const { Icon } = Stage.Basic;
 
-    beforeEach(() => {
-        systemStatus = 'OK';
-
-        wrapper = mount(<SystemStatusIcon systemStatus={systemStatus} />);
-    });
+    const mountSystemStatusIcon = (systemStatus?: ClusterServiceStatus) => {
+        const mockStore = configureMockStore();
+        const store = mockStore({
+            manager: {
+                clusterStatus: {
+                    status: systemStatus
+                }
+            }
+        });
+        const wrapper = mount(
+            <Provider store={store}>
+                <SystemStatusIcon />
+            </Provider>
+        );
+        return wrapper;
+    };
 
     it('renders with available status', () => {
-        systemStatus = 'OK';
-        wrapper.setProps({ systemStatus });
+        const systemStatus = ClusterServiceStatus.OK;
+        const wrapper = mountSystemStatusIcon(systemStatus);
         expect(wrapper).toHaveLength(1);
-        expect(wrapper.find(Icon).instance().props.color).toBe('green'); // Green icon
+        const iconProps: IconProps = wrapper.find(Icon).instance().props;
+        expect(iconProps.color).toBe('green'); // Green icon
     });
 
     it('renders with unavailable status', () => {
-        systemStatus = 'Fail';
-        wrapper.setProps({ systemStatus });
+        const systemStatus = ClusterServiceStatus.Fail;
+        const wrapper = mountSystemStatusIcon(systemStatus);
         expect(wrapper).toHaveLength(1);
-        expect(wrapper.find(Icon).instance().props.color).toBe('red'); // Red icon
+        const iconProps: IconProps = wrapper.find(Icon).instance().props;
+        expect(iconProps.color).toBe('red'); // Red icon
     });
 
     it('renders with no status', () => {
-        systemStatus = undefined;
-        wrapper.setProps({ systemStatus });
+        const systemStatus = undefined;
+        const wrapper = mountSystemStatusIcon(systemStatus);
         expect(wrapper).toHaveLength(1);
-        expect(wrapper.find(Icon).instance().props.color).toBe('grey'); // Grey icon
+        const iconProps: IconProps = wrapper.find(Icon).instance().props;
+        expect(iconProps.color).toBe('grey'); // Grey icon
     });
 
     it('renders with degraded status', () => {
-        systemStatus = 'Degraded';
-        wrapper.setProps({ systemStatus });
+        const systemStatus = ClusterServiceStatus.Degraded;
+        const wrapper = mountSystemStatusIcon(systemStatus);
         expect(wrapper).toHaveLength(1);
-        expect(wrapper.find(Icon).instance().props.color).toBe('yellow'); // Yellow icon
+        const iconProps: IconProps = wrapper.find(Icon).instance().props;
+        expect(iconProps.color).toBe('yellow'); // Yellow icon
     });
 });

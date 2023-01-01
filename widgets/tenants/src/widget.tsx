@@ -11,7 +11,6 @@ Stage.defineWidget({
     description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
-    color: 'green',
     fetchUrl: '[manager]/tenants?_get_data=true[params]',
     isReact: true,
     hasReadme: true,

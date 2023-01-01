@@ -1,11 +1,11 @@
 // @ts-nocheck File not migrated fully to TS
 import BlueprintActions, {
-    InProgressBlueprintStates,
-    CompletedBlueprintStates
-} from 'common/src/blueprints/BlueprintActions';
-import PollHelper from 'common/src/utils/PollHelper';
+    CompletedBlueprintStates,
+    InProgressBlueprintStates
+} from 'widgets/common/blueprints/BlueprintActions';
+import PollHelper from 'widgets/common/utils/PollHelper';
 
-jest.mock('common/src/utils/PollHelper');
+jest.mock('widgets/common/utils/PollHelper');
 
 const wait = jest.fn(() => Promise.resolve());
 const resetAttempts = jest.fn();

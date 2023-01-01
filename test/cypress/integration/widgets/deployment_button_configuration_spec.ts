@@ -20,12 +20,11 @@ describe('Create deployment button widget should allow configuring', () => {
         return cy.get(`div[name="${divName}"]`).click();
     };
 
-    const selectLabelValue = (value: string) => {
+    const selectLabelValue = (value: string) =>
         openDropdown('labelValue').within(() => {
             cy.get('input').type(value);
             cy.contains(`New value ${value}`).click();
         });
-    };
 
     it('color', () => {
         const color = 'red';
@@ -59,7 +58,7 @@ describe('Create deployment button widget should allow configuring', () => {
             openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
-                cy.get(`[role="listbox"] > *`).click();
+                cy.get(`[role="listbox"].visible > *`).click();
             });
             selectLabelValue('k8s');
             selectLabelValue('docker');

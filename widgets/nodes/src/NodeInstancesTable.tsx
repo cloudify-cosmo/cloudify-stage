@@ -69,7 +69,6 @@ export default class NodeInstancesTable extends React.Component {
                                 <DataTable.Data>{instance.state}</DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
-                                        bordered
                                         link
                                         className="table"
                                         onClick={event => {

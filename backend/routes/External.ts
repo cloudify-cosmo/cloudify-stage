@@ -1,5 +1,6 @@
+import type { NextFunction, Request, Response } from 'express';
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
+import { format } from 'url';
 import { getLogger } from '../handler/LoggerHandler';
 import { requestAndForwardResponse } from '../handler/RequestHandler';
 import type { GetExternalContentQueryParams } from './External.types';
@@ -9,7 +10,7 @@ const router = express.Router();
 const logger = getLogger('External');
 
 function pipeRequest(
-    _req: Request<never, any | GenericErrorResponse, any, GetExternalContentQueryParams>,
+    req: Request<never, any | GenericErrorResponse, any, GetExternalContentQueryParams>,
     res: Response,
     _next: NextFunction,
     url: string,
@@ -17,7 +18,20 @@ function pipeRequest(
 ) {
     logger.debug('Piping get request to url:', url, 'with query string:', queryString);
 
-    requestAndForwardResponse(url.startsWith('//') ? `http:${url}` : url, res, { params: queryString }).catch(err =>
+    let requestUrl;
+    if (url.startsWith('//')) {
+        requestUrl = `http:${url}`;
+    } else if (url.startsWith('/')) {
+        requestUrl = format({
+            protocol: req.protocol,
+            host: req.get('host'),
+            pathname: url
+        });
+    } else {
+        requestUrl = url;
+    }
+
+    requestAndForwardResponse(requestUrl, res, { params: queryString }).catch(err =>
         res.status(500).send({ message: err.message })
     );
 }

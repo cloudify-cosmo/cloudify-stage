@@ -6,7 +6,7 @@ import { closestCenter, DndContext, PointerSensor, useSensor, useSensors } from 
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import type { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
@@ -47,17 +47,28 @@ function consumeEvent(event: React.MouseEvent) {
     event.stopPropagation();
     event.preventDefault();
 }
+interface RemoveIconProps {
+    isSubItem: boolean;
+}
 
-const RemoveIcon = styled(Icon)`
-    position: relative;
-    top: 3px;
-    right: 3px;
+const RemoveIcon = styled(Icon)<RemoveIconProps>`
+    position: absolute;
+    top: 15px;
+    right: 2px;
     visibility: hidden;
     float: right;
-
+    line-height: 8px !important;
+    font-size: 10px !important;
     ${SideBarItemWrapper}:hover & {
         visibility: visible;
     }
+
+    ${({ isSubItem }) =>
+        isSubItem &&
+        css`
+            right: 10px;
+            top: 0;
+        `}
 `;
 
 const EditIcon = styled(Icon)`
@@ -283,6 +294,7 @@ const PagesList: FunctionComponent<PagesListProps> = ({ pageId, expandedGroupIds
                                     consumeEvent(event);
                                     onItemRemoved(pageMenuItem);
                                 }}
+                                isSubItem={subItem}
                             />
                         )}
                     </>

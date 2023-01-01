@@ -2,6 +2,8 @@
 
 import Actions from './actions';
 
+const t = Stage.Utils.getT('widgets.managers.actions');
+
 export default class RefreshIcon extends React.Component {
     constructor(props, context) {
         super(props, context);
@@ -33,10 +35,10 @@ export default class RefreshIcon extends React.Component {
                     loading ? (
                         <Icon name="spinner" loading disabled />
                     ) : (
-                        <Icon name="refresh" link bordered onClick={this.handleClick} />
+                        <Icon name="refresh" link onClick={this.handleClick} />
                     )
                 }
-                content={loading ? 'Status refresh in progress...' : 'Refresh Status'}
+                content={loading ? t('refreshStatusInProgress') : t('refreshStatus')}
             />
         );
     }

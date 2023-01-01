@@ -1,99 +1,81 @@
-// @ts-nocheck File not migrated fully to TS
 import i18n from 'i18next';
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
+import { push } from 'connected-react-router';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Banner from '../banner/Banner';
-import SystemStatusHeader from '../../containers/status/SystemStatusHeader';
+import SystemStatusHeader from '../status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';
-
 import { Divider, Header, FullScreenSegment, MessageContainer } from '../basic';
 import { ClusterServicesList, MaintenanceModeActivationButton, MaintenanceModeModal } from '../shared';
+import { useBoolean } from '../../utils/hooks';
+import type { ReduxState } from '../../reducers';
+import StageUtils from '../../utils/stageUtils';
+import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
-export default class MaintenanceModePageMessage extends Component {
-    constructor(props, context) {
-        super(props, context);
+export default function MaintenanceModePageMessage() {
+    const isFetchingClusterStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
+    const maintenanceStatus = useSelector((state: ReduxState) => state.manager.maintenance);
+    const maintenanceModePermitted = useSelector((state: ReduxState) =>
+        StageUtils.isUserAuthorized(Consts.permissions.STAGE_MAINTENANCE_MODE, state.manager)
+    );
+    const showServicesStatus = useSelector((state: ReduxState) =>
+        StageUtils.isUserAuthorized(Consts.permissions.STAGE_SERVICES_STATUS, state.manager)
+    );
+    const dispatch = useDispatch();
+    const navigateToHome = () => dispatch(push(Consts.PAGE_PATH.HOME));
+    const onGetClusterStatus = () => dispatch(getClusterStatus());
 
-        this.state = {
-            showMaintenanceModal: false
-        };
-    }
+    const [maintenanceModalVisible, showMaintenanceModal, hideMaintenanceModal] = useBoolean(false);
 
-    componentDidMount() {
-        const { onGetClusterStatus } = this.props;
+    useEffect(() => {
         StatusPoller.getPoller().start();
         onGetClusterStatus();
-    }
 
-    componentDidUpdate() {
-        const { maintenanceStatus, navigateToHome } = this.props;
+        return () => {
+            StatusPoller.getPoller()?.stop();
+        };
+    }, []);
+
+    useEffect(() => {
         if (maintenanceStatus !== Consts.MAINTENANCE_ACTIVATED) {
             navigateToHome();
         }
-    }
+    }, [maintenanceStatus]);
 
-    componentWillUnmount() {
-        StatusPoller.getPoller().stop();
-    }
+    SplashLoadingScreen.turnOff();
 
-    render() {
-        SplashLoadingScreen.turnOff();
+    return (
+        <FullScreenSegment>
+            <HeaderBar>
+                <Banner hideOnSmallScreen={false} />
+            </HeaderBar>
 
-        const { canMaintenanceMode, isFetchingClusterStatus, showServicesStatus } = this.props;
-        const { showMaintenanceModal } = this.state;
+            <MessageContainer wide>
+                <Header as="h2">{i18n.t('maintenanceMode.header')}</Header>
 
-        return (
-            <FullScreenSegment>
-                <HeaderBar>
-                    <Banner hideOnSmallScreen={false} />
-                </HeaderBar>
+                <p>{i18n.t('maintenanceMode.message')}</p>
 
-                <MessageContainer wide>
-                    <Header as="h2">{i18n.t('maintenanceMode.header', 'Maintenance mode')}</Header>
-
-                    <p>
-                        {i18n.t(
-                            'maintenanceMode.message',
-                            'Server is on maintenance mode and is not available at the moment.'
-                        )}
-                    </p>
-
-                    {canMaintenanceMode && (
-                        <MaintenanceModeActivationButton
-                            activate={false}
-                            onClick={() => this.setState({ showMaintenanceModal: true })}
-                        />
-                    )}
-
-                    {showServicesStatus && (
-                        <div style={{ fontSize: '1rem' }}>
-                            <Divider />
-                            <SystemStatusHeader />
-
-                            {!isFetchingClusterStatus && <ClusterServicesList />}
-                        </div>
-                    )}
-                </MessageContainer>
-
-                {canMaintenanceMode && (
-                    <MaintenanceModeModal
-                        show={showMaintenanceModal}
-                        onHide={() => this.setState({ showMaintenanceModal: false })}
-                    />
+                {maintenanceModePermitted && (
+                    <MaintenanceModeActivationButton activate={false} onClick={showMaintenanceModal} />
                 )}
-            </FullScreenSegment>
-        );
-    }
-}
 
-MaintenanceModePageMessage.propTypes = {
-    canMaintenanceMode: PropTypes.bool.isRequired,
-    isFetchingClusterStatus: PropTypes.bool.isRequired,
-    maintenanceStatus: PropTypes.string.isRequired,
-    navigateToHome: PropTypes.func.isRequired,
-    onGetClusterStatus: PropTypes.func.isRequired,
-    showServicesStatus: PropTypes.bool.isRequired
-};
+                {showServicesStatus && (
+                    <div style={{ fontSize: '1rem' }}>
+                        <Divider />
+                        <SystemStatusHeader />
+
+                        {!isFetchingClusterStatus && <ClusterServicesList />}
+                    </div>
+                )}
+            </MessageContainer>
+
+            {maintenanceModePermitted && (
+                <MaintenanceModeModal show={maintenanceModalVisible} onHide={hideMaintenanceModal} />
+            )}
+        </FullScreenSegment>
+    );
+}

@@ -41,21 +41,21 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
             return (
                 <div>
                     <pre className="forceMaxWidth">{showSecretValue}</pre>
-                    <Icon bordered link name="hide" title="Hide secret value" onClick={onHide} />
+                    <Icon link name="hide" title="Hide secret value" onClick={onHide} />
                 </div>
             );
         }
         return (
             <Popup position="top right" on="hover">
                 <Popup.Trigger>
-                    <Icon bordered name="dont" color="red" />
+                    <Icon name="dont" color="red" />
                 </Popup.Trigger>
                 User `{currentUsername}` is not permitted to show the secret `{secretKey} in the tenant `
                 {selectedTenant}` .
             </Popup>
         );
     }
-    return <Icon bordered link name="unhide" title="Show secret value" onClick={onShow} />;
+    return <Icon link name="unhide" title="Show secret value" onClick={onShow} />;
 };
 
 interface SecretsTableProps {
@@ -149,7 +149,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             showSecretLoading: true
         });
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doGet(secretKey)
             .then(secret => {
@@ -174,7 +174,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     onIsHiddenValueChange(secretKey, isHiddenValue) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
         actions
             .doSetIsHiddenValue(secretKey, isHiddenValue)
@@ -190,7 +190,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     setSecretVisibility(secretKey, visibility) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
         actions
             .doSetVisibility(secretKey, visibility)
@@ -213,7 +213,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         const { toolbox } = this.props;
         const { secret } = this.state;
         const secretKey = secret.key;
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
         actions
@@ -305,7 +305,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                         toolbox={toolbox}
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data textAlign="center">
+                                <DataTable.Data>
                                     <Checkbox
                                         checked={item.is_hidden_value}
                                         onChange={() => this.onIsHiddenValueChange(item.key, !item.is_hidden_value)}
@@ -319,17 +319,15 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                 <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
-                                        bordered
                                         link
                                         name="edit"
-                                        title="Update secret"
+                                        title={t('actions.updateSecret')}
                                         onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
-                                        bordered
                                         link
                                         name="trash"
-                                        title="Delete secret"
+                                        title={t('actions.deleteSecret')}
                                         onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>

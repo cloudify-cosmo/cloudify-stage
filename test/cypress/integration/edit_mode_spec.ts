@@ -1,3 +1,5 @@
+import { secondsToMs } from 'test/cypress/support/resource_commons';
+
 describe('Edit mode', () => {
     before(() => cy.activate('valid_trial_license').removeCustomWidgets());
 
@@ -8,18 +10,22 @@ describe('Edit mode', () => {
         cy.intercept('POST', '/console/ua').as('updateUserApps');
     });
 
+    function waitForUserAppsUpdate() {
+        cy.wait('@updateUserApps', { timeout: secondsToMs(10) });
+    }
+
     it('should allow to edit widget settings', () => {
         cy.get('.blueprintsWidget .setting').click({ force: true });
 
         cy.get('.pollingTime input').type('0');
 
         cy.contains('Save').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
     });
 
     it('should allow to remove widget', () => {
         cy.get('.blueprintsWidget .remove').click({ force: true });
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
         cy.get('.blueprintsWidget').should('not.exist');
     });
 
@@ -28,17 +34,17 @@ describe('Edit mode', () => {
         cy.get('.addWidgetBtn').click();
         cy.get(`*[data-id=${widget1Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
 
         cy.contains('Add Widgets Container').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
         cy.get('.react-grid-layout').should('have.length', 2);
 
         const widget2Id = 'blueprints';
         cy.get('.addWidgetBtn:last()').click();
         cy.get(`*[data-id=${widget2Id}]`).click();
         cy.contains('Add selected widgets').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
 
         cy.contains('.widgetName', 'Plugins Catalog');
         cy.contains('.react-grid-layout:last() .widgetName', 'Blueprints');
@@ -62,14 +68,14 @@ describe('Edit mode', () => {
 
     it('should allow to rename tab and set default tab', () => {
         cy.contains('Add Tabs').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
 
         cy.get('.editModeButton .edit:eq(0)').click();
         cy.get('.modal input[type=text]').type('2');
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
 
         cy.log('Verify default flag was set');
         cy.get('.editModeButton .edit:eq(0)').click();
@@ -81,7 +87,7 @@ describe('Edit mode', () => {
         cy.get('.modal .toggle').click();
 
         cy.contains('Save').click();
-        cy.wait('@updateUserApps');
+        waitForUserAppsUpdate();
 
         cy.log('Verify previous tab is no longer default');
         cy.get('.editModeButton .edit:eq(0)').click();
@@ -133,7 +139,7 @@ describe('Edit mode', () => {
                     cy.get('input[name=widgetFile]').attachFile(`widgets/${widgetFileName}.zip`);
                     cy.contains('.label', 'File');
                 });
-                cy.get('.actions button.positive').click();
+                cy.get('.actions button.ok').click();
             });
             if (addToPage) {
                 cy.get(`*[data-id=${widgetFileName}]`).click();

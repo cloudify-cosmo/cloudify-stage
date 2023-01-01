@@ -1,8 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
-
-import PropTypes from 'prop-types';
 import React from 'react';
 import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
+
+export interface PieGraphProps {
+    data: {
+        color: string;
+        name: string;
+        value: number;
+    }[];
+}
 
 /**
  * PieGraph is a component to present data in form of pie chart
@@ -37,7 +42,7 @@ import { PieChart, Pie, Legend, Cell, ResponsiveContainer } from 'recharts';
  * return (<PieGraph data={formattedData} />);
  * ```
  */
-export default function PieGraph({ data }) {
+export default function PieGraph({ data }: PieGraphProps) {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -51,13 +56,3 @@ export default function PieGraph({ data }) {
         </ResponsiveContainer>
     );
 }
-
-PieGraph.propTypes = {
-    data: PropTypes.arrayOf(
-        PropTypes.shape({
-            color: PropTypes.string,
-            name: PropTypes.string,
-            value: PropTypes.number
-        })
-    ).isRequired
-};

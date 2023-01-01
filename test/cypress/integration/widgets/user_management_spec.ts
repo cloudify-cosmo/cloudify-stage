@@ -1,4 +1,5 @@
 import Consts from 'app/utils/consts';
+import type { PostAuthUsersInviteRequestBody } from 'widgets/userManagement/src/authServiceActions';
 
 describe('User management widget', () => {
     const widgetId = 'userManagement';
@@ -25,7 +26,7 @@ describe('User management widget', () => {
                 cy.get('input[name=password]').type(password);
                 cy.get('input[name=confirmPassword]').type(password);
                 cy.get('.checkbox').click();
-                cy.get('button.positive').click();
+                cy.clickButton('Add');
             });
 
             function verifyCheckbox(name: string, url: string, checkedPayload: any, uncheckedPayload: any) {
@@ -155,11 +156,19 @@ describe('User management widget', () => {
                 verifyEmailFieldError();
 
                 typeEmail(invitedUserEmail);
+
+                cy.contains('Admin').click();
+
+                cy.setMultipleDropdownValues('Tenants', [Consts.DEFAULT_TENANT]);
+                cy.setSingleDropdownValue('Choose a role for tenant default_tenant:', 'operations');
+
                 cy.clickButton('Invite');
                 cy.wait('@postUsersInvite').then(({ request }) => {
                     expect(request.body).to.deep.equal({
-                        email: invitedUserEmail
-                    });
+                        email: invitedUserEmail,
+                        role_name: Consts.ROLE.SYS_ADMIN,
+                        tenants: [{ role_name: 'operations', tenant_name: Consts.DEFAULT_TENANT }]
+                    } as PostAuthUsersInviteRequestBody);
                 });
             });
 

@@ -1,6 +1,6 @@
 {
   "name": "Environments",
-  "icon": "bullseye",
+  "icon": "cloudify-cogs-connected",
   "layout": [
     {
       "type": "widgets",

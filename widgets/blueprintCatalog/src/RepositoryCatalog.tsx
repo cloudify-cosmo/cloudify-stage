@@ -113,7 +113,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             <div key={id}>
                 <StyledDataSegment
                     selected={isSelected}
-                    onClick={(event: Event) => {
+                    onClick={event => {
                         event.stopPropagation();
                         onSelect(item);
                     }}

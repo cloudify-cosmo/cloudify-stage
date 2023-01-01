@@ -1,13 +1,7 @@
 import _ from 'lodash';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { ClusterService } from './types';
-
-export enum ClusterServiceStatus {
-    OK = 'OK',
-    Fail = 'Fail',
-    Degraded = 'Degraded',
-    Unknown = 'Unknown'
-}
+import { ClusterServiceStatus } from './types';
 
 export const clusterServiceEnum = Object.freeze({
     manager: 'manager',

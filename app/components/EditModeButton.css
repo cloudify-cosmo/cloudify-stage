@@ -1,3 +1,6 @@
 .ui.button.editModeButton {
     background-color: #fff8db !important;
 }
+.ui.button.editModeButton:hover {
+    background-color: #fff !important;
+}

@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import Consts from '../utils/consts';
 
 import { FullScreenSegment, Logo } from './basic';
-import ErrorPage from '../containers/ErrorPage';
+import ErrorPage from './ErrorPage';
 import NoTenants from './NoTenants';
 import NotFound from './NotFound';
 

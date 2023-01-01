@@ -193,6 +193,7 @@ export default {
         user_group_get: ['sys_admin'],
         ldap_status_get: ['sys_admin', 'manager', 'user', 'operations', 'viewer', 'default'],
         user_list: ['sys_admin'],
-        widget_nodes: ['sys_admin', 'manager', 'user', 'operations', 'viewer']
+        widget_nodes: ['sys_admin', 'manager', 'user', 'operations', 'viewer'],
+        widget_secretProviders: ['sys_admin', 'manager', 'user', 'operations']
     }
 };

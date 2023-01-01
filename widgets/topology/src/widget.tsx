@@ -12,7 +12,6 @@ Stage.defineWidget({
     description: 'Shows topology (blueprint or deployment)',
     initialWidth: 8,
     initialHeight: 16,
-    color: 'yellow',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),

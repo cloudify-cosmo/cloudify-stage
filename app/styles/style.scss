@@ -1,8 +1,10 @@
 @import '~cloudify-ui-common-frontend/styles/colors';
+@import './colors.scss';
+@import './fonts.scss';
 
 a:hover {
-  text-decoration: underline !important;
-  cursor: pointer;
+    text-decoration: underline !important;
+    cursor: pointer;
 }
 
 .loadingSegment {
@@ -10,292 +12,294 @@ a:hover {
     z-index: 5 !important;
 }
 
-.dropDownText
-{
-  display: inline-block;
+.dropDownText {
+    display: inline-block;
 }
 
-.sidebar-button{
-  color: $white;
-  padding: 15px;
+.sidebar-button {
+    color: $white;
+    padding: 15px;
 }
 
 .main {
-  min-width: 1100px;
-  overflow: auto;
+    min-width: 1100px;
+    overflow: auto;
 
-  .sidebar {
-    &.ui.left.menu{
-      z-index: 100;
-      transition: all 500ms cubic-bezier(.55, 0, .1, 1);
-      &.open{
-        left: 0 !important;
-      }
+    .sidebar {
+        &.ui.left.menu {
+            z-index: 100;
+            transition: all 500ms cubic-bezier(0.55, 0, 0.1, 1);
+            &.open {
+                left: 0 !important;
+            }
+        }
     }
-  }
 
-  .ui.left.menu.sidebar.editSideBar {
-    height: calc(100% - 109px) !important;
-  }
-
-  .page {
-    $input-padding: 4.85px 9px !important;
-    $input-left: -10px;
-    .pageDescription {
-      $font-size: 12px;
-      opacity: 0.6;
-      font-size: $font-size;
-      padding-left: 0;
-
-      &.editPlaceholder {
-        font-style: italic;
-      }
-
-      input {
-        padding: $input-padding;
-        font-size: $font-size !important;
-        font-weight: 700;
-        width: 260px;
-        margin-left: $input-left;
-      }
+    .ui.left.menu.sidebar.editSideBar {
+        height: calc(100% - 109px) !important;
     }
-    .pageTitle {
-      clear: both;
-      line-height: 1.5;
-      height: 18px;
-      font-size: inherit;
 
-      &.input {
-        width: 230px;
-      }
+    .page {
+        $input-padding: 4.85px 9px !important;
+        $input-left: -10px;
+        .pageDescription {
+            $font-size: 14px;
+            font-size: $font-size;
+            padding: 0;
+            font-weight: normal;
+            color: $cloudify-grey;
 
-      input {
-        font-weight: 700;
-        font-size: 14px;
-        position: absolute;
-        left: $input-left;
-        top: -4px;
-        padding: $input-padding;
-      }
-    }
-  }
+            &.editPlaceholder {
+                font-style: italic;
+            }
 
-  .ui.breadcrumb {
-    width: 100%;
-    .section:not(.active):not(.input) {
-      cursor: pointer;
+            input {
+                padding: $input-padding;
+                font-size: $font-size !important;
+                font-weight: normal;
+                width: 260px;
+                margin-left: $input-left;
+                padding-bottom: 0 !important;
+                margin-left: -8px;
+                margin-top: -5px;
+            }
+        }
+        .pageTitle {
+            clear: both;
+            line-height: 1.5;
+            height: 18px;
+            font-size: inherit;
+
+            &.input {
+                width: 230px;
+            }
+
+            input {
+                font-weight: 700;
+                font-size: 14px;
+                position: absolute;
+                left: $input-left;
+                top: -4px;
+                padding: $input-padding;
+            }
+        }
     }
-    > * {
-      vertical-align: bottom !important;
+
+    .ui.breadcrumb {
+        width: 100%;
+        .section:not(.active):not(.input) {
+            cursor: pointer;
+        }
+        > * {
+            vertical-align: bottom !important;
+        }
     }
-  }
 }
 
 .grid-stack > .grid-stack-item.widget > .grid-stack-item-content {
-  overflow-x: initial;
-  overflow-y: initial;
+    overflow-x: initial;
+    overflow-y: initial;
 }
 
 .gridStackBottomSpace {
-  height: 150px;
+    height: 150px;
 }
 
 .react-grid-item.widget {
-  z-index: auto !important;
+    z-index: auto !important;
 }
 
 .maximizeWidget .widget {
-  display: none;
+    display: none;
 
-  &.maximize {
-    $maximizedWidgetGap: 1rem;
+    &.maximize {
+        $maximizedWidgetGap: 1rem;
 
-    display: block;
-    width: auto !important;
-    height: auto !important;
-    transform: translate(0px, 0px) !important;
-    position: fixed !important;
-    top: 8rem !important;
-    bottom: $maximizedWidgetGap !important;
-    left: $maximizedWidgetGap !important;
-    right: $maximizedWidgetGap !important;
-    outline: 0;
+        display: block;
+        width: auto !important;
+        height: auto !important;
+        transform: translate(0px, 0px) !important;
+        position: fixed !important;
+        top: 8rem !important;
+        bottom: $maximizedWidgetGap !important;
+        left: $maximizedWidgetGap !important;
+        right: $maximizedWidgetGap !important;
+        outline: 0;
 
-    .widget{
-      display: block;
+        .widget {
+            display: block;
+        }
     }
-  }
 }
 
 .pages {
+    .ui-sortable-helper {
+        background-color: rgba(255, 255, 255, 0.4) !important;
+    }
 
-  .ui-sortable-helper {
-    background-color: rgba(255,255,255,0.4) !important;
-  }
-
-  .ui-sortable-placeholder {
-    height: 40px !important;
-  }
-
+    .ui-sortable-placeholder {
+        height: 40px !important;
+    }
 }
 
-.react-grid-placeholder{
-  background-color: $grey-normal !important;
-  border: 2px dotted $grey-veryDark;
-  border-radius: 2px;
-}
-
-.layout{
-  &.isEditMode{
-    background-color: $grey-veryLight;
-    border: 1px solid $grey-light;
-    border-radius: 5px;
-  }
-
-  &>.react-draggable{
-    background-color: rgba(0,0,0,.04);
+.react-grid-placeholder {
+    background-color: $grey-normal !important;
+    border: 2px dotted $grey-veryDark;
     border-radius: 2px;
-  }
-  &>.react-draggable-dragging{
-    opacity: 0.3;
-    filter: blur(1px);
-  }
+}
 
-  .widgetItem{
-    height: 100%;
-  }
+.layout {
+    &.isEditMode {
+        background-color: $grey-veryLight;
+        border: 1px solid $grey-light;
+        border-radius: 5px;
+    }
 
-  .widgetWithoutContent{
-    overflow: auto;
-  }
+    & > .react-draggable {
+        background-color: rgba(0, 0, 0, 0.04);
+        border-radius: 2px;
+    }
+    & > .react-draggable-dragging {
+        opacity: 0.3;
+        filter: blur(1px);
+    }
+
+    .widgetItem {
+        height: 100%;
+        box-shadow: none !important;
+    }
+
+    .widgetWithoutContent {
+        overflow: auto;
+    }
 }
 
 .widget {
-  --widget-buttons-whitespace: 5px;
+    --widget-buttons-whitespace: 5px;
 
-  .headerless {
-    --widget-buttons-whitespace: 0;
-  }
-
-  .widgetEditButtons, .widgetViewButtons {
-    position: absolute;
-    top: var(--widget-buttons-whitespace);
-    right : var(--widget-buttons-whitespace);
-    display: none;
-    z-index: 5;
-
-    a {
-      color: inherit !important;
+    .headerless {
+        --widget-buttons-whitespace: 0;
     }
 
-    a:hover {
-      text-decoration: none !important;
-    }
-  }
+    .widgetEditButtons,
+    .widgetViewButtons {
+        position: absolute;
+        top: var(--widget-buttons-whitespace);
+        right: var(--widget-buttons-whitespace);
+        display: none;
+        z-index: 5;
 
-  .widgetViewButtons.alwaysOnTop {
-    display: block;
-  }
+        a {
+            color: inherit !important;
+        }
 
-  &:hover {
-    .widgetEditButtons, .widgetViewButtons{
-      display: block;
-    }
-
-    .ui.basic.segment.borderOnHover {
-      border: 1px solid rgba(34, 36, 38, 0.15);
-    }
-  }
-
-  .row {
-    cursor: pointer;
-
-    .rowActions {
-      white-space: nowrap;
-//      visibility: hidden;
+        a:hover {
+            text-decoration: none !important;
+        }
     }
 
-    &:hover .rowActions{
-//      visibility: visible;
+    .widgetViewButtons.alwaysOnTop {
+        display: block;
     }
 
+    &:hover {
+        .widgetEditButtons,
+        .widgetViewButtons {
+            display: block;
+        }
 
-  }
-
-  .ui.segment.widgetItem {
-    &:not(.standalone) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-    }
-    &.standalone {
-      padding: 0;
+        .ui.basic.segment.borderOnHover {
+            border: 1px solid rgba(34, 36, 38, 0.15);
+        }
     }
 
-    .widgetName {
-      padding-left: 0;
-      padding-bottom: 0;
-      margin-left: 0;
-      font-size: inherit;
-      color: inherit;
+    .row {
+        cursor: pointer;
 
-      input {
-        font-weight: bold;
-        padding: 0.5px 9px;
-        position: relative;
-        left: -10px;
-        top: 2px;
-      }
-    }
-  }
+        .rowActions {
+            white-space: nowrap;
+            //      visibility: hidden;
+        }
 
-  .widgetContent {
-    &:not(.standalone) {
-      position: absolute;
-      top: 35px;
-      bottom: 15px;
-      left: 0;
-      right: 0;
-      overflow: auto;
-      padding: 15px;
+        &:hover .rowActions {
+            //      visibility: visible;
+        }
     }
 
-    &.noHeader {
-      top: 0;
-      bottom: 0;
+    .ui.segment.widgetItem {
+        &:not(.standalone) {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+        &.standalone {
+            padding: 0;
+        }
+
+        .widgetName {
+            padding-left: 0;
+            padding-bottom: 0;
+            margin-left: 0;
+            font-size: inherit;
+            color: inherit;
+
+            input {
+                font-weight: bold;
+                padding: 0.5px 9px;
+                position: relative;
+                left: -10px;
+                top: 2px;
+            }
+        }
     }
 
-    &.standalone.noHeader {
-      // NOTE: margin so the help modal icon does appears to the side of the
-      // widget, instead of on top
-      margin-right: 15px;
-    }
+    .widgetContent {
+        &:not(.standalone) {
+            position: absolute;
+            top: 35px;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            overflow: auto;
+            padding: 15px;
+        }
 
-    &.noBorder {
-      overflow: initial;
-      padding: 0 !important;
+        &.noHeader {
+            top: 0;
+            bottom: 0;
+        }
+
+        &.standalone.noHeader {
+            // NOTE: margin so the help modal icon does appears to the side of the
+            // widget, instead of on top
+            margin-right: 15px;
+        }
+
+        &.noBorder {
+            overflow: initial;
+            padding: 0 !important;
+        }
     }
-  }
 }
 
 .uploadSnapshot {
-  float: right;
+    float: right;
 }
 
 .createSnapshot {
-  float: right;
+    float: right;
 }
 
 .snapshotsButtons {
-  position: relative;
-  bottom: 5px;
+    position: relative;
+    bottom: 5px;
 }
 
 // TODO need to calc it according to screen size
 .editWidgetModal {
-  max-height: none;
+    max-height: none;
 }
 
 .loginContainer {
@@ -310,300 +314,300 @@ a:hover {
 
     input,
     input:placeholder-shown {
-      margin: 0 50px !important;
-      color: $white !important;
-      background: rgba(255, 255, 255, 0.3) !important;
+        margin: 0 50px !important;
+        color: $white !important;
+        background: rgba(255, 255, 255, 0.3) !important;
     }
 
     input:focus,
     input:placeholder-shown:focus {
-      background: rgba(255, 255, 255, 0.6) !important;
+        background: rgba(255, 255, 255, 0.6) !important;
     }
 
     input::placeholder {
-      color: $white !important;
-      opacity: 1 !important; /* Firefox */
+        color: $white !important;
+        opacity: 1 !important; /* Firefox */
     }
 
     button {
-      display: block !important;
-      margin: 30px auto !important;
-      min-width: 50% !important;
-      border-radius: 25px !important;
-      color: $white !important;
+        display: block !important;
+        margin: 30px auto !important;
+        min-width: 50% !important;
+        border-radius: 25px !important;
+        color: $white !important;
     }
-  }
+}
 
 .loginContainerExtended {
-  height: 400px;
+    height: 400px;
 }
 
 .manager {
-  .icon.statusIcon {
-    line-height: 18px;
-    margin-right: 0;
-    margin-left: 7px;
-  }
+    .icon.statusIcon {
+        line-height: 18px;
+        margin-right: 0;
+        margin-left: 7px;
+    }
 }
 
 table.servicesData {
-  margin-left: auto !important;
-  margin-right: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
 
 table.servicesData button.refreshButton {
-  width: auto !important;
+    width: auto !important;
 }
 
 .managerVersion {
-  font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 .ui.menu:not(.vertical) .item.configPanel {
-  flex-direction: row;
-  align-items: flex-end;
+    flex-direction: row;
+    align-items: flex-end;
 }
 
 .ui.inline.loader.widgetLoader {
-  position:  absolute;
-  left: auto;
-  bottom: auto;
-  display: none;
-  right: 50px;
-  z-index: 5;
+    position: absolute;
+    left: auto;
+    bottom: auto;
+    display: none;
+    right: 50px;
+    z-index: 5;
 
-  &.header {
-    top: 4px;
-  }
+    &.header {
+        top: 4px;
+    }
 
-  &.noheader {
-    top: 5px;
-  }
+    &.noheader {
+        top: 5px;
+    }
 }
 
 .actionIcons {
-  & > i.icon {
-    margin-right: 2px !important;
-  }
+    & > i.icon {
+        margin-right: 2px !important;
+    }
 }
 
 .ui.grid {
+    .rightDivider {
+        position: relative;
+    }
 
-  .rightDivider {
-    position: relative;
-  }
+    .rightDivider::after {
+        content: '';
+        border-left: 1px solid rgba(34, 36, 38, 0.15);
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        height: calc(100% - 2rem);
+        position: absolute;
+        right: 0;
+        top: 1rem;
+        width: 0;
+    }
 
-  .rightDivider::after {
-    content: "";
-    border-left: 1px solid rgba(34, 36, 38, 0.15);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    height: calc(100% - 2rem);
-    position: absolute;
-    right: 0;
-    top: 1rem;
-    width: 0;
-  }
+    .bottomDivider {
+        position: relative;
+    }
 
-  .bottomDivider {
-    position: relative;
-  }
-
-  .bottomDivider::after {
-    content: "";
-    border-top: 1px solid rgba(34, 36, 38, 0.15);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    width: calc(100% - 2rem);
-    position: absolute;
-    left: 1rem;
-    bottom: 0;
-    height: 0;
-  }
-
+    .bottomDivider::after {
+        content: '';
+        border-top: 1px solid rgba(34, 36, 38, 0.15);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        width: calc(100% - 2rem);
+        position: absolute;
+        left: 1rem;
+        bottom: 0;
+        height: 0;
+    }
 }
 
 .breakWord {
-  display: block !important;
-  word-wrap: break-word;
+    display: block !important;
+    word-wrap: break-word;
 }
 
 /* Modal */
 
 .ui.modal.tiny {
-  width: 500px !important;
-  margin-left: -222px !important;
+    width: 500px !important;
+    margin-left: -222px !important;
 }
 
 .ui.tiny.modal > .header:not(.ui) {
-  font-size: 1.3em;
+    font-size: 1.3em;
 }
 
 /* Center vertically */
 
 .rightFloated {
-  float: right;
+    float: right;
 }
 
 .leftFloated {
-  float: left;
+    float: left;
 }
 
 .verticalCenter {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .alignCenter {
-  text-align: center !important;
+    text-align: center !important;
 }
 
 .noWrap {
-  white-space: nowrap !important;
+    white-space: nowrap !important;
 }
 
 .fullHeight {
-  height: 100%;
+    height: 100%;
 }
 
 .noPadded {
-  padding: 0 !important;
+    padding: 0 !important;
 }
 
-.ui.dropdown .menu>.item.indent {
-  padding-left: 30px !important;
+.ui.dropdown .menu > .item.indent {
+    padding-left: 30px !important;
 }
 
 .ui.dropdown > a.label {
-  text-decoration: none !important;
+    text-decoration: none !important;
 }
 
-.ui.dropdown.multiple[role=combobox][aria-expanded=false] {
-  overflow-y: auto;
-  max-height: 35px;
+.ui.dropdown.multiple[role='combobox'][aria-expanded='false'] {
+    overflow-y: auto;
+    max-height: 35px;
 
-  .icon {
-    line-height: inherit;
-  }
+    .icon {
+        line-height: inherit;
+    }
 }
 
 .ui.form .inline.fields {
-  align-items: unset !important;
+    align-items: unset !important;
 }
 
-.ui.divided.light.list>.item {
-  border-top: 1px solid $grey-veryLight;
+.ui.divided.light.list > .item {
+    border-top: 1px solid $grey-veryLight;
 }
 
-.ui.divided.light.list>.item:first-child {
-  border-top: none;
+.ui.divided.light.list > .item:first-child {
+    border-top: none;
 }
 
 /* A href underscore */
 a.underline {
-  text-decoration: none !important;
-  color: inherit;
-
-  &:hover {
+    text-decoration: none !important;
     color: inherit;
-  }
 
-  &::before {
-    backface-visibility: hidden;
-    background-color: inherit;
-    bottom: 1px;
-    content: "";
-    height: 1px;
-    left: 0;
-    position: absolute;
-    top: auto;
-    transform: scaleX(0);
-    transition: all 0.2s ease 0s;
-    width: 100%;
-  }
+    &:hover {
+        color: inherit;
+    }
 
-  &:hover::before {
-    background-color: $black;
-    transform: scaleX(1);
-  }
+    &::before {
+        backface-visibility: hidden;
+        background-color: inherit;
+        bottom: 1px;
+        content: '';
+        height: 1px;
+        left: 0;
+        position: absolute;
+        top: auto;
+        transform: scaleX(0);
+        transition: all 0.2s ease 0s;
+        width: 100%;
+    }
+
+    &:hover::before {
+        background-color: $black;
+        transform: scaleX(1);
+    }
 }
 
 .clickable {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .superscripted {
-  vertical-align: super;
+    vertical-align: super;
 }
 
 /* NodesTree */
 
 .nodes-tree li .rc-tree-node-content-wrapper {
-  display: inline !important;
-  padding: 1px 3px 3px 0  !important;
+    display: inline !important;
+    padding: 1px 3px 3px 0 !important;
 }
 
 .typesHierarchy .rc-tree-switcher_open {
-  display: none !important;
+    display: none !important;
 }
 
 /* Splitter */
 
 .widgetContent {
-  .splitter-layout {
-    top: 1rem;
-    bottom: 0;
-    left: 1rem;
-    right: 1rem;
-    width: inherit;
-    height: inherit;
+    .splitter-layout {
+        top: 1rem;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        width: inherit;
+        height: inherit;
 
-    &>.layout-splitter {
-      background-color: $grey-light;
+        & > .layout-splitter {
+            background-color: $grey-light;
+        }
     }
-  }
 }
 
 .ui.sidebar.editModeSidebar {
-  box-shadow: none !important;
-  background-color: transparent !important;
-  max-width: 500px !important;
-  margin: 0 calc(50% - 250px) !important;
-  display: block;
+    box-shadow: none !important;
+    background-color: transparent !important;
+    max-width: 500px !important;
+    margin: 0 calc(50% - 250px) !important;
+    display: block;
 
-  .content {
-    margin-top: 10px;
-    display: inline-block;
-    width: 100%;
-  }
+    .content {
+        margin-top: 10px;
+        display: inline-block;
+        width: 100%;
+    }
 
-  .button {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
+    .button {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
 }
 
 .forceMaxWidth {
-  white-space: pre-wrap;       /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
-  max-width: 500px;
-  margin: 1px;
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    max-width: 500px;
+    margin: 1px;
 }
 
 .topRightCorner {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
-.ui.ordered.list .list>.item:before, .ui.ordered.list>.item:before, ol.ui.list li:before {
-  position: relative !important;
-  margin-right: 0.25rem !important;
-  content: counters(ordered,".") "." !important;
-  vertical-align: inherit !important;
+.ui.ordered.list .list > .item:before,
+.ui.ordered.list > .item:before,
+ol.ui.list li:before {
+    position: relative !important;
+    margin-right: 0.25rem !important;
+    content: counters(ordered, '.') '.' !important;
+    vertical-align: inherit !important;
 }
 
 .widgetButton {
-  width: 100%;
+    width: 100%;
 }

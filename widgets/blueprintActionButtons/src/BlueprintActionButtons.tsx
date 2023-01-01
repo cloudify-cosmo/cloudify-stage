@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'react';
-import type { Field } from '../../common/src/types';
+import type { Field } from '../../../app/widgets/common/types';
 import Consts from './consts';
 import Utils from './utils';
 

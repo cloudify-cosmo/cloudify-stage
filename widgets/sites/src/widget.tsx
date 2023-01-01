@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'This widget shows a list of available sites and allow managing them',
     initialWidth: 5,
     initialHeight: 16,
-    color: 'blue',
     fetchUrl: {
         sites: '[manager]/sites[params]',
         siteDeploymentCount: '[manager]/summary/deployments?_target_field=site_name'

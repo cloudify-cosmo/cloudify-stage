@@ -1,15 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-
 import colors from 'cloudify-ui-common-frontend/styles/_colors.scss';
 import { LoadingOverlay } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without, wrap } from 'lodash';
-import PropTypes from 'prop-types';
+import type { InputOnChangeData, MenuItemProps, StrictInputProps, StrictMenuItemProps } from 'semantic-ui-react';
 
+import { connect, useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { updateWidgetDefinition } from '../actions/widgetDefinitions';
+import type { GetWidgetsUsedResponse } from 'backend/routes/Widgets.types';
+import type { EnhancedWidgetDefinition } from '../actions/widgetDefinitions';
+import {
+    checkIfWidgetIsUsed,
+    installWidget,
+    replaceWidget,
+    uninstallWidget,
+    updateWidgetDefinition
+} from '../actions/widgetDefinitions';
+import Consts from '../utils/consts';
+import type { ReduxState } from '../reducers';
+import type { ReduxThunkDispatch } from '../configureStore';
+import type GenericConfigType from '../utils/GenericConfig';
 import GenericConfig from '../utils/GenericConfig';
 import { useBoolean, useResettableState } from '../utils/hooks';
 import LoaderUtils from '../utils/LoaderUtils';
@@ -34,6 +44,7 @@ import {
 } from './basic/index';
 import EditModeButton from './EditModeButton';
 import InstallWidgetModal from './InstallWidgetModal';
+import type { ObjectKeys } from '../utils/types';
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;
@@ -96,21 +107,37 @@ const StyledItem = styled(Item)`
 
 let nameIndex = 0;
 
-function generateCategories(widgets) {
-    const categories = widgets.reduce((curr, next) => {
+type Category = ObjectKeys<typeof GenericConfigType['CATEGORY']>;
+interface CategoryCount {
+    name: Category;
+    count: number;
+}
+function generateCategories(widgets: EnhancedWidgetDefinition[]) {
+    const categories = widgets.reduce((result: CategoryCount[], next) => {
         (next.categories || [GenericConfig.CATEGORY.OTHERS]).forEach(category => {
             if (!next.loaded) return;
-            const idx = curr.findIndex(current => current.name === category);
+            const idx = result.findIndex(current => current.name === category);
             if (idx === -1) {
-                curr.push({ name: category, count: 1 });
+                result.push({ name: category, count: 1 });
             } else {
-                curr[idx].count += 1;
+                result[idx].count += 1;
             }
         });
-        return curr;
+        return result;
     }, []);
 
     return sortBy(categories, 'name');
+}
+
+export interface AddWidgetModalProps {
+    addButtonTitle: string;
+    canInstallWidgets: boolean;
+    widgetDefinitions: EnhancedWidgetDefinition[];
+    onWidgetAdded: (widgetId: string, widgetDefinition: EnhancedWidgetDefinition) => any;
+    onWidgetInstalled: (widgetFile: File | null, widgetUrl: string) => any;
+    onWidgetUninstalled: (widgetId: string) => any;
+    onWidgetUpdated: (widgetId: string, widgetFile: File | null, widgetUrl: string) => any;
+    onWidgetUsed: (widgetId: string) => Promise<GetWidgetsUsedResponse>;
 }
 
 function AddWidgetModal({
@@ -122,17 +149,20 @@ function AddWidgetModal({
     onWidgetUpdated,
     onWidgetUninstalled,
     widgetDefinitions
-}) {
-    const [filteredWidgetDefinitions, setFilteredWidgetDefinitions] = useState(widgetDefinitions);
+}: AddWidgetModalProps) {
+    const [filteredWidgetDefinitions, setFilteredWidgetDefinitions] =
+        useState<EnhancedWidgetDefinition[]>(widgetDefinitions);
     const [search, setSearch, resetSearch] = useResettableState('');
     const [showConfirm, setShowConfirm, unsetShowConfirm] = useBoolean();
-    const [widgetToRemove, setWidgetToRemove, resetWidgetToRemove] = useResettableState({});
+    const [widgetToRemove, setWidgetToRemove, resetWidgetToRemove] =
+        useResettableState<EnhancedWidgetDefinition | null>(null);
     const [showThumbnail, setShowThumbnail, unsetShowThumbnail] = useBoolean();
-    const [thumbnailWidget, setThumbnailWidget, resetThumbnailWidget] = useResettableState({});
-    const [usedByList, setUsedByList, resetUsedByList] = useResettableState([]);
+    const [thumbnailWidget, setThumbnailWidget, resetThumbnailWidget] =
+        useResettableState<EnhancedWidgetDefinition | null>(null);
+    const [usedByList, setUsedByList, resetUsedByList] = useResettableState<GetWidgetsUsedResponse>([]);
     const [categories, setCategories] = useState(generateCategories(widgetDefinitions));
-    const [selectedCategory, setSelectedCategory] = useState(GenericConfig.CATEGORY.ALL);
-    const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState([]);
+    const [selectedCategory, setSelectedCategory] = useState<Category>(GenericConfig.CATEGORY.ALL);
+    const [widgetsToAdd, setWidgetsToAdd, resetWidgetsToAdd] = useResettableState<string[]>([]);
     const [open, setOpen, unsetOpen] = useBoolean();
     const [error, setError] = useState();
     const dispatch = useDispatch();
@@ -155,9 +185,10 @@ function AddWidgetModal({
         () =>
             widgetDefinitions.forEach(widgetDefinition => {
                 if (!widgetDefinition.loaded) {
-                    WidgetDefinitionsLoader.loadWidget(widgetDefinition).then(loadedWidgetDefinition =>
-                        dispatch(updateWidgetDefinition(widgetDefinition.id, loadedWidgetDefinition))
-                    );
+                    WidgetDefinitionsLoader.loadWidget(widgetDefinition).then(loadedWidgetDefinition => {
+                        if (loadedWidgetDefinition)
+                            dispatch(updateWidgetDefinition(widgetDefinition.id, loadedWidgetDefinition));
+                    });
                 }
             }),
         []
@@ -173,7 +204,7 @@ function AddWidgetModal({
         unsetOpen();
     }
 
-    function openThumbnailModal(event, widget) {
+    function openThumbnailModal(event: Event, widget: EnhancedWidgetDefinition) {
         event.stopPropagation();
         setShowThumbnail();
         setThumbnailWidget(widget);
@@ -200,13 +231,13 @@ function AddWidgetModal({
         closeModal();
     }
 
-    function toggleWidgetInstall(widgetId) {
+    function toggleWidgetInstall(widgetId: string) {
         setWidgetsToAdd(
             includes(widgetsToAdd, widgetId) ? without(widgetsToAdd, widgetId) : [...widgetsToAdd, widgetId]
         );
     }
 
-    function confirmRemove(event, widget) {
+    function confirmRemove(_event: React.MouseEvent, widget: EnhancedWidgetDefinition) {
         onWidgetUsed(widget.id)
             .then(widgetUsedByList => {
                 setWidgetToRemove(widget);
@@ -218,22 +249,26 @@ function AddWidgetModal({
             });
     }
 
-    function getWidgetsToAddWithout(widgetId) {
+    function getWidgetsToAddWithout(widgetId: string) {
         return without(widgetsToAdd, widgetId);
     }
 
-    function uninstallWidget() {
+    function doUninstallWidget() {
         unsetShowConfirm();
-        onWidgetUninstalled(widgetToRemove.id).then(() => setWidgetsToAdd(getWidgetsToAddWithout(widgetToRemove.id)));
+        if (widgetToRemove) {
+            onWidgetUninstalled(widgetToRemove.id).then(() =>
+                setWidgetsToAdd(getWidgetsToAddWithout(widgetToRemove.id))
+            );
+        }
     }
 
-    function updateWidget(widget, widgetFile, widgetUrl) {
+    function updateWidget(widget: EnhancedWidgetDefinition, widgetFile: File | null, widgetUrl: string) {
         return onWidgetUpdated(widget.id, widgetFile, widgetUrl).then(() =>
             setWidgetsToAdd(getWidgetsToAddWithout(widget.id))
         );
     }
 
-    function updateCategoriesCounter(widgets) {
+    function updateCategoriesCounter(widgets: EnhancedWidgetDefinition[]) {
         setCategories(
             categories.map(category => {
                 category.count = widgets.filter(
@@ -244,24 +279,31 @@ function AddWidgetModal({
         );
     }
 
-    function getWidgetsByCategory(widgets, category) {
-        const filtered = widgets.filter(item => {
-            item.categories = item.categories || [GenericConfig.CATEGORY.OTHERS];
-            return category === GenericConfig.CATEGORY.ALL || item.categories.indexOf(category) !== -1;
+    function getWidgetsByCategory(widgets: EnhancedWidgetDefinition[], category: Category) {
+        const filtered = widgets.filter(widget => {
+            widget.categories = widget.categories || [GenericConfig.CATEGORY.OTHERS];
+            return category === GenericConfig.CATEGORY.ALL || widget.categories.indexOf(category) !== -1;
         });
 
         return filtered;
     }
 
-    function getWidgetsBySearch(widgets, searchText) {
+    function getWidgetsBySearch(widgets: EnhancedWidgetDefinition[], searchText: string) {
         const filtered = widgets.filter(el => el.name.toLowerCase().includes(searchText.toLowerCase() || ''));
         updateCategoriesCounter(filtered);
         return filtered;
     }
 
-    function doFilterWidgets(field, isCategoryChange = false) {
-        const updatedSearch = isCategoryChange ? search : field.value;
-        const category = isCategoryChange ? field.name : selectedCategory;
+    function doFilterWidgets(field: InputOnChangeData | MenuItemProps) {
+        let updatedSearch = '';
+        let category: Category = GenericConfig.CATEGORY.ALL;
+        if ('value' in field) {
+            updatedSearch = field.value;
+            category = selectedCategory;
+        } else {
+            updatedSearch = search;
+            category = field.name;
+        }
 
         let filtered = getWidgetsBySearch(widgetDefinitions, updatedSearch);
         filtered = getWidgetsByCategory(filtered, category);
@@ -271,15 +313,15 @@ function AddWidgetModal({
         setFilteredWidgetDefinitions(filtered);
     }
 
-    const filterWidgets = (proxy, field) => doFilterWidgets(field);
+    const filterWidgets: StrictInputProps['onChange'] = (_event, data) => doFilterWidgets(data);
 
-    const filterByCategory = (proxy, field) => doFilterWidgets(field, true);
+    const filterByCategory: StrictMenuItemProps['onClick'] = (_event, data) => doFilterWidgets(data);
 
     const addWidgetBtn = (
         <EditModeButton
             icon="add"
             labelPosition="left"
-            content={i18n.t('editMode.addWidget.addButton', 'Add Widget')}
+            content={i18n.t('editMode.addWidget.addButton')}
             className="addWidgetBtn"
             style={{ marginBottom: 15, marginLeft: 1, marginTop: 1 }}
             title={addButtonTitle}
@@ -288,7 +330,7 @@ function AddWidgetModal({
 
     const installWidgetBtn = (
         <Button animated="vertical" id="installWidgetBtn" onClick={() => {}}>
-            <Button.Content visible>{i18n.t('editMode.addWidget.installButton', 'Install new widget')}</Button.Content>
+            <Button.Content visible>{i18n.t('editMode.addWidget.installButton')}</Button.Content>
             <Button.Content hidden>
                 <Icon name="folder open" />
             </Button.Content>
@@ -300,18 +342,18 @@ function AddWidgetModal({
             size="small"
             compact
             basic
-            content={i18n.t('editMode.addWidget.updateButton', 'Update')}
+            content={i18n.t('editMode.addWidget.updateButton')}
             className="updateWidgetButton"
         />
     );
 
     const confirmContent = !isEmpty(usedByList) ? (
         <Segment basic>
-            <h5>{i18n.t('editMode.removeWidget.usedBy.header', 'Widget is currently used by:')}</h5>
+            <h5>{i18n.t('editMode.removeWidget.usedBy.header')}</h5>
 
             <DataTable>
-                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.username', 'Username')} />
-                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.manager', 'Manager IP')} />
+                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.username')} />
+                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.manager')} />
 
                 {usedByList.map(item => {
                     return (
@@ -351,7 +393,7 @@ function AddWidgetModal({
         </Menu>
     );
 
-    const imageSrc = widget =>
+    const imageSrc = (widget: EnhancedWidgetDefinition) =>
         StageUtils.Url.url(LoaderUtils.getResourceUrl(`widgets/${widget.id}/widget.png`, widget.isCustom));
 
     return (
@@ -370,7 +412,7 @@ function AddWidgetModal({
                     icon="search"
                     fluid
                     size="mini"
-                    placeholder={i18n.t('editMode.addWidget.search', 'Search widgets ...')}
+                    placeholder={i18n.t('editMode.addWidget.search')}
                     onChange={filterWidgets}
                     value={search}
                 />
@@ -384,69 +426,60 @@ function AddWidgetModal({
                             <WidgetListWrapper>
                                 <WidgetList divided>
                                     {find(widgetDefinitions, { loaded: false }) && <LoadingOverlay />}
-                                    {filteredWidgetDefinitions.map(
-                                        widget => (
-                                            <StyledItem
-                                                key={widget.id}
-                                                data-id={widget.id}
-                                                onClick={() => {
-                                                    toggleWidgetInstall(widget.id);
-                                                }}
-                                            >
-                                                <AddWidgetCheckBox
-                                                    readOnly
-                                                    title={i18n.t('editMode.addWidget.checkbox', 'Add widget to page')}
-                                                    checked={widgetsToAdd.includes(widget.id)}
-                                                />
-                                                <Item.Image
-                                                    as="div"
-                                                    size="small"
-                                                    bordered
-                                                    src={imageSrc(widget)}
-                                                    onClick={event => openThumbnailModal(event, widget)}
-                                                />
-                                                <Item.Content>
-                                                    <Item.Header as="div">{widget.name}</Item.Header>
-                                                    <Item.Meta>{widget.description}</Item.Meta>
-                                                    <Item.Description />
-                                                    <Item.Extra>
-                                                        {widget.isCustom && canInstallWidgets && (
-                                                            // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-                                                            <div onClick={e => e.stopPropagation()}>
-                                                                <InstallWidgetModal
-                                                                    onWidgetInstalled={wrap(widget, updateWidget)}
-                                                                    trigger={updateWidgetBtn}
-                                                                    buttonLabel={i18n.t(
-                                                                        'editMode.addWidget.updateModal.button',
-                                                                        'Update Widget'
-                                                                    )}
-                                                                    className="updateWidgetModal"
-                                                                    header={i18n.t(
-                                                                        'editMode.addWidget.updateModal.header',
-                                                                        'Update widget definition'
-                                                                    )}
-                                                                />
+                                    {filteredWidgetDefinitions.map(widget => (
+                                        <StyledItem
+                                            key={widget.id}
+                                            data-id={widget.id}
+                                            onClick={() => {
+                                                toggleWidgetInstall(widget.id);
+                                            }}
+                                        >
+                                            <AddWidgetCheckBox
+                                                readOnly
+                                                title={i18n.t('editMode.addWidget.checkbox')}
+                                                checked={widgetsToAdd.includes(widget.id)}
+                                            />
+                                            <Item.Image
+                                                as="div"
+                                                size="small"
+                                                bordered
+                                                src={imageSrc(widget)}
+                                                onClick={(event: Event) => openThumbnailModal(event, widget)}
+                                            />
+                                            <Item.Content>
+                                                <Item.Header as="div">{widget.name}</Item.Header>
+                                                <Item.Meta>{widget.description}</Item.Meta>
+                                                <Item.Description />
+                                                <Item.Extra>
+                                                    {widget.isCustom && canInstallWidgets && (
+                                                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+                                                        <div onClick={e => e.stopPropagation()}>
+                                                            <InstallWidgetModal
+                                                                /* @ts-ignore InstallWidgetModal not migrated yet */
+                                                                onWidgetInstalled={wrap(widget, updateWidget)}
+                                                                trigger={updateWidgetBtn}
+                                                                buttonLabel={i18n.t(
+                                                                    'editMode.addWidget.updateModal.button'
+                                                                )}
+                                                                className="updateWidgetModal"
+                                                                header={i18n.t('editMode.addWidget.updateModal.header')}
+                                                            />
 
-                                                                <Button
-                                                                    floated="left"
-                                                                    size="small"
-                                                                    compact
-                                                                    basic
-                                                                    content={i18n.t(
-                                                                        'editMode.removeWidget.button',
-                                                                        'Remove'
-                                                                    )}
-                                                                    onClick={e => confirmRemove(e, widget)}
-                                                                    className="removeWidgetButton"
-                                                                />
-                                                            </div>
-                                                        )}
-                                                    </Item.Extra>
-                                                </Item.Content>
-                                            </StyledItem>
-                                        ),
-                                        this
-                                    )}
+                                                            <Button
+                                                                floated="left"
+                                                                size="small"
+                                                                compact
+                                                                basic
+                                                                content={i18n.t('editMode.removeWidget.button')}
+                                                                onClick={event => confirmRemove(event, widget)}
+                                                                className="removeWidgetButton"
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </Item.Extra>
+                                            </Item.Content>
+                                        </StyledItem>
+                                    ))}
 
                                     {isEmpty(filteredWidgetDefinitions) && (
                                         <Item
@@ -478,6 +511,7 @@ function AddWidgetModal({
 
                                 {canInstallWidgets && (
                                     <InstallWidgetModal
+                                        /* @ts-ignore InstallWidgetModal not migrated yet */
                                         onWidgetInstalled={onWidgetInstalled}
                                         trigger={installWidgetBtn}
                                         header={i18n.t('editMode.addWidget.installModal.header', 'Install new widget')}
@@ -493,51 +527,54 @@ function AddWidgetModal({
                 </Grid>
             </StyledAddWidgetModal>
 
-            <Confirm
-                open={showConfirm}
-                onCancel={unsetShowConfirm}
-                onConfirm={uninstallWidget}
-                header={i18n.t(
-                    'editMode.removeWidget.confirm',
-                    `Are you sure to remove widget {{name}}`,
-                    pick(widgetToRemove, 'name')
-                )}
-                content={confirmContent}
-                className="removeWidgetConfirm"
-            />
+            {widgetToRemove && (
+                <Confirm
+                    open={showConfirm}
+                    onCancel={unsetShowConfirm}
+                    onConfirm={doUninstallWidget}
+                    header={i18n.t(
+                        'editMode.removeWidget.confirm',
+                        `Are you sure to remove widget {{name}}`,
+                        pick(widgetToRemove, 'name')
+                    )}
+                    content={confirmContent}
+                    className="removeWidgetConfirm"
+                />
+            )}
 
             <Modal open={showThumbnail} basic closeOnDimmerClick closeOnDocumentClick onClose={closeThumbnailModal}>
-                <div>
-                    <Image centered src={imageSrc(thumbnailWidget)} />
-                </div>
+                <div>{thumbnailWidget && <Image centered src={imageSrc(thumbnailWidget)} />}</div>
             </Modal>
         </AddWidgetModalWrapper>
     );
 }
 
-AddWidgetModal.propTypes = {
-    addButtonTitle: PropTypes.string,
-    canInstallWidgets: PropTypes.bool.isRequired,
-    widgetDefinitions: PropTypes.arrayOf(
-        PropTypes.shape({
-            description: PropTypes.string,
-            id: PropTypes.string,
-            isCustom: PropTypes.bool,
-            name: PropTypes.string
-        })
-    ).isRequired,
-    onWidgetAdded: PropTypes.func.isRequired,
-    onWidgetInstalled: PropTypes.func.isRequired,
-    onWidgetUninstalled: PropTypes.func.isRequired,
-    onWidgetUpdated: PropTypes.func.isRequired,
-    onWidgetUsed: PropTypes.func.isRequired
-};
-
-AddWidgetModal.defaultProps = {
-    addButtonTitle: null
-};
-
-// NOTE: AddWidgetModal is not exported directly from this file and cannot be used as a type in the emitted declarations
-/** @type {import('react').ComponentType<import('prop-types').InferProps<typeof AddWidgetModal['propTypes']>>} */
 const MemoizedAddWidgetModal = React.memo(AddWidgetModal, isEqual);
-export default MemoizedAddWidgetModal;
+
+const mapStateToProps = (state: ReduxState) => {
+    const widgetDefinitions = state.widgetDefinitions.filter(definition => {
+        const isLoadingDefinition = !definition.loaded;
+        const isUserAuthorized = StageUtils.isUserAuthorized(definition.permission, state.manager);
+        const isWidgetPermitted = StageUtils.isWidgetPermitted(definition.supportedEditions, state.manager);
+        return isLoadingDefinition || (isUserAuthorized && isWidgetPermitted);
+    });
+    const canInstallWidgets = StageUtils.isUserAuthorized(Consts.permissions.STAGE_INSTALL_WIDGETS, state.manager);
+
+    return {
+        widgetDefinitions,
+        canInstallWidgets
+    };
+};
+
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
+    return {
+        onWidgetInstalled: (widgetFile: File | null, widgetUrl: string) =>
+            dispatch(installWidget(widgetFile, widgetUrl)),
+        onWidgetUninstalled: (widgetId: string) => dispatch(uninstallWidget(widgetId)),
+        onWidgetUpdated: (widgetId: string, widgetFile: File | null, widgetUrl: string) =>
+            dispatch(replaceWidget(widgetId, widgetFile, widgetUrl)),
+        onWidgetUsed: (widgetId: string) => dispatch(checkIfWidgetIsUsed(widgetId))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(MemoizedAddWidgetModal);

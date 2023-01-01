@@ -6,7 +6,7 @@ import type { ButtonProps } from 'semantic-ui-react';
 import EditTabModal from './EditTabModal';
 import EditModeButton from './EditModeButton';
 import { Confirm, Menu } from './basic';
-import AddWidget from '../containers/AddWidget';
+import AddWidgetModal from './AddWidgetModal';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean, useResettableState } from '../utils/hooks';
@@ -22,7 +22,7 @@ const SortableMenuItem = SortableElement(Menu.Item);
 
 const t = StageUtils.getT('editMode');
 
-interface TabsProps {
+export interface TabsProps {
     tabs: TabContent[];
     isEditMode: boolean;
     onTabMoved: (oldIndex: number, newIndex: number) => void;
@@ -131,9 +131,8 @@ export default function Tabs({
             <span className="tabContent">
                 {isEditMode && (
                     <div style={{ paddingTop: 15 }}>
-                        <AddWidget
+                        <AddWidgetModal
                             addButtonTitle={t('addWidget.addToTabButtonTitle')}
-                            // @ts-ignore AddWidget not yet fully migrated to TS
                             onWidgetAdded={(...params) => onWidgetAdded(...params, activeTabIndex)}
                         />
                     </div>

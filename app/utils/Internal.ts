@@ -4,7 +4,7 @@ import Consts from './consts';
 import StageUtils from './stageUtils';
 
 export default class Internal extends External {
-    buildHeaders() {
+    buildHeaders(): ReturnType<External['buildHeaders']> {
         if (!this.managerData) {
             return {};
         }

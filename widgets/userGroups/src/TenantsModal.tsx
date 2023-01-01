@@ -1,19 +1,29 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { pick, pickBy, difference, isEqual, map, forEach } from 'lodash';
+import type { DropdownProps } from 'semantic-ui-react';
+import type { UserGroup } from './widget.types';
+import type { Role } from '../../../app/widgets/common/roles/RolesPicker';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
 import Actions from './actions';
-import GroupPropType from './props/GroupPropType';
 
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 const t = Stage.Utils.getT('widgets.userGroups.modals.tenants');
 
-export default function TenantsModal({ group, open, tenants, toolbox, onHide }) {
+interface TenantsModalProps {
+    group: UserGroup;
+    onHide: () => void;
+    open: boolean;
+    tenants: Record<string, any>;
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function TenantsModal({ group, open, tenants, toolbox, onHide }: TenantsModalProps) {
     const { useState } = React;
     const { useBoolean, useErrors, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [editedTenants, setEditedTenants] = useState({});
+    const [editedTenants, setEditedTenants] = useState<RolesAssignment>({});
     const { errors, setMessageAsError, clearErrors } = useErrors();
 
     useOpenProp(open, () => {
@@ -27,7 +37,7 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
         return true;
     }
 
-    function onRoleChange(tenant, role) {
+    function onRoleChange(tenant: string, role: Role) {
         const newTenants = { ...editedTenants };
         newTenants[tenant] = role;
         setEditedTenants(newTenants);
@@ -41,10 +51,10 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
         const tenantsList = Object.keys(groupTenants);
         const submitTenantsList = Object.keys(editedTenants);
 
-        const tenantsToAdd = _.pick(editedTenants, _.difference(submitTenantsList, tenantsList));
-        const tenantsToRemove = _.difference(tenantsList, submitTenantsList);
-        const tenantsToUpdate = _.pickBy(editedTenants, (role, tenant) => {
-            return groupTenants[tenant] && !_.isEqual(groupTenants[tenant], role);
+        const tenantsToAdd = pick(editedTenants, difference(submitTenantsList, tenantsList));
+        const tenantsToRemove = difference(tenantsList, submitTenantsList);
+        const tenantsToUpdate = pickBy(editedTenants, (role, tenant) => {
+            return groupTenants[tenant] && !isEqual(groupTenants[tenant], role);
         });
 
         const actions = new Actions(toolbox);
@@ -61,15 +71,14 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
             .finally(unsetLoading);
     }
 
-    function handleInputChange(proxy, field) {
-        const newTenants = {};
-        _.forEach(field.value, tenant => {
+    const handleInputChange: DropdownProps['onChange'] = (_proxy: any, field) => {
+        const newTenants: RolesAssignment = {};
+        forEach(field.value as string, tenant => {
             newTenants[tenant] = editedTenants[tenant] || getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setEditedTenants(newTenants);
-    }
-
-    const options = _.map(tenants.items, item => {
+    };
+    const options = map(tenants.items, item => {
         return { text: item.name, value: item.name, key: item.name };
     });
 
@@ -110,11 +119,3 @@ export default function TenantsModal({ group, open, tenants, toolbox, onHide }) 
         </Modal>
     );
 }
-
-TenantsModal.propTypes = {
-    group: GroupPropType.isRequired,
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    tenants: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.object) }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

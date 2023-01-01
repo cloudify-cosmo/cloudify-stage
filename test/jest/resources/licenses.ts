@@ -1,4 +1,6 @@
-export default {
+import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
+
+const licenses: Record<string, LicenseResponse> = {
     activePayingLicense: {
         expiration_date: '2019-11-24T00:00:00.000Z',
         cloudify_version: '4.6',
@@ -64,3 +66,5 @@ export default {
         expired: false
     }
 };
+
+export default licenses;

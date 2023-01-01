@@ -6,7 +6,6 @@ Stage.defineWidget<unknown, unknown, { page?: unknown }>({
     description: 'Number of blueprints',
     initialWidth: 2,
     initialHeight: 8,
-    color: 'blue',
     showHeader: false,
     isReact: true,
     hasReadme: true,

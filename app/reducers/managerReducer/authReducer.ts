@@ -8,7 +8,7 @@ export type IdentityProvider = 'local' | 'okta' | 'ldap' | string;
 
 export interface AuthData {
     username: string;
-    role: any;
+    role: string;
     groupSystemRoles: Record<string, any>;
     tenantsRoles: Record<string, any>;
     state: AuthState;

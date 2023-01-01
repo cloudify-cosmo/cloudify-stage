@@ -1,15 +1,15 @@
 import type { Reducer } from 'redux';
+import type { VersionResponse } from 'backend/handler/AuthHandler.types';
 import { ActionType } from '../../actions/types';
+import type { AuthData } from './authReducer';
 import auth from './authReducer';
+import type { ClusterStatusData } from './clusterStatusReducer';
 import clusterStatus from './clusterStatusReducer';
+import type { TenantsData } from './tenantsReducer';
 import tenants from './tenantsReducer';
+import type { LicenseData } from './licenseReducer';
 import license from './licenseReducer';
 import emptyState from './emptyState';
-import type { ClusterStatusData } from './clusterStatusReducer';
-import type { LicenseData } from './licenseReducer';
-import type { TenantsData } from './tenantsReducer';
-import type { VersionResponse } from '../../../backend/handler/AuthHandler.types';
-import type { AuthData } from './authReducer';
 import type { AuthAction } from '../../actions/manager/auth';
 import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
 import type { VersionAction } from '../../actions/manager/version';
@@ -32,6 +32,7 @@ export interface ManagerData {
     }[];
     tenants: TenantsData;
     version: Partial<VersionResponse>;
+    activeExecutions?: any;
 }
 
 type ManagerAction =

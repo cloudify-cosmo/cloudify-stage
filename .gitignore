@@ -5,6 +5,7 @@
 .tmp
 .nyc_output
 .DS_Store
+.fontello-session
 coverage-*
 conf/me.json
 /dist

@@ -1,25 +1,32 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
+import { get } from 'lodash';
 import log from 'loglevel';
 import { getMaintenanceStatus } from '../actions/manager/maintenance';
 import { getClusterStatus } from '../actions/manager/clusterStatus';
 import StageUtils from './stageUtils';
+import type { ReduxStore } from '../configureStore';
+import type { CancelablePromise } from './types';
 
-let singleton = null;
+type StatusPollerSingleton = StatusPoller;
+let singleton: StatusPollerSingleton;
 
 export default class StatusPoller {
-    constructor(store) {
-        this.store = store;
-        this.pollerTimer = null;
-        this.fetchMaintenanceStatusPromise = null;
-        this.fetchClusterStatusPromise = null;
+    pollerTimer?: NodeJS.Timeout;
+
+    fetchMaintenanceStatusPromise?: CancelablePromise<void>;
+
+    fetchClusterStatusPromise?: CancelablePromise<void>;
+
+    isActive: boolean;
+
+    interval: number;
+
+    constructor(private store: ReduxStore) {
         this.isActive = false;
         this.interval = store.getState().config.app.maintenancePollingInterval;
     }
 
     getManagerIp() {
-        return _.get(this.store.getState(), 'config.manager.ip');
+        return get(this.store.getState(), 'config.manager.ip');
     }
 
     start() {
@@ -44,7 +51,9 @@ export default class StatusPoller {
     }
 
     stopPolling() {
-        clearTimeout(this.pollerTimer);
+        if (this.pollerTimer) {
+            clearTimeout(this.pollerTimer);
+        }
 
         if (this.fetchMaintenanceStatusPromise) {
             this.fetchMaintenanceStatusPromise.cancel();
@@ -72,7 +81,7 @@ export default class StatusPoller {
         return Promise.all([this.fetchMaintenanceStatusPromise.promise, this.fetchClusterStatusPromise.promise]);
     }
 
-    static create(store) {
+    static create(store: ReduxStore) {
         singleton = new StatusPoller(store);
     }
 

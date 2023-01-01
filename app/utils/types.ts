@@ -5,6 +5,8 @@ declare global {
     }
 }
 
+export type ObjectKeys<T extends Record<string, any>> = T[keyof T];
+
 export type CancelablePromise<T> = {
     promise: Promise<T>;
     cancel: () => void;

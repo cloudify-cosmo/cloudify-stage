@@ -11,6 +11,7 @@ export interface Execution {
     workflow_id?: string;
     finished_operations?: number;
     total_operations?: number;
+    is_system_workflow?: boolean;
     /* eslint-enable camelcase  */
 }
 

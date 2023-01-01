@@ -1,7 +1,8 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
-import type { FilterRule } from '../../../../widgets/common/src/filters/types';
-import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import type { ObjectKeys } from 'app/utils/types';
+import type { FilterRule } from 'app/widgets/common/filters/types';
+import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 import { testPageName } from '../../support/commands';
 
@@ -16,12 +17,15 @@ describe('Deployments View widget', () => {
     const blueprintName = `${specPrefix}blueprint`;
     const deploymentId = `${specPrefix}deployment_id`;
     const deploymentName = `${specPrefix}deployment_name`;
+    const prefixedLabelName = `${specPrefix}label_name`;
+    const prefixedLabelValue = `${specPrefix}label_val`;
+
     const exampleSiteName = 'Olsztyn';
     const blueprintUrl = exampleBlueprintUrl;
     const widgetConfiguration: DeploymentsViewWidgetConfiguration = {
         filterByParentDeployment: false,
         fieldsToShow: ['status', 'id', 'name', 'blueprintName', 'location', 'subenvironmentsCount', 'subservicesCount'],
-        labelsToShow: [],
+        keysOfLabelsToShow: ['rendered-inside'],
         pageSize: 100,
         customPollingTime: 10,
         sortColumn: 'created_at',
@@ -45,7 +49,10 @@ describe('Deployments View widget', () => {
             .deployBlueprint(blueprintName, deploymentId, { webserver_port: 9123 }, { display_name: deploymentName })
             .createSite({ name: exampleSiteName, location: '53.77509462534224, 20.473709106445316' })
             .setSite(deploymentId, exampleSiteName)
-            .setLabels(deploymentId, [{ 'rendered-inside': 'details-panel' }]);
+            .setLabels(deploymentId, [
+                { 'rendered-inside': 'details-panel' },
+                { [prefixedLabelName]: prefixedLabelValue }
+            ]);
     });
 
     beforeEach(() => {
@@ -79,6 +86,10 @@ describe('Deployments View widget', () => {
     const widgetConfigurationHelpers = {
         getFieldsDropdown: () => cy.contains('List of fields to show in the table').parent().find('[role="listbox"]'),
         toggleFieldsDropdown: () => widgetConfigurationHelpers.getFieldsDropdown().find('.dropdown.icon').click(),
+
+        getLabelsDropdown: () => cy.contains('List of labels').parent().find('[role="combobox"]'),
+        toggleLabelsDropdown: () => widgetConfigurationHelpers.getLabelsDropdown().click(),
+
         mapHeightInput: () => cy.contains('Map height').parent().find('input[type="number"]')
     };
 
@@ -120,6 +131,34 @@ describe('Deployments View widget', () => {
                 cy.contains(deploymentName);
                 cy.contains(blueprintName);
                 cy.contains(exampleSiteName).should('not.exist');
+            });
+        });
+
+        it('should allow changing displayed labels in columns', () => {
+            useDeploymentsViewWidget({
+                configurationOverrides: {
+                    fieldsToShow: without(widgetConfiguration.fieldsToShow, 'blueprintName', 'location')
+                }
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(prefixedLabelName).should('not.exist');
+            });
+
+            cy.log('Show a label');
+            cy.editWidgetConfiguration(widgetId, () => {
+                widgetConfigurationHelpers.toggleLabelsDropdown();
+                widgetConfigurationHelpers.getLabelsDropdown().within(() => {
+                    cy.contains('[role="listbox"]', prefixedLabelName).click();
+                });
+                widgetConfigurationHelpers.toggleLabelsDropdown();
+            });
+
+            getDeploymentsViewTable().within(() => {
+                cy.contains(deploymentName);
+                cy.contains(prefixedLabelValue);
+                cy.contains(prefixedLabelName);
             });
         });
 
@@ -372,31 +411,28 @@ describe('Deployments View widget', () => {
             const filterFieldLabel = 'Name of the saved filter to apply';
 
             cy.log('Show only precious deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.setSearchableDropdownValue(filterFieldLabel, filterId);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.setSearchableDropdownValue(filterFieldLabel, filterId));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName).should('not.exist');
 
             cy.log('Show all deployments');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.clearSearchableDropdown(filterFieldLabel);
-            });
+            cy.editWidgetConfiguration(widgetId, () => cy.clearSearchableDropdown(filterFieldLabel));
 
             cy.contains(deploymentNameThatMatchesFilter);
             cy.contains(deploymentName);
 
             cy.log('Invalid filter id');
-            cy.editWidgetConfiguration(widgetId, () => {
-                cy.getField(filterFieldLabel)
+            cy.editWidgetConfiguration(widgetId, () =>
+                cy
+                    .getField(filterFieldLabel)
                     .click()
                     .within(() => {
                         cy.get('input').type('some-very-gibberish-filter-id');
                         // NOTE: there should not be such a filter
                         cy.contains('No results found');
-                    });
-            });
+                    })
+            );
         });
 
         it('should return an error when the filter ID saved in the configuration is invalid', () => {
@@ -542,6 +578,7 @@ describe('Deployments View widget', () => {
             useDeploymentsViewWidget();
 
             cy.location('pathname').then(pathname => cy.visit(`${pathname}?filterId=csys-environment-filter`));
+            cy.waitUntilLoaded();
 
             cy.contains('button', 'csys-environment').should('be.visible');
             cy.get('button[title="Clear selected filter"]').should('be.visible');
@@ -916,8 +953,7 @@ describe('Deployments View widget', () => {
         } as const;
         const mapDeploymentsPrefix = `${deploymentName}_map`;
         /** Uses the same ID and display name for the deployment */
-        const getSiteDeploymentId = (siteName: Stage.Types.ObjectKeys<typeof siteNames>) =>
-            `${mapDeploymentsPrefix}_${siteName}`;
+        const getSiteDeploymentId = (siteName: ObjectKeys<typeof siteNames>) => `${mapDeploymentsPrefix}_${siteName}`;
 
         before(() => {
             Object.values(siteNames)

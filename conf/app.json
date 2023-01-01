@@ -1,4 +1,8 @@
 {
+  "backend": {
+    "host": "localhost",
+    "port": 8088
+  },
   "db": {
     "url": "postgres://cloudify:cloudify@localhost:5432/stage",
     "options": {

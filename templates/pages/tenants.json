@@ -1,6 +1,6 @@
 {
   "name": "Tenants",
-  "icon": "user circle",
+  "icon": "cloudify-user-cog",
   "layout": [
     {
       "type": "widgets",

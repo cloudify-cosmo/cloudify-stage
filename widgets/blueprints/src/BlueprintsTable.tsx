@@ -84,7 +84,6 @@ export default function BlueprintsTable({
                                         {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
                                             <Icon
                                                 name="external share"
-                                                bordered
                                                 title="Edit a copy in Composer"
                                                 onClick={(event: Event) => {
                                                     event.stopPropagation();
@@ -98,7 +97,6 @@ export default function BlueprintsTable({
                                         <Icon
                                             name="rocket"
                                             link
-                                            bordered
                                             title="Create deployment"
                                             onClick={(event: Event) => {
                                                 event.stopPropagation();
@@ -110,7 +108,6 @@ export default function BlueprintsTable({
                                 <Icon
                                     name="trash"
                                     link
-                                    bordered
                                     title="Delete blueprint"
                                     onClick={(event: Event) => {
                                         event.stopPropagation();

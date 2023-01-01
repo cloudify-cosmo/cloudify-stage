@@ -7,7 +7,8 @@ import type { FunctionComponent, ReactNode } from 'react';
 
 import { ErrorMessage, LoadingOverlay, Message, Table } from '../../basic';
 import ClusterService from './ClusterService';
-import { clusterServiceBgColor, clusterServiceEnum, ClusterServiceStatus } from './consts';
+import { clusterServiceBgColor, clusterServiceEnum } from './consts';
+import { ClusterServiceStatus } from './types';
 import './ClusterServicesOverview.css';
 import { createPagesMap } from '../../../actions/pageMenu';
 import type { ClusterService as ClusterServiceName, ClusterServices } from './types';
@@ -39,14 +40,17 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
     return (
         <>
             {!_.isEmpty(header) && header}
-            <Table celled basic="very" collapsing className="servicesData" style={{ position: 'relative' }}>
+            <Table
+                celled
+                basic="very"
+                collapsing
+                className="servicesData"
+                style={{ position: 'relative', width: '100%' }}
+            >
                 <Table.Body>
                     {isFetching && <LoadingOverlay />}
                     {fetchingError && (
-                        <ErrorMessage
-                            error={fetchingError}
-                            header={i18n.t('cluster.overview.errorHeader', 'Failed to fetch status')}
-                        />
+                        <ErrorMessage error={fetchingError} header={i18n.t('cluster.overview.errorHeader')} />
                     )}
                     {!fetchingError &&
                         (!_.isEmpty(services) ? (
@@ -77,9 +81,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                             })
                         ) : (
                             <Message>
-                                <Message.Header>
-                                    {i18n.t('cluster.overview.noServices', 'No services available')}
-                                </Message.Header>
+                                <Message.Header>{i18n.t('cluster.overview.noServices')}</Message.Header>
                             </Message>
                         ))}
                 </Table.Body>

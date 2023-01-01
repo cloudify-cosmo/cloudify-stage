@@ -1,15 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
-
+import { useSelector } from 'react-redux';
+import type { ReduxState } from '../../reducers';
 import ClusterStatusIcon from '../shared/cluster/ClusterStatusIcon';
 
-export default function SystemStatusIcon({ systemStatus }) {
+export default function SystemStatusIcon() {
+    const systemStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.status);
     return <ClusterStatusIcon status={systemStatus} />;
 }
-SystemStatusIcon.propTypes = {
-    systemStatus: PropTypes.string
-};
-SystemStatusIcon.defaultProps = {
-    systemStatus: ''
-};

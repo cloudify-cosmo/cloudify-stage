@@ -56,11 +56,20 @@ export interface UserResponse {
     show_getting_started: boolean;
 }
 
+export interface UserGroupResponse {
+    ldap_dn: string | null;
+    name: string;
+    role: string;
+    users: string[];
+    tenants: Record<string, string>;
+    group_system_roles: GroupSystemRoles;
+}
+
 export interface LicenseResponse {
     capabilities: string[] | null;
     cloudify_version: string | null;
     customer_id: string;
-    expiration_date: string;
+    expiration_date: string | null;
     expired: boolean;
     license_edition: string;
     trial: boolean;

@@ -1,6 +1,6 @@
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { ClusterNodeStatus, ClusterService } from 'app/components/shared/cluster/types';
-import { ClusterServiceStatus } from 'app/components/shared/cluster/consts';
+import { ClusterServiceStatus } from 'app/components/shared/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
 
 export type StatusColor = 'green' | 'yellow' | 'red';

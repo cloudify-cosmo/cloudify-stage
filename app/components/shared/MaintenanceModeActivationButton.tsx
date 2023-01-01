@@ -1,14 +1,20 @@
-// @ts-nocheck File not migrated fully to TS
-
-import PropTypes from 'prop-types';
+import type { ButtonProps } from 'semantic-ui-react';
 import React from 'react';
 import i18n from 'i18next';
 import { Button } from '../basic';
 
-export default function MaintenanceModeActivationButton({ activate, onClick, disabled }) {
-    const content = activate
-        ? i18n.t('maintenanceMode.activate', 'Activate Maintenance Mode')
-        : i18n.t('maintenanceMode.deactivate', 'Deactivate Maintenance Mode');
+interface MaintenanceModeActivationButtonProps {
+    activate: boolean;
+    onClick: ButtonProps['onClick'];
+    disabled?: boolean;
+}
+
+export default function MaintenanceModeActivationButton({
+    activate,
+    onClick,
+    disabled = false
+}: MaintenanceModeActivationButtonProps) {
+    const content = activate ? i18n.t('maintenanceMode.activate') : i18n.t('maintenanceMode.deactivate');
 
     return (
         <Button
@@ -22,13 +28,3 @@ export default function MaintenanceModeActivationButton({ activate, onClick, dis
         />
     );
 }
-
-MaintenanceModeActivationButton.propTypes = {
-    activate: PropTypes.bool.isRequired,
-    onClick: PropTypes.func.isRequired,
-    disabled: PropTypes.bool
-};
-
-MaintenanceModeActivationButton.defaultProps = {
-    disabled: false
-};

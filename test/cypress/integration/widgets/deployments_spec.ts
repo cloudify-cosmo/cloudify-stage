@@ -86,7 +86,7 @@ describe('Deployments widget', () => {
                 cy.get('.icon').should('be.visible');
                 cy.get('.label').should('be.visible');
             });
-            cy.getSearchInput().clear();
+            cy.getSearchInput().clear().blur();
         });
 
         describe('showFirstUserJourneyButtons option and', () => {
@@ -132,11 +132,12 @@ describe('Deployments widget', () => {
             });
 
             it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
+                const displayName = 'deploymentDisplayName';
                 const mockedDeployment = {
                     blueprint_id: 'test',
                     created_at: '2022-03-21T08:52:31.251Z',
                     created_by: 'admin',
-                    display_name: 'Test',
+                    display_name: displayName,
                     id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
                     inputs: { webserver_port: 8000 },
                     latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
@@ -146,6 +147,8 @@ describe('Deployments widget', () => {
                 };
                 const mockedResponse = getMockedResponse([mockedDeployment]);
                 mockDeploymentsResponse(mockedResponse);
+
+                cy.contains(displayName).should('be.visible');
                 cy.contains('No Deployments Yet').should('not.exist');
             });
         });
@@ -155,11 +158,9 @@ describe('Deployments widget', () => {
                 'getFilteredDeployments'
             );
 
-            cy.refreshPage();
-
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName);
-            });
+            cy.editWidgetConfiguration('deployments', () =>
+                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
+            );
 
             cy.wait('@getFilteredDeployments');
         });
@@ -217,6 +218,9 @@ describe('Deployments widget', () => {
     });
 
     it('should allow to update deployment', () => {
+        const anotherBlueprintName = `${blueprintName}_another`;
+        cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
+
         cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
@@ -224,12 +228,20 @@ describe('Deployments widget', () => {
 
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
+
             cy.get('div[name=blueprintName]').click();
             cy.wait('@uploadedBlueprints');
+            cy.contains(anotherBlueprintName).click();
+
+            cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
+
+            cy.get('div[name=blueprintName]').click();
+            cy.contains(RegExp(`${blueprintName}$`)).click();
+
             cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.contains('Skip heal').click();
             cy.contains('Skip drift check').click();
-            cy.get('button.blue.ok').click();
+            cy.clickButton('Preview');
         });
 
         cy.get('.updateDetailsModal').within(() => {
@@ -237,7 +249,7 @@ describe('Deployments widget', () => {
                 cy.get('td:nth-child(2)').should('have.text', '9123');
                 cy.get('td:nth-child(3)').should('have.text', '9321');
             });
-            cy.get('button.ok').click();
+            cy.clickButton('Update');
         });
 
         cy.wait('@updateDeployment').then(({ request }) => {

@@ -30,6 +30,15 @@ export const SideBarAnimatedItemWrapper = styled.div<SideBarAnimatedItemWrapperP
         `}
 `;
 
+const SidebarDropdownIcon = styled(Icon)`
+    position: absolute;
+    right: 12px;
+    margin: 0;
+    height: 13px;
+    width: 13px;
+    font-size: 14px;
+`;
+
 export interface SideBarItemProps extends MenuItemProps {
     subItem?: boolean;
     expandable?: boolean;
@@ -64,11 +73,7 @@ const SideBarItem: FunctionComponent<SideBarItemProps> = ({
                     {label && <span style={{ verticalAlign: 'top', fontSize: sideBarItemFontSize }}>{label}</span>}
                     {children}
                     {expandable && (
-                        <Icon
-                            name="dropdown"
-                            rotated={expanded ? undefined : 'counterclockwise'}
-                            style={{ position: 'absolute', right: 12, margin: 0 }}
-                        />
+                        <SidebarDropdownIcon name="dropdown" rotated={expanded ? undefined : 'counterclockwise'} />
                     )}
                 </SideBarAnimatedItemWrapper>
             </Menu.Item>

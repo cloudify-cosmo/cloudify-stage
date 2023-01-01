@@ -1,6 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-import _ from 'lodash';
-import PropTypes from 'prop-types';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -9,13 +6,17 @@ import { HeaderBanner } from 'cloudify-ui-components';
 import i18n from 'i18next';
 import Consts from '../../utils/consts';
 import LicenseLabel from '../LicenseLabel';
+import type { ReduxState } from '../../reducers';
 
-function Banner({ className }) {
-    const isCommunity = useSelector(
-        state => _.get(state, 'manager.version.edition', Consts.EDITION.PREMIUM) === Consts.EDITION.COMMUNITY
-    );
-    const licenseEdition = useSelector(state => _.get(state, 'manager.license.data.license_edition', ''));
-    const productVersion = useSelector(state => _.get(state, 'manager.version.version', ''));
+interface BannerProps {
+    className?: string;
+}
+
+function Banner({ className = '' }: BannerProps) {
+    const edition = useSelector((state: ReduxState) => state.manager.version.edition ?? Consts.EDITION.PREMIUM);
+    const isCommunity = edition === Consts.EDITION.COMMUNITY;
+    const licenseEdition = useSelector((state: ReduxState) => state.manager.license.data?.license_edition ?? '');
+    const productVersion = useSelector((state: ReduxState) => state.manager.version.version ?? '');
     const theme = useContext(ThemeContext) || {};
     const showVersionDetails = _.isBoolean(theme.showVersionDetails) ? theme.showVersionDetails : true;
 
@@ -25,7 +26,6 @@ function Banner({ className }) {
         <>
             <Link to={Consts.PAGE_PATH.HOME} className={className}>
                 <HeaderBanner
-                    isCommunity={isCommunity}
                     licenseEdition={licenseEdition}
                     productName={productName}
                     productVersion={productVersion}
@@ -36,14 +36,6 @@ function Banner({ className }) {
         </>
     );
 }
-
-Banner.propTypes = {
-    className: PropTypes.string
-};
-
-Banner.defaultProps = {
-    className: ''
-};
 
 interface StyledBannerProps {
     hideOnSmallScreen?: boolean;

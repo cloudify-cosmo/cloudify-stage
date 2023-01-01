@@ -41,7 +41,6 @@ const MaintenanceModeButton: FunctionComponent<MaintenanceModeButtonProps> = ({ 
                 disabled={activating}
                 onClick={showModal}
             />
-            {/* @ts-expect-error Props inferred by TypeScript are invalid */}
             <MaintenanceModeModal show={open} onHide={hideModal} />
         </div>
     );

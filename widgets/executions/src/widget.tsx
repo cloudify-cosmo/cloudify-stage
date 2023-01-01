@@ -27,7 +27,6 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
     description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
-    color: 'teal',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),

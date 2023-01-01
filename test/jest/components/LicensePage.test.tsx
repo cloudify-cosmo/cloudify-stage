@@ -1,29 +1,36 @@
-// @ts-nocheck File not migrated fully to TS
 /* eslint-disable jest/expect-expect */
 
+import type { ReactWrapper } from 'enzyme';
 import { mount } from 'enzyme';
 import fetchMock from 'fetch-mock';
+import type { SemanticICONS } from 'semantic-ui-react';
 
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
-import moment from 'moment';
 import Consts from 'utils/consts';
-import ConnectedLicensePage from 'containers/LicensePage';
-import LicensePage from 'components/LicensePage';
-import * as BasicComponents from 'components/basic';
+import type { LicensePageProps } from 'components/LicensePage';
+import ConnectedLicensePage, { LicensePage } from 'components/LicensePage';
 
 import { createToolbox } from 'utils/Toolbox';
+import type { LicenseData, LicenseStatus } from 'reducers/managerReducer';
+import React from 'react';
+import type { ReduxState } from 'reducers';
+import type { ReduxStore } from 'configureStore';
+import type { LicenseResponse, VersionResponse } from 'backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';
 import versions from '../resources/versions';
 
 describe('(Component) LicensePage', () => {
-    let licensePageComponent = null;
-    let messageContainerComponent = null;
-    global.Stage = { Basic: BasicComponents };
-    global.moment = (timestamp, inputPattern) => moment(timestamp, inputPattern).utcOffset(0);
+    let licensePageComponent: ReactWrapper<LicensePageProps>;
+    let messageContainerComponent: ReactWrapper;
 
-    const verifyProps = (canUploadLicense, isProductOperational, license, status) => {
+    const verifyProps = (
+        canUploadLicense: boolean,
+        isProductOperational: boolean,
+        license: LicenseResponse | null,
+        status: LicenseStatus
+    ) => {
         expect(licensePageComponent.props().canUploadLicense).toEqual(canUploadLicense);
         expect(licensePageComponent.props().isProductOperational).toEqual(isProductOperational);
         expect(licensePageComponent.props().license).toEqual(license);
@@ -36,7 +43,7 @@ describe('(Component) LicensePage', () => {
         expect(header.find('Icon').props().name).toBe('key');
     };
 
-    const verifyMessage = (messageHeader, icon, isLicenseSwitchButtonVisible) => {
+    const verifyMessage = (messageHeader: string, icon: SemanticICONS, isLicenseSwitchButtonVisible: boolean) => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         expect(descriptionMessage.find('MessageHeader').text()).toBe(messageHeader);
         expect(descriptionMessage.find('Icon').first().props().name).toBe(icon);
@@ -73,12 +80,12 @@ describe('(Component) LicensePage', () => {
         }
     };
 
-    const verifyUploadLicense = isPresent => {
+    const verifyUploadLicense = (isPresent: boolean) => {
         const uploadLicense = messageContainerComponent.find('UploadLicense');
         expect(uploadLicense).toHaveLength(isPresent ? 1 : 0);
     };
 
-    const verifyFooter = isGoToAppButtonEnabled => {
+    const verifyFooter = (isGoToAppButtonEnabled: boolean) => {
         const footer = messageContainerComponent.find('Grid');
         expect(footer.find('EulaLink')).toHaveLength(1);
         const goToAppButton = footer.find('Button').findWhere(el => el.props().content === 'Go to app');
@@ -86,22 +93,26 @@ describe('(Component) LicensePage', () => {
         expect(goToAppButton.props().disabled).toBe(!isGoToAppButtonEnabled);
     };
 
-    const verifySwitchToUpload = isButtonPresent => {
+    const verifySwitchToUpload = (isButtonPresent: boolean) => {
         const descriptionMessage = messageContainerComponent.find('DescriptionMessage');
         const licenseSwitchButton = descriptionMessage.find('LicenseSwitchButton');
         expect(licenseSwitchButton).toHaveLength(isButtonPresent ? 1 : 0);
     };
 
-    const getLicenseState = (data, isRequired, status) => {
+    const getLicenseState = (data: LicenseResponse | null, isRequired: boolean, status: LicenseStatus) => {
         return { data, isRequired, status };
     };
 
-    const mockStoreAndRender = async (role, license, version) => {
+    const mockStoreAndRender = async (role: string, license: LicenseData, version: VersionResponse) => {
         const licenseUrl = '/console/sp/license';
-        const mockStore = configureMockStore();
+        const mockStore = configureMockStore<Partial<ReduxState>>();
         const store = mockStore({
             manager: {
                 auth: {
+                    username: 'test',
+                    identityProviders: ['local'],
+                    showGettingStarted: false,
+                    state: 'loggedIn',
                     role,
                     groupSystemRoles: {},
                     tenantsRoles: {
@@ -109,7 +120,8 @@ describe('(Component) LicensePage', () => {
                             'tenant-role': 'user',
                             roles: ['user']
                         }
-                    }
+                    },
+                    error: null
                 },
                 license,
                 permissions: {
@@ -117,26 +129,26 @@ describe('(Component) LicensePage', () => {
                 },
                 tenants: {
                     isFetching: false,
-                    items: [
-                        {
-                            name: 'default_tenant'
-                        }
-                    ],
+                    items: ['default_tenant'],
                     selected: 'default_tenant',
                     lastUpdated: 1553065713112
                 },
-                version
+                version,
+                clusterStatus: {},
+                maintenance: '',
+                roles: [],
+                lastUpdated: null
             }
         });
-        createToolbox(store);
+        createToolbox(store as ReduxStore);
 
         const myMock = fetchMock.sandbox().mock(licenseUrl, { items: [license.data] });
-        global.fetch = myMock;
+        (global as any).fetch = myMock;
 
         const componentsTree = mount(
             <Provider store={store}>
                 <Router>
-                    <ConnectedLicensePage onLicenseChange={_.noop} />
+                    <ConnectedLicensePage />
                 </Router>
             </Provider>
         );
@@ -145,7 +157,7 @@ describe('(Component) LicensePage', () => {
         messageContainerComponent = componentsTree.find('MessageContainer');
 
         // Wait until Promise in componentDidMount resolves
-        await licensePageComponent.instance().componentDidMount();
+        await licensePageComponent.instance().componentDidMount?.();
 
         // Check that license was fetch request was called
         expect(myMock.called(licenseUrl)).toBeTruthy();
@@ -205,9 +217,9 @@ describe('(Component) LicensePage', () => {
         });
 
         it('allows license management when no license is active', async () => {
-            const license = getLicenseState({}, true, Consts.LICENSE.EMPTY);
+            const license = getLicenseState(null, true, Consts.LICENSE.EMPTY);
             await mockStoreAndRender('sys_admin', license, versions.premium);
-            verifyProps(true, false, {}, Consts.LICENSE.EMPTY);
+            verifyProps(true, false, null, Consts.LICENSE.EMPTY);
             verifyHeader();
             verifyMessage('No active license', 'ban', false);
             verifySwitchToUpload(false);
@@ -270,10 +282,10 @@ describe('(Component) LicensePage', () => {
         });
 
         it('allows to view license when no license is active', async () => {
-            const license = getLicenseState({}, true, Consts.LICENSE.EMPTY);
+            const license = getLicenseState(null, true, Consts.LICENSE.EMPTY);
             await mockStoreAndRender('default', license, versions.premium);
 
-            verifyProps(false, false, {}, Consts.LICENSE.EMPTY);
+            verifyProps(false, false, null, Consts.LICENSE.EMPTY);
             verifyHeader();
             verifyMessage('No active license', 'ban', false);
             verifySwitchToUpload(false);

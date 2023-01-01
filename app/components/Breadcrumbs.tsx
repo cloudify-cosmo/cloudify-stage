@@ -13,12 +13,19 @@ import type { PageDefinitionWithContext } from './Page';
 const BreadCrumbsWrapper = styled.div`
     display: flex;
     align-items: center;
+    margin-bottom: 17px;
 `;
 
 const StyledLabel = styled(Label)`
     && {
         margin-right: 8px;
     }
+`;
+
+const StyledEditableLabel = styled(EditableLabel)`
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 450px;
 `;
 
 type GetBreadcrumbPages = (
@@ -51,24 +58,18 @@ export default function Breadcrumbs({ isEditMode, onPageNameChange, onPageSelect
                         <Breadcrumb.Section link onClick={() => onPageSelected(page, pagesList, pageIndex)}>
                             <TextEllipsis maxWidth="300px">{page.name}</TextEllipsis>
                         </Breadcrumb.Section>
-                        <Breadcrumb.Divider key={`d_${page.id}`} icon="right angle" />
+                        <Breadcrumb.Divider key={`d_${page.id}`} />
                     </React.Fragment>
                 ))}
                 {editablePage && (
-                    <EditableLabel
+                    <StyledEditableLabel
                         key={editablePage.id}
                         value={editablePage.name}
-                        placeholder={i18n.t('editMode.pageName', 'You must fill a page name')}
+                        placeholder={i18n.t('editMode.pageName')}
                         className="section active pageTitle"
                         enabled={isEditMode}
-                        onChange={newName => onPageNameChange(editablePage, newName)}
+                        onChange={(newName: string) => onPageNameChange(editablePage, newName)}
                         inputSize="mini"
-                        style={{
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap',
-                            maxWidth: '450px'
-                        }}
                     />
                 )}
             </Breadcrumb>

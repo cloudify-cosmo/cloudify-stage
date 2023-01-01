@@ -1,4 +1,6 @@
-export default {
+import type { VersionResponse } from 'backend/handler/AuthHandler.types';
+
+const versions: Record<string, VersionResponse> = {
     premium: {
         edition: 'premium',
         version: '4.6',
@@ -18,3 +20,5 @@ export default {
         distro_release: 'Core'
     }
 };
+
+export default versions;

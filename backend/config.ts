@@ -77,3 +77,8 @@ export function getClientConfig(mode: Mode): ClientConfig {
         mode
     };
 }
+
+export function getBackendConfig() {
+    const { backend } = getConfig().app;
+    return { host: backend?.host ?? 'localhost', port: backend?.port ?? 8088 };
+}

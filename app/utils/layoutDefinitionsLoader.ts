@@ -1,14 +1,10 @@
 import type { SemanticICONS } from 'semantic-ui-react';
 import { keyBy, mapValues } from 'lodash';
 import log from 'loglevel';
+import type { Page, PageGroup, Template } from 'backend/handler/templates/types';
+import type { GetPageGroupsResponse, GetPagesResponse, GetTemplatesResponse } from 'backend/routes/Templates.types';
 import type { ManagerData } from '../reducers/managerReducer';
 import Internal from './Internal';
-import type { Page, PageGroup, Template } from '../../backend/handler/templates/types';
-import type {
-    GetPageGroupsResponse,
-    GetPagesResponse,
-    GetTemplatesResponse
-} from '../../backend/routes/Templates.types';
 import type { SimpleWidgetObj } from '../actions/page';
 
 // NOTE: Solution based on https://stackoverflow.com/questions/41253310/typescript-retrieve-element-type-information-from-array-type

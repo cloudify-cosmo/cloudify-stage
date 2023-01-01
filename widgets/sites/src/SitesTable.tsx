@@ -5,6 +5,8 @@ import SiteLocationMap from './SiteLocationMap';
 import UpdateModal from './UpdateModal';
 import SitePropType from './props/SitePropType';
 
+const t = Stage.Utils.getT('widgets.sites');
+
 export default class SitesTable extends React.Component {
     static DELETE_SITE_ACTION = 'delete';
 
@@ -156,7 +158,6 @@ export default class SitesTable extends React.Component {
                                                     <Icon
                                                         name="crosshairs"
                                                         link
-                                                        bordered
                                                         className="rightFloated"
                                                         onClick={event => event.stopPropagation()}
                                                     />
@@ -185,17 +186,15 @@ export default class SitesTable extends React.Component {
                                 </DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
-                                        bordered
                                         link
                                         name="edit"
-                                        title="Update site"
+                                        title={t('actions.updateSite')}
                                         onClick={() => this.onUpdateSite(item)}
                                     />
                                     <Icon
-                                        bordered
                                         link
                                         name="trash"
-                                        title="Delete site"
+                                        title={t('actions.deleteSite')}
                                         onClick={() => this.onDeleteSite(item)}
                                     />
                                 </DataTable.Data>

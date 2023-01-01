@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'Adds a filter section for events and logs',
     initialWidth: 12,
     initialHeight: 5,
-    color: 'pink',
     showHeader: false,
     showBorder: false,
     categories: [Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],

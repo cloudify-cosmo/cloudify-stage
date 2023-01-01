@@ -19,10 +19,9 @@ These parameters are a must if you want to configure the widget to access privat
 
 ## Settings
 
-* `Blueprint Examples URL` - Specifies the JSON file from which the blueprints are being read
-* `List of fields to show` - The fields that are presented in the blueprints list. Default: Name, Description, Created, Updated.
+* `Blueprint Examples URL` - Specifies the JSON file from which the blueprints are being read, accepts both absolute and relative URLs
 * `GitHub User` - GitHub user or organization account name which is the owner of the repository to fetch. Default: cloudify-examples
 * `GitHub Filter` - Optional filter for GitHub repositories. See GitHub’s web page ‘Searching repositories’ for more details.
 * `Display style` - defines whether the widget’s view is Catalog or Table. Default: Catalog
-* `List of fields to show in the table` - defines visible columns in table view only. Default: Name, Description, Created, Updated
+* `List of fields to show` - The fields that are presented in the blueprints list. Default: Name, Description
 * `Sort by name` -  if set to true, then blueprints will be sorted by name. Default: No

@@ -1,4 +1,4 @@
-import type { GroupState } from '../../common/src/components/GroupState';
+import type { GroupState } from '../../../app/widgets/common/components/GroupState';
 import type { DeploymentStatus } from './types';
 import { DeploymentStatuses } from './types';
 

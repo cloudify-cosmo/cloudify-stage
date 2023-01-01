@@ -1,6 +1,6 @@
+import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
+import type { PostPluginsUploadQueryParams } from 'backend/routes/Plugins.types';
 import type { PluginDescription, PluginDescriptionWithVersion, PluginUploadData } from './types';
-import type { GetExternalContentQueryParams } from '../../../backend/routes/External.types';
-import type { PostPluginsUploadQueryParams } from '../../../backend/routes/Plugins.types';
 
 interface UploadedPlugin {
     // NOTE: property names match from the backend ones

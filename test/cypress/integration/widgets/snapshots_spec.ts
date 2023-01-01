@@ -17,7 +17,7 @@ describe('Snapshots list widget', () => {
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
             cy.get('input[type=text]').type(createdSnapshotName);
-            cy.get('.positive').click();
+            cy.clickButton('Create');
         });
         cy.contains('.snapshotsWidget tr', createdSnapshotName).within(() => {
             cy.contains('creating');
@@ -33,18 +33,18 @@ describe('Snapshots list widget', () => {
     it('should allow to upload and restore a snapshot', () => {
         cy.contains('Upload').click();
         cy.get('.modal').within(() => {
-            cy.get('.positive').click();
+            cy.clickButton('Upload');
             cy.contains('Please select snapshot file or url');
             cy.contains('Please provide snapshot ID');
 
             cy.get('input[name=snapshotUrl]').type('bad url');
-            cy.get('.positive').click();
+            cy.clickButton('Upload');
             cy.contains('Please provide valid URL for snapshot');
 
             cy.get('input[name=snapshotUrl]').clear();
             cy.get('input[name=snapshotFile]').attachFile('snapshots/empty.zip');
             cy.get('input[name=snapshotId]').type(uploadedSnapshotName);
-            cy.get('.positive').click();
+            cy.clickButton('Upload');
         });
         cy.contains('.snapshotsWidget tr', uploadedSnapshotName).within(() => {
             cy.contains('uploaded');

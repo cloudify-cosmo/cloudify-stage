@@ -42,7 +42,7 @@ describe('User Menu', () => {
         cy.mockLoginWithoutWaiting();
 
         cy.contains('admin').click({ force: true });
-        verifyOptionIsVisible('Edit Mode', 'edit');
+        verifyOptionIsVisible('Edit Mode', 'pencil');
         verifyOptionIsVisible('Template Management', 'layout list');
         verifyOptionIsVisible('Reset Templates', 'undo');
         verifyOptionIsVisible('License Management', 'key');

@@ -1,0 +1,56 @@
+/*******************************
+    User Overrides
+*******************************/
+
+@dropdownHeight: @relative36px;
+
+.ui.dropdown {
+    &.selection {
+        & > .text {
+            line-height: @relative17px;
+        }
+
+        &.visible {
+            &.error {
+                .text {
+                    color: @red;
+                }
+
+                .menu {
+                    border-color: @red;
+
+                    .item {
+                        background-color: @errorBackgroundColor;
+                        border-top: none;
+
+                        &.active {
+                            background-color: @errorItemActiveBackground;
+                        }
+
+                        &:hover {
+                            background-color: @errorItemHoverBackground;
+                        }
+                    }
+                }
+            }
+        }
+
+        &.multiple {
+            min-height: @dropdownHeight;
+
+            &.search {
+                max-height: @dropdownHeight;
+                overflow-y: initial;
+
+                .icon {
+                    line-height: @searchSelectionLineHeight;
+                }
+            }
+
+            & > .label {
+                padding-left: unit(6 / 11, em);
+                padding-right: unit(8 / 11, em);
+            }
+        }
+    }
+}

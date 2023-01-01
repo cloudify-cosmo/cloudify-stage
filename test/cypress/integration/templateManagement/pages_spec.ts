@@ -22,7 +22,7 @@ describe('Pages segment', () => {
                 cy.contains('tr', 'Dashboard').within(dashboardPageRow => {
                     cy.contains('.label.blue', 2).should('be.visible');
                     cy.contains('.label:not(.blue)', 0).should('be.visible');
-                    cy.get('.dashboard').should('be.visible');
+                    cy.get('.cloudify-dashboard').should('be.visible');
                     cy.wrap(dashboardPageRow).click();
                 });
                 cy.contains('Used in templates').contains('main-default');

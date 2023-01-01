@@ -32,6 +32,7 @@ import './plugins';
 
 import { secondsToMs } from './resource_commons';
 import './secrets';
+import './secret_providers';
 import './sites';
 import './snapshots';
 import './templates';
@@ -99,11 +100,12 @@ type License =
 const commands = {
     waitUntilPageLoaded: () => {
         cy.log('Wait for widgets loaders to disappear');
-        cy.get('.widget').should('exist');
+        cy.get('.widgetContent *').should('exist');
         cy.contains('Loading...').should('not.exist');
         return cy.waitUntilWidgetsDataLoaded();
     },
-    waitUntilWidgetsDataLoaded: () => cy.get('div.loader:visible', { timeout: 10000 }).should('not.exist'),
+    waitUntilWidgetsDataLoaded: (timeout: number = secondsToMs(10)) =>
+        cy.get('div.loader:visible', { timeout }).should('not.exist'),
     waitUntilAppLoaded: () =>
         cy
             .log('Wait for splash screen loader to disappear')
@@ -457,7 +459,7 @@ const commands = {
     openAccordionSection: (sectionTitle: string) => cy.getAccordionSection(sectionTitle).click(),
 
     withinAccordionSection: (sectionTitle: string, callback: () => void) => {
-        cy.openAccordionSection(sectionTitle).next('.content').within(callback);
+        cy.getAccordionSection(sectionTitle).next('.content').within(callback);
     },
 
     getField: (fieldName: string) => cy.contains('.field', fieldName),
