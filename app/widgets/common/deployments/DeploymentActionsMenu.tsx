@@ -5,6 +5,8 @@ import type { Workflow } from '../executeWorkflow';
 import { Menu, Popup, PopupMenu } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
 
+const translate = StageUtils.getT('widgets.common.deployments.actionsMenu');
+
 export const actions = Object.freeze({
     delete: 'delete',
     forceDelete: 'forceDelete',
@@ -12,24 +14,32 @@ export const actions = Object.freeze({
     manageLabels: 'manageLabels',
     setSite: 'setSite',
     uninstall: 'uninstall',
-    update: 'update'
+    update: 'update',
+    deployOn: 'deployOn'
 });
 
-const executeWorkflowPermission = 'execution_start';
-const translate = StageUtils.getT('widgets.common.deployments.actionsMenu');
+const permissions = {
+    executeWorkflowPermission: 'execution_start',
+    deploymentDelete: 'deployment_delete',
+    deploymentUpdateCreate: 'deployment_update_create',
+    deploymentSetSite: 'deployment_set_site',
+    deploymentCreate: 'deployment_create'
+};
+
 type MenuItem = { name: string; icon: string; permission: string };
 const menuItems: MenuItem[] = [
-    { name: actions.install, icon: 'play', permission: executeWorkflowPermission },
-    { name: actions.update, icon: 'edit', permission: 'deployment_update_create' },
-    { name: actions.setSite, icon: 'building', permission: 'deployment_set_site' },
-    { name: actions.manageLabels, icon: 'tags', permission: 'deployment_create' },
-    { name: actions.uninstall, icon: 'recycle', permission: executeWorkflowPermission },
-    { name: actions.delete, icon: 'trash alternate', permission: 'deployment_delete' },
-    { name: actions.forceDelete, icon: 'trash', permission: 'deployment_delete' }
+    { name: actions.install, icon: 'play', permission: permissions.executeWorkflowPermission },
+    { name: actions.update, icon: 'edit', permission: permissions.deploymentUpdateCreate },
+    { name: actions.deployOn, icon: 'rocket', permission: permissions.deploymentCreate },
+    { name: actions.setSite, icon: 'building', permission: permissions.deploymentSetSite },
+    { name: actions.manageLabels, icon: 'tags', permission: permissions.deploymentCreate },
+    { name: actions.uninstall, icon: 'recycle', permission: permissions.executeWorkflowPermission },
+    { name: actions.delete, icon: 'trash alternate', permission: permissions.deploymentDelete },
+    { name: actions.forceDelete, icon: 'trash', permission: permissions.deploymentDelete }
 ];
 
 function isAvailable(item: MenuItem, workflows: Workflow[]) {
-    if (item.permission === executeWorkflowPermission) {
+    if (item.permission === permissions.executeWorkflowPermission) {
         const workflow = workflows?.find(w => w.name === item.name);
         return !!workflow?.is_available;
     }

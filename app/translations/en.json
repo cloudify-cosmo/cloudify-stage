@@ -529,6 +529,7 @@
                 "actionsMenu": {
                     "install": "Install",
                     "update": "Update",
+                    "deployOn": "Deploy On",
                     "setSite": "Set Site",
                     "manageLabels": "Manage Labels",
                     "uninstall": "Uninstall",
