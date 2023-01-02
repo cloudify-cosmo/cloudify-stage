@@ -2047,6 +2047,13 @@
                 "refreshStatus": "Refresh Status",
                 "refreshStatusInProgress": "Status refresh in progress..."
             }
+        },
+        "deploymentActionButtons": {
+            "name": "Deployment action buttons",
+            "description": "Provides set of action buttons for deployment",
+            "errors": {
+                "fetchData": "No deployment selected, cannot determine deployment ID"
+            }
         }
     }
 }

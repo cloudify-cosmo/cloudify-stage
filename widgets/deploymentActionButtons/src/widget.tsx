@@ -1,6 +1,8 @@
 import { castArray } from 'lodash';
 import type { ComponentProps } from 'react';
 import DeploymentActionButtons from './DeploymentActionButtons';
+import { widgetId } from './widget.consts';
+import { translateWidget } from './widget.utils';
 
 interface WidgetParams {
     id: string | null | undefined;
@@ -14,9 +16,9 @@ interface WidgetConfiguration {
 }
 
 Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
-    id: 'deploymentActionButtons',
-    name: 'Deployment action buttons',
-    description: 'Provides set of action buttons for deployment',
+    id: widgetId,
+    name: translateWidget('name'),
+    description: translateWidget('description'),
     initialWidth: 5,
     initialHeight: 5,
     showHeader: false,
@@ -39,7 +41,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
 
     fetchData(_widget, toolbox, { id }) {
         if (!id) {
-            return Promise.resolve(new Error('No deployment selected, cannot determine deployment ID'));
+            return Promise.resolve(new Error(translateWidget('errors.fetchData')));
         }
 
         const DeploymentActions = Stage.Common.Deployments.Actions;
