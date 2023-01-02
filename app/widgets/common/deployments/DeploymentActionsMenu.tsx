@@ -40,8 +40,6 @@ const menuItems: MenuItem[] = [
 ];
 
 function isDeployOnFunctionalityAvailable(deploymentLabels: Label[]) {
-    // eslint-disable-next-line
-    console.log(deploymentLabels);
     return deploymentLabels.some(deploymentLabel => {
         return deploymentLabel.key === 'csys-obj-type' && deploymentLabel.value === 'environment';
     });
