@@ -189,8 +189,6 @@ describe('Getting started modal', () => {
                 goToNextStep();
 
                 clickFirstEnvironment();
-                goToNextStep();
-
                 goToFinishStep();
                 closeModal();
             });
