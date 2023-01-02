@@ -41,7 +41,7 @@ function getPages(folder: string, custom: boolean) {
         .value();
 }
 
-function getUserPages() {
+export function getUserPages() {
     return getPages(userPagesFolder, true);
 }
 
@@ -49,23 +49,35 @@ function getBuiltInPages() {
     return getPages(builtInPagesFolder, false);
 }
 
-export function createPage(username: string, page: CreatePageData) {
-    const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
-    if (fs.existsSync(path)) {
-        return Promise.reject(`Page id "${page.id}" already exists`);
-    }
+function getUserPagePath(id: string) {
+    return pathlib.resolve(userPagesFolder, `${id}.json`);
+}
 
+export function checkPageExists({ id }: { id: string }) {
+    const path = getUserPagePath(id);
+    if (fs.existsSync(path)) {
+        return Promise.reject(`Page id "${id}" already exists`);
+    }
+    return Promise.resolve();
+}
+
+export function createPage(page: CreatePageData, updatedBy: string, updatedAt = moment().format()) {
+    const path = getUserPagePath(page.id);
     const content: PageFileContent = {
-        ..._.pick(page, 'name', 'layout'),
-        updatedBy: username,
-        updatedAt: moment().format()
+        ..._.pick(page, 'name', 'layout', 'icon'),
+        updatedBy,
+        updatedAt
     };
 
     return fs.writeJson(path, content, { spaces: '  ' });
 }
 
+export function validateAndCreatePage(username: string, page: CreatePageData) {
+    return checkPageExists(page).then(() => createPage(page, username));
+}
+
 export function updatePage(username: string, page: UpdatePageData) {
-    const path = pathlib.resolve(userPagesFolder, `${page.id}.json`);
+    const path = getUserPagePath(page.id);
 
     const content: PageFileContent = {
         ..._.omit(page, 'id'),
@@ -89,7 +101,7 @@ export function updatePage(username: string, page: UpdatePageData) {
 }
 
 export function deletePage(pageId: string) {
-    const path = pathlib.resolve(userPagesFolder, `${pageId}.json`);
+    const path = getUserPagePath(pageId);
 
     return new Promise<void>((resolve, reject) => {
         fs.remove(path, err => {
