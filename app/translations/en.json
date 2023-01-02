@@ -1581,6 +1581,49 @@
             "popupMessage": "User {{currentUsername}} is not permitted to show the secret {{secretKey}} in the tenant {{selectedTenant}}.",
             "deleteModal": {
                 "content": "Are you sure you want to delete secret {{secretKey}}?"
+            },
+            "createModal": {
+                "header": "Create secret",
+                "buttons": {
+                    "create": "Create"
+                },
+                "inputs": {
+                    "secretKey": {
+                        "placeholder": "Secret key"
+                    },
+                    "secretValue": {
+                        "placeholder": "Secret value"
+                    },
+                    "secretFile": {
+                        "placeholder": "Get secret value from file (max: 50kB)"
+                    },
+                    "hiddenValue": {
+                        "label": "Hidden Value"
+                    }
+                },
+                "errors": {
+                    "validation": {
+                        "secretKey": "Please provide secret key",
+                        "secretValue": "Please provide secret value"
+                    }
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                },
+                "inputs": {
+                    "secretValue": {
+                        "placeholder": "Secret value"
+                    }
+                },
+                "errors": {
+                    "validation": {
+                        "secretValue": "Please provide secret value"
+                    },
+                    "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
+                }
             }
         },
         "serviceButton": {

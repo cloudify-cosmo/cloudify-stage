@@ -341,7 +341,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                 {secret && (
                     <>
                         <DeleteModal
-                            content={translateSecrets('deleteModalContent', { secretKey: secret.key })}
+                            content={translateSecrets('deleteModal.content', { secretKey: secret.key })}
                             open={modalType === SecretsTable.DELETE_SECRET_ACTION && showModal}
                             onConfirm={this.deleteSecret}
                             onCancel={this.hideModal}

@@ -10,6 +10,9 @@ interface UpdateModalProps {
     toolbox: Stage.Types.Toolbox;
     onHide: () => void;
 }
+
+const translateUpdateModal = Stage.Utils.getT('widgets.secrets.updateModal');
+
 export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateModalProps) {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
@@ -43,7 +46,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     function updateSecret() {
         if (isEmpty(secretValue)) {
-            setErrors({ secretValue: 'Please provide secret value' });
+            setErrors({ secretValue: translateUpdateModal('errors.validation.secretValue') });
             return;
         }
 
@@ -65,25 +68,29 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
 
+    const headerContent = translateUpdateModal('header', { secretKey: secret.key });
+
+    const noPermissionError = translateUpdateModal('errors.noPermission', {
+        currentUsername,
+        secretKey: secret.key,
+        selectedTenant
+    });
+
     return (
         <div>
             <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
-                    <Icon name="edit" /> Update secret {secret.key}
+                    <Icon name="edit" /> {headerContent}
                 </Modal.Header>
 
                 <Modal.Content>
-                    {!canUpdateSecret && (
-                        <ErrorMessage
-                            error={`User \`${currentUsername}\` is not permitted to update value of the secret '${secret.key}' in the tenant \`${selectedTenant}\` .`}
-                        />
-                    )}
+                    {!canUpdateSecret && <ErrorMessage error={noPermissionError} />}
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         {canUpdateSecret && (
                             <Form.Field error={errors.secretValue}>
                                 <MultilineInput
                                     name="secretValue"
-                                    placeholder="Secret value"
+                                    placeholder={translateUpdateModal('inputs.secretValue.placeholder')}
                                     value={secretValue}
                                     onChange={setSecretValue}
                                 />
@@ -95,7 +102,12 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
                     {canUpdateSecret && (
-                        <ApproveButton onClick={updateSecret} disabled={isLoading} content="Update" icon="edit" />
+                        <ApproveButton
+                            onClick={updateSecret}
+                            disabled={isLoading}
+                            content={translateUpdateModal('buttons.update')}
+                            icon="edit"
+                        />
                     )}
                 </Modal.Actions>
             </Modal>
