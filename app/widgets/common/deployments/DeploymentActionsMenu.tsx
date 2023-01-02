@@ -1,9 +1,7 @@
 import type { ComponentProps, ReactNode } from 'react';
 import React from 'react';
 import i18n from 'i18next';
-import PropTypes from 'prop-types';
 import type { Workflow } from '../executeWorkflow';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import { Menu, Popup, PopupMenu } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
 
@@ -73,13 +71,3 @@ export default function DeploymentActionsMenu({
         </PopupMenu>
     );
 }
-
-DeploymentActionsMenu.propTypes = {
-    onActionClick: PropTypes.func.isRequired,
-    toolbox: ToolboxPropType.isRequired,
-    trigger: PropTypes.node
-};
-
-DeploymentActionsMenu.defaultProps = {
-    trigger: null
-};
