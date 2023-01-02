@@ -238,7 +238,7 @@ describe('Deployments widget', () => {
             cy.get('div[name=blueprintName]').click();
             cy.contains(RegExp(`${blueprintName}$`)).click();
 
-            cy.get('input[name="webserver_port"]').clear({ force: true }).type('9321');
+            cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
             cy.contains('Skip heal').click();
             cy.contains('Skip drift check').click();
             cy.clickButton('Preview');

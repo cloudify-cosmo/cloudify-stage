@@ -249,13 +249,12 @@ export default function TemplateManagement() {
         const pageId = createPageId(name);
         const body: PostPagesRequestBody = {
             id: pageId,
-            name,
-            layout: []
+            name
         };
 
         return internal
             .doPost<never, PostPagesRequestBody>('/templates/pages', { body })
-            .then(() => dispatch(addPage(body)))
+            .then(() => dispatch(addPage({ ...body, layout: [] })))
             .then(() => dispatch(push(`/page_edit/${pageId}`)))
             .catch(handleError);
     }
