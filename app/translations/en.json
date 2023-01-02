@@ -1558,6 +1558,9 @@
             }
         },
         "secrets": {
+            "name": "Secret Store Management",
+            "description": "This widget shows a list of available secrets and allow managing them",
+            "noSecrets": "There are no Secrets available. Click \"Create\" to add Secret.",
             "columns": {
                 "key": "Key",
                 "value": "Value",
@@ -1570,6 +1573,14 @@
             "actions": {
                 "updateSecret": "Update secret",
                 "deleteSecret": "Delete secret"
+            },
+            "icons": {
+                "hide": "Hide secret value",
+                "show": "Show secret value"
+            },
+            "popupMessage": "User {{currentUsername}} is not permitted to show the secret {{secretKey}} in the tenant {{selectedTenant}}.",
+            "deleteModal": {
+                "content": "Are you sure you want to delete secret {{secretKey}}?"
             }
         },
         "serviceButton": {

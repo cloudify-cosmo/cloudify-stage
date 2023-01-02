@@ -1,9 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEmpty } from 'lodash';
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
 
-export default function CreateModal({ toolbox }) {
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
+type FileValue = File | File[] | null;
+
+export default function CreateModal({ toolbox }: CreateModalProps) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -24,17 +29,17 @@ export default function CreateModal({ toolbox }) {
 
     function createSecret() {
         const { isHiddenValue, secretKey, secretValue } = inputs;
-        const validationErrors = {};
+        const validationErrors: Record<string, string> = {};
 
-        if (_.isEmpty(secretKey)) {
+        if (isEmpty(secretKey)) {
             validationErrors.secretKey = 'Please provide secret key';
         }
 
-        if (_.isEmpty(secretValue)) {
+        if (isEmpty(secretValue)) {
             validationErrors.secretValue = 'Please provide secret value';
         }
 
-        if (!_.isEmpty(validationErrors)) {
+        if (!isEmpty(validationErrors)) {
             setErrors(validationErrors);
             return;
         }
@@ -53,7 +58,7 @@ export default function CreateModal({ toolbox }) {
             .finally(unsetLoading);
     }
 
-    function onSecretFileChange(file) {
+    function onSecretFileChange(file: FileValue) {
         if (!file) {
             clearErrors();
             setInput({ secretValue: '' });
@@ -64,7 +69,7 @@ export default function CreateModal({ toolbox }) {
 
         const actions = new Stage.Common.Actions.File(toolbox);
         actions
-            .doGetTextFileContent(file)
+            .doGetTextFileContent(file as File)
             .then(secretValue => {
                 setInput({ secretValue });
                 clearErrors();
@@ -126,7 +131,3 @@ export default function CreateModal({ toolbox }) {
         </Modal>
     );
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

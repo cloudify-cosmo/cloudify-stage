@@ -1,11 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEmpty, isEqual } from 'lodash';
 import type { FunctionComponent } from 'react';
+import type { Visibility } from 'app/widgets/common/types';
+import type { Secret, SecretsWidget } from './widget.types';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
-import type { Secret } from './types';
-import SecretPropType from './props/SecretPropType';
 
-const t = Stage.Utils.getT('widgets.secrets');
+const translateSecrets = Stage.Utils.getT('widgets.secrets');
 
 interface SecretValueProps {
     canShowSecret: boolean;
@@ -33,6 +33,12 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
 
+    const popupMessage = translateSecrets('popupMessage', {
+        currentUsername,
+        secretKey,
+        selectedTenant
+    });
+
     if (showSecretKey === secretKey) {
         if (showSecretLoading) {
             return <Icon name="spinner" loading />;
@@ -41,30 +47,30 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
             return (
                 <div>
                     <pre className="forceMaxWidth">{showSecretValue}</pre>
-                    <Icon link name="hide" title="Hide secret value" onClick={onHide} />
+                    <Icon link name="hide" title={translateSecrets('icons.hide')} onClick={onHide} />
                 </div>
             );
         }
+
         return (
             <Popup position="top right" on="hover">
                 <Popup.Trigger>
                     <Icon name="dont" color="red" />
                 </Popup.Trigger>
-                User `{currentUsername}` is not permitted to show the secret `{secretKey} in the tenant `
-                {selectedTenant}` .
+                {popupMessage}
             </Popup>
         );
     }
-    return <Icon link name="unhide" title="Show secret value" onClick={onShow} />;
+    return <Icon link name="unhide" title={translateSecrets('show')} onClick={onShow} />;
 };
 
-interface SecretsTableProps {
+export interface SecretsTableProps {
     data: {
         items: Secret[];
         total: number;
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
+    widget: Stage.Types.Widget<SecretsWidget.Configuration>;
 }
 
 interface SecretsTableState {
@@ -78,16 +84,6 @@ interface SecretsTableState {
     showSecretLoading: boolean;
 }
 
-SecretValue.propTypes = {
-    canShowSecret: PropTypes.bool.isRequired,
-    showSecretLoading: PropTypes.bool.isRequired,
-    showSecretKey: PropTypes.string.isRequired,
-    showSecretValue: PropTypes.string.isRequired,
-    secretKey: PropTypes.string.isRequired,
-    onHide: PropTypes.func.isRequired,
-    onShow: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
 export default class SecretsTable extends React.Component<SecretsTableProps, SecretsTableState> {
     static CREATE_SECRET_ACTION = 'create';
 
@@ -95,14 +91,16 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     static UPDATE_SECRET_ACTION = 'update';
 
-    constructor(props: SecretsTableProps, context) {
+    constructor(props: SecretsTableProps, context: any) {
         super(props, context);
 
         this.state = {
             error: null,
             showModal: false,
             modalType: '',
-            secret: {},
+            secret: {
+                key: ''
+            },
             canShowSecret: true,
             showSecretKey: '',
             showSecretValue: '',
@@ -117,11 +115,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     shouldComponentUpdate(nextProps: SecretsTableProps, nextState: SecretsTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -129,7 +123,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         toolbox.getEventBus().off('secrets:refresh', this.refreshData);
     }
 
-    onUpdateSecret(secret) {
+    onUpdateSecret(secret: Secret) {
         this.setState({
             secret,
             modalType: SecretsTable.UPDATE_SECRET_ACTION,
@@ -139,7 +133,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         });
     }
 
-    onShowSecret(selectedSecret) {
+    onShowSecret(selectedSecret: Secret) {
         const { toolbox } = this.props;
         const secretKey = selectedSecret.key;
         this.setState({
@@ -154,7 +148,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             .doGet(secretKey)
             .then(secret => {
                 let canShowSecret = true;
-                if (secret.is_hidden_value && _.isEmpty(secret.value)) {
+                if (secret.is_hidden_value && isEmpty(secret.value)) {
                     canShowSecret = false;
                 }
                 this.setState({ showSecretValue: secret.value, showSecretLoading: false, error: null, canShowSecret });
@@ -168,11 +162,11 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         this.setState({ showSecretKey: '', showSecretValue: '' });
     };
 
-    onDeleteSecret(secret) {
+    onDeleteSecret(secret: Secret) {
         this.setState({ secret, modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: true });
     }
 
-    onIsHiddenValueChange(secretKey, isHiddenValue) {
+    onIsHiddenValueChange(secretKey: string, isHiddenValue: boolean) {
         const { toolbox } = this.props;
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
@@ -188,7 +182,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             });
     }
 
-    setSecretVisibility(secretKey, visibility) {
+    setSecretVisibility(secretKey: string, visibility: Visibility) {
         const { toolbox } = this.props;
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         toolbox.loading(true);
@@ -204,7 +198,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             });
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -249,7 +243,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             showSecretLoading,
             showSecretValue
         } = this.state;
-        const NO_DATA_MESSAGE = 'There are no Secrets available. Click "Create" to create Secrets.';
+        const NO_DATA_MESSAGE = translateSecrets('noSecrets');
         const { Checkbox, DataTable, ErrorMessage, Icon, ResourceVisibility } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { TextEllipsis } = Stage.Shared;
@@ -270,13 +264,17 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     className="secretsTable"
                     noDataMessage={NO_DATA_MESSAGE}
                 >
-                    <DataTable.Column label={t('columns.key')} name="key" width="20%" />
-                    <DataTable.Column label={t('columns.value')} width="20%" />
-                    <DataTable.Column label={t('columns.hiddenValue')} name="is_hidden_value" width="10%" />
-                    <DataTable.Column label={t('columns.created')} name="created_at" width="10%" />
-                    <DataTable.Column label={t('columns.updated')} name="updated_at" width="10%" />
-                    <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
-                    <DataTable.Column label={t('columns.tenant')} name="tenant_name" width="10%" />
+                    <DataTable.Column label={translateSecrets('columns.key')} name="key" width="20%" />
+                    <DataTable.Column label={translateSecrets('columns.value')} width="20%" />
+                    <DataTable.Column
+                        label={translateSecrets('columns.hiddenValue')}
+                        name="is_hidden_value"
+                        width="10%"
+                    />
+                    <DataTable.Column label={translateSecrets('columns.created')} name="created_at" width="10%" />
+                    <DataTable.Column label={translateSecrets('columns.updated')} name="updated_at" width="10%" />
+                    <DataTable.Column label={translateSecrets('columns.creator')} name="created_by" width="10%" />
+                    <DataTable.Column label={translateSecrets('columns.tenant')} name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
@@ -321,13 +319,13 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                     <Icon
                                         link
                                         name="edit"
-                                        title={t('actions.updateSecret')}
+                                        title={translateSecrets('actions.updateSecret')}
                                         onClick={() => this.onUpdateSecret(item)}
                                     />
                                     <Icon
                                         link
                                         name="trash"
-                                        title={t('actions.deleteSecret')}
+                                        title={translateSecrets('actions.deleteSecret')}
                                         onClick={() => this.onDeleteSecret(item)}
                                     />
                                 </DataTable.Data>
@@ -340,29 +338,24 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     </DataTable.Action>
                 </DataTable>
 
-                <DeleteModal
-                    content={`Are you sure you want to delete secret '${secret.key}'?`}
-                    open={modalType === SecretsTable.DELETE_SECRET_ACTION && showModal}
-                    onConfirm={this.deleteSecret}
-                    onCancel={this.hideModal}
-                />
+                {secret && (
+                    <>
+                        <DeleteModal
+                            content={translateSecrets('deleteModalContent', { secretKey: secret.key })}
+                            open={modalType === SecretsTable.DELETE_SECRET_ACTION && showModal}
+                            onConfirm={this.deleteSecret}
+                            onCancel={this.hideModal}
+                        />
 
-                <UpdateModal
-                    toolbox={toolbox}
-                    open={modalType === SecretsTable.UPDATE_SECRET_ACTION && showModal}
-                    onHide={this.hideModal}
-                    secret={secret}
-                />
+                        <UpdateModal
+                            toolbox={toolbox}
+                            open={modalType === SecretsTable.UPDATE_SECRET_ACTION && showModal}
+                            onHide={this.hideModal}
+                            secret={secret}
+                        />
+                    </>
+                )}
             </div>
         );
     }
 }
-
-SecretsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(SecretPropType),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

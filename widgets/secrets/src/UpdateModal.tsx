@@ -1,10 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
-import SecretPropType from './props/SecretPropType';
+import { isEmpty } from 'lodash';
+import type { Secret } from './widget.types';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
 
-export default function UpdateModal({ open, secret, toolbox, onHide }) {
+interface UpdateModalProps {
+    open: boolean;
+    secret: Secret;
+    toolbox: Stage.Types.Toolbox;
+    onHide: () => void;
+}
+export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateModalProps) {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -25,7 +31,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
                 clearErrors();
                 setSecretValue(value);
 
-                if (isHidden && _.isEmpty(value)) {
+                if (isHidden && isEmpty(value)) {
                     disableSecretUpdate();
                 } else {
                     enableSecretUpdate();
@@ -36,7 +42,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
     });
 
     function updateSecret() {
-        if (_.isEmpty(secretValue)) {
+        if (isEmpty(secretValue)) {
             setErrors({ secretValue: 'Please provide secret value' });
             return;
         }
@@ -96,14 +102,3 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
         </div>
     );
 }
-
-UpdateModal.propTypes = {
-    secret: SecretPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func
-};
-
-UpdateModal.defaultProps = {
-    onHide: () => {}
-};
