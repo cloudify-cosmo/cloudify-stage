@@ -104,7 +104,8 @@ export interface Page<WD = WidgetDefinition, Icon = string> extends Required<Com
 export interface CreatePageData {
     id: string;
     name: string;
-    layout: [];
+    layout: LayoutSection[];
+    icon?: string;
 }
 
 export interface UpdatePageData<WD = WidgetDefinition> extends Omit<CreatePageData, 'layout'> {

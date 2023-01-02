@@ -65,7 +65,7 @@ function getTemplates(folder: string, custom: boolean, filter: (fileName: string
         .value();
 }
 
-function getUserTemplates() {
+export function getUserTemplates() {
     return getTemplates(userTemplatesFolder, true, () => true);
 }
 
@@ -126,7 +126,7 @@ async function getSystemRole(userSystemRole: string, groupSystemRoles: Record<st
     return systemRole;
 }
 
-function checkTemplateExistence(data: TemplateData, excludeTemplateId?: string) {
+function checkTemplateConflict(data: TemplateData, excludeTemplateId?: string) {
     const { tenants, roles } = data;
     const getTenantString = (listOfTenants: string[]) =>
         listOfTenants.includes(allTenants) ? 'all tenants' : `tenants="${listOfTenants.join(', ')}"`;
@@ -153,25 +153,37 @@ function checkTemplateExistence(data: TemplateData, excludeTemplateId?: string) 
     return Promise.resolve();
 }
 
-export function createTemplate(username: string, template: CreateTemplateData) {
-    const path = pathlib.resolve(userTemplatesFolder, `${template.id}.json`);
+function getUserTemplatePath(id: string) {
+    return pathlib.resolve(userTemplatesFolder, `${id}.json`);
+}
+
+export function checkTemplateExists(template: Pick<CreateTemplateData, 'id' | 'data'>) {
+    const path = getUserTemplatePath(template.id);
     if (fs.existsSync(path)) {
         return Promise.reject(`Template name "${template.id}" already exists`);
     }
 
+    return checkTemplateConflict(template.data);
+}
+
+export function createTemplate(template: CreateTemplateData, updatedBy: string, updatedAt = moment().format()) {
+    const path = getUserTemplatePath(template.id);
     const content: TemplateFileContent = {
-        updatedBy: username,
-        updatedAt: moment().format(),
+        updatedBy,
+        updatedAt,
         roles: template.data.roles,
         tenants: template.data.tenants,
         pages: template.pages
     };
+    return fs.writeJson(path, content, { spaces: '  ' });
+}
 
-    return checkTemplateExistence(template.data).then(() => fs.writeJson(path, content, { spaces: '  ' }));
+export function validateAndCreateTemplate(username: string, template: CreateTemplateData) {
+    return checkTemplateExists(template).then(() => createTemplate(template, username));
 }
 
 export function deleteTemplate(templateId: string) {
-    const path = pathlib.resolve(userTemplatesFolder, `${templateId}.json`);
+    const path = getUserTemplatePath(templateId);
 
     return new Promise<void>((resolve, reject) => {
         fs.remove(path, err => {
@@ -185,7 +197,7 @@ export function deleteTemplate(templateId: string) {
 }
 
 export function updateTemplate(username: string, templateUpdate: UpdateTemplateData) {
-    const path = pathlib.resolve(userTemplatesFolder, `${templateUpdate.id}.json`);
+    const path = getUserTemplatePath(templateUpdate.id);
 
     const content: TemplateFileContent = {
         updatedBy: username,
@@ -195,7 +207,7 @@ export function updateTemplate(username: string, templateUpdate: UpdateTemplateD
         pages: templateUpdate.pages
     };
 
-    return checkTemplateExistence(templateUpdate.data, templateUpdate.oldId)
+    return checkTemplateConflict(templateUpdate.data, templateUpdate.oldId)
         .then(
             () =>
                 new Promise<void>((resolve, reject) => {
