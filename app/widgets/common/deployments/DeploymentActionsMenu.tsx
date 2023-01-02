@@ -1,6 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
 import React from 'react';
-import i18n from 'i18next';
 import type { Workflow } from '../executeWorkflow';
 import { Menu, Popup, PopupMenu } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
@@ -67,7 +66,7 @@ export default function DeploymentActionsMenu({
         disabled: !StageUtils.isUserAuthorized(item.permission, managerState) || !isAvailable(item, workflows)
     }));
     const popupMenuProps: { help?: string; offset?: [number, number] } = !trigger
-        ? { help: i18n.t('widgets.common.deployments.actionsMenu.tooltip'), offset: [0, 5] }
+        ? { help: translate('tooltip'), offset: [0, 5] }
         : {};
 
     const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
