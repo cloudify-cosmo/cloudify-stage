@@ -1,6 +1,6 @@
 import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
 
-interface ConnectionParameters {
+export interface ConnectionParameters {
     host: string;
     token: string;
     path?: string;

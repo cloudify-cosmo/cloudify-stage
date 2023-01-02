@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import { translateSecretProviders, translateForm, validateModalForm } from './widget.utils';
-import type { SecretProvidersWidget } from './widget.types';
+import type { ConnectionParameters, SecretProvidersWidget } from './widget.types';
 
 const { useErrors, useInput } = Stage.Hooks;
 const { Modal, Button, Form } = Stage.Basic;
@@ -37,7 +37,7 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
             return;
         }
         manager
-            .doPatch(`/secrets-providers/${secretProvider.id}`, {
+            .doPatch<ConnectionParameters>(`/secrets-providers/${secretProvider.id}`, {
                 body: {
                     connection_parameters: {
                         host: hostname,
