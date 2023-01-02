@@ -2058,6 +2058,11 @@
             "buttons": {
                 "executeWorkflow": "Execute workflow",
                 "deploymentActions": "Deployment actions"
+            },
+            "modals": {
+                "deployOn": {
+                    "header": "Deploy On {{blueprintId}}"
+                }
             }
         }
     }

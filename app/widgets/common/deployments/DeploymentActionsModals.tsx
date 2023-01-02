@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
+import GenericDeployModal from '../deployModal/GenericDeployModal';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
 import { actions } from './DeploymentActionsMenu';
@@ -41,6 +42,14 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
                     {...commonProps}
                     force={activeAction === actions.forceDelete}
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
+                />
+            );
+        case actions.deployOn:
+            return (
+                <GenericDeployModal
+                    // TODO Norbert: Adjust translation
+                    i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
+                    {...commonProps}
                 />
             );
         case actions.setSite:
