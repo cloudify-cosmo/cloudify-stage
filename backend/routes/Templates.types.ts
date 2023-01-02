@@ -26,6 +26,6 @@ export type PutPageGroupsRequestBody = UpdatePageGroupData;
 
 export type GetPagesResponse = Page[];
 
-export type PostPagesRequestBody = CreatePageData;
+export type PostPagesRequestBody = Pick<CreatePageData, 'id' | 'name'>;
 
 export type PutPagesRequestBody = UpdatePageData;

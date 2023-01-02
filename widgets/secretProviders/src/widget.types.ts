@@ -1,5 +1,11 @@
 import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
 
+export interface ConnectionParameters {
+    host: string;
+    token: string;
+    path?: string;
+}
+
 export declare namespace SecretProvidersWidget {
     export type DataItem = {
         /* eslint-disable camelcase */
@@ -8,7 +14,7 @@ export declare namespace SecretProvidersWidget {
         visibility: string;
         name: string;
         type: string;
-        connection_parameters: string | null;
+        connection_parameters: ConnectionParameters | null;
         updated_at: Date | null;
         tenant_name: string;
         created_by: string;
