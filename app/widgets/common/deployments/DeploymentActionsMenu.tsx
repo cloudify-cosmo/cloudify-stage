@@ -1,8 +1,10 @@
 import type { ComponentProps, ReactNode } from 'react';
 import React from 'react';
+import type { PopupMenuProps } from 'cloudify-ui-components/typings/components/popups/PopupMenu/PopupMenu';
 import type { Workflow } from '../executeWorkflow';
 import { Menu, Popup, PopupMenu } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
+import type { Label } from '../labels/types';
 
 const translate = StageUtils.getT('widgets.common.deployments.actionsMenu');
 
@@ -37,37 +39,52 @@ const menuItems: MenuItem[] = [
     { name: actions.forceDelete, icon: 'trash', permission: permissions.deploymentDelete }
 ];
 
-function isAvailable(item: MenuItem, workflows: Workflow[]) {
+function isDeployOnFunctionalityAvailable(deploymentLabels: Label[]) {
+    // eslint-disable-next-line
+    console.log(deploymentLabels);
+    return deploymentLabels.some(deploymentLabel => {
+        return deploymentLabel.key === 'csys-obj-type' && deploymentLabel.value === 'environment';
+    });
+}
+
+function isMenuItemAvailable(item: MenuItem, workflows: Workflow[], deploymentLabels: Label[]) {
     if (item.permission === permissions.executeWorkflowPermission) {
         const workflow = workflows?.find(w => w.name === item.name);
         return !!workflow?.is_available;
     }
+
+    if (item.name === actions.deployOn) {
+        return isDeployOnFunctionalityAvailable(deploymentLabels);
+    }
+
     return true;
 }
 
 interface DeploymentActionsMenuProps {
     onActionClick: (actionName: string) => void;
     toolbox: Stage.Types.Toolbox;
-    trigger: ReactNode;
+    trigger?: ReactNode;
     workflows: Workflow[];
+    deploymentLabels?: Label[];
 }
 
 export default function DeploymentActionsMenu({
     onActionClick,
     toolbox,
     trigger,
-    workflows
+    workflows,
+    deploymentLabels = []
 }: DeploymentActionsMenuProps) {
     const managerState = toolbox.getManagerState();
     const items = menuItems.map(item => ({
         ...item,
         key: item.name,
         content: translate(item.name),
-        disabled: !StageUtils.isUserAuthorized(item.permission, managerState) || !isAvailable(item, workflows)
+        disabled:
+            !StageUtils.isUserAuthorized(item.permission, managerState) ||
+            !isMenuItemAvailable(item, workflows, deploymentLabels)
     }));
-    const popupMenuProps: { help?: string; offset?: [number, number] } = !trigger
-        ? { help: translate('tooltip'), offset: [0, 5] }
-        : {};
+    const popupMenuProps: Partial<PopupMenuProps> = !trigger ? { help: translate('tooltip'), offset: [0, 5] } : {};
 
     const onItemClick: ComponentProps<typeof Menu>['onItemClick'] = (_event, { name }) => {
         onActionClick(name!);

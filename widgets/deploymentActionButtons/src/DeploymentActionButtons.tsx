@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
+import type { Label } from 'app/widgets/common/labels/types';
 import type { Workflow } from '../../../app/widgets/common/executeWorkflow';
 import StageUtils from '../../../app/utils/stageUtils';
 import { translateWidget } from './widget.utils';
@@ -8,7 +9,7 @@ const translate = StageUtils.composeT(translateWidget, 'buttons');
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase
-    | { status: 'success'; data: { display_name: string; workflows: Workflow[] } }
+    | { status: 'success'; data: { display_name: string; workflows: Workflow[]; labels: Label[] } }
     | { status: 'loading' }
     | { status: 'error'; error: Error };
 
@@ -48,6 +49,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
 
     const buttonsDisabled = !deploymentId || ['error', 'loading'].includes(fetchedDeploymentState.status);
     const workflows = isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.workflows : [];
+    const deploymentLabels = isDeploymentFetched(fetchedDeploymentState) ? fetchedDeploymentState.data.labels : [];
 
     return (
         <div>
@@ -78,6 +80,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                     />
                 }
                 workflows={workflows}
+                deploymentLabels={deploymentLabels}
             />
 
             {isDeploymentFetched(fetchedDeploymentState) && deploymentId && workflow && (
