@@ -2053,6 +2053,10 @@
             "description": "Provides set of action buttons for deployment",
             "errors": {
                 "fetchData": "No deployment selected, cannot determine deployment ID"
+            },
+            "buttons": {
+                "executeWorkflow": "Execute workflow",
+                "deploymentActions": "Deployment actions"
             }
         }
     }

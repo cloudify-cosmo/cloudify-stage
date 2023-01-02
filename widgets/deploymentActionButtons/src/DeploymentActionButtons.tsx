@@ -1,6 +1,10 @@
 import type { FunctionComponent } from 'react';
 import { useEffect } from 'react';
 import type { Workflow } from '../../../app/widgets/common/executeWorkflow';
+import StageUtils from '../../../app/utils/stageUtils';
+import { translateWidget } from './widget.utils';
+
+const translate = StageUtils.composeT(translateWidget, 'buttons');
 
 type FetchedDeploymentState =
     // eslint-disable-next-line camelcase
@@ -55,7 +59,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                         color="teal"
                         icon="cogs"
                         disabled={buttonsDisabled}
-                        content="Execute workflow"
+                        content={translate('executeWorkflow')}
                     />
                 }
                 onClick={setWorkflow}
@@ -70,7 +74,7 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
                         color="teal"
                         icon="content"
                         disabled={buttonsDisabled}
-                        content="Deployment actions"
+                        content={translate('deploymentActions')}
                     />
                 }
                 workflows={workflows}
