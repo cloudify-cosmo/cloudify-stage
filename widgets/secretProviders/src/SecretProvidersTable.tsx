@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import RemoveSecretProviderButton from './RemoveSecretProviderButton';
+
 import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
 import { SecretProvidersType } from './widget.types';
 import type { SecretProvidersWidget } from './widget.types';
 import CreateSecretProviderModal from './CreateSecretProviderModal';
+import UpdateSecretProviderButton from './UpdateSecretProviderButton';
+import RemoveSecretProviderButton from './RemoveSecretProviderButton';
 
-const { DataTable, Icon, Dropdown } = Stage.Basic;
+const { DataTable, Dropdown } = Stage.Basic;
 const { Time } = Stage.Utils;
 const { useBoolean } = Stage.Hooks;
 const { Menu, Item } = Dropdown;
@@ -77,7 +79,11 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.created_at)}</DataTable.Data>
                         <DataTable.Data>{Time.formatTimestamp(secretProvider.updated_at)}</DataTable.Data>
                         <DataTable.Data textAlign="center">
-                            <Icon name="edit" title={translateTable('buttons.updateSecretProvider')} />
+                            <UpdateSecretProviderButton
+                                secretProvider={secretProvider}
+                                manager={toolbox.getManager()}
+                                onSubmit={handleOnSubmit}
+                            />
                             <RemoveSecretProviderButton secretProvider={secretProvider} toolbox={toolbox} />
                         </DataTable.Data>
                     </DataTable.Row>
