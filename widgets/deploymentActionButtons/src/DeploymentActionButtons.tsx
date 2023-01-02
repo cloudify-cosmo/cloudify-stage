@@ -5,6 +5,15 @@ import type { Workflow } from '../../../app/widgets/common/executeWorkflow';
 import StageUtils from '../../../app/utils/stageUtils';
 import { translateWidget } from './widget.utils';
 
+const {
+    Basic: { Button },
+    Hooks: { useResettableState }
+} = Stage;
+const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
+const WorkflowsMenu = Stage.Common.Workflows.Menu;
+const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
+const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
+
 const translate = StageUtils.composeT(translateWidget, 'buttons');
 
 type FetchedDeploymentState =
@@ -29,15 +38,6 @@ const DeploymentActionButtons: FunctionComponent<DeploymentActionButtonsProps> =
     toolbox,
     redirectToParentPageAfterDelete
 }) => {
-    const {
-        Basic: { Button },
-        Hooks: { useResettableState }
-    } = Stage;
-    const ExecuteWorkflowModal = Stage.Common.Workflows.ExecuteModal;
-    const WorkflowsMenu = Stage.Common.Workflows.Menu;
-    const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
-    const DeploymentActionsModals = Stage.Common.Deployments.ActionsModals;
-
     const [activeAction, setActiveAction, resetActiveAction] = useResettableState<string | null>(null);
     const [workflow, setWorkflow, resetWorkflow] = useResettableState<Workflow | null>(null);
 
