@@ -1,4 +1,3 @@
-import StageUtils from '../../../app/utils/stageUtils';
 import { widgetId } from './widget.consts';
 
-export const translateWidget = StageUtils.getT(`widgets.${widgetId}`);
+export const translateWidget = Stage.Utils.getT(`widgets.${widgetId}`);
