@@ -1,6 +1,7 @@
 import { isEmpty, isEqual } from 'lodash';
 import type { FetchParams, Visibility } from 'app/widgets/common/types';
-import type { Secret, SecretsWidget } from './widget.types';
+import type { Secret } from 'app/widgets/common/secrets/SecretActions';
+import type { SecretsWidget } from './widget.types';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
 import SecretValue from './SecretValue';
@@ -33,8 +34,8 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
 
     static UPDATE_SECRET_ACTION = 'update';
 
-    constructor(props: SecretsTableProps, context: any) {
-        super(props, context);
+    constructor(props: SecretsTableProps) {
+        super(props);
 
         this.state = {
             error: null,

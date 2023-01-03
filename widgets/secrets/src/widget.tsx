@@ -1,6 +1,7 @@
+import type { Secret } from 'app/widgets/common/secrets/SecretActions';
 import { isEmpty } from 'lodash';
 import SecretsTable from './SecretsTable';
-import type { Secret, SecretsWidget } from './widget.types';
+import type { SecretsWidget } from './widget.types';
 
 const translateSecrets = Stage.Utils.getT('widgets.secrets');
 
