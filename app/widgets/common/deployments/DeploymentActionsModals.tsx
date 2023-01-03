@@ -26,6 +26,10 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     redirectToParentPageAfterDelete
 }) => {
     const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
+    const deploymentToDeployOn = {
+        id: deploymentId,
+        displayName: deploymentName
+    };
 
     switch (activeAction) {
         case actions.manageLabels:
@@ -47,8 +51,9 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
         case actions.deployOn:
             return (
                 <GenericDeployModal
-                    // TODO Norbert: Adjust translation
+                    // TODO Norbert: Consider using DeployBlueprintModal
                     i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
+                    deploymentToDeployOn={deploymentToDeployOn}
                     {...commonProps}
                 />
             );

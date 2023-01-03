@@ -147,6 +147,13 @@ type GenericDeployModalProps = {
      * Filter rules for blueprints listing
      */
     blueprintFilterRules?: FilterRule[];
+    /**
+     * // TODO Norbert: Provide additional info
+     */
+    deploymentToDeployOn?: {
+        id: string;
+        displayName: string;
+    };
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -265,6 +272,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onDryRunChange = this.onDryRunChange.bind(this);
         this.onQueueChange = this.onQueueChange.bind(this);
         this.onScheduleChange = this.onScheduleChange.bind(this);
+
+        this.getModalHeader = this.getModalHeader.bind(this);
     }
 
     componentDidMount() {
@@ -499,6 +508,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     };
 
     getDeploymentParams() {
+        const { deploymentToDeployOn } = this.props;
         const {
             blueprint,
             deploymentName,
@@ -512,8 +522,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentIdToDeployOn
         } = this.state;
 
-        const deploymentLabels = deploymentIdToDeployOn
-            ? [...labels, { key: parentDeploymentLabelKey, value: deploymentIdToDeployOn }]
+        const parentDeploymentId = deploymentIdToDeployOn || deploymentToDeployOn?.id;
+
+        const deploymentLabels = parentDeploymentId
+            ? [...labels, { key: parentDeploymentLabelKey, value: parentDeploymentId }]
             : labels;
 
         return {
@@ -531,6 +543,16 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
 
     setLoadingMessage(message: string) {
         this.setState({ loadingMessage: message });
+    }
+
+    getModalHeader() {
+        const { i18nHeaderKey, deploymentToDeployOn } = this.props;
+        const { blueprint } = this.state;
+        const translationParameters: Record<string, string> = deploymentToDeployOn
+            ? { deploymentName: deploymentToDeployOn.displayName }
+            : { blueprintId: blueprint.id };
+
+        return i18n.t(i18nHeaderKey, translationParameters);
     }
 
     isBlueprintSelectable() {
@@ -622,7 +644,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             onHide,
             open,
             toolbox,
-            i18nHeaderKey,
             showInstallOptions,
             showDeploymentIdInput,
             showDeploymentNameInput,
@@ -664,7 +685,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
                 <Modal.Header>
-                    <Icon name="rocket" /> {i18n.t(i18nHeaderKey, { blueprintId: blueprint.id })}
+                    <Icon name="rocket" /> {this.getModalHeader()}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"
