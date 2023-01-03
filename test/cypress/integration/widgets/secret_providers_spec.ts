@@ -48,4 +48,14 @@ describe('Secret Providers widget', () => {
         });
         cy.contains('Secret_Provider_2').should('be.visible');
     });
+
+    it('should allow to update secret provider', () => {
+        getSecretProviderRow('Secret_Provider_2').find('td').eq(3).should('be.empty');
+        getSecretProviderRow('Secret_Provider_2').find('i[title="Update Secret Provider"]').click();
+        cy.typeToFieldInput('Vault Hostname', 'localhost_test');
+        cy.typeToFieldInput('Authorization Token', 'token_test');
+        cy.typeToFieldInput('Vault Default Path', 'path_test');
+        cy.clickButton('Update');
+        getSecretProviderRow('Secret_Provider_2').find('td').eq(3).should('not.be.empty');
+    });
 });
