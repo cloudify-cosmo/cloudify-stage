@@ -35,7 +35,7 @@ Stage.defineWidget<never, SecretsWidget.Data, SecretsWidget.Configuration>({
             return <Loading />;
         }
         const formattedData: FormattedSecrets = {
-            items: _.map(data.items, item => {
+            items: data.items.map(item => {
                 return {
                     ...item,
                     created_at: Stage.Utils.Time.formatTimestamp(item.created_at),

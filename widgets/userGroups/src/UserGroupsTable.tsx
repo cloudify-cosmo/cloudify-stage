@@ -1,5 +1,6 @@
 import { isEqual } from 'lodash';
 
+import type { FetchParams } from 'app/widgets/common/types';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupDetails from './GroupDetails';
@@ -122,7 +123,7 @@ class UserGroupsTable extends React.Component<UserGroupsTableProps, UserGroupsTa
             });
     }
 
-    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
+    fetchData = (fetchParams: FetchParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };

@@ -1,6 +1,6 @@
 import type { FilterRule } from '../../../app/widgets/common/filters/types';
 import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
-import type { Visibility } from '../../../app/widgets/common/types';
+import type { FetchParams, Visibility } from '../../../app/widgets/common/types';
 
 export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration, DataTableConfiguration {
     clickToDrillDown: boolean;
@@ -41,7 +41,7 @@ export interface BlueprintsViewProps {
     data: BlueprintDataResponse;
     widget: Stage.Types.Widget<BlueprintsWidgetConfiguration>;
     toolbox: Stage.Types.Toolbox;
-    fetchData: (params: { gridParams: Stage.Types.GridParams }) => void;
+    fetchData: (params: FetchParams) => void;
     onSelectBlueprint: (blueprint: ExtendedBlueprint) => void;
     onDeleteBlueprint: (blueprint: ExtendedBlueprint) => void;
     onCreateDeployment: (blueprint: ExtendedBlueprint) => void;

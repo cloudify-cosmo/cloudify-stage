@@ -1,68 +1,10 @@
 import { isEmpty, isEqual } from 'lodash';
-import type { FunctionComponent } from 'react';
-import type { Visibility } from 'app/widgets/common/types';
+import type { FetchParams, Visibility } from 'app/widgets/common/types';
 import type { Secret, SecretsWidget } from './widget.types';
 import CreateModal from './CreateModal';
 import UpdateModal from './UpdateModal';
-
-const translateSecrets = Stage.Utils.getT('widgets.secrets');
-
-interface SecretValueProps {
-    canShowSecret: boolean;
-    showSecretLoading: boolean;
-    showSecretKey: string;
-    showSecretValue: string;
-    secretKey: string;
-    onHide: () => void;
-    onShow: () => void;
-    toolbox: Stage.Types.Toolbox;
-}
-
-const SecretValue: FunctionComponent<SecretValueProps> = ({
-    canShowSecret,
-    showSecretKey,
-    showSecretValue,
-    showSecretLoading,
-    secretKey,
-    onHide,
-    onShow,
-    toolbox
-}) => {
-    const { Icon, Popup } = Stage.Basic;
-
-    const currentUsername = toolbox.getManager().getCurrentUsername();
-    const selectedTenant = toolbox.getManager().getSelectedTenant();
-
-    const popupMessage = translateSecrets('popupMessage', {
-        currentUsername,
-        secretKey,
-        selectedTenant
-    });
-
-    if (showSecretKey === secretKey) {
-        if (showSecretLoading) {
-            return <Icon name="spinner" loading />;
-        }
-        if (canShowSecret) {
-            return (
-                <div>
-                    <pre className="forceMaxWidth">{showSecretValue}</pre>
-                    <Icon link name="hide" title={translateSecrets('icons.hide')} onClick={onHide} />
-                </div>
-            );
-        }
-
-        return (
-            <Popup position="top right" on="hover">
-                <Popup.Trigger>
-                    <Icon name="dont" color="red" />
-                </Popup.Trigger>
-                {popupMessage}
-            </Popup>
-        );
-    }
-    return <Icon link name="unhide" title={translateSecrets('show')} onClick={onShow} />;
-};
+import SecretValue from './SecretValue';
+import { translateSecrets } from './widget.utils';
 
 export interface SecretsTableProps {
     data: {
@@ -198,7 +140,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             });
     }
 
-    fetchGridData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
+    fetchGridData = (fetchParams: FetchParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };

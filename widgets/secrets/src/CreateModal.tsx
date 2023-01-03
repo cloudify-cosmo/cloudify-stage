@@ -1,4 +1,5 @@
 import { isEmpty } from 'lodash';
+import type { FileInputProps } from 'cloudify-ui-components/typings/components/form/FileInput/FileInput';
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
@@ -6,7 +7,6 @@ const { MultilineInput } = Stage.Common.Secrets;
 interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
 }
-type FileValue = File | File[] | null;
 
 const translateCreateModal = Stage.Utils.getT('widgets.secrets.createModal');
 
@@ -60,7 +60,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .finally(unsetLoading);
     }
 
-    function onSecretFileChange(file: FileValue) {
+    const onSecretFileChange: FileInputProps['onChange'] = file => {
         if (!file) {
             clearErrors();
             setInput({ secretValue: '' });
@@ -81,7 +81,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                 setMessageAsError(err);
             })
             .finally(unsetFileLoading);
-    }
+    };
 
     const { isHiddenValue, secretKey, secretValue } = inputs;
     const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
