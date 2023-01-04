@@ -3,7 +3,7 @@ import React from 'react';
 import DeployBlueprintModal from '../deployModal/DeployBlueprintModal';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
-import { actions } from './DeploymentActionsMenu';
+import { actions } from './DeploymentActionsMenu.consts';
 import RemoveDeploymentModal from './RemoveDeploymentModal';
 import SetSiteModal from './SetSiteModal';
 import UpdateDeploymentModal from './UpdateDeploymentModal';
