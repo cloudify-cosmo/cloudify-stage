@@ -221,7 +221,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     />
                     <DataTable.Column label={translateSecrets('columns.creator')} name="created_by" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.tenant')} name="tenant_name" width="10%" />
-                    <DataTable.Column width="5" />
+                    <DataTable.Column width="5%" />
 
                     {data.items.map(item => {
                         return (
