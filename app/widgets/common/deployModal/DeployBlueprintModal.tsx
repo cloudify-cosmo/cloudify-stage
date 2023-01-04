@@ -12,7 +12,7 @@ import { getErrorObject } from '../inputs/utils/errors';
 const t = (key: string, options?: Record<string, any>) =>
     i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
-export type DeployBlueprintModalProps = Pick<
+type DeployBlueprintModalProps = Pick<
     ComponentProps<typeof GenericDeployModal>,
     | 'open'
     | 'onHide'
