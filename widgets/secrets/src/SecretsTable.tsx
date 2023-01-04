@@ -43,7 +43,8 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             modalType: '',
             secret: {
                 key: '',
-                value: ''
+                value: '',
+                schema: ''
             },
             canShowSecret: true,
             showSecretKey: '',
