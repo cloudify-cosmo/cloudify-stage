@@ -22,7 +22,7 @@ export default class SecretActions {
         this.manager = manager;
     }
 
-    doGet(key: Secret['key']) {
+    doGet(key: Secret['key']): Promise<Secret> {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
@@ -30,11 +30,11 @@ export default class SecretActions {
         return this.manager.doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key: Secret['key'], value: Secret['value'], visibility: Visibility, hidden: Secret['is_hidden_value']) {
+    doCreate(key: Secret['key'], value: string, visibility: Visibility, hidden: Secret['is_hidden_value']) {
         return this.manager.doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
     }
 
-    doUpdate(key: Secret['key'], value: Secret['value']) {
+    doUpdate(key: Secret['key'], value: string) {
         return this.manager.doPatch(`/secrets/${key}`, { body: { value } });
     }
 

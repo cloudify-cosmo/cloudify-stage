@@ -90,7 +90,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doGet(secretKey)
-            .then((secret: Secret) => {
+            .then(secret => {
                 let canShowSecret = true;
                 if (secret.is_hidden_value && isEmpty(secret.value)) {
                     canShowSecret = false;
