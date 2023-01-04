@@ -1,3 +1,4 @@
+import type { FetchParams } from 'app/widgets/common/types';
 import type { NamedResourceResponse } from './actions';
 import Actions from './actions';
 import CreateModal from './CreateModal';
@@ -158,7 +159,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
             });
     }
 
-    fetchData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
+    fetchData = (fetchParams: FetchParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
