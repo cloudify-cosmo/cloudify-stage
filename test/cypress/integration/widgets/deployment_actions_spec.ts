@@ -1,4 +1,4 @@
-import type { LabelInputType } from 'app/widgets/common/labels/types';
+import type { Label, LabelInputType } from 'app/widgets/common/labels/types';
 import { isLabelModifiable } from 'app/widgets/common/labels/common';
 
 describe('Deployment Action Buttons widget', () => {
@@ -23,7 +23,14 @@ describe('Deployment Action Buttons widget', () => {
             .deleteDeployments(deploymentId, true)
             .deleteBlueprints(blueprintName, true)
             .uploadBlueprint('blueprints/simple.zip', blueprintName)
-            .deployBlueprint(blueprintName, deploymentId, { server_ip: '127.0.0.1' }, { display_name: deploymentName })
+            .deployBlueprint(
+                blueprintName,
+                deploymentId,
+                { server_ip: '127.0.0.1' },
+                {
+                    display_name: deploymentName
+                }
+            )
     );
 
     it('should be disabled when deploymentId is not set in the context', () => {
@@ -81,6 +88,50 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.popupMenu > .menu').within(() => {
                 cy.contains('Uninstall').should('not.exist');
                 cy.contains('Install').should('be.visible');
+            });
+        });
+
+        it('should allow to use "Deploy On" functionality', () => {
+            const markDeploymentAsEnvironment = () => {
+                const environmentLabel: Label = {
+                    key: 'csys-obj-type',
+                    value: 'environment'
+                };
+
+                cy.interceptSp('GET', `/deployments/${deploymentId}`, request => {
+                    request.on('response', response => {
+                        response.send({
+                            ...response.body,
+                            labels: [environmentLabel]
+                        });
+                    });
+                });
+            };
+
+            const refreshDeploymentData = () => {
+                cy.clearDeploymentContext().setDeploymentContext(deploymentId);
+            };
+
+            cy.clickButton('Deployment actions');
+            cy.get('.popupMenu > .menu').contains('a.disabled', 'Deploy On');
+
+            markDeploymentAsEnvironment();
+            refreshDeploymentData();
+
+            cy.clickButton('Deployment actions');
+            cy.get('.popupMenu > .menu').contains('a:not(.disabled)', 'Deploy On').click();
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Blueprint', blueprintName);
+                cy.typeToFieldInput('Deployment name', `${deploymentId}_child`);
+
+                cy.getField('Server IP').find('textarea').type('127.0.0.1');
+
+                cy.clickButton('Install');
+            });
+
+            cy.interceptSp('PUT', '/deployments/', request => {
+                expect(request.body.labels).to.contain({ 'csys-obj-parent': deploymentId });
             });
         });
     });
