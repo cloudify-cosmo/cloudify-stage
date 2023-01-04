@@ -12,12 +12,18 @@ import { getErrorObject } from '../inputs/utils/errors';
 const t = (key: string, options?: Record<string, any>) =>
     i18n.t(`widgets.common.deployments.deployModal.${key}`, options);
 
-type DeployBlueprintModalProps = Pick<
+export type DeployBlueprintModalProps = Pick<
     ComponentProps<typeof GenericDeployModal>,
-    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules'
->;
+    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules' | 'deploymentToDeployOn'
+> &
+    Pick<Partial<ComponentProps<typeof GenericDeployModal>>, 'i18nHeaderKey'>;
 
-const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
+const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({
+    toolbox,
+    onHide,
+    i18nHeaderKey = 'widgets.common.deployments.deployModal.header',
+    ...rest
+}) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
@@ -76,7 +82,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             {...rest}
             toolbox={toolbox}
             onHide={onHide}
-            i18nHeaderKey="widgets.common.deployments.deployModal.header"
+            i18nHeaderKey={i18nHeaderKey}
             showDeploymentNameInput
             showDeploymentIdInput
             showDeployButton

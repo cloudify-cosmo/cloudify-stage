@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import GenericDeployModal from '../deployModal/GenericDeployModal';
+import DeployBlueprintModal from '../deployModal/DeployBlueprintModal';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
 import { actions } from './DeploymentActionsMenu';
@@ -50,10 +50,9 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
             );
         case actions.deployOn:
             return (
-                <GenericDeployModal
-                    // TODO Norbert: Consider using DeployBlueprintModal
-                    i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
+                <DeployBlueprintModal
                     deploymentToDeployOn={deploymentToDeployOn}
+                    i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
                     {...commonProps}
                 />
             );
