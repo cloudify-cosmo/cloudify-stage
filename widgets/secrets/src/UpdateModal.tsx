@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import type { Secret } from './widget.types';
+import type { Secret } from 'app/widgets/common/secrets/SecretActions';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;

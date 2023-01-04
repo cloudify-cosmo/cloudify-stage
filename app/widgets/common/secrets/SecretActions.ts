@@ -11,6 +11,7 @@ export type Secret = {
     tenant_name?: string;
     updated_at?: string;
     visibility?: Visibility;
+    value: string;
 };
 /* eslint-enable camelcase */
 
@@ -29,11 +30,11 @@ export default class SecretActions {
         return this.manager.doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key: Secret['key'], value: string, visibility: Visibility, hidden: Secret['is_hidden_value']) {
+    doCreate(key: Secret['key'], value: Secret['value'], visibility: Visibility, hidden: Secret['is_hidden_value']) {
         return this.manager.doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
     }
 
-    doUpdate(key: Secret['key'], value: string) {
+    doUpdate(key: Secret['key'], value: Secret['value']) {
         return this.manager.doPatch(`/secrets/${key}`, { body: { value } });
     }
 
