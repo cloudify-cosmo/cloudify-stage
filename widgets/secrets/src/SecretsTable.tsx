@@ -211,13 +211,14 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                 >
                     <DataTable.Column label={translateSecrets('columns.key')} name="key" width="20%" />
                     <DataTable.Column label={translateSecrets('columns.value')} width="20%" />
-                    <DataTable.Column
-                        label={translateSecrets('columns.hiddenValue')}
-                        name="is_hidden_value"
-                        width="10%"
-                    />
+                    <DataTable.Column label={translateSecrets('columns.hidden')} name="is_hidden_value" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.created')} name="created_at" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.updated')} name="updated_at" width="10%" />
+                    <DataTable.Column
+                        label={translateSecrets('columns.secretProvider')}
+                        name="secret_provider"
+                        width="10%"
+                    />
                     <DataTable.Column label={translateSecrets('columns.creator')} name="created_by" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.tenant')} name="tenant_name" width="10%" />
                     <DataTable.Column width="10%" />
@@ -258,6 +259,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                 </DataTable.Data>
                                 <DataTable.Data>{item.created_at}</DataTable.Data>
                                 <DataTable.Data>{item.updated_at}</DataTable.Data>
+                                <DataTable.Data>{item.provider_name}</DataTable.Data>
                                 <DataTable.Data>{item.created_by}</DataTable.Data>
                                 <DataTable.Data>{item.tenant_name}</DataTable.Data>
                                 <DataTable.Data textAlign="center" className="rowActions">
