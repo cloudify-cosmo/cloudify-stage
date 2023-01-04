@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import type { FetchParams } from 'app/widgets/common/types';
 import { dataSortingKeys, tableRefreshEvent } from './widget.consts';
 import { translateSecretProviders } from './widget.utils';
 import { SecretProvidersType } from './widget.types';
@@ -27,7 +28,7 @@ const SecretProvidersTable = ({ configuration, data, toolbox }: SecretProvidersT
     const [isCreateModalVisible, showCreateModal, hideCreateModal] = useBoolean();
     const [secretProviderType, setSecretProviderTypeType] = useState<SecretProvidersType>();
 
-    const fetchTableData = (fetchParams: { gridParams: Stage.Types.GridParams }) => {
+    const fetchTableData = (fetchParams: FetchParams) => {
         toolbox.refresh(fetchParams);
     };
 
