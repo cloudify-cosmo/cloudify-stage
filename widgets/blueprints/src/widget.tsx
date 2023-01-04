@@ -87,7 +87,9 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
 
         return searchActions
             .doListBlueprints(filterRules, {
-                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                // TODO Norbert: Consider improving _include string by conditionally fetching requirements field
+                // NOTE Norbert: Then it would be worth to check if we can have a condition (while switching between catalog and table view mode) in which `requirements` are not existing
+                _include: `id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error,requirements`,
                 ...params
             })
             .then(data => {

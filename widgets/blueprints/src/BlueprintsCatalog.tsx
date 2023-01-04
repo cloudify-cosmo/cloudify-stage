@@ -1,4 +1,6 @@
 import type { ReactElement } from 'react';
+// TODO Norbert: Function below probably should be shared in a different way (for sure from a different file 😁)
+import { isDeployOnFunctionalityAvailable } from '../../../app/widgets/common/deployModal/GenericDeployModal.utils';
 
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
@@ -157,7 +159,11 @@ export default function BlueprintsCatalog({
                                         <>
                                             <Button
                                                 icon="rocket"
-                                                content="Deploy"
+                                                content={
+                                                    isDeployOnFunctionalityAvailable(item.requirements)
+                                                        ? 'Deploy On'
+                                                        : 'Deploy'
+                                                }
                                                 labelPosition="left"
                                                 onClick={event => {
                                                     event.stopPropagation();

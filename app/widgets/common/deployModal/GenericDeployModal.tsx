@@ -33,7 +33,7 @@ import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
 import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { parentDeploymentLabelKey } from '../deploymentsView/common';
-import { deployOnTextFormatter } from './GenericDeployModal.utils';
+import { deployOnTextFormatter, isDeployOnFunctionalityAvailable } from './GenericDeployModal.utils';
 import StageUtils from '../../../utils/stageUtils';
 import { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } from '../../../components/basic';
 
@@ -562,7 +562,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        showDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown: isDeployOnFunctionalityAvailable(blueprint?.requirements)
                     });
                 })
                 .catch(err => {
