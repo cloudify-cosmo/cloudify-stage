@@ -51,8 +51,9 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
         case actions.deployOn:
             return (
                 <DeployBlueprintModal
-                    deploymentToDeployOn={deploymentToDeployOn}
                     i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
+                    deploymentToDeployOn={deploymentToDeployOn}
+                    generateDeploymentIdOnMount
                     {...commonProps}
                 />
             );

@@ -14,7 +14,13 @@ const t = (key: string, options?: Record<string, any>) =>
 
 export type DeployBlueprintModalProps = Pick<
     ComponentProps<typeof GenericDeployModal>,
-    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules' | 'deploymentToDeployOn'
+    | 'open'
+    | 'onHide'
+    | 'blueprintId'
+    | 'toolbox'
+    | 'blueprintFilterRules'
+    | 'deploymentToDeployOn'
+    | 'generateDeploymentIdOnMount'
 > &
     Pick<Partial<ComponentProps<typeof GenericDeployModal>>, 'i18nHeaderKey'>;
 
