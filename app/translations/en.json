@@ -1499,7 +1499,7 @@
                 "noSecretProviders": "There are no Secret Providers available. Click \"Create\" to add Secret Provider.",
                 "buttons": {
                     "removeSecretProvider": "Delete Secret Provider",
-                    "updateSecretPRovider": "Update Secret Provider",
+                    "updateSecretProvider": "Update Secret Provider",
                     "create": "Create"
                 }
             },
@@ -1528,7 +1528,16 @@
                 "buttons": {
                     "create": "Create",
                     "cancel": "Cancel"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update a Vault Secret Provider",
+                "buttons": {
+                    "update": "Update",
+                    "cancel": "Cancel"
+                }
+            },
+            "form": {
                 "inputs": {
                     "providerName": {
                         "label": "Provider Name",
@@ -1554,7 +1563,8 @@
                     },
                     "hostname": "Please provide vault hostname.",
                     "authorizationToken": "Please provide an authorization token.",
-                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again."
+                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again.",
+                    "update": "Couldn't update a Secret Provider, please try to submit the Secret Provider data again."
                 }
             }
         },
