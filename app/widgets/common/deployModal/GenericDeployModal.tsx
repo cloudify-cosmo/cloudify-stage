@@ -147,14 +147,18 @@ type GenericDeployModalProps = {
      * Filter rules for blueprints listing
      */
     blueprintFilterRules?: FilterRule[];
+
     /**
-     * // TODO Norbert: Provide additional info
+     * Deployment on which submitted blueprint should be deployed on
      */
     deploymentToDeployOn?: {
         id: string;
         displayName: string;
     };
 
+    /**
+     * Whether to fill deploymentId field automatically on the modal mount
+     */
     generateDeploymentIdOnMount?: boolean;
 };
 
