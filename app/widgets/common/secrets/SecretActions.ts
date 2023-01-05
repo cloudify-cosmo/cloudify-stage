@@ -12,6 +12,7 @@ export type Secret = {
     visibility?: Visibility;
     value: string;
     schema: string;
+    provider_name?: string;
 };
 /* eslint-enable camelcase */
 
