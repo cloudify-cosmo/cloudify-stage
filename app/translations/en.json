@@ -1575,11 +1575,12 @@
             "columns": {
                 "key": "Key",
                 "value": "Value",
-                "hiddenValue": "Hidden value",
+                "hidden": "Hidden",
                 "created": "Created",
                 "updated": "Updated",
                 "creator": "Creator",
-                "tenant": "Tenant"
+                "tenant": "Tenant",
+                "secretProvider": "Secret provider"
             },
             "actions": {
                 "updateSecret": "Update secret",
