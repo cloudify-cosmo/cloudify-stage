@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import GettingStartedModal from './GettingStartedModal';
-import { GettingStartedSchema } from './model';
+import type { GettingStartedSchema } from './model';
 
 const GettingStartedWrapper = () => {
     const [gettingStartedSchema, setGettingStartedSchema] = useState<GettingStartedSchema | null>(null);
