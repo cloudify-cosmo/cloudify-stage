@@ -10,8 +10,6 @@ import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
-import gettingStartedJson from './schema/gettingStarted.schema.json';
-import cloudSetupJson from './schema/cloudSetup.schema.json';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
@@ -45,10 +43,12 @@ const isPortValid = (port: string) => {
     return portNum >= 1 && portNum <= 65535;
 };
 
-const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
-const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
+interface GettingStartedModalProps {
+    gettingStartedSchema: GettingStartedSchema;
+    cloudSetupSchema: GettingStartedSchema;
+}
 
-const GettingStartedModal = () => {
+const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: GettingStartedModalProps) => {
     const modalOpenState = useModalOpenState();
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
