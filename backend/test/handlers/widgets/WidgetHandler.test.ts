@@ -1,6 +1,6 @@
 import mkdirp from 'mkdirp';
 import { getResourcePath } from 'utils';
-import { listWidgets } from 'handler/WidgetsHandler';
+import { listWidgets } from 'handler/widgets/WidgetsHandler';
 
 jest.mock('handler/ManagerHandler');
 

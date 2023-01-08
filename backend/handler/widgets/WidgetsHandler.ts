@@ -5,25 +5,28 @@ import mkdirp from 'mkdirp';
 import os from 'os';
 import pathlib from 'path';
 
-import { getConfig } from '../config';
-import { db } from '../db/Connection';
-import type { UserAppsInstance } from '../db/models/UserAppsModel';
-import { getResourcePath } from '../utils';
-import * as ArchiveHelper from './ArchiveHelper';
-import * as BackendHandler from './BackendHandler';
+import archiver from 'archiver';
+import { getConfig } from '../../config';
+import { db } from '../../db/Connection';
+import type { UserAppsInstance } from '../../db/models/UserAppsModel';
+import { getResourcePath } from '../../utils';
+import * as ArchiveHelper from '../ArchiveHelper';
+import * as BackendHandler from '../BackendHandler';
 
-import { getLogger } from './LoggerHandler';
-import type { WidgetData, WidgetUsage } from './WidgetsHandler.types';
+import { getLogger } from '../LoggerHandler';
+import type { WidgetData, WidgetUsage } from '../WidgetsHandler.types';
+import validateUniqueness from './validateUniqueness';
+import installFiles from './installFiles';
 
 const logger = getLogger('WidgetHandler');
 
 const builtInWidgetsFolder = getResourcePath('widgets', false);
-const userWidgetsFolder = getResourcePath('widgets', true);
+export const userWidgetsFolder = getResourcePath('widgets', true);
 const widgetTempDir = pathlib.join(os.tmpdir(), getConfig().app.widgets.tempDir);
 
-function saveMultipartData(req: Request) {
+function saveMultipartData(req: Request, multipartId = 'widget') {
     const targetPath = pathlib.join(widgetTempDir, `widget${Date.now()}`);
-    return ArchiveHelper.saveMultipartData(req, targetPath, 'widget');
+    return ArchiveHelper.saveMultipartData(req, targetPath, multipartId);
 }
 
 function saveDataFromUrl(archiveUrl: string) {
@@ -31,31 +34,13 @@ function saveDataFromUrl(archiveUrl: string) {
     return ArchiveHelper.saveDataFromUrl(archiveUrl, targetPath);
 }
 
-// Credits to: https://geedew.com/remove-a-directory-that-is-not-empty-in-nodejs/
-
-function rmdirSync(path: string) {
-    if (fs.existsSync(path)) {
-        fs.readdirSync(path).forEach(file => {
-            const curPath = `${path}/${file}`;
-            if (fs.lstatSync(curPath).isDirectory()) {
-                // recurse
-                rmdirSync(curPath);
-            } else {
-                // delete file
-                fs.unlinkSync(curPath);
-            }
-        });
-        fs.rmdirSync(path);
-    }
-}
-
-function getUserWidgets() {
+export function getUserWidgets() {
     return fs
         .readdirSync(pathlib.resolve(userWidgetsFolder))
         .filter(dir => fs.lstatSync(pathlib.resolve(userWidgetsFolder, dir)).isDirectory());
 }
 
-function getBuiltInWidgets() {
+export function getBuiltInWidgets() {
     return fs
         .readdirSync(pathlib.resolve(builtInWidgetsFolder))
         .filter(
@@ -63,21 +48,6 @@ function getBuiltInWidgets() {
                 fs.lstatSync(pathlib.resolve(builtInWidgetsFolder, dir)).isDirectory() &&
                 _.indexOf(getConfig().app.widgets.ignoreFolders, dir) < 0
         );
-}
-
-function getAllWidgets() {
-    return _.concat(getBuiltInWidgets(), getUserWidgets());
-}
-
-function validateUniqueness(widgetId: string) {
-    logger.debug(`Validating widget ${widgetId} uniqueness.`);
-
-    const widgets = getAllWidgets();
-    if (_.indexOf(widgets, widgetId) >= 0) {
-        return Promise.reject({ status: 422, message: `Widget ${widgetId} is already installed` });
-    }
-
-    return Promise.resolve();
 }
 
 function validateConsistency(widgetId: string, dirName: string) {
@@ -127,24 +97,6 @@ function validateWidget(widgetId: string, extractedDir: string) {
         });
     }
     return Promise.resolve(tempPath);
-}
-
-function installFiles(widgetId: string, tempPath: string) {
-    logger.debug('Installing widget files to the target path:', pathlib.resolve(userWidgetsFolder));
-    logger.debug('Widget temp path:', tempPath);
-
-    const installPath = pathlib.resolve(userWidgetsFolder, widgetId);
-
-    return new Promise<void>((resolve, reject) => {
-        rmdirSync(installPath);
-        fs.move(tempPath, installPath, err => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
-        });
-    });
 }
 
 function backupWidget(widgetId: string, tempPath: string) {
@@ -309,5 +261,32 @@ export function init() {
             logger.error('Could not set up directory, error was:', e);
             return reject(`Could not set up directory, error was: ${e}`);
         }
+    });
+}
+
+export function createUserWidgetsSnapshot(onError: (err?: any) => void) {
+    const archive = archiver('zip');
+    archive.directory(userWidgetsFolder, false);
+    archive.finalize().catch(onError);
+    return archive;
+}
+
+export function restoreUserWidgetsSnapshot(req: Request) {
+    return saveMultipartData(req, 'snapshot').then(({ archiveFolder, archiveFile }) => {
+        const archivePath = pathlib.join(archiveFolder, archiveFile);
+        const extractDirPath = pathlib.join(archiveFolder, 'extract');
+
+        return ArchiveHelper.decompressArchive(archivePath, extractDirPath).then(() => {
+            const widgetIds = fs.readdirSync(pathlib.resolve(extractDirPath));
+            return Promise.all(widgetIds.map(widgetId => validateUniqueness(widgetId))).then(() =>
+                Promise.all(
+                    widgetIds.map(widgetId =>
+                        installFiles(widgetId, pathlib.join(extractDirPath, widgetId)).then(() =>
+                            BackendHandler.importWidgetBackend(widgetId)
+                        )
+                    )
+                )
+            );
+        });
     });
 }

@@ -65,7 +65,7 @@ router.get('/page-groups', (_req, res: Response<GetPageGroupsResponse>, next) =>
 });
 
 router.post<never, never, PostPageGroupsRequestBody>('/page-groups', (req, res, next) => {
-    PageGroupsHandler.createPageGroup(req.user!.username, req.body)
+    PageGroupsHandler.validateAndCreatePageGroup(req.user!.username, req.body)
         .then(() => res.status(200).end())
         .catch(next);
 });
