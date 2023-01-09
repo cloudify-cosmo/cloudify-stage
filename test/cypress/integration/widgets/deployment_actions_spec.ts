@@ -133,6 +133,8 @@ describe('Deployment Action Buttons widget', () => {
             cy.interceptSp('PUT', '/deployments/', request => {
                 expect(request.body.labels).to.contain({ 'csys-obj-parent': deploymentId });
             });
+
+            cy.location('pathname').should('contain', 'deployment');
         });
     });
 
@@ -150,6 +152,8 @@ describe('Deployment Action Buttons widget', () => {
         }
 
         before(() => {
+            // NOTE: After executing test scenarios from the previous describe block we're getting redirected to the deployment page
+            cy.visitTestPage();
             cy.setLabels(deploymentId, [{ existing_key: 'existing_value' }]);
             cy.clearDeploymentContext().setDeploymentContext(deploymentId);
             cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
