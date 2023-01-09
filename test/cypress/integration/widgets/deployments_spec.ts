@@ -229,9 +229,7 @@ describe('Deployments widget', () => {
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
 
-            cy.get('div[name=blueprintName]').click();
-            cy.wait('@uploadedBlueprints');
-            cy.contains(anotherBlueprintName).click();
+            cy.setSearchableDropdownValue('Blueprint', anotherBlueprintName);
 
             cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
 
