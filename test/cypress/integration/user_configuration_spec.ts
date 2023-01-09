@@ -31,7 +31,7 @@ describe('User configuration', () => {
         before(() => {
             mockConfigResponse();
             cy.intercept('GET', '/console/auth/first-login', { body: true });
-            cy.visit('/console/login');
+            cy.visit('/console/login').waitUntilAppLoaded();
             cy.get('.loginContainer').should('be.visible');
         });
 
