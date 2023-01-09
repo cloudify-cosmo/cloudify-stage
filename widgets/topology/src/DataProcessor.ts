@@ -38,7 +38,10 @@ export function createBlueprintData(data: ManagerData) {
                 node.actual_planned_number_of_instances ||
                 _.get(node, 'capabilities.scalable.properties.default_instances') ||
                 1,
-            relationships: node.relationships.map(relationship => ({ ...relationship, target: relationship.target_id }))
+            relationships: node.relationships?.map(relationship => ({
+                ...relationship,
+                target: relationship.target_id
+            }))
         };
 
         if (instancesPerNode) {

@@ -34,7 +34,7 @@ export interface Node {
     id: string;
     type: string;
     type_hierarchy: unknown[];
-    relationships: Relationship[];
+    relationships?: Relationship[];
     actual_planned_number_of_instances?: unknown;
     actual_number_of_instances?: unknown;
     plugins?: unknown;
