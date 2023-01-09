@@ -2112,6 +2112,10 @@
                 "refreshStatus": "Refresh Status",
                 "refreshStatusInProgress": "Status refresh in progress..."
             }
+        },
+        "topology": {
+            "scrollerMessage": "Click to release scroller",
+            "layoutSaveConfirmation": "Topology layout saved"
         }
     }
 }
