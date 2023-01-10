@@ -1,19 +1,32 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import type { GetBlueprintUserDataLayoutResponse } from 'backend/routes/BlueprintUserData.types';
+import type { WidgetlessToolbox } from 'app/utils/StageAPI';
+import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
+import type { ManagerData } from './widget.types';
+
+interface Node {
+    id: string;
+}
 
 export default class DataFetcher {
-    static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {
+    static fetch(
+        toolbox: WidgetlessToolbox,
+        deploymentId?: string,
+        blueprintId?: string,
+        fetchLayout?: boolean
+    ): Promise<ManagerData | undefined> {
         if (!deploymentId && !blueprintId) {
-            return Promise.resolve({ data: {} });
+            return Promise.resolve(undefined);
         }
 
-        function getLayoutPromise(layoutBlueprintId) {
+        function getLayoutPromise(layoutBlueprintId?: string) {
             return toolbox
                 .getInternal()
                 .doGet<GetBlueprintUserDataLayoutResponse>(`/bud/layout/${layoutBlueprintId}`)
                 .catch(_.constant(null));
         }
+
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
 
         if (deploymentId) {
             let getBlueprintId;
@@ -34,7 +47,7 @@ export default class DataFetcher {
 
             return getBlueprintId.then(resolvedBlueprintId => {
                 const promises = [
-                    toolbox.getManager().doGet(`/blueprints?id=${resolvedBlueprintId}`),
+                    blueprintActions.doGetFullBlueprintData(resolvedBlueprintId),
                     toolbox.getManager().doGet(`/nodes?deployment_id=${deploymentId}`),
                     toolbox.getManager().doGet(`/node-instances?deployment_id=${deploymentId}`),
                     toolbox
@@ -50,14 +63,14 @@ export default class DataFetcher {
                 }
 
                 return Promise.all(promises).then(data => {
-                    const blueprint = data[0].items && data[0].items.length === 1 ? data[0].items[0] : {};
+                    const blueprint: FullBlueprintData = data[0] || {};
                     const blueprintPlan = blueprint.plan || {};
                     let nodes = data[1].items ? data[1].items : [];
                     const nodeInstances = data[2].items ? data[2].items : [];
 
-                    blueprintPlan.nodes = this.sortNodesById(blueprintPlan.nodes);
+                    this.sortNodesById(blueprintPlan.nodes);
                     nodes = this.sortNodesById(nodes);
-                    nodes = nodes.map(node => {
+                    nodes = nodes.map((node: Node) => {
                         return Object.assign(node, {
                             name: node.id,
                             instances: {}
@@ -78,16 +91,15 @@ export default class DataFetcher {
             });
         }
 
-        return Promise.all([
-            toolbox.getManager().doGet(`/blueprints/${blueprintId}`),
-            getLayoutPromise(blueprintId)
-        ]).then(data => ({
-            data: data[0],
-            layout: data[1]
-        }));
+        return Promise.all([blueprintActions.doGetFullBlueprintData(blueprintId!), getLayoutPromise(blueprintId)]).then(
+            data => ({
+                data: data[0],
+                layout: data[1]
+            })
+        );
     }
 
-    static sortNodesById(nodes) {
+    static sortNodesById(nodes: Node[]) {
         nodes.sort((node1, node2) => {
             if (node1.id < node2.id) {
                 return -1;

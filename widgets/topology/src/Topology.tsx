@@ -1,32 +1,35 @@
-// @ts-nocheck File not migrated fully to TS
-// @ts-expect-error Blueprint topology does not emit type declarations yet
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
-import type { RefObject } from 'react';
 import type { PutBlueprintUserDataLayoutRequestBody } from 'backend/routes/BlueprintUserData.types';
+import type {
+    NodeTemplateData,
+    StageTopologyData,
+    StageTopologyElement,
+    TerraformResources,
+    TopologyWidget
+} from 'widgets/topology/src/widget.types';
+import TopologyView, { topologyContainerId } from './TopologyView';
 import { createExpandedTopology } from './DataProcessor';
-import ScrollerGlassHandler from './ScrollerGlassHandler';
-import TerraformDetailsModal from './TerraformDetailsModal';
 
 const saveConfirmationTimeout = 2500;
 
-function isNodesChanged(topologyNodes, newNodes) {
+function isNodesChanged(topologyNodes: unknown, newNodes: unknown) {
     return !_.isEqual(topologyNodes, newNodes);
 }
 
 interface TopologyProps {
     toolbox: Stage.Types.Toolbox;
     blueprintId: string;
-    configuration: unknown;
+    configuration: TopologyWidget.Configuration;
     data: {
-        blueprintDeploymentData: unknown;
-        componentDeploymentsData: unknown;
+        blueprintDeploymentData?: StageTopologyData;
+        componentDeploymentsData: Record<string, StageTopologyData>;
         icons: Record<string, string>;
         layout: unknown;
     };
-    deploymentId: string;
+    deploymentId?: string;
 }
 
-function findExpandedNode(currentTopology: TopologyProps['data']['blueprintDeploymentData'], deploymentId: string) {
+function findExpandedNode(currentTopology: StageTopologyData, deploymentId: string) {
     return _.find(currentTopology.nodes, node => node.templateData.deploymentId === deploymentId);
 }
 
@@ -36,31 +39,40 @@ interface TopologyState {
     expandedTerraformNodes: { deployment_id: string; id: string }[];
     saveConfirmationOpen: boolean;
     isRedirecting: boolean;
+    terraformDetails?: TerraformResources;
 }
 
 export default class Topology extends React.Component<TopologyProps, TopologyState> {
-    private readonly glassRef: RefObject<unknown>;
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = {
+        blueprintId: '',
+        deploymentId: '',
+        configuration: {
+            showToolbar: true,
+            enableGroupClick: true,
+            enableNodeClick: true,
+            enableZoom: true,
+            enableDrag: true
+        },
+        data: {
+            blueprintDeploymentData: {},
+            componentDeploymentsData: {},
+            layout: {},
+            icons: {}
+        }
+    };
 
-    private readonly topologyParentContainerRef: RefObject<unknown>;
+    private topologyData: ReturnType<Topology['buildTopologyData']>;
 
-    private topologyData: unknown;
+    private topology: BlueprintTopology<NodeTemplateData> | null;
 
-    private topology: BlueprintTopology | null;
-
-    private processedTopologyData: unknown;
-
-    private readonly scrollerGlassHandler: ScrollerGlassHandler;
+    private processedTopologyData?: StageTopologyData;
 
     constructor(props: TopologyProps) {
         super(props);
 
-        this.glassRef = React.createRef();
-        this.topologyParentContainerRef = React.createRef();
-
         this.topologyData = null;
         this.topology = null;
-        this.processedTopologyData = null;
-        this.scrollerGlassHandler = new ScrollerGlassHandler(this.glassRef);
 
         this.state = {
             saveConfirmationOpen: false,
@@ -117,7 +129,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         toolbox.getEventBus().off('deployments:refresh', toolbox.refresh);
     }
 
-    getExpandHandler(stateProp: keyof Pick<TopologyState, 'expandedDeployments' | 'expandedTerraformNodes'>) {
+    getExpandHandler(stateProp: 'expandedDeployments' | 'expandedTerraformNodes') {
         return (entityId: string) => {
             const { [stateProp]: currentExpanded } = this.state;
 
@@ -126,18 +138,21 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                 return;
             }
 
-            this.setState({ [stateProp]: [...currentExpanded, entityId] });
+            this.setState(prevState => ({ ...prevState, [stateProp]: [...currentExpanded, entityId] }));
         };
     }
 
-    getCollapseHandler(stateProp: keyof Pick<TopologyState, 'expandedDeployments' | 'expandedTerraformNodes'>) {
+    getCollapseHandler(stateProp: 'expandedDeployments' | 'expandedTerraformNodes') {
         return (entityToCollapse: unknown) => {
             const { [stateProp]: currentExpanded } = this.state;
-            this.setState({ [stateProp]: _.reject(currentExpanded, entity => _.isEqual(entity, entityToCollapse)) });
+            this.setState(prevState => ({
+                ...prevState,
+                [stateProp]: _.reject(currentExpanded, entity => _.isEqual(entity, entityToCollapse))
+            }));
         };
     }
 
-    setSelectedNode(selectedNode) {
+    setSelectedNode(selectedNode: StageTopologyElement) {
         const { deploymentId, blueprintId, toolbox } = this.props;
         const { isRedirecting } = this.state;
 
@@ -160,15 +175,15 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         this.topologyData = this.buildTopologyData();
 
         if (_.isEmpty(data.blueprintDeploymentData)) {
-            this.topology.setTopology(this.topologyData, {});
-        } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData.nodes, this.topologyData.nodes)) {
+            this.topology?.setTopology(this.topologyData, {});
+        } else if (isFirstTimeLoading || isNodesChanged(oldTopologyData?.nodes, this.topologyData?.nodes)) {
             const { layout } = data;
-            this.topology.setTopology(this.topologyData, layout);
-            if (isFirstTimeLoading) this.topology.setScale(_.get(layout, 'scaleInfo'));
+            this.topology?.setTopology(this.topologyData, layout);
+            if (isFirstTimeLoading) this.topology?.setScale(_.get(layout, 'scaleInfo'));
         } else {
-            this.topology.refreshTopologyDeploymentStatus(this.topologyData);
+            this.topology?.refreshTopologyDeploymentStatus(this.topologyData);
         }
-        this.topology.setLoading(false);
+        this.topology?.setLoading(false);
     }
 
     startTopology() {
@@ -176,34 +191,29 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         this.destroyTopology();
         this.topology = new BlueprintTopology({
             isLoading: true,
-            selector: '#topologyContainer',
+            selector: `#${topologyContainerId}`,
             autoScale: true,
-            showToolbar: _.get(configuration, 'showToolbar', true),
+            showToolbar: configuration.showToolbar ?? true,
             showToolbarCursorActions: false,
             showToolbarLayoutActions: true,
-            enableGroupClick: _.get(configuration, 'enableGroupClick', true),
-            enableNodeClick: _.get(configuration, 'enableNodeClick', true),
-            enableZoom: _.get(configuration, 'enableZoom', true),
-            enableDrag: _.get(configuration, 'enableDrag', true),
+            enableGroupClick: configuration.enableGroupClick ?? true,
+            enableNodeClick: configuration.enableNodeClick ?? true,
+            enableZoom: configuration.enableZoom ?? true,
+            enableDrag: configuration.enableDrag ?? true,
             enableDrop: true,
             enableDragEdit: false,
             enableDragToSelect: true,
             enableContextMenu: false,
-            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onNodeSelected: node => this.setSelectedNode(node),
-            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onDataProcessed: processedData => {
                 this.processedTopologyData = processedData;
             },
-            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onDeploymentNodeClick: deploymentId => this.goToDeploymentPage(deploymentId),
             onExpandClick: this.getExpandHandler('expandedDeployments'),
             onCollapseClick: this.getCollapseHandler('expandedDeployments'),
-            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onTerraformDetailsClick: node => this.setState({ terraformDetails: node.templateData.terraformResources }),
             onTerraformExpandClick: this.getExpandHandler('expandedTerraformNodes'),
             onTerraformCollapseClick: this.getCollapseHandler('expandedTerraformNodes'),
-            // @ts-expect-error Blueprint topology does not emit type declarations yet
             onLayoutSave: body =>
                 toolbox
                     .getInternal()
@@ -225,28 +235,30 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
             return null;
         }
 
-        const topology = _.cloneDeep(data.blueprintDeploymentData);
+        const topology = _.cloneDeep(data.blueprintDeploymentData)!;
 
-        const determineComponentsPlugins = deploymentData => {
+        const determineComponentsPlugins = (deploymentData: StageTopologyData) => {
             _(deploymentData.nodes)
                 .map('templateData')
                 .filter({ actual_number_of_instances: 1 })
                 .each(templateData => {
-                    const componentDeploymentData = data.componentDeploymentsData[templateData.deploymentId];
-                    if (componentDeploymentData) {
-                        determineComponentsPlugins(componentDeploymentData);
-                        templateData.plugins = _(componentDeploymentData.nodes)
-                            .flatMap('templateData.plugins')
-                            .filter('package_name')
-                            .uniqBy('package_name')
-                            .value();
+                    if (templateData.deploymentId) {
+                        const componentDeploymentData = data.componentDeploymentsData[templateData.deploymentId];
+                        if (componentDeploymentData) {
+                            determineComponentsPlugins(componentDeploymentData);
+                            templateData.plugins = _(componentDeploymentData.nodes)
+                                .flatMap('templateData.plugins')
+                                .filter('package_name')
+                                .uniqBy('package_name')
+                                .value();
+                        }
                     }
                 });
         };
 
         determineComponentsPlugins(topology);
 
-        const expandDeployments = deploymentsToExpand => {
+        const expandDeployments = (deploymentsToExpand: string[]) => {
             [...deploymentsToExpand].forEach(deploymentId => {
                 const expandedNodeData = findExpandedNode(topology, deploymentId);
                 const componentDeploymentsData = data.componentDeploymentsData[deploymentId];
@@ -261,9 +273,9 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                     node.name = `${node.name}(${expandedNodeData.name})`;
                 });
 
-                topology.connectors.push(...expandedTopology.connectors);
-                topology.groups.push(...expandedTopology.groups);
-                topology.nodes.push(...expandedTopology.nodes);
+                topology.connectors?.push(...expandedTopology.connectors);
+                topology.groups?.push(...expandedTopology.groups);
+                topology.nodes?.push(...expandedTopology.nodes);
 
                 _.pull(deploymentsToExpand, deploymentId);
             });
@@ -282,9 +294,9 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         }
 
         expandedTerraformNodes.forEach(terraformNodeData => {
-            const terraformNode = _.find(topology.nodes, node => _.isMatch(node.templateData, terraformNodeData));
+            const terraformNode = _.find(topology.nodes, node => _.isMatch(node.templateData, terraformNodeData))!;
             const terraformDeploymentNodes = _.map(terraformNode.templateData.terraformResources, resource => {
-                const newNode = {
+                const newNode: StageTopologyElement = {
                     name: resource.name,
                     templateData: {
                         type: 'cloudify.nodes.terraform.Node',
@@ -296,13 +308,14 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                         },
                         actual_planned_number_of_instances: _.size(resource.instances)
                     },
+                    connectedTo: [],
                     container: { parent: terraformNode }
                 };
                 terraformNode.children = terraformNode.children || [];
                 terraformNode.children.push(newNode);
                 return newNode;
             });
-            topology.nodes.push(...terraformDeploymentNodes);
+            topology.nodes?.push(...terraformDeploymentNodes);
 
             _.each(terraformNode.templateData.terraformResources, resource =>
                 _(resource.instances)
@@ -311,13 +324,13 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                     .uniq()
                     .forEach((dependency: string) => {
                         const [dependencyName] = dependency.split('.').slice(-1);
-                        const side2 = _.find(terraformDeploymentNodes, { name: dependencyName });
+                        const side2 = terraformDeploymentNodes.find(node => node.name === dependencyName);
 
                         if (!side2) {
                             return;
                         }
 
-                        const side1 = _.find(terraformDeploymentNodes, _.pick(resource, 'name'));
+                        const side1 = terraformDeploymentNodes.find(node => node.name === resource.name)!;
                         const connector = {
                             name: '',
                             id: `terraformDependency:${resource.name}.${dependencyName}`,
@@ -327,11 +340,9 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
                             side1,
                             side2
                         };
-                        side1.connectedTo = side1.connectedTo || [];
-                        side1.connectedTo.push(connector);
-                        side2.connectedTo = side2.connectedTo || [];
-                        side2.connectedTo.push(connector);
-                        topology.connectors.push(connector);
+                        side1?.connectedTo?.push(connector);
+                        side2?.connectedTo?.push(connector);
+                        topology.connectors?.push(connector);
                     })
             );
         });
@@ -339,7 +350,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         return topology;
     }
 
-    selectNode(nodeId) {
+    selectNode(nodeId: unknown) {
         if (this.topology && this.processedTopologyData && this.processedTopologyData.nodes) {
             if (_.isEmpty(nodeId)) {
                 this.topology.clearSelectedNodes();
@@ -360,7 +371,7 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
         }
     }
 
-    goToDeploymentPage(nodeDeploymentId) {
+    goToDeploymentPage(nodeDeploymentId: unknown) {
         const { toolbox } = this.props;
 
         /*
@@ -376,67 +387,12 @@ export default class Topology extends React.Component<TopologyProps, TopologySta
 
     render() {
         const { saveConfirmationOpen, terraformDetails } = this.state;
-        const { Popup } = Stage.Basic;
         return (
-            <div
-                role="none"
-                ref={this.topologyParentContainerRef}
-                onClick={this.scrollerGlassHandler.releaseScroller}
-                onKeyPress={this.scrollerGlassHandler.releaseScroller}
-                onMouseEnter={this.scrollerGlassHandler.timerReleaseScroller}
-                onMouseLeave={this.scrollerGlassHandler.reactivateScroller}
-            >
-                <div className="scrollGlass" ref={this.glassRef}>
-                    <span className="message">Click to release scroller</span>
-                </div>
-                <Popup
-                    open={saveConfirmationOpen}
-                    content="Topology layout saved"
-                    position="top center"
-                    style={{ left: 'unset', right: 65 }}
-                    trigger={<div id="topologyContainer" />}
-                />
-                <TerraformDetailsModal
-                    terraformDetails={terraformDetails}
-                    onClose={() => this.setState({ terraformDetails: null })}
-                />
-            </div>
+            <TopologyView
+                terraformDetails={terraformDetails}
+                onTerraformDetailsModalClose={() => this.setState({ terraformDetails: undefined })}
+                saveConfirmationOpen={saveConfirmationOpen}
+            />
         );
     }
 }
-Topology.propTypes = {
-    blueprintId: PropTypes.string,
-    deploymentId: PropTypes.string,
-    configuration: PropTypes.shape({
-        showToolbar: PropTypes.bool,
-        enableGroupClick: PropTypes.bool,
-        enableNodeClick: PropTypes.bool,
-        enableZoom: PropTypes.bool,
-        enableDrag: PropTypes.bool
-    }),
-    data: PropTypes.shape({
-        blueprintDeploymentData: PropTypes.shape({}),
-        componentDeploymentsData: PropTypes.shape({}),
-        layout: PropTypes.shape({ scaleInfo: PropTypes.shape({}) }),
-        icons: PropTypes.shape({})
-    }),
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-Topology.defaultProps = {
-    blueprintId: '',
-    deploymentId: '',
-    configuration: {
-        showToolbar: true,
-        enableGroupClick: true,
-        enableNodeClick: true,
-        enableZoom: true,
-        enableDrag: true
-    },
-    data: {
-        blueprintDeploymentData: {},
-        componentDeploymentsData: {},
-        layout: {},
-        icons: {}
-    }
-};

@@ -18,7 +18,7 @@ describe('(Widget) Topology', () => {
             expect(_.size(blueprintData)).toBe(2);
             expect(blueprintData).toHaveProperty('groups');
             expect(_.size(blueprintData.node_templates)).toBe(4);
-            _.each(data.data.plan.nodes, node => expect(node).toBe(blueprintData.node_templates[node.name]));
+            _.each(data.data.plan.nodes, node => expect(blueprintData.node_templates[node.name]).toMatchObject(node));
         });
 
         it('supports deployed instances and executions', () => {
@@ -28,14 +28,15 @@ describe('(Widget) Topology', () => {
                 data: nodecellarExampleData
             };
 
-            createBlueprintData(data);
+            const result = createBlueprintData(data);
 
-            expect(data.data.plan.nodes[0].deployStatus.label).toBe('done');
-            expect(data.data.plan.nodes[0].deployStatus.completed).toBe(1);
-            expect(data.data.plan.nodes[0].deployStatus.icon).not.toBeUndefined();
-            expect(data.data.plan.nodes[0].deployStatus.icon).not.toBeNull();
-            expect(data.data.plan.nodes[0].deployStatus.color).not.toBeUndefined();
-            expect(data.data.plan.nodes[0].deployStatus.color).not.toBeNull();
+            const { deployStatus } = result.node_templates[data.data.plan.nodes[0].name];
+            expect(deployStatus.label).toBe('done');
+            expect(deployStatus.completed).toBe(1);
+            expect(deployStatus.icon).not.toBeUndefined();
+            expect(deployStatus.icon).not.toBeNull();
+            expect(deployStatus.color).not.toBeUndefined();
+            expect(deployStatus.color).not.toBeNull();
         });
     });
 
