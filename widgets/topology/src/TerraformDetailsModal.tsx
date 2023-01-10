@@ -1,5 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
-export default function TerraformDetailsModal({ terraformDetails, onClose }) {
+import { sortBy } from 'lodash';
+import type { TerraformResources } from 'widgets/topology/src/widget.types';
+
+export interface TerraformDetailsModalProps {
+    terraformDetails?: TerraformResources;
+    onClose: () => void;
+}
+
+export default function TerraformDetailsModal({ terraformDetails, onClose }: TerraformDetailsModalProps) {
     const { Modal, DataTable, HighlightText, CancelButton } = Stage.Basic;
 
     return (
@@ -12,19 +19,16 @@ export default function TerraformDetailsModal({ terraformDetails, onClose }) {
                     <DataTable.Column label="Provider" />
                     <DataTable.Column label="Raw data" />
 
-                    {_(terraformDetails)
-                        .sortBy('type')
-                        .map(tfResource => (
-                            <DataTable.Row key={tfResource.name}>
-                                <DataTable.Data>{tfResource.type}</DataTable.Data>
-                                <DataTable.Data>{tfResource.name}</DataTable.Data>
-                                <DataTable.Data>{tfResource.provider}</DataTable.Data>
-                                <DataTable.Data>
-                                    <HighlightText>{JSON.stringify(tfResource, null, 2)}</HighlightText>
-                                </DataTable.Data>
-                            </DataTable.Row>
-                        ))
-                        .value()}
+                    {sortBy(terraformDetails, 'type').map(tfResource => (
+                        <DataTable.Row key={tfResource.name}>
+                            <DataTable.Data>{tfResource.type}</DataTable.Data>
+                            <DataTable.Data>{tfResource.name}</DataTable.Data>
+                            <DataTable.Data>{tfResource.provider}</DataTable.Data>
+                            <DataTable.Data>
+                                <HighlightText language="json">{JSON.stringify(tfResource, null, 2)}</HighlightText>
+                            </DataTable.Data>
+                        </DataTable.Row>
+                    ))}
                 </DataTable>
             </Modal.Content>
             <Modal.Actions>
@@ -33,12 +37,3 @@ export default function TerraformDetailsModal({ terraformDetails, onClose }) {
         </Modal>
     );
 }
-
-TerraformDetailsModal.propTypes = {
-    terraformDetails: PropTypes.shape({}),
-    onClose: PropTypes.func.isRequired
-};
-
-TerraformDetailsModal.defaultProps = {
-    terraformDetails: null
-};
