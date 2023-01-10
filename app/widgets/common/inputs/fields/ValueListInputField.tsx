@@ -23,7 +23,10 @@ const parseOptionValue = (value: any) => {
     return isStringifiedNumber(value) ? `"${value}"` : value;
 };
 
-function getOptionsFromSecret(secretValue: string, schema: string) {
+function getOptionsFromSecret(secretValue: string | null, schema: string) {
+    if (!secretValue) {
+        return [];
+    }
     if (schema) {
         const parsedValue = JSON.parse(secretValue);
         if (Array.isArray(parsedValue)) {
