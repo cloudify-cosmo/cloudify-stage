@@ -5,17 +5,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
+import useFetchSchemas from './useFetchSchemas';
 import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
-import { Confirm, Form, Modal } from '../basic';
+import { Confirm, Form, Modal, Button } from '../basic';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
     GettingStartedEnvironmentsData,
-    GettingStartedSchema,
     GettingStartedSecretsData,
     GettingStartedSchemaItem,
     GettingStartedSchemaSecret
@@ -43,12 +43,9 @@ const isPortValid = (port: string) => {
     return portNum >= 1 && portNum <= 65535;
 };
 
-interface GettingStartedModalProps {
-    gettingStartedSchema: GettingStartedSchema;
-    cloudSetupSchema: GettingStartedSchema;
-}
+const GettingStartedModal = () => {
+    const [gettingStartedSchema, cloudSetupSchema, error, clearError] = useFetchSchemas();
 
-const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: GettingStartedModalProps) => {
     const modalOpenState = useModalOpenState();
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
@@ -261,6 +258,18 @@ const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: Getting
                 break;
         }
     };
+
+    if (error) {
+        return (
+            <Modal open>
+                <Modal.Header>{t('errorModal.title')}</Modal.Header>
+                <Modal.Content>{t('errorModal.description')}</Modal.Content>
+                <Modal.Actions>
+                    <Button content="Close" onClick={clearError} />
+                </Modal.Actions>
+            </Modal>
+        );
+    }
 
     return (
         <Modal open={modalOpenState.modalOpen} onClose={handleModalClose}>
