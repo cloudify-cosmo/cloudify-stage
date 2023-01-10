@@ -2129,6 +2129,19 @@
                     "header": "Deploy On {{deploymentName}}"
                 }
             }
+        },
+        "topology": {
+            "scrollerMessage": "Click to release scroller",
+            "layoutSaveConfirmation": "Topology layout saved",
+            "name": "Topology",
+            "description": "Shows topology (blueprint or deployment)",
+            "configuration": {
+                "enableNodeClick": "Enable node click",
+                "enableGroupClick": "Enable group click",
+                "enableZoom": "Enable zoom",
+                "enableDrag": "Enable drag",
+                "showToolbar": "Show toolbar"
+            }
         }
     }
 }

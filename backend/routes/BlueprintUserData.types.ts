@@ -1,5 +1,7 @@
 import type { BlueprintUserData } from '../db/models/BlueprintUserDataModel.types';
 
-export type GetBlueprintUserDataLayoutResponse = unknown;
+export type BlueprintLayout = BlueprintUserData['layout'];
 
-export type PutBlueprintUserDataLayoutRequestBody = BlueprintUserData['layout'];
+export type GetBlueprintUserDataLayoutResponse = BlueprintLayout;
+
+export type PutBlueprintUserDataLayoutRequestBody = BlueprintLayout;

@@ -24,49 +24,68 @@ export interface BlueprintRequirements {
 }
 
 /* eslint-disable camelcase */
+export interface Relationship {
+    type: string;
+    type_hierarchy: unknown[];
+    target_id?: unknown;
+}
+
+export interface Node {
+    id: string;
+    type: string;
+    type_hierarchy: unknown[];
+    relationships?: Relationship[];
+    actual_planned_number_of_instances?: unknown;
+    actual_number_of_instances?: unknown;
+    plugins?: unknown;
+    capabilities?: unknown;
+}
+
+export interface BlueprintPlan {
+    description: null | unknown;
+    metadata: null | unknown;
+    nodes: Node[];
+    relationships: { [key: string]: unknown };
+    workflows: { [key: string]: unknown };
+    policy_types: { [key: string]: unknown };
+    policy_triggers: { [key: string]: unknown };
+    policies: { [key: string]: unknown };
+    groups: { [key: string]: unknown };
+    scaling_groups: { [key: string]: unknown };
+    inputs: { [key: string]: unknown };
+    outputs: { [key: string]: unknown };
+    deployment_plugins_to_install: unknown[];
+    workflow_plugins_to_install: unknown[];
+    host_agent_plugins_to_install: unknown[];
+    version: {
+        raw: string;
+        definitions_name: string;
+        definitions_version: number[];
+    };
+    capabilities: { [key: string]: unknown };
+    imported_blueprints: unknown[];
+    namespaces_mapping: { [key: string]: unknown };
+    data_types: {
+        derived_from: string;
+        version: string;
+        properties: {
+            description: string;
+            type: string;
+            default: unknown;
+            required: boolean;
+        };
+    };
+    labels: { [key: string]: unknown };
+    blueprint_labels: { [key: string]: unknown };
+    deployment_settings: { [key: string]: unknown };
+}
+
 export interface FullBlueprintData {
     id: string;
     visibility: string;
     created_at: string;
     main_file_name: string;
-    plan: {
-        description: null | unknown;
-        metadata: null | unknown;
-        nodes: unknown[];
-        relationships: { [key: string]: unknown };
-        workflows: { [key: string]: unknown };
-        policy_types: { [key: string]: unknown };
-        policy_triggers: { [key: string]: unknown };
-        policies: { [key: string]: unknown };
-        groups: { [key: string]: unknown };
-        scaling_groups: { [key: string]: unknown };
-        inputs: { [key: string]: unknown };
-        outputs: { [key: string]: unknown };
-        deployment_plugins_to_install: unknown[];
-        workflow_plugins_to_install: unknown[];
-        host_agent_plugins_to_install: unknown[];
-        version: {
-            raw: string;
-            definitions_name: string;
-            definitions_version: number[];
-        };
-        capabilities: { [key: string]: unknown };
-        imported_blueprints: unknown[];
-        namespaces_mapping: { [key: string]: unknown };
-        data_types: {
-            derived_from: string;
-            version: string;
-            properties: {
-                description: string;
-                type: string;
-                default: unknown;
-                required: boolean;
-            };
-        };
-        labels: { [key: string]: unknown };
-        blueprint_labels: { [key: string]: unknown };
-        deployment_settings: { [key: string]: unknown };
-    };
+    plan: BlueprintPlan;
     updated_at: string;
     description: null | unknown;
     is_hidden: boolean;
