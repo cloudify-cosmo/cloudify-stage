@@ -1600,9 +1600,11 @@
                 },
                 "inputs": {
                     "secretKey": {
+                        "label": "Secret key",
                         "placeholder": "Secret key"
                     },
                     "secretValue": {
+                        "label": "Secret value",
                         "placeholder": "Secret value"
                     },
                     "secretFile": {
@@ -1613,6 +1615,14 @@
                     },
                     "enableSecretProvider": {
                         "label": "Retrieve the secret value from a secret provider"
+                    },
+                    "secretProvider": {
+                        "label": "Secret provider",
+                        "placeholder": "Select secret provider"
+                    },
+                    "secretProviderPath": {
+                        "label": "Secret provider path",
+                        "placeholder": "Path"
                     }
                 },
                 "errors": {

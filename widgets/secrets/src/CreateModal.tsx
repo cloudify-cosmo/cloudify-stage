@@ -83,7 +83,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     function onSecretProviderChange() {
         if (errors.secretValue) {
-            clearErrors();
+            setErrors({ ...errors, secretValue: null });
         }
         setInput({ enableSecretProvider: !enableSecretProvider });
     }
@@ -134,7 +134,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.secretKey}>
+                    <Form.Field label="Secret key" error={errors.secretKey} required>
                         <Form.Input
                             name="secretKey"
                             placeholder={translateCreateModal('inputs.secretKey.placeholder')}
@@ -152,21 +152,29 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                     </Form.Field>
                     {enableSecretProvider ? (
                         <>
-                            <Form.Field label="Secret provider" error={errors.secretProviderName} required>
+                            <Form.Field
+                                label={translateCreateModal('inputs.secretProvider.label')}
+                                error={errors.secretProviderName}
+                                required
+                                className={errors.secretProvider ? 'error' : ''}
+                            >
                                 <Form.Dropdown
                                     name="secretProvider"
-                                    placeholder="Select secret provider"
+                                    placeholder={translateCreateModal('inputs.secretProvider.placeholder')}
                                     selection
                                     options={secretProviderOptions}
                                     onChange={setInput}
                                     value={secretProvider as unknown as string}
                                 />
                             </Form.Field>
-                            <Form.Field error={errors.secretProviderPath}>
+                            <Form.Field
+                                label={translateCreateModal('inputs.secretProviderPath.label')}
+                                error={errors.secretProviderPath}
+                                required
+                            >
                                 <Form.Input
-                                    label="Secret provider path"
                                     name="secretProviderPath"
-                                    placeholder="Secret provider path"
+                                    placeholder={translateCreateModal('inputs.secretProviderPath.placeholder')}
                                     value={secretProviderPath}
                                     onChange={setInput}
                                 />
