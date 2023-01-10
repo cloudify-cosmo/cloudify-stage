@@ -4,10 +4,13 @@ import { createBaseTopology } from './DataProcessor';
 import Topology from './Topology';
 import type { StageTopologyData, TopologyWidget } from './widget.types';
 
+const translate = Stage.Utils.getT('widgets.topology');
+const translateConfiguration = Stage.Utils.composeT(translate, 'configuration');
+
 Stage.defineWidget<TopologyWidget.Params, TopologyWidget.Data, TopologyWidget.Configuration>({
     id: 'topology',
-    name: 'Topology',
-    description: 'Shows topology (blueprint or deployment)',
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 8,
     initialHeight: 16,
     isReact: true,
@@ -19,19 +22,34 @@ Stage.defineWidget<TopologyWidget.Params, TopologyWidget.Data, TopologyWidget.Co
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'enableNodeClick',
-            name: 'Enable node click',
+            name: translateConfiguration('enableNodeClick'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'enableGroupClick',
-            name: 'Enable group click',
+            name: translateConfiguration('enableGroupClick'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
-        { id: 'enableZoom', name: 'Enable zoom', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
-        { id: 'enableDrag', name: 'Enable drag', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
-        { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
+        {
+            id: 'enableZoom',
+            name: translateConfiguration('enableZoom'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'enableDrag',
+            name: translateConfiguration('enableDrag'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'showToolbar',
+            name: translateConfiguration('showToolbar'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
     fetchParams(_widget, toolbox) {
