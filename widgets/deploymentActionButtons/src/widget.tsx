@@ -9,7 +9,7 @@ interface WidgetParams {
 }
 type UnwrapPromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
 type WidgetData =
-    | UnwrapPromise<ReturnType<InstanceType<typeof Stage.Common.Deployments.Actions>['doGetWorkflows']>>
+    | UnwrapPromise<ReturnType<InstanceType<typeof Stage.Common.Deployments.Actions>['doGetWorkflowsAndLabels']>>
     | Error;
 interface WidgetConfiguration {
     preventRedirectToParentPageAfterDelete?: boolean;
@@ -47,7 +47,7 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
         const DeploymentActions = Stage.Common.Deployments.Actions;
         const actions = new DeploymentActions(toolbox.getManager());
 
-        return actions.doGetWorkflows(id);
+        return actions.doGetWorkflowsAndLabels(id);
     },
 
     fetchParams(_widget, toolbox): WidgetParams {

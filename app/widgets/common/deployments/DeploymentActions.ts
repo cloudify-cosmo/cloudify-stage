@@ -161,7 +161,7 @@ export default class DeploymentActions {
         return this.manager.doGet('/labels/deployments?_reserved=true').then(({ items }) => items);
     }
 
-    doGetWorkflows(
+    doGetWorkflowsAndLabels(
         deploymentId: string
         // eslint-disable-next-line camelcase
     ): Promise<{ id: string; display_name: string; workflows: Workflow[]; labels: Label[] }> {
