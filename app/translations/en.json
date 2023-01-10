@@ -1610,12 +1610,18 @@
                     },
                     "hiddenValue": {
                         "label": "Hidden Value"
+                    },
+                    "enableSecretProvider": {
+                        "label": "Retrieve the secret value from a secret provider"
                     }
                 },
                 "errors": {
                     "validation": {
                         "secretKey": "Please provide secret key",
-                        "secretValue": "Please provide secret value"
+                        "secretValue": "Please provide secret value",
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                     }
                 }
             },

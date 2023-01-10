@@ -1,7 +1,15 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
 
-    before(() => cy.activate().usePageMock('secrets').mockLogin().deleteSecrets(secretName));
+    before(() =>
+        cy
+            .activate()
+            .usePageMock('secrets')
+            .mockLogin()
+            .deleteSecrets(secretName)
+            .deleteSecretProviders()
+            .createSecretProvider({ name: 'Secret_Provider_1', type: 'vault', visibility: 'global' })
+    );
 
     it('should allow to manage secrets', () => {
         const secretValue = 'confidental';
@@ -48,5 +56,28 @@ describe('Secret store management widget', () => {
         cy.get('.secretsWidget .trash').click();
         cy.contains('Yes').click();
         cy.contains('There are no Secrets available');
+    });
+
+    it.only('should allow to manage secret with secret provider', () => {
+        const secretProviderName = 'Secret_Provider_1';
+        cy.contains('Create').click();
+
+        cy.get('.modal').within(() => {
+            cy.contains('.checkbox', 'Retrieve the secret value from a secret provider').click();
+            cy.clickButton('Create');
+            cy.contains('Please select a secret provider').should('be.visible');
+            cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
+            cy.get('.selection').click();
+            cy.contains('Secret_Provider_1').click();
+            cy.get('input[name=secretKey]').type(secretName);
+            cy.get('input[name=secretProviderName]').type(secretProviderName);
+            cy.get('input[name=secretProviderPath]').type(secretName);
+        });
+
+        cy.get('.secretsWidget').within(() => {
+            cy.getSearchInput().type(secretName);
+            cy.get('tbody tr').should('have.length', 1);
+            cy.contains(secretProviderName);
+        });
     });
 });
