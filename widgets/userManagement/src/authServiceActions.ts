@@ -1,7 +1,7 @@
 import { isEmpty, map } from 'lodash';
 import type { Toolbox } from '../../../app/utils/StageAPI';
-import type { RolesAssignment } from '../../common/src/tenants/utils';
-import type { SystemRole } from '../../common/src/roles/types';
+import type { RolesAssignment } from '../../../app/widgets/common/tenants/utils';
+import type { SystemRole } from '../../../app/widgets/common/roles/types';
 
 export interface GetAuthUserResponse {
     email: string;

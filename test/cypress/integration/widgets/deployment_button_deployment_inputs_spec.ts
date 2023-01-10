@@ -277,6 +277,22 @@ describe('Create Deployment modal handles deployment inputs', () => {
         });
 
         it('string', () => {
+            const secretValue = 'secretValue';
+            const schema = 'schema';
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_string_secret', { value: secretValue });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_string_secret', {
+                value: `"${secretValue}"`,
+                schema
+            });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_array_secret', {
+                value: `["${secretValue}"]`,
+                schema
+            });
+            cy.interceptSp('GET', '/secrets/deployment_inputs_test_json_object_secret', {
+                value: `{"${secretValue}": 0}`,
+                schema
+            });
+
             selectBlueprintInModal('string');
 
             cy.getField('string_no_default').within(() => {
@@ -291,7 +307,7 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 verifyTextInput('Ubuntu 18.04');
             });
 
-            cy.getField('string_constraint_valid_values').within(() => {
+            cy.getField('string_constraint_valid_values_static').within(() => {
                 cy.get('div.text').as('text').should('have.text', 'en');
                 cy.get('div.dropdown').click();
 
@@ -304,7 +320,11 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 cy.revertToDefaultValue();
                 cy.get('@text').should('have.text', 'en');
 
-                cy.get('i.dropdown.icon').as('dropdownOrClearIcon').should('be.visible').should('have.class', 'clear');
+                cy.get('i.dropdown.icon')
+                    .as('dropdownOrClearIcon')
+                    .scrollIntoView()
+                    .should('be.visible')
+                    .should('have.class', 'clear');
                 cy.get('@dropdownOrClearIcon').click();
 
                 cy.get('@text').should('not.exist');
@@ -313,6 +333,18 @@ describe('Create Deployment modal handles deployment inputs', () => {
                 cy.revertToDefaultValue();
                 cy.get('@text').should('have.text', 'en');
             });
+
+            function verifySecretValuesField(field: string) {
+                cy.getField(field).within(() => {
+                    cy.get('div.dropdown').click();
+                    cy.get(`.menu .item[role="option"]`).should('have.length', 1).should('have.text', secretValue);
+                });
+            }
+
+            verifySecretValuesField('string_constraint_valid_values_secret_string');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_string');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_array');
+            verifySecretValuesField('string_constraint_valid_values_secret_json_object');
 
             cy.getField('string_default').within(() => {
                 verifyTextInput('Some default string');
@@ -473,6 +505,52 @@ describe('Create Deployment modal handles deployment inputs', () => {
             cy.getField('node_instance_from_deployment').within(() => verifyNumberOfOptions(4, false, ''));
             cy.getField('node_type_from_deployment').within(() => verifyNumberOfOptions(1, false, ''));
             cy.getField('scaling_group_from_deployment').within(() => verifyNumberOfOptions(3, false, ''));
+        });
+    });
+
+    it('sorting', () => {
+        function caseInsensitiveCompareFn(a: string, b: string) {
+            return a.toLowerCase().localeCompare(b.toLowerCase());
+        }
+        function verifyInputsLabels(expectedInputsLabels: string[]) {
+            return cy.get('.field label').then($labels => {
+                const actualInputsLabels = _.map($labels, field => field.innerText.trim());
+                expect(actualInputsLabels).deep.equal(expectedInputsLabels);
+            });
+        }
+        function waitForInputsLabelsToBeReordered() {
+            // eslint-disable-next-line cypress/no-unnecessary-waiting
+            cy.wait(1000);
+        }
+
+        const inputsLabelsInOriginalOrder = [
+            'string_no_default',
+            'string_constraint_pattern',
+            'string_constraint_valid_values_static',
+            'string_constraint_valid_values_secret_string',
+            'string_constraint_valid_values_secret_json_string',
+            'string_constraint_valid_values_secret_json_array',
+            'string_constraint_valid_values_secret_json_object',
+            'string_default',
+            'string_default_null'
+        ];
+        const inputsLabelsInAscendingOrder = [...inputsLabelsInOriginalOrder].sort(caseInsensitiveCompareFn);
+        const inputsLabelsInDescendingOrder = [...inputsLabelsInAscendingOrder].reverse();
+
+        selectBlueprintInModal('string');
+
+        cy.withinAccordionSection('Deployment Inputs', () => {
+            cy.get('[title="Original order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInOriginalOrder);
+
+            cy.get('[title="Ascending alphabetical order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInAscendingOrder);
+
+            cy.get('[title="Descending alphabetical order"]').click();
+            waitForInputsLabelsToBeReordered();
+            verifyInputsLabels(inputsLabelsInDescendingOrder);
         });
     });
 });

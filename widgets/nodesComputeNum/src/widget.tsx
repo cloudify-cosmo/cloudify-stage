@@ -7,7 +7,6 @@ Stage.defineWidget<unknown, { items: { host_id: unknown }[] }, unknown>({
     description: 'Number of compute nodes',
     initialWidth: 2,
     initialHeight: 8,
-    color: 'red',
     showHeader: false,
     isReact: true,
     hasReadme: true,

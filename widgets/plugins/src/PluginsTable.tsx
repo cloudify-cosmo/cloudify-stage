@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
-import type { Visibility } from '../../common/src/types';
+import type { Visibility } from '../../../app/widgets/common/types';
 import MarketplaceModal from './MarketplaceModal';
 import type { DataTableConfiguration } from '../../../app/utils/GenericConfig';
 

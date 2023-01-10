@@ -1,10 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-import SecretPropType from './props/SecretPropType';
+import { isEmpty } from 'lodash';
+import type { Secret } from 'app/widgets/common/secrets/SecretActions';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
 
-export default function UpdateModal({ open, secret, toolbox, onHide }) {
+interface UpdateModalProps {
+    open: boolean;
+    secret: Secret;
+    toolbox: Stage.Types.Toolbox;
+    onHide: () => void;
+}
+
+const translateUpdateModal = Stage.Utils.getT('widgets.secrets.updateModal');
+
+export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateModalProps) {
     const { useBoolean, useErrors, useOpenProp, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -18,14 +27,14 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
         clearErrors();
         clearSecretValue();
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doGet(secret.key)
             .then(({ is_hidden_value: isHidden, value }) => {
                 clearErrors();
                 setSecretValue(value);
 
-                if (isHidden && _.isEmpty(value)) {
+                if (isHidden && isEmpty(value)) {
                     disableSecretUpdate();
                 } else {
                     enableSecretUpdate();
@@ -36,15 +45,15 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
     });
 
     function updateSecret() {
-        if (_.isEmpty(secretValue)) {
-            setErrors({ secretValue: 'Please provide secret value' });
+        if (isEmpty(secretValue)) {
+            setErrors({ secretValue: translateUpdateModal('errors.validation.secretValue') });
             return;
         }
 
         // Disable the form
         setLoading();
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doUpdate(secret.key, secretValue)
             .then(() => {
@@ -59,25 +68,29 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
 
+    const headerContent = translateUpdateModal('header', { secretKey: secret.key });
+
+    const noPermissionError = translateUpdateModal('errors.noPermission', {
+        currentUsername,
+        secretKey: secret.key,
+        selectedTenant
+    });
+
     return (
         <div>
             <Modal open={open} onClose={() => onHide()}>
                 <Modal.Header>
-                    <Icon name="edit" /> Update secret {secret.key}
+                    <Icon name="edit" /> {headerContent}
                 </Modal.Header>
 
                 <Modal.Content>
-                    {!canUpdateSecret && (
-                        <ErrorMessage
-                            error={`User \`${currentUsername}\` is not permitted to update value of the secret '${secret.key}' in the tenant \`${selectedTenant}\` .`}
-                        />
-                    )}
+                    {!canUpdateSecret && <ErrorMessage error={noPermissionError} />}
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         {canUpdateSecret && (
                             <Form.Field error={errors.secretValue}>
                                 <MultilineInput
                                     name="secretValue"
-                                    placeholder="Secret value"
+                                    placeholder={translateUpdateModal('inputs.secretValue.placeholder')}
                                     value={secretValue}
                                     onChange={setSecretValue}
                                 />
@@ -89,21 +102,15 @@ export default function UpdateModal({ open, secret, toolbox, onHide }) {
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
                     {canUpdateSecret && (
-                        <ApproveButton onClick={updateSecret} disabled={isLoading} content="Update" icon="edit" />
+                        <ApproveButton
+                            onClick={updateSecret}
+                            disabled={isLoading}
+                            content={translateUpdateModal('buttons.update')}
+                            icon="edit"
+                        />
                     )}
                 </Modal.Actions>
             </Modal>
         </div>
     );
 }
-
-UpdateModal.propTypes = {
-    secret: SecretPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func
-};
-
-UpdateModal.defaultProps = {
-    onHide: () => {}
-};

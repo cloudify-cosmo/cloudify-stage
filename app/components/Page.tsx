@@ -35,7 +35,7 @@ export interface PageOwnProps {
     pageName: string;
 }
 
-type PageProps = PageOwnProps & PropsFromRedux;
+export type PageProps = PageOwnProps & PropsFromRedux;
 
 const StyledContainer = styled.div`
     .widget.maximize {
@@ -203,16 +203,26 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps
             dispatch(setDrilldownContext(drilldownContext));
             dispatch(selectPage(page.id, page.isDrillDown, page.context, page.name));
         },
-        onWidgetAdded: (layoutSection: number, name: string, widgetDefinition: WidgetDefinition, tabIndex: number) => {
+        onWidgetAdded: (
+            layoutSection: number,
+            name: string,
+            widgetDefinition: WidgetDefinition,
+            tabIndex: number | null
+        ) => {
             dispatch(addWidget(ownProps.pageId, layoutSection, tabIndex, { name }, widgetDefinition));
         },
-        onTabAdded: (layoutSection: number) => dispatch(addTab(ownProps.pageId, layoutSection)),
-        onTabRemoved: (layoutSection: number, tabIndex: number) =>
-            dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex)),
-        onTabUpdated: (layoutSection: number, tabIndex: number, name: string, isDefault: boolean) =>
-            dispatch(updateTab(ownProps.pageId, layoutSection, tabIndex, name, isDefault)),
-        onTabMoved: (layoutSection: number, oldTabIndex: number, newTabIndex: number) =>
-            dispatch(moveTab(ownProps.pageId, layoutSection, oldTabIndex, newTabIndex)),
+        onTabAdded: (layoutSection: number) => {
+            dispatch(addTab(ownProps.pageId, layoutSection));
+        },
+        onTabRemoved: (layoutSection: number, tabIndex: number) => {
+            dispatch(removeTab(ownProps.pageId, layoutSection, tabIndex));
+        },
+        onTabUpdated: (layoutSection: number, tabIndex: number, name: string, isDefault: boolean) => {
+            dispatch(updateTab(ownProps.pageId, layoutSection, tabIndex, name, isDefault));
+        },
+        onTabMoved: (layoutSection: number, oldTabIndex: number, newTabIndex: number) => {
+            dispatch(moveTab(ownProps.pageId, layoutSection, oldTabIndex, newTabIndex));
+        },
         onEditModeExit: () => {
             dispatch(setEditMode(false));
         },
@@ -222,10 +232,12 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps
         onWidgetRemoved: (widgetId: string) => {
             dispatch(removeWidget(ownProps.pageId, widgetId));
         },
-        onLayoutSectionAdded: (layoutSection: LayoutSection, position: number) =>
-            dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position)),
-        onLayoutSectionRemoved: (layoutSection: number) =>
-            dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection))
+        onLayoutSectionAdded: (layoutSection: LayoutSection, position: number) => {
+            dispatch(addLayoutSectionToPage(ownProps.pageId, layoutSection, position));
+        },
+        onLayoutSectionRemoved: (layoutSection: number) => {
+            dispatch(removeLayoutSectionFromPage(ownProps.pageId, layoutSection));
+        }
     };
 };
 

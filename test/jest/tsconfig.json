@@ -3,7 +3,7 @@
     "compilerOptions": {
         "baseUrl": "../../",
         "paths": {
-            "*": ["node_modules/*", "app/*", "widgets/*"]
+            "*": ["node_modules/*", "app/*", "widgets/*", "./*"]
         },
         "types": ["jest"]
     },

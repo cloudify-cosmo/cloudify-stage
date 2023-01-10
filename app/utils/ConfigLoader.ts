@@ -1,8 +1,8 @@
 import log from 'loglevel';
 import fetch from 'isomorphic-fetch';
 
+import type { GetConfigResponse } from 'backend/routes/Config.types';
 import StageUtils from './stageUtils';
-import type { GetConfigResponse } from '../../backend/routes/Config.types';
 
 export default class ConfigLoader {
     static load(): Promise<GetConfigResponse> {

@@ -1,3 +1,5 @@
+import { range } from 'lodash';
+
 describe('Create Deployment Button widget', () => {
     const resourcePrefix = 'deploy_test_';
     const testBlueprintId = `${resourcePrefix}bp`;
@@ -6,21 +8,16 @@ describe('Create Deployment Button widget', () => {
     const customInstallWorkflowParam1 = 'hello';
     const customInstallWorkflowParam2 = 'world';
 
-    const types = ['string'];
-
     before(() => {
         cy.activate('valid_trial_license').usePageMock('deploymentButton').mockLogin();
         cy.deleteDeployments(resourcePrefix, true)
             .deleteBlueprints(resourcePrefix, true)
             .uploadBlueprint('blueprints/simple.zip', testBlueprintId)
             .uploadBlueprint('blueprints/required_secrets.zip', requiredSecretsBlueprint)
-            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint);
-
-        types.forEach(type =>
-            cy.uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}${type}_type`, {
-                yamlFile: `${type}_type.yaml`
-            })
-        );
+            .uploadBlueprint('blueprints/custom_install_workflow.zip', customInstallWorkflowBlueprint)
+            .uploadBlueprint('blueprints/input_types.zip', `${resourcePrefix}integer_type`, {
+                yamlFile: `integer_type.yaml`
+            });
     });
 
     beforeEach(() => {
@@ -59,6 +56,7 @@ describe('Create Deployment Button widget', () => {
             cy.get('input[name="deploymentId"]').clear().type(deploymentId);
 
             if (blueprintId === customInstallWorkflowBlueprint) {
+                cy.openAccordionSection('Install');
                 cy.withinAccordionSection('Install', () => {
                     cy.getField('xxx').within(() => {
                         cy.get('textarea').should('have.text', 'blabla').clear().type(customInstallWorkflowParam1);
@@ -71,6 +69,7 @@ describe('Create Deployment Button widget', () => {
             }
 
             if (blueprintId === testBlueprintId) {
+                cy.openAccordionSection('Deployment Inputs');
                 cy.withinAccordionSection('Deployment Inputs', () => {
                     // check hidden input is not rendered
                     cy.get('.field')
@@ -218,7 +217,7 @@ describe('Create Deployment Button widget', () => {
         });
 
         it('parses constraint error message from /deployments REST API', () => {
-            selectBlueprintInModal('string');
+            selectBlueprintInModal('integer');
 
             const deploymentName = `${resourcePrefix}constraintError`;
             cy.interceptSp('PUT', `/deployments/${deploymentName}`).as('deployBlueprint');
@@ -227,24 +226,28 @@ describe('Create Deployment Button widget', () => {
             cy.openAccordionSection('Advanced');
             cy.typeToFieldInput('Deployment ID', deploymentName);
             cy.openAccordionSection('Deployment Inputs');
-            cy.get('input[name=string_no_default]').clear().type('Something');
 
-            cy.getField('string_constraint_pattern')
-                .as('string_constraint_pattern')
+            range(1, 5).forEach(i => {
+                cy.typeToFieldInput(`integer_constraint_max_${i}`, '1');
+                cy.typeToFieldInput(`integer_constraint_min_${i}`, '1');
+            });
+            cy.typeToFieldInput(`integer_no_default`, '1');
+
+            cy.getField('integer_constraint_max_1')
+                .as('invalidField')
                 .within(() => {
-                    cy.get('input').clear().type('CentOS 7.6').blur();
-                });
-            cy.get('@string_constraint_pattern').should('not.have.class', 'error');
+                    cy.get('input').clear().type('51').blur();
+                })
+                .should('not.have.class', 'error');
 
             cy.selectAndClickDeploy();
             cy.wait('@deployBlueprint');
 
             cy.get('div.error.message > ul > li').should(
                 'contain.text',
-                'Value CentOS 7.6 of input string_constraint_pattern violates ' +
-                    'constraint pattern(Ubuntu \\d{2}\\.\\d{2}) operator.'
+                'Value 51 of input integer_constraint_max_1 violates constraint less_than(50) operator.'
             );
-            cy.get('@string_constraint_pattern').should('have.class', 'error');
+            cy.get('@invalidField').should('have.class', 'error');
         });
 
         it('should handle missing secrets error', () => {

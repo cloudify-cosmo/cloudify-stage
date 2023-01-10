@@ -1,10 +1,10 @@
 import type { FunctionComponent } from 'react';
-import type { SharedDeploymentsViewWidgetConfiguration } from '../../common/src/deploymentsView/configuration';
-import type { FilterRule } from '../../common/src/filters/types';
+import type { SharedDeploymentsViewWidgetConfiguration } from '../../../app/widgets/common/deploymentsView/configuration';
+import type { FilterRule } from '../../../app/widgets/common/filters/types';
 
 const {
     Common: { i18nDrillDownPrefix },
-    Configuration: { sharedConfiguration },
+    Configuration: { getSharedConfiguration },
     sharedDefinition
 } = Stage.Common.DeploymentsView;
 
@@ -17,7 +17,7 @@ Stage.defineWidget<never, never, DrilledDownWidgetConfiguration>({
     name: Stage.i18n.t(`${i18nDrillDownPrefix}.name`),
     description: Stage.i18n.t(`${i18nDrillDownPrefix}.description`),
 
-    initialConfiguration: sharedConfiguration,
+    initialConfiguration: getSharedConfiguration(),
 
     render(widget, _data, _error, toolbox) {
         return <DrilledDownDeploymentsViewWidget widget={widget} toolbox={toolbox} />;

@@ -1,5 +1,5 @@
-import type { Deployment } from '../../common/src/deploymentsView/types';
-import type { Visibility } from '../../common/src/types';
+import type { Deployment } from '../../../app/widgets/common/deploymentsView/types';
+import type { Visibility } from '../../../app/widgets/common/types';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 

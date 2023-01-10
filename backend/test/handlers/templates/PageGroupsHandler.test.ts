@@ -32,8 +32,8 @@ describe('PageGroupsHandler', () => {
         ]);
     });
 
-    it('should create page group', () => {
-        PageGroupsHandler.createPageGroup('admin', { id: 'pg', name: 'pg', icon: 'stop', pages: [] });
+    it('should create page group', async () => {
+        await PageGroupsHandler.validateAndCreatePageGroup('admin', { id: 'pg', name: 'pg', icon: 'stop', pages: [] });
 
         expect(writeJson).toHaveBeenCalledWith(
             pathlib.resolve(userTemplatesFolder, 'page-groups', 'pg.json'),

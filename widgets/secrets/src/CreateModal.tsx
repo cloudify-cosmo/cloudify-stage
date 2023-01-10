@@ -1,9 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEmpty } from 'lodash';
+import type { FileInputProps } from 'cloudify-ui-components/typings/components/form/FileInput/FileInput';
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
 
-export default function CreateModal({ toolbox }) {
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
+
+const translateCreateModal = Stage.Utils.getT('widgets.secrets.createModal');
+
+export default function CreateModal({ toolbox }: CreateModalProps) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -24,17 +31,17 @@ export default function CreateModal({ toolbox }) {
 
     function createSecret() {
         const { isHiddenValue, secretKey, secretValue } = inputs;
-        const validationErrors = {};
+        const validationErrors: Record<string, string> = {};
 
-        if (_.isEmpty(secretKey)) {
-            validationErrors.secretKey = 'Please provide secret key';
+        if (isEmpty(secretKey)) {
+            validationErrors.secretKey = translateCreateModal('errors.validation.secretKey');
         }
 
-        if (_.isEmpty(secretValue)) {
-            validationErrors.secretValue = 'Please provide secret value';
+        if (isEmpty(secretValue)) {
+            validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
         }
 
-        if (!_.isEmpty(validationErrors)) {
+        if (!isEmpty(validationErrors)) {
             setErrors(validationErrors);
             return;
         }
@@ -42,7 +49,7 @@ export default function CreateModal({ toolbox }) {
         // Disable the form
         setLoading();
 
-        const actions = new Stage.Common.Secrets.Actions(toolbox);
+        const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
             .doCreate(secretKey, secretValue, visibility, isHiddenValue)
             .then(() => {
@@ -53,7 +60,7 @@ export default function CreateModal({ toolbox }) {
             .finally(unsetLoading);
     }
 
-    function onSecretFileChange(file) {
+    const onSecretFileChange: FileInputProps['onChange'] = file => {
         if (!file) {
             clearErrors();
             setInput({ secretValue: '' });
@@ -64,7 +71,7 @@ export default function CreateModal({ toolbox }) {
 
         const actions = new Stage.Common.Actions.File(toolbox);
         actions
-            .doGetTextFileContent(file)
+            .doGetTextFileContent(file as File)
             .then(secretValue => {
                 setInput({ secretValue });
                 clearErrors();
@@ -74,27 +81,32 @@ export default function CreateModal({ toolbox }) {
                 setMessageAsError(err);
             })
             .finally(unsetFileLoading);
-    }
+    };
 
     const { isHiddenValue, secretKey, secretValue } = inputs;
-    const createButton = <Button content="Create" icon="add" labelPosition="left" />;
+    const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
 
     return (
         <Modal trigger={createButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add" /> Create secret
+                <Icon name="add" /> {translateCreateModal('header')}
                 <VisibilityField visibility={visibility} className="rightFloated" onVisibilityChange={setVisibility} />
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                     <Form.Field error={errors.secretKey}>
-                        <Form.Input name="secretKey" placeholder="Secret key" value={secretKey} onChange={setInput} />
+                        <Form.Input
+                            name="secretKey"
+                            placeholder={translateCreateModal('inputs.secretKey.placeholder')}
+                            value={secretKey}
+                            onChange={setInput}
+                        />
                     </Form.Field>
                     <Form.Field error={errors.secretValue}>
                         <MultilineInput
                             name="secretValue"
-                            placeholder="Secret value"
+                            placeholder={translateCreateModal('inputs.secretValue.placeholder')}
                             value={secretValue}
                             onChange={setInput}
                         />
@@ -102,7 +114,7 @@ export default function CreateModal({ toolbox }) {
                     <Form.Field error={errors.secretFile}>
                         <Form.File
                             name="secretFile"
-                            placeholder="Get secret value from file (max: 50kB)"
+                            placeholder={translateCreateModal('inputs.secretFile.placeholder')}
                             onChange={onSecretFileChange}
                             loading={isFileLoading}
                             disabled={isFileLoading}
@@ -111,7 +123,7 @@ export default function CreateModal({ toolbox }) {
                     <Form.Field error={errors.isHiddenValue}>
                         <Form.Checkbox
                             name="isHiddenValue"
-                            label="Hidden Value"
+                            label={translateCreateModal('inputs.hiddenValue.label')}
                             checked={isHiddenValue}
                             onChange={setInput}
                         />
@@ -121,12 +133,13 @@ export default function CreateModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={createSecret} disabled={isLoading} content="Create" icon="add" />
+                <ApproveButton
+                    onClick={createSecret}
+                    disabled={isLoading}
+                    content={translateCreateModal('buttons.create')}
+                    icon="add"
+                />
             </Modal.Actions>
         </Modal>
     );
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

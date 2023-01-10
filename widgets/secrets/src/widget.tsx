@@ -1,14 +1,21 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Secret } from 'app/widgets/common/secrets/SecretActions';
+import { isEmpty } from 'lodash';
 import SecretsTable from './SecretsTable';
+import type { SecretsWidget } from './widget.types';
 
-Stage.defineWidget({
+const translateSecrets = Stage.Utils.getT('widgets.secrets');
+
+interface FormattedSecrets {
+    items: Secret[];
+    total: number;
+}
+
+Stage.defineWidget<never, SecretsWidget.Data, SecretsWidget.Configuration>({
     id: 'secrets',
-    name: 'Secret Store Management',
-    description: 'This widget shows a list of available secrets and allow managing them',
+    name: translateSecrets('name'),
+    description: translateSecrets('description'),
     initialWidth: 5,
     initialHeight: 16,
-    color: 'red',
     fetchUrl: '[manager]/secrets[params]',
     isReact: true,
     hasReadme: true,
@@ -22,24 +29,21 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (!data || isEmpty(data)) {
             return <Loading />;
         }
-
-        let formattedData = data;
-        formattedData = {
-            ...formattedData,
-            items: _.map(formattedData.items, item => {
+        const formattedData: FormattedSecrets = {
+            items: data.items.map(item => {
                 return {
                     ...item,
                     created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
                     updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at)
                 };
             }),
-            total: _.get(data, 'metadata.pagination.total', 0)
+            total: data.metadata.pagination.total
         };
 
         return <SecretsTable widget={widget} data={formattedData} toolbox={toolbox} />;

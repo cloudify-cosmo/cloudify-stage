@@ -1,7 +1,7 @@
 import type { Reducer } from 'redux';
 
+import type { ClientConfig } from 'backend/routes/Config.types';
 import { ActionType } from '../actions/types';
-import type { ClientConfig } from '../../backend/routes/Config.types';
 import type { SetConfigEditModeAction } from '../actions/config';
 import type { LogoutAction } from '../actions/manager/auth';
 

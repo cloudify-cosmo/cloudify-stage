@@ -12,7 +12,6 @@ inputs:
     default: 'defaultB'
   inputC:
     type: string
-    default: 'defaultC'
 
 node_templates:
   terraform:

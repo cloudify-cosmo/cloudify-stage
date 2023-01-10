@@ -1,19 +1,19 @@
 [
     {
         "name": "Main JS bundle",
-        "limit": "335 KB",
+        "limit": "511 KB",
         "gzip": false,
         "path": "dist/static/js/main.bundle.js"
     },
     {
         "name": "Vendor JS bundle",
-        "limit": "5.08 MB",
+        "limit": "5.15 MB",
         "gzip": false,
         "path": "dist/static/js/vendor.bundle.js"
     },
     {
         "name": "Widgets",
-        "limit": "3.00 MB",
+        "limit": "2.64 MB",
         "gzip": false,
         "running": false,
         "path": [
@@ -23,7 +23,7 @@
     },
     {
         "name": "Application package",
-        "limit": "10.15 MB",
+        "limit": "10.16 MB",
         "gzip": false,
         "running": false,
         "path": [

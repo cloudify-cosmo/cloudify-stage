@@ -13,7 +13,6 @@ Stage.defineWidget({
     description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
-    color: 'purple',
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
 
     initialConfiguration: [

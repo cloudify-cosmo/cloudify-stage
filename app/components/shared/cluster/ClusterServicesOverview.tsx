@@ -50,10 +50,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                 <Table.Body>
                     {isFetching && <LoadingOverlay />}
                     {fetchingError && (
-                        <ErrorMessage
-                            error={fetchingError}
-                            header={i18n.t('cluster.overview.errorHeader', 'Failed to fetch status')}
-                        />
+                        <ErrorMessage error={fetchingError} header={i18n.t('cluster.overview.errorHeader')} />
                     )}
                     {!fetchingError &&
                         (!_.isEmpty(services) ? (
@@ -84,9 +81,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                             })
                         ) : (
                             <Message>
-                                <Message.Header>
-                                    {i18n.t('cluster.overview.noServices', 'No services available')}
-                                </Message.Header>
+                                <Message.Header>{i18n.t('cluster.overview.noServices')}</Message.Header>
                             </Message>
                         ))}
                 </Table.Body>

@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
-import type { GetBlueprintUserDataLayoutResponse } from '../../../backend/routes/BlueprintUserData.types';
+import type { GetBlueprintUserDataLayoutResponse } from 'backend/routes/BlueprintUserData.types';
 
 export default class DataFetcher {
     static fetch(toolbox, blueprintId, deploymentId, fetchLayout) {

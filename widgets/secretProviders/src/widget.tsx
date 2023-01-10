@@ -1,12 +1,11 @@
 import type { SecretProvidersWidget } from './widget.types';
 import SecretProvidersTable from './SecretProvidersTable';
-
-const t = Stage.Utils.getT('widgets.secretProviders');
+import { translateSecretProviders } from './widget.utils';
 
 Stage.defineWidget<never, SecretProvidersWidget.Data, SecretProvidersWidget.Configuration>({
     id: 'secretProviders',
-    name: t('name'),
-    description: t('description'),
+    name: translateSecretProviders('name'),
+    description: translateSecretProviders('description'),
     initialWidth: 12,
     initialHeight: 16,
     isReact: true,

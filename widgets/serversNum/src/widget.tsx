@@ -6,7 +6,6 @@ Stage.defineWidget({
     description: 'Number of nodes',
     initialWidth: 2,
     initialHeight: 8,
-    color: 'red',
     showHeader: false,
     isReact: true,
     hasReadme: true,

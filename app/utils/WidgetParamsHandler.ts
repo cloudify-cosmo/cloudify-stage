@@ -1,9 +1,9 @@
-import { forIn, pick, replace, isEqual, isEmpty, isBoolean, isFunction } from 'lodash';
+import { forIn, isBoolean, isEmpty, isEqual, isFunction, pick, replace } from 'lodash';
 import log from 'loglevel';
 
+import type { QueryStringParams } from 'backend/sharedUtils';
 import mapGridParamsToManagerGridParams from './shared/mapGridParamsToManagerGridParams';
 import type { Toolbox, Widget } from './StageAPI';
-import type { QueryStringParams } from '../../backend/sharedUtils';
 
 export interface FetchParams {
     gridParams: Stage.Types.GridParams;

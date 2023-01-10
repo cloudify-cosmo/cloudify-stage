@@ -1,4 +1,4 @@
-import type { SiteWithPosition } from '../../common/src/map/site';
+import type { SiteWithPosition } from '../../../app/widgets/common/map/site';
 import SitesMap from './SitesMap';
 import type { DeploymentStatus, DeploymentStatusesSummary, SitesData } from './types';
 import { DeploymentStatuses } from './types';
@@ -54,7 +54,6 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     description: 'This widget displays a map view of sites by location with site deployments status summary',
     initialWidth: 6,
     initialHeight: 30,
-    color: 'green',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sitesMap'),

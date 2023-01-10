@@ -2,10 +2,10 @@
 // @ts-expect-error Blueprint topology does not emit type declarations yet
 import { Topology as BlueprintTopology } from 'cloudify-blueprint-topology';
 import type { RefObject } from 'react';
+import type { PutBlueprintUserDataLayoutRequestBody } from 'backend/routes/BlueprintUserData.types';
 import { createExpandedTopology } from './DataProcessor';
 import ScrollerGlassHandler from './ScrollerGlassHandler';
 import TerraformDetailsModal from './TerraformDetailsModal';
-import type { PutBlueprintUserDataLayoutRequestBody } from '../../../backend/routes/BlueprintUserData.types';
 
 const saveConfirmationTimeout = 2500;
 

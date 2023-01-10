@@ -348,27 +348,7 @@ module.exports = (env, argv) => {
                 ])
             )
         },
-        widgetsConfiguration,
-        {
-            mode,
-            context,
-            devtool,
-            resolve: {
-                extensions: resolveExtensions
-            },
-            entry: glob.sync(`./widgets/common/src/index.ts`),
-            output: {
-                path: path.join(outputPath, 'appData/widgets'),
-                filename: 'common/common.js',
-                publicPath: CONTEXT_PATH
-            },
-            module,
-            plugins: [
-                environmentPlugin,
-                ...(isProduction ? getProductionPlugins(env && env.analyse === 'widgets-common') : [])
-            ],
-            externals
-        }
+        widgetsConfiguration
     ];
 
     if (argv.debug) {

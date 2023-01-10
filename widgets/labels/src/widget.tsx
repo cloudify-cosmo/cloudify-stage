@@ -10,7 +10,6 @@ Stage.defineWidget({
     description: i18n.t('widgets.labels.description'),
     initialWidth: 12,
     initialHeight: 24,
-    color: 'olive',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),

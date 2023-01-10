@@ -26,7 +26,6 @@ Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     description: t('description'),
     initialWidth: 2,
     initialHeight: 8,
-    color: 'blue',
     showHeader: false,
     isReact: true,
     hasReadme: true,

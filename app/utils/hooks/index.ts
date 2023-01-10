@@ -9,6 +9,9 @@ import useResettableState from './useResettableState';
 import useSearchParam from './useSearchParam';
 import useToggle from './useToggle';
 import useWidthObserver from './useWidthObserver';
+import useEventListener from './useEventListener';
+import useLabelInput from './useLabelInput';
+import useRefreshEvent from './useRefreshEvent';
 
 export {
     useBoolean,
@@ -21,5 +24,8 @@ export {
     useResettableState,
     useSearchParam,
     useToggle,
-    useWidthObserver
+    useWidthObserver,
+    useEventListener,
+    useLabelInput,
+    useRefreshEvent
 };

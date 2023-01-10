@@ -1,11 +1,12 @@
 import React from 'react';
+import type { ErrorMessageProps } from 'cloudify-ui-components/typings/components/elements/ErrorMessage/ErrorMessage';
 import { ErrorMessage } from '../basic';
 import ErrorMessageWithPopup from './ErrorMessageWithPopup';
 
 interface WidgetErrorMessageProps {
     widgetName: string;
     header: string;
-    content: string;
+    content: ErrorMessageProps['error'];
     showErrorInPopup: boolean;
 }
 

@@ -13,7 +13,6 @@ Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, E
     description: t('description'),
     initialWidth: 4,
     initialHeight: 24,
-    color: 'blue',
     isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),

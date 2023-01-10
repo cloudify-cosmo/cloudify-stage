@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import type { Label as LabelType } from '../../common/src/labels/types';
+import type { Label as LabelType } from '../../../app/widgets/common/labels/types';
 
 interface DeleteConfirmModalProps {
     deploymentId: string;

@@ -31,7 +31,6 @@ Stage.defineWidget({
     description: t('description'),
     initialWidth: 12,
     initialHeight: 18,
-    color: 'green',
     fetchUrl: '[manager]/events[params]',
     isReact: true,
     hasReadme: true,

@@ -4,8 +4,8 @@ import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } f
 // NOTE: the file contains only types and is undetectable for ESLint
 // eslint-disable-next-line import/no-unresolved
 import type { SemanticCOLORS } from 'semantic-ui-react';
-import type { WidgetDefinition } from '../../backend/handler/templates/types';
-import type { PaginatedResponse as CloudifyPaginatedResponse } from '../../backend/types';
+import type { WidgetDefinition } from 'backend/handler/templates/types';
+import type { PaginatedResponse as CloudifyPaginatedResponse } from 'backend/types';
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type WidgetContext from './Context';
@@ -20,6 +20,7 @@ import type StageUtils from './stageUtils';
 // NOTE: make sure the types are registered globally
 import './types';
 import type { ManagerData } from '../reducers/managerReducer';
+import type StageCommon from '../widgets/common';
 import type { ObjectKeys } from './types';
 
 type StagePropTypes = typeof StagePropTypes;
@@ -123,7 +124,7 @@ export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
     name: string;
     categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
-    color: SemanticCOLORS;
+    color?: SemanticCOLORS;
     description?: string;
     /** @see https://docs.cloudify.co/developer/writing_widgets/widget-definition/#fetchurl */
     fetchUrl?: string | Record<string, string>;
@@ -231,26 +232,9 @@ declare global {
         const ComponentToHtmlString: (element: ReactElement) => string;
         const GenericConfig: typeof GenericConfigType;
         const Utils: typeof StageUtils;
-
-        // NOTE: Common items are defined in widgets/common
-        /** Common widget utilities */
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface Common {}
-        let Common: Common;
-        const defineCommon: (definition: any) => void;
-
-        // NOTE: Additional PropTypes are defined in widgets
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface PropTypes extends StagePropTypes {}
-        const PropTypes: PropTypes;
-        const definePropTypes: (definition: Record<string, any>) => void;
-
-        // NOTE: Additional hooks are defined in widgets
-        // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface Hooks extends StageHooks {}
-        /** Reusable utility hooks */
-        const Hooks: Hooks;
-        const defineHooks: (definition: Record<string, any>) => void;
+        const Common: typeof StageCommon;
+        const PropTypes: typeof StagePropTypes;
+        const Hooks: typeof StageHooks;
 
         /**
          * Well-known entries that can be stored in the widgets' context.

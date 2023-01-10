@@ -159,68 +159,72 @@ pipeline {
     }
     stage('Run second tests group') {
       parallel {
-        stage('Test frontend unit'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run frontend unit tests'
-                sh 'npm run test:frontend:unit'
+        stage('Run tests') {
+          stages {
+            stage('Test frontend unit'){
+              steps{
+                container('node'){
+                  dir("${WORKSPACE}/test"){
+                    echo 'Run frontend unit tests'
+                    sh 'npm run test:frontend:unit'
+                  }
+                }
               }
             }
-          }
-        }
-        stage('Test frontend components'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run frontend component tests'
-                sh 'npm run test:frontend:components'
+            stage('Test frontend components'){
+              steps{
+                container('node'){
+                  dir("${WORKSPACE}/test"){
+                    echo 'Run frontend component tests'
+                    sh 'npm run test:frontend:components'
+                  }
+                }
               }
             }
-          }
-        }
-        stage('Test backend'){
-          steps{
-            container('node'){
-              dir("${WORKSPACE}/test"){
-                echo 'Run backend tests'
-                sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
-                sh 'npm run test:backend'
-                echo 'Verify backend start'
-                sh '''
-                  cd backend
-                  npm run db-migrate
-                  npm run start &
-                  npm run wait-on-server
-                '''
+            stage('Test backend'){
+              steps{
+                container('node'){
+                  dir("${WORKSPACE}/test"){
+                    echo 'Run backend tests'
+                    sh 'echo \'{"app":{"ssl":{"ca":null},"logLevelConf":"","logLevel":"debug"}}\' > conf/me.json'
+                    sh 'npm run test:backend'
+                    echo 'Verify backend start'
+                    sh '''
+                      cd backend
+                      npm run db-migrate
+                      npm run start &
+                      npm run wait-on-server
+                    '''
+                  }
+                }
               }
             }
-          }
-        }
-        stage('Size & check-types') {
-          steps {
-            container('node'){
-              sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
-              dir("size") {
-                echo 'Check bundle size'
-                sh 'npm run size'
-                echo 'Check TypeScript types'
-                sh 'npm run check-types'
+            stage('Size & check-types') {
+              steps {
+                container('node'){
+                  sh "mkdir -p ${WORKSPACE}/size && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/size"
+                  dir("size") {
+                    echo 'Check bundle size'
+                    sh 'npm run size'
+                    echo 'Check TypeScript types'
+                    sh 'npm run check-types'
+                  }
+                  sh "rm -rf ${WORKSPACE}/size"
+                }
               }
-              sh "rm -rf ${WORKSPACE}/size"
             }
-          }
-        }
-        stage('Docs'){
-          steps {
-            container('node'){
-              sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
-              dir("docs") {
-                echo 'Generate widgets documentation'
-                sh 'npm run docWidgets'
+            stage('Docs'){
+              steps {
+                container('node'){
+                  sh "mkdir -p ${WORKSPACE}/docs && cp -rf ${WORKSPACE}/${STAGE_DIR}/. ${WORKSPACE}/docs"
+                  dir("docs") {
+                    echo 'Generate widgets documentation'
+                    sh 'npm run docWidgets'
 
-                echo 'Check if widgets documentation is up to date'
-                sh 'git diff --exit-code ./widgets'
+                    echo 'Check if widgets documentation is up to date'
+                    sh 'git diff --exit-code ./widgets'
+                  }
+                }
               }
             }
           }

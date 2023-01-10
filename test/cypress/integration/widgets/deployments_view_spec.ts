@@ -1,8 +1,8 @@
 import type { RouteHandler } from 'cypress/types/net-stubbing';
 import { without } from 'lodash';
 import type { ObjectKeys } from 'app/utils/types';
-import type { FilterRule } from '../../../../widgets/common/src/filters/types';
-import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from '../../../../widgets/common/src/filters/types';
+import type { FilterRule } from 'app/widgets/common/filters/types';
+import { FilterRuleAttribute, FilterRuleOperators, FilterRuleType } from 'app/widgets/common/filters/types';
 import type { DeploymentsViewWidgetConfiguration } from '../../../../widgets/deploymentsView/src/widget';
 import { testPageName } from '../../support/commands';
 

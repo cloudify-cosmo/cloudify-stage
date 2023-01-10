@@ -1,13 +1,13 @@
-import express from 'express';
 import type { Response } from 'express';
+import express from 'express';
 import * as TemplatesHandler from '../handler/templates/TemplatesHandler';
 import * as PagesHandler from '../handler/templates/PagesHandler';
 import * as PageGroupsHandler from '../handler/templates/PageGroupsHandler';
 import { getTokenFromCookies } from '../utils';
 import type {
+    GetInitialTemplateIdResponse,
     GetPageGroupsResponse,
     GetPagesResponse,
-    GetInitialTemplateIdResponse,
     GetTemplatesResponse,
     PostPageGroupsRequestBody,
     PostPagesRequestBody,
@@ -27,7 +27,7 @@ router.get('/', (_req, res: Response<GetTemplatesResponse>, next) => {
 });
 
 router.post<never, never, PostTemplatesRequestBody>('/', (req, res, next) => {
-    TemplatesHandler.createTemplate(req.user!.username, req.body)
+    TemplatesHandler.validateAndCreateTemplate(req.user!.username, req.body)
         .then(() => res.status(200).end())
         .catch(next);
 });
@@ -65,7 +65,7 @@ router.get('/page-groups', (_req, res: Response<GetPageGroupsResponse>, next) =>
 });
 
 router.post<never, never, PostPageGroupsRequestBody>('/page-groups', (req, res, next) => {
-    PageGroupsHandler.createPageGroup(req.user!.username, req.body)
+    PageGroupsHandler.validateAndCreatePageGroup(req.user!.username, req.body)
         .then(() => res.status(200).end())
         .catch(next);
 });
@@ -89,7 +89,7 @@ router.get('/pages', (_req, res: Response<GetPagesResponse>, next) => {
 });
 
 router.post<never, never, PostPagesRequestBody>('/pages', (req, res, next) => {
-    PagesHandler.createPage(req.user!.username, req.body)
+    PagesHandler.validateAndCreatePage(req.user!.username, { ...req.body, layout: [] })
         .then(() => res.status(200).end())
         .catch(next);
 });

@@ -1,7 +1,7 @@
 import { without } from 'lodash';
 import type { CyHttpMessages, RouteMatcherOptions } from 'cypress/types/net-stubbing';
 import Consts from 'app/utils/consts';
-import type { FilterRule, FilterRuleOperator } from '../../../../widgets/common/src/filters/types';
+import type { FilterRule, FilterRuleOperator } from 'app/widgets/common/filters/types';
 import {
     AttributesFilterRuleOperators,
     FilterRuleAttribute,
@@ -9,7 +9,7 @@ import {
     FilterRuleRowType,
     FilterRuleType,
     LabelsFilterRuleOperators
-} from '../../../../widgets/common/src/filters/types';
+} from 'app/widgets/common/filters/types';
 
 describe('Filters widget', () => {
     const widgetId = 'filters';
