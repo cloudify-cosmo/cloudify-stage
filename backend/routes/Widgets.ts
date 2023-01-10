@@ -1,6 +1,6 @@
-import express from 'express';
 import type { RequestHandler, Response } from 'express';
-import * as WidgetsHandler from '../handler/WidgetsHandler';
+import express from 'express';
+import * as WidgetsHandler from '../handler/widgets/WidgetsHandler';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 import { getTokenFromCookies } from '../utils';
 import type {
