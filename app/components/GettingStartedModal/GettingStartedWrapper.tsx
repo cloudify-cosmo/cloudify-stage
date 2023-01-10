@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal } from 'semantic-ui-react';
+import { Button, Modal } from '../basic';
 import GettingStartedModal from './GettingStartedModal';
 import useFetchSchemas from './useFetchSchemas';
 
