@@ -10,7 +10,7 @@ function isDeployOnFunctionalityAvailable(deploymentLabels: Label[]) {
 }
 
 export function isMenuItemAvailable(item: MenuItem, workflows: Workflow[], deploymentLabels: Label[]) {
-    if (item.permission === permissions.executeWorkflowPermission) {
+    if (item.permission === permissions.executeWorkflow) {
         const workflow = workflows?.find(w => w.name === item.name);
         return !!workflow?.is_available;
     }
