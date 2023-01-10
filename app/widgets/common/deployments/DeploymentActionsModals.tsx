@@ -26,7 +26,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     redirectToParentPageAfterDelete
 }) => {
     const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
-    const deploymentToDeployOn = {
+    const environmentToDeployOn = {
         id: deploymentId,
         displayName: deploymentName
     };
@@ -52,7 +52,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
             return (
                 <DeployBlueprintModal
                     i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
-                    deploymentToDeployOn={deploymentToDeployOn}
+                    environmentToDeployOn={environmentToDeployOn}
                     generateDeploymentIdOnMount
                     {...commonProps}
                 />

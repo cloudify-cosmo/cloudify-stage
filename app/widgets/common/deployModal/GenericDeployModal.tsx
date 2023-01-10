@@ -151,7 +151,7 @@ type GenericDeployModalProps = {
     /**
      * Deployment on which submitted blueprint should be deployed on
      */
-    deploymentToDeployOn?: {
+    environmentToDeployOn?: {
         id: string;
         displayName: string;
     };
@@ -518,7 +518,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     };
 
     getDeploymentParams() {
-        const { deploymentToDeployOn } = this.props;
+        const { environmentToDeployOn } = this.props;
         const {
             blueprint,
             deploymentName,
@@ -532,7 +532,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentIdToDeployOn
         } = this.state;
 
-        const parentDeploymentId = deploymentIdToDeployOn || deploymentToDeployOn?.id;
+        const parentDeploymentId = deploymentIdToDeployOn || environmentToDeployOn?.id;
 
         const deploymentLabels = parentDeploymentId
             ? [...labels, { key: parentDeploymentLabelKey, value: parentDeploymentId }]
@@ -556,10 +556,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     getModalHeader() {
-        const { i18nHeaderKey, deploymentToDeployOn } = this.props;
+        const { i18nHeaderKey, environmentToDeployOn } = this.props;
         const { blueprint } = this.state;
-        const translationParameters: Record<string, string> = deploymentToDeployOn
-            ? { deploymentName: deploymentToDeployOn.displayName }
+        const translationParameters: Record<string, string> = environmentToDeployOn
+            ? { deploymentName: environmentToDeployOn.displayName }
             : { blueprintId: blueprint.id };
 
         return i18n.t(i18nHeaderKey, translationParameters);

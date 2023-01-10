@@ -19,7 +19,7 @@ type DeployBlueprintModalProps = Pick<
     | 'blueprintId'
     | 'toolbox'
     | 'blueprintFilterRules'
-    | 'deploymentToDeployOn'
+    | 'environmentToDeployOn'
     | 'generateDeploymentIdOnMount'
 > &
     Pick<Partial<ComponentProps<typeof GenericDeployModal>>, 'i18nHeaderKey'>;
