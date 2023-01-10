@@ -21,8 +21,8 @@ function useFetchSchemas() {
                     setCloudSetupSchema(response as GettingStartedSchema);
                 })
         ])
-            .catch(error => {
-                setError(error);
+            .catch(err => {
+                setError(err);
             })
             .finally(() => setLoading(false));
     }, []);
