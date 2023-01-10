@@ -1,7 +1,10 @@
 import React from 'react';
+import StageUtils from '../../utils/stageUtils';
 import { Button, Modal } from '../basic';
 import GettingStartedModal from './GettingStartedModal';
 import useFetchSchemas from './useFetchSchemas';
+
+const t = StageUtils.getT('gettingStartedModal');
 
 const GettingStartedWrapper = () => {
     const [gettingStartedSchema, cloudSetupSchema, error, clearError] = useFetchSchemas();
@@ -9,8 +12,8 @@ const GettingStartedWrapper = () => {
     if (error) {
         return (
             <Modal open>
-                <Modal.Header>Failed to open the setup</Modal.Header>
-                <Modal.Content>Failed to open the setup. Please try again.</Modal.Content>
+                <Modal.Header>{t('errorModal.title')}</Modal.Header>
+                <Modal.Content>{t('errorModal.description')}</Modal.Content>
                 <Modal.Actions>
                     <Button content="Close" onClick={clearError} />
                 </Modal.Actions>
