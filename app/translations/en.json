@@ -529,6 +529,7 @@
                 "actionsMenu": {
                     "install": "Install",
                     "update": "Update",
+                    "deployOn": "Deploy On",
                     "setSite": "Set Site",
                     "manageLabels": "Manage Labels",
                     "uninstall": "Uninstall",
@@ -2111,6 +2112,22 @@
                 "openConsole": "Open Console",
                 "refreshStatus": "Refresh Status",
                 "refreshStatusInProgress": "Status refresh in progress..."
+            }
+        },
+        "deploymentActionButtons": {
+            "name": "Deployment action buttons",
+            "description": "Provides set of action buttons for deployment",
+            "errors": {
+                "fetchData": "No deployment selected, cannot determine deployment ID"
+            },
+            "buttons": {
+                "executeWorkflow": "Execute workflow",
+                "deploymentActions": "Deployment actions"
+            },
+            "modals": {
+                "deployOn": {
+                    "header": "Deploy On {{deploymentName}}"
+                }
             }
         },
         "topology": {
