@@ -23,7 +23,7 @@ const managerService: ManagerService = {
         return this.call(ALLOWED_METHODS_OBJECT.get, url, requestOptions);
     },
 
-    doGetFull(url, requestOptions, fullData, size = 0) {
+    doGetFull(url, requestOptions = {}, fullData = { items: [] }, size = 0) {
         requestOptions.params = requestOptions.params || {};
         requestOptions.params._size = 1000;
         requestOptions.params._offset = size;

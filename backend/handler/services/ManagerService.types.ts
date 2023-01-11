@@ -16,9 +16,9 @@ export interface ManagerService {
     doGet(url: string, requestOptions: RequestOptions): AxiosPromise<any>;
     doGetFull(
         url: string,
-        requestOptions: RequestOptions,
-        fullData: ManagerResponse,
-        size: number
+        requestOptions?: RequestOptions,
+        fullData?: ManagerResponse,
+        size?: number
     ): Promise<ManagerResponse>;
     doPost(url: string, requestOptions: RequestOptions): AxiosPromise<any>;
     doDelete(url: string, requestOptions: RequestOptions): AxiosPromise<any>;
