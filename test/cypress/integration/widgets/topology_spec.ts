@@ -52,7 +52,6 @@ describe('Topology', () => {
             cy.setBlueprintContext(blueprintId);
 
             cy.log('Check Topology widget');
-            cy.get('.widgetItem > div > .widgetContent > div > .scrollGlass').click();
             verifyTopology();
         });
 
@@ -161,7 +160,7 @@ describe('Topology', () => {
             cy.wait(2000);
 
             cy.log('Unlocking topology canvas to be interactive');
-            cy.get('.scrollGlass').click();
+            cy.contains('Click to release scroller').click({ force: true });
         };
 
         before(() => {

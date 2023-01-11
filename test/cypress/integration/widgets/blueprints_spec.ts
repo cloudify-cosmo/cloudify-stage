@@ -105,12 +105,16 @@ describe('Blueprints widget', () => {
             it('when deployOn value is required', () => {
                 const blueprintName = `${blueprintNamePrefix}_deploy_on`;
                 const deploymentName = `${blueprintNamePrefix}_deploy_on`;
-                const parentDeploymentName = `${deploymentName}_parent`;
+                // NOTE: string assigned to the "environmentDeploymentName" variable is also being referenced inside "blueprints/deploy_on.zip" fixture - changing the value of this string would also require a modification of the mentioned fixture
+                const environmentDeploymentName = `${blueprintNamePrefix}_deploy_environment`;
+                const environmentBlueprintName = `${blueprintNamePrefix}_deploy_environment`;
 
+                cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
+                    environmentBlueprintName,
+                    environmentDeploymentName
+                );
+                cy.uploadBlueprint('blueprints/deploy_on.zip', blueprintName);
                 cy.interceptSp('PUT', '/deployments/*').as('deploy');
-                cy.uploadBlueprint('blueprints/deploy_on.zip', blueprintName)
-                    .deployBlueprint(blueprintName, parentDeploymentName)
-                    .refreshPage();
 
                 getBlueprintRow(blueprintName).find('.rocket').click();
 
@@ -124,8 +128,8 @@ describe('Blueprints widget', () => {
                     );
 
                     cy.getField('Deploy On').within(() => {
-                        cy.get('input').click().type(parentDeploymentName);
-                        cy.get(`div[option-value*="${parentDeploymentName}"]`).click();
+                        cy.get('input').click().type(environmentDeploymentName);
+                        cy.get(`div[option-value*="${environmentDeploymentName}"]`).click();
                     });
                     cy.contains('button', 'Deploy').click();
                 });
