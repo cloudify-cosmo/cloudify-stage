@@ -63,13 +63,16 @@ const GettingStartedModal = () => {
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
     const commonStepsSchemas = useMemo(
-        () => schema.content.filter(item => environmentsStepData[item.name]),
+        () => schema?.content.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
 
-    const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
+    const secretsStepsSchemas = useMemo(
+        () => createEnvironmentsGroups(commonStepsSchemas ?? []),
+        [environmentsStepData]
+    );
     const summaryStepSchemas = useMemo(() => {
-        return commonStepsSchemas.reduce(
+        return commonStepsSchemas?.reduce(
             (result, item) => {
                 if (item.secrets.length === 0) {
                     result.push(item);
@@ -260,7 +263,7 @@ const GettingStartedModal = () => {
         }
     };
 
-    if (error) {
+    if (error || !schema) {
         return <GettingStartedErrorModal clearError={clearError} />;
     }
 
@@ -276,7 +279,7 @@ const GettingStartedModal = () => {
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
-                summaryStepSchemas={summaryStepSchemas}
+                summaryStepSchemas={summaryStepSchemas ?? []}
                 schema={schema}
                 onEnvironmentsStepChange={handleEnvironmentClick}
                 onSecretsStepChange={handleSecretsStepChange}
