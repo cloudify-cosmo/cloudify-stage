@@ -96,12 +96,8 @@ const GettingStartedModal = () => {
     }, [modalOpenState.shouldAutomaticallyShowModal]);
 
     useEffect(() => {
-        setSchema(gettingStartedSchema);
-    }, [gettingStartedSchema]);
-
-    useEffect(() => {
         setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
-    }, [cloudSetupUrlParam]);
+    }, [cloudSetupUrlParam, cloudSetupSchema, gettingStartedSchema]);
 
     useEffect(() => {
         if (!isEmpty(environmentsStepData)) {
