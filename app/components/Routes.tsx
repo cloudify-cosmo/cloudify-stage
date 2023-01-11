@@ -16,12 +16,17 @@ const Routes: FunctionComponent = () => {
     const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
     const isSamlEnabled = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.enabled', false));
     const samlPortalUrl = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.portalUrl', ''));
+    const useLoginPage = useSelector((state: ReduxState) => state.config.app.useLoginPage);
     const theme = useSelector((state: ReduxState) => _.get(state, 'config.app.whiteLabel', {}));
 
     return (
         <ThemeProvider theme={theme}>
             <Switch>
-                <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
+                <Route
+                    exact
+                    path={Consts.PAGE_PATH.LOGIN}
+                    render={() => (useLoginPage ? <LoginPage /> : <Redirect to={Consts.PAGE_PATH.EXTERNAL_LOGIN} />)}
+                />
                 <Route exact path={Consts.PAGE_PATH.EXTERNAL_LOGIN} component={ExternalLogin} />
                 <Route
                     exact
