@@ -155,11 +155,6 @@ type GenericDeployModalProps = {
         id: string;
         displayName: string;
     };
-
-    /**
-     * Whether to fill deploymentId field automatically on the modal mount
-     */
-    generateDeploymentIdOnMount?: boolean;
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -170,7 +165,6 @@ const defaultProps: Partial<GenericDeployModalProps> = {
     showDeployButton: false,
     showInstallOptions: false,
     showSitesInput: false,
-    generateDeploymentIdOnMount: false,
     deploySteps: [],
     deployValidationMessage: '',
     deployAndInstallValidationMessage: '',
@@ -284,25 +278,24 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     }
 
     componentDidMount() {
-        const { generateDeploymentIdOnMount } = this.props;
         const { installWorkflow } = this.state;
         this.setState({
             baseInstallWorkflowParams: installWorkflow.parameters,
             userInstallWorkflowParams: mapValues(installWorkflow.parameters, parameterData =>
                 getInputFieldInitialValue(parameterData.default, parameterData.type)
             ),
-            deploymentId: generateDeploymentIdOnMount ? StageUtils.uuid() : GenericDeployModal.initialState.deploymentId
+            deploymentId: StageUtils.uuid()
         });
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
         const { blueprintId, open } = this.props;
 
-        if (!prevProps.open && open && typeof blueprintId === 'string') {
+        if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ ...GenericDeployModal.initialState, deploymentId: StageUtils.uuid() }, () =>
-                this.selectBlueprint(blueprintId)
-            );
+            this.setState({ ...GenericDeployModal.initialState, deploymentId: StageUtils.uuid() }, () => {
+                this.selectBlueprint(blueprintId!);
+            });
         }
     }
 

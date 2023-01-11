@@ -53,7 +53,6 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
                 <DeployBlueprintModal
                     i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
                     environmentToDeployOn={environmentToDeployOn}
-                    generateDeploymentIdOnMount
                     {...commonProps}
                 />
             );
