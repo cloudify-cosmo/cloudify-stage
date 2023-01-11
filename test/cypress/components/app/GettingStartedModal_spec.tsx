@@ -5,6 +5,7 @@ import '../initAppContext';
 
 import GettingStartedModal from 'app/components/GettingStartedModal';
 import StageUtils from 'app/utils/stageUtils';
+import { cloudSetupSchemaUrl, gettingStartedSchemaUrl } from 'app/components/GettingStartedModal/useFetchSchemas';
 import userConfig from 'conf/userConfig.json';
 import type { ManagerData } from 'app/reducers/managerReducer';
 import { emptyState } from 'app/reducers/managerReducer';
@@ -25,17 +26,11 @@ describe('GettingStartedModal', () => {
             }
         );
 
-        cy.intercept(
-            'GET',
-            'https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json'
-        ).as('gettingStartedSchema');
+        cy.intercept('GET', gettingStartedSchemaUrl).as('gettingStartedSchema');
 
         cy.wait('@gettingStartedSchema');
 
-        cy.intercept(
-            'GET',
-            'https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json'
-        ).as('cloudSetupSchema');
+        cy.intercept('GET', cloudSetupSchemaUrl).as('cloudSetupSchema');
 
         cy.wait('@cloudSetupSchema');
 

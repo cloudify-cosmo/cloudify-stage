@@ -1,3 +1,4 @@
+import { cloudSetupSchemaUrl, gettingStartedSchemaUrl } from 'app/components/GettingStartedModal/useFetchSchemas';
 import Consts from 'app/utils/consts';
 import PluginUtils from 'app/utils/shared/PluginUtils';
 import { escapeRegExp, find } from 'lodash';
@@ -165,17 +166,11 @@ describe('Getting started modal', () => {
             cy.wait('@updateUserApps');
             cy.url().should('contain', 'console/');
 
-            cy.intercept(
-                'GET',
-                'https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json'
-            ).as('gettingStartedSchema');
+            cy.intercept('GET', gettingStartedSchemaUrl).as('gettingStartedSchema');
 
             cy.wait('@gettingStartedSchema');
 
-            cy.intercept(
-                'GET',
-                'https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json'
-            ).as('cloudSetupSchema');
+            cy.intercept('GET', cloudSetupSchemaUrl).as('cloudSetupSchema');
 
             cy.wait('@cloudSetupSchema');
         }
