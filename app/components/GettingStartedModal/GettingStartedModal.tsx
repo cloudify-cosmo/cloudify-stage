@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
+import useFetchSchemas from './useFetchSchemas';
 import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
@@ -15,7 +16,6 @@ import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
     GettingStartedEnvironmentsData,
-    GettingStartedSchema,
     GettingStartedSecretsData,
     GettingStartedSchemaItem,
     GettingStartedSchemaSecret
@@ -28,6 +28,7 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
+import GettingStartedErrorModal from './GettingStartedErrorModal';
 
 type Error = boolean | { content: string };
 
@@ -43,12 +44,9 @@ const isPortValid = (port: string) => {
     return portNum >= 1 && portNum <= 65535;
 };
 
-interface GettingStartedModalProps {
-    gettingStartedSchema: GettingStartedSchema;
-    cloudSetupSchema: GettingStartedSchema;
-}
+const GettingStartedModal = () => {
+    const [gettingStartedSchema, cloudSetupSchema, error, clearError] = useFetchSchemas();
 
-const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: GettingStartedModalProps) => {
     const modalOpenState = useModalOpenState();
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
@@ -65,13 +63,16 @@ const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: Getting
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
     const commonStepsSchemas = useMemo(
-        () => schema.content.filter(item => environmentsStepData[item.name]),
+        () => schema?.content.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
 
-    const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
+    const secretsStepsSchemas = useMemo(
+        () => createEnvironmentsGroups(commonStepsSchemas ?? []),
+        [environmentsStepData]
+    );
     const summaryStepSchemas = useMemo(() => {
-        return commonStepsSchemas.reduce(
+        return commonStepsSchemas?.reduce(
             (result, item) => {
                 if (item.secrets.length === 0) {
                     result.push(item);
@@ -262,6 +263,10 @@ const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: Getting
         }
     };
 
+    if (error || !schema) {
+        return <GettingStartedErrorModal clearError={clearError} />;
+    }
+
     return (
         <Modal open={modalOpenState.modalOpen} onClose={handleModalClose}>
             <ModalHeader
@@ -274,7 +279,7 @@ const GettingStartedModal = ({ gettingStartedSchema, cloudSetupSchema }: Getting
                 secretsStepsSchemas={secretsStepsSchemas}
                 secretsStepsData={secretsStepsData}
                 secretsStepIndex={secretsStepIndex}
-                summaryStepSchemas={summaryStepSchemas}
+                summaryStepSchemas={summaryStepSchemas ?? []}
                 schema={schema}
                 onEnvironmentsStepChange={handleEnvironmentClick}
                 onSecretsStepChange={handleSecretsStepChange}
