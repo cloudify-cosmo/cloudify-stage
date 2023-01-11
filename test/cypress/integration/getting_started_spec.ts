@@ -164,6 +164,20 @@ describe('Getting started modal', () => {
         function waitUntilAppReadyAfterActivation() {
             cy.wait('@updateUserApps');
             cy.url().should('contain', 'console/');
+
+            cy.intercept(
+                'GET',
+                'https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json'
+            ).as('gettingStartedSchema');
+
+            cy.wait('@gettingStartedSchema');
+
+            cy.intercept(
+                'GET',
+                'https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json'
+            ).as('cloudSetupSchema');
+
+            cy.wait('@cloudSetupSchema');
         }
 
         it('should redirect to the dashboard page upon canceling the modal process', () => {

@@ -96,6 +96,10 @@ const GettingStartedModal = () => {
     }, [modalOpenState.shouldAutomaticallyShowModal]);
 
     useEffect(() => {
+        setSchema(gettingStartedSchema);
+    }, [gettingStartedSchema]);
+
+    useEffect(() => {
         setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
     }, [cloudSetupUrlParam]);
 
@@ -263,7 +267,7 @@ const GettingStartedModal = () => {
         }
     };
 
-    if (error || !schema) {
+    if (error) {
         return <GettingStartedErrorModal clearError={clearError} />;
     }
 
@@ -274,20 +278,24 @@ const GettingStartedModal = () => {
                 secretsStepIndex={secretsStepIndex}
                 secretsStepsSchemas={secretsStepsSchemas}
             />
-            <ModalContent
-                stepName={stepName}
-                secretsStepsSchemas={secretsStepsSchemas}
-                secretsStepsData={secretsStepsData}
-                secretsStepIndex={secretsStepIndex}
-                summaryStepSchemas={summaryStepSchemas ?? []}
-                schema={schema}
-                onEnvironmentsStepChange={handleEnvironmentClick}
-                onSecretsStepChange={handleSecretsStepChange}
-                onInstallationStarted={handleInstallationStarted}
-                onInstallationFinished={handleInstallationFinishedOrCanceled}
-                onInstallationCanceled={handleInstallationFinishedOrCanceled}
-                errors={errors}
-            />
+            {schema ? (
+                <ModalContent
+                    stepName={stepName}
+                    secretsStepsSchemas={secretsStepsSchemas}
+                    secretsStepsData={secretsStepsData}
+                    secretsStepIndex={secretsStepIndex}
+                    summaryStepSchemas={summaryStepSchemas ?? []}
+                    schema={schema}
+                    onEnvironmentsStepChange={handleEnvironmentClick}
+                    onSecretsStepChange={handleSecretsStepChange}
+                    onInstallationStarted={handleInstallationStarted}
+                    onInstallationFinished={handleInstallationFinishedOrCanceled}
+                    onInstallationCanceled={handleInstallationFinishedOrCanceled}
+                    errors={errors}
+                />
+            ) : (
+                <Modal.Content>Loading...</Modal.Content>
+            )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                     <Form.Field>
