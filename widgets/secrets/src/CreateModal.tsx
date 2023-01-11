@@ -36,7 +36,6 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
 
-    // get secret providers list on modal open
     useEffect(() => {
         if (isOpen) {
             fetchSecretProviders();
