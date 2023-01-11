@@ -8,7 +8,7 @@ interface Helper {
     Manager: ManagerService;
 }
 
-type BackendService = (req: Request, res: Response, next: NextFunction, helper: Helper) => void;
+export type BackendService = (req: Request, res: Response, next: NextFunction, helper: Helper) => void;
 
 export interface BackendServiceRegistrator {
     register: (serviceName: string, method: AllowedRequestMethod | BackendService, service?: BackendService) => void;

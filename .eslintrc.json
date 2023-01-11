@@ -77,7 +77,6 @@
             ],
             "rules": {
                 "node/no-missing-require": ["error", { "allowModules": ["lodash", "body", "elkjs"] }],
-                "node/no-missing-import": "off",
                 "global-require": "off",
                 "import/no-unresolved": "off",
                 "@typescript-eslint/no-var-requires": "off"

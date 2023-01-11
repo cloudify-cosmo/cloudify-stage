@@ -1,6 +1,6 @@
-import type { BackendServiceRegistrator } from 'backend/handler/BackendHandler.types';
-import type { PaginatedResponse } from 'backend/types';
 import type { ElkNode } from 'elkjs';
+import type { BackendServiceRegistrator } from '../../../backend/handler/BackendHandler.types';
+import type { PaginatedResponse } from '../../../backend/types';
 
 declare module 'elkjs/lib/elk-api' {
     interface ElkLabel {
