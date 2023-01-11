@@ -221,7 +221,7 @@ describe('Deployments widget', () => {
         const anotherBlueprintName = `${blueprintName}_another`;
         cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
 
-        cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
+        cy.interceptSp('POST', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
         executeDeploymentAction(deploymentId, deploymentName, 'Update');
