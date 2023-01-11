@@ -11,6 +11,16 @@ describe('Login', () => {
 
     beforeEach(() => cy.interceptWithoutCaching('/console/config'));
 
+    it('page is not reachable when useLoginPage configuration parameter is set to false', () => {
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
+            clientConfig.app.useLoginPage = false;
+            return clientConfig;
+        });
+
+        cy.visit('/console/login');
+        cy.location('pathname').should('be.equal', '/console/external-login');
+    });
+
     it('succeeds when provided credentials are valid and license is active', () => {
         cy.activate().usePageMock();
         forceLogin();
