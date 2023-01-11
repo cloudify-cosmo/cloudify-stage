@@ -5,10 +5,10 @@ describe('Secret store management widget', () => {
         cy
             .activate()
             .usePageMock('secrets')
-            .mockLogin()
-            .deleteSecrets(secretName)
             .deleteSecretProviders()
             .createSecretProvider({ name: 'Secret_Provider_1', type: 'vault', visibility: 'global' })
+            .mockLogin()
+            .deleteSecrets(secretName)
     );
 
     it('should allow to manage secrets', () => {
