@@ -58,7 +58,7 @@ describe('Secret store management widget', () => {
         cy.contains('There are no Secrets available');
     });
 
-    it.only('should allow to manage secret with secret provider', () => {
+    it('should allow to manage secret with secret provider', () => {
         const secretProviderName = 'Secret_Provider_1';
         cy.contains('Create').click();
 

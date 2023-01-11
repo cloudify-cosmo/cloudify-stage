@@ -21,10 +21,10 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
     const [visibility, setVisibility, clearVisibility] = useInput(Stage.Common.Consts.defaultVisibility);
     const [inputs, setInput, clearInputs] = useInputs({
         secretKey: '',
-        secretValue: null,
+        secretValue: '',
         isHiddenValue: false,
         enableSecretProvider: false,
-        secretProvider: null,
+        secretProvider: '',
         secretProviderPath: null
     });
     const [isOpen, doOpen, doClose] = useOpen(() => {
@@ -38,7 +38,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     useEffect(() => {
         fetchSecretProviders();
-    }, []);
+    }, secretProviders);
 
     function createSecret() {
         const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } =

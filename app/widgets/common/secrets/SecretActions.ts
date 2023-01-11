@@ -12,7 +12,7 @@ export type Secret = {
     tenant_name?: string;
     updated_at?: string;
     visibility?: Visibility;
-    value: string | null;
+    value: string;
     schema: string;
     provider_name?: string | null;
     provider_options?: ProviderOptions;
@@ -39,19 +39,19 @@ export default class SecretActions {
     }
 
     doCreate(
-        key: Secret['key'],
-        value: Secret['value'],
+        key: string,
+        value: string,
         visibility: Visibility,
-        hidden: Secret['is_hidden_value'],
-        providerName?: Secret['provider_name'],
-        providerOptions?: Secret['provider_options']
+        hidden: boolean,
+        provider?: string,
+        providerOptions?: Record<string, any> | null
     ) {
         return this.manager.doPut(`/secrets/${key}`, {
             body: {
                 value,
                 visibility,
                 is_hidden_value: hidden,
-                provider_name: providerName,
+                provider,
                 provider_options: providerOptions
             }
         });
