@@ -14,10 +14,16 @@ const t = (key: string, options?: Record<string, any>) =>
 
 type DeployBlueprintModalProps = Pick<
     ComponentProps<typeof GenericDeployModal>,
-    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules'
->;
+    'open' | 'onHide' | 'blueprintId' | 'toolbox' | 'blueprintFilterRules' | 'environmentToDeployOn'
+> &
+    Pick<Partial<ComponentProps<typeof GenericDeployModal>>, 'i18nHeaderKey'>;
 
-const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ toolbox, onHide, ...rest }) => {
+const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({
+    toolbox,
+    onHide,
+    i18nHeaderKey = 'widgets.common.deployments.deployModal.header',
+    ...rest
+}) => {
     function deployBlueprint(_: undefined, params: BlueprintDeployParams) {
         const blueprintActions = new BlueprintActions(toolbox);
         return blueprintActions
@@ -76,7 +82,7 @@ const DeployBlueprintModal: FunctionComponent<DeployBlueprintModalProps> = ({ to
             {...rest}
             toolbox={toolbox}
             onHide={onHide}
-            i18nHeaderKey="widgets.common.deployments.deployModal.header"
+            i18nHeaderKey={i18nHeaderKey}
             showDeploymentNameInput
             showDeploymentIdInput
             showDeployButton
