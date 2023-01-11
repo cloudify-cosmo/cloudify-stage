@@ -1,9 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
 
-export default function SystemWorkflowIcon({ execution }) {
+export default function SystemWorkflowIcon({ execution }: { execution?: Execution }) {
     const { Icon, Popup } = Stage.Basic;
 
-    return execution.is_system_workflow ? (
+    return execution?.is_system_workflow ? (
         <Popup wide on="hover">
             <Popup.Trigger>
                 <Icon name="cogs" color="blue" />
@@ -12,11 +12,3 @@ export default function SystemWorkflowIcon({ execution }) {
         </Popup>
     ) : null;
 }
-
-SystemWorkflowIcon.propTypes = {
-    execution: PropTypes.shape({ is_system_workflow: PropTypes.bool })
-};
-
-SystemWorkflowIcon.defaultProps = {
-    execution: { is_system_workflow: false }
-};

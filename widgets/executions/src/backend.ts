@@ -1,5 +1,44 @@
-// @ts-nocheck File not migrated fully to TS
-export default r => {
+import type { BackendServiceRegistrator } from 'backend/handler/BackendHandler.types';
+import type { PaginatedResponse } from 'backend/types';
+import type { ElkNode } from 'elkjs';
+
+declare module 'elkjs/lib/elk-api' {
+    interface ElkLabel {
+        displayTitle?: string[];
+        displayText?: string[];
+        state?: string;
+        retry?: number;
+        type?: string;
+        operation?: string;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    interface ElkNode {
+        nodeInstanceId?: string;
+        operation?: string;
+        containingSubgraph?: string;
+    }
+}
+
+interface Operation {
+    id: string;
+    name?: string;
+    type?: string;
+    state?: string;
+    parameters: {
+        /* eslint-disable camelcase */
+        task_kwargs: {
+            cloudify_context?: { operation?: { name?: string } };
+            kwargs?: unknown;
+        };
+        containing_subgraph?: string;
+        current_retries: number;
+        retried_task?: unknown;
+        /* eslint-enable camelcase */
+    };
+    dependencies: unknown[];
+}
+
+export default (r: BackendServiceRegistrator) => {
     r.register('get_tasks_graph', 'GET', (req, res, next, helper) => {
         /**
          * ### Due to the nature of widgetBackend, the whole logic of a function must be placed inside that function
@@ -64,6 +103,7 @@ export default r => {
          *
          * More information can be found here: https://github.com/OpenKieler/elkjs
          */
+        // eslint-disable-next-line import/no-extraneous-dependencies
         const ELK = require('elkjs');
         const _ = require('lodash');
 
@@ -74,18 +114,6 @@ export default r => {
         const operationsFetchUrl = '/operations';
         const subgraphTask = 'SubgraphTask';
 
-        // ELK Tasks graph skeleton
-        const tasksGraph = {
-            id: 'tasksGraph',
-            layoutOptions: {
-                'elk.algorithm': 'layered',
-                'elk.spacing.nodeNode': '30f', // Vertical spacing between nodes in each layer
-                'layered.spacing.nodeNodeBetweenLayers': '50f', // Horizontal spacing between layers
-                hierarchyHandling: 'INCLUDE_CHILDREN' // To ensure inner nodes can have proper edges to nodes with different parents
-            },
-            children: [],
-            edges: []
-        };
         const paddingLeftRight = 24;
         const paddingTop = 46;
         const paddingBottom = 28;
@@ -100,123 +128,122 @@ export default r => {
         const textSizingFactor = 5.8;
         const textHeight = 18;
 
-        const isLeafNode = subGraph => _.isEmpty(subGraph.children);
-        const constructSubgraphs = operationsList => {
+        function isRetried(node: ElkNode) {
+            const { retry } = node.labels![0];
+            return retry && retry > 0;
+        }
+
+        const isLeafNode = (subGraph: ElkNode) => _.isEmpty(subGraph.children);
+        const constructSubgraphs = (operationsList: Operation[]) => {
             // All the subgraphs and leaves are in the same list for better time-complexity performance, meaning -
             // For every subgraph - instead of traversing its children until we find the desired subgraph/leaf, we simply
             // keep the child (or grand child) subgraph/leaf in the first-tier list as a pointer to the real child.
             // When we're done creating the skeleton for ELK, we remove all the pointers and only keep the root subgraphs.
-            const allSubgraphs: Record<string, any> = {};
-            _.map(operationsList, task => {
-                let taskName = _.split(task.name, 'cloudify.interfaces.');
+            const allSubgraphs: Record<string, ElkNode> = {};
+            operationsList.forEach(operation => {
+                let taskName = _.split(operation.name, 'cloudify.interfaces.');
                 taskName = taskName.length > 1 ? taskName[1] : _.upperFirst(taskName[0]);
 
                 let taskOperation = '';
-                const taskArgs = task.parameters.task_kwargs;
+                const taskArgs = operation.parameters.task_kwargs;
                 if (taskArgs.cloudify_context && taskArgs.cloudify_context.operation) {
-                    taskOperation = taskArgs.cloudify_context.operation.name;
-                    taskOperation = _.split(taskOperation, 'cloudify.interfaces.');
+                    taskOperation = _.split(taskArgs.cloudify_context.operation.name, 'cloudify.interfaces.');
                     taskOperation = taskOperation.length > 1 ? taskOperation[1] : taskOperation[0];
                     taskOperation = _.capitalize(_.lowerCase(taskOperation));
                 }
 
                 const cloudifyContext = _.get(taskArgs.kwargs, '__cloudify_context', {});
-                let subGraph = {
+                let subGraph: ElkNode = {
                     // subGraph can be a subGraph or a 'leaf'
-                    id: task.id,
+                    id: operation.id,
                     labels: [
                         {
                             text: taskName,
                             retry: 0,
-                            type: task.type,
-                            state: _.upperFirst(task.state),
+                            type: operation.type,
+                            state: _.upperFirst(operation.state),
                             operation: taskOperation,
-                            displayText: ''
+                            displayText: []
                         }
                     ],
                     nodeInstanceId: cloudifyContext.node_id,
                     operation: _.get(cloudifyContext.operation, 'name'),
                     children: [],
-                    edges: [],
-                    containingSubgraph: null
+                    edges: []
                 };
-                if (!Object.prototype.hasOwnProperty.call(allSubgraphs, task.id)) {
-                    allSubgraphs[task.id] = subGraph;
+                if (!Object.prototype.hasOwnProperty.call(allSubgraphs, operation.id)) {
+                    allSubgraphs[operation.id] = subGraph;
                 } else {
-                    allSubgraphs[task.id].labels[0].text = taskName;
-                    allSubgraphs[task.id].labels[0].type = task.type;
-                    allSubgraphs[task.id].labels[0].operation = taskOperation;
-                    subGraph = allSubgraphs[task.id];
+                    allSubgraphs[operation.id].labels![0].text = taskName;
+                    allSubgraphs[operation.id].labels![0].type = operation.type;
+                    allSubgraphs[operation.id].labels![0].operation = taskOperation;
+                    subGraph = allSubgraphs[operation.id];
                 }
-                if (task.parameters.containing_subgraph) {
+                if (operation.parameters.containing_subgraph) {
                     // Task is inside a Subgraph (could be subgraph in subgraph)
                     // Need to create its parent and update self as its child
-                    const { containing_subgraph: containingSubgraph } = task.parameters;
+                    const { containing_subgraph: containingSubgraph } = operation.parameters;
                     subGraph.containingSubgraph = containingSubgraph;
                     if (!Object.prototype.hasOwnProperty.call(allSubgraphs, containingSubgraph)) {
                         // Parent does not exist - creating parent skeleton to be filled later
                         const parentGraph = {
                             id: containingSubgraph,
-                            labels: [{ state: null }],
+                            labels: [{}],
                             children: [subGraph],
-                            edges: [],
-                            containingSubgraph: null
+                            edges: []
                         };
                         allSubgraphs[containingSubgraph] = parentGraph;
                     } else {
                         // parentGraph already exists - only update its children and its child that its contained in it
-                        allSubgraphs[containingSubgraph].children.push(subGraph);
-                        allSubgraphs[containingSubgraph].labels[0].state = null;
-                        allSubgraphs[task.id].containingSubgraph = containingSubgraph;
+                        allSubgraphs[containingSubgraph].children?.push(subGraph);
+                        allSubgraphs[containingSubgraph].labels![0].state = undefined;
+                        allSubgraphs[operation.id].containingSubgraph = containingSubgraph;
                     }
 
-                    if (task.dependencies) {
+                    if (operation.dependencies) {
                         // Updating task dependencies not to include containing_subgraph
-                        task.dependencies = task.dependencies.filter(
-                            taskId => taskId !== task.parameters.containing_subgraph
+                        operation.dependencies = operation.dependencies.filter(
+                            taskId => taskId !== operation.parameters.containing_subgraph
                         );
                     }
                 }
             });
             return allSubgraphs;
         };
-        const constructDependencies = (operationsList, allSubgraphs) => {
+        const constructDependencies = (operationsList: Operation[], allSubgraphs: Record<string, ElkNode>) => {
             // Connecting all the operations into a graph
             // *IMPORTANT NOTE* - Retrying tasks depend on their previous failed task
             const edges: any[] = [];
-            _.each(operationsList, task => {
-                if (task.parameters.current_retries > 0) {
-                    allSubgraphs[task.id].labels[0].retry = task.parameters.current_retries;
+            operationsList.forEach(operation => {
+                if (operation.parameters.current_retries > 0) {
+                    allSubgraphs[operation.id].labels![0].retry = operation.parameters.current_retries;
                 }
-                if (isLeafNode(allSubgraphs[task.id])) {
-                    allSubgraphs[task.id].width = 270;
-                    allSubgraphs[task.id].height = 40;
+                if (isLeafNode(allSubgraphs[operation.id])) {
+                    allSubgraphs[operation.id].width = 270;
+                    allSubgraphs[operation.id].height = 40;
                 }
-                _.each(operationsList, dependantTask => {
-                    const edge = {
-                        id: '',
-                        sources: [],
-                        targets: []
-                    };
+                operationsList.forEach(anotherOperation => {
                     if (
-                        dependantTask.dependencies.indexOf(task.id) > -1 ||
-                        dependantTask.parameters.retried_task === task.id
+                        anotherOperation.dependencies.indexOf(operation.id) > -1 ||
+                        anotherOperation.parameters.retried_task === operation.id
                     ) {
-                        edge.id = `${task.id}_${dependantTask.id}`;
-                        edge.sources.push(task.id);
-                        edge.targets.push(dependantTask.id);
-                        const { containingSubgraph } = allSubgraphs[task.id];
-                        if (containingSubgraph === null) {
+                        const edge = {
+                            id: `${operation.id}_${anotherOperation.id}`,
+                            sources: [operation.id],
+                            targets: [anotherOperation.id]
+                        };
+                        const { containingSubgraph } = allSubgraphs[operation.id];
+                        if (containingSubgraph === undefined) {
                             edges.push(edge);
                         } else {
-                            allSubgraphs[containingSubgraph].edges.push(edge);
+                            allSubgraphs[containingSubgraph].edges?.push(edge);
                         }
                     }
                 });
             });
             return edges;
         };
-        const shouldHideTask = workflowTask => {
+        const shouldHideTask = (workflowTask: ElkNode) => {
             const typesToHide = [
                 'SendNodeEventTask',
                 'SetNodeInstanceStateTask',
@@ -228,72 +255,78 @@ export default r => {
                 'LocalWorkflowTask',
                 'NOPLocalWorkflowTask'
             ];
-            return workflowTask.labels[0].retry > 0 || _.includes(typesToHide, workflowTask.labels[0].type);
+            return isRetried(workflowTask) || _.includes(typesToHide, workflowTask.labels![0].type);
         };
-        const safeDeleteIrrelevantGraphVertices = allSubgraphs => {
+        const safeDeleteIrrelevantGraphVertices = (allSubgraphs: Record<string, ElkNode>) => {
             // Remove send-event, set-state, and retrying-tasks from the graph
             // while keeping it connected
             const existingEdges = new Set(); // Used to remove duplicate edges
-            _.map(allSubgraphs, subGraph => {
+            Object.values(allSubgraphs).forEach(subGraph => {
                 if (subGraph.children && subGraph.children.length > 0) {
                     // Go through all the subgraphs
-                    // eslint-disable-next-line consistent-return
-                    subGraph.children = _.map(subGraph.children, workflowTask => {
-                        // For each subgraph, go through all the tasks
-                        if (shouldHideTask(workflowTask)) {
-                            // For each hidden task, connect the 'target'
-                            // edges to it's parents' 'target' edges
-                            // Remove the node when done
-                            const sourceNodes = [];
-                            const targetNodes = [];
-                            // Need to go through the array twice because the
-                            // update of the rest of the edges must be after all the
-                            // "Node to remove"'s edges have been scanned
-                            // eslint-disable-next-line consistent-return
-                            subGraph.edges = _.map(subGraph.edges, edge => {
-                                const sourceNode = edge.sources[0];
-                                const targetNode = edge.targets[0];
-                                if (sourceNode === workflowTask.id) {
-                                    targetNodes.push(targetNode);
-                                } else if (targetNode === workflowTask.id) {
-                                    sourceNodes.push(sourceNode);
-                                    if (workflowTask.labels[0].retry > 0) {
-                                        // If a task is retrying - delete it and combine it with its father
-                                        allSubgraphs[sourceNode].labels[0].retry = workflowTask.labels[0].retry;
-                                        allSubgraphs[sourceNode].labels[0].state = workflowTask.labels[0].state;
-                                        allSubgraphs[sourceNode].labels[0].displayText =
-                                            workflowTask.labels[0].displayText;
-                                    }
-                                } else {
-                                    return edge;
-                                }
-                            }).filter(edge => edge !== undefined);
-                            _.map(sourceNodes, sourceNodeId => {
-                                _.map(targetNodes, targetNodeId => {
-                                    const newEdge = {
-                                        id: `${sourceNodeId}_${targetNodeId}`,
-                                        sources: [`${sourceNodeId}`],
-                                        targets: [`${targetNodeId}`]
-                                    };
-                                    if (!existingEdges.has(newEdge.id)) {
-                                        subGraph.edges.push(newEdge);
-                                        existingEdges.add(newEdge.id);
-                                    }
+                    subGraph.children = _.compact(
+                        subGraph.children.map(workflowTask => {
+                            // For each subgraph, go through all the tasks
+                            if (shouldHideTask(workflowTask)) {
+                                // For each hidden task, connect the 'target'
+                                // edges to it's parents' 'target' edges
+                                // Remove the node when done
+                                const sourceNodes: string[] = [];
+                                const targetNodes: string[] = [];
+                                // Need to go through the array twice because the
+                                // update of the rest of the edges must be after all the
+                                // "Node to remove"'s edges have been scanned
+                                subGraph.edges = _.compact(
+                                    subGraph.edges?.map(edge => {
+                                        const sourceNode = edge.sources[0];
+                                        const targetNode = edge.targets[0];
+                                        if (sourceNode === workflowTask.id) {
+                                            targetNodes.push(targetNode);
+                                            return undefined;
+                                        }
+                                        if (targetNode === workflowTask.id) {
+                                            sourceNodes.push(sourceNode);
+                                            if (isRetried(workflowTask)) {
+                                                // If a task is retrying - delete it and combine it with its father
+                                                allSubgraphs[sourceNode].labels![0].retry =
+                                                    workflowTask.labels?.[0].retry;
+                                                allSubgraphs[sourceNode].labels![0].state =
+                                                    workflowTask.labels?.[0].state;
+                                                allSubgraphs[sourceNode].labels![0].displayText =
+                                                    workflowTask.labels?.[0].displayText;
+                                            }
+                                            return undefined;
+                                        }
+                                        return edge;
+                                    })
+                                );
+                                sourceNodes.forEach(sourceNodeId => {
+                                    targetNodes.forEach(targetNodeId => {
+                                        const newEdge = {
+                                            id: `${sourceNodeId}_${targetNodeId}`,
+                                            sources: [`${sourceNodeId}`],
+                                            targets: [`${targetNodeId}`]
+                                        };
+                                        if (!existingEdges.has(newEdge.id)) {
+                                            subGraph.edges?.push(newEdge);
+                                            existingEdges.add(newEdge.id);
+                                        }
+                                    });
                                 });
-                            });
-                        } else {
+                                return undefined;
+                            }
                             return workflowTask;
-                        }
-                    }).filter(workflowTask => workflowTask !== undefined);
+                        })
+                    );
                 }
             });
             return allSubgraphs;
         };
-        const adjustingNodeSizes = allSubgraphs => {
+        const adjustingNodeSizes = (allSubgraphs: Record<string, ElkNode>) => {
             // Since some operations' inner text may exceed its Node's width
             // we need to increase the Node's height accordingly and split the text
             // This process must be here after all the nodes are in the list
-            const textSplitCalculation = (nodeWidth, textToCalculate) => {
+            const textSplitCalculation = (nodeWidth: number, textToCalculate: string): string[] => {
                 const maximumLength = _.floor((nodeWidth - paddingLeftRight * 2) / textSizingFactor) - 2;
                 if (textToCalculate.length > maximumLength) {
                     let indexOfSplitLocation;
@@ -312,19 +345,17 @@ export default r => {
                 }
                 return [textToCalculate];
             };
-            _.map(allSubgraphs, subGraph => {
+            Object.values(allSubgraphs).forEach(subGraph => {
                 if (subGraph.children) {
                     if (!isLeafNode(subGraph)) {
                         subGraph.layoutOptions = subGraphLayoutOptions;
                     } else {
                         // if leaf and not the 'edges' object
-                        const labels = subGraph.labels[0];
+                        const labels = subGraph.labels![0];
                         labels.text = _.capitalize(_.lowerCase(labels.text));
                         let numberOfSplits = 0;
-                        let textToCalculate = '';
                         if (labels.text) {
-                            textToCalculate = labels.text;
-                            textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
+                            const textToCalculate = textSplitCalculation(subGraph.width!, labels.text);
                             // Each element in the resulting array will be rendered in a separate <text> element
                             labels.displayTitle = textToCalculate;
                             numberOfSplits += textToCalculate.length - 1;
@@ -341,15 +372,14 @@ export default r => {
                                 state === 'Pending' && retriesCount ? `Pending retry (${retriesCount})` : state
                             );
                         }
-                        textToCalculate = tempArr.join(' - ');
-                        textToCalculate = textSplitCalculation(subGraph.width, textToCalculate);
+                        const textToCalculate = textSplitCalculation(subGraph.width!, tempArr.join(' - '));
                         // Each element in the resulting array will be rendered in a separate <text> element
                         labels.displayText = textToCalculate;
                         numberOfSplits += textToCalculate.length - 1;
                         if (numberOfSplits > 0) {
-                            subGraph.height += textHeight * numberOfSplits;
+                            subGraph.height! += textHeight * numberOfSplits;
                         }
-                        subGraph.height += 10;
+                        subGraph.height! += 10;
                     }
                 }
             });
@@ -359,61 +389,59 @@ export default r => {
             // Removing irrelevant vertices (when a task is rescheduled due to failure mostly)
             safeDeleteIrrelevantGraphVertices(allSubgraphs);
             // Removing subgraphs with 0 children
-            return (
-                _(allSubgraphs)
-                    // eslint-disable-next-line consistent-return
-                    .omitBy(subGraph => {
-                        if (
-                            isLeafNode(subGraph) &&
-                            !_.isEmpty(subGraph.labels) &&
-                            subGraph.labels[0].type === subgraphTask
-                        ) {
-                            // Verify the subGraph doesn't have connected edges
-                            if (subGraph.containingSubgraph !== null) {
-                                let i = allSubgraphs[subGraph.containingSubgraph].edges.length;
-                                while (i) {
-                                    i -= 1;
-                                    if (
-                                        allSubgraphs[subGraph.containingSubgraph].edges[i].sources.indexOf(
-                                            subGraph.id
-                                        ) > -1 ||
-                                        allSubgraphs[subGraph.containingSubgraph].edges[i].targets.indexOf(
-                                            subGraph.id
-                                        ) > -1
-                                    ) {
-                                        allSubgraphs[subGraph.containingSubgraph].edges.splice(i, 1);
-                                    }
-                                }
-                            } else {
-                                let i = edges.length;
-                                while (i) {
-                                    i -= 1;
-                                    if (
-                                        edges[i].sources.indexOf(subGraph.id) > -1 ||
-                                        edges[i].targets.indexOf(subGraph.id) > -1
-                                    ) {
-                                        edges.splice(i, 1);
-                                    }
-                                }
+            Object.keys(allSubgraphs).forEach(nodeKey => {
+                const subGraph = allSubgraphs[nodeKey];
+                if (isLeafNode(subGraph) && !_.isEmpty(subGraph.labels) && subGraph.labels[0].type === subgraphTask) {
+                    // Verify the subGraph doesn't have connected edges
+                    if (subGraph.containingSubgraph !== null) {
+                        let i = allSubgraphs[subGraph.containingSubgraph].edges.length;
+                        while (i) {
+                            i -= 1;
+                            if (
+                                allSubgraphs[subGraph.containingSubgraph].edges[i].sources.indexOf(subGraph.id) > -1 ||
+                                allSubgraphs[subGraph.containingSubgraph].edges[i].targets.indexOf(subGraph.id) > -1
+                            ) {
+                                allSubgraphs[subGraph.containingSubgraph].edges.splice(i, 1);
                             }
-                            return true;
                         }
-                    })
-                    .omitBy(subGraph => {
-                        // Return all the nodes that are root-level subgraphs
-                        const { containingSubgraph } = subGraph;
-                        delete subGraph.containingSubgraph;
-                        return containingSubgraph;
-                    })
-                    .value()
-            );
-        };
-        const createELKTasksGraphs = (allSubgraphs: Record<string, any>, edges: any[]) => {
-            tasksGraph.edges = edges;
-            _.map(allSubgraphs, subGraph => {
-                tasksGraph.children.push(subGraph);
+                    } else {
+                        let i = edges.length;
+                        while (i) {
+                            i -= 1;
+                            if (
+                                edges[i].sources.indexOf(subGraph.id) > -1 ||
+                                edges[i].targets.indexOf(subGraph.id) > -1
+                            ) {
+                                edges.splice(i, 1);
+                            }
+                        }
+                    }
+                    delete allSubgraphs[nodeKey];
+                }
             });
-            return tasksGraph;
+
+            Object.keys(allSubgraphs).forEach(nodeKey => {
+                // Return all the nodes that are root-level subgraphs
+                const subGraph = allSubgraphs[nodeKey];
+                const { containingSubgraph } = subGraph;
+                delete subGraph.containingSubgraph;
+                if (containingSubgraph) delete allSubgraphs[nodeKey];
+            });
+
+            return allSubgraphs;
+        };
+        const createELKTasksGraphs = (allSubgraphs: Record<string, any>, edges: any[]): ElkNode => {
+            return {
+                id: 'tasksGraph',
+                layoutOptions: {
+                    'elk.algorithm': 'layered',
+                    'elk.spacing.nodeNode': '30f', // Vertical spacing between nodes in each layer
+                    'layered.spacing.nodeNodeBetweenLayers': '50f', // Horizontal spacing between layers
+                    hierarchyHandling: 'INCLUDE_CHILDREN' // To ensure inner nodes can have proper edges to nodes with different parents
+                },
+                children: Object.values(allSubgraphs),
+                edges
+            };
         };
         const runGraphCreation = () => {
             const params = { ...req.query };
@@ -421,7 +449,7 @@ export default r => {
 
             helper.Manager.doGet(tasksGraphsFetchUrl, { params, headers })
                 .then(async data => {
-                    const { items } = data;
+                    const { items } = data as unknown as PaginatedResponse<{ id: string }>;
 
                     function send404() {
                         const message = `No tasks graph for execution id=${params.execution_id}.`;
@@ -434,12 +462,10 @@ export default r => {
                         return;
                     }
 
-                    const operationsPromises = _.map(items, graph =>
-                        // eslint-disable-next-line camelcase
-                        helper.Manager.doGet(operationsFetchUrl, { params: { graph_id: graph.id }, headers })
-                    );
-
-                    const [{ items: operationsList }] = await Promise.all(operationsPromises);
+                    const { items: operationsList } = (await helper.Manager.doGet(operationsFetchUrl, {
+                        params: { graph_id: items[0].id },
+                        headers
+                    })) as unknown as PaginatedResponse<Operation>;
 
                     // Constructing SubGraphs
                     let allSubgraphs = constructSubgraphs(operationsList);
@@ -464,7 +490,7 @@ export default r => {
 
                     res.send(elkGraph);
                 })
-                .catch(error => {
+                .catch((error: any) => {
                     logger.error(error);
                     next(error);
                 });

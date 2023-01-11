@@ -1,12 +1,36 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox, Widget } from 'app/utils/StageAPI';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import type { ExecutionsWidgetConfiguration } from 'widgets/executions/src/widget';
+import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
+import type { MenuItemProps } from 'semantic-ui-react';
 import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
 const MAX_TABLE_GRAPH_HEIGHT = 380;
 
-export default class ExecutionsTable extends React.Component {
+interface ExecutionsTableProps {
+    data: {
+        blueprintId: boolean;
+        deploymentId: boolean;
+        items: (Execution & { isSelected: boolean })[];
+        total: number;
+    };
+    toolbox: Toolbox;
+    widget: Widget<ExecutionsWidgetConfiguration>;
+}
+
+interface ExecutionsTableState {
+    execution?: Execution;
+    errorModalOpen: boolean;
+    executionParametersModalOpen: boolean;
+    deploymentUpdateModalOpen: boolean;
+    hoveredExecution?: string;
+    deploymentUpdateId: '';
+    error: null;
+}
+
+export default class ExecutionsTable extends React.Component<ExecutionsTableProps, ExecutionsTableState> {
     static MenuAction = {
         SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
         SHOW_UPDATE_DETAILS: 'update_details',
@@ -17,15 +41,13 @@ export default class ExecutionsTable extends React.Component {
         KILL_CANCEL_EXECUTION: Stage.Utils.Execution.KILL_CANCEL_ACTION
     };
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props: ExecutionsTableProps) {
+        super(props);
 
         this.state = {
-            execution: null,
             errorModalOpen: false,
             executionParametersModalOpen: false,
             deploymentUpdateModalOpen: false,
-            hoveredExecution: null,
             deploymentUpdateId: '',
             error: null
         };
@@ -36,7 +58,7 @@ export default class ExecutionsTable extends React.Component {
         toolbox.getEventBus().on('executions:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: ExecutionsTableProps, nextState: ExecutionsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget.configuration, nextProps.widget.configuration) ||
@@ -50,41 +72,47 @@ export default class ExecutionsTable extends React.Component {
         toolbox.getEventBus().off('executions:refresh', this.refreshData);
     }
 
-    setHoveredExecution(idToCheck) {
+    setHoveredExecution(idToCheck?: string) {
         const { hoveredExecution } = this.state;
         if (hoveredExecution !== idToCheck) {
             this.setState({ hoveredExecution: idToCheck });
         }
     }
 
-    actionClick = (execution, proxy, { name }) => {
-        const { MenuAction } = ExecutionsTable;
+    getActionMenuItemClickHandler(execution: Execution) {
+        return (): MenuItemProps['onClick'] =>
+            (_proxy, { name }) => {
+                const { MenuAction } = ExecutionsTable;
 
-        switch (name) {
-            case MenuAction.SHOW_EXECUTION_PARAMETERS:
-                this.setState({ execution, executionParametersModalOpen: true, idPopupOpen: false });
-                break;
+                switch (name) {
+                    case MenuAction.SHOW_EXECUTION_PARAMETERS:
+                        this.setState({ execution, executionParametersModalOpen: true });
+                        break;
 
-            case MenuAction.SHOW_UPDATE_DETAILS:
-                this.setState({ deploymentUpdateId: execution.parameters.update_id, deploymentUpdateModalOpen: true });
-                break;
+                    case MenuAction.SHOW_UPDATE_DETAILS:
+                        this.setState({
+                            deploymentUpdateId: execution.parameters?.update_id,
+                            deploymentUpdateModalOpen: true
+                        });
+                        break;
 
-            case MenuAction.SHOW_ERROR_DETAILS:
-                this.setState({ execution, errorModalOpen: true, idPopupOpen: false });
-                break;
+                    case MenuAction.SHOW_ERROR_DETAILS:
+                        this.setState({ execution, errorModalOpen: true });
+                        break;
 
-            case MenuAction.RESUME_EXECUTION:
-            case MenuAction.CANCEL_EXECUTION:
-            case MenuAction.FORCE_CANCEL_EXECUTION:
-            case MenuAction.KILL_CANCEL_EXECUTION:
-                this.actOnExecution(execution, name);
-                break;
+                    case MenuAction.RESUME_EXECUTION:
+                    case MenuAction.CANCEL_EXECUTION:
+                    case MenuAction.FORCE_CANCEL_EXECUTION:
+                    case MenuAction.KILL_CANCEL_EXECUTION:
+                        this.actOnExecution(execution, name);
+                        break;
 
-            default:
-        }
-    };
+                    default:
+                }
+            };
+    }
 
-    fetchGridData = fetchParams => {
+    fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -94,7 +122,7 @@ export default class ExecutionsTable extends React.Component {
         toolbox.refresh();
     }
 
-    selectExecution(item) {
+    selectExecution(item: Execution) {
         const { toolbox } = this.props;
 
         const context = toolbox.getContext();
@@ -110,16 +138,23 @@ export default class ExecutionsTable extends React.Component {
         toolbox.getEventBus().trigger('filter:refresh');
     }
 
-    unsetHoveredExecution(idToCheck) {
+    unsetHoveredExecution(idToCheck: string) {
         const { hoveredExecution } = this.state;
         if (hoveredExecution === idToCheck) {
-            this.setState({ hoveredExecution: null });
+            this.setState({ hoveredExecution: undefined });
         }
     }
 
-    actOnExecution(execution, action) {
+    actOnExecution(
+        execution: Execution,
+        action:
+            | typeof ExecutionsTable.MenuAction.RESUME_EXECUTION
+            | typeof ExecutionsTable.MenuAction.CANCEL_EXECUTION
+            | typeof ExecutionsTable.MenuAction.FORCE_CANCEL_EXECUTION
+            | typeof ExecutionsTable.MenuAction.KILL_CANCEL_EXECUTION
+    ) {
         const { toolbox } = this.props;
-        const actions = new Stage.Common.Executions.Actions(toolbox);
+        const actions = new Stage.Common.Executions.Actions(toolbox.getManager());
         actions
             .doAct(execution, action)
             .then(() => {
@@ -165,7 +200,7 @@ export default class ExecutionsTable extends React.Component {
         const { MenuAction } = ExecutionsTable;
 
         const { fieldsToShow } = widget.configuration;
-        const execution = stateExecution || { parameters: {} };
+        const execution: Pick<Execution, 'parameters' | 'error'> = stateExecution || { parameters: {} };
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
@@ -191,7 +226,7 @@ export default class ExecutionsTable extends React.Component {
                         label="Deployment"
                         name="deployment_display_name"
                         width="150%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deployment_display_name}
+                        show={fieldsToShow.indexOf('Deployment') >= 0}
                     />
                     <DataTable.Column
                         label="Deployment ID"
@@ -242,6 +277,7 @@ export default class ExecutionsTable extends React.Component {
                     />
 
                     {data.items.map(item => {
+                        const actionMenuItemClickHandler = this.getActionMenuItemClickHandler(item);
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.isSelected}>
                                 <DataTable.Row
@@ -249,9 +285,7 @@ export default class ExecutionsTable extends React.Component {
                                     selected={item.isSelected}
                                     onClick={() => this.selectExecution(item)}
                                     onMouseOver={() => this.setHoveredExecution(item.id)}
-                                    onFocus={() => this.setHoveredExecution(item.id)}
                                     onMouseOut={() => this.unsetHoveredExecution(item.id)}
-                                    onBlur={() => this.unsetHoveredExecution(item.id)}
                                 >
                                     <DataTable.Data>
                                         <IdPopup id={item.id} selected={hoveredExecution === item.id} />
@@ -289,14 +323,14 @@ export default class ExecutionsTable extends React.Component {
                                                     content="Show Execution Parameters"
                                                     icon="options"
                                                     name={MenuAction.SHOW_EXECUTION_PARAMETERS}
-                                                    onClick={_.wrap(item, this.actionClick)}
+                                                    onClick={actionMenuItemClickHandler}
                                                 />
                                                 {Utils.Execution.isUpdateExecution(item) && (
                                                     <Menu.Item
                                                         content="Show Update Details"
                                                         icon="magnify"
                                                         name={MenuAction.SHOW_UPDATE_DETAILS}
-                                                        onClick={_.wrap(item, this.actionClick)}
+                                                        onClick={actionMenuItemClickHandler}
                                                     />
                                                 )}
                                                 {Utils.Execution.isFailedExecution(item) && (
@@ -304,7 +338,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Show Error Details"
                                                         icon={<Icon name="exclamation circle" color="red" />}
                                                         name={MenuAction.SHOW_ERROR_DETAILS}
-                                                        onClick={_.wrap(item, this.actionClick)}
+                                                        onClick={actionMenuItemClickHandler}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isCancelledExecution(item) ||
@@ -313,7 +347,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Resume"
                                                         icon={<Icon name="play" color="green" />}
                                                         name={MenuAction.RESUME_EXECUTION}
-                                                        onClick={_.wrap(item, this.actionClick)}
+                                                        onClick={actionMenuItemClickHandler}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isActiveExecution(item) ||
@@ -322,7 +356,7 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Cancel"
                                                         icon="cancel"
                                                         name={MenuAction.CANCEL_EXECUTION}
-                                                        onClick={_.wrap(item, this.actionClick)}
+                                                        onClick={actionMenuItemClickHandler}
                                                     />
                                                 )}
                                                 {(Utils.Execution.isActiveExecution(item) ||
@@ -331,14 +365,14 @@ export default class ExecutionsTable extends React.Component {
                                                         content="Force Cancel"
                                                         icon={<Icon name="cancel" color="red" />}
                                                         name={MenuAction.FORCE_CANCEL_EXECUTION}
-                                                        onClick={_.wrap(item, this.actionClick)}
+                                                        onClick={actionMenuItemClickHandler}
                                                     />
                                                 )}
                                                 <Menu.Item
                                                     content="Kill Cancel"
                                                     icon={<Icon name="stop" color="red" />}
                                                     name={MenuAction.KILL_CANCEL_EXECUTION}
-                                                    onClick={_.wrap(item, this.actionClick)}
+                                                    onClick={actionMenuItemClickHandler}
                                                 />
                                             </Menu>
                                         </PopupMenu>
@@ -358,7 +392,7 @@ export default class ExecutionsTable extends React.Component {
 
                 <Modal
                     open={executionParametersModalOpen}
-                    onClose={() => this.setState({ execution: null, executionParametersModalOpen: false })}
+                    onClose={() => this.setState({ execution: undefined, executionParametersModalOpen: false })}
                 >
                     <Modal.Header>Execution parameters</Modal.Header>
                     <Modal.Content scrolling>
@@ -378,7 +412,7 @@ export default class ExecutionsTable extends React.Component {
                                         <Table.Row key={parameterName}>
                                             <Table.Cell>{parameterName}</Table.Cell>
                                             <Table.Cell>
-                                                <ParameterValue value={execution.parameters[parameterName]} />
+                                                <ParameterValue value={execution.parameters?.[parameterName]} />
                                             </Table.Cell>
                                         </Table.Row>
                                     ))}
@@ -407,12 +441,19 @@ export default class ExecutionsTable extends React.Component {
                     open={deploymentUpdateModalOpen}
                     deploymentUpdateId={deploymentUpdateId}
                     onClose={() =>
-                        this.setState({ execution: null, deploymentUpdateId: '', deploymentUpdateModalOpen: false })
+                        this.setState({
+                            execution: undefined,
+                            deploymentUpdateId: '',
+                            deploymentUpdateModalOpen: false
+                        })
                     }
                     toolbox={toolbox}
                 />
 
-                <Modal open={errorModalOpen} onClose={() => this.setState({ execution: null, errorModalOpen: false })}>
+                <Modal
+                    open={errorModalOpen}
+                    onClose={() => this.setState({ execution: undefined, errorModalOpen: false })}
+                >
                     <Modal.Header>Error details</Modal.Header>
                     <Modal.Content scrolling>
                         <HighlightText language="python">{execution.error}</HighlightText>
@@ -432,26 +473,3 @@ export default class ExecutionsTable extends React.Component {
         );
     }
 }
-
-ExecutionsTable.propTypes = {
-    data: PropTypes.shape({
-        blueprintId: PropTypes.bool,
-        deploymentId: PropTypes.bool,
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                blueprint_id: PropTypes.string,
-                created_at: PropTypes.string,
-                created_by: PropTypes.string,
-                deployment_id: PropTypes.string,
-                ended_at: PropTypes.string,
-                id: PropTypes.string,
-                isSelected: PropTypes.bool,
-                scheduled_for: PropTypes.string,
-                workflow_id: PropTypes.string
-            })
-        ),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

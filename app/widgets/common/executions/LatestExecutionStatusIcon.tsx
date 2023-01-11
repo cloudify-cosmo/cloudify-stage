@@ -1,6 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { Toolbox } from 'app/utils/StageAPI';
 import {
     Button,
     CancelButton,
@@ -12,16 +12,31 @@ import {
     Table
 } from '../../../components/basic';
 import UpdateDetailsModal from '../deployments/UpdateDetailsModal';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import ExecutionActions from './ExecutionActions';
 import StageUtils from '../../../utils/stageUtils';
 import { ExecutionStatus } from '../../../components/shared';
+import type { Execution } from '../../../utils/shared/ExecutionUtils';
 import ExecutionUtils from '../../../utils/shared/ExecutionUtils';
 import TimeUtils from '../../../utils/shared/TimeUtils';
 
 const t = StageUtils.getT('widgets.common.executions');
 
-export default class LatestExecutionStatusIcon extends React.Component {
+type ExecutionAction =
+    | typeof ExecutionUtils.FORCE_CANCEL_ACTION
+    | typeof ExecutionUtils.CANCEL_ACTION
+    | typeof ExecutionUtils.FORCE_RESUME_ACTION
+    | typeof ExecutionUtils.RESUME_ACTION
+    | typeof ExecutionUtils.KILL_CANCEL_ACTION;
+
+export interface LatestExecutionStatusIconProps {
+    execution?: Execution;
+    onActOnExecution?: (execution: Execution, action: ExecutionAction, errorMessage: any) => void;
+    showLabel?: boolean;
+    labelAttached?: boolean;
+    toolbox: Toolbox;
+}
+
+export default class LatestExecutionStatusIcon extends React.Component<LatestExecutionStatusIconProps> {
     constructor(props, context) {
         super(props, context);
         this.state = { errorModalOpen: false, updateModalOpen: false, open: false };
@@ -247,24 +262,6 @@ export default class LatestExecutionStatusIcon extends React.Component {
         ) : null;
     }
 }
-
-LatestExecutionStatusIcon.propTypes = {
-    toolbox: ToolboxPropType.isRequired,
-    execution: PropTypes.shape({
-        created_at: PropTypes.string,
-        deployment_id: PropTypes.string,
-        ended_at: PropTypes.string,
-        error: PropTypes.string,
-        id: PropTypes.string,
-        scheduled_for: PropTypes.string,
-        status_display: PropTypes.string,
-        workflow_id: '',
-        status: ''
-    }),
-    onActOnExecution: PropTypes.func,
-    showLabel: PropTypes.bool,
-    labelAttached: PropTypes.bool
-};
 
 LatestExecutionStatusIcon.defaultProps = {
     execution: { workflow_id: '', status: '' },

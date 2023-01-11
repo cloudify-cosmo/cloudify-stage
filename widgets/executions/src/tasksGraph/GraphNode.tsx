@@ -1,8 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * @property {Any} [graphNode] - A Graph Node to render
- */
-import GraphNodePropType from './props/GraphNodePropType';
+import type { ElkNode } from 'elkjs';
+import type { Toolbox } from 'app/utils/StageAPI';
 import states from './States';
 
 const textHeight = 18;
@@ -15,15 +12,15 @@ const colors = {
     failed: 'rgb(249, 25, 25)'
 };
 
-const GraphNode = ({ graphNode, toolbox }) => {
+const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbox }) => {
     const { Icon } = Stage.Basic;
-    const labels = graphNode.labels[0];
+    const labels = graphNode.labels![0];
 
     let currentTextPlacementY = 0;
 
     const title = labels.displayTitle || [labels.text];
     const { displayText, state } = labels;
-    const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state));
+    const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state)) as keyof typeof states;
     const stateColor = colors[mappedState];
 
     const headerHeight = _.size(title) * textHeight + textHeight / 2;
@@ -42,8 +39,8 @@ const GraphNode = ({ graphNode, toolbox }) => {
                     />
                     <rect
                         transform={`translate(0.5, ${headerHeight})`}
-                        height={graphNode.height - headerHeight}
-                        width={graphNode.width - 1}
+                        height={graphNode.height! - headerHeight}
+                        width={graphNode.width! - 1}
                         strokeWidth={0}
                         style={{ fill: stateColor }}
                         opacity={0.5}
@@ -53,7 +50,7 @@ const GraphNode = ({ graphNode, toolbox }) => {
             <rect
                 transform="translate(0.5, 0.5)"
                 height={headerHeight}
-                width={graphNode.width - 1}
+                width={graphNode.width! - 1}
                 strokeWidth={0}
                 style={{ fill: !_.isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
             />
@@ -75,11 +72,11 @@ const GraphNode = ({ graphNode, toolbox }) => {
                     </text>
                 ))}
             &gt;
-            {displayText && nodeInstanceId && operation && (state !== 'Pending' || labels.retry > 0) && (
+            {displayText && nodeInstanceId && operation && (state !== 'Pending' || (labels.retry && labels.retry > 0)) && (
                 <foreignObject
                     width={textHeight}
                     height={textHeight * 2}
-                    x={graphNode.width - textHeight - 3}
+                    x={graphNode.width! - textHeight - 3}
                     y={headerHeight + 3}
                 >
                     <Icon
@@ -117,11 +114,6 @@ const GraphNode = ({ graphNode, toolbox }) => {
                 ))}
         </g>
     );
-};
-
-GraphNode.propTypes = {
-    graphNode: GraphNodePropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 export default GraphNode;

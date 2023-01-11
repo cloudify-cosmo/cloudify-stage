@@ -1,4 +1,5 @@
 import { castArray, isEmpty } from 'lodash';
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
@@ -13,8 +14,8 @@ export interface ExecutionsWidgetParams {
     /* eslint-enable camelcase */
 }
 
-export interface ExecutionsWidgetConfiguration {
-    fieldsToShow?: string;
+export interface ExecutionsWidgetConfiguration extends DataTableConfiguration {
+    fieldsToShow: string;
     showSystemExecutions?: boolean;
     singleExecutionView?: boolean;
 }
@@ -142,7 +143,6 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
             deploymentId: !!params.deployment_id
         };
 
-        // @ts-ignore ExecutionsTable is not migrated yet
         return <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });

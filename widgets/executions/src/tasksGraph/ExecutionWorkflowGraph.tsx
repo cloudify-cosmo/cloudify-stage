@@ -1,9 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
+import type { OptionalProps, Value } from 'react-svg-pan-zoom';
 import { ReactSVGPanZoom } from 'react-svg-pan-zoom';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { LatestExecutionStatusIconProps } from 'app/widgets/common/executions/LatestExecutionStatusIcon';
+import type { ElkNode } from 'elkjs';
+import type { CancelablePromise } from 'app/utils/types';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
-import type { CancelablePromise } from '../../../../app/utils/types';
 
 const INACTIVE_EXECUTION_POLLING_INTERVAL = 5000;
 const ACTIVE_EXECUTION_POLLING_INTERVAL = 2500;
@@ -24,22 +28,32 @@ const INITIAL_POSITION = {
     e: 0,
     f: GRAPH_MARGIN,
     version: 3
-};
+} as unknown as Value;
 
-export default function ExecutionWorkflowGraph({ containerHeight, selectedExecution, showStatus, toolbox }) {
+export default function ExecutionWorkflowGraph({
+    containerHeight,
+    selectedExecution,
+    showStatus,
+    toolbox
+}: {
+    containerHeight: number;
+    selectedExecution: Execution;
+    showStatus?: boolean;
+    toolbox: Toolbox;
+}) {
     const { useState, useRef, useEffect, useCallback } = React;
     const { useBoolean, useResettableState, useWidthObserver } = Stage.Hooks;
 
-    const [graphData, setGraphData, clearGraphData] = useResettableState(null);
+    const [graphData, setGraphData, clearGraphData] = useResettableState<ElkNode | null>(null);
     const [error, setError, clearError] = useResettableState('');
     const [isMaximized, maximize, minimize] = useBoolean();
     const [position, setPosition] = useState(INITIAL_POSITION);
     const [modalPosition, setModalPosition] = useState(INITIAL_POSITION);
-    const [autoFocus, setAutoFocus] = useState();
+    const [autoFocus, setAutoFocus] = useState<boolean>();
 
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-    const cancelablePromise = useRef<CancelablePromise | null>(null);
-    const modal = useRef();
+    const cancelablePromise = useRef<CancelablePromise<ElkNode> | null>(null);
+    const modal = useRef<HTMLDivElement | null>(null);
 
     const [wrapperRef, getWrapperWidth] = useWidthObserver();
 
@@ -55,7 +69,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         const params = {
             execution_id: selectedExecution.id
         };
-        return toolbox.getWidgetBackend().doGet('get_tasks_graph', { params });
+        return toolbox.getWidgetBackend().doGet<ElkNode>('get_tasks_graph', { params });
     }
 
     function startPolling() {
@@ -115,10 +129,12 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }
 
     function fitToView() {
-        const { width: graphWidth, height: graphHeight } = graphData;
+        const { width: graphWidth, height: graphHeight } = graphData!;
         const width = isMaximized ? getModalWidth() : getWrapperWidth();
-        const height = isMaximized ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight + 2 * GRAPH_MARGIN) : containerHeight;
-        const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth, (height - 2 * GRAPH_MARGIN) / graphHeight);
+        const height = isMaximized
+            ? Math.max(MIN_MODAL_GRAPH_HEIGHT, graphHeight! + 2 * GRAPH_MARGIN)
+            : containerHeight;
+        const zoom = Math.min((width - 2 * GRAPH_MARGIN) / graphWidth!, (height - 2 * GRAPH_MARGIN) / graphHeight!);
 
         scrollTo(GRAPH_MARGIN, GRAPH_MARGIN, zoom, false);
     }
@@ -128,11 +144,13 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
     }, [!!graphData]);
 
     function scrollToInProgress() {
-        const focusNode = _.find(graphData.children, containerNode =>
-            _.find(containerNode.children, subGraphNode => _.includes(states.inProgress, subGraphNode.labels[0].state))
+        const focusNode = graphData?.children?.find(containerNode =>
+            _.find(containerNode.children, subGraphNode =>
+                _.includes(states.inProgress, subGraphNode.labels?.[0].state)
+            )
         );
         if (focusNode) {
-            scrollTo(-focusNode.x + GRAPH_MARGIN, -focusNode.y + GRAPH_MARGIN);
+            scrollTo(-focusNode.x! + GRAPH_MARGIN, -focusNode.y! + GRAPH_MARGIN);
         }
     }
 
@@ -142,9 +160,19 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         }
     }, [graphData, autoFocus]);
 
-    const actOnExecution = useCallback((execution, action, executionError) => setError(executionError), []);
+    const actOnExecution = useCallback<NonNullable<LatestExecutionStatusIconProps['onActOnExecution']>>(
+        (_execution, _action, executionError) => setError(executionError),
+        []
+    );
 
-    function renderGraph(width, height, positionValue, positionSetter, openInModalIcon = true, minimap) {
+    function renderGraph(
+        width: number,
+        height: number,
+        positionValue: Value,
+        positionSetter: (value: Value) => void,
+        openInModalIcon = true,
+        minimap = false
+    ) {
         const { Icon } = Stage.Basic;
         const { LatestExecutionStatusIcon } = Stage.Common.Executions;
         return (
@@ -164,7 +192,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                     <Icon
                         name="play"
                         link
-                        color={autoFocus ? 'green' : null}
+                        color={autoFocus ? 'green' : undefined}
                         onClick={() => setAutoFocus(!autoFocus)}
                         title="Focus on tasks in progress"
                     />
@@ -194,7 +222,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                     height={height}
                     background="#fff"
                     tool="pan"
-                    miniatureProps={minimap ? undefined : { position: 'none' }}
+                    miniatureProps={minimap ? undefined : ({ position: 'none' } as OptionalProps['miniatureProps'])}
                     toolbarProps={{ position: 'none' }}
                     value={{ ...positionValue, viewerWidth: width, viewerHeight: height }}
                     onChangeValue={positionSetter}
@@ -202,9 +230,9 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                     onPan={() => setAutoFocus(false)}
                     onChangeTool={_.noop}
                 >
-                    <svg width={graphData.width} height={graphData.height}>
-                        <GraphNodes graphNodes={graphData.children} toolbox={toolbox} />
-                        <GraphEdges graphEdges={graphData.edges} />
+                    <svg width={graphData?.width} height={graphData?.height}>
+                        <GraphNodes graphNodes={graphData?.children ?? []} toolbox={toolbox} />
+                        <GraphEdges graphEdges={graphData?.edges ?? []} />
                     </svg>
                 </ReactSVGPanZoom>
             </>
@@ -235,7 +263,7 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
                         <div ref={modal}>
                             {renderGraph(
                                 getModalWidth(),
-                                Math.max(MIN_MODAL_GRAPH_HEIGHT, graphData.height + 2 * GRAPH_MARGIN),
+                                Math.max(MIN_MODAL_GRAPH_HEIGHT, graphData.height! + 2 * GRAPH_MARGIN),
                                 modalPosition,
                                 setModalPosition,
                                 false,
@@ -254,14 +282,3 @@ export default function ExecutionWorkflowGraph({ containerHeight, selectedExecut
         </div>
     );
 }
-
-ExecutionWorkflowGraph.propTypes = {
-    selectedExecution: PropTypes.shape({ id: PropTypes.string, workflow_id: PropTypes.string }).isRequired,
-    containerHeight: PropTypes.number.isRequired,
-    showStatus: PropTypes.bool,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-ExecutionWorkflowGraph.defaultProps = {
-    showStatus: false
-};
