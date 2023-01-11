@@ -67,11 +67,12 @@ describe('Secret store management widget', () => {
             cy.clickButton('Create');
             cy.contains('Please select a secret provider').should('be.visible');
             cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
-            cy.get('.selection').click();
-            cy.contains('Secret_Provider_1').click();
+            cy.openDropdown('secretProvider').within(() => {
+                cy.get(`[option-value=${secretProviderName}]`).click();
+            });
             cy.get('input[name=secretKey]').type(secretName);
-            cy.get('input[name=secretProviderName]').type(secretProviderName);
             cy.get('input[name=secretProviderPath]').type(secretName);
+            cy.clickButton('Create');
         });
 
         cy.get('.secretsWidget').within(() => {

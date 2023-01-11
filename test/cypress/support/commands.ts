@@ -85,6 +85,8 @@ declare global {
             containsNumber: (num: number) => Cypress.Chainable;
 
             clickButton: (buttonLabel: string) => Cypress.Chainable;
+
+            openDropdown: (dropdownLabel: string) => Cypress.Chainable;
         }
     }
 }
@@ -504,7 +506,9 @@ const commands = {
     openTab: (tabName: string) => cy.get('.tabular.menu').contains(tabName).click(),
 
     getWidget: (widgetId: string) => cy.get(`.${widgetId}Widget`),
-    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click()
+    clickButton: (buttonLabel: string) => cy.contains('button', buttonLabel).click(),
+
+    openDropdown: (dropdownName: string) => cy.get(`div[name="${dropdownName}"]`).click()
 };
 
 addCommands(commands);
@@ -516,6 +520,13 @@ Cypress.Commands.add('containsNumber', { prevSubject: 'optional' }, (subject: un
 );
 Cypress.Commands.add('clickButton', { prevSubject: 'optional' }, (subject: unknown | undefined, buttonLabel: string) =>
     (subject ? cy.wrap(subject) : cy).contains('button', buttonLabel).click()
+);
+
+Cypress.Commands.add(
+    'openDropdown',
+    { prevSubject: 'optional' },
+    (subject: unknown | undefined, dropdownName: string) =>
+        (subject ? cy.wrap(subject) : cy).get(`div[name="${dropdownName}"]`).click()
 );
 
 function setContext(field: string, value: string) {
