@@ -1,4 +1,3 @@
-import { cloudSetupSchemaUrl, gettingStartedSchemaUrl } from 'app/components/GettingStartedModal/useFetchSchemas';
 import Consts from 'app/utils/consts';
 import PluginUtils from 'app/utils/shared/PluginUtils';
 import { escapeRegExp, find } from 'lodash';
@@ -165,14 +164,6 @@ describe('Getting started modal', () => {
         function waitUntilAppReadyAfterActivation() {
             cy.wait('@updateUserApps');
             cy.url().should('contain', 'console/');
-
-            cy.intercept('GET', gettingStartedSchemaUrl).as('gettingStartedSchema');
-
-            cy.wait('@gettingStartedSchema');
-
-            cy.intercept('GET', cloudSetupSchemaUrl).as('cloudSetupSchema');
-
-            cy.wait('@cloudSetupSchema');
         }
 
         it('should redirect to the dashboard page upon canceling the modal process', () => {

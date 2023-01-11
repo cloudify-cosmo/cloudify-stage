@@ -27,11 +27,9 @@ describe('GettingStartedModal', () => {
         );
 
         cy.intercept('GET', gettingStartedSchemaUrl).as('gettingStartedSchema');
-
         cy.wait('@gettingStartedSchema');
 
         cy.intercept('GET', cloudSetupSchemaUrl).as('cloudSetupSchema');
-
         cy.wait('@cloudSetupSchema');
 
         cy.contains('Welcome to Cloudify');
