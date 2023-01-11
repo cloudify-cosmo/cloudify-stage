@@ -85,6 +85,10 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         if (errors.secretValue) {
             setErrors({ ...errors, secretValue: null });
         }
+        if (isEmpty(secretProviders)) {
+            setErrors({ ...errors, secretProviderCheckbox: translateCreateModal('errors.validation.noProviders') });
+            return;
+        }
         setInput({ enableSecretProvider: !enableSecretProvider });
     }
 
@@ -111,9 +115,6 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .finally(unsetFileLoading);
     };
 
-    const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } = inputs;
-    const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
-
     function fetchSecretProviders() {
         const secretActions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         secretActions.doGetAllSecretProviders().then(data => {
@@ -124,6 +125,10 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         text: item.name,
         value: item.name
     }));
+
+    const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } = inputs;
+
+    const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
 
     return (
         <Modal trigger={createButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
@@ -142,7 +147,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                             onChange={setInput}
                         />
                     </Form.Field>
-                    <Form.Field>
+                    <Form.Field error={errors.secretProviderCheckbox}>
                         <Form.Checkbox
                             label={translateCreateModal('inputs.enableSecretProvider.label')}
                             name="enableSecretProvider"
