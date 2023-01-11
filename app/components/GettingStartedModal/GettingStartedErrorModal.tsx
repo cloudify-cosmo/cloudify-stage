@@ -5,16 +5,16 @@ import { Button, Modal } from '../basic';
 const t = StageUtils.getT('gettingStartedModal');
 
 interface GettingStartedErrorModalProps {
-    clearError: () => void;
+    onClose: () => void;
 }
 
-const GettingStartedErrorModal = ({ clearError }: GettingStartedErrorModalProps) => {
+const GettingStartedErrorModal = ({ onClose }: GettingStartedErrorModalProps) => {
     return (
         <Modal open>
             <Modal.Header>{t('errorModal.title')}</Modal.Header>
             <Modal.Content>{t('errorModal.description')}</Modal.Content>
             <Modal.Actions>
-                <Button content="Close" onClick={clearError} />
+                <Button content="Close" onClick={onClose} />
             </Modal.Actions>
         </Modal>
     );

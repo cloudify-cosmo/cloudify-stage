@@ -268,7 +268,7 @@ const GettingStartedModal = () => {
     };
 
     if (error) {
-        return <GettingStartedErrorModal clearError={clearError} />;
+        return <GettingStartedErrorModal onClose={clearError} />;
     }
 
     return (
