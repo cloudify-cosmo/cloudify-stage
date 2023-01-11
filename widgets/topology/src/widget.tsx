@@ -1,15 +1,16 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { castArray } from 'lodash';
 import DataFetcher from './DataFetcher';
 import { createBaseTopology } from './DataProcessor';
 import Topology from './Topology';
-import './widget.css';
+import type { StageTopologyData, TopologyWidget } from './widget.types';
 
-Stage.defineWidget({
+const translate = Stage.Utils.getT('widgets.topology');
+const translateConfiguration = Stage.Utils.composeT(translate, 'configuration');
+
+Stage.defineWidget<TopologyWidget.Params, TopologyWidget.Data, TopologyWidget.Configuration>({
     id: 'topology',
-    name: 'Topology',
-    description: 'Shows topology (blueprint or deployment)',
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 8,
     initialHeight: 16,
     isReact: true,
@@ -21,24 +22,39 @@ Stage.defineWidget({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'enableNodeClick',
-            name: 'Enable node click',
+            name: translateConfiguration('enableNodeClick'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'enableGroupClick',
-            name: 'Enable group click',
+            name: translateConfiguration('enableGroupClick'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
-        { id: 'enableZoom', name: 'Enable zoom', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
-        { id: 'enableDrag', name: 'Enable drag', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
-        { id: 'showToolbar', name: 'Show toolbar', default: true, type: Stage.Basic.GenericField.BOOLEAN_TYPE }
+        {
+            id: 'enableZoom',
+            name: translateConfiguration('enableZoom'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'enableDrag',
+            name: translateConfiguration('enableDrag'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        },
+        {
+            id: 'showToolbar',
+            name: translateConfiguration('showToolbar'),
+            default: true,
+            type: Stage.Basic.GenericField.BOOLEAN_TYPE
+        }
     ],
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         // TODO(RD-2130): Use common utility function to get only the first ID
-        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0] ?? undefined;
         const blueprintId = castArray(toolbox.getContext().getValue('blueprintId'))[0];
 
         return {
@@ -47,16 +63,18 @@ Stage.defineWidget({
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const { blueprintId, deploymentId } = params;
 
-        function fetchComponentsDeploymentsData(rootDeploymentData) {
+        function fetchComponentsDeploymentsData(
+            rootDeploymentData?: StageTopologyData
+        ): Promise<Record<string, StageTopologyData>> {
             return Promise.all(
-                _(rootDeploymentData.nodes)
+                _(rootDeploymentData?.nodes)
                     .map('templateData.deploymentId')
                     .compact()
                     .map(depId =>
-                        DataFetcher.fetch(toolbox, null, depId, false).then(componentDeploymentData => {
+                        DataFetcher.fetch(toolbox, depId).then(componentDeploymentData => {
                             const processedNestedDeploymentData = createBaseTopology(componentDeploymentData);
                             return fetchComponentsDeploymentsData(processedNestedDeploymentData).then(
                                 nestedDeploymentData => ({
@@ -66,17 +84,18 @@ Stage.defineWidget({
                             );
                         })
                     )
+                    .value()
             ).then(componentDeploymentsData => Object.assign({}, ...componentDeploymentsData));
         }
 
-        return DataFetcher.fetch(toolbox, blueprintId, deploymentId, true)
+        return DataFetcher.fetch(toolbox, deploymentId, blueprintId, true)
             .then(rawBlueprintData => {
                 const processedBlueprintData = createBaseTopology(rawBlueprintData);
-                const result = { processedBlueprintData, rawBlueprintData };
+                const result = { processedBlueprintData, rawBlueprintData, componentDeploymentsData: {} };
                 if (deploymentId) {
                     return fetchComponentsDeploymentsData(processedBlueprintData).then(componentDeploymentsData => ({
-                        componentDeploymentsData,
-                        ...result
+                        ...result,
+                        componentDeploymentsData
                     }));
                 }
                 return result;
@@ -84,14 +103,14 @@ Stage.defineWidget({
             .then(data => {
                 const plugins = _(data.componentDeploymentsData)
                     .flatMap('nodes')
-                    .concat(data.processedBlueprintData.nodes)
+                    .concat(data.processedBlueprintData?.nodes)
                     .flatMap('templateData.plugins')
                     .map(plugin => _.pick(plugin, 'package_name', 'package_version'))
                     .uniqWith(_.isEqual)
                     .filter(plugin => plugin.package_name && plugin.package_version)
                     .value();
 
-                if (_.isEmpty(plugins)) return data;
+                if (_.isEmpty(plugins)) return { ...data, icons: {} };
 
                 return toolbox
                     .getManager()
@@ -114,13 +133,13 @@ Stage.defineWidget({
                                             new Promise(resolve => {
                                                 if (blob.size) {
                                                     const reader = new FileReader();
-                                                    reader.addEventListener('error', () => resolve());
+                                                    reader.addEventListener('error', () => resolve(undefined));
                                                     reader.addEventListener('load', () => {
                                                         resolve({ [plugin.package_name]: reader.result });
                                                     });
                                                     reader.readAsDataURL(blob);
                                                 } else {
-                                                    resolve();
+                                                    resolve(undefined);
                                                 }
                                             })
                                     );
@@ -134,23 +153,12 @@ Stage.defineWidget({
             });
     },
 
-    render(widget, data, error, toolbox) {
-        const {
-            processedBlueprintData: blueprintDeploymentData,
-            componentDeploymentsData,
-            rawBlueprintData: {
-                data: { id },
-                layout
-            },
-            icons
-        } = _.isEmpty(data)
-            ? {
-                  processedBlueprintData: {},
-                  componentDeploymentsData: {},
-                  rawBlueprintData: { data: { id: '' }, layout: {} },
-                  icons: {}
-              }
-            : data;
+    render(widget, data, _error, toolbox) {
+        const blueprintDeploymentData = data?.processedBlueprintData;
+        const componentDeploymentsData = data?.componentDeploymentsData ?? {};
+        const id = data?.rawBlueprintData?.data?.id ?? '';
+        const layout = data?.rawBlueprintData?.layout ?? {};
+        const icons = data?.icons ?? {};
 
         // TODO(RD-2130): Use common utility function to get only the first ID
         const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
@@ -166,7 +174,7 @@ Stage.defineWidget({
         return (
             <Topology
                 blueprintId={blueprintId}
-                deploymentId={deploymentId}
+                deploymentId={deploymentId ?? undefined}
                 configuration={widget.configuration}
                 data={formattedData}
                 toolbox={toolbox}
