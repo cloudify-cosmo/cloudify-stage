@@ -1,6 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useResettableState } from '../../utils/hooks';
+import StageUtils from '../../utils/stageUtils';
 import type { GettingStartedSchema } from './model';
+
+export const gettingStartedSchemaUrl = StageUtils.Url.url(
+    `/external/content?url=${encodeURIComponent(
+        'https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json'
+    )}`
+);
+
+export const cloudSetupSchemaUrl = StageUtils.Url.url(
+    `/external/content?url=${encodeURIComponent(
+        'https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json'
+    )}`
+);
 
 function useFetchSchemas() {
     const [gettingStartedSchema, setGettingStartedSchema] = useState<GettingStartedSchema | null>(null);
@@ -9,12 +22,12 @@ function useFetchSchemas() {
 
     useEffect(() => {
         Promise.all([
-            fetch('https://repository.cloudifysource.org/cloudify/getting-started/6.4/gettingStarted.schema.json')
+            fetch(gettingStartedSchemaUrl)
                 .then(response => response.json())
                 .then(response => {
                     setGettingStartedSchema(response);
                 }),
-            fetch('https://repository.cloudifysource.org/cloudify/getting-started/6.4/cloudSetup.schema.json')
+            fetch(cloudSetupSchemaUrl)
                 .then(response => response.json())
                 .then(response => {
                     setCloudSetupSchema(response);
