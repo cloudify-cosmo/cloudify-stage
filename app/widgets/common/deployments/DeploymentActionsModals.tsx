@@ -1,10 +1,9 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import PropTypes from 'prop-types';
+import DeployBlueprintModal from '../deployModal/DeployBlueprintModal';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
-import ToolboxPropType from '../../../utils/props/Toolbox';
-import { actions } from './DeploymentActionsMenu';
+import { actions } from './DeploymentActionsMenu.consts';
 import RemoveDeploymentModal from './RemoveDeploymentModal';
 import SetSiteModal from './SetSiteModal';
 import UpdateDeploymentModal from './UpdateDeploymentModal';
@@ -27,6 +26,10 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     redirectToParentPageAfterDelete
 }) => {
     const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
+    const environmentToDeployOn = {
+        id: deploymentId,
+        displayName: deploymentName
+    };
 
     switch (activeAction) {
         case actions.manageLabels:
@@ -45,20 +48,19 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
                     redirectToParentPageAfterDelete={redirectToParentPageAfterDelete}
                 />
             );
+        case actions.deployOn:
+            return (
+                <DeployBlueprintModal
+                    i18nHeaderKey="widgets.deploymentActionButtons.modals.deployOn.header"
+                    environmentToDeployOn={environmentToDeployOn}
+                    {...commonProps}
+                />
+            );
         case actions.setSite:
             return <SetSiteModal {...commonProps} />;
         default:
             return null;
     }
-};
-
-DeploymentActionsModals.propTypes = {
-    activeAction: PropTypes.string.isRequired,
-    deploymentId: PropTypes.string.isRequired,
-    onHide: PropTypes.func.isRequired,
-    // NOTE: `as any` assertion since Toolbox from PropTypes and TS slightly differ
-    toolbox: ToolboxPropType.isRequired as any,
-    redirectToParentPageAfterDelete: PropTypes.bool.isRequired
 };
 
 export default DeploymentActionsModals;
