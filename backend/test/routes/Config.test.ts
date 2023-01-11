@@ -18,7 +18,7 @@ describe('/config endpoint', () => {
                         whiteLabel: userConfig.whiteLabel,
                         maps: userConfig.maps,
                         maintenancePollingInterval: appConfig.maintenancePollingInterval,
-                        singleManager: appConfig.singleManager,
+                        useLoginPage: userConfig.useLoginPage,
                         saml: _.omit(userConfig.saml, 'certPath')
                     },
                     manager: {
