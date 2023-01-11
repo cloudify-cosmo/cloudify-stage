@@ -23,8 +23,8 @@ export interface Config {
 export interface ClientConfig {
     app: {
         maintenancePollingInterval: AppConfig['maintenancePollingInterval'];
-        singleManager: AppConfig['singleManager'];
         whiteLabel: AppConfig['whiteLabel'];
+        useLoginPage: AppConfig['useLoginPage'];
         saml: Omit<AppConfig['saml'], 'certPath'>;
         maps: typeof userConfig['maps'];
     };
