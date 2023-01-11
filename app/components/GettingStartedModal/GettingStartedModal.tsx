@@ -10,7 +10,7 @@ import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
-import { Confirm, Form, Modal, Button } from '../basic';
+import { Confirm, Form, Modal } from '../basic';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
@@ -28,6 +28,7 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
+import GettingStartedErrorModal from './GettingStartedErrorModal';
 
 type Error = boolean | { content: string };
 
@@ -260,15 +261,7 @@ const GettingStartedModal = () => {
     };
 
     if (error) {
-        return (
-            <Modal open>
-                <Modal.Header>{t('errorModal.title')}</Modal.Header>
-                <Modal.Content>{t('errorModal.description')}</Modal.Content>
-                <Modal.Actions>
-                    <Button content="Close" onClick={clearError} />
-                </Modal.Actions>
-            </Modal>
-        );
+        return <GettingStartedErrorModal clearError={clearError} />;
     }
 
     return (
