@@ -36,9 +36,12 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
 
+    // get secret providers list on modal open
     useEffect(() => {
-        fetchSecretProviders();
-    }, secretProviders);
+        if (isOpen) {
+            fetchSecretProviders();
+        }
+    }, [isOpen]);
 
     function createSecret() {
         const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } =
@@ -68,11 +71,11 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretOptions = {};
+        const secretProviderOptions = enableSecretProvider ? { path: secretProviderPath } : {};
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
-            .doCreate(secretKey, secretValue, visibility, isHiddenValue, secretProvider, secretOptions)
+            .doCreate(secretKey, secretValue, visibility, isHiddenValue, secretProvider, secretProviderOptions)
             .then(() => {
                 doClose();
                 toolbox.refresh();
@@ -117,11 +120,14 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     function fetchSecretProviders() {
         const secretActions = new Stage.Common.Secrets.Actions(toolbox.getManager());
-        secretActions.doGetAllSecretProviders().then(data => {
-            return setSecretProviders(data.items);
-        });
+        secretActions
+            .doGetAllSecretProviders()
+            .then(data => {
+                return setSecretProviders(data.items);
+            })
+            .catch(setMessageAsError);
     }
-    const secretProviderOptions = secretProviders?.map((item: { name: string }) => ({
+    const secretProvidersArray = secretProviders?.map((item: { name: string }) => ({
         text: item.name,
         value: item.name
     }));
@@ -166,9 +172,9 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                                     name="secretProvider"
                                     placeholder={translateCreateModal('inputs.secretProvider.placeholder')}
                                     selection
-                                    options={secretProviderOptions}
+                                    options={secretProvidersArray}
                                     onChange={setInput}
-                                    value={secretProvider as unknown as string}
+                                    value={secretProvider}
                                 />
                             </Form.Field>
                             <Form.Field
@@ -190,7 +196,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                                 <MultilineInput
                                     name="secretValue"
                                     placeholder={translateCreateModal('inputs.secretValue.placeholder')}
-                                    value={secretValue as unknown as string}
+                                    value={secretValue}
                                     onChange={setInput}
                                 />
                             </Form.Field>
