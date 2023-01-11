@@ -68,7 +68,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretOptions = enableSecretProvider ? { path: secretProviderPath } : {};
+        const secretOptions = {};
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
@@ -154,9 +154,8 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                         <>
                             <Form.Field
                                 label={translateCreateModal('inputs.secretProvider.label')}
-                                error={errors.secretProviderName}
+                                error={errors.secretProvider}
                                 required
-                                className={errors.secretProvider ? 'error' : ''}
                             >
                                 <Form.Dropdown
                                     name="secretProvider"
