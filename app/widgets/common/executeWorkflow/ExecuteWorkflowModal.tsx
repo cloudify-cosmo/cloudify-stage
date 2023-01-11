@@ -90,7 +90,7 @@ const ExecuteWorkflowModal: FunctionComponent<ExecuteWorkflowModalProps> = ({
         if (typeof workflow === 'string') {
             setLoading();
             actions
-                .doGetWorkflows(deploymentId)
+                .doGetWorkflowsAndLabels(deploymentId)
                 .then(({ workflows }) => {
                     const selectedWorkflow = _.find(workflows, { name: workflowName });
 
