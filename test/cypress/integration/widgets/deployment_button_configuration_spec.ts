@@ -16,12 +16,8 @@ describe('Create deployment button widget should allow configuring', () => {
         );
     });
 
-    const openDropdown = (divName: string) => {
-        return cy.get(`div[name="${divName}"]`).click();
-    };
-
     const selectLabelValue = (value: string) =>
-        openDropdown('labelValue').within(() => {
+        cy.openDropdown('labelValue').within(() => {
             cy.get('input').type(value);
             cy.contains(`New value ${value}`).click();
         });
@@ -54,8 +50,8 @@ describe('Create deployment button widget should allow configuring', () => {
         cy.uploadBlueprint('blueprints/labels.zip', labelsBlueprint);
         cy.editWidgetConfiguration('deploymentButton', () => {
             cy.clickButton('Add new rule');
-            openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
-            openDropdown('labelKey').within(() => {
+            cy.openDropdown('ruleOperator').contains('[role="option"]', 'is one of').click();
+            cy.openDropdown('labelKey').within(() => {
                 const labelKey = 'arch';
                 cy.get('input').type(labelKey);
                 cy.get(`[role="listbox"].visible > *`).click();

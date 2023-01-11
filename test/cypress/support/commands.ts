@@ -86,7 +86,7 @@ declare global {
 
             clickButton: (buttonLabel: string) => Cypress.Chainable;
 
-            openDropdown: (dropdownLabel: string) => Cypress.Chainable;
+            openDropdown: (dropdownName: string) => Cypress.Chainable;
         }
     }
 }
