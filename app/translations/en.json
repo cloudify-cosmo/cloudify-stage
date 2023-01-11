@@ -130,7 +130,8 @@
         },
         "errorModal": {
             "title": "Failed to open the setup",
-            "description": "Failed to open the setup. Please try again."
+            "description": "Failed to open the setup. Please try again.",
+            "close": "Close"
         }
     },
     "editMode": {

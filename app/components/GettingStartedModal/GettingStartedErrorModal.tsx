@@ -14,7 +14,7 @@ const GettingStartedErrorModal = ({ onClose }: GettingStartedErrorModalProps) =>
             <Modal.Header>{t('errorModal.title')}</Modal.Header>
             <Modal.Content>{t('errorModal.description')}</Modal.Content>
             <Modal.Actions>
-                <Button content="Close" onClick={onClose} />
+                <Button content={t('errorModal.close')} onClick={onClose} />
             </Modal.Actions>
         </Modal>
     );
