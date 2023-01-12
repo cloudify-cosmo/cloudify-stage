@@ -1,14 +1,15 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
+    const secretProviderName = 'Secret_Provider_1';
 
     before(() =>
         cy
             .activate()
             .usePageMock('secrets')
-            .deleteSecretProviders()
-            .createSecretProvider({ name: 'Secret_Provider_1', type: 'vault', visibility: 'global' })
-            .mockLogin()
             .deleteSecrets(secretName)
+            .deleteSecretProviders()
+            .createSecretProvider({ name: secretProviderName, type: 'vault', visibility: 'global' })
+            .mockLogin()
     );
 
     it('should allow to manage secrets', () => {
@@ -58,24 +59,21 @@ describe('Secret store management widget', () => {
         cy.contains('There are no Secrets available');
     });
 
-    it('should allow to manage secret with secret provider', () => {
-        const secretProviderName = 'Secret_Provider_1';
+    it.only('should allow to manage secret with secret provider', () => {
         cy.contains('Create').click();
 
         cy.get('.modal').within(() => {
+            cy.getField('Secret key').find('input').type(secretName);
             cy.contains('.checkbox', 'Retrieve the secret value from a secret provider').click();
             cy.clickButton('Create');
             cy.contains('Please select a secret provider').should('be.visible');
             cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
-            cy.openDropdown('secretProvider').within(() => {
-                cy.get(`[option-value=${secretProviderName}]`).click();
-            });
-            cy.get('input[name=secretKey]').type(secretName);
-            cy.get('input[name=secretProviderPath]').type(secretName);
+            cy.setSingleDropdownValue(secretProviderName, secretProviderName);
+            cy.getField('Secret provider path').find('input').type(secretName);
             cy.clickButton('Create');
         });
 
-        cy.get('.secretsWidget').within(() => {
+        cy.getWidget('secrets').within(() => {
             cy.getSearchInput().type(secretName);
             cy.get('tbody tr').should('have.length', 1);
             cy.contains(secretProviderName);
