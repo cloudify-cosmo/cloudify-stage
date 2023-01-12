@@ -1,5 +1,7 @@
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 
+const translate = Stage.Utils.getT('widgets.executions');
+
 export default function DryRunIcon({ execution }: { execution?: Execution }) {
     const { Icon, Popup } = Stage.Basic;
 
@@ -8,7 +10,7 @@ export default function DryRunIcon({ execution }: { execution?: Execution }) {
             <Popup.Trigger>
                 <Icon name="clipboard check" color="green" />
             </Popup.Trigger>
-            <Popup.Content>Dry Run</Popup.Content>
+            <Popup.Content>{translate('dryRun')}</Popup.Content>
         </Popup>
     ) : null;
 }

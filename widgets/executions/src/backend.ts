@@ -462,10 +462,13 @@ export default (serviceRegistrator: BackendServiceRegistrator) => {
                         return;
                     }
 
-                    const { items: operationsList } = (await helper.Manager.doGet(operationsFetchUrl, {
-                        params: { graph_id: items[0].id },
-                        headers
-                    })) as unknown as PaginatedResponse<Operation>;
+                    const { items: operationsList } = await helper.Manager.doGet<PaginatedResponse<Operation>>(
+                        operationsFetchUrl,
+                        {
+                            params: { graph_id: items[0].id },
+                            headers
+                        }
+                    );
 
                     // Constructing SubGraphs
                     let allSubgraphs = constructSubgraphs(operationsList);

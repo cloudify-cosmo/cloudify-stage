@@ -13,6 +13,8 @@ const colors = {
     failed: 'rgb(249, 25, 25)'
 };
 
+const translate = Stage.Utils.getT('widgets.executions.graph');
+
 const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbox }) => {
     const { Icon } = Stage.Basic;
     const labels = graphNode.labels![0];
@@ -86,7 +88,7 @@ const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbo
                         name="file alternate outline"
                         // NOTE: `display: inline` to fix a rendering bug in webkit
                         style={{ fontSize: '1.3em', cursor: 'pointer', display: 'inline' }}
-                        title="Show related entries in Deployment Events/Logs widget"
+                        title={translate('showLogs')}
                         onClick={() => {
                             const context = toolbox.getContext();
                             const eventBus = toolbox.getEventBus();

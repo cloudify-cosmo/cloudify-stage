@@ -4,6 +4,7 @@ import type { ExecutionsWidgetConfiguration } from 'widgets/executions/src/widge
 import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
 import type { MenuItemProps } from 'semantic-ui-react';
 import { Component } from 'react';
+import { camelCase } from 'lodash';
 import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
@@ -30,6 +31,15 @@ interface ExecutionsTableState {
     deploymentUpdateId: '';
     error: null;
 }
+
+const translate = Stage.Utils.getT('widgets.executions');
+const translateActionMenu = Stage.Utils.composeT(translate, 'actionMenu');
+const translateColumn = Stage.Utils.composeT(translate, 'columns');
+const translateParametersModal = Stage.Utils.composeT(translate, 'parametersModal');
+const translateParametersModalActions = Stage.Utils.composeT(translateParametersModal, 'actions');
+const translateParametersModalColumns = Stage.Utils.composeT(translateParametersModal, 'columns');
+const translateErrorModal = Stage.Utils.composeT(translate, 'errorModal');
+const translateErrorModalActions = Stage.Utils.composeT(translateErrorModal, 'actions');
 
 export default class ExecutionsTable extends Component<ExecutionsTableProps, ExecutionsTableState> {
     static MenuAction = {
@@ -179,7 +189,6 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
             hoveredExecution
         } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = "There are no Executions available. Probably there's no deployment created, yet.";
         const {
             CancelButton,
             CopyToClipboardButton,
@@ -202,6 +211,28 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
 
         const { fieldsToShow } = widget.configuration;
         const execution: Pick<Execution, 'parameters' | 'error'> = stateExecution || { parameters: {} };
+
+        function getLabelledColumn(
+            name: keyof Execution | 'attributes',
+            width = '100%',
+            showCondition = true,
+            defineName = false
+        ) {
+            const label = translateColumn(camelCase(name));
+            return (
+                <DataTable.Column
+                    label={label}
+                    name={defineName ? name : undefined}
+                    width={width}
+                    show={fieldsToShow.indexOf(label) >= 0 && showCondition}
+                />
+            );
+        }
+
+        function getLabelledNamedColumn(name: keyof Execution | 'attributes', width = '100%', showCondition = true) {
+            return getLabelledColumn(name, width, showCondition, true);
+        }
+
         return (
             <div>
                 <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
@@ -214,71 +245,35 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                     sortAscending={widget.configuration.sortAscending}
                     selectable
                     className="executionsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={translate('noData')}
                 >
                     <DataTable.Column label="" width="43px" />
-                    <DataTable.Column
-                        label="Blueprint"
-                        name="blueprint_id"
-                        width="150%"
-                        show={fieldsToShow.indexOf('Blueprint') >= 0 && !data.blueprintId && !data.deploymentId}
-                    />
-                    <DataTable.Column
-                        label="Deployment"
-                        name="deployment_display_name"
-                        width="150%"
-                        show={fieldsToShow.indexOf('Deployment') >= 0}
-                    />
-                    <DataTable.Column
-                        label="Deployment ID"
-                        name="deployment_id"
-                        width="150%"
-                        show={fieldsToShow.indexOf('Deployment ID') >= 0 && !data.deploymentId}
-                    />
-                    <DataTable.Column
-                        label="Workflow"
-                        name="workflow_id"
-                        width="200%"
-                        show={fieldsToShow.indexOf('Workflow') >= 0}
-                    />
-                    <DataTable.Column label="Id" name="id" width="10%" show={fieldsToShow.indexOf('Id') >= 0} />
-                    <DataTable.Column
-                        label="Created"
-                        name="created_at"
-                        width="110%"
-                        show={fieldsToShow.indexOf('Created') >= 0}
-                    />
-                    <DataTable.Column
-                        label="Scheduled"
-                        name="scheduled_for"
-                        width="100%"
-                        show={fieldsToShow.indexOf('Scheduled') >= 0}
-                    />
-                    <DataTable.Column
-                        label="Ended"
-                        name="ended_at"
-                        width="100%"
-                        show={fieldsToShow.indexOf('Ended') >= 0}
-                    />
-                    <DataTable.Column
-                        label="Creator"
-                        name="created_by"
-                        width="100%"
-                        show={fieldsToShow.indexOf('Creator') >= 0}
-                    />
-                    <DataTable.Column
-                        label="Attributes"
-                        width="100%"
-                        show={fieldsToShow.indexOf('System') >= 0 || fieldsToShow.indexOf('Attributes') >= 0}
-                    />
-                    <DataTable.Column label="Status" width="150%" show={fieldsToShow.indexOf('Status') >= 0} />
-                    <DataTable.Column
-                        width="40px"
-                        show={fieldsToShow.indexOf('Params') >= 0 || fieldsToShow.indexOf('Actions') >= 0}
-                    />
+                    {getLabelledNamedColumn('blueprint_id', '150%', !data.blueprintId && !data.deploymentId)}
+                    {getLabelledNamedColumn('deployment_display_name', '150%')}
+                    {getLabelledNamedColumn('deployment_id', '150%', !data.deploymentId)}
+                    {getLabelledNamedColumn('workflow_id', '200%')}
+                    {getLabelledNamedColumn('id', '10%')}
+                    {getLabelledNamedColumn('created_at', '110%')}
+                    {getLabelledNamedColumn('scheduled_for')}
+                    {getLabelledNamedColumn('ended_at')}
+                    {getLabelledNamedColumn('created_by')}
+                    {getLabelledColumn('attributes')}
+                    {getLabelledColumn('status', '150%')}
+                    <DataTable.Column width="40px" show={fieldsToShow.indexOf('Actions') >= 0} />
 
                     {data.items.map(item => {
-                        const actionMenuItemClickHandler = this.getActionMenuItemClickHandler(item);
+                        const getActionMenuItem = (
+                            action: typeof ExecutionsTable.MenuAction[keyof typeof ExecutionsTable.MenuAction],
+                            icon: MenuItemProps['icon']
+                        ) => (
+                            <Menu.Item
+                                content={translateActionMenu(camelCase(action))}
+                                icon={icon}
+                                name={action}
+                                onClick={this.getActionMenuItemClickHandler(item)}
+                            />
+                        );
+
                         return (
                             <DataTable.RowExpandable key={item.id} expanded={item.isSelected}>
                                 <DataTable.Row
@@ -320,61 +315,33 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                     <DataTable.Data textAlign="center">
                                         <PopupMenu className="menuAction">
                                             <Menu pointing vertical>
-                                                <Menu.Item
-                                                    content="Show Execution Parameters"
-                                                    icon="options"
-                                                    name={MenuAction.SHOW_EXECUTION_PARAMETERS}
-                                                    onClick={actionMenuItemClickHandler}
-                                                />
-                                                {Utils.Execution.isUpdateExecution(item) && (
-                                                    <Menu.Item
-                                                        content="Show Update Details"
-                                                        icon="magnify"
-                                                        name={MenuAction.SHOW_UPDATE_DETAILS}
-                                                        onClick={actionMenuItemClickHandler}
-                                                    />
-                                                )}
-                                                {Utils.Execution.isFailedExecution(item) && (
-                                                    <Menu.Item
-                                                        content="Show Error Details"
-                                                        icon={<Icon name="exclamation circle" color="red" />}
-                                                        name={MenuAction.SHOW_ERROR_DETAILS}
-                                                        onClick={actionMenuItemClickHandler}
-                                                    />
-                                                )}
+                                                {getActionMenuItem(MenuAction.SHOW_EXECUTION_PARAMETERS, 'options')}
+                                                {Utils.Execution.isUpdateExecution(item) &&
+                                                    getActionMenuItem(MenuAction.SHOW_UPDATE_DETAILS, 'magnify')}
+                                                {Utils.Execution.isFailedExecution(item) &&
+                                                    getActionMenuItem(
+                                                        MenuAction.SHOW_ERROR_DETAILS,
+                                                        <Icon name="exclamation circle" color="red" />
+                                                    )}
                                                 {(Utils.Execution.isCancelledExecution(item) ||
-                                                    Utils.Execution.isFailedExecution(item)) && (
-                                                    <Menu.Item
-                                                        content="Resume"
-                                                        icon={<Icon name="play" color="green" />}
-                                                        name={MenuAction.RESUME_EXECUTION}
-                                                        onClick={actionMenuItemClickHandler}
-                                                    />
-                                                )}
+                                                    Utils.Execution.isFailedExecution(item)) &&
+                                                    getActionMenuItem(
+                                                        MenuAction.RESUME_EXECUTION,
+                                                        <Icon name="play" color="green" />
+                                                    )}
                                                 {(Utils.Execution.isActiveExecution(item) ||
-                                                    Utils.Execution.isWaitingExecution(item)) && (
-                                                    <Menu.Item
-                                                        content="Cancel"
-                                                        icon="cancel"
-                                                        name={MenuAction.CANCEL_EXECUTION}
-                                                        onClick={actionMenuItemClickHandler}
-                                                    />
-                                                )}
+                                                    Utils.Execution.isWaitingExecution(item)) &&
+                                                    getActionMenuItem(MenuAction.CANCEL_EXECUTION, 'cancel')}
                                                 {(Utils.Execution.isActiveExecution(item) ||
-                                                    Utils.Execution.isWaitingExecution(item)) && (
-                                                    <Menu.Item
-                                                        content="Force Cancel"
-                                                        icon={<Icon name="cancel" color="red" />}
-                                                        name={MenuAction.FORCE_CANCEL_EXECUTION}
-                                                        onClick={actionMenuItemClickHandler}
-                                                    />
+                                                    Utils.Execution.isWaitingExecution(item)) &&
+                                                    getActionMenuItem(
+                                                        MenuAction.FORCE_CANCEL_EXECUTION,
+                                                        <Icon name="cancel" color="red" />
+                                                    )}
+                                                {getActionMenuItem(
+                                                    MenuAction.KILL_CANCEL_EXECUTION,
+                                                    <Icon name="stop" color="red" />
                                                 )}
-                                                <Menu.Item
-                                                    content="Kill Cancel"
-                                                    icon={<Icon name="stop" color="red" />}
-                                                    name={MenuAction.KILL_CANCEL_EXECUTION}
-                                                    onClick={actionMenuItemClickHandler}
-                                                />
                                             </Menu>
                                         </PopupMenu>
                                     </DataTable.Data>
@@ -395,15 +362,17 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                     open={executionParametersModalOpen}
                     onClose={() => this.setState({ execution: undefined, executionParametersModalOpen: false })}
                 >
-                    <Modal.Header>Execution parameters</Modal.Header>
+                    <Modal.Header>{translateParametersModal('header')}</Modal.Header>
                     <Modal.Content scrolling>
                         {!_.isEmpty(execution.parameters) ? (
                             <Table>
                                 <Table.Header>
                                     <Table.Row>
-                                        <Table.HeaderCell>Parameter</Table.HeaderCell>
                                         <Table.HeaderCell>
-                                            Value <ParameterValueDescription />
+                                            {translateParametersModalColumns('parameter')}
+                                        </Table.HeaderCell>
+                                        <Table.HeaderCell>
+                                            {translateParametersModalColumns('value')} <ParameterValueDescription />
                                         </Table.HeaderCell>
                                     </Table.Row>
                                 </Table.Header>
@@ -420,12 +389,12 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                 </Table.Body>
                             </Table>
                         ) : (
-                            <span>No execution parameters.</span>
+                            <span>{translateParametersModal('noParametersMessage')}</span>
                         )}
                     </Modal.Content>
                     <Modal.Actions>
                         <CopyToClipboardButton
-                            content="Copy Parameters"
+                            content={translateParametersModalActions('copy')}
                             text={JSON.stringify(execution.parameters, null, 2)}
                         />
                         <CancelButton
@@ -433,7 +402,7 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                 e.stopPropagation();
                                 this.setState({ executionParametersModalOpen: false });
                             }}
-                            content="Close"
+                            content={translateParametersModalActions('close')}
                         />
                     </Modal.Actions>
                 </Modal>
@@ -455,18 +424,18 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                     open={errorModalOpen}
                     onClose={() => this.setState({ execution: undefined, errorModalOpen: false })}
                 >
-                    <Modal.Header>Error details</Modal.Header>
+                    <Modal.Header>{translateErrorModal('header')}</Modal.Header>
                     <Modal.Content scrolling>
                         <HighlightText language="python">{execution.error}</HighlightText>
                     </Modal.Content>
                     <Modal.Actions>
-                        <CopyToClipboardButton content="Copy Error" text={execution.error} />
+                        <CopyToClipboardButton content={translateErrorModalActions('copy')} text={execution.error} />
                         <CancelButton
                             onClick={e => {
                                 e.stopPropagation();
                                 this.setState({ errorModalOpen: false });
                             }}
-                            content="Close"
+                            content={translateErrorModalActions('close')}
                         />
                     </Modal.Actions>
                 </Modal>

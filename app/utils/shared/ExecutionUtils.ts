@@ -22,6 +22,13 @@ export interface Execution {
     /* eslint-enable camelcase  */
 }
 
+export type ExecutionAction =
+    | typeof ExecutionUtils.FORCE_CANCEL_ACTION
+    | typeof ExecutionUtils.CANCEL_ACTION
+    | typeof ExecutionUtils.FORCE_RESUME_ACTION
+    | typeof ExecutionUtils.RESUME_ACTION
+    | typeof ExecutionUtils.KILL_CANCEL_ACTION;
+
 export default class ExecutionUtils {
     /* Execution resume types */
     static FORCE_RESUME_ACTION = 'force-resume';

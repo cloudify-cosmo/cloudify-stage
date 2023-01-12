@@ -12,8 +12,8 @@ interface RequestOptions {
 export type ManagerResponse = { items: any[] };
 
 export interface ManagerService {
-    call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions): AxiosPromise<any>;
-    doGet(url: string, requestOptions: RequestOptions): AxiosPromise<any>;
+    call(method: AllowedRequestMethod, url: string, requestOptions: RequestOptions): Promise<any>;
+    doGet<T>(url: string, requestOptions: RequestOptions): Promise<T>;
     doGetFull(
         url: string,
         requestOptions?: RequestOptions,

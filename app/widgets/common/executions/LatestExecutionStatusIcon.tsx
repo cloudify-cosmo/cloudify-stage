@@ -15,18 +15,11 @@ import UpdateDetailsModal from '../deployments/UpdateDetailsModal';
 import ExecutionActions from './ExecutionActions';
 import StageUtils from '../../../utils/stageUtils';
 import { ExecutionStatus } from '../../../components/shared';
-import type { Execution } from '../../../utils/shared/ExecutionUtils';
+import type { Execution, ExecutionAction } from '../../../utils/shared/ExecutionUtils';
 import ExecutionUtils from '../../../utils/shared/ExecutionUtils';
 import TimeUtils from '../../../utils/shared/TimeUtils';
 
 const t = StageUtils.getT('widgets.common.executions');
-
-type ExecutionAction =
-    | typeof ExecutionUtils.FORCE_CANCEL_ACTION
-    | typeof ExecutionUtils.CANCEL_ACTION
-    | typeof ExecutionUtils.FORCE_RESUME_ACTION
-    | typeof ExecutionUtils.RESUME_ACTION
-    | typeof ExecutionUtils.KILL_CANCEL_ACTION;
 
 export interface LatestExecutionStatusIconProps {
     execution?: Execution;

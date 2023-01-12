@@ -1,5 +1,7 @@
 import { castArray, isEmpty } from 'lodash';
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { PaginatedResponse } from 'backend/types';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
@@ -21,8 +23,9 @@ export interface ExecutionsWidgetConfiguration extends DataTableConfiguration {
 }
 
 const t = Stage.Utils.getT('widgets.executions');
+const translateColumns = Stage.Utils.composeT(t, 'columns');
 
-Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
+Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Execution>, ExecutionsWidgetConfiguration>({
     id: 'executions',
     name: t('name'),
     description: t('description'),
@@ -40,20 +43,32 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
             id: 'fieldsToShow',
             name: t('configuration.fieldsToShow.name'),
             items: [
-                'Blueprint',
-                'Deployment',
-                'Deployment ID',
-                'Workflow',
-                'Id',
-                'Created',
-                'Scheduled',
-                'Ended',
-                'Creator',
-                'Attributes',
-                'Status',
-                'Actions'
-            ],
-            default: 'Blueprint,Deployment,Workflow,Created,Ended,Creator,Attributes,Actions,Status',
+                'blueprintId',
+                'deploymentDisplayName',
+                'deploymentId',
+                'workflowId',
+                'id',
+                'createdAt',
+                'scheduledFor',
+                'endedAt',
+                'createdBy',
+                'attributes',
+                'status',
+                'actions'
+            ].map(item => translateColumns(item)),
+            default: [
+                'blueprintId',
+                'deploymentDisplayName',
+                'workflowId',
+                'createdAt',
+                'endedAt',
+                'createdBy',
+                'attributes',
+                'actions',
+                'status'
+            ]
+                .map(item => translateColumns(item))
+                .join(),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
@@ -112,14 +127,13 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
 
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
-        const { singleExecutionView } = widget.configuration;
 
-        if (_.isEmpty(data)) {
+        if (!data) {
             return <Loading />;
         }
 
-        if (singleExecutionView) {
-            const latestExecution = data;
+        if ('id' in data) {
+            const latestExecution = data as Execution;
             if (isEmpty(latestExecution)) {
                 const { ErrorMessage } = Stage.Basic;
                 return <ErrorMessage error={t('noExecutionFound')} />;

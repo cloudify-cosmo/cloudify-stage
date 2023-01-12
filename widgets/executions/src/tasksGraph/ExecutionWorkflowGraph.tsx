@@ -19,8 +19,6 @@ const GRAPH_MARGIN = 25;
 const AUTO_FOCUS_ANIMATION_FRAMES = 30;
 const AUTO_FOCUS_ANIMATION_FRAME_DURATION = 10;
 
-const NO_TASKS_GRAPH_MESSAGE = 'The selected execution does not have a tasks graph';
-
 const INITIAL_POSITION = {
     a: 1,
     b: 0,
@@ -30,6 +28,8 @@ const INITIAL_POSITION = {
     f: GRAPH_MARGIN,
     version: 3
 } as unknown as Value;
+
+const translate = Stage.Utils.getT('widgets.executions.graph');
 
 export default function ExecutionWorkflowGraph({
     containerHeight,
@@ -87,7 +87,7 @@ export default function ExecutionWorkflowGraph({
                     }
 
                     clearGraphData();
-                    setError(status === 404 ? NO_TASKS_GRAPH_MESSAGE : message);
+                    setError(status === 404 ? translate('noTasks') : message);
                 });
 
             const { isActiveExecution } = Stage.Utils.Execution;
@@ -193,7 +193,7 @@ export default function ExecutionWorkflowGraph({
                         link
                         color={autoFocus ? 'green' : undefined}
                         onClick={() => setAutoFocus(!autoFocus)}
-                        title="Focus on tasks in progress"
+                        title={translate('focus')}
                     />
                     <Icon
                         name="expand arrows alternate"
@@ -202,17 +202,17 @@ export default function ExecutionWorkflowGraph({
                             setAutoFocus(false);
                             fitToView();
                         }}
-                        title="Fit to view"
+                        title={translate('fitToView')}
                     />
                     {openInModalIcon ? (
-                        <Icon name="expand" link onClick={maximize} title="Open in window" />
+                        <Icon name="expand" link onClick={maximize} title={translate('open')} />
                     ) : (
                         <Icon
                             name="close"
                             link
                             onClick={minimize}
                             style={{ fontSize: '1.25em', marginTop: -2 }}
-                            title="Close window"
+                            title={translate('close')}
                         />
                     )}
                 </div>
@@ -253,7 +253,7 @@ export default function ExecutionWorkflowGraph({
                 />
             )}
 
-            {error && <Message error={error !== NO_TASKS_GRAPH_MESSAGE}>{error}</Message>}
+            {error && <Message error={error !== translate('noTasks')}>{error}</Message>}
 
             {graphData && (
                 <div ref={wrapperRef} style={{ position: 'relative' }}>
