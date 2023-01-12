@@ -118,6 +118,7 @@
             }
         },
         "welcomeLogoLabel": "CLOUDIFY",
+        "loading": "Loading...",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -127,6 +128,11 @@
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation completed! (you can now close this window)",
             "failureMessage": "Installation failed."
+        },
+        "errorModal": {
+            "title": "Failed to open the setup",
+            "description": "Failed to open the setup. Please try again.",
+            "close": "Close"
         }
     },
     "editMode": {
