@@ -121,9 +121,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         const secretActions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         secretActions
             .doGetAllSecretProviders()
-            .then(data => {
-                return setSecretProviders(data.items);
-            })
+            .then(data => setSecretProviders(data.items))
             .catch(setMessageAsError);
     }
     const secretProvidersArray = secretProviders?.map((item: { name: string }) => ({
