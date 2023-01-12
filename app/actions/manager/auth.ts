@@ -32,6 +32,7 @@ export type StoreRBACAction = PayloadAction<
 export type SetUserDataAction = PayloadAction<GetAuthUserResponse, ActionType.SET_USER_DATA>;
 export type SetIdentityProvidersAction = PayloadAction<string[], ActionType.SET_IDENTITY_PROVIDERS>;
 export type LogoutAction = PayloadAction<{ error?: string | null; receivedAt: number }, ActionType.LOGOUT>;
+export type HideGettingStartedAction = Action<ActionType.HIDE_GETTING_STARTED>;
 
 export type AuthAction =
     | LoginRequestAction
@@ -40,7 +41,8 @@ export type AuthAction =
     | StoreRBACAction
     | SetUserDataAction
     | SetIdentityProvidersAction
-    | LogoutAction;
+    | LogoutAction
+    | HideGettingStartedAction;
 
 function loginRequest(): LoginRequestAction {
     return {
@@ -174,5 +176,11 @@ export function logout(
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
+    };
+}
+
+export function hideGettingStarted(): HideGettingStartedAction {
+    return {
+        type: ActionType.HIDE_GETTING_STARTED
     };
 }

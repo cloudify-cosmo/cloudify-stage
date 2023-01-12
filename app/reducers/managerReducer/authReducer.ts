@@ -54,6 +54,11 @@ const auth: Reducer<AuthData, AuthAction> = (state = emptyAuthState, action) => 
                 ...state,
                 identityProviders: action.payload
             };
+        case ActionType.HIDE_GETTING_STARTED:
+            return {
+                ...state,
+                showGettingStarted: false
+            };
         default:
             return state;
     }

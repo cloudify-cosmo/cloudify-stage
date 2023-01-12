@@ -30,6 +30,7 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
+import { hideGettingStarted } from '../../actions/manager/auth';
 
 type Error = boolean | { content: string };
 
@@ -103,6 +104,13 @@ const GettingStartedModal = () => {
             handleNextClick();
         }
     }, [environmentsStepData]);
+
+    useEffect(() => {
+        debugger;
+        if (modalDisabledChecked) {
+            dispatch(hideGettingStarted());
+        }
+    }, [modalDisabledChecked]);
 
     if (!StageUtils.isUserAuthorized('getting_started', manager)) {
         return null;
