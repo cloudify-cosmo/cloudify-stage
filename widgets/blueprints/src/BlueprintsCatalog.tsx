@@ -147,7 +147,6 @@ export default function BlueprintsCatalog({
                                         icon="trash"
                                         content="Delete"
                                         basic
-                                        labelPosition="left"
                                         onClick={event => {
                                             event.stopPropagation();
                                             onDeleteBlueprint(item);
@@ -158,7 +157,6 @@ export default function BlueprintsCatalog({
                                             <Button
                                                 icon="rocket"
                                                 content="Deploy"
-                                                labelPosition="left"
                                                 onClick={event => {
                                                     event.stopPropagation();
                                                     onCreateDeployment(item);
@@ -169,7 +167,6 @@ export default function BlueprintsCatalog({
                                                 <Button
                                                     icon="external share"
                                                     content="Edit a copy in Composer"
-                                                    labelPosition="left"
                                                     onClick={event => {
                                                         event.stopPropagation();
                                                         new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(

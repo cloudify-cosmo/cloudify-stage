@@ -29,17 +29,11 @@ const ApproveButtons: FunctionComponent<ApproveButtonsProps> = ({
 }) => {
     if (!showDeployButton) {
         return (
-            <ApproveButton
-                onClick={onInstall}
-                disabled={loading}
-                content={t('buttons.deployAndInstall')}
-                icon="cogs"
-                className="green"
-            />
+            <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.deployAndInstall')} icon="cogs" />
         );
     }
     return (
-        <Button.Group color="green">
+        <Button.Group color="blue">
             {selectedApproveButton === Buttons.install ? (
                 <ApproveButton onClick={onInstall} disabled={loading} content={t('buttons.install')} icon="cogs" />
             ) : (
