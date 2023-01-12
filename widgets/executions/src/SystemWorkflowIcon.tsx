@@ -2,7 +2,7 @@ import type { Execution } from 'app/utils/shared/ExecutionUtils';
 
 const translate = Stage.Utils.getT('widgets.executions');
 
-export default function SystemWorkflowIcon({ execution }: { execution?: Execution }) {
+export default function SystemWorkflowIcon({ execution }: { execution?: Pick<Execution, 'is_system_workflow'> }) {
     const { Icon, Popup } = Stage.Basic;
 
     return execution?.is_system_workflow ? (
