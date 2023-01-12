@@ -9,6 +9,8 @@ import { checkTemplateExists, createTemplate, getUserTemplates } from '../handle
 import { checkPageExists, createPage, getUserPages } from '../handler/templates/PagesHandler';
 import { checkPageGroupExists, createPageGroup, getUserPageGroups } from '../handler/templates/PageGroupsHandler';
 import { createUserWidgetsSnapshot, restoreUserWidgetsSnapshot } from '../handler/widgets/WidgetsHandler';
+import type { BlueprintUserDataInstance } from '../db/models/BlueprintUserDataModel';
+import type { BlueprintUserDataAttributes } from '../db/models/BlueprintUserDataModel.types';
 
 const router = express.Router();
 
@@ -134,6 +136,39 @@ export type PageGroupsSnapshot = Omit<PageGroup, CommonPropertiesToOmit>[];
         restoreUserWidgetsSnapshot(req)
             .then(() => res.status(201).end())
             .catch(next);
+    });
+})();
+
+(() => {
+    const propertiesToOmit = ['id'] as const;
+    type PropertiesToOmit = typeof propertiesToOmit[number];
+    type BlueprintLayoutsSnapshot = Omit<BlueprintUserDataAttributes, PropertiesToOmit>[];
+
+    router.get('/blueprint-layouts', (_req, res: Response<BlueprintLayoutsSnapshot>, next) => {
+        db.BlueprintUserData.findAll<BlueprintUserDataInstance>({
+            attributes: Object.keys(omit(db.BlueprintUserData.getAttributes(), propertiesToOmit))
+        })
+            .then(blueprintLayouts => {
+                res.send(blueprintLayouts);
+            })
+            .catch(next);
+    });
+
+    router.post<never, { message: string }, BlueprintLayoutsSnapshot>('/blueprint-layouts', (req, res, next) => {
+        db.sequelize
+            ?.transaction(transaction =>
+                Promise.all(
+                    req.body.map(blueprintLayoutSnapshot =>
+                        db.BlueprintUserData.create<BlueprintUserDataInstance>(blueprintLayoutSnapshot, { transaction })
+                    )
+                )
+            )
+            .then(() => res.status(201).end())
+            .catch(err => {
+                if (err.name === 'SequelizeUniqueConstraintError')
+                    res.status(400).send({ message: 'Snapshot data conflicts with already existing data' });
+                else next(err);
+            });
     });
 })();
 
