@@ -118,6 +118,7 @@
             }
         },
         "welcomeLogoLabel": "CLOUDIFY",
+        "loading": "Loading...",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",

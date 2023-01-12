@@ -290,7 +290,7 @@ const GettingStartedModal = () => {
                     errors={errors}
                 />
             ) : (
-                <Modal.Content>Loading...</Modal.Content>
+                <Modal.Content>{i18n.t('gettingStartedModal.loading')}</Modal.Content>
             )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
