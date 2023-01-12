@@ -1614,7 +1614,7 @@
                     "hiddenValue": {
                         "label": "Hidden Value"
                     },
-                    "enableSecretProvider": {
+                    "useSecretProvider": {
                         "label": "Retrieve the secret value from a secret provider"
                     },
                     "secretProvider": {

@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import type { FileInputProps } from 'cloudify-ui-components/typings/components/form/FileInput/FileInput';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
@@ -23,7 +23,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         secretKey: '',
         secretValue: '',
         isHiddenValue: false,
-        enableSecretProvider: false,
+        useSecretProvider: false,
         secretProvider: '',
         secretProviderPath: null
     });
@@ -32,34 +32,30 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         clearErrors();
         clearInputs();
         clearVisibility();
+        fetchSecretProviders();
     });
 
     const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchSecretProviders();
-        }
-    }, [isOpen]);
-
     function createSecret() {
-        const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } =
-            inputs;
+        const { isHiddenValue, secretKey, secretValue, useSecretProvider, secretProvider, secretProviderPath } = inputs;
         const validationErrors: Record<string, string> = {};
 
         if (isEmpty(secretKey)) {
             validationErrors.secretKey = translateCreateModal('errors.validation.secretKey');
         }
 
-        if (!enableSecretProvider && isEmpty(secretValue)) {
-            validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
-        }
-
-        if (enableSecretProvider && isEmpty(secretProvider)) {
-            validationErrors.secretProvider = translateCreateModal('errors.validation.secretProviderName');
-        }
-        if (enableSecretProvider && isEmpty(secretProviderPath)) {
-            validationErrors.secretProviderPath = translateCreateModal('errors.validation.secretProviderPath');
+        if (useSecretProvider) {
+            if (isEmpty(secretProvider)) {
+                validationErrors.secretProvider = translateCreateModal('errors.validation.secretProviderName');
+            }
+            if (isEmpty(secretProviderPath)) {
+                validationErrors.secretProviderPath = translateCreateModal('errors.validation.secretProviderPath');
+            }
+        } else if (isEmpty(secretValue)) {
+            if (isEmpty(secretValue)) {
+                validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
+            }
         }
 
         if (!isEmpty(validationErrors)) {
@@ -70,7 +66,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretProviderOptions = enableSecretProvider ? { path: secretProviderPath } : {};
+        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : {};
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
@@ -91,7 +87,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             setErrors({ ...errors, secretProviderCheckbox: translateCreateModal('errors.validation.noProviders') });
             return;
         }
-        setInput({ enableSecretProvider: !enableSecretProvider });
+        setInput({ useSecretProvider: !useSecretProvider });
     }
 
     const onSecretFileChange: FileInputProps['onChange'] = file => {
@@ -131,7 +127,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         value: item.name
     }));
 
-    const { isHiddenValue, secretKey, secretValue, enableSecretProvider, secretProvider, secretProviderPath } = inputs;
+    const { isHiddenValue, secretKey, secretValue, useSecretProvider, secretProvider, secretProviderPath } = inputs;
 
     const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
 
@@ -144,7 +140,11 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Secret key" error={errors.secretKey} required>
+                    <Form.Field
+                        label={translateCreateModal('inputs.secretKey.label')}
+                        error={errors.secretKey}
+                        required
+                    >
                         <Form.Input
                             name="secretKey"
                             placeholder={translateCreateModal('inputs.secretKey.placeholder')}
@@ -154,13 +154,13 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                     </Form.Field>
                     <Form.Field error={errors.secretProviderCheckbox}>
                         <Form.Checkbox
-                            label={translateCreateModal('inputs.enableSecretProvider.label')}
-                            name="enableSecretProvider"
-                            checked={enableSecretProvider}
+                            label={translateCreateModal('inputs.useSecretProvider.label')}
+                            name="useSecretProvider"
+                            checked={useSecretProvider}
                             onChange={onSecretProviderChange}
                         />
                     </Form.Field>
-                    {enableSecretProvider ? (
+                    {useSecretProvider ? (
                         <>
                             <Form.Field
                                 label={translateCreateModal('inputs.secretProvider.label')}
