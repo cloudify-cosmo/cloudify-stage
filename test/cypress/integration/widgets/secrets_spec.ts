@@ -5,10 +5,10 @@ describe('Secret store management widget', () => {
     before(() =>
         cy
             .activate()
-            .usePageMock('secrets')
             .deleteSecrets(secretName)
             .deleteSecretProviders()
             .createSecretProvider({ name: secretProviderName, type: 'vault', visibility: 'global' })
+            .usePageMock('secrets')
             .mockLogin()
     );
 
@@ -59,7 +59,7 @@ describe('Secret store management widget', () => {
         cy.contains('There are no Secrets available');
     });
 
-    it.only('should allow to manage secret with secret provider', () => {
+    it('should allow to manage secret with secret provider', () => {
         cy.contains('Create').click();
 
         cy.get('.modal').within(() => {
