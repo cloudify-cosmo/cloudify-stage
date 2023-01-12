@@ -221,7 +221,7 @@ describe('Deployments widget', () => {
         const anotherBlueprintName = `${blueprintName}_another`;
         cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
 
-        cy.interceptSp('PUT', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
+        cy.interceptSp('POST', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
 
         cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
         executeDeploymentAction(deploymentId, deploymentName, 'Update');
@@ -229,9 +229,7 @@ describe('Deployments widget', () => {
         cy.get('.updateDeploymentModal').within(() => {
             cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
 
-            cy.get('div[name=blueprintName]').click();
-            cy.wait('@uploadedBlueprints');
-            cy.contains(anotherBlueprintName).click();
+            cy.setSearchableDropdownValue('Blueprint', anotherBlueprintName);
 
             cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
 

@@ -107,7 +107,7 @@ export default class DeploymentActions {
         body.force = forceUpdate;
         body.preview = preview;
 
-        return this.manager.doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
+        return this.manager.doPost(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {
@@ -161,9 +161,11 @@ export default class DeploymentActions {
         return this.manager.doGet('/labels/deployments?_reserved=true').then(({ items }) => items);
     }
 
-    // eslint-disable-next-line camelcase
-    doGetWorkflows(deploymentId: string): Promise<{ id: string; display_name: string; workflows: Workflow[] }> {
-        return this.manager.doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows`);
+    doGetWorkflowsAndLabels(
+        deploymentId: string
+        // eslint-disable-next-line camelcase
+    ): Promise<{ id: string; display_name: string; workflows: Workflow[]; labels: Label[] }> {
+        return this.manager.doGet(`/deployments/${deploymentId}?_include=id,display_name,workflows,labels`);
     }
 
     async waitUntilCreated(deploymentId: string) {

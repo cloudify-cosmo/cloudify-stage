@@ -37,7 +37,7 @@ Stage.defineWidget({
             id: 'color',
             name: tConfiguration('color.name'),
             description: tConfiguration('color.description'),
-            default: 'green',
+            default: 'blue',
             component: Stage.Common.Components.SemanticColorDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
