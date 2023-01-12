@@ -3,6 +3,7 @@ import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { ExecutionsWidgetConfiguration } from 'widgets/executions/src/widget';
 import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
 import type { MenuItemProps } from 'semantic-ui-react';
+import { Component } from 'react';
 import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
@@ -30,7 +31,7 @@ interface ExecutionsTableState {
     error: null;
 }
 
-export default class ExecutionsTable extends React.Component<ExecutionsTableProps, ExecutionsTableState> {
+export default class ExecutionsTable extends Component<ExecutionsTableProps, ExecutionsTableState> {
     static MenuAction = {
         SHOW_EXECUTION_PARAMETERS: 'execution_parameters',
         SHOW_UPDATE_DETAILS: 'update_details',

@@ -38,8 +38,8 @@ interface Operation {
     dependencies: unknown[];
 }
 
-export default (r: BackendServiceRegistrator) => {
-    r.register('get_tasks_graph', 'GET', (req, res, next, helper) => {
+export default (serviceRegistrator: BackendServiceRegistrator) => {
+    serviceRegistrator.register('get_tasks_graph', 'GET', (req, res, next, helper) => {
         /**
          * ### Due to the nature of widgetBackend, the whole logic of a function must be placed inside that function
          * ### and cannot be separated to several functions :(

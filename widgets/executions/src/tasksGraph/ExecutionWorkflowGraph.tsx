@@ -5,6 +5,7 @@ import type { Toolbox } from 'app/utils/StageAPI';
 import type { LatestExecutionStatusIconProps } from 'app/widgets/common/executions/LatestExecutionStatusIcon';
 import type { ElkNode } from 'elkjs';
 import type { CancelablePromise } from 'app/utils/types';
+import { find, get, includes, noop } from 'lodash';
 import GraphEdges from './GraphEdges';
 import GraphNodes from './GraphNodes';
 import states from './States';
@@ -125,7 +126,7 @@ export default function ExecutionWorkflowGraph({
     }
 
     function getModalWidth() {
-        return _.get(modal.current, 'offsetWidth', 0);
+        return get(modal.current, 'offsetWidth', 0);
     }
 
     function fitToView() {
@@ -145,9 +146,7 @@ export default function ExecutionWorkflowGraph({
 
     function scrollToInProgress() {
         const focusNode = graphData?.children?.find(containerNode =>
-            _.find(containerNode.children, subGraphNode =>
-                _.includes(states.inProgress, subGraphNode.labels?.[0].state)
-            )
+            find(containerNode.children, subGraphNode => includes(states.inProgress, subGraphNode.labels?.[0].state))
         );
         if (focusNode) {
             scrollTo(-focusNode.x! + GRAPH_MARGIN, -focusNode.y! + GRAPH_MARGIN);
@@ -228,7 +227,7 @@ export default function ExecutionWorkflowGraph({
                     onChangeValue={positionSetter}
                     onZoom={() => setAutoFocus(false)}
                     onPan={() => setAutoFocus(false)}
-                    onChangeTool={_.noop}
+                    onChangeTool={noop}
                 >
                     <svg width={graphData?.width} height={graphData?.height}>
                         <GraphNodes graphNodes={graphData?.children ?? []} toolbox={toolbox} />

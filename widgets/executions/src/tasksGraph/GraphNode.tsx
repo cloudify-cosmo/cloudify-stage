@@ -1,5 +1,6 @@
 import type { ElkNode } from 'elkjs';
 import type { Toolbox } from 'app/utils/StageAPI';
+import { findKey, includes, isEmpty, size } from 'lodash';
 import states from './States';
 
 const textHeight = 18;
@@ -20,11 +21,13 @@ const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbo
 
     const title = labels.displayTitle || [labels.text];
     const { displayText, state } = labels;
-    const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state)) as keyof typeof states;
+    const mappedState = findKey(states, stateArray => includes(stateArray, state)) as keyof typeof states;
     const stateColor = colors[mappedState];
 
-    const headerHeight = _.size(title) * textHeight + textHeight / 2;
+    const headerHeight = size(title) * textHeight + textHeight / 2;
     const { nodeInstanceId, operation } = graphNode;
+    const showLogsIcon =
+        displayText && nodeInstanceId && operation && (state !== 'Pending' || (labels.retry && labels.retry > 0));
     return (
         <g className="g-tasks-graph-general">
             {stateColor && (
@@ -52,7 +55,7 @@ const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbo
                 height={headerHeight}
                 width={graphNode.width! - 1}
                 strokeWidth={0}
-                style={{ fill: !_.isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
+                style={{ fill: !isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
             />
             <rect height={graphNode.height} width={graphNode.width} rx={rx} fillOpacity={0} />
             <path d={`m 0,${headerHeight} h ${graphNode.width} z`} strokeWidth={0.5} />
@@ -72,7 +75,7 @@ const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbo
                     </text>
                 ))}
             &gt;
-            {displayText && nodeInstanceId && operation && (state !== 'Pending' || (labels.retry && labels.retry > 0)) && (
+            {showLogsIcon && (
                 <foreignObject
                     width={textHeight}
                     height={textHeight * 2}
