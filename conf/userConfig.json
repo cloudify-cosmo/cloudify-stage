@@ -12,6 +12,7 @@
     },
     "maxBodySize": "2gb"
   },
+  "useLoginPage": true,
   "saml":{
     "enabled": false,
     "certPath": "",
