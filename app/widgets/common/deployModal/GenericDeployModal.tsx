@@ -566,7 +566,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     selectBlueprint(id: DropdownValue) {
         if (!isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
-            const { toolbox } = this.props;
+            const { toolbox, environmentToDeployOn } = this.props;
 
             const actions = new BlueprintActions(toolbox);
             actions
@@ -587,7 +587,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        showDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown:
+                            !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
