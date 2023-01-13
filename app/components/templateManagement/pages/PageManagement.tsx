@@ -10,8 +10,8 @@ import { arrayMove } from 'react-sortable-hoc';
 import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
-import EditModeBubble from '../../applicationPage/editMode/EditModeBubble';
-import { PageContent } from '../../applicationPage/content';
+import EditModeBubble from '../../application/editMode/EditModeBubble';
+import { PageContent } from '../../application/content';
 import { setTemplateManagementActive } from '../../../actions/templateManagement';
 import type { TemplatePageDefinition } from '../../../actions/templateManagement/pages';
 import { savePage, setDrillDownWarningActive, setPageEditMode } from '../../../actions/templateManagement/pages';
@@ -22,8 +22,8 @@ import { forEachWidget, getWidgetDefinitionById } from '../../../actions/page';
 import type { ReduxState } from '../../../reducers';
 import type { WidgetDefinition } from '../../../utils/StageAPI';
 import useCreatePageId from './useCreatePageId';
-import IconSelection from '../../applicationPage/sidebar/IconSelection';
-import { expandedSidebarWidth } from '../../applicationPage/sidebar/SideBar';
+import IconSelection from '../../application/sidebar/IconSelection';
+import { expandedSidebarWidth } from '../../application/sidebar/SideBar';
 import type { ReduxThunkDispatch } from '../../../configureStore';
 
 export interface PageManagementProps {
