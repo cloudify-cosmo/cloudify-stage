@@ -54,8 +54,7 @@ function sendConflictResponse(res: Response) {
             )
             .then(() => res.status(201).end())
             .catch(err => {
-                if (err.name === 'SequelizeUniqueConstraintError')
-                    res.status(400).send({ message: 'Snapshot data conflicts with already existing data' });
+                if (err.name === 'SequelizeUniqueConstraintError') sendConflictResponse(res);
                 else next(err);
             });
     });
@@ -171,8 +170,7 @@ export type PageGroupsSnapshot = Omit<PageGroup, CommonPropertiesToOmit>[];
             )
             .then(() => res.status(201).end())
             .catch(err => {
-                if (err.name === 'SequelizeUniqueConstraintError')
-                    res.status(400).send({ message: 'Snapshot data conflicts with already existing data' });
+                if (err.name === 'SequelizeUniqueConstraintError') sendConflictResponse(res);
                 else next(err);
             });
     });
