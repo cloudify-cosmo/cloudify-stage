@@ -17,7 +17,7 @@ import type { Widget as WidgetObj } from '../../../utils/StageAPI';
 import stageUtils from '../../../utils/stageUtils';
 import WidgetDefinitionsLoader from '../../../utils/widgetDefinitionsLoader';
 import { EditableLabel, ErrorMessage, Header, Icon, Loading, Message, ReadmeModal, Segment } from '../../basic';
-import EditWidget from '../../EditWidget';
+import EditWidget from '../../editMode/EditWidget';
 import WidgetDynamicContent from '../../WidgetDynamicContent';
 import type { ReduxThunkDispatch } from '../../../configureStore';
 

@@ -3,10 +3,10 @@ import { get, isEmpty } from 'lodash';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import type { ButtonProps } from 'semantic-ui-react';
 
-import EditTabModal from './EditTabModal';
-import EditModeButton from './EditModeButton';
+import EditTabModal from './editMode/EditTabModal';
+import EditModeButton from './editMode/EditModeButton';
 import { Confirm, Menu } from './basic';
-import AddWidgetModal from './AddWidgetModal';
+import AddWidgetModal from './editMode/AddWidgetModal';
 import WidgetsList from './shared/widgets/WidgetsList';
 import useWidgetsFilter from './useWidgetsFilter';
 import { useBoolean, useResettableState } from '../utils/hooks';

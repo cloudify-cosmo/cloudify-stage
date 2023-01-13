@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import i18n from 'i18next';
 import { addPage } from '../../actions/pageMenu';
-import EditModeButton from '../EditModeButton';
+import EditModeButton from './EditModeButton';
 
 let nameIndex = 0;
 

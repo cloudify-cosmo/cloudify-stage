@@ -10,7 +10,7 @@ import { arrayMove } from 'react-sortable-hoc';
 import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Alert, Breadcrumb, Button, Divider, EditableLabel, ErrorMessage, Menu, Segment, Sidebar } from '../../basic';
-import EditModeBubble from '../../EditModeBubble';
+import EditModeBubble from '../../editMode/EditModeBubble';
 import { PageContent } from '../../shared/widgets';
 import { setTemplateManagementActive } from '../../../actions/templateManagement';
 import type { TemplatePageDefinition } from '../../../actions/templateManagement/pages';

@@ -25,7 +25,7 @@ import type { WidgetDefinition } from '../utils/StageAPI';
 import StageUtils from '../utils/stageUtils';
 import { Button, EditableLabel } from './basic';
 import Breadcrumbs from './Breadcrumbs';
-import EditModeBubble from './EditModeBubble';
+import EditModeBubble from './editMode/EditModeBubble';
 import { PageContent } from './shared/widgets';
 import { collapsedSidebarWidth } from './sidebar/SideBar';
 import type { ReduxThunkDispatch } from '../configureStore';

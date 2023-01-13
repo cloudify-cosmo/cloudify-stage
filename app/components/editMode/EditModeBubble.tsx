@@ -3,7 +3,7 @@
 import PropTypes from 'prop-types';
 
 import React from 'react';
-import { Message, Sidebar } from './basic';
+import { Message, Sidebar } from '../basic';
 
 export default function EditModeBubble({ onDismiss, header, children }) {
     return (

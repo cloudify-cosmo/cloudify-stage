@@ -10,8 +10,8 @@ import styled, { css } from 'styled-components';
 
 import type { SemanticICONS } from 'semantic-ui-react';
 import { EditableLabel, Icon } from '../basic';
-import AddPageButton from './AddPageButton';
-import AddPageGroupButton from './AddPageGroupButton';
+import AddPageButton from '../editMode/AddPageButton';
+import AddPageGroupButton from '../editMode/AddPageGroupButton';
 import SortableMenuItem from './SortableMenuItem';
 
 import type { PageDefinition } from '../../actions/page';

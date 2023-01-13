@@ -4,9 +4,9 @@ import _ from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import i18n from 'i18next';
-import EventBus from '../utils/EventBus';
-import StageUtils from '../utils/stageUtils';
-import { ApproveButton, Button, Form, Icon, Message, Modal } from './basic/index';
+import EventBus from '../../utils/EventBus';
+import StageUtils from '../../utils/stageUtils';
+import { ApproveButton, Button, Form, Icon, Message, Modal } from '../basic';
 
 export default class InstallWidgetModal extends Component {
     static initialState = {

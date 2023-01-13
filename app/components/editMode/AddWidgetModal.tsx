@@ -8,23 +8,23 @@ import { connect, useDispatch } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import type { GetWidgetsUsedResponse } from 'backend/routes/Widgets.types';
-import type { EnhancedWidgetDefinition } from '../actions/widgetDefinitions';
+import type { EnhancedWidgetDefinition } from '../../actions/widgetDefinitions';
 import {
     checkIfWidgetIsUsed,
     installWidget,
     replaceWidget,
     uninstallWidget,
     updateWidgetDefinition
-} from '../actions/widgetDefinitions';
-import Consts from '../utils/consts';
-import type { ReduxState } from '../reducers';
-import type { ReduxThunkDispatch } from '../configureStore';
-import type GenericConfigType from '../utils/GenericConfig';
-import GenericConfig from '../utils/GenericConfig';
-import { useBoolean, useResettableState } from '../utils/hooks';
-import LoaderUtils from '../utils/LoaderUtils';
-import StageUtils from '../utils/stageUtils';
-import WidgetDefinitionsLoader from '../utils/widgetDefinitionsLoader';
+} from '../../actions/widgetDefinitions';
+import Consts from '../../utils/consts';
+import type { ReduxState } from '../../reducers';
+import type { ReduxThunkDispatch } from '../../configureStore';
+import type GenericConfigType from '../../utils/GenericConfig';
+import GenericConfig from '../../utils/GenericConfig';
+import { useBoolean, useResettableState } from '../../utils/hooks';
+import LoaderUtils from '../../utils/LoaderUtils';
+import StageUtils from '../../utils/stageUtils';
+import WidgetDefinitionsLoader from '../../utils/widgetDefinitionsLoader';
 import {
     Button,
     Checkbox,
@@ -41,10 +41,10 @@ import {
     Menu,
     Modal,
     Segment
-} from './basic/index';
+} from '../basic';
 import EditModeButton from './EditModeButton';
 import InstallWidgetModal from './InstallWidgetModal';
-import type { ObjectKeys } from '../utils/types';
+import type { ObjectKeys } from '../../utils/types';
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;

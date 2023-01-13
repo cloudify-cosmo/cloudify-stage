@@ -3,11 +3,11 @@ import { get, isEmpty, noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 import React, { useCallback, useEffect, useState } from 'react';
 import type { GenericFieldProps } from 'cloudify-ui-components';
-import { getToolbox } from '../utils/Toolbox';
+import { getToolbox } from '../../utils/Toolbox';
 
-import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from './basic';
-import type { WidgetConfigurationDefinition, Widget } from '../utils/StageAPI';
-import type { WidgetOwnProps } from './shared/widgets/Widget';
+import { ApproveButton, CancelButton, Form, GenericField, Message, Modal } from '../basic';
+import type { WidgetConfigurationDefinition, Widget } from '../../utils/StageAPI';
+import type { WidgetOwnProps } from '../shared/widgets/Widget';
 
 type Fields = Record<string, any>;
 type Configuration = Record<string, unknown>;

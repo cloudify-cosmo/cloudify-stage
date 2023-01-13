@@ -1,7 +1,7 @@
 // @ts-nocheck File not migrated fully to TS
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from './basic';
+import { Button } from '../basic';
 import './EditModeButton.css';
 
 export default function EditModeButton({ className, icon, labelPosition, content, style, title, onClick }) {

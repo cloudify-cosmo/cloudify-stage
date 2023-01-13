@@ -3,8 +3,8 @@ import type { FunctionComponent } from 'react';
 import EditWidgetIcon from './EditWidgetIcon';
 import type { EditWidgetIconProps } from './EditWidgetIcon';
 import EditWidgetModal from './EditWidgetModal';
-import type { Widget } from '../utils/StageAPI';
-import type { WidgetOwnProps } from './shared/widgets/Widget';
+import type { Widget } from '../../utils/StageAPI';
+import type { WidgetOwnProps } from '../shared/widgets/Widget';
 
 interface EditWidgetProps {
     widget: Widget;

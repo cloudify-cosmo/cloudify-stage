@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import i18n from 'i18next';
 import PropTypes from 'prop-types';
-import { useBoolean } from '../utils/hooks';
-import { ApproveButton, CancelButton, Form, Modal } from './basic';
+import { useBoolean } from '../../utils/hooks';
+import { ApproveButton, CancelButton, Form, Modal } from '../basic';
 
 export default function EditTabModal({ tab, trigger, onTabUpdate }) {
     const [open, setOpen, unsetOpen] = useBoolean();
