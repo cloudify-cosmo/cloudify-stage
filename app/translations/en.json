@@ -1416,8 +1416,61 @@
                     "name": "Show most recent execution only"
                 }
             },
+            "columns": {
+                "blueprintId": "Blueprint",
+                "deploymentDisplayName": "Deployment",
+                "deploymentId": "Deployment ID",
+                "workflowId": "Workflow",
+                "id": "Id",
+                "createdAt": "Created",
+                "scheduledFor": "Scheduled",
+                "endedAt": "Ended",
+                "createdBy": "Creator",
+                "attributes": "Attributes",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "actionMenu": {
+                "executionParameters": "Show Execution Parameters",
+                "updateDetails": "Show Update Details",
+                "errorDetails": "Show Error Details",
+                "forceResume": "Resume",
+                "cancel": "Cancel",
+                "forceCancel": "Force Cancel",
+                "kill": "Kill Cancel"
+            },
+            "parametersModal": {
+                "header": "Execution parameters",
+                "noParametersMessage": "No execution parameters.",
+                "actions": {
+                    "copy": "Copy Parameters",
+                    "close": "Close"
+                },
+                "columns": {
+                    "parameter": "Parameter",
+                    "value": "Value"
+                }
+            },
+            "errorModal": {
+                "header": "Error details",
+                "actions": {
+                    "copy": "Copy Error",
+                    "close": "Close"
+                }
+            },
+            "graph": {
+                "noTasks": "The selected execution does not have a tasks graph",
+                "focus": "Focus on tasks in progress",
+                "fitToView": "Fit to view",
+                "open": "Open in window",
+                "close": "Close window",
+                "showLogs": "Show related entries in Deployment Events/Logs widget"
+            },
             "noExecutionFound": "There are no executions that could be shown.",
-            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on."
+            "noData": "There are no Executions available. Probably there's no deployment created, yet.",
+            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on.",
+            "dryRun": "Dry Run",
+            "systemWorkflow": "System Workflow"
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
