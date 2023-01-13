@@ -69,7 +69,7 @@ describe('Secret store management widget', () => {
             cy.contains('Please select a secret provider').should('be.visible');
             cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
             cy.setSingleDropdownValue(secretProviderName, secretProviderName);
-            cy.getField('Secret provider path').find('input').type(secretName);
+            cy.getField('Path at the provider').find('input').type(secretName);
             cy.clickButton('Create');
         });
 

@@ -1608,11 +1608,11 @@
                 "inputs": {
                     "secretKey": {
                         "label": "Secret key",
-                        "placeholder": "Secret key"
+                        "placeholder": "Provide secret key"
                     },
                     "secretValue": {
                         "label": "Secret value",
-                        "placeholder": "Secret value"
+                        "placeholder": "Provide secret value"
                     },
                     "secretFile": {
                         "placeholder": "Get secret value from file (max: 50kB)"
@@ -1628,8 +1628,8 @@
                         "placeholder": "Select secret provider"
                     },
                     "secretProviderPath": {
-                        "label": "Secret provider path",
-                        "placeholder": "Path"
+                        "label": "Path at the provider",
+                        "placeholder": "Provide path at the secret provider"
                     }
                 },
                 "errors": {
