@@ -1,9 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
 import React, { useEffect, useRef, useState } from 'react';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import type { Toolbox } from 'app/utils/StageAPI';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
 
-export default function SingleExecution({ execution, toolbox }) {
-    const container = useRef();
+export default function SingleExecution({ execution, toolbox }: { execution: Execution; toolbox: Toolbox }) {
+    const container = useRef<HTMLDivElement>(null);
     const [containerHeight, setContainerHeight] = useState(0);
     const { useRefreshEvent } = Stage.Hooks;
 
@@ -27,11 +28,3 @@ export default function SingleExecution({ execution, toolbox }) {
         </div>
     );
 }
-
-SingleExecution.propTypes = {
-    execution: PropTypes.shape({}).isRequired,
-    toolbox: PropTypes.shape({
-        getEventBus: PropTypes.func,
-        refresh: PropTypes.func
-    }).isRequired
-};
