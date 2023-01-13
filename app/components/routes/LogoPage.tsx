@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Consts from '../utils/consts';
+import Consts from '../../utils/consts';
 
-import { FullScreenSegment, Logo } from './basic';
+import { FullScreenSegment, Logo } from '../basic';
 import ErrorPage from './ErrorPage';
-import NoTenants from './NoTenants';
-import NotFound from './NotFound';
+import NoTenantsPage from './NoTenantsPage';
+import NotFoundPage from './NotFoundPage';
 
 export default function LogoPage() {
     return (
@@ -15,8 +15,8 @@ export default function LogoPage() {
             <Logo />
             <Switch>
                 <Route exact path={Consts.PAGE_PATH.ERROR} component={ErrorPage} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={NoTenants} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={NotFound} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={NoTenantsPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={NotFoundPage} />
             </Switch>
         </FullScreenSegment>
     );

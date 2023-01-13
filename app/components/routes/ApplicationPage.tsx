@@ -7,17 +7,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import type { RouteComponentProps } from 'react-router';
 import type { Dispatch } from 'redux';
-import { storeCurrentPageId, setAppError } from '../actions/app';
-import { clearContext, setValue } from '../actions/context';
-import type { DrilldownContext } from '../actions/drilldownContext';
-import { setDrilldownContext } from '../actions/drilldownContext';
-import { createPagesMap } from '../actions/pageMenu';
-import type { ReduxState } from '../reducers';
-import Consts from '../utils/consts';
-import ContactDetailsModal from './ContactDetailsModal';
-import GettingStartedModal from './GettingStartedModal';
-import Page from './Page';
-import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
+import { storeCurrentPageId, setAppError } from '../../actions/app';
+import { clearContext, setValue } from '../../actions/context';
+import type { DrilldownContext } from '../../actions/drilldownContext';
+import { setDrilldownContext } from '../../actions/drilldownContext';
+import { createPagesMap } from '../../actions/pageMenu';
+import type { ReduxState } from '../../reducers';
+import Consts from '../../utils/consts';
+import ContactDetailsModal from '../ContactDetailsModal';
+import GettingStartedModal from '../GettingStartedModal';
+import Page from './PageContainer';
+import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from '../sidebar/SideBar';
 
 type ContextParams = DrilldownContext[];
 
@@ -41,7 +41,7 @@ interface HomeProps extends HomeCallbackProps {
     pageName: string;
 }
 
-class Home extends Component<HomeProps> {
+class ApplicationPage extends Component<HomeProps> {
     componentDidMount() {
         const { contextParams, onStorePageId, pageId } = this.props;
         onStorePageId(pageId);
@@ -160,4 +160,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     } as HomeCallbackProps;
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(ApplicationPage);

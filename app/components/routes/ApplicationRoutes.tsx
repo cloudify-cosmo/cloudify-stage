@@ -9,7 +9,7 @@ import type { ReduxThunkDispatch } from '../../configureStore';
 import intialPageLoad from '../../actions/initialPageLoad';
 import { logout } from '../../actions/manager/auth';
 import stageUtils from '../../utils/stageUtils';
-import Home from '../Home';
+import Home from './ApplicationPage';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
@@ -20,7 +20,7 @@ import ScrollToTop from './ScrollToTop';
 import TemplateManagement from '../templateManagement/TemplateManagement';
 import { useBoolean } from '../../utils/hooks';
 
-export default function Layout() {
+export default function ApplicationRoutes() {
     const [initialized, setInitialized] = useBoolean(false);
     const isLoading = useSelector((state: ReduxState) => state.app.loading);
     const isUserAuthorizedForTemplateManagement = useSelector(

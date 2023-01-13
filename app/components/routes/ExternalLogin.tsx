@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import type { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { loginSuccess } from '../actions/manager/auth';
-import Auth from '../utils/auth';
-import type { ReduxState } from '../reducers';
-import Consts from '../utils/consts';
+import { loginSuccess } from '../../actions/manager/auth';
+import Auth from '../../utils/auth';
+import type { ReduxState } from '../../reducers';
+import Consts from '../../utils/consts';
 
 const ExternalLogin: FunctionComponent = () => {
     const dispatch = useDispatch();

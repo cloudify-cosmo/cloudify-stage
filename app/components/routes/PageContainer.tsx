@@ -5,10 +5,10 @@ import type { ConnectedProps } from 'react-redux';
 import { connect } from 'react-redux';
 
 import styled from 'styled-components';
-import { setEditMode } from '../actions/config';
-import type { DrilldownContext } from '../actions/drilldownContext';
-import { setDrilldownContext } from '../actions/drilldownContext';
-import type { LayoutSection, PageDefinition } from '../actions/page';
+import { setEditMode } from '../../actions/config';
+import type { DrilldownContext } from '../../actions/drilldownContext';
+import { setDrilldownContext } from '../../actions/drilldownContext';
+import type { LayoutSection, PageDefinition } from '../../actions/page';
 import {
     addLayoutSectionToPage,
     addTab,
@@ -17,18 +17,18 @@ import {
     removeLayoutSectionFromPage,
     removeTab,
     updateTab
-} from '../actions/page';
-import { changePageMenuItemName, createPagesMap, selectPage } from '../actions/pageMenu';
-import { addWidget, removeWidget, updateWidget } from '../actions/widgets';
-import type { ReduxState } from '../reducers';
-import type { WidgetDefinition } from '../utils/StageAPI';
-import StageUtils from '../utils/stageUtils';
-import { Button, EditableLabel } from './basic';
-import Breadcrumbs from './Breadcrumbs';
-import EditModeBubble from './editMode/EditModeBubble';
-import { PageContent } from './shared/widgets';
-import { collapsedSidebarWidth } from './sidebar/SideBar';
-import type { ReduxThunkDispatch } from '../configureStore';
+} from '../../actions/page';
+import { changePageMenuItemName, createPagesMap, selectPage } from '../../actions/pageMenu';
+import { addWidget, removeWidget, updateWidget } from '../../actions/widgets';
+import type { ReduxState } from '../../reducers';
+import type { WidgetDefinition } from '../../utils/StageAPI';
+import StageUtils from '../../utils/stageUtils';
+import { Button, EditableLabel } from '../basic';
+import Breadcrumbs from '../Breadcrumbs';
+import EditModeBubble from '../editMode/EditModeBubble';
+import { PageContent } from '../shared/widgets';
+import { collapsedSidebarWidth } from '../sidebar/SideBar';
+import type { ReduxThunkDispatch } from '../../configureStore';
 
 export interface PageOwnProps {
     pageId: string;
@@ -47,7 +47,7 @@ const StyledPageHeader = styled.div`
     padding-left: 10px;
 `;
 
-class Page extends Component<PageProps, never> {
+class PageContainer extends Component<PageProps, never> {
     shouldComponentUpdate(nextProps: PageProps) {
         return !isEqual(this.props, nextProps);
     }
@@ -244,4 +244,4 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch, ownProps: PageOwnProps
 const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-export default connector(Page);
+export default connector(PageContainer);

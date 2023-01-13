@@ -8,7 +8,7 @@ import type { ReduxState } from '../reducers';
 import { Label, Breadcrumb, EditableLabel } from './basic';
 import { TextEllipsis } from './shared';
 
-import type { PageDefinitionWithContext } from './Page';
+import type { PageDefinitionWithContext } from './routes/PageContainer';
 
 const BreadCrumbsWrapper = styled.div`
     display: flex;

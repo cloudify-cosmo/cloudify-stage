@@ -6,14 +6,14 @@ import i18n from 'i18next';
 
 import { push } from 'connected-react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, CancelButton, Divider, Header, Modal } from './basic';
-import Banner from './banner/Banner';
-import CurrentLicense from './license/CurrentLicense';
-import CurrentVersion from './license/CurrentVersion';
-import EulaLink from './license/EulaLink';
-import stageUtils from '../utils/stageUtils';
-import Consts from '../utils/consts';
-import type { ReduxState } from '../reducers';
+import { Button, CancelButton, Divider, Header, Modal } from '../basic';
+import Banner from '../banner/Banner';
+import CurrentLicense from '../license/CurrentLicense';
+import CurrentVersion from '../license/CurrentVersion';
+import EulaLink from '../license/EulaLink';
+import stageUtils from '../../utils/stageUtils';
+import Consts from '../../utils/consts';
+import type { ReduxState } from '../../reducers';
 
 interface AboutModalProps {
     open: boolean;

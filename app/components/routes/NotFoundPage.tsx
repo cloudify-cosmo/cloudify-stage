@@ -3,11 +3,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from 'i18next';
-import Consts from '../utils/consts';
-import { Header, Label, Message, MessageContainer } from './basic';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
+import Consts from '../../utils/consts';
+import { Header, Label, Message, MessageContainer } from '../basic';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
-export default function NotFound() {
+export default function NotFoundPage() {
     return (
         <MessageContainer onRender={SplashLoadingScreen.turnOff}>
             <Header as="h2">

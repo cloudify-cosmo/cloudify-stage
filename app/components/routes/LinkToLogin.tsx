@@ -3,8 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from 'i18next';
 import { connect } from 'react-redux';
-import Consts from '../utils/consts';
-import type { ReduxState } from '../reducers';
+import Consts from '../../utils/consts';
+import type { ReduxState } from '../../reducers';
 
 interface LinkToLoginProps {
     portalUrl?: string;

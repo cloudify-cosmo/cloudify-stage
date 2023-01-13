@@ -16,7 +16,7 @@ import type { ReduxState } from '../../reducers';
 import StageUtils from '../../utils/stageUtils';
 import { getClusterStatus } from '../../actions/manager/clusterStatus';
 
-export default function MaintenanceModePageMessage() {
+export default function MaintenanceModePage() {
     const isFetchingClusterStatus = useSelector((state: ReduxState) => state.manager.clusterStatus.isFetching);
     const maintenanceStatus = useSelector((state: ReduxState) => state.manager.maintenance);
     const maintenanceModePermitted = useSelector((state: ReduxState) =>

@@ -8,20 +8,20 @@ import { push } from 'connected-react-router';
 
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import type { PaginatedResponse } from 'backend/types';
-import type { LicenseStatus } from '../reducers/managerReducer/licenseReducer';
-import Banner from './banner/Banner';
-import Consts from '../utils/consts';
-import StageUtils from '../utils/stageUtils';
-import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from './basic';
-import CurrentLicense from './license/CurrentLicense';
-import EulaLink from './license/EulaLink';
-import UploadLicense from './license/UploadLicense';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import Manager from '../utils/Manager';
-import { setLicense } from '../actions/manager/license';
-import Auth from '../utils/auth';
-import type { ReduxThunkDispatch } from '../configureStore';
-import type { ReduxState } from '../reducers';
+import type { LicenseStatus } from '../../reducers/managerReducer/licenseReducer';
+import Banner from '../banner/Banner';
+import Consts from '../../utils/consts';
+import StageUtils from '../../utils/stageUtils';
+import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from '../basic';
+import CurrentLicense from '../license/CurrentLicense';
+import EulaLink from '../license/EulaLink';
+import UploadLicense from '../license/UploadLicense';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import Manager from '../../utils/Manager';
+import { setLicense } from '../../actions/manager/license';
+import Auth from '../../utils/auth';
+import type { ReduxThunkDispatch } from '../../configureStore';
+import type { ReduxState } from '../../reducers';
 
 interface LicenseSwitchButtonProps {
     color: ButtonProps['color'];

@@ -13,7 +13,7 @@ import EditModeButton from '../../editMode/EditModeButton';
 import { useResettableState } from '../../../utils/hooks';
 import Consts from '../../../utils/consts';
 import EmptyContainerMessage from '../../EmptyContainerMessage';
-import type { PageProps } from '../../Page';
+import type { PageProps } from '../../routes/PageContainer';
 import type { TemplatePageDefinition } from '../../../actions/templateManagement/pages';
 
 export interface PageContentProps {

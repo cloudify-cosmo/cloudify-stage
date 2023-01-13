@@ -5,11 +5,11 @@ import { Redirect } from 'react-router-dom';
 import i18n from 'i18next';
 import { connect } from 'react-redux';
 
-import Consts from '../utils/consts';
+import Consts from '../../utils/consts';
 import LinkToLogin from './LinkToLogin';
-import { Header, Message, MessageContainer } from './basic';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type { ReduxState } from '../reducers';
+import { Header, Message, MessageContainer } from '../basic';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import type { ReduxState } from '../../reducers';
 
 interface ErrorPageProps {
     error: ReactNode;

@@ -4,7 +4,7 @@ import React from 'react';
 import i18n from 'i18next';
 import type { CheckboxProps } from 'semantic-ui-react';
 
-import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from './basic';
+import { Modal, Icon, ApproveButton, CancelButton, Checkbox, List, Card, Confirm } from '../basic';
 
 export interface ResetPagesModalProps {
     onConfirm: (tenantsNamesToReset: string[]) => void;

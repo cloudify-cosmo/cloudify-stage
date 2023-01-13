@@ -6,17 +6,17 @@ import type { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
-import { useBoolean } from '../utils/hooks';
-import { getTenants } from '../actions/manager/tenants';
-import Auth from '../utils/auth';
-import Consts from '../utils/consts';
-import type { LogoutAction } from '../actions/manager/auth';
-import { getManagerData, getUserData, logout } from '../actions/manager/auth';
-import Layout from './layout/Layout';
+import { useBoolean } from '../../utils/hooks';
+import { getTenants } from '../../actions/manager/tenants';
+import Auth from '../../utils/auth';
+import Consts from '../../utils/consts';
+import type { LogoutAction } from '../../actions/manager/auth';
+import { getManagerData, getUserData, logout } from '../../actions/manager/auth';
+import ApplicationRoutes from './ApplicationRoutes';
 import LicensePage from './LicensePage';
-import MaintenanceMode from './maintenance/MaintenanceModePageMessage';
-import SplashLoadingScreen from '../utils/SplashLoadingScreen';
-import type { ReduxThunkDispatch } from '../configureStore';
+import MaintenanceModePage from './MaintenanceModePage';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
+import type { ReduxThunkDispatch } from '../../configureStore';
 
 class NoTenantsError extends Error {}
 
@@ -52,9 +52,13 @@ const AuthRoutes: FunctionComponent = () => {
     return isManagerDataFetched ? (
         <Switch>
             {isLicenseRequired && <Route exact path={Consts.PAGE_PATH.LICENSE} component={LicensePage} />}
-            <Route exact path={Consts.PAGE_PATH.MAINTENANCE} component={MaintenanceMode} />
+            <Route exact path={Consts.PAGE_PATH.MAINTENANCE} component={MaintenanceModePage} />
             {isInMaintenanceMode && <Redirect to={Consts.PAGE_PATH.MAINTENANCE} />}
-            <Route render={() => (isProductOperational ? <Layout /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />)} />
+            <Route
+                render={() =>
+                    isProductOperational ? <ApplicationRoutes /> : <Redirect to={Consts.PAGE_PATH.LICENSE} />
+                }
+            />
         </Switch>
     ) : null;
 };

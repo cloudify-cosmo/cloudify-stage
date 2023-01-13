@@ -11,7 +11,7 @@ import { useBoolean } from '../../utils/hooks';
 import { minimizeWidgets } from '../../actions/widgets';
 import { setEditMode } from '../../actions/config';
 import Consts from '../../utils/consts';
-import ResetPagesModal from '../ResetPagesModal';
+import ResetPagesModal from './ResetPagesModal';
 import { resetPagesForTenant } from '../../actions/userApp';
 import PasswordModal from '../shared/PasswordModal';
 import { logout } from '../../actions/manager/auth';
