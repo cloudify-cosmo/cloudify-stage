@@ -25,7 +25,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         isHiddenValue: false,
         useSecretProvider: false,
         secretProvider: '',
-        secretProviderPath: null
+        secretProviderPath: ''
     });
     const [isOpen, doOpen, doClose] = useOpen(() => {
         unsetLoading();
@@ -64,7 +64,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : {};
+        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : undefined;
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
