@@ -31,14 +31,12 @@ import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
-import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { parentDeploymentLabelKey } from '../deploymentsView/common';
-import { deployOnTextFormatter } from './GenericDeployModal.utils';
 import StageUtils from '../../../utils/stageUtils';
 import { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } from '../../../components/basic';
+import EnvironmentDropdown from './EnvironmentDropdown';
 
 const t = StageUtils.getT('widgets.common.deployments.deployModal');
-const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
 
 type Blueprint = {
     description?: string;
@@ -587,8 +585,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        showDeployOnDropdown:
-                            !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown: true
+                        // TODO Norbert: Uncomment line below
+                        // !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
@@ -754,22 +753,18 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         )}
 
                         {showDeployOnDropdown && (
+                            // TODO
                             <Form.Field
                                 error={errors.deploymentIdToDeployOn}
                                 label={t('inputs.deploymentIdToDeployOn.label')}
                                 required
                             >
-                                <DynamicDropdown
+                                <EnvironmentDropdown
                                     value={deploymentIdToDeployOn}
                                     name="deploymentIdToDeployOn"
-                                    fetchUrl="/deployments?_include=id,display_name"
                                     placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
-                                    searchParams={deploymentSearchParams}
-                                    clearable={false}
                                     onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
-                                    textFormatter={deployOnTextFormatter}
                                     toolbox={toolbox}
-                                    prefetch
                                 />
                             </Form.Field>
                         )}
