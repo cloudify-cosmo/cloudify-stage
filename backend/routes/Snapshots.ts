@@ -1,6 +1,7 @@
 import type { Response } from 'express';
 import express from 'express';
-import { omit } from 'lodash';
+import { map, omit, union } from 'lodash';
+import { existsSync, writeJson } from 'fs-extra';
 import { db } from '../db/Connection';
 import type { UserAppsInstance } from '../db/models/UserAppsModel';
 import type { UserAppsAttributes } from '../db/models/UserAppsModel.types';
@@ -11,10 +12,15 @@ import { checkPageGroupExists, createPageGroup, getUserPageGroups } from '../han
 import { createUserWidgetsSnapshot, restoreUserWidgetsSnapshot } from '../handler/widgets/WidgetsHandler';
 import type { BlueprintUserDataInstance } from '../db/models/BlueprintUserDataModel';
 import type { BlueprintUserDataAttributes } from '../db/models/BlueprintUserDataModel.types';
+import { getResourcePath } from '../utils';
 
 const router = express.Router();
 
 router.use(express.json());
+
+function sendConflictResponse(res: Response) {
+    res.status(400).send({ message: 'Snapshot data conflicts with already existing data' });
+}
 
 (function ua() {
     const propertiesToOmit = ['id', 'tenant'] as const;
@@ -169,6 +175,41 @@ export type PageGroupsSnapshot = Omit<PageGroup, CommonPropertiesToOmit>[];
                     res.status(400).send({ message: 'Snapshot data conflicts with already existing data' });
                 else next(err);
             });
+    });
+})();
+
+(() => {
+    const userConfigurationFiles = ['overrides.json', 'userConfig.json'] as const;
+    type ConfigurationSnapshot = Partial<Record<typeof userConfigurationFiles[number], any>>;
+
+    router.get('/configuration', (_req, res: Response<ConfigurationSnapshot>, _next) => {
+        const snapshot: ConfigurationSnapshot = {};
+        userConfigurationFiles.forEach(fileName => {
+            const filePath = getResourcePath(fileName, true);
+            if (existsSync(filePath)) {
+                // eslint-disable-next-line import/no-dynamic-require,global-require
+                snapshot[fileName] = require(filePath);
+            }
+        });
+        res.send(snapshot);
+    });
+
+    router.post<never, { message: string }, ConfigurationSnapshot>('/configuration', (req, res, next) => {
+        if (union(userConfigurationFiles, Object.keys(req.body)).length > userConfigurationFiles.length) {
+            res.status(400).send({ message: 'Unsupported configuration file' });
+            return;
+        }
+
+        const existingFile = Object.keys(req.body).find(fileName => existsSync(getResourcePath(fileName, true)));
+
+        if (existingFile) {
+            sendConflictResponse(res);
+            return;
+        }
+
+        Promise.all(map(req.body, (fileContent, fileName) => writeJson(getResourcePath(fileName, true), fileContent)))
+            .then(() => res.status(201).end())
+            .catch(next);
     });
 })();
 
