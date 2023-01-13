@@ -31,7 +31,7 @@ export default class SecretActions {
     }
 
     doGetAllSecretProviders(): Promise<any> {
-        return this.manager.doGet('/secrets-providers');
+        return this.manager.doGet('/secrets-providers?_include=name');
     }
 
     doDelete(key: Secret['key']) {

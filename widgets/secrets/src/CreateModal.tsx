@@ -53,9 +53,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                 validationErrors.secretProviderPath = translateCreateModal('errors.validation.secretProviderPath');
             }
         } else if (isEmpty(secretValue)) {
-            if (isEmpty(secretValue)) {
-                validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
-            }
+            validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
         }
 
         if (!isEmpty(validationErrors)) {

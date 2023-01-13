@@ -80,7 +80,7 @@ describe('Secret store management widget', () => {
         });
     });
 
-    it('should return an error when secret providers are not defined', () => {
+    it('should not allow to create secret with secret provider if they are not defined in the system', () => {
         cy.deleteSecrets(secretName);
         cy.deleteSecretProviders();
 
