@@ -2,7 +2,7 @@ import React from 'react';
 
 import '../../initAppContext';
 import { noop } from 'lodash';
-import UserMenu from 'app/components/sidebar/UserMenu';
+import UserMenu from 'app/components/applicationPage/sidebar/UserMenu';
 import StageUtils from 'app/utils/stageUtils';
 import Consts from 'app/utils/consts';
 import Auth from 'app/utils/auth';

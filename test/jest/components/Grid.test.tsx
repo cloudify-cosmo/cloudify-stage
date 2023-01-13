@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
-import Grid from 'components/layout/Grid';
+import Grid from 'components/applicationPage/content/widgets/grid/Grid';
 import { Provider } from 'react-redux';
 
 describe('(Component) Grid', () => {

@@ -3,7 +3,7 @@ import { ThemeProvider } from 'styled-components';
 
 import '../../initAppContext';
 import Consts from 'app/utils/consts';
-import SideBar from 'app/components/sidebar/SideBar';
+import SideBar from 'app/components/applicationPage/sidebar/SideBar';
 import type { ManagerData } from 'app/reducers/managerReducer';
 import { emptyState } from 'app/reducers/managerReducer';
 import userConfig from 'conf/userConfig.json';

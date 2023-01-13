@@ -1,5 +1,5 @@
 import type { Reducer } from 'redux';
-import type { ClusterServices, ClusterServiceStatus } from '../../components/shared/cluster/types';
+import type { ClusterServices, ClusterServiceStatus } from '../../components/misc/status/cluster/types';
 import { ActionType } from '../../actions/types';
 import type { ClusterStatusAction } from '../../actions/manager/clusterStatus';
 

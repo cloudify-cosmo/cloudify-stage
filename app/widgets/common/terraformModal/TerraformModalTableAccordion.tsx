@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DynamicTableProps } from '../../../components/shared/DynamicTable';
+import type { DynamicTableProps } from '../../../components/misc/DynamicTable';
 import AccordionSection from '../components/accordion/AccordionSection';
 
 import { DynamicTable } from '../../../components/shared';

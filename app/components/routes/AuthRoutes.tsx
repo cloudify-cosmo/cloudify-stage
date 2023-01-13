@@ -13,8 +13,8 @@ import Consts from '../../utils/consts';
 import type { LogoutAction } from '../../actions/manager/auth';
 import { getManagerData, getUserData, logout } from '../../actions/manager/auth';
 import ApplicationRoutes from './ApplicationRoutes';
-import LicensePage from './LicensePage';
-import MaintenanceModePage from './MaintenanceModePage';
+import LicensePage from '../license/LicensePage';
+import MaintenanceModePage from '../maintenanceMode/MaintenanceModePage';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import type { ReduxThunkDispatch } from '../../configureStore';
 

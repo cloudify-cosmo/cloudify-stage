@@ -9,7 +9,7 @@ import type { ReduxThunkDispatch } from '../../configureStore';
 import intialPageLoad from '../../actions/initialPageLoad';
 import { logout } from '../../actions/manager/auth';
 import stageUtils from '../../utils/stageUtils';
-import Home from './ApplicationPage';
+import Home from '../applicationPage/ApplicationPage';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';

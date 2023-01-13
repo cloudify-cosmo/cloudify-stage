@@ -6,7 +6,7 @@ import Manager from '../../utils/Manager';
 import { forEachWidget } from '../page';
 import type { PageMenuItem } from '../pageMenu';
 import { createPagesMap } from '../pageMenu';
-import type { ClusterServices, ClusterServiceStatus } from '../../components/shared/cluster/types';
+import type { ClusterServices, ClusterServiceStatus } from '../../components/misc/status/cluster/types';
 
 export type FetchClusterStatusRequestAction = Action<ActionType.FETCH_CLUSTER_STATUS_REQUEST>;
 export type FetchClusterStatusSuccessAction = PayloadAction<

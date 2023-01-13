@@ -1,7 +1,7 @@
 import React from 'react';
 
 import '../../initAppContext';
-import TenantSelection from 'app/components/sidebar/TenantSelection';
+import TenantSelection from 'app/components/applicationPage/sidebar/TenantSelection';
 import { mountWithProvider } from '../../utils';
 
 const mockTenantsResponse = (tenants: any[], withDelay = false) => {

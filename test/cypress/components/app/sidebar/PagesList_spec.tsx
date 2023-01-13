@@ -1,7 +1,7 @@
 import React from 'react';
 
 import '../../initAppContext';
-import PagesList from 'app/components/sidebar/PagesList';
+import PagesList from 'app/components/applicationPage/sidebar/PagesList';
 import Consts from 'app/utils/consts';
 import { noop } from 'lodash';
 import { mountWithProvider } from '../../utils';

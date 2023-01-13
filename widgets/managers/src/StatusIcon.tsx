@@ -1,4 +1,4 @@
-import type { ClusterServices, ClusterServiceStatus } from '../../../app/components/shared/cluster/types';
+import type { ClusterServices, ClusterServiceStatus } from '../../../app/components/misc/status/cluster/types';
 
 interface StatusIconProps {
     isFetching: boolean;
