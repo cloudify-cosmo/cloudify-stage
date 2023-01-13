@@ -118,7 +118,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .then(data => setSecretProviders(data.items))
             .catch(setMessageAsError);
     }
-    const secretProvidersArray = secretProviders?.map((item: { name: string }) => ({
+    const secretProvidersDropdownOptions = secretProviders?.map((item: { name: string }) => ({
         text: item.name,
         value: item.name
     }));
@@ -171,7 +171,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                                     name="secretProvider"
                                     placeholder={translateCreateModal('inputs.secretProvider.placeholder')}
                                     selection
-                                    options={secretProvidersArray}
+                                    options={secretProvidersDropdownOptions}
                                     onChange={setInput}
                                     value={secretProvider}
                                 />
