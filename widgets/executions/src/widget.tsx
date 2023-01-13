@@ -5,6 +5,7 @@ import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
+import { translate } from './widget.utils';
 import './widget.css';
 
 export interface ExecutionsWidgetParams {
@@ -22,7 +23,6 @@ export interface ExecutionsWidgetConfiguration extends DataTableConfiguration {
     singleExecutionView?: boolean;
 }
 
-export const translate = Stage.Utils.getT('widgets.executions');
 const translateColumns = Stage.Utils.composeT(translate, 'columns');
 
 Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Execution>, ExecutionsWidgetConfiguration>({

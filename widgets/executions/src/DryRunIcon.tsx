@@ -1,5 +1,5 @@
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
-import { translate } from './widget';
+import { translate } from './widget.utils';
 
 export default function DryRunIcon({ execution }: { execution?: Pick<Execution, 'is_dry_run'> }) {
     const { Icon, Popup } = Stage.Basic;
