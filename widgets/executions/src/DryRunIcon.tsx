@@ -1,22 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import { translate } from './widget';
 
-export default function DryRunIcon({ execution }) {
+export default function DryRunIcon({ execution }: { execution?: Pick<Execution, 'is_dry_run'> }) {
     const { Icon, Popup } = Stage.Basic;
 
-    return execution.is_dry_run ? (
+    return execution?.is_dry_run ? (
         <Popup wide on="hover">
             <Popup.Trigger>
                 <Icon name="clipboard check" color="green" />
             </Popup.Trigger>
-            <Popup.Content>Dry Run</Popup.Content>
+            <Popup.Content>{translate('dryRun')}</Popup.Content>
         </Popup>
     ) : null;
 }
-
-DryRunIcon.propTypes = {
-    execution: PropTypes.shape({ is_dry_run: PropTypes.bool })
-};
-
-DryRunIcon.defaultProps = {
-    execution: { is_dry_run: false }
-};

@@ -6,6 +6,7 @@ import type { JSXElementConstructor, ReactElement, ReactNode, SyntheticEvent } f
 import type { SemanticCOLORS } from 'semantic-ui-react';
 import type { WidgetDefinition } from 'backend/handler/templates/types';
 import type { PaginatedResponse as CloudifyPaginatedResponse } from 'backend/types';
+import type WidgetBackend from 'app/utils/WidgetBackend';
 import type * as BasicComponents from '../components/basic';
 import type * as SharedComponents from '../components/shared';
 import type WidgetContext from './Context';
@@ -50,7 +51,7 @@ interface StageWidgetlessToolbox {
 /** @see https://docs.cloudify.co/developer/writing_widgets/widget-apis/#toolbox-object */
 interface StageToolbox extends StageWidgetlessToolbox {
     getWidget(): StageWidget;
-    getWidgetBackend(): any;
+    getWidgetBackend(): WidgetBackend;
     loading(isLoading: boolean): void;
     refresh(params?: any): void;
 }
