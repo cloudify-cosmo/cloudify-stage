@@ -466,8 +466,6 @@ const commands = {
 
     typeToFieldInput: (fieldName: string, text: string) => cy.getField(fieldName).find('input').clear().type(text),
 
-    openDropdown: (dropdownName: string) => cy.get(`div[name="${dropdownName}"]`).click(),
-
     setSearchableDropdownValue: (fieldName: string, value: string) => {
         if (value) {
             return cy
