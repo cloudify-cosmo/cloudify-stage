@@ -23,7 +23,7 @@ const commands = {
         }),
 
     killExecution: (executionId: string) =>
-        cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill' }),
+        cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill', force: true }),
 
     killRunningExecutions: () => {
         const activeStatusesQueryString = stringify({
