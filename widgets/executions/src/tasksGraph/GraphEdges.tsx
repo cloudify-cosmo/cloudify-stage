@@ -1,18 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
-import GraphEdgePropType from './props/GraphEdgePropType';
+import type { ElkExtendedEdge } from 'elkjs/lib/elk-api';
 import GraphEdge from './GraphEdge';
 
-/**
- * @property {Array} [graphEdges] - Array of Graph Edges to render
- */
-
-const GraphEdges = props => props.graphEdges.map(graphEdge => <GraphEdge key={graphEdge.id} graphEdge={graphEdge} />);
-
-GraphEdges.propTypes = {
-    graphEdges: PropTypes.arrayOf(GraphEdgePropType)
-};
-GraphEdges.defaultProps = {
-    graphEdges: []
-};
+const GraphEdges = ({ graphEdges = [] }: { graphEdges: ElkExtendedEdge[] }) => (
+    <>
+        {graphEdges.map(graphEdge => (
+            <GraphEdge key={graphEdge.id} graphEdge={graphEdge} />
+        ))}
+    </>
+);
 
 export default GraphEdges;
