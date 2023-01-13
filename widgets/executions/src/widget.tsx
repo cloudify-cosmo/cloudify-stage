@@ -22,13 +22,13 @@ export interface ExecutionsWidgetConfiguration extends DataTableConfiguration {
     singleExecutionView?: boolean;
 }
 
-const t = Stage.Utils.getT('widgets.executions');
-const translateColumns = Stage.Utils.composeT(t, 'columns');
+export const translate = Stage.Utils.getT('widgets.executions');
+const translateColumns = Stage.Utils.composeT(translate, 'columns');
 
 Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Execution>, ExecutionsWidgetConfiguration>({
     id: 'executions',
-    name: t('name'),
-    description: t('description'),
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 8,
     initialHeight: 24,
     isReact: true,
@@ -41,7 +41,7 @@ Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Executi
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: t('configuration.fieldsToShow.name'),
+            name: translate('configuration.fieldsToShow.name'),
             items: [
                 'blueprintId',
                 'deploymentDisplayName',
@@ -73,7 +73,7 @@ Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Executi
         },
         {
             id: 'showSystemExecutions',
-            name: t('configuration.showSystemExecutions.name'),
+            name: translate('configuration.showSystemExecutions.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
@@ -81,7 +81,7 @@ Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Executi
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'singleExecutionView',
-            name: t('configuration.singleExecutionView.name'),
+            name: translate('configuration.singleExecutionView.name'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
@@ -107,7 +107,7 @@ Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Executi
                     .then(deployment => executionActions.doGet(deployment.latest_execution));
             }
 
-            return Promise.reject(t('invalidConfigurationError'));
+            return Promise.reject(translate('invalidConfigurationError'));
         }
 
         return executionActions.doGetAll(params);
@@ -136,7 +136,7 @@ Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Executi
             const latestExecution = data as Execution;
             if (isEmpty(latestExecution)) {
                 const { ErrorMessage } = Stage.Basic;
-                return <ErrorMessage error={t('noExecutionFound')} />;
+                return <ErrorMessage error={translate('noExecutionFound')} />;
             }
             return <SingleExecution execution={latestExecution} toolbox={toolbox} />;
         }

@@ -1,10 +1,11 @@
 import type { Toolbox, Widget } from 'app/utils/StageAPI';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
-import type { ExecutionsWidgetConfiguration } from 'widgets/executions/src/widget';
 import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
 import type { MenuItemProps } from 'semantic-ui-react';
 import { Component } from 'react';
 import { camelCase } from 'lodash';
+import { translate } from './widget';
+import type { ExecutionsWidgetConfiguration } from './widget';
 import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
 import ExecutionWorkflowGraph from './tasksGraph/ExecutionWorkflowGraph';
@@ -32,7 +33,6 @@ interface ExecutionsTableState {
     error: null;
 }
 
-const translate = Stage.Utils.getT('widgets.executions');
 const translateActionMenu = Stage.Utils.composeT(translate, 'actionMenu');
 const translateColumn = Stage.Utils.composeT(translate, 'columns');
 const translateParametersModal = Stage.Utils.composeT(translate, 'parametersModal');
