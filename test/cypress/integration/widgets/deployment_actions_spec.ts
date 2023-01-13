@@ -125,6 +125,8 @@ describe('Deployment Action Buttons widget', () => {
                 cy.setSearchableDropdownValue('Blueprint', blueprintName);
                 cy.typeToFieldInput('Deployment name', `${deploymentId}_child`);
 
+                cy.getField('Deploy On').should('not.exist');
+
                 cy.getField('Server IP').find('textarea').type('127.0.0.1');
 
                 cy.clickButton('Install');
