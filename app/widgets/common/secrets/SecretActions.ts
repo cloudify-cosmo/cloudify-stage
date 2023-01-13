@@ -1,7 +1,7 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Visibility } from '../types';
 
-type ProviderOptions = Record<string, any> | null;
+type ProviderOptions = Record<string, any>;
 
 /* eslint-disable camelcase */
 export type Secret = {
@@ -14,7 +14,7 @@ export type Secret = {
     visibility?: Visibility;
     value: string;
     schema: string;
-    provider_name?: string | null;
+    provider_name?: string;
     provider_options?: ProviderOptions;
 };
 /* eslint-enable camelcase */

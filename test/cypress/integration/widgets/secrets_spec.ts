@@ -79,4 +79,18 @@ describe('Secret store management widget', () => {
             cy.contains(secretProviderName);
         });
     });
+
+    it('should return an error when secret providers are not defined', () => {
+        cy.deleteSecrets(secretName);
+        cy.deleteSecretProviders();
+
+        cy.contains('Create').click();
+        cy.get('.modal').within(() => {
+            cy.getField('Secret key').find('input').type(secretName);
+            cy.contains('.checkbox', 'Retrieve the secret value from a secret provider').should(
+                'have.class',
+                'disabled'
+            );
+        });
+    });
 });

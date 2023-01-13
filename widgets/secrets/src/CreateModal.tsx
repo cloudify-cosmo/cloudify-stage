@@ -150,12 +150,16 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                             onChange={setInput}
                         />
                     </Form.Field>
-                    <Form.Field error={errors.secretProviderCheckbox}>
+                    <Form.Field>
                         <Form.Checkbox
                             label={translateCreateModal('inputs.useSecretProvider.label')}
                             name="useSecretProvider"
                             checked={useSecretProvider}
                             onChange={onSecretProviderChange}
+                            disabled={isEmpty(secretProviders)}
+                            help={
+                                isEmpty(secretProviders) ? translateCreateModal('errors.validation.noProviders') : null
+                            }
                         />
                     </Form.Field>
                     {useSecretProvider ? (
