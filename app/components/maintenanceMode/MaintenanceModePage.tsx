@@ -4,7 +4,7 @@ import { HeaderBar } from 'cloudify-ui-components';
 import { push } from 'connected-react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Banner from '../widgetsPage/sidebar/banner/Banner';
+import Banner from '../sidebar/banner/Banner';
 import SystemStatusHeader from '../misc/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';

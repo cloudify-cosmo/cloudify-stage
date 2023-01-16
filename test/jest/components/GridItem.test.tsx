@@ -1,7 +1,7 @@
 import { mount } from 'enzyme';
 import React from 'react';
 
-import GridItem from 'components/widgetsPage/content/widgets/grid/GridItem';
+import GridItem from 'components/page/content/widgets/grid/GridItem';
 
 describe('(Component) GridItem', () => {
     const wrapper = mount(

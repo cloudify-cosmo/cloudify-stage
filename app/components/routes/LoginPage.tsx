@@ -12,8 +12,8 @@ import type { ReduxState } from '../../reducers';
 import renderMultilineText from '../../utils/shared/renderMultilineText';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StageUtils from '../../utils/stageUtils';
-import LargeLogo from '../widgetsPage/sidebar/banner/LargeLogo';
-import LogoLabel from '../widgetsPage/sidebar/banner/LogoLabel';
+import LargeLogo from '../sidebar/banner/LargeLogo';
+import LogoLabel from '../sidebar/banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from '../basic';
 import type { ReduxThunkDispatch } from '../../configureStore';
 

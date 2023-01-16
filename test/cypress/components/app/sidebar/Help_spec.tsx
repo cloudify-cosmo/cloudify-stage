@@ -1,7 +1,7 @@
 import React from 'react';
 
 import '../../initAppContext';
-import HelpMenu from 'app/components/widgetsPage/sidebar/HelpMenu';
+import HelpMenu from 'app/components/sidebar/HelpMenu';
 import { ThemeContext } from 'styled-components';
 import StageUtils from 'app/utils/stageUtils';
 import { noop } from 'lodash';
