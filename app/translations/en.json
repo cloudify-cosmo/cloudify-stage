@@ -1660,22 +1660,38 @@
                 },
                 "inputs": {
                     "secretKey": {
-                        "placeholder": "Secret key"
+                        "label": "Secret key",
+                        "placeholder": "Provide secret key"
                     },
                     "secretValue": {
-                        "placeholder": "Secret value"
+                        "label": "Secret value",
+                        "placeholder": "Provide secret value"
                     },
                     "secretFile": {
                         "placeholder": "Get secret value from file (max: 50kB)"
                     },
                     "hiddenValue": {
                         "label": "Hidden Value"
+                    },
+                    "useSecretProvider": {
+                        "label": "Retrieve the secret value from a secret provider"
+                    },
+                    "secretProvider": {
+                        "label": "Secret provider",
+                        "placeholder": "Select secret provider"
+                    },
+                    "secretProviderPath": {
+                        "label": "Path at the provider",
+                        "placeholder": "Provide path at the secret provider"
                     }
                 },
                 "errors": {
                     "validation": {
                         "secretKey": "Please provide secret key",
-                        "secretValue": "Please provide secret value"
+                        "secretValue": "Please provide secret value",
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                     }
                 }
             },
