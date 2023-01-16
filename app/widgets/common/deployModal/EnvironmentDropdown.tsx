@@ -29,11 +29,11 @@ export interface FetchedOption {
 }
 
 // TODO:
-// - Fetching Data (remember about a prefetch 😁)
-// - Displaying Data via MenuItems
-// - Sorting data
-// - Displaying data with certain headers
+// - Download data with a required information (capabilities?)
+// - Displaying data with certain headers and MenuItems
+// - Implement matching specified in a corresponding ticket
 // - Add pagination for fetched data
+// - Error handling
 
 const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox }: EnvironmentDropdownProps) => {
     const searchActions = new SearchActions(toolbox);
@@ -102,7 +102,8 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
     }, [searchQuery]);
 
     return (
-        // TODO Norbert: Check if debounce is needed - maybe DynamicDropdown had it implemented under the hood
+        // TODO Norbert: Implement debounce functionality
+        // TODO Norbert: Persist selected value data on dropdown blur
         <Form.Dropdown
             name={name}
             fluid
