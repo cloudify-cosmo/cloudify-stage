@@ -1,7 +1,11 @@
 import { castArray, isEmpty } from 'lodash';
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { PaginatedResponse } from 'backend/types';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import ExecutionsTable from './ExecutionsTable';
 import SingleExecution from './SingleExecution';
 
+import { translate } from './widget.utils';
 import './widget.css';
 
 export interface ExecutionsWidgetParams {
@@ -13,18 +17,18 @@ export interface ExecutionsWidgetParams {
     /* eslint-enable camelcase */
 }
 
-export interface ExecutionsWidgetConfiguration {
-    fieldsToShow?: string;
+export interface ExecutionsWidgetConfiguration extends DataTableConfiguration {
+    fieldsToShow: string;
     showSystemExecutions?: boolean;
     singleExecutionView?: boolean;
 }
 
-const t = Stage.Utils.getT('widgets.executions');
+const translateColumns = Stage.Utils.composeT(translate, 'columns');
 
-Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
+Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Execution>, ExecutionsWidgetConfiguration>({
     id: 'executions',
-    name: t('name'),
-    description: t('description'),
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 8,
     initialHeight: 24,
     isReact: true,
@@ -37,27 +41,39 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: t('configuration.fieldsToShow.name'),
+            name: translate('configuration.fieldsToShow.name'),
             items: [
-                'Blueprint',
-                'Deployment',
-                'Deployment ID',
-                'Workflow',
-                'Id',
-                'Created',
-                'Scheduled',
-                'Ended',
-                'Creator',
-                'Attributes',
-                'Status',
-                'Actions'
-            ],
-            default: 'Blueprint,Deployment,Workflow,Created,Ended,Creator,Attributes,Actions,Status',
+                'blueprintId',
+                'deploymentDisplayName',
+                'deploymentId',
+                'workflowId',
+                'id',
+                'createdAt',
+                'scheduledFor',
+                'endedAt',
+                'createdBy',
+                'attributes',
+                'status',
+                'actions'
+            ].map(item => translateColumns(item)),
+            default: [
+                'blueprintId',
+                'deploymentDisplayName',
+                'workflowId',
+                'createdAt',
+                'endedAt',
+                'createdBy',
+                'attributes',
+                'actions',
+                'status'
+            ]
+                .map(item => translateColumns(item))
+                .join(),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'showSystemExecutions',
-            name: t('configuration.showSystemExecutions.name'),
+            name: translate('configuration.showSystemExecutions.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
@@ -65,7 +81,7 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'singleExecutionView',
-            name: t('configuration.singleExecutionView.name'),
+            name: translate('configuration.singleExecutionView.name'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
@@ -91,7 +107,7 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
                     .then(deployment => executionActions.doGet(deployment.latest_execution));
             }
 
-            return Promise.reject(t('invalidConfigurationError'));
+            return Promise.reject(translate('invalidConfigurationError'));
         }
 
         return executionActions.doGetAll(params);
@@ -111,17 +127,16 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
 
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
-        const { singleExecutionView } = widget.configuration;
 
-        if (_.isEmpty(data)) {
+        if (!data) {
             return <Loading />;
         }
 
-        if (singleExecutionView) {
-            const latestExecution = data;
+        if ('id' in data) {
+            const latestExecution = data as Execution;
             if (isEmpty(latestExecution)) {
                 const { ErrorMessage } = Stage.Basic;
-                return <ErrorMessage error={t('noExecutionFound')} />;
+                return <ErrorMessage error={translate('noExecutionFound')} />;
             }
             return <SingleExecution execution={latestExecution} toolbox={toolbox} />;
         }
@@ -142,7 +157,6 @@ Stage.defineWidget<ExecutionsWidgetParams, any, ExecutionsWidgetConfiguration>({
             deploymentId: !!params.deployment_id
         };
 
-        // @ts-ignore ExecutionsTable is not migrated yet
         return <ExecutionsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
 });
