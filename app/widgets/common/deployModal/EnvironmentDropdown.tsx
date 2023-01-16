@@ -7,9 +7,11 @@ import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { useBoolean } from '../../../utils/hooks';
 import { mapFetchedOptions } from './EnvironmentDropdown.utils';
 import DynamicDropdown from '../components/DynamicDropdown';
+import SearchActions from '../actions/SearchActions';
+import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 
 const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
-const fetchUrl = '/deployments';
+const fetchUrl = '/searches/deployments';
 
 // TODO Norbert: Consider extending interface with the `DynamicDropdownProps`, so that the user could pass not required by the functionality props, like `prefetch`, `clearable` etc
 interface EnvironmentDropdownProps {
@@ -34,6 +36,7 @@ export interface FetchedOption {
 // - Add pagination for fetched data
 
 const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox }: EnvironmentDropdownProps) => {
+    const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [fetchedOptions, setFetchedOptions] = useState<FetchedOption[]>([]);
@@ -58,18 +61,40 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
     const loadData = () => {
         setLoading();
 
-        // TODO: Fetch only deployments marked as `environment`
-        toolbox
-            .getManager()
-            .doGetFull<FetchedOption>(fetchUrl, {
-                _include: 'id,display_name',
-                _search: searchQuery,
-                _search_name: searchQuery
-            })
+        searchActions
+            .doListAllDeployments(
+                [
+                    {
+                        key: 'csys-obj-type',
+                        values: ['environment'],
+                        type: FilterRuleType.Label,
+                        operator: FilterRuleOperators.AnyOf
+                    }
+                ],
+                {
+                    _include: 'id,display_name',
+                    _search: searchQuery
+                }
+            )
             .then(data => {
                 setFetchedOptions(data.items);
             })
             .finally(unsetLoading);
+
+        // TODO: Fetch only deployments marked as `environment`
+        // toolbox
+        //     .getManager()
+        //     .doPostFull<FetchedOption>(fetchUrl, {
+        //         params: {
+        //             _include: 'id,display_name',
+        //             _search: searchQuery,
+        //             _search_name: searchQuery
+        //         }
+        //     })
+        //     .then(data => {
+        //         setFetchedOptions(data.items);
+        //     })
+        //     .finally(unsetLoading);
     };
 
     useEffect(() => {
@@ -77,6 +102,7 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
     }, [searchQuery]);
 
     return (
+        // TODO Norbert: Check if debounce is needed - maybe DynamicDropdown had it implemented under the hood
         <Form.Dropdown
             name={name}
             fluid
