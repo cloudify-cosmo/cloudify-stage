@@ -193,12 +193,13 @@ export type PageGroupsSnapshot = Omit<PageGroup, CommonPropertiesToOmit>[];
     });
 
     router.post<never, { message: string }, ConfigurationSnapshot>('/configuration', (req, res, next) => {
-        if (union(userConfigurationFiles, Object.keys(req.body)).length > userConfigurationFiles.length) {
+        const requestedFiles = Object.keys(req.body);
+        if (union(userConfigurationFiles, requestedFiles).length > userConfigurationFiles.length) {
             res.status(400).send({ message: 'Unsupported configuration file' });
             return;
         }
 
-        const existingFile = Object.keys(req.body).find(fileName => existsSync(getResourcePath(fileName, true)));
+        const existingFile = requestedFiles.find(fileName => existsSync(getResourcePath(fileName, true)));
 
         if (existingFile) {
             sendConflictResponse(res);
