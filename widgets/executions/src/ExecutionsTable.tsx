@@ -4,7 +4,7 @@ import type { DataTableProps } from 'cloudify-ui-components/typings/components/d
 import type { MenuItemProps } from 'semantic-ui-react';
 import { Component } from 'react';
 import { camelCase } from 'lodash';
-import { translate } from './widget';
+import { translate } from './widget.utils';
 import type { ExecutionsWidgetConfiguration } from './widget';
 import DryRunIcon from './DryRunIcon';
 import SystemWorkflowIcon from './SystemWorkflowIcon';
