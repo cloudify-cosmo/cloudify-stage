@@ -10,11 +10,11 @@ import Link from './misc/Link';
 import MaintenanceModeActivationButton from './maintenanceMode/MaintenanceModeActivationButton';
 import MaintenanceModeModal from './maintenanceMode/MaintenanceModeModal';
 import PageFilter from './misc/PageFilter';
-import PasswordModal from './application/modals/PasswordModal';
+import PasswordModal from './widgetsPage/modals/PasswordModal';
 import ProductLogo from './misc/ProductLogo';
 import SemanticIconDropdown from './misc/SemanticIconDropdown';
 import ErrorPopup from './misc/ErrorPopup';
-import * as Widgets from './application/content';
+import * as Widgets from './widgetsPage/content';
 import * as PluginActions from '../actions/plugins';
 import TextEllipsis from './misc/TextEllipsis';
 

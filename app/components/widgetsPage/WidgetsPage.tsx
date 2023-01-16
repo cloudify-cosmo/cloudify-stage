@@ -16,12 +16,12 @@ import type { ReduxState } from '../../reducers';
 import Consts from '../../utils/consts';
 import ContactDetailsModal from './modals/ContactDetailsModal';
 import GettingStartedModal from './modals/GettingStartedModal';
-import Page from './content/PageContainer';
+import PageContainer from './content/PageContainer';
 import SideBar, { collapsedSidebarWidth, expandedSidebarWidth } from './sidebar/SideBar';
 
 type ContextParams = DrilldownContext[];
 
-interface ApplicationPageCallbackProps {
+interface WidgetsPageCallbackProps {
     navigateTo404: () => void;
     navigateToError: (message: string) => void;
     navigateToMaintenancePage: () => void;
@@ -31,7 +31,7 @@ interface ApplicationPageCallbackProps {
     onStorePageId: (pageId: string) => void;
 }
 
-interface ApplicationPageProps extends ApplicationPageCallbackProps {
+interface WidgetsPageProps extends WidgetsPageCallbackProps {
     contextParams: ContextParams;
     emptyPages: boolean;
     isEditMode: boolean;
@@ -41,14 +41,14 @@ interface ApplicationPageProps extends ApplicationPageCallbackProps {
     pageName: string;
 }
 
-class ApplicationPage extends Component<ApplicationPageProps> {
+class WidgetsPage extends Component<WidgetsPageProps> {
     componentDidMount() {
         const { contextParams, onStorePageId, pageId } = this.props;
         onStorePageId(pageId);
         this.handleContext(contextParams);
     }
 
-    componentDidUpdate(prevProps: ApplicationPageProps) {
+    componentDidUpdate(prevProps: WidgetsPageProps) {
         const { contextParams, onStorePageId, pageId } = this.props;
         if (prevProps.pageId !== pageId) {
             onStorePageId(pageId);
@@ -105,7 +105,7 @@ class ApplicationPage extends Component<ApplicationPageProps> {
 
                 <div className="page" style={{ marginLeft: isEditMode ? expandedSidebarWidth : collapsedSidebarWidth }}>
                     <div className="ui basic segment">
-                        <Page pageId={pageId} pageName={pageName} />
+                        <PageContainer pageId={pageId} pageName={pageName} />
                     </div>
                 </div>
             </div>
@@ -157,7 +157,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
         onStorePageId: pageId => {
             dispatch(storeCurrentPageId(pageId));
         }
-    } as ApplicationPageCallbackProps;
+    } as WidgetsPageCallbackProps;
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ApplicationPage);
+export default connect(mapStateToProps, mapDispatchToProps)(WidgetsPage);

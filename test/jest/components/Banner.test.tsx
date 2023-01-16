@@ -11,7 +11,7 @@ import { MemoryRouter as Router } from 'react-router-dom';
 import type { ReduxState } from 'reducers';
 import Consts from 'utils/consts';
 import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
-import Banner from 'components/applicationPage/sidebar/banner/Banner';
+import Banner from 'components/widgetsPage/sidebar/banner/Banner';
 import type { LicenseStatus } from 'reducers/managerReducer';
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import licenses from '../resources/licenses';

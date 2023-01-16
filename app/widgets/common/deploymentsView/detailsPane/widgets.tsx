@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import pageLayout from './pageLayout.json';
 import type { TemplatePageDefinition } from '../../../../actions/templateManagement/pages';
-import { PageContent } from '../../../../components/application/content';
+import { PageContent } from '../../../../components/widgetsPage/content';
 
 const WidgetsPaneWrapper = styled.div`
     overflow: auto;

@@ -9,7 +9,7 @@ import type { ReduxThunkDispatch } from '../../configureStore';
 import intialPageLoad from '../../actions/initialPageLoad';
 import { logout } from '../../actions/manager/auth';
 import stageUtils from '../../utils/stageUtils';
-import ApplicationPage from '../application/ApplicationPage';
+import WidgetsPage from '../widgetsPage/WidgetsPage';
 import PageManagement from '../templateManagement/pages/PageManagement';
 import Consts from '../../utils/consts';
 import { NO_PAGES_FOR_TENANT_ERR, UNAUTHORIZED_ERR } from '../../utils/ErrorCodes';
@@ -90,9 +90,9 @@ export default function ApplicationRoutes() {
                         render={({ match }) => <PageManagement pageId={match.params.pageId} isEditMode />}
                     />
                 )}
-                <Route exact path="/page/:pageId/:pageName" component={ApplicationPage} />
-                <Route exact path="/page/:pageId" component={ApplicationPage} />
-                <Route exact path={Consts.PAGE_PATH.HOME} component={ApplicationPage} />
+                <Route exact path="/page/:pageId/:pageName" component={WidgetsPage} />
+                <Route exact path="/page/:pageId" component={WidgetsPage} />
+                <Route exact path={Consts.PAGE_PATH.HOME} component={WidgetsPage} />
                 <Route render={() => <Redirect to={Consts.PAGE_PATH.ERROR_404} />} />
             </Switch>
         </ScrollToTop>

@@ -3,7 +3,7 @@ import React, { useMemo, useRef } from 'react';
 import { noop } from 'lodash';
 import styled from 'styled-components';
 
-import { Widget } from '../../../../components/application/content';
+import { Widget } from '../../../../components/widgetsPage/content';
 import './header.scss';
 import type { Deployment } from '../types';
 import StageUtils from '../../../../utils/stageUtils';

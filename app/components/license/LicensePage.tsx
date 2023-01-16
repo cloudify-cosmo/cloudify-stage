@@ -9,7 +9,7 @@ import { push } from 'connected-react-router';
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import type { PaginatedResponse } from 'backend/types';
 import type { LicenseStatus } from '../../reducers/managerReducer/licenseReducer';
-import Banner from '../application/sidebar/banner/Banner';
+import Banner from '../widgetsPage/sidebar/banner/Banner';
 import Consts from '../../utils/consts';
 import StageUtils from '../../utils/stageUtils';
 import { Button, FullScreenSegment, Grid, Header, Icon, Message, MessageContainer } from '../basic';
