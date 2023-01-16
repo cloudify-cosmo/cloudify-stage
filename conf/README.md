@@ -5,7 +5,6 @@ The following section describes different configuration files used in cloudify-s
 ## Core configuration (`config.json`)
 
 * `maintenancePollingInterval` - integer, time interval for Manager status polling (milliseconds) 
-* `singleManager` - boolean, defines if Manager is executed as single (depracated)
 
 * `github` - object, configuration for accessing GitHub resources
   * `username` - string, GitHub username secret name, eg. "secret(github-username)"
@@ -74,6 +73,9 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
     * `put` - integer, PUT request timeout (milliseconds)
     * `delete` - integer, DELETE request timeout (milliseconds)
   * `maxBodySize` - string, maximum body size to handle (number + unit, see https://www.npmjs.com/package/bytes)
+
+* `useLoginPage` - boolean, if set to true then login page is reachable, if set to false it's not reachable
+  and in order to log in a token cookie must be set in the browser
 
 * `saml` - object, SAML configuration
   * `enabled` - boolean, if set to true SAML will be enabled

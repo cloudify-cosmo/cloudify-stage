@@ -5,19 +5,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 import { isEmpty } from 'lodash';
 
+import useFetchSchemas from './useFetchSchemas';
 import StageUtils from '../../utils/stageUtils';
 import EventBus from '../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../utils/hooks';
 import useResettableState from '../../utils/hooks/useResettableState';
 import { Confirm, Form, Modal } from '../basic';
-import gettingStartedJson from './schema/gettingStarted.schema.json';
-import cloudSetupJson from './schema/cloudSetup.schema.json';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
     GettingStartedData,
     GettingStartedEnvironmentsData,
-    GettingStartedSchema,
     GettingStartedSecretsData,
     GettingStartedSchemaItem,
     GettingStartedSchemaSecret
@@ -30,6 +28,7 @@ import ModalActions from './ModalActions';
 import type { ReduxState } from '../../reducers';
 import useCloudSetupUrlParam from './useCloudSetupUrlParam';
 import Consts from '../../utils/consts';
+import GettingStartedErrorModal from './GettingStartedErrorModal';
 
 type Error = boolean | { content: string };
 
@@ -45,10 +44,9 @@ const isPortValid = (port: string) => {
     return portNum >= 1 && portNum <= 65535;
 };
 
-const gettingStartedSchema = gettingStartedJson as GettingStartedSchema;
-const cloudSetupSchema = cloudSetupJson as GettingStartedSchema;
-
 const GettingStartedModal = () => {
+    const [gettingStartedSchema, cloudSetupSchema, error, clearError] = useFetchSchemas();
+
     const modalOpenState = useModalOpenState();
     const dispatch = useDispatch();
     const manager = useSelector((state: ReduxState) => state.manager);
@@ -65,13 +63,16 @@ const GettingStartedModal = () => {
     const [cloudSetupUrlParam] = useCloudSetupUrlParam();
 
     const commonStepsSchemas = useMemo(
-        () => schema.content.filter(item => environmentsStepData[item.name]),
+        () => schema?.content.filter(item => environmentsStepData[item.name]),
         [environmentsStepData]
     );
 
-    const secretsStepsSchemas = useMemo(() => createEnvironmentsGroups(commonStepsSchemas), [environmentsStepData]);
+    const secretsStepsSchemas = useMemo(
+        () => createEnvironmentsGroups(commonStepsSchemas ?? []),
+        [environmentsStepData]
+    );
     const summaryStepSchemas = useMemo(() => {
-        return commonStepsSchemas.reduce(
+        return commonStepsSchemas?.reduce(
             (result, item) => {
                 if (item.secrets.length === 0) {
                     result.push(item);
@@ -96,7 +97,7 @@ const GettingStartedModal = () => {
 
     useEffect(() => {
         setSchema(cloudSetupUrlParam ? cloudSetupSchema : gettingStartedSchema);
-    }, [cloudSetupUrlParam]);
+    }, [cloudSetupUrlParam, cloudSetupSchema, gettingStartedSchema]);
 
     useEffect(() => {
         if (!isEmpty(environmentsStepData)) {
@@ -262,6 +263,10 @@ const GettingStartedModal = () => {
         }
     };
 
+    if (error) {
+        return <GettingStartedErrorModal onClose={clearError} />;
+    }
+
     return (
         <Modal open={modalOpenState.modalOpen} onClose={handleModalClose}>
             <ModalHeader
@@ -269,20 +274,24 @@ const GettingStartedModal = () => {
                 secretsStepIndex={secretsStepIndex}
                 secretsStepsSchemas={secretsStepsSchemas}
             />
-            <ModalContent
-                stepName={stepName}
-                secretsStepsSchemas={secretsStepsSchemas}
-                secretsStepsData={secretsStepsData}
-                secretsStepIndex={secretsStepIndex}
-                summaryStepSchemas={summaryStepSchemas}
-                schema={schema}
-                onEnvironmentsStepChange={handleEnvironmentClick}
-                onSecretsStepChange={handleSecretsStepChange}
-                onInstallationStarted={handleInstallationStarted}
-                onInstallationFinished={handleInstallationFinishedOrCanceled}
-                onInstallationCanceled={handleInstallationFinishedOrCanceled}
-                errors={errors}
-            />
+            {schema ? (
+                <ModalContent
+                    stepName={stepName}
+                    secretsStepsSchemas={secretsStepsSchemas}
+                    secretsStepsData={secretsStepsData}
+                    secretsStepIndex={secretsStepIndex}
+                    summaryStepSchemas={summaryStepSchemas ?? []}
+                    schema={schema}
+                    onEnvironmentsStepChange={handleEnvironmentClick}
+                    onSecretsStepChange={handleSecretsStepChange}
+                    onInstallationStarted={handleInstallationStarted}
+                    onInstallationFinished={handleInstallationFinishedOrCanceled}
+                    onInstallationCanceled={handleInstallationFinishedOrCanceled}
+                    errors={errors}
+                />
+            ) : (
+                <Modal.Content>{i18n.t('gettingStartedModal.loading')}</Modal.Content>
+            )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
                     <Form.Field>

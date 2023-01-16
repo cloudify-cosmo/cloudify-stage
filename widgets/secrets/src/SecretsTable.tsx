@@ -214,11 +214,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                     <DataTable.Column label={translateSecrets('columns.hidden')} name="is_hidden_value" width="5%" />
                     <DataTable.Column label={translateSecrets('columns.created')} name="created_at" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.updated')} name="updated_at" width="10%" />
-                    <DataTable.Column
-                        label={translateSecrets('columns.secretProvider')}
-                        name="provider_name"
-                        width="10%"
-                    />
+                    <DataTable.Column label={translateSecrets('columns.secretProvider')} name="provider" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.creator')} name="created_by" width="10%" />
                     <DataTable.Column label={translateSecrets('columns.tenant')} name="tenant_name" width="10%" />
                     <DataTable.Column width="5%" />

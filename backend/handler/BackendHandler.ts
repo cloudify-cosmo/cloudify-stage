@@ -2,14 +2,14 @@ import fs from 'fs-extra';
 import pathlib from 'path';
 import _ from 'lodash';
 import { NodeVM, VMScript } from 'vm2';
+import type { CompilerOptions } from 'typescript';
 import ts, { ModuleKind, ScriptTarget } from 'typescript';
 import tsConfig from '@tsconfig/node14/tsconfig.json';
 
-import type { Request, Response, NextFunction } from 'express';
-import type { CompilerOptions } from 'typescript';
+import type { NextFunction, Request, Response } from 'express';
 
 import { getConfig } from '../config';
-import { ALLOWED_METHODS_OBJECT, ALLOWED_METHODS_ARRAY, WIDGET_ID_HEADER } from '../consts';
+import { ALLOWED_METHODS_ARRAY, ALLOWED_METHODS_OBJECT, WIDGET_ID_HEADER } from '../consts';
 import { db } from '../db/Connection';
 import { getResourcePath } from '../utils';
 import * as services from './services';
@@ -17,6 +17,7 @@ import * as services from './services';
 import { getLogger } from './LoggerHandler';
 import type { AllowedRequestMethod } from '../types';
 import type { WidgetBackendsInstance } from '../db/models/WidgetBackendsModel';
+import type { BackendServiceRegistrator } from './BackendHandler.types';
 
 const logger = getLogger('WidgetBackend');
 
@@ -37,9 +38,12 @@ const compilerOptions: CompilerOptions = {
     target: ScriptTarget.ES2020
 };
 
-type BackendService = (req: Request, res: Response, next: NextFunction, helper: typeof services) => void;
-const BackendRegistrator = (widgetId: string, resolve: (value?: any) => void, reject: (reason?: any) => void) => ({
-    register: (serviceName: string, method: AllowedRequestMethod | BackendService, service?: BackendService) => {
+const BackendRegistrator = (
+    widgetId: string,
+    resolve: (value?: any) => void,
+    reject: (reason?: any) => void
+): BackendServiceRegistrator => ({
+    register: (serviceName, method, service) => {
         if (!serviceName) {
             return reject('Service name must be provided');
         }

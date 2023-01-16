@@ -1,5 +1,7 @@
 import { isEmpty } from 'lodash';
 import type { FileInputProps } from 'cloudify-ui-components/typings/components/form/FileInput/FileInput';
+import { useState } from 'react';
+import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
 
 const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
@@ -20,24 +22,37 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
     const [inputs, setInput, clearInputs] = useInputs({
         secretKey: '',
         secretValue: '',
-        isHiddenValue: false
+        isHiddenValue: false,
+        useSecretProvider: false,
+        secretProvider: '',
+        secretProviderPath: ''
     });
     const [isOpen, doOpen, doClose] = useOpen(() => {
         unsetLoading();
         clearErrors();
         clearInputs();
         clearVisibility();
+        fetchSecretProviders();
     });
 
+    const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
+
     function createSecret() {
-        const { isHiddenValue, secretKey, secretValue } = inputs;
+        const { isHiddenValue, secretKey, secretValue, useSecretProvider, secretProvider, secretProviderPath } = inputs;
         const validationErrors: Record<string, string> = {};
 
         if (isEmpty(secretKey)) {
             validationErrors.secretKey = translateCreateModal('errors.validation.secretKey');
         }
 
-        if (isEmpty(secretValue)) {
+        if (useSecretProvider) {
+            if (isEmpty(secretProvider)) {
+                validationErrors.secretProvider = translateCreateModal('errors.validation.secretProviderName');
+            }
+            if (isEmpty(secretProviderPath)) {
+                validationErrors.secretProviderPath = translateCreateModal('errors.validation.secretProviderPath');
+            }
+        } else if (isEmpty(secretValue)) {
             validationErrors.secretValue = translateCreateModal('errors.validation.secretValue');
         }
 
@@ -49,15 +64,28 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
+        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : undefined;
+
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
-            .doCreate(secretKey, secretValue, visibility, isHiddenValue)
+            .doCreate(secretKey, secretValue, visibility, isHiddenValue, secretProvider, secretProviderOptions)
             .then(() => {
                 doClose();
                 toolbox.refresh();
             })
             .catch(setMessageAsError)
             .finally(unsetLoading);
+    }
+
+    function onSecretProviderChange() {
+        if (errors.secretValue) {
+            setErrors({ ...errors, secretValue: null });
+        }
+        if (isEmpty(secretProviders)) {
+            setErrors({ ...errors, secretProviderCheckbox: translateCreateModal('errors.validation.noProviders') });
+            return;
+        }
+        setInput({ useSecretProvider: !useSecretProvider });
     }
 
     const onSecretFileChange: FileInputProps['onChange'] = file => {
@@ -83,7 +111,20 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
             .finally(unsetFileLoading);
     };
 
-    const { isHiddenValue, secretKey, secretValue } = inputs;
+    function fetchSecretProviders() {
+        const secretActions = new Stage.Common.Secrets.Actions(toolbox.getManager());
+        secretActions
+            .doGetAllSecretProviders()
+            .then(data => setSecretProviders(data.items))
+            .catch(setMessageAsError);
+    }
+    const secretProvidersDropdownOptions = secretProviders?.map((item: { name: string }) => ({
+        text: item.name,
+        value: item.name
+    }));
+
+    const { isHiddenValue, secretKey, secretValue, useSecretProvider, secretProvider, secretProviderPath } = inputs;
+
     const createButton = <Button content={translateCreateModal('buttons.create')} icon="add" labelPosition="left" />;
 
     return (
@@ -95,7 +136,11 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field error={errors.secretKey}>
+                    <Form.Field
+                        label={translateCreateModal('inputs.secretKey.label')}
+                        error={errors.secretKey}
+                        required
+                    >
                         <Form.Input
                             name="secretKey"
                             placeholder={translateCreateModal('inputs.secretKey.placeholder')}
@@ -103,23 +148,68 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                             onChange={setInput}
                         />
                     </Form.Field>
-                    <Form.Field error={errors.secretValue}>
-                        <MultilineInput
-                            name="secretValue"
-                            placeholder={translateCreateModal('inputs.secretValue.placeholder')}
-                            value={secretValue}
-                            onChange={setInput}
+                    <Form.Field>
+                        <Form.Checkbox
+                            label={translateCreateModal('inputs.useSecretProvider.label')}
+                            name="useSecretProvider"
+                            checked={useSecretProvider}
+                            onChange={onSecretProviderChange}
+                            disabled={isEmpty(secretProviders)}
+                            help={
+                                isEmpty(secretProviders) ? translateCreateModal('errors.validation.noProviders') : null
+                            }
                         />
                     </Form.Field>
-                    <Form.Field error={errors.secretFile}>
-                        <Form.File
-                            name="secretFile"
-                            placeholder={translateCreateModal('inputs.secretFile.placeholder')}
-                            onChange={onSecretFileChange}
-                            loading={isFileLoading}
-                            disabled={isFileLoading}
-                        />
-                    </Form.Field>
+                    {useSecretProvider ? (
+                        <>
+                            <Form.Field
+                                label={translateCreateModal('inputs.secretProvider.label')}
+                                error={errors.secretProvider}
+                                required
+                            >
+                                <Form.Dropdown
+                                    name="secretProvider"
+                                    placeholder={translateCreateModal('inputs.secretProvider.placeholder')}
+                                    selection
+                                    options={secretProvidersDropdownOptions}
+                                    onChange={setInput}
+                                    value={secretProvider}
+                                />
+                            </Form.Field>
+                            <Form.Field
+                                label={translateCreateModal('inputs.secretProviderPath.label')}
+                                error={errors.secretProviderPath}
+                                required
+                            >
+                                <Form.Input
+                                    name="secretProviderPath"
+                                    placeholder={translateCreateModal('inputs.secretProviderPath.placeholder')}
+                                    value={secretProviderPath}
+                                    onChange={setInput}
+                                />
+                            </Form.Field>
+                        </>
+                    ) : (
+                        <>
+                            <Form.Field error={errors.secretValue}>
+                                <MultilineInput
+                                    name="secretValue"
+                                    placeholder={translateCreateModal('inputs.secretValue.placeholder')}
+                                    value={secretValue}
+                                    onChange={setInput}
+                                />
+                            </Form.Field>
+                            <Form.Field error={errors.secretFile}>
+                                <Form.File
+                                    name="secretFile"
+                                    placeholder={translateCreateModal('inputs.secretFile.placeholder')}
+                                    onChange={onSecretFileChange}
+                                    loading={isFileLoading}
+                                    disabled={isFileLoading}
+                                />
+                            </Form.Field>
+                        </>
+                    )}
                     <Form.Field error={errors.isHiddenValue}>
                         <Form.Checkbox
                             name="isHiddenValue"

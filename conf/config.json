@@ -1,6 +1,5 @@
 {
     "maintenancePollingInterval": 10000,
-    "singleManager": true,
 
     "github": {
         "username": "secret(github-username)",

@@ -1,16 +1,17 @@
-// @ts-nocheck File not migrated fully to TS
 import { consts, icons } from 'cloudify-ui-common-frontend';
+import type { NodeStatus } from 'cloudify-ui-common-frontend/typings/consts';
+import type { NodeInstance } from './widget.types';
 
 const NODE_STATUS = consts.nodeStatuses;
 
-function isInitialized(instance) {
+function isInitialized(instance: NodeInstance) {
     return !_.includes(
         ['uninitialized', 'deleting', 'deleted', 'stopping', 'stopped'],
         typeof instance === 'string' ? instance : instance.state
     );
 }
 
-export function isCompleted(instance) {
+export function isCompleted(instance: NodeInstance) {
     return instance && instance.state === 'started';
 }
 
@@ -18,11 +19,11 @@ export function isCompleted(instance) {
  *
  * @param {NODE_STATUS} nodeStatus
  */
-export function getContentByStatus(nodeStatus) {
+export function getContentByStatus(nodeStatus: NodeStatus) {
     return icons.getNodeStatusIcon(nodeStatus);
 }
 
-export function getColorByStatus(nodeStatus) {
+export function getColorByStatus(nodeStatus: NodeStatus) {
     switch (nodeStatus) {
         case NODE_STATUS.DONE:
             return '#8eaf26';
@@ -38,12 +39,12 @@ export function getColorByStatus(nodeStatus) {
     }
 }
 
-export function getInstancesCountPerState(instances) {
+export function getInstancesCountPerState(instances: NodeInstance[]) {
     return _.countBy(instances, 'state');
 }
 
 // an aggregation of all instances
-export function getNodeState(inProgress, instances) {
+export function getNodeState(inProgress: boolean, instances: NodeInstance[]) {
     let status = inProgress ? NODE_STATUS.LOADING : NODE_STATUS.UNINITIALIZED;
 
     // if node is not completed when execution is over, the execution is failed. we ignore uninitialized scenario here.

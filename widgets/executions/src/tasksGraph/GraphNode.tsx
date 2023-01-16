@@ -1,8 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-/**
- * @property {Any} [graphNode] - A Graph Node to render
- */
-import GraphNodePropType from './props/GraphNodePropType';
+import type { ElkNode } from 'elkjs';
+import type { Toolbox } from 'app/utils/StageAPI';
+import { findKey, includes, isEmpty, size } from 'lodash';
 import states from './States';
 
 const textHeight = 18;
@@ -15,19 +13,23 @@ const colors = {
     failed: 'rgb(249, 25, 25)'
 };
 
-const GraphNode = ({ graphNode, toolbox }) => {
+const translate = Stage.Utils.getT('widgets.executions.graph');
+
+const GraphNode = ({ graphNode, toolbox }: { graphNode: ElkNode; toolbox: Toolbox }) => {
     const { Icon } = Stage.Basic;
-    const labels = graphNode.labels[0];
+    const labels = graphNode.labels![0];
 
     let currentTextPlacementY = 0;
 
     const title = labels.displayTitle || [labels.text];
     const { displayText, state } = labels;
-    const mappedState = _.findKey(states, stateArray => _.includes(stateArray, state));
+    const mappedState = findKey(states, stateArray => includes(stateArray, state)) as keyof typeof states;
     const stateColor = colors[mappedState];
 
-    const headerHeight = _.size(title) * textHeight + textHeight / 2;
+    const headerHeight = size(title) * textHeight + textHeight / 2;
     const { nodeInstanceId, operation } = graphNode;
+    const showLogsIcon =
+        displayText && nodeInstanceId && operation && (state !== 'Pending' || (labels.retry && labels.retry > 0));
     return (
         <g className="g-tasks-graph-general">
             {stateColor && (
@@ -42,8 +44,8 @@ const GraphNode = ({ graphNode, toolbox }) => {
                     />
                     <rect
                         transform={`translate(0.5, ${headerHeight})`}
-                        height={graphNode.height - headerHeight}
-                        width={graphNode.width - 1}
+                        height={graphNode.height! - headerHeight}
+                        width={graphNode.width! - 1}
                         strokeWidth={0}
                         style={{ fill: stateColor }}
                         opacity={0.5}
@@ -53,9 +55,9 @@ const GraphNode = ({ graphNode, toolbox }) => {
             <rect
                 transform="translate(0.5, 0.5)"
                 height={headerHeight}
-                width={graphNode.width - 1}
+                width={graphNode.width! - 1}
                 strokeWidth={0}
-                style={{ fill: !_.isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
+                style={{ fill: !isEmpty(graphNode.children) ? '#F2F2F2' : 'white' }}
             />
             <rect height={graphNode.height} width={graphNode.width} rx={rx} fillOpacity={0} />
             <path d={`m 0,${headerHeight} h ${graphNode.width} z`} strokeWidth={0.5} />
@@ -75,18 +77,18 @@ const GraphNode = ({ graphNode, toolbox }) => {
                     </text>
                 ))}
             &gt;
-            {displayText && nodeInstanceId && operation && (state !== 'Pending' || labels.retry > 0) && (
+            {showLogsIcon && (
                 <foreignObject
                     width={textHeight}
                     height={textHeight * 2}
-                    x={graphNode.width - textHeight - 3}
+                    x={graphNode.width! - textHeight - 3}
                     y={headerHeight + 3}
                 >
                     <Icon
                         name="file alternate outline"
                         // NOTE: `display: inline` to fix a rendering bug in webkit
                         style={{ fontSize: '1.3em', cursor: 'pointer', display: 'inline' }}
-                        title="Show related entries in Deployment Events/Logs widget"
+                        title={translate('showLogs')}
                         onClick={() => {
                             const context = toolbox.getContext();
                             const eventBus = toolbox.getEventBus();
@@ -117,11 +119,6 @@ const GraphNode = ({ graphNode, toolbox }) => {
                 ))}
         </g>
     );
-};
-
-GraphNode.propTypes = {
-    graphNode: GraphNodePropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
 export default GraphNode;

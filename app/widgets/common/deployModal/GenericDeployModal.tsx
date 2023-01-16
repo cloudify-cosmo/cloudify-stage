@@ -147,6 +147,14 @@ type GenericDeployModalProps = {
      * Filter rules for blueprints listing
      */
     blueprintFilterRules?: FilterRule[];
+
+    /**
+     * Deployment on which submitted blueprint should be deployed on
+     */
+    environmentToDeployOn?: {
+        id: string;
+        displayName: string;
+    };
 };
 
 const defaultProps: Partial<GenericDeployModalProps> = {
@@ -265,6 +273,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.onDryRunChange = this.onDryRunChange.bind(this);
         this.onQueueChange = this.onQueueChange.bind(this);
         this.onScheduleChange = this.onScheduleChange.bind(this);
+
+        this.getModalHeader = this.getModalHeader.bind(this);
     }
 
     componentDidMount() {
@@ -273,17 +283,19 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             baseInstallWorkflowParams: installWorkflow.parameters,
             userInstallWorkflowParams: mapValues(installWorkflow.parameters, parameterData =>
                 getInputFieldInitialValue(parameterData.default, parameterData.type)
-            )
+            ),
+            deploymentId: StageUtils.uuid()
         });
     }
 
     componentDidUpdate(prevProps: GenericDeployModalProps) {
         const { blueprintId, open } = this.props;
-        if (!prevProps.open && open && typeof blueprintId === 'string') {
+
+        if (!prevProps.open && open) {
             // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({ ...GenericDeployModal.initialState, deploymentId: StageUtils.uuid() }, () =>
-                this.selectBlueprint(blueprintId)
-            );
+            this.setState({ ...GenericDeployModal.initialState, deploymentId: StageUtils.uuid() }, () => {
+                this.selectBlueprint(blueprintId!);
+            });
         }
     }
 
@@ -499,6 +511,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     };
 
     getDeploymentParams() {
+        const { environmentToDeployOn } = this.props;
         const {
             blueprint,
             deploymentName,
@@ -512,8 +525,10 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             deploymentIdToDeployOn
         } = this.state;
 
-        const deploymentLabels = deploymentIdToDeployOn
-            ? [...labels, { key: parentDeploymentLabelKey, value: deploymentIdToDeployOn }]
+        const parentDeploymentId = deploymentIdToDeployOn || environmentToDeployOn?.id;
+
+        const deploymentLabels = parentDeploymentId
+            ? [...labels, { key: parentDeploymentLabelKey, value: parentDeploymentId }]
             : labels;
 
         return {
@@ -533,6 +548,16 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         this.setState({ loadingMessage: message });
     }
 
+    getModalHeader() {
+        const { i18nHeaderKey, environmentToDeployOn } = this.props;
+        const { blueprint } = this.state;
+        const translationParameters: Record<string, string> = environmentToDeployOn
+            ? { deploymentName: environmentToDeployOn.displayName }
+            : { blueprintId: blueprint.id };
+
+        return i18n.t(i18nHeaderKey, translationParameters);
+    }
+
     isBlueprintSelectable() {
         const { blueprintId } = this.props;
         return isEmpty(blueprintId);
@@ -541,7 +566,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     selectBlueprint(id: DropdownValue) {
         if (!isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
-            const { toolbox } = this.props;
+            const { toolbox, environmentToDeployOn } = this.props;
 
             const actions = new BlueprintActions(toolbox);
             actions
@@ -562,7 +587,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        showDeployOnDropdown: !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown:
+                            !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
@@ -622,7 +648,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
             onHide,
             open,
             toolbox,
-            i18nHeaderKey,
             showInstallOptions,
             showDeploymentIdInput,
             showDeploymentNameInput,
@@ -664,7 +689,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
         return (
             <Modal open={open} onClose={onHide} className="deployBlueprintModal">
                 <Modal.Header>
-                    <Icon name="rocket" /> {i18n.t(i18nHeaderKey, { blueprintId: blueprint.id })}
+                    <Icon name="rocket" /> {this.getModalHeader()}
                     <VisibilityField
                         visibility={visibility}
                         className="rightFloated"

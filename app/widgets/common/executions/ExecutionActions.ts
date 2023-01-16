@@ -1,14 +1,16 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import type { PaginatedResponse } from 'backend/types';
 
 export default class ExecutionActions {
     constructor(private manager: Manager) {}
 
     doGet(executionId: string) {
-        return this.manager.doGet(`/executions/${executionId}`);
+        return this.manager.doGet<Execution>(`/executions/${executionId}`);
     }
 
     doGetAll(params: Record<string, any> = {}) {
-        return this.manager.doGet('/executions', { params });
+        return this.manager.doGet<PaginatedResponse<Execution>>('/executions', { params });
     }
 
     doGetStatus(executionId: string) {

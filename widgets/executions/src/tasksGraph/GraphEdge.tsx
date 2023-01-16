@@ -1,14 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
-import GraphEdgePropType from './props/GraphEdgePropType';
+import type { ElkExtendedEdge } from 'elkjs/lib/elk-api';
 
-/**
- * @property {Any} [graphEdge] - A Graph Edge to render
- */
-
-const GraphEdge = ({ graphEdge: edge }) => {
-    const { startPoint } = edge.sections[0];
-    const { bendPoints } = edge.sections[0];
-    const { endPoint } = edge.sections[0];
+const GraphEdge = ({ graphEdge: edge }: { graphEdge: ElkExtendedEdge }) => {
+    const { startPoint } = edge.sections![0];
+    const { bendPoints } = edge.sections![0];
+    const { endPoint } = edge.sections![0];
 
     const drawingPath = {
         x: 0,
@@ -80,10 +75,6 @@ const GraphEdge = ({ graphEdge: edge }) => {
             {drawArrow()}
         </g>
     );
-};
-
-GraphEdge.propTypes = {
-    graphEdge: GraphEdgePropType.isRequired
 };
 
 export default GraphEdge;
