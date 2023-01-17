@@ -14,12 +14,12 @@ interface EditTabModalProps {
 
 export default function EditTabModal({ tab, trigger, onTabUpdate }: EditTabModalProps) {
     const [open, setOpen, unsetOpen] = useBoolean();
-    const [name, setName] = useState<string>('');
-    const [isDefault, setDefault] = useState<boolean>(false);
+    const [name, setName] = useState('');
+    const [isDefault, setDefault] = useState(false);
 
     useEffect(() => {
         setName(tab.name);
-        setDefault(tab.isDefault || false);
+        setDefault(!!tab.isDefault);
     }, [tab]);
 
     return (
