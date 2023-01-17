@@ -29,7 +29,7 @@ export interface FetchedOption {
 }
 
 // TODO:
-// - Download data with a required information (capabilities?)
+// - Pass required data from blueprint
 // - Displaying data with certain headers and MenuItems
 // - Implement matching specified in a corresponding ticket
 // - Add pagination for fetched data
@@ -72,11 +72,15 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
                     }
                 ],
                 {
-                    _include: 'id,display_name',
+                    _include: 'id,display_name,capabilities',
                     _search: searchQuery
                 }
             )
             .then(data => {
+                // eslint-disable-next-line
+                console.log('='.repeat(25));
+                // eslint-disable-next-line
+                console.log(data.items);
                 setFetchedOptions(data.items);
             })
             .finally(unsetLoading);
