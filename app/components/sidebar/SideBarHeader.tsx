@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux';
 import styled, { ThemeContext } from 'styled-components';
 import { ProductVersion } from '../basic';
 import type { ReduxState } from '../../reducers';
-import LicenseLabel from '../LicenseLabel';
+import LicenseLabel from './LicenseLabel';
 import { Link } from '../shared';
 import Consts from '../../utils/consts';
-import { productFont } from '../fonts';
-import ProductLogo from '../shared/ProductLogo';
+import { productFont } from './fonts';
+import ProductLogo from '../common/ProductLogo';
 
 const StyledLink = styled(Link)`
     color: ${props => props.color} !important;
