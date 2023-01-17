@@ -6,6 +6,10 @@ import request from 'supertest';
 import app from 'app';
 
 jest.mock('handler/templates/PagesHandler');
+jest.mock('handler/AuthHandler', () => ({
+    isAuthorized: () => true,
+    getRBAC: () => Promise.resolve({ permissions: {} })
+}));
 
 describe('/snapshots/pages endpoint', () => {
     const page: Page = {

@@ -3,6 +3,10 @@ import { existsSync, writeJson } from 'fs-extra';
 import app from 'app';
 
 jest.mock('fs-extra');
+jest.mock('handler/AuthHandler', () => ({
+    isAuthorized: () => true,
+    getRBAC: () => Promise.resolve({ permissions: {} })
+}));
 
 describe('/snapshots/configuration endpoint', () => {
     it('gets snapshot data', () => {

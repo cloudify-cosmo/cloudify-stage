@@ -3,6 +3,10 @@ import app from 'app';
 import mockDb from '../../mockDb';
 
 jest.mock('db/Connection');
+jest.mock('handler/AuthHandler', () => ({
+    isAuthorized: () => true,
+    getRBAC: () => Promise.resolve({ permissions: {} })
+}));
 
 describe('/snapshots/ua endpoint', () => {
     const userAppRow = {
