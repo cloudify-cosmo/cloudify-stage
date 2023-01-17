@@ -1703,23 +1703,11 @@
                 "inputs": {
                     "secretValue": {
                         "placeholder": "Secret value"
-                    },
-                    "secretProvider": {
-                        "label": "Secret provider",
-                        "placeholder": "Select secret provider"
-                    },
-                    "secretProviderPath": {
-                        "label": "Secret provider path",
-                        "placeholder": "Path"
-                    },
-                    "useSecretProvider": {
-                        "label": "Retrieve the secret value from a secret provider"
                     }
                 },
                 "errors": {
                     "validation": {
-                        "secretValue": "Please provide secret value",
-                        "noProviders": "No Secret providers are defined in the System"
+                        "secretValue": "Please provide secret value"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
