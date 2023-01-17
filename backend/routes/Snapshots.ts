@@ -14,7 +14,7 @@ import { checkPageGroupExists, createPageGroup, getUserPageGroups } from '../han
 import { createUserWidgetsSnapshot, restoreUserWidgetsSnapshot } from '../handler/widgets/WidgetsHandler';
 import type { BlueprintUserDataInstance } from '../db/models/BlueprintUserDataModel';
 import type { BlueprintUserDataAttributes } from '../db/models/BlueprintUserDataModel.types';
-import { getResourcePath } from '../utils';
+import { getResourcePath, getTokenFromHeader } from '../utils';
 import { getRBAC, isAuthorized } from '../handler/AuthHandler';
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.use(express.json());
 
 function getSnapshotPermissionValidator(permissionType: 'create' | 'restore'): RequestHandler<never, never> {
     return async (req, res, next) => {
-        const rbac = await getRBAC(req.get('Authentication-Token')!);
+        const rbac = await getRBAC(getTokenFromHeader(req)!);
         const permission = rbac.permissions[`snapshot_${permissionType}`];
         if (!isAuthorized(req.user!, permission)) {
             res.sendStatus(403);
