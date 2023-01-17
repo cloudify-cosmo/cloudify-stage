@@ -59,7 +59,7 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             id: 'showComposerOptions',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             name: t('configuration.showComposerOptions'),
-            default: false
+            default: true
         },
         {
             id: 'filterRules',
