@@ -5,7 +5,7 @@ import { push } from 'connected-react-router';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Banner from '../sidebar/banner/Banner';
-import SystemStatusHeader from '../misc/status/SystemStatusHeader';
+import SystemStatusHeader from '../common/status/SystemStatusHeader';
 import Consts from '../../utils/consts';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 import StatusPoller from '../../utils/StatusPoller';

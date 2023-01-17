@@ -9,7 +9,7 @@ import LicenseLabel from './LicenseLabel';
 import { Link } from '../shared';
 import Consts from '../../utils/consts';
 import { productFont } from './fonts';
-import ProductLogo from '../misc/ProductLogo';
+import ProductLogo from '../common/ProductLogo';
 
 const StyledLink = styled(Link)`
     color: ${props => props.color} !important;

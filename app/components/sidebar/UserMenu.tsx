@@ -13,7 +13,7 @@ import { setEditMode } from '../../actions/config';
 import Consts from '../../utils/consts';
 import ResetPagesModal from './ResetPagesModal';
 import { resetPagesForTenant } from '../../actions/userApp';
-import PasswordModal from '../misc/PasswordModal';
+import PasswordModal from '../common/PasswordModal';
 import { logout } from '../../actions/manager/auth';
 import UserInitialsIcon from './UserInitialsIcon';
 import type { SystemMenuGroupItemProps } from './SystemMenu';

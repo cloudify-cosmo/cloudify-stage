@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import TextEllipsis from '../../../../misc/TextEllipsis';
+import TextEllipsis from '../../../../common/TextEllipsis';
 import { Message } from '../../../../basic';
 import { ErrorPopup } from '../../../../shared';
 import { useBoolean } from '../../../../../utils/hooks';
-import type { ErrorPopupProps } from '../../../../misc/ErrorPopup';
+import type { ErrorPopupProps } from '../../../../common/ErrorPopup';
 
 export interface ErrorMessageWithPopupProps {
     widgetName: string;

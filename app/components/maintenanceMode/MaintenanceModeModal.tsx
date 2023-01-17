@@ -25,7 +25,7 @@ import { useBoolean, useErrors } from '../../utils/hooks';
 import ExecutionUtils from '../../utils/shared/ExecutionUtils';
 import type { CancelAction, Execution } from '../../utils/shared/ExecutionUtils';
 import StageUtils from '../../utils/stageUtils';
-import ExecutionStatus from '../misc/ExecutionStatus';
+import ExecutionStatus from '../common/ExecutionStatus';
 import type { ReduxState } from '../../reducers';
 import type { ActiveExecutions } from '../../actions/manager/maintenance';
 import type { CancelablePromise } from '../../utils/types';
