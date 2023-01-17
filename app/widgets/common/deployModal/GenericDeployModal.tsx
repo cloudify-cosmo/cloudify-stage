@@ -202,7 +202,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     // eslint-disable-next-line react/static-property-placement
     static defaultProps = defaultProps;
 
-    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } }, requirements: {} };
 
     static DEPLOYMENT_SECTIONS = {
         deploymentInputs: 0,
@@ -564,7 +564,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     selectBlueprint(id: DropdownValue) {
         if (!isEmpty(id) && typeof id === 'string') {
             this.setState({ loading: true, loadingMessage: t('inputs.deploymentInputs.loading') });
-            const { toolbox } = this.props;
+            const { toolbox, environmentToDeployOn } = this.props;
 
             const actions = new BlueprintActions(toolbox);
             actions
@@ -585,9 +585,8 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         ),
                         errors: {},
                         loading: false,
-                        showDeployOnDropdown: true
-                        // TODO Norbert: Uncomment line below
-                        // !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
+                        showDeployOnDropdown:
+                            !environmentToDeployOn && !isEmpty(blueprint.requirements?.parent_capabilities)
                     });
                 })
                 .catch(err => {
@@ -765,6 +764,9 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                     placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
                                     onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
                                     toolbox={toolbox}
+                                    capabilitiesToMatch={
+                                        (blueprint as FullBlueprintData).requirements?.parent_capabilities
+                                    }
                                 />
                             </Form.Field>
                         )}

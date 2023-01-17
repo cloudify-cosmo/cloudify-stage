@@ -5,10 +5,12 @@ import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../components/DynamicDropdown';
 import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { useBoolean } from '../../../utils/hooks';
-import { mapFetchedOptions } from './EnvironmentDropdown.utils';
+import { mapFetchedDeployments, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
 import DynamicDropdown from '../components/DynamicDropdown';
 import SearchActions from '../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
+import type { BlueprintRequirements } from '../blueprints/BlueprintActions';
+import type { Deployment } from '../deploymentsView/types';
 
 const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
 const fetchUrl = '/searches/deployments';
@@ -20,26 +22,38 @@ interface EnvironmentDropdownProps {
     placeholder: DynamicDropdownProps['placeholder'];
     onChange: (value: string | null) => void;
     toolbox: Stage.Types.Toolbox;
+    capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
 }
 
-export interface FetchedOption {
+export interface FetchedDeployment {
     id: string;
     // eslint-disable-next-line
     display_name: string;
+    capabilities: Deployment['capabilities'];
 }
 
 // TODO:
-// - Pass required data from blueprint
 // - Displaying data with certain headers and MenuItems
 // - Implement matching specified in a corresponding ticket
 // - Add pagination for fetched data
 // - Error handling
 
-const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox }: EnvironmentDropdownProps) => {
+const EnvironmentDropdown = ({
+    value = '',
+    name,
+    placeholder,
+    onChange,
+    toolbox,
+    capabilitiesToMatch = []
+}: EnvironmentDropdownProps) => {
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [fetchedOptions, setFetchedOptions] = useState<FetchedOption[]>([]);
+    const [fetchedDeployments, setFetchedDeployments] = useState<FetchedDeployment[]>([]);
+
+    useEffect(() => {
+        // eslint-disable-next-line
+    }, []);
 
     const handleSearchChange: DropdownProps['onSearchChange'] = (_event, data) => {
         setSearchQuery(data.searchQuery);
@@ -49,8 +63,32 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
         setSearchQuery('');
     };
 
+    // TODO Norbert: This function seems to be rendered to many times, see if it can be optimized
     const getOptions = () => {
-        return mapFetchedOptions(fetchedOptions);
+        const capabilities = simplifyCapabilities(capabilitiesToMatch);
+        const { suggestedDeployments, otherDeployments } = fetchedDeployments.reduce<{
+            suggestedDeployments: FetchedDeployment[];
+            otherDeployments: FetchedDeployment[];
+        }>(
+            (aggregator, deployment) => {
+                const isSuggestedOption = isDeploymentSuggested(deployment, capabilities);
+
+                if (isSuggestedOption) {
+                    aggregator.suggestedDeployments.push(deployment);
+                } else {
+                    aggregator.otherDeployments.push(deployment);
+                }
+
+                return aggregator;
+            },
+            {
+                suggestedDeployments: [],
+                otherDeployments: []
+            }
+        );
+
+        const deployments = [...suggestedDeployments, ...otherDeployments];
+        return mapFetchedDeployments(deployments);
     };
 
     const handleChange: DropdownProps['onChange'] = (_event, data) => {
@@ -77,28 +115,9 @@ const EnvironmentDropdown = ({ value = '', name, placeholder, onChange, toolbox 
                 }
             )
             .then(data => {
-                // eslint-disable-next-line
-                console.log('='.repeat(25));
-                // eslint-disable-next-line
-                console.log(data.items);
-                setFetchedOptions(data.items);
+                setFetchedDeployments(data.items);
             })
             .finally(unsetLoading);
-
-        // TODO: Fetch only deployments marked as `environment`
-        // toolbox
-        //     .getManager()
-        //     .doPostFull<FetchedOption>(fetchUrl, {
-        //         params: {
-        //             _include: 'id,display_name',
-        //             _search: searchQuery,
-        //             _search_name: searchQuery
-        //         }
-        //     })
-        //     .then(data => {
-        //         setFetchedOptions(data.items);
-        //     })
-        //     .finally(unsetLoading);
     };
 
     useEffect(() => {
