@@ -27,7 +27,7 @@ describe('Blueprints widget should open upload from Terraform module modal and',
             .mockLogin()
     );
 
-    beforeEach(() => cy.refreshTemplate().refreshPage());
+    beforeEach(() => cy.refreshTemplate().visitTestPage());
 
     function typeToTextarea(fieldName: string, text: string) {
         cy.getField(fieldName).find('textarea').clear().type(text);
