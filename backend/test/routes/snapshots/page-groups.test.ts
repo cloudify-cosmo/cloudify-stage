@@ -6,10 +6,7 @@ import { createPageGroup, getUserPageGroups } from 'handler/templates/PageGroups
 import app from 'app';
 
 jest.mock('handler/templates/PageGroupsHandler');
-jest.mock('handler/AuthHandler', () => ({
-    isAuthorized: () => true,
-    getRBAC: () => Promise.resolve({ permissions: {} })
-}));
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/page-groups endpoint', () => {
     const pageGroup: PageGroup = {

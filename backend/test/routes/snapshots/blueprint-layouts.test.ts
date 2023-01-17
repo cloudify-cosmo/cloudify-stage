@@ -3,10 +3,7 @@ import app from 'app';
 import mockDb from '../../mockDb';
 
 jest.mock('db/Connection');
-jest.mock('handler/AuthHandler', () => ({
-    isAuthorized: () => true,
-    getRBAC: () => Promise.resolve({ permissions: {} })
-}));
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/blueprint-layouts endpoint', () => {
     const blueprintUserDataRow = {

@@ -9,10 +9,7 @@ import installFiles from 'handler/widgets/installFiles';
 jest.mock('handler/widgets/validateUniqueness');
 jest.mock('handler/widgets/installFiles');
 jest.mock('handler/BackendHandler');
-jest.mock('handler/AuthHandler', () => ({
-    isAuthorized: () => true,
-    getRBAC: () => Promise.resolve({ permissions: {} })
-}));
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/widgets endpoint', () => {
     it('allows to get snapshot data', () => {

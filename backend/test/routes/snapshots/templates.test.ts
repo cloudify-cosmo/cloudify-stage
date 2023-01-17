@@ -6,10 +6,7 @@ import request from 'supertest';
 import app from 'app';
 
 jest.mock('handler/templates/TemplatesHandler');
-jest.mock('handler/AuthHandler', () => ({
-    isAuthorized: () => true,
-    getRBAC: () => Promise.resolve({ permissions: {} })
-}));
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/templates endpoint', () => {
     const template: Template = {
