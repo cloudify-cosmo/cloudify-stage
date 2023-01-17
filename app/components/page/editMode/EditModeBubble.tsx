@@ -1,11 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
-
-import PropTypes from 'prop-types';
-
+import type { PropsWithChildren } from 'react';
 import React from 'react';
 import { Message, Sidebar } from '../../basic';
 
-export default function EditModeBubble({ onDismiss, header, children }) {
+interface EditModeBubbleProps {
+    onDismiss: () => void;
+    header: string;
+}
+
+export default function EditModeBubble({ onDismiss, header, children }: PropsWithChildren<EditModeBubbleProps>) {
     return (
         <>
             <div className="gridStackBottomSpace" />
@@ -18,9 +20,3 @@ export default function EditModeBubble({ onDismiss, header, children }) {
         </>
     );
 }
-
-EditModeBubble.propTypes = {
-    onDismiss: PropTypes.func.isRequired,
-    header: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired
-};

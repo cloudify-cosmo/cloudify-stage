@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Consts from '../../utils/consts';

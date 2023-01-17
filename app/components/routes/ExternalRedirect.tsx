@@ -1,17 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-
 import i18n from 'i18next';
-import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 
-export default function ExternalRedirect({ url }) {
-    useEffect(() => {
-        window.location = url;
-    }, []);
-
-    return <section>{i18n.t('redirecting', 'Redirecting to {{url}}...', { url })}</section>;
+interface ExternalRedirectProps {
+    url: string;
 }
 
-ExternalRedirect.propTypes = {
-    url: PropTypes.string.isRequired
-};
+export default function ExternalRedirect({ url }: ExternalRedirectProps) {
+    useEffect(() => {
+        // eslint-disable-next-line xss/no-location-href-assign
+        window.location.href = url;
+    }, []);
+
+    return <section>{i18n.t('redirecting', { url })}</section>;
+}
