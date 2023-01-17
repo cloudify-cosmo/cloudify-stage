@@ -1,7 +1,6 @@
 import colors from 'cloudify-ui-common-frontend/styles/_colors.scss';
 import { LoadingOverlay } from 'cloudify-ui-components';
-import i18n from 'i18next';
-import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without, wrap } from 'lodash';
+import { camelCase, find, forEach, includes, isEmpty, isEqual, pick, sortBy, without } from 'lodash';
 import type { InputOnChangeData, MenuItemProps, StrictInputProps, StrictMenuItemProps } from 'semantic-ui-react';
 
 import { connect, useDispatch } from 'react-redux';
@@ -45,6 +44,9 @@ import {
 import EditModeButton from './EditModeButton';
 import InstallWidgetModal from './InstallWidgetModal';
 import type { ObjectKeys } from '../../../utils/types';
+
+const translateAddWidget = StageUtils.getT('editMode.addWidget');
+const translateRemoveWidget = StageUtils.getT('editMode.removeWidget');
 
 const AddWidgetModalWrapper = styled.div`
     display: inline-block;
@@ -219,11 +221,7 @@ function AddWidgetModal({
         forEach(widgetsToAdd, widgetId => {
             const widget = find(widgetDefinitions, widgetDefinition => widgetId === widgetDefinition.id);
             if (widget) {
-                onWidgetAdded(
-                    widget.name ||
-                        i18n.t('editMode.addWidget.defaultWidgetName', `Widget_{{index}}`, { index: nameIndex }),
-                    widget
-                );
+                onWidgetAdded(widget.name || translateAddWidget('defaultWidgetName', { index: nameIndex }), widget);
                 nameIndex += 1;
             }
         });
@@ -321,7 +319,7 @@ function AddWidgetModal({
         <EditModeButton
             icon="add"
             labelPosition="left"
-            content={i18n.t('editMode.addWidget.addButton')}
+            content={translateAddWidget('addButton')}
             className="addWidgetBtn"
             style={{ marginBottom: 15, marginLeft: 1, marginTop: 1 }}
             title={addButtonTitle}
@@ -330,7 +328,7 @@ function AddWidgetModal({
 
     const installWidgetBtn = (
         <Button animated="vertical" id="installWidgetBtn" onClick={() => {}}>
-            <Button.Content visible>{i18n.t('editMode.addWidget.installButton')}</Button.Content>
+            <Button.Content visible>{translateAddWidget('installButton')}</Button.Content>
             <Button.Content hidden>
                 <Icon name="folder open" />
             </Button.Content>
@@ -342,18 +340,18 @@ function AddWidgetModal({
             size="small"
             compact
             basic
-            content={i18n.t('editMode.addWidget.updateButton')}
+            content={translateAddWidget('updateButton')}
             className="updateWidgetButton"
         />
     );
 
     const confirmContent = !isEmpty(usedByList) ? (
         <Segment basic>
-            <h5>{i18n.t('editMode.removeWidget.usedBy.header')}</h5>
+            <h5>{translateRemoveWidget('usedBy.header')}</h5>
 
             <DataTable>
-                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.username')} />
-                <DataTable.Column label={i18n.t('editMode.removeWidget.usedBy.manager')} />
+                <DataTable.Column label={translateRemoveWidget('usedBy.username')} />
+                <DataTable.Column label={translateRemoveWidget('usedBy.manager')} />
 
                 {usedByList.map(item => {
                     return (
@@ -372,7 +370,7 @@ function AddWidgetModal({
     const menuContent = (
         <Menu fluid vertical tabular>
             <Menu.Item
-                name={i18n.t('editMode.addWidget.category.all')}
+                name={translateAddWidget('category.all')}
                 active={selectedCategory === GenericConfig.CATEGORY.ALL}
                 onClick={filterByCategory}
             />
@@ -385,7 +383,7 @@ function AddWidgetModal({
                         active={selectedCategory === category.name}
                         onClick={filterByCategory}
                     >
-                        {i18n.t(`editMode.addWidget.category.${camelCase(category.name)}`)}
+                        {translateAddWidget(`category.${camelCase(category.name)}`)}
                         <Label color={category.count ? 'green' : 'yellow'}>{category.count}</Label>
                     </Menu.Item>
                 );
@@ -412,7 +410,7 @@ function AddWidgetModal({
                     icon="search"
                     fluid
                     size="mini"
-                    placeholder={i18n.t('editMode.addWidget.search')}
+                    placeholder={translateAddWidget('search')}
                     onChange={filterWidgets}
                     value={search}
                 />
@@ -436,7 +434,7 @@ function AddWidgetModal({
                                         >
                                             <AddWidgetCheckBox
                                                 readOnly
-                                                title={i18n.t('editMode.addWidget.checkbox')}
+                                                title={translateAddWidget('checkbox')}
                                                 checked={widgetsToAdd.includes(widget.id)}
                                             />
                                             <Item.Image
@@ -455,14 +453,13 @@ function AddWidgetModal({
                                                         // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                                                         <div onClick={e => e.stopPropagation()}>
                                                             <InstallWidgetModal
-                                                                /* @ts-ignore InstallWidgetModal not migrated yet */
-                                                                onWidgetInstalled={wrap(widget, updateWidget)}
+                                                                onWidgetInstalled={(widgetFile, widgetUrl) =>
+                                                                    updateWidget(widget, widgetFile, widgetUrl)
+                                                                }
                                                                 trigger={updateWidgetBtn}
-                                                                buttonLabel={i18n.t(
-                                                                    'editMode.addWidget.updateModal.button'
-                                                                )}
+                                                                buttonLabel={translateAddWidget('updateModal.button')}
                                                                 className="updateWidgetModal"
-                                                                header={i18n.t('editMode.addWidget.updateModal.header')}
+                                                                header={translateAddWidget('updateModal.header')}
                                                             />
 
                                                             <Button
@@ -470,7 +467,7 @@ function AddWidgetModal({
                                                                 size="small"
                                                                 compact
                                                                 basic
-                                                                content={i18n.t('editMode.removeWidget.button')}
+                                                                content={translateRemoveWidget('button')}
                                                                 onClick={event => confirmRemove(event, widget)}
                                                                 className="removeWidgetButton"
                                                             />
@@ -482,10 +479,7 @@ function AddWidgetModal({
                                     ))}
 
                                     {isEmpty(filteredWidgetDefinitions) && (
-                                        <Item
-                                            className="alignCenter"
-                                            content={i18n.t('editMode.addWidget.noWidgets', 'No widgets available')}
-                                        />
+                                        <Item className="alignCenter" content={translateAddWidget('noWidgets')} />
                                     )}
                                 </WidgetList>
                             </WidgetListWrapper>
@@ -498,11 +492,7 @@ function AddWidgetModal({
                                     disabled={widgetsToAdd.length === 0}
                                 >
                                     <Button.Content visible>
-                                        {i18n.t(
-                                            'editMode.addWidget.submitButton',
-                                            'Add selected widgets ({{widgetsCount}})',
-                                            { widgetsCount: widgetsToAdd.length }
-                                        )}
+                                        {translateAddWidget('submitButton', { widgetsCount: widgetsToAdd.length })}
                                     </Button.Content>
                                     <Button.Content hidden>
                                         <Icon name="check" />
@@ -511,14 +501,10 @@ function AddWidgetModal({
 
                                 {canInstallWidgets && (
                                     <InstallWidgetModal
-                                        /* @ts-ignore InstallWidgetModal not migrated yet */
                                         onWidgetInstalled={onWidgetInstalled}
                                         trigger={installWidgetBtn}
-                                        header={i18n.t('editMode.addWidget.installModal.header', 'Install new widget')}
-                                        buttonLabel={i18n.t(
-                                            'editMode.addWidget.installModal.submitButton',
-                                            'Install Widget'
-                                        )}
+                                        header={translateAddWidget('installModal.header')}
+                                        buttonLabel={translateAddWidget('installModal.submitButton')}
                                     />
                                 )}
                             </Button.Group>
@@ -532,11 +518,7 @@ function AddWidgetModal({
                     open={showConfirm}
                     onCancel={unsetShowConfirm}
                     onConfirm={doUninstallWidget}
-                    header={i18n.t(
-                        'editMode.removeWidget.confirm',
-                        `Are you sure to remove widget {{name}}`,
-                        pick(widgetToRemove, 'name')
-                    )}
+                    header={translateRemoveWidget('confirm', pick(widgetToRemove, 'name'))}
                     content={confirmContent}
                     className="removeWidgetConfirm"
                 />

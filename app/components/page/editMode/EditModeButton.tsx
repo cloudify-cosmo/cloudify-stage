@@ -1,10 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
+import type { ButtonHTMLAttributes } from 'react';
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { StrictButtonProps } from 'semantic-ui-react';
+
 import { Button } from '../../basic';
 import './EditModeButton.css';
 
-export default function EditModeButton({ className, icon, labelPosition, content, style, title, onClick }) {
+type EditModeButtonProps = Pick<StrictButtonProps, 'className' | 'content' | 'icon' | 'labelPosition' | 'onClick'> &
+    Pick<ButtonHTMLAttributes<any>, 'style' | 'title'>;
+
+export default function EditModeButton({
+    className,
+    icon,
+    labelPosition,
+    content,
+    style,
+    title,
+    onClick
+}: EditModeButtonProps) {
     return (
         <Button
             className={`editModeButton ${className}`}
@@ -18,22 +30,3 @@ export default function EditModeButton({ className, icon, labelPosition, content
         />
     );
 }
-
-EditModeButton.propTypes = {
-    className: PropTypes.string,
-    content: PropTypes.string,
-    icon: PropTypes.string.isRequired,
-    labelPosition: PropTypes.string,
-    onClick: PropTypes.func,
-    style: PropTypes.shape({}),
-    title: PropTypes.string
-};
-
-EditModeButton.defaultProps = {
-    content: undefined,
-    className: '',
-    labelPosition: undefined,
-    onClick: undefined,
-    style: undefined,
-    title: undefined
-};
