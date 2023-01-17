@@ -1,14 +1,35 @@
-// @ts-nocheck File not migrated fully to TS
-
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { isEmpty, isEqual, isNil, noop } from 'lodash';
 import React, { Component } from 'react';
-import i18n from 'i18next';
 import EventBus from '../../../utils/EventBus';
 import StageUtils from '../../../utils/stageUtils';
 import { ApproveButton, Button, Form, Icon, Message, Modal } from '../../basic';
 
-export default class InstallWidgetModal extends Component {
+const translate = StageUtils.getT('editMode.addWidget.installModal');
+
+interface InstallWidgetModalProps {
+    buttonLabel: string;
+    header: string;
+    trigger: JSX.Element;
+    className: string;
+    onWidgetInstalled: (widgetFile: File | null, widgetUrl: string) => Promise<void>;
+}
+
+interface InstallWidgetModalState {
+    open: boolean;
+    loading: boolean;
+    widgetUrl: string;
+    widgetFile: File | null;
+    errors: Record<string, string>;
+    scriptError: string;
+}
+
+export default class InstallWidgetModal extends Component<InstallWidgetModalProps, InstallWidgetModalState> {
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = {
+        className: 'installWidgetModal',
+        onWidgetInstalled: () => Promise.resolve()
+    };
+
     static initialState = {
         open: false,
         loading: false,
@@ -18,14 +39,14 @@ export default class InstallWidgetModal extends Component {
         scriptError: ''
     };
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props: InstallWidgetModalProps) {
+        super(props);
 
         this.state = InstallWidgetModal.initialState;
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextState, this.state) || !_.isEqual(nextProps, this.props);
+    shouldComponentUpdate(nextProps: InstallWidgetModalProps, nextState: InstallWidgetModalState) {
+        return !isEqual(nextState, this.state) || !isEqual(nextProps, this.props);
     }
 
     openModal = () => {
@@ -36,15 +57,15 @@ export default class InstallWidgetModal extends Component {
         this.setState({ open: false });
     };
 
-    onWidgetUrlChange = widgetUrl => {
+    onWidgetUrlChange = (widgetUrl: string) => {
         this.setState({ errors: {}, widgetUrl, widgetFile: null });
     };
 
-    onWidgetFileChange = widgetFile => {
-        this.setState({ errors: {}, widgetUrl: null, widgetFile });
+    onWidgetFileChange = (widgetFile: File) => {
+        this.setState({ errors: {}, widgetUrl: '', widgetFile });
     };
 
-    showScriptError(message, source, lineno, colno) {
+    showScriptError(message: string, source: string, lineno: string, colno: string) {
         this.setState({ scriptError: `${message} (${source}:${lineno}:${colno})` });
     }
 
@@ -53,23 +74,17 @@ export default class InstallWidgetModal extends Component {
         const { widgetFile, widgetUrl: stateWidgetUrl } = this.state;
         const widgetUrl = widgetFile ? '' : stateWidgetUrl;
 
-        const errors = {};
+        const errors: { widgetUrl?: string } = {};
 
-        if (!widgetFile) {
-            if (_.isEmpty(widgetUrl)) {
-                errors.widgetUrl = i18n.t(
-                    'editMode.addWidget.installModal.error.noFileOrUrl',
-                    "Please provide the widget's archive URL or select a file"
-                );
+        if (isNil(widgetFile)) {
+            if (!widgetUrl) {
+                errors.widgetUrl = translate('error.noFileOrUrl');
             } else if (!StageUtils.Url.isUrl(widgetUrl)) {
-                errors.widgetUrl = i18n.t(
-                    'editMode.addWidget.installModal.error.invalidUrl',
-                    "Please provide valid URL for widget's archive"
-                );
+                errors.widgetUrl = translate('error.invalidUrl');
             }
         }
 
-        if (!_.isEmpty(errors)) {
+        if (!isEmpty(errors)) {
             this.setState({ errors, scriptError: '' });
             return false;
         }
@@ -105,19 +120,13 @@ export default class InstallWidgetModal extends Component {
                 </Modal.Header>
                 <Modal.Content>
                     <Form errors={errors} loading={loading}>
-                        <Form.Field
-                            label={i18n.t('editMode.addWidget.installModal.fileOrUrlLabel', 'Widget package')}
-                            required
-                            error={errors.widgetUrl}
-                        >
+                        <Form.Field label={translate('fileOrUrlLabel')} required error={errors.widgetUrl}>
                             <Form.UrlOrFile
                                 name="widget"
-                                placeholder={i18n.t(
-                                    'editMode.addWidget.installModal.fileOrUrlPlaceholder',
-                                    "Provide the widget's archive URL or click browse to select a file"
-                                )}
+                                placeholder={translate('fileOrUrlPlaceholder')}
                                 onChangeUrl={this.onWidgetUrlChange}
                                 onChangeFile={this.onWidgetFileChange}
+                                onBlurUrl={noop}
                             />
                         </Form.Field>
                     </Form>
@@ -128,7 +137,7 @@ export default class InstallWidgetModal extends Component {
                     <Button
                         icon="remove"
                         basic
-                        content={i18n.t('editMode.addWidget.installModal.cancelButton', 'Cancel')}
+                        content={translate('cancelButton')}
                         onClick={event => {
                             event.stopPropagation();
                             this.closeModal();
@@ -147,16 +156,3 @@ export default class InstallWidgetModal extends Component {
         );
     }
 }
-
-InstallWidgetModal.propTypes = {
-    buttonLabel: PropTypes.string.isRequired,
-    header: PropTypes.string.isRequired,
-    trigger: PropTypes.node.isRequired,
-    className: PropTypes.string,
-    onWidgetInstalled: PropTypes.func
-};
-
-InstallWidgetModal.defaultProps = {
-    className: 'installWidgetModal',
-    onWidgetInstalled: () => Promise.resolve()
-};
