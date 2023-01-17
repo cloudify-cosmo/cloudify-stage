@@ -55,7 +55,7 @@ const SecretValue: FunctionComponent<SecretValueProps> = ({
             </Popup>
         );
     }
-    return <Icon link name="unhide" title={translateSecrets('show')} onClick={onShow} />;
+    return <Icon link name="unhide" title={translateSecrets('icons.show')} onClick={onShow} />;
 };
 
 export default SecretValue;

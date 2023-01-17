@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import { translateSecretProviders, translateForm, validateModalForm } from './widget.utils';
-import type { ConnectionParameters, SecretProvidersWidget } from './widget.types';
+import type { VaultConnectionParameters, SecretProvidersWidget } from './widget.types';
 
 const { useErrors, useInput } = Stage.Hooks;
 const { Modal, Button, Form } = Stage.Basic;
@@ -18,7 +18,7 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
     const { errors, setErrors, clearErrors } = useErrors();
     const connectionParameters = secretProvider?.connection_parameters;
 
-    const [hostname, setHostname] = useInput(connectionParameters?.host ?? '');
+    const [hostname, setHostname] = useInput(connectionParameters?.url ?? '');
     const [authorizationToken, setAuthorizationToken] = useInput(connectionParameters?.token ?? '');
     const [defaultPath, setDefaultPath] = useInput(connectionParameters?.path ?? '');
 
@@ -37,10 +37,10 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
             return;
         }
         manager
-            .doPatch<ConnectionParameters>(`/secrets-providers/${secretProvider.id}`, {
+            .doPatch<VaultConnectionParameters>(`/secrets-providers/${secretProvider.id}`, {
                 body: {
                     connection_parameters: {
-                        host: hostname,
+                        url: hostname,
                         token: authorizationToken,
                         path: defaultPath
                     }
