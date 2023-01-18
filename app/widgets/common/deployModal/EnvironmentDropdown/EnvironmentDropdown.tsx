@@ -14,7 +14,6 @@ import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 
 type OnChangeValue = string | null;
 
-// TODO Norbert: Consider extending interface with the `DynamicDropdownProps`, so that the user could pass not required by the functionality props, like `prefetch`, `clearable` etc
 interface EnvironmentDropdownProps {
     value: DropdownProps['value'];
     name: DynamicDropdownProps['name'];
@@ -25,10 +24,9 @@ interface EnvironmentDropdownProps {
 }
 
 // TODO:
-// - Handling empty lists state
-// - Handling lists loading state
-// - Styling MenuItems
-// - Error handling
+// - Take care of found bugs
+// - Write some tests
+// - Refactor
 
 const EnvironmentDropdown = ({
     value = '',
