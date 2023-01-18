@@ -1,11 +1,7 @@
-import StageUtils from '../../../../utils/stageUtils';
+import { cloneDeep } from 'lodash';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
-
-export const formatDropdownItemText = (item: Environment) => {
-    return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
-};
 
 const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
     return capabilities.map(innerCapabilities => innerCapabilities[0]);
@@ -39,5 +35,6 @@ export const filterEnvironments = (
         }
 
         return filteredEnvironments;
-    }, defaultEnvironmentList);
+        // NOTE: List is being deep cloned as array mutating operations are being executed above
+    }, cloneDeep(defaultEnvironmentList));
 };

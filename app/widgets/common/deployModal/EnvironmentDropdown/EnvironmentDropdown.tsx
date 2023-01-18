@@ -105,7 +105,6 @@ const EnvironmentDropdown = ({
             onChange={handleChange}
         >
             <Form.Dropdown.Menu>
-                {/* NOTE Norbert: List items are duplicated while reopening deploy modal */}
                 <EnvironmentDropdownList
                     environments={environmentList.suggestedEnvironments}
                     onItemClick={handleDropdownItemClick}
