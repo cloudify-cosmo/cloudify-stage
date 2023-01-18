@@ -18,6 +18,10 @@ export function getTokenFromCookies(req: Request<any, any, any, any, Record<stri
     return req.cookies[TOKEN_COOKIE_NAME] as string;
 }
 
+export function getTokenFromHeader(req: Request<never, never>) {
+    return req.get('Authentication-Token');
+}
+
 function getAuthenticationTokenHeader(token: string) {
     return { 'Authentication-Token': token };
 }

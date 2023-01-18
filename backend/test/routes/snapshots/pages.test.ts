@@ -6,6 +6,7 @@ import request from 'supertest';
 import app from 'app';
 
 jest.mock('handler/templates/PagesHandler');
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/pages endpoint', () => {
     const page: Page = {
