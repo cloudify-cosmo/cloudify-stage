@@ -8,7 +8,8 @@ import { formatDropdownItemText, simplifyCapabilities, isDeploymentSuggested } f
 import SearchActions from '../../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { Deployment } from '../../deploymentsView/types';
+import type { FetchedDeployment } from './EnvironmentDropdown.types';
+import EnvironmentDropdownList from './EnvironmentDropdownList';
 
 type OnChangeValue = string | null;
 
@@ -20,13 +21,6 @@ interface EnvironmentDropdownProps {
     onChange: (value: OnChangeValue) => void;
     toolbox: Stage.Types.Toolbox;
     capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
-}
-
-export interface FetchedDeployment {
-    id: string;
-    // eslint-disable-next-line
-    display_name: string;
-    capabilities: Deployment['capabilities'];
 }
 
 // TODO:
@@ -142,33 +136,17 @@ const EnvironmentDropdown = ({
             onChange={handleChange}
         >
             <Form.Dropdown.Menu>
-                <Form.Dropdown.Header>Suggested</Form.Dropdown.Header>
-                {getDropdownOptions(true).map(dropdownOption => {
-                    return (
-                        <Form.Dropdown.Item
-                            key={dropdownOption.id}
-                            active={dropdownOption.id === value}
-                            value={dropdownOption.id}
-                            onClick={handleDropdownItemClick}
-                        >
-                            {formatDropdownItemText(dropdownOption)}
-                        </Form.Dropdown.Item>
-                    );
-                })}
-
-                <Form.Dropdown.Header>Others</Form.Dropdown.Header>
-                {getDropdownOptions().map(dropdownOption => {
-                    return (
-                        <Form.Dropdown.Item
-                            key={dropdownOption.id}
-                            active={dropdownOption.id === value}
-                            value={dropdownOption.id}
-                            onClick={handleDropdownItemClick}
-                        >
-                            {formatDropdownItemText(dropdownOption)}
-                        </Form.Dropdown.Item>
-                    );
-                })}
+                <EnvironmentDropdownList
+                    dropdownValue={value}
+                    onItemClick={handleDropdownItemClick}
+                    isSuggestedList
+                    environments={getDropdownOptions(true)}
+                />
+                <EnvironmentDropdownList
+                    dropdownValue={value}
+                    onItemClick={handleDropdownItemClick}
+                    environments={getDropdownOptions()}
+                />
             </Form.Dropdown.Menu>
         </Form.Dropdown>
     );

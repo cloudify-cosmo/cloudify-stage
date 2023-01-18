@@ -1,6 +1,6 @@
 import StageUtils from '../../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { FetchedDeployment } from './EnvironmentDropdown';
+import type { FetchedDeployment } from './EnvironmentDropdown.types';
 
 export const formatDropdownItemText = (item: FetchedDeployment) => {
     return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
