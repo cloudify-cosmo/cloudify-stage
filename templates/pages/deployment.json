@@ -40,11 +40,22 @@
               "definition": "executions"
             },
             {
+              "name": "Deployment output/capabilities",
+              "x": 0,
+              "y": 24,
+              "width": 12,
+              "height": 16,
+              "definition": "outputs",
+              "configuration": {},
+              "drillDownPages": {},
+              "maximized": false
+            },
+            {
               "name": "Events/Logs Filter",
               "width": 12,
               "height": 5,
               "x": 0,
-              "y": 24,
+              "y": 40,
               "definition": "eventsFilter"
             },
             {
@@ -52,7 +63,7 @@
               "width": 12,
               "height": 18,
               "x": 0,
-              "y": 29,
+              "y": 45,
               "definition": "events"
             }
           ],
