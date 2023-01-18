@@ -1,12 +1,14 @@
 import type { Snapshot, SnapshotsWidget } from 'widgets/snapshots/src/widget.types';
 import type { Toolbox } from 'app/utils/StageAPI';
 import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
+import { camelCase } from 'lodash';
 import Actions from './actions';
 import CreateModal from './CreateSnapshotModal';
 import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 
-const t = Stage.Utils.getT('widgets.snapshots');
+const translate = Stage.Utils.getT('widgets.snapshots');
+const translateColumn = Stage.Utils.composeT(translate, 'columns');
 
 interface SnapshotsTableProps {
     data: { items: Snapshot[]; total: number };
@@ -125,8 +127,11 @@ export default class SnapshotsTable extends React.Component<SnapshotsTableProps,
     render() {
         const { confirmDelete, error, item: snapshot, showRestore } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Snapshots available. Click "Create" to create Snapshots.';
         const { Confirm, ErrorMessage, DataTable, Icon, ResourceVisibility } = Stage.Basic;
+
+        function createLabelledColumn(name: keyof Snapshot, width = 15) {
+            return <DataTable.Column label={translateColumn(camelCase(name))} name={name} width={`${width}%`} />;
+        }
 
         return (
             <div className="snapshotsTableDiv">
@@ -141,12 +146,12 @@ export default class SnapshotsTable extends React.Component<SnapshotsTableProps,
                     selectable
                     searchable
                     className="snapshotsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={translate('noData')}
                 >
-                    <DataTable.Column label="Name" name="id" width="40%" />
-                    <DataTable.Column label="Created at" name="created_at" width="20%" />
-                    <DataTable.Column label="Status" name="status" width="15%" />
-                    <DataTable.Column label="Creator" name="created_by" width="15%" />
+                    {createLabelledColumn('id', 40)}
+                    {createLabelledColumn('created_at', 20)}
+                    {createLabelledColumn('status')}
+                    {createLabelledColumn('created_by')}
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
@@ -168,14 +173,14 @@ export default class SnapshotsTable extends React.Component<SnapshotsTableProps,
                                 <DataTable.Data textAlign="center" className="rowActions">
                                     <Icon
                                         name="undo"
-                                        title={t('actions.restore')}
+                                        title={translate('actions.restore')}
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.restoreSnapshot)}
                                     />
                                     <Icon
                                         name="download"
-                                        title={t('actions.download')}
+                                        title={translate('actions.download')}
                                         disabled={!isUsable}
                                         link={isUsable}
                                         onClick={_.wrap(item, this.downloadSnapshot)}
@@ -184,7 +189,7 @@ export default class SnapshotsTable extends React.Component<SnapshotsTableProps,
                                         name="trash"
                                         disabled={!isRemovable}
                                         link={isRemovable}
-                                        title={t('actions.delete')}
+                                        title={translate('actions.delete')}
                                         onClick={_.wrap(item, this.deleteSnapshotConfirm)}
                                     />
                                 </DataTable.Data>
@@ -209,7 +214,7 @@ export default class SnapshotsTable extends React.Component<SnapshotsTableProps,
                 )}
 
                 <Confirm
-                    content="Are you sure you want to remove this snapshot?"
+                    content={translate('confirmDelete')}
                     open={confirmDelete}
                     onConfirm={this.deleteSnapshot}
                     onCancel={() => this.setState({ confirmDelete: false })}

@@ -3,6 +3,8 @@ import type { Toolbox } from 'app/utils/StageAPI';
 import { noop } from 'lodash';
 import Actions from './actions';
 
+const translate = Stage.Utils.getT('widgets.snapshots.restoreModal');
+
 export default function RestoreSnapshotModal({
     onHide = noop,
     snapshot,
@@ -49,7 +51,7 @@ export default function RestoreSnapshotModal({
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="undo" /> Restore snapshot
+                <Icon name="undo" /> {translate('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -57,32 +59,27 @@ export default function RestoreSnapshotModal({
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label="Snapshot from a tenant-less environment"
+                            label={translate('form.tenantless.label')}
                             name="isFromTenantlessEnv"
                             checked={isFromTenantlessEnv}
                             onChange={setInputs}
                         />
                     </Form.Field>
 
-                    {isFromTenantlessEnv && (
-                        <Message>
-                            When restoring from a tenant-less environment, make sure you uploaded the snapshot to a
-                            &quot;clean&quot; tenant that does not contain any other resources.
-                        </Message>
-                    )}
+                    {isFromTenantlessEnv && <Message>{translate('form.message')}</Message>}
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label="Force restore even if manager is non-empty (it will delete all data)"
+                            label={translate('form.force.label')}
                             name="shouldForceRestore"
                             checked={shouldForceRestore}
                             onChange={setInputs}
                         />
                     </Form.Field>
-                    <Form.Field help="Ignore plugin installation failures and deployment environment creation failures due to missing plugins">
+                    <Form.Field help={translate('form.ignoreFailure.help')}>
                         <Form.Checkbox
                             toggle
-                            label="Ignore plugin failures"
+                            label={translate('form.ignoreFailure.label')}
                             name="ignorePluginFailure"
                             checked={ignorePluginFailure}
                             onChange={setInputs}
@@ -93,7 +90,12 @@ export default function RestoreSnapshotModal({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={submitRestore} disabled={isLoading} content="Restore" icon="undo" />
+                <ApproveButton
+                    onClick={submitRestore}
+                    disabled={isLoading}
+                    content={translate('actions.restore')}
+                    icon="undo"
+                />
             </Modal.Actions>
         </Modal>
     );

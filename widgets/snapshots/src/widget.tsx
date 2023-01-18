@@ -3,11 +3,13 @@ import type { Snapshot } from 'widgets/snapshots/src/widget.types';
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
 import SnapshotsTable from './SnapshotsTable';
 
+const translate = Stage.Utils.getT('widgets.snapshots');
+
 // eslint-disable-next-line camelcase
 Stage.defineWidget<{ created_by?: string }, PaginatedResponse<Snapshot>, DataTableConfiguration>({
     id: 'snapshots',
-    name: 'Snapshots list',
-    description: 'Snapshots list',
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 4,
     initialHeight: 16,
     isReact: true,
