@@ -3,17 +3,12 @@ import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../components/DynamicDropdown';
-import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { useBoolean } from '../../../utils/hooks';
 import { formatDropdownItemText, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
-import DynamicDropdown from '../components/DynamicDropdown';
 import SearchActions from '../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
 import type { BlueprintRequirements } from '../blueprints/BlueprintActions';
 import type { Deployment } from '../deploymentsView/types';
-
-const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
-const fetchUrl = '/searches/deployments';
 
 type OnChangeValue = string | null;
 
@@ -176,17 +171,6 @@ const EnvironmentDropdown = ({
                 })}
             </Form.Dropdown.Menu>
         </Form.Dropdown>
-        // <DynamicDropdown
-        //     value={value as any}
-        //     name={name}
-        //     placeholder={placeholder}
-        //     clearable={false}
-        //     fetchUrl="/deployments?_include=id,display_name"
-        //     searchParams={deploymentSearchParams}
-        //     onChange={onChange as any}
-        //     toolbox={toolbox}
-        //     prefetch
-        // />
     );
 };
 
