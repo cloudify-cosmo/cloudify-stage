@@ -1,5 +1,5 @@
-import StageUtils from '../../../utils/stageUtils';
-import type { BlueprintRequirements } from '../blueprints/BlueprintActions';
+import StageUtils from '../../../../utils/stageUtils';
+import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import type { FetchedDeployment } from './EnvironmentDropdown';
 
 export const formatDropdownItemText = (item: FetchedDeployment) => {

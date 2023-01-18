@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
-import type { DynamicDropdownProps } from '../components/DynamicDropdown';
-import { useBoolean } from '../../../utils/hooks';
+import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
+import { useBoolean } from '../../../../utils/hooks';
 import { formatDropdownItemText, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
-import SearchActions from '../actions/SearchActions';
-import { FilterRuleOperators, FilterRuleType } from '../filters/types';
-import type { BlueprintRequirements } from '../blueprints/BlueprintActions';
-import type { Deployment } from '../deploymentsView/types';
+import SearchActions from '../../actions/SearchActions';
+import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
+import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
+import type { Deployment } from '../../deploymentsView/types';
 
 type OnChangeValue = string | null;
 
