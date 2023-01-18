@@ -5,7 +5,7 @@ import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../components/DynamicDropdown';
 import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { useBoolean } from '../../../utils/hooks';
-import { mapFetchedDeployments, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
+import { formatDropdownItemText, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
 import DynamicDropdown from '../components/DynamicDropdown';
 import SearchActions from '../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../filters/types';
@@ -15,12 +15,14 @@ import type { Deployment } from '../deploymentsView/types';
 const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
 const fetchUrl = '/searches/deployments';
 
+type OnChangeValue = string | null;
+
 // TODO Norbert: Consider extending interface with the `DynamicDropdownProps`, so that the user could pass not required by the functionality props, like `prefetch`, `clearable` etc
 interface EnvironmentDropdownProps {
     value: DropdownProps['value'];
     name: DynamicDropdownProps['name'];
     placeholder: DynamicDropdownProps['placeholder'];
-    onChange: (value: string | null) => void;
+    onChange: (value: OnChangeValue) => void;
     toolbox: Stage.Types.Toolbox;
     capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
 }
@@ -33,9 +35,9 @@ export interface FetchedDeployment {
 }
 
 // TODO:
-// - Displaying data with certain headers and MenuItems
-// - Implement matching specified in a corresponding ticket
-// - Add pagination for fetched data
+// - Handling empty lists state
+// - Handling lists loading state
+// - Styling MenuItems
 // - Error handling
 
 const EnvironmentDropdown = ({
@@ -64,7 +66,7 @@ const EnvironmentDropdown = ({
     };
 
     // TODO Norbert: This function seems to be rendered to many times, see if it can be optimized
-    const getOptions = () => {
+    const getDropdownOptions = (suggested?: boolean): FetchedDeployment[] => {
         const capabilities = simplifyCapabilities(capabilitiesToMatch);
         const { suggestedDeployments, otherDeployments } = fetchedDeployments.reduce<{
             suggestedDeployments: FetchedDeployment[];
@@ -87,8 +89,7 @@ const EnvironmentDropdown = ({
             }
         );
 
-        const deployments = [...suggestedDeployments, ...otherDeployments];
-        return mapFetchedDeployments(deployments);
+        return suggested ? suggestedDeployments : otherDeployments;
     };
 
     const handleChange: DropdownProps['onChange'] = (_event, data) => {
@@ -120,6 +121,10 @@ const EnvironmentDropdown = ({
             .finally(unsetLoading);
     };
 
+    const handleDropdownItemClick: DropdownItemProps['onClick'] = (_event, { value: dropdownItemValue }) => {
+        onChange(dropdownItemValue as OnChangeValue);
+    };
+
     useEffect(() => {
         loadData();
     }, [searchQuery]);
@@ -137,11 +142,40 @@ const EnvironmentDropdown = ({
             search
             selection
             selectOnBlur={false}
-            options={getOptions()}
             onSearchChange={handleSearchChange}
             onBlur={resetSearch}
             onChange={handleChange}
-        />
+        >
+            <Form.Dropdown.Menu>
+                <Form.Dropdown.Header>Suggested</Form.Dropdown.Header>
+                {getDropdownOptions(true).map(dropdownOption => {
+                    return (
+                        <Form.Dropdown.Item
+                            key={dropdownOption.id}
+                            active={dropdownOption.id === value}
+                            value={dropdownOption.id}
+                            onClick={handleDropdownItemClick}
+                        >
+                            {formatDropdownItemText(dropdownOption)}
+                        </Form.Dropdown.Item>
+                    );
+                })}
+
+                <Form.Dropdown.Header>Others</Form.Dropdown.Header>
+                {getDropdownOptions().map(dropdownOption => {
+                    return (
+                        <Form.Dropdown.Item
+                            key={dropdownOption.id}
+                            active={dropdownOption.id === value}
+                            value={dropdownOption.id}
+                            onClick={handleDropdownItemClick}
+                        >
+                            {formatDropdownItemText(dropdownOption)}
+                        </Form.Dropdown.Item>
+                    );
+                })}
+            </Form.Dropdown.Menu>
+        </Form.Dropdown>
         // <DynamicDropdown
         //     value={value as any}
         //     name={name}

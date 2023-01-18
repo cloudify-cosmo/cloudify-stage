@@ -1,20 +1,9 @@
-import type { DropdownItemProps } from 'semantic-ui-react';
 import StageUtils from '../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../blueprints/BlueprintActions';
 import type { FetchedDeployment } from './EnvironmentDropdown';
 
-const formatDropdownItemText = (item: FetchedDeployment) => {
+export const formatDropdownItemText = (item: FetchedDeployment) => {
     return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
-};
-
-export const mapFetchedDeployments = (items: FetchedDeployment[]): DropdownItemProps[] => {
-    return items.map(item => {
-        return {
-            text: formatDropdownItemText(item),
-            value: item.id,
-            title: item.display_name
-        };
-    });
 };
 
 export const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
