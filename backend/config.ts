@@ -63,11 +63,10 @@ export function getClientConfig(mode: Mode): ClientConfig {
         app: {
             maintenancePollingInterval: config.app.maintenancePollingInterval,
             whiteLabel: userConfig.whiteLabel,
-            useLoginPage: config.app.useLoginPage,
-            saml: {
-                enabled: config.app.saml.enabled,
-                ssoUrl: config.app.saml.ssoUrl,
-                portalUrl: config.app.saml.portalUrl
+            auth: {
+                type: config.app.auth.type,
+                ssoUrl: config.app.auth.ssoUrl,
+                portalUrl: config.app.auth.portalUrl
             },
             maps: userConfig.maps
         },

@@ -5,6 +5,7 @@ import i18n from 'i18next';
 import { connect } from 'react-redux';
 import Consts from '../../utils/consts';
 import type { ReduxState } from '../../reducers';
+import StageUtils from '../../utils/stageUtils';
 
 interface LinkToLoginProps {
     portalUrl?: string;
@@ -12,20 +13,16 @@ interface LinkToLoginProps {
 }
 const LinkToLogin: FunctionComponent<LinkToLoginProps> = ({ portalUrl, searchQuery }) =>
     portalUrl ? (
-        <a href={portalUrl}>{i18n.t('backToApps', 'Back to apps')}</a>
+        <a href={portalUrl}>{i18n.t('backToApps')}</a>
     ) : (
-        <Link to={{ pathname: Consts.PAGE_PATH.LOGIN, search: searchQuery }}>
-            {i18n.t('backToLogin', 'Back to login')}
-        </Link>
+        <Link to={{ pathname: Consts.PAGE_PATH.LOGIN, search: searchQuery }}>{i18n.t('backToLogin')}</Link>
     );
 
 const mapStateToProps = (state: ReduxState) => {
     return {
-        portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : undefined,
+        portalUrl: !StageUtils.Idp.isLocal(state.manager) ? state.config.app.auth.portalUrl : undefined,
         searchQuery: state.router.location.search
     };
 };
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LinkToLogin);
+export default connect(mapStateToProps)(LinkToLogin);

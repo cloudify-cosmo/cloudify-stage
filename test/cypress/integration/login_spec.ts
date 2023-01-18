@@ -13,7 +13,7 @@ describe('Login', () => {
 
     it('page is not reachable when useLoginPage configuration parameter is set to false', () => {
         cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
-            clientConfig.app.useLoginPage = false;
+            clientConfig.app.auth.type = 'saas';
             return clientConfig;
         });
 
@@ -89,27 +89,6 @@ describe('Login', () => {
         cy.visit('/console/login');
 
         cy.contains('For the first login').should('be.visible');
-    });
-
-    it('provides SSO login button when SAML is enabled', () => {
-        cy.activate();
-
-        const ssoUrl = '/sso-redirect';
-        cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
-            clientConfig.app.saml.enabled = true;
-            clientConfig.app.saml.ssoUrl = ssoUrl;
-            return clientConfig;
-        });
-
-        cy.visit('/console/login').waitUntilAppLoaded();
-        cy.get('button').as('loginButton');
-
-        cy.get('@loginButton').should('contain.text', 'LOGIN WITH SSO');
-        cy.get('input').should('not.exist');
-
-        cy.get('@loginButton').click();
-        cy.wait('@ssoRedirect');
     });
 
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import styled from 'styled-components';
 import type { ClientConfig } from 'backend/routes/Config.types';
-
+import SmartRedirect from './SmartRedirect';
 import { login } from '../../actions/manager/auth';
 import type { ReduxState } from '../../reducers';
 import renderMultilineText from '../../utils/shared/renderMultilineText';
@@ -19,13 +19,13 @@ import type { ReduxThunkDispatch } from '../../configureStore';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
-    isSamlEnabled: ClientConfig['app']['saml']['enabled'];
     onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
         search: string;
     };
     loginError: string | null;
-    samlSsoUrl: ClientConfig['app']['saml']['ssoUrl'];
+    isLocalIdp: boolean;
+    ssoUrl: string;
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
@@ -81,13 +81,8 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     onSubmit = () => {
         const { password, username } = this.state;
-        const { isSamlEnabled, location, onLogin, samlSsoUrl = '' } = this.props;
+        const { location, onLogin } = this.props;
         const errors: Errors = {};
-
-        if (isSamlEnabled) {
-            // eslint-disable-next-line xss/no-location-href-assign
-            window.location.href = samlSsoUrl;
-        }
 
         if (isEmpty(username)) {
             errors.username = t('error.noUsername');
@@ -113,8 +108,10 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username, isFirstLogin } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError = null, whiteLabel } = this.props;
+        const { isLocalIdp, ssoUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
+
+        if (!isLocalIdp) return <SmartRedirect url={ssoUrl} />;
 
         const loginPageHeader = t('header');
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
@@ -142,37 +139,35 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                     )}
 
                     <Form onSubmit={this.onSubmit}>
-                        {!isSamlEnabled && (
-                            <Popup
-                                open={isFirstLogin}
-                                content={renderMultilineText(t('firstLoginHint'))}
-                                position="right center"
-                                style={{ marginLeft: -25 }}
-                                trigger={
-                                    <div>
-                                        <Form.Field required error={errors?.username}>
-                                            <StyledInput
-                                                name="username"
-                                                type="text"
-                                                placeholder={t('username')}
-                                                autoFocus
-                                                value={username}
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Field>
-                                        <Form.Field required error={errors?.password}>
-                                            <StyledInput
-                                                name="password"
-                                                type="password"
-                                                placeholder={t('password')}
-                                                value={password}
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Field>
-                                    </div>
-                                }
-                            />
-                        )}
+                        <Popup
+                            open={isFirstLogin}
+                            content={renderMultilineText(t('firstLoginHint'))}
+                            position="right center"
+                            style={{ marginLeft: -25 }}
+                            trigger={
+                                <div>
+                                    <Form.Field required error={errors?.username}>
+                                        <StyledInput
+                                            name="username"
+                                            type="text"
+                                            placeholder={t('username')}
+                                            autoFocus
+                                            value={username}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field required error={errors?.password}>
+                                        <StyledInput
+                                            name="password"
+                                            type="password"
+                                            placeholder={t('password')}
+                                            value={password}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                </div>
+                            }
+                        />
 
                         {loginError && (
                             <Message error style={{ display: 'block' }}>
@@ -186,7 +181,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={t(isSamlEnabled ? 'ssoSubmit' : 'submit')}
+                            content={t('submit')}
                         />
                     </Form>
                 </div>
@@ -199,12 +194,12 @@ const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
         username: manager.auth.username,
+        isLocalIdp: config.app.auth.type === 'local',
+        ssoUrl: config.app.auth.ssoUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
         loginError: manager.auth.error,
         mode: get(config, 'mode'),
-        whiteLabel: get(config, 'app.whiteLabel'),
-        isSamlEnabled: get(config, 'app.saml.enabled', false),
-        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
+        whiteLabel: get(config, 'app.whiteLabel')
     };
 };
 

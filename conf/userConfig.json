@@ -12,9 +12,8 @@
     },
     "maxBodySize": "2gb"
   },
-  "useLoginPage": true,
-  "saml":{
-    "enabled": false,
+  "auth":{
+    "type": "local",
     "certPath": "",
     "ssoUrl": "",
     "portalUrl": ""

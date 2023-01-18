@@ -7,15 +7,15 @@ import { getConfig } from '../config';
 export default () => {
     let cert;
     try {
-        cert = fs.readFileSync(getConfig().app.saml.certPath, 'utf-8');
+        cert = fs.readFileSync(getConfig().app.auth.certPath, 'utf-8');
     } catch (e) {
-        throw new Error('Could not read SAML certificate [saml.certPath]');
+        throw new Error('Could not read SAML certificate [auth.certPath]');
     }
 
     return new Strategy(
         {
             path: '/auth/saml/callback',
-            entryPoint: getConfig().app.saml.ssoUrl,
+            entryPoint: getConfig().app.auth.ssoUrl,
             cert
         },
         ((user, done) => done(null, user!)) as VerifyWithoutRequest
