@@ -1,16 +1,17 @@
 import StageUtils from '../../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { Environment } from './EnvironmentDropdown.types';
+import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
+import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
 
 export const formatDropdownItemText = (item: Environment) => {
     return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
 };
 
-export const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
+const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
     return capabilities.map(innerCapabilities => innerCapabilities[0]);
 };
 
-export const isDeploymentSuggested = (deployment: Environment, simplifiedCapabilities: string[]): boolean => {
+const isEnvironmentSuggested = (deployment: Environment, simplifiedCapabilities: string[]): boolean => {
     const deploymentCapabilities = Object.keys(deployment.capabilities);
     const isSuggestedDeployment = simplifiedCapabilities.every(
         capability =>
@@ -20,4 +21,23 @@ export const isDeploymentSuggested = (deployment: Environment, simplifiedCapabil
     );
 
     return isSuggestedDeployment;
+};
+
+export const filterEnvironments = (
+    environments: Environment[],
+    capabilities: BlueprintRequirements['parent_capabilities']
+) => {
+    const capabilitiesToMatch = simplifyCapabilities(capabilities);
+
+    return environments.reduce<FilteredEnvironments>((filteredEnvironments, environment) => {
+        const isSuggestedOption = isEnvironmentSuggested(environment, capabilitiesToMatch);
+
+        if (isSuggestedOption) {
+            filteredEnvironments.suggestedEnvironments.push(environment);
+        } else {
+            filteredEnvironments.nonSuggestedEnvironments.push(environment);
+        }
+
+        return filteredEnvironments;
+    }, defaultEnvironmentList);
 };

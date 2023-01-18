@@ -6,3 +6,8 @@ export interface Environment {
     display_name: string;
     capabilities: Deployment['capabilities'];
 }
+
+export type FilteredEnvironments = {
+    suggestedEnvironments: Environment[];
+    nonSuggestedEnvironments: Environment[];
+};

@@ -4,12 +4,13 @@ import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import { useBoolean } from '../../../../utils/hooks';
-import { simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
+import { filterEnvironments } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { Environment } from './EnvironmentDropdown.types';
+import type { FilteredEnvironments } from './EnvironmentDropdown.types';
 import EnvironmentDropdownList from './EnvironmentDropdownList';
+import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 
 type OnChangeValue = string | null;
 
@@ -40,7 +41,7 @@ const EnvironmentDropdown = ({
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [environments, setEnvironments] = useState<Environment[]>([]);
+    const [environmentList, setEnvironmentList] = useState<FilteredEnvironments>(defaultEnvironmentList);
 
     const handleSearchChange: DropdownProps['onSearchChange'] = (_event, data) => {
         setSearchQuery(data.searchQuery);
@@ -50,39 +51,12 @@ const EnvironmentDropdown = ({
         setSearchQuery('');
     };
 
-    // TODO Norbert: This function seems to be rendered to many times, see if it can be optimized
-    const getDropdownOptions = (suggested?: boolean): Environment[] => {
-        const capabilities = simplifyCapabilities(capabilitiesToMatch);
-        const { suggestedDeployments, otherDeployments } = environments.reduce<{
-            suggestedDeployments: Environment[];
-            otherDeployments: Environment[];
-        }>(
-            (aggregator, deployment) => {
-                const isSuggestedOption = isDeploymentSuggested(deployment, capabilities);
-
-                if (isSuggestedOption) {
-                    aggregator.suggestedDeployments.push(deployment);
-                } else {
-                    aggregator.otherDeployments.push(deployment);
-                }
-
-                return aggregator;
-            },
-            {
-                suggestedDeployments: [],
-                otherDeployments: []
-            }
-        );
-
-        return suggested ? suggestedDeployments : otherDeployments;
-    };
-
     const handleChange: DropdownProps['onChange'] = (_event, data) => {
         const changeValue = !isEmpty(data?.value) ? (data.value as string) : null;
         onChange(changeValue);
     };
 
-    const loadData = () => {
+    const fetchEnvironments = () => {
         setLoading();
 
         searchActions
@@ -101,7 +75,8 @@ const EnvironmentDropdown = ({
                 }
             )
             .then(data => {
-                setEnvironments(data.items);
+                const filteredEnvironments = filterEnvironments(data.items, capabilitiesToMatch);
+                setEnvironmentList(filteredEnvironments);
             })
             .finally(unsetLoading);
     };
@@ -111,7 +86,7 @@ const EnvironmentDropdown = ({
     };
 
     useEffect(() => {
-        loadData();
+        fetchEnvironments();
     }, [searchQuery]);
 
     return (
@@ -132,14 +107,15 @@ const EnvironmentDropdown = ({
             onChange={handleChange}
         >
             <Form.Dropdown.Menu>
+                {/* NOTE Norbert: List items are duplicated while reopening deploy modal */}
                 <EnvironmentDropdownList
-                    environments={getDropdownOptions(true)}
+                    environments={environmentList.suggestedEnvironments}
                     onItemClick={handleDropdownItemClick}
                     activeEnvironmentId={value}
                     isSuggestedList
                 />
                 <EnvironmentDropdownList
-                    environments={getDropdownOptions()}
+                    environments={environmentList.nonSuggestedEnvironments}
                     onItemClick={handleDropdownItemClick}
                     activeEnvironmentId={value}
                 />
