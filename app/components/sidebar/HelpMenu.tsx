@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import type { ReduxState } from '../../reducers';
 import SideBarItem from './SideBarItem';
 import StageUtils from '../../utils/stageUtils';
-import AboutModal from '../AboutModal';
+import AboutModal from './AboutModal';
 import { useBoolean } from '../../utils/hooks';
 import type { SystemMenuGroupItemProps } from './SystemMenu';
 
