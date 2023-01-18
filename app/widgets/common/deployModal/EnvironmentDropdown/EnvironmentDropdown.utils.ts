@@ -1,8 +1,8 @@
 import StageUtils from '../../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { FetchedDeployment } from './EnvironmentDropdown.types';
+import type { Environment } from './EnvironmentDropdown.types';
 
-export const formatDropdownItemText = (item: FetchedDeployment) => {
+export const formatDropdownItemText = (item: Environment) => {
     return StageUtils.formatDisplayName({ id: item.id, displayName: item.display_name });
 };
 
@@ -10,7 +10,7 @@ export const simplifyCapabilities = (capabilities: BlueprintRequirements['parent
     return capabilities.map(innerCapabilities => innerCapabilities[0]);
 };
 
-export const isDeploymentSuggested = (deployment: FetchedDeployment, simplifiedCapabilities: string[]): boolean => {
+export const isDeploymentSuggested = (deployment: Environment, simplifiedCapabilities: string[]): boolean => {
     const deploymentCapabilities = Object.keys(deployment.capabilities);
     const isSuggestedDeployment = simplifiedCapabilities.every(
         capability =>

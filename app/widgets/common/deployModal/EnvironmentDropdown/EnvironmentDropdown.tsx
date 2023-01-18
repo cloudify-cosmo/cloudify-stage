@@ -4,11 +4,11 @@ import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import { useBoolean } from '../../../../utils/hooks';
-import { formatDropdownItemText, simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
+import { simplifyCapabilities, isDeploymentSuggested } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
-import type { FetchedDeployment } from './EnvironmentDropdown.types';
+import type { Environment } from './EnvironmentDropdown.types';
 import EnvironmentDropdownList from './EnvironmentDropdownList';
 
 type OnChangeValue = string | null;
@@ -40,11 +40,7 @@ const EnvironmentDropdown = ({
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
-    const [fetchedDeployments, setFetchedDeployments] = useState<FetchedDeployment[]>([]);
-
-    useEffect(() => {
-        // eslint-disable-next-line
-    }, []);
+    const [environments, setEnvironments] = useState<Environment[]>([]);
 
     const handleSearchChange: DropdownProps['onSearchChange'] = (_event, data) => {
         setSearchQuery(data.searchQuery);
@@ -55,11 +51,11 @@ const EnvironmentDropdown = ({
     };
 
     // TODO Norbert: This function seems to be rendered to many times, see if it can be optimized
-    const getDropdownOptions = (suggested?: boolean): FetchedDeployment[] => {
+    const getDropdownOptions = (suggested?: boolean): Environment[] => {
         const capabilities = simplifyCapabilities(capabilitiesToMatch);
-        const { suggestedDeployments, otherDeployments } = fetchedDeployments.reduce<{
-            suggestedDeployments: FetchedDeployment[];
-            otherDeployments: FetchedDeployment[];
+        const { suggestedDeployments, otherDeployments } = environments.reduce<{
+            suggestedDeployments: Environment[];
+            otherDeployments: Environment[];
         }>(
             (aggregator, deployment) => {
                 const isSuggestedOption = isDeploymentSuggested(deployment, capabilities);
@@ -105,7 +101,7 @@ const EnvironmentDropdown = ({
                 }
             )
             .then(data => {
-                setFetchedDeployments(data.items);
+                setEnvironments(data.items);
             })
             .finally(unsetLoading);
     };
@@ -137,15 +133,15 @@ const EnvironmentDropdown = ({
         >
             <Form.Dropdown.Menu>
                 <EnvironmentDropdownList
-                    dropdownValue={value}
-                    onItemClick={handleDropdownItemClick}
-                    isSuggestedList
                     environments={getDropdownOptions(true)}
+                    onItemClick={handleDropdownItemClick}
+                    activeEnvironmentId={value}
+                    isSuggestedList
                 />
                 <EnvironmentDropdownList
-                    dropdownValue={value}
-                    onItemClick={handleDropdownItemClick}
                     environments={getDropdownOptions()}
+                    onItemClick={handleDropdownItemClick}
+                    activeEnvironmentId={value}
                 />
             </Form.Dropdown.Menu>
         </Form.Dropdown>

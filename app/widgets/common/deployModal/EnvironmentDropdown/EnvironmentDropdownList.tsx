@@ -1,20 +1,24 @@
 import React from 'react';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
-import { formatDropdownItemText } from './EnvironmentDropdown.utils';
-import type { FetchedDeployment } from './EnvironmentDropdown.types';
+import type { Environment } from './EnvironmentDropdown.types';
+import StageUtils from '../../../../utils/stageUtils';
+
+const formatListItemText = (listItem: Environment) => {
+    return StageUtils.formatDisplayName({ id: listItem.id, displayName: listItem.display_name });
+};
 
 interface EnvironmentDropdownListProps {
-    environments: FetchedDeployment[];
+    environments: Environment[];
     onItemClick: DropdownItemProps['onClick'];
-    dropdownValue: DropdownProps['value'];
+    activeEnvironmentId: DropdownProps['value'];
     isSuggestedList?: boolean;
 }
 
 const EnvironmentDropdownList = ({
     environments,
     onItemClick,
-    dropdownValue,
+    activeEnvironmentId,
     isSuggestedList
 }: EnvironmentDropdownListProps) => {
     const listTitle = isSuggestedList ? 'Suggested' : 'Others';
@@ -26,11 +30,11 @@ const EnvironmentDropdownList = ({
                 return (
                     <Form.Dropdown.Item
                         key={environment.id}
-                        active={environment.id === dropdownValue}
+                        active={environment.id === activeEnvironmentId}
                         value={environment.id}
                         onClick={onItemClick}
                     >
-                        {formatDropdownItemText(environment)}
+                        {formatListItemText(environment)}
                     </Form.Dropdown.Item>
                 );
             })}
