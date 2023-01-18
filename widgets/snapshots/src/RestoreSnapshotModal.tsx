@@ -1,9 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Snapshot } from 'widgets/snapshots/src/widget.types';
+import type { Toolbox } from 'app/utils/StageAPI';
+import { noop } from 'lodash';
 import Actions from './actions';
-import SnapshotPropType from './props/SnapshotPropType';
 
-export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }) {
+export default function RestoreSnapshotModal({
+    onHide = noop,
+    snapshot,
+    toolbox,
+    open
+}: {
+    onHide?: () => void;
+    snapshot: Snapshot;
+    toolbox: Toolbox;
+    open: boolean;
+}) {
     const { useBoolean, useErrors, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -88,14 +98,3 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
         </Modal>
     );
 }
-
-RestoreSnapshotModal.propTypes = {
-    onHide: PropTypes.func,
-    open: PropTypes.bool.isRequired,
-    snapshot: SnapshotPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-RestoreSnapshotModal.defaultProps = {
-    onHide: _.noop
-};

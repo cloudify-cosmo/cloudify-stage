@@ -1,21 +1,36 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { CheckboxProps, InputOnChangeData } from 'semantic-ui-react';
+import type { SnapshotsWidget } from 'widgets/snapshots/src/widget.types';
 import Actions from './actions';
 
-export default class CreateModal extends React.Component {
+interface CreateModalProps {
+    toolbox: Toolbox;
+    widget: SnapshotsWidget;
+}
+
+interface CreateModalState {
+    errors: Record<string, string>;
+    excludeLogs: boolean;
+    excludeEvents: boolean;
+    includeCredentials: boolean;
+    queue: boolean;
+    open?: boolean;
+    loading?: boolean;
+    snapshotId: string;
+}
+
+export default class CreateModal extends React.Component<CreateModalProps, CreateModalState> {
     static initialState = {
-        loading: false,
         snapshotId: '',
+        errors: {},
         includeCredentials: false,
         excludeLogs: false,
         excludeEvents: false,
-        queue: false,
-        errors: {},
-        open: false
+        queue: false
     };
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props: CreateModalProps) {
+        super(props);
 
         this.state = CreateModal.initialState;
 
@@ -24,8 +39,10 @@ export default class CreateModal extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    handleInputChange(_proxy: unknown, field: CheckboxProps | InputOnChangeData) {
+        this.setState(
+            Stage.Basic.Form.fieldNameValue({ name: '', value: '', type: '', ...field }) as unknown as CreateModalState
+        );
     }
 
     onApprove() {
@@ -60,7 +77,7 @@ export default class CreateModal extends React.Component {
                 toolbox.getEventBus().trigger('snapshots:refresh');
                 this.setState({ errors: {}, loading: false, open: false });
             })
-            .catch(err => {
+            .catch((err: any) => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
@@ -136,8 +153,3 @@ export default class CreateModal extends React.Component {
         );
     }
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

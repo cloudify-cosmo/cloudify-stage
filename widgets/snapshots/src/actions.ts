@@ -1,15 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { Snapshot } from 'widgets/snapshots/src/widget.types';
 
 export default class {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Toolbox) {}
 
-    doDelete(snapshot) {
+    doDelete(snapshot: Snapshot) {
         return this.toolbox.getManager().doDelete(`/snapshots/${snapshot.id}`);
     }
 
-    doRestore(snapshot, shouldForceRestore, ignorePluginFailure) {
+    doRestore(snapshot: Snapshot, shouldForceRestore: boolean, ignorePluginFailure: boolean) {
         return this.toolbox.getManager().doPost(`/snapshots/${snapshot.id}/restore`, {
             body: {
                 force: shouldForceRestore,
@@ -19,7 +18,7 @@ export default class {
         });
     }
 
-    doUpload(snapshotUrl, snapshotId, files) {
+    doUpload(snapshotUrl: string, snapshotId: string, files: File | null) {
         if (files) {
             return this.toolbox.getManager().doUpload(`/snapshots/${snapshotId}/archive`, { files });
         }
@@ -29,7 +28,7 @@ export default class {
             .doPut(`/snapshots/${snapshotId}/archive`, { params: { snapshot_archive_url: snapshotUrl } });
     }
 
-    doDownload(snapshot) {
+    doDownload(snapshot: Snapshot) {
         const snapshotDownloadUrl = `/snapshots/${snapshot.id}/archive`;
         const snapshotCreationDateShort = moment(snapshot.created_at, 'DD-MM-YYYY HH:mm').format('YYYYMMDD_HHmm');
         const snapshotFileName = `${snapshot.id}_${snapshotCreationDateShort}.zip`;
@@ -37,7 +36,13 @@ export default class {
         return this.toolbox.getManager().doDownload(snapshotDownloadUrl, snapshotFileName);
     }
 
-    doCreate(snapshotId, includeCredentials, excludeLogs, excludeEvents, queue) {
+    doCreate(
+        snapshotId: string,
+        includeCredentials: boolean,
+        excludeLogs: boolean,
+        excludeEvents: boolean,
+        queue: boolean
+    ) {
         return this.toolbox.getManager().doPut(`/snapshots/${encodeURIComponent(snapshotId)}`, {
             body: {
                 include_credentials: includeCredentials,

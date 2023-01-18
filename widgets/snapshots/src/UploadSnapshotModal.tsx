@@ -1,14 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import { noop } from 'lodash';
 import Actions from './actions';
 
-export default function UploadModal({ toolbox }) {
+export default function UploadModal({ toolbox }: { toolbox: Toolbox }) {
     const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [snapshotId, setSnapshotId, clearSnapshotId] = useInput('');
-    const [snapshotFile, setSnapshotFile, clearSnapshotFile] = useInput(null);
+    const [snapshotFile, setSnapshotFile, clearSnapshotFile] = useInput<File | null>(null);
     const [snapshotUrl, setSnapshotUrl, clearSnapshotUrl] = useInput('');
     const [isOpen, doOpen, doClose] = useOpen(() => {
         unsetLoading();
@@ -19,7 +19,7 @@ export default function UploadModal({ toolbox }) {
     });
 
     function submitUpload() {
-        const validationErrors = {};
+        const validationErrors: Partial<Record<'snapshotUrl' | 'snapshotId', string>> = {};
 
         if (!snapshotFile) {
             if (_.isEmpty(snapshotUrl)) {
@@ -53,14 +53,14 @@ export default function UploadModal({ toolbox }) {
             .finally(unsetLoading);
     }
 
-    function onSnapshotFileChange(file) {
+    function onSnapshotFileChange(file?: File) {
         if (file) {
             setSnapshotUrl(file.name);
             setSnapshotFile(file);
         }
     }
 
-    function onSnapshotUrlChange(url) {
+    function onSnapshotUrlChange(url: string) {
         setSnapshotUrl(url);
         clearSnapshotFile();
     }
@@ -79,10 +79,10 @@ export default function UploadModal({ toolbox }) {
                     <Form.Field label="Snapshot file" required error={errors.snapshotUrl}>
                         <Form.UrlOrFile
                             name="snapshot"
-                            value={snapshotUrl}
                             placeholder="Provide the snapshot's file URL or click browse to select a file"
                             onChangeUrl={onSnapshotUrlChange}
                             onChangeFile={onSnapshotFileChange}
+                            onBlurUrl={noop}
                         />
                     </Form.Field>
 

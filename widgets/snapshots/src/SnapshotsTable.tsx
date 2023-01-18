@@ -1,15 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Snapshot, SnapshotsWidget } from 'widgets/snapshots/src/widget.types';
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
 import Actions from './actions';
 import CreateModal from './CreateSnapshotModal';
 import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
-import SnapshotPropType from './props/SnapshotPropType';
 
 const t = Stage.Utils.getT('widgets.snapshots');
 
-export default class SnapshotsTable extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface SnapshotsTableProps {
+    data: { items: Snapshot[]; total: number };
+    toolbox: Toolbox;
+    widget: SnapshotsWidget;
+}
+
+interface SnapshotsTableState {
+    item?: Snapshot;
+    confirmDelete: boolean;
+    showRestore: boolean;
+    error?: any;
+}
+
+type SnapshotActionHandler = (item: Snapshot, event: Event) => void;
+
+export default class SnapshotsTable extends React.Component<SnapshotsTableProps, SnapshotsTableState> {
+    constructor(props: SnapshotsTableProps) {
+        super(props);
 
         this.state = {
             confirmDelete: false,
@@ -23,7 +39,7 @@ export default class SnapshotsTable extends React.Component {
         toolbox.getEventBus().on('snapshots:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: SnapshotsTableProps, nextState: SnapshotsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -37,7 +53,7 @@ export default class SnapshotsTable extends React.Component {
         toolbox.getEventBus().off('snapshots:refresh', this.refreshData);
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -57,12 +73,12 @@ export default class SnapshotsTable extends React.Component {
                 this.setState({ confirmDelete: false, error: null });
                 toolbox.refresh();
             })
-            .catch(err => {
+            .catch((err: any) => {
                 this.setState({ confirmDelete: false, error: err.message });
             });
     };
 
-    deleteSnapshotConfirm = (item, event) => {
+    deleteSnapshotConfirm: SnapshotActionHandler = (item, event) => {
         event.stopPropagation();
 
         this.setState({
@@ -71,7 +87,7 @@ export default class SnapshotsTable extends React.Component {
         });
     };
 
-    restoreSnapshot = (item, event) => {
+    restoreSnapshot: SnapshotActionHandler = (item, event) => {
         event.stopPropagation();
 
         this.setState({
@@ -80,7 +96,7 @@ export default class SnapshotsTable extends React.Component {
         });
     };
 
-    downloadSnapshot = (item, event) => {
+    downloadSnapshot: SnapshotActionHandler = (item, event) => {
         event.stopPropagation();
 
         const { toolbox } = this.props;
@@ -90,12 +106,12 @@ export default class SnapshotsTable extends React.Component {
             .then(() => {
                 this.setState({ error: null });
             })
-            .catch(err => {
+            .catch((err: any) => {
                 this.setState({ error: err.message });
             });
     };
 
-    selectSnapshot(item) {
+    selectSnapshot(item: Snapshot) {
         const { toolbox } = this.props;
         const oldSelectedSnapshotId = toolbox.getContext().getValue('snapshotId');
         toolbox.getContext().setValue('snapshotId', item.id === oldSelectedSnapshotId ? null : item.id);
@@ -139,7 +155,7 @@ export default class SnapshotsTable extends React.Component {
                         return (
                             <DataTable.Row
                                 key={item.id}
-                                selected={item.isSelected}
+                                selected={toolbox.getContext().getValue('snapshotId') === item.id}
                                 onClick={() => this.selectSnapshot(item)}
                             >
                                 <DataTable.Data verticalAlign="flexMiddle">
@@ -177,18 +193,20 @@ export default class SnapshotsTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <CreateModal widget={widget} data={data} toolbox={toolbox} />
+                        <CreateModal widget={widget} toolbox={toolbox} />
 
-                        <UploadModal widget={widget} data={data} toolbox={toolbox} />
+                        <UploadModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
-                <RestoreModal
-                    open={showRestore}
-                    onHide={() => this.setState({ showRestore: false })}
-                    toolbox={toolbox}
-                    snapshot={snapshot}
-                />
+                {snapshot && (
+                    <RestoreModal
+                        open={showRestore}
+                        onHide={() => this.setState({ showRestore: false })}
+                        toolbox={toolbox}
+                        snapshot={snapshot}
+                    />
+                )}
 
                 <Confirm
                     content="Are you sure you want to remove this snapshot?"
@@ -200,12 +218,3 @@ export default class SnapshotsTable extends React.Component {
         );
     }
 }
-
-SnapshotsTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(SnapshotPropType),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
