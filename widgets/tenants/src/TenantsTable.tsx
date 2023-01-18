@@ -20,12 +20,13 @@ interface TenantsTableProps {
 }
 
 interface TenantsTableState {
-    error: any;
+    error?: any;
     showModal?: boolean;
     modalType?: string;
-    tenant: Tenant;
+    tenant?: Tenant;
     userGroups?: string[];
     users?: string[];
+    expandedTenantName?: string;
 }
 
 type TenantActionHandler = (action: string, tenant: Tenant) => void;
@@ -33,6 +34,8 @@ type TenantActionHandler = (action: string, tenant: Tenant) => void;
 export default class TenantsTable extends React.Component<TenantsTableProps, TenantsTableState> {
     constructor(props: TenantsTableProps) {
         super(props);
+
+        this.state = {};
     }
 
     componentDidMount() {
@@ -124,7 +127,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
         const HIDE_DELETE_MODAL_STATE = { modalType: MenuAction.DELETE_TENANT_ACTION, showModal: false };
 
         actions
-            .doDelete(tenant.name)
+            .doDelete(tenant!.name)
             .then((/* tenant */) => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('tenants:refresh');
@@ -144,15 +147,13 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
         toolbox.refresh();
     }
 
-    selectTenant(tenantName: string) {
-        const { toolbox } = this.props;
-        const selectedTenantName = toolbox.getContext().getValue('tenantName');
-        toolbox.getContext().setValue('tenantName', tenantName === selectedTenantName ? null : tenantName);
+    selectTenant(expandedTenantName: string) {
+        this.setState({ expandedTenantName });
     }
 
     render() {
         const { data, toolbox, widget } = this.props;
-        const { error, modalType, showModal, tenant, userGroups, users } = this.state;
+        const { error, modalType, showModal, tenant, userGroups, users, expandedTenantName } = this.state;
         const { ErrorMessage, DataTable, Label } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
 
@@ -176,7 +177,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
-                        const selected = toolbox.getContext().getValue('tenantName') === item.name;
+                        const selected = expandedTenantName === item.name;
                         return (
                             <DataTable.RowExpandable key={item.name} expanded={selected}>
                                 <DataTable.Row
@@ -216,30 +217,34 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
                     </DataTable.Action>
                 </DataTable>
 
-                <DeleteModal
-                    content={t('deleteModal.content', {
-                        tenantName: tenant.name
-                    })}
-                    open={modalType === MenuAction.DELETE_TENANT_ACTION && showModal}
-                    onConfirm={this.deleteTenant}
-                    onCancel={this.hideModal}
-                />
+                {tenant && (
+                    <>
+                        <DeleteModal
+                            content={t('deleteModal.content', {
+                                tenantName: tenant.name
+                            })}
+                            open={modalType === MenuAction.DELETE_TENANT_ACTION && showModal}
+                            onConfirm={this.deleteTenant}
+                            onCancel={this.hideModal}
+                        />
 
-                <UsersModal
-                    toolbox={toolbox}
-                    open={modalType === MenuAction.EDIT_USERS_ACTION && showModal}
-                    onHide={this.hideModal}
-                    tenant={tenant}
-                    users={users}
-                />
+                        <UsersModal
+                            toolbox={toolbox}
+                            open={modalType === MenuAction.EDIT_USERS_ACTION && showModal}
+                            onHide={this.hideModal}
+                            tenant={tenant}
+                            users={users}
+                        />
 
-                <GroupsModal
-                    toolbox={toolbox}
-                    open={modalType === MenuAction.EDIT_USER_GROUPS_ACTION && showModal}
-                    onHide={this.hideModal}
-                    tenant={tenant}
-                    userGroups={userGroups}
-                />
+                        <GroupsModal
+                            toolbox={toolbox}
+                            open={modalType === MenuAction.EDIT_USER_GROUPS_ACTION && showModal}
+                            onHide={this.hideModal}
+                            tenant={tenant}
+                            userGroups={userGroups}
+                        />
+                    </>
+                )}
             </div>
         );
     }

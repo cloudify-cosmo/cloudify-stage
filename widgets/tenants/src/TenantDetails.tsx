@@ -17,6 +17,8 @@ interface TenantDetailsState {
 export default class TenantDetails extends React.Component<TenantDetailsProps, TenantDetailsState> {
     constructor(props: TenantDetailsProps) {
         super(props);
+
+        this.state = {};
     }
 
     removeUser(username: string) {
