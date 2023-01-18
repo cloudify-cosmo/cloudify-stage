@@ -1,18 +1,30 @@
-// @ts-nocheck File not migrated fully to TS
-
-import { useEffect } from 'react';
+import { noop } from 'lodash';
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { DropdownProps } from 'semantic-ui-react';
+import type { Tenant } from './widget.types';
 import Actions from './actions';
-import TenantPropType from './props/TenantPropType';
 
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
 const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
 
-export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups }) {
+export default function GroupsModal({
+    onHide = noop,
+    open,
+    tenant,
+    toolbox,
+    userGroups
+}: {
+    onHide: () => void;
+    open?: boolean;
+    tenant: Tenant;
+    toolbox: Toolbox;
+    userGroups?: string[];
+}) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
-    const [editedUserGroups, setEditedUserGroups] = useInput({});
+    const [editedUserGroups, setEditedUserGroups] = useInput<Record<string, string>>({});
 
     useOpenProp(open, () => {
         unsetLoading();
@@ -20,7 +32,7 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
         setEditedUserGroups(tenant.groups);
     });
 
-    function onRoleChange(group, role) {
+    function onRoleChange(group: string, role: string) {
         const newUserGroups = { ...editedUserGroups };
         newUserGroups[group] = role;
         setEditedUserGroups(newUserGroups);
@@ -53,13 +65,13 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
             .finally(unsetLoading);
     }
 
-    function handleInputChange(proxy, field) {
-        const newUserGroups = {};
-        _.forEach(field.value, group => {
+    const handleInputChange: DropdownProps['onChange'] = (_proxy, field) => {
+        const newUserGroups: Record<string, string> = {};
+        _.forEach(field.value as string[], group => {
             newUserGroups[group] = editedUserGroups[group] || getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setEditedUserGroups(newUserGroups);
-    }
+    };
 
     return (
         <Modal open={open} onClose={() => onHide()}>
@@ -73,8 +85,8 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
                         <Form.Dropdown
                             multiple
                             selection
-                            options={_.map(userGroups.items, userGroup => {
-                                return { text: userGroup.name, value: userGroup.name, key: userGroup.name };
+                            options={_.map(userGroups, userGroup => {
+                                return { text: userGroup, value: userGroup, key: userGroup };
                             })}
                             name="userGroups"
                             value={Object.keys(editedUserGroups)}
@@ -97,15 +109,3 @@ export default function GroupsModal({ onHide, open, tenant, toolbox, userGroups 
         </Modal>
     );
 }
-
-GroupsModal.propTypes = {
-    tenant: TenantPropType.isRequired,
-    userGroups: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ name: PropTypes.string })) }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    onHide: PropTypes.func,
-    open: PropTypes.bool.isRequired
-};
-
-GroupsModal.defaultProps = {
-    onHide: _.noop
-};

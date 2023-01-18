@@ -1,20 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { Tenant } from './widget.types';
 import Actions from './actions';
 import UserRoles from './UserRoles';
-import TenantPropType from './props/TenantPropType';
 
-export default class TenantDetails extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface TenantDetailsProps {
+    toolbox: Toolbox;
+    tenant: Tenant;
+    onError: (error: any) => void;
+}
 
-        this.state = {
-            processing: false,
-            processItem: ''
-        };
+interface TenantDetailsState {
+    processing?: boolean;
+    processItem?: string;
+}
+
+export default class TenantDetails extends React.Component<TenantDetailsProps, TenantDetailsState> {
+    constructor(props: TenantDetailsProps) {
+        super(props);
     }
 
-    removeUser(username) {
+    removeUser(username: string) {
         const { onError, tenant, toolbox } = this.props;
         this.setState({ processItem: username, processing: true });
 
@@ -32,7 +37,7 @@ export default class TenantDetails extends React.Component {
             });
     }
 
-    removeUserGroup(group) {
+    removeUserGroup(group: string) {
         const { onError, tenant, toolbox } = this.props;
         this.setState({ processItem: group, processing: true });
 
@@ -69,7 +74,7 @@ export default class TenantDetails extends React.Component {
                                     {group} - {role}
                                     <Icon
                                         link
-                                        name={processing ? 'notched circle' : 'remove'}
+                                        name={processing ? 'circle notched' : 'remove'}
                                         loading={processing}
                                         className="right floated"
                                         onClick={() => this.removeUserGroup(group)}
@@ -88,7 +93,7 @@ export default class TenantDetails extends React.Component {
                             <Icon name="user" /> Users
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
-                                {_.map(tenant.users, (data, user) => {
+                                {_.map(tenant.users, (_data, user) => {
                                     const processing = processingState && processItem === user;
 
                                     return (
@@ -96,7 +101,7 @@ export default class TenantDetails extends React.Component {
                                             {user} - <UserRoles tenant={tenant} user={user} />
                                             <Icon
                                                 link
-                                                name={processing ? 'notched circle' : 'remove'}
+                                                name={processing ? 'circle notched' : 'remove'}
                                                 loading={processing}
                                                 className="right floated"
                                                 onClick={() => this.removeUser(user)}
@@ -118,9 +123,3 @@ export default class TenantDetails extends React.Component {
         );
     }
 }
-
-TenantDetails.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    tenant: TenantPropType.isRequired,
-    onError: PropTypes.func.isRequired
-};

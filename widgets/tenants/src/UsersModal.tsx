@@ -1,17 +1,31 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { noop } from 'lodash';
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { DropdownProps } from 'semantic-ui-react';
+import type { RolesPickerProps } from 'app/widgets/common/roles/RolesPicker';
+import type { Tenant } from './widget.types';
 import Actions from './actions';
-import TenantPropType from './props/TenantPropType';
 
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
-export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
+export default function UsersModal({
+    onHide = noop,
+    tenant,
+    open,
+    toolbox,
+    users
+}: {
+    onHide: () => void;
+    tenant: Tenant;
+    open?: boolean;
+    toolbox: Toolbox;
+    users?: string[];
+}) {
     const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
-    const [editedUsers, setEditedUsers] = useInput({});
+    const [editedUsers, setEditedUsers] = useInput<Record<string, string>>({});
 
     useOpenProp(open, () => {
         unsetLoading();
@@ -28,11 +42,11 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
         );
     });
 
-    function onRoleChange(user, role) {
+    const onRoleChange: RolesPickerProps['onUpdate'] = (user, role) => {
         const newUsers = { ...editedUsers };
         newUsers[user] = role;
         setEditedUsers(newUsers);
-    }
+    };
 
     function updateTenant() {
         // Disable the form
@@ -61,13 +75,13 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
             .finally(unsetLoading);
     }
 
-    function handleInputChange(proxy, field) {
-        const newUsers = {};
-        _.forEach(field.value, user => {
+    const handleInputChange: DropdownProps['onChange'] = (_proxy, field) => {
+        const newUsers: Record<string, string> = {};
+        _.forEach(field.value as string[], user => {
             newUsers[user] = editedUsers[user] || getDefaultRoleName(toolbox.getManagerState().roles);
         });
         setEditedUsers(newUsers);
-    }
+    };
 
     const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 
@@ -83,8 +97,8 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
                         <Form.Dropdown
                             multiple
                             selection
-                            options={_.map(users.items, user => {
-                                return { text: user.username, value: user.username, key: user.username };
+                            options={_.map(users, user => {
+                                return { text: user, value: user, key: user };
                             })}
                             name="users"
                             value={Object.keys(editedUsers)}
@@ -107,15 +121,3 @@ export default function UsersModal({ onHide, tenant, open, toolbox, users }) {
         </Modal>
     );
 }
-
-UsersModal.propTypes = {
-    tenant: TenantPropType.isRequired,
-    users: PropTypes.shape({ items: PropTypes.arrayOf(PropTypes.shape({ username: PropTypes.string })) }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    onHide: PropTypes.func,
-    open: PropTypes.bool.isRequired
-};
-
-UsersModal.defaultProps = {
-    onHide: () => {}
-};

@@ -1,27 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
+import type { Tenant, TenantsWidget } from './widget.types';
 import Actions from './actions';
 import CreateModal from './CreateModal';
 import GroupsModal from './GroupsModal';
 import MenuAction from './MenuAction';
 import TenantDetails from './TenantDetails';
 import UsersModal from './UsersModal';
-import TenantPropType from './props/TenantPropType';
 
 const t = Stage.Utils.getT(`widgets.tenants.tenantsTable`);
 
-export default class TenantsTable extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface TenantsTableProps {
+    data: {
+        items: Tenant[];
+        total: number;
+    };
+    toolbox: Toolbox;
+    widget: TenantsWidget;
+}
 
-        this.state = {
-            error: null,
-            showModal: false,
-            modalType: '',
-            tenant: {},
-            users: {},
-            userGroups: {}
-        };
+interface TenantsTableState {
+    error: any;
+    showModal?: boolean;
+    modalType?: string;
+    tenant: Tenant;
+    userGroups?: string[];
+    users?: string[];
+}
+
+type TenantActionHandler = (action: string, tenant: Tenant) => void;
+
+export default class TenantsTable extends React.Component<TenantsTableProps, TenantsTableState> {
+    constructor(props: TenantsTableProps) {
+        super(props);
     }
 
     componentDidMount() {
@@ -29,7 +40,7 @@ export default class TenantsTable extends React.Component {
         toolbox.getEventBus().on('tenants:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: TenantsTableProps, nextState: TenantsTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -43,7 +54,7 @@ export default class TenantsTable extends React.Component {
         toolbox.getEventBus().off('tenants:refresh', this.refreshData);
     }
 
-    getAvailableUsers(value, tenant) {
+    getAvailableUsers: TenantActionHandler = (value, tenant) => {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -51,16 +62,22 @@ export default class TenantsTable extends React.Component {
         actions
             .doGetUsers()
             .then(users => {
-                this.setState({ error: null, tenant, users, modalType: value, showModal: true });
+                this.setState({
+                    error: null,
+                    tenant,
+                    users: users.items.map(user => user.username),
+                    modalType: value,
+                    showModal: true
+                });
                 toolbox.loading(false);
             })
             .catch(err => {
                 this.setState({ error: err.message });
                 toolbox.loading(false);
             });
-    }
+    };
 
-    getAvailableUserGroups(value, tenant) {
+    getAvailableUserGroups: TenantActionHandler = (value, tenant) => {
         const { toolbox } = this.props;
         toolbox.loading(true);
 
@@ -68,21 +85,27 @@ export default class TenantsTable extends React.Component {
         actions
             .doGetUserGroups()
             .then(userGroups => {
-                this.setState({ error: null, tenant, userGroups, modalType: value, showModal: true });
+                this.setState({
+                    error: null,
+                    tenant,
+                    userGroups: userGroups.items.map(userGroup => userGroup.name),
+                    modalType: value,
+                    showModal: true
+                });
                 toolbox.loading(false);
             })
             .catch(err => {
                 this.setState({ error: err.message });
                 toolbox.loading(false);
             });
-    }
+    };
 
-    fetchGridData = fetchParams => {
+    fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
 
-    selectAction = (value, tenant) => {
+    selectAction: TenantActionHandler = (value, tenant) => {
         if (value === MenuAction.EDIT_USERS_ACTION) {
             this.getAvailableUsers(value, tenant);
         } else if (value === MenuAction.EDIT_USER_GROUPS_ACTION) {
@@ -121,7 +144,7 @@ export default class TenantsTable extends React.Component {
         toolbox.refresh();
     }
 
-    selectTenant(tenantName) {
+    selectTenant(tenantName: string) {
         const { toolbox } = this.props;
         const selectedTenantName = toolbox.getContext().getValue('tenantName');
         toolbox.getContext().setValue('tenantName', tenantName === selectedTenantName ? null : tenantName);
@@ -153,11 +176,12 @@ export default class TenantsTable extends React.Component {
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
+                        const selected = toolbox.getContext().getValue('tenantName') === item.name;
                         return (
-                            <DataTable.RowExpandable key={item.name} expanded={item.isSelected}>
+                            <DataTable.RowExpandable key={item.name} expanded={selected}>
                                 <DataTable.Row
                                     key={item.name}
-                                    selected={item.isSelected}
+                                    selected={selected}
                                     onClick={() => this.selectTenant(item.name)}
                                 >
                                     <DataTable.Data>{item.name}</DataTable.Data>
@@ -188,7 +212,7 @@ export default class TenantsTable extends React.Component {
                     })}
 
                     <DataTable.Action>
-                        <CreateModal widget={widget} data={data} toolbox={toolbox} />
+                        <CreateModal toolbox={toolbox} />
                     </DataTable.Action>
                 </DataTable>
 
@@ -202,7 +226,6 @@ export default class TenantsTable extends React.Component {
                 />
 
                 <UsersModal
-                    widget={widget}
                     toolbox={toolbox}
                     open={modalType === MenuAction.EDIT_USERS_ACTION && showModal}
                     onHide={this.hideModal}
@@ -211,7 +234,6 @@ export default class TenantsTable extends React.Component {
                 />
 
                 <GroupsModal
-                    widget={widget}
                     toolbox={toolbox}
                     open={modalType === MenuAction.EDIT_USER_GROUPS_ACTION && showModal}
                     onHide={this.hideModal}
@@ -222,9 +244,3 @@ export default class TenantsTable extends React.Component {
         );
     }
 }
-
-TenantsTable.propTypes = {
-    data: PropTypes.shape({ items: PropTypes.arrayOf(TenantPropType), total: PropTypes.number }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

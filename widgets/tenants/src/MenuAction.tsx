@@ -1,16 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-import TenantPropType from './props/TenantPropType';
+import type { MenuItemProps } from 'semantic-ui-react';
 
-export default class MenuAction extends React.Component {
+export default class MenuAction<Tenant> extends React.Component<{
+    onSelectAction: (name: string, tenant: Tenant) => void;
+    tenant: Tenant;
+}> {
     static EDIT_USERS_ACTION = 'users';
 
     static EDIT_USER_GROUPS_ACTION = 'user-groups';
 
     static DELETE_TENANT_ACTION = 'delete';
 
-    onDropdownChange = (event, { name }) => {
+    onDropdownChange: MenuItemProps['onClick'] = (_event, { name }) => {
         const { onSelectAction, tenant } = this.props;
-        onSelectAction(name, tenant);
+        onSelectAction(name!, tenant);
     };
 
     render() {
@@ -42,8 +44,3 @@ export default class MenuAction extends React.Component {
         );
     }
 }
-
-MenuAction.propTypes = {
-    tenant: TenantPropType.isRequired,
-    onSelectAction: PropTypes.func.isRequired
-};
