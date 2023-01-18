@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, debounce } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
@@ -54,7 +54,7 @@ const EnvironmentDropdown = ({
         onChange(changeValue);
     };
 
-    const fetchEnvironments = () => {
+    const fetchEnvironments = debounce(() => {
         setLoading();
 
         searchActions
@@ -77,7 +77,7 @@ const EnvironmentDropdown = ({
                 setEnvironmentList(filteredEnvironments);
             })
             .finally(unsetLoading);
-    };
+    }, 500);
 
     const handleDropdownItemClick: DropdownItemProps['onClick'] = (_event, { value: dropdownItemValue }) => {
         onChange(dropdownItemValue as OnChangeValue);
@@ -88,7 +88,6 @@ const EnvironmentDropdown = ({
     }, [searchQuery]);
 
     return (
-        // TODO Norbert: Implement debounce functionality
         // TODO Norbert: Persist selected value data on dropdown blur
         <Form.Dropdown
             name={name}
