@@ -2180,6 +2180,26 @@
                 "restore": "Restore",
                 "download": "Download",
                 "delete": "Delete"
+            },
+            "uploadModal": {
+                "header": "Upload snapshot",
+                "actions": {
+                    "upload": "Upload"
+                },
+                "form": {
+                    "file": {
+                        "label": "Snapshot file",
+                        "placeholder": "Provide the snapshot's file URL or click browse to select a file"
+                    },
+                    "name": {
+                        "label": "Snapshot name"
+                    }
+                },
+                "errors": {
+                    "fileOrUrlMissing": "Please select snapshot file or url",
+                    "urlInvalid": "Please provide valid URL for snapshot",
+                    "idMissing": "Please provide snapshot ID"
+                }
             }
         },
         "managers": {
