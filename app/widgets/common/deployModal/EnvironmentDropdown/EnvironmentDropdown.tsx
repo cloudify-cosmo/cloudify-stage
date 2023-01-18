@@ -113,11 +113,13 @@ const EnvironmentDropdown = ({
                     onItemClick={handleDropdownItemClick}
                     activeEnvironmentId={value}
                     isSuggestedList
+                    loading={isLoading}
                 />
                 <EnvironmentDropdownList
                     environments={environmentList.nonSuggestedEnvironments}
                     onItemClick={handleDropdownItemClick}
                     activeEnvironmentId={value}
+                    loading={isLoading}
                 />
             </Form.Dropdown.Menu>
         </Form.Dropdown>
