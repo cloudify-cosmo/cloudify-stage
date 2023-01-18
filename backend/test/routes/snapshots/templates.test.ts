@@ -6,6 +6,7 @@ import request from 'supertest';
 import app from 'app';
 
 jest.mock('handler/templates/TemplatesHandler');
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/templates endpoint', () => {
     const template: Template = {
