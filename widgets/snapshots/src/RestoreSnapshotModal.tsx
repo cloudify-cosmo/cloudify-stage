@@ -1,9 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Snapshot } from 'widgets/snapshots/src/widget.types';
+import type { Toolbox } from 'app/utils/StageAPI';
+import { noop } from 'lodash';
+import { translate } from './widget.common';
 import Actions from './actions';
-import SnapshotPropType from './props/SnapshotPropType';
 
-export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }) {
+const translateModal = Stage.Utils.composeT(translate, 'restoreModal');
+
+export default function RestoreSnapshotModal({
+    onHide = noop,
+    snapshot,
+    toolbox,
+    open
+}: {
+    onHide?: () => void;
+    snapshot: Snapshot;
+    toolbox: Toolbox;
+    open: boolean;
+}) {
     const { useBoolean, useErrors, useInputs } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -39,7 +52,7 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="undo" /> Restore snapshot
+                <Icon name="undo" /> {translateModal('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -47,32 +60,27 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label="Snapshot from a tenant-less environment"
+                            label={translateModal('form.tenantless.label')}
                             name="isFromTenantlessEnv"
                             checked={isFromTenantlessEnv}
                             onChange={setInputs}
                         />
                     </Form.Field>
 
-                    {isFromTenantlessEnv && (
-                        <Message>
-                            When restoring from a tenant-less environment, make sure you uploaded the snapshot to a
-                            &quot;clean&quot; tenant that does not contain any other resources.
-                        </Message>
-                    )}
+                    {isFromTenantlessEnv && <Message>{translateModal('form.message')}</Message>}
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label="Force restore even if manager is non-empty (it will delete all data)"
+                            label={translateModal('form.force.label')}
                             name="shouldForceRestore"
                             checked={shouldForceRestore}
                             onChange={setInputs}
                         />
                     </Form.Field>
-                    <Form.Field help="Ignore plugin installation failures and deployment environment creation failures due to missing plugins">
+                    <Form.Field help={translateModal('form.ignoreFailure.help')}>
                         <Form.Checkbox
                             toggle
-                            label="Ignore plugin failures"
+                            label={translateModal('form.ignoreFailure.label')}
                             name="ignorePluginFailure"
                             checked={ignorePluginFailure}
                             onChange={setInputs}
@@ -83,19 +91,13 @@ export default function RestoreSnapshotModal({ onHide, snapshot, toolbox, open }
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={submitRestore} disabled={isLoading} content="Restore" icon="undo" />
+                <ApproveButton
+                    onClick={submitRestore}
+                    disabled={isLoading}
+                    content={translateModal('actions.restore')}
+                    icon="undo"
+                />
             </Modal.Actions>
         </Modal>
     );
 }
-
-RestoreSnapshotModal.propTypes = {
-    onHide: PropTypes.func,
-    open: PropTypes.bool.isRequired,
-    snapshot: SnapshotPropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-RestoreSnapshotModal.defaultProps = {
-    onHide: _.noop
-};
