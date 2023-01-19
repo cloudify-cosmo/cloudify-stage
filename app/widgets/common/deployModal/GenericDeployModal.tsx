@@ -752,7 +752,6 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                         )}
 
                         {showDeployOnDropdown && (
-                            // TODO
                             <Form.Field
                                 error={errors.deploymentIdToDeployOn}
                                 label={t('inputs.deploymentIdToDeployOn.label')}

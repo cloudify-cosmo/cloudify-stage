@@ -23,9 +23,7 @@ interface EnvironmentDropdownProps {
 }
 
 // TODO:
-// - Take care of found bugs
 // - Write some tests
-// - Provide translations
 // - Refactor
 
 const EnvironmentDropdown = ({

@@ -3,6 +3,11 @@ import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import { Icon } from 'semantic-ui-react';
 import type { Environment } from './EnvironmentDropdown.types';
+import StageUtils from '../../../../utils/stageUtils';
+
+const translate = StageUtils.getT(
+    'widgets.common.deployments.deployModal.inputs.deploymentIdToDeployOn.environmentList'
+);
 
 const DATA_STATE = {
     LOADING: 'LOADING',
@@ -25,7 +30,7 @@ const EnvironmentDropdownList = ({
     isSuggestedList,
     loading
 }: EnvironmentDropdownListProps) => {
-    const listTitle = isSuggestedList ? 'Suggested' : 'Others';
+    const listTitle = isSuggestedList ? translate('title.suggested') : translate('title.others');
     const dataState = useMemo<keyof typeof DATA_STATE>(() => {
         if (loading) {
             return DATA_STATE.LOADING;
@@ -45,7 +50,7 @@ const EnvironmentDropdownList = ({
             {dataState === DATA_STATE.LOADING && (
                 <Form.Dropdown.Item disabled>
                     <Icon name="spinner" loading />
-                    fetching environments
+                    {translate('loading')}
                 </Form.Dropdown.Item>
             )}
 
@@ -53,7 +58,7 @@ const EnvironmentDropdownList = ({
                 <Form.Dropdown.Item disabled>
                     {/* TODO Norbert: To discuss with Alex */}
                     {/* <Icon name="close" /> */}
-                    no environments
+                    {translate('noData')}
                 </Form.Dropdown.Item>
             )}
 

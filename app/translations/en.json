@@ -621,7 +621,15 @@
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",
-                            "placeholder": "Select a parent"
+                            "placeholder": "Select a parent",
+                            "environmentList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching environments",
+                                "noData": "no environments"
+                            }
                         },
                         "siteName": {
                             "label": "Site name",
