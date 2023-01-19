@@ -18,7 +18,7 @@ export default function validateAuthConfig(authConfig: Partial<Config['app']['au
         throw new Error('Login page URL was not configured. [auth.loginPageUrl]');
     }
 
-    if (!authConfig.logoutRedirectUrl) {
-        throw new Error('Logout redirection URL was not configured. [auth.logoutRedirectUrl]');
+    if (!authConfig.afterLogoutUrl) {
+        throw new Error('After logout redirection URL was not configured. [auth.afterLogoutUrl]');
     }
 }

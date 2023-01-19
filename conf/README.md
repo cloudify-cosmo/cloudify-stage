@@ -79,7 +79,7 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
     "saas" - SaaS
   * `certPath` - string, SAML certificate path (relevant only when type is set to "saml")
   * `loginPageUrl` - string, login page URL (both - absolute and relative URLs are supported)
-  * `logoutRedirectUrl` - string, URL to redirect to after logout (both - absolute and relative URLs are supported)
+  * `afterLogoutUrl` - string, URL to redirect to after logout (both - absolute and relative URLs are supported)
 
 * `whiteLabel` - object, UI white-labelling configuration
   * `logoUrl` - string, relative URL to logo image

@@ -66,7 +66,7 @@ export function getClientConfig(mode: Mode): ClientConfig {
             auth: {
                 type: config.app.auth.type,
                 loginPageUrl: config.app.auth.loginPageUrl,
-                logoutRedirectUrl: config.app.auth.logoutRedirectUrl
+                afterLogoutUrl: config.app.auth.afterLogoutUrl
             },
             maps: userConfig.maps
         },

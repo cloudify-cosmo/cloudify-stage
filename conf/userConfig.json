@@ -16,7 +16,7 @@
     "type": "local",
     "certPath": "",
     "loginPageUrl": "/console/login",
-    "logoutRedirectUrl": "/console/login"
+    "afterLogoutUrl": "/console/login"
   },
   "whiteLabel": {
     "logoUrl": "",

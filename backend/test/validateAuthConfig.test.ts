@@ -6,7 +6,7 @@ describe('validateAuthConfig', () => {
             'SAML authentication is enabled, yet certificate path was not configured. [auth.certPath]'
         );
         expect(() =>
-            validateAuthConfig({ type: 'saml', certPath: 'x', loginPageUrl: 'x', logoutRedirectUrl: 'x' })
+            validateAuthConfig({ type: 'saml', certPath: 'x', loginPageUrl: 'x', afterLogoutUrl: 'x' })
         ).not.toThrowError();
     });
 
@@ -24,7 +24,7 @@ describe('validateAuthConfig', () => {
     });
     it('should validate logout redirection URL', () => {
         expect(() => validateAuthConfig({ type: 'local', loginPageUrl: '/console/login' })).toThrowError(
-            'Logout redirection URL was not configured. [auth.logoutRedirectUrl]'
+            'After logout redirection URL was not configured. [auth.afterLogoutUrl]'
         );
     });
 });
