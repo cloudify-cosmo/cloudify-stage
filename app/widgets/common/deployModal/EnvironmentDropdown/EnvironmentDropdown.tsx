@@ -24,7 +24,6 @@ interface EnvironmentDropdownProps {
 
 // TODO:
 // - Write some tests
-// - Refactor
 
 const EnvironmentDropdown = ({
     value = '',
