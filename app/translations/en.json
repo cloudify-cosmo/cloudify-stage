@@ -2180,7 +2180,83 @@
                 "restore": "Restore",
                 "download": "Download",
                 "delete": "Delete"
-            }
+            },
+            "uploadModal": {
+                "header": "Upload snapshot",
+                "actions": {
+                    "upload": "Upload"
+                },
+                "form": {
+                    "file": {
+                        "label": "Snapshot file",
+                        "placeholder": "Provide the snapshot's file URL or click browse to select a file"
+                    },
+                    "name": {
+                        "label": "Snapshot name"
+                    }
+                }
+            },
+            "createModal" : {
+                "header": "Create snapshot",
+                "actions": {
+                    "create": "Create"
+                },
+                "form": {
+                    "id": {
+                        "label": "Snapshot ID"
+                    },
+                    "includeCredentials": {
+                        "label": "Include credentials",
+                        "help": "Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot"
+                    },
+                    "excludeLogs": {
+                        "label": "Exclude logs",
+                        "help": "Exclude logs from the snapshot"
+                    },
+                    "excludeEvents": {
+                        "label": "Exclude events",
+                        "help": "Exclude events from the snapshot"
+                    },
+                    "queue": {
+                        "label": "Queue",
+                        "help": "Queue snapshot creation workflow and run automatically when possible"
+                    }
+                }
+            },
+            "restoreModal": {
+                "header": "Restore snapshot",
+                "actions": {
+                    "restore": "Restore"
+                },
+                "form": {
+                    "message": "When restoring from a tenant-less environment, make sure you uploaded the snapshot to a \"clean\" tenant that does not contain any other resources.",
+                    "tenantless": {
+                        "label": "Snapshot from a tenant-less environment"
+                    },
+                    "force": {
+                        "label": "Force restore even if manager is non-empty (it will delete all data)"
+                    },
+                    "ignoreFailure": {
+                        "label": "Ignore plugin failures",
+                        "help": "Ignore plugin installation failures and deployment environment creation failures due to missing plugins"
+                    }
+                }
+            },
+            "errors": {
+                "fileOrUrlMissing": "Please select snapshot file or url",
+                "urlInvalid": "Please provide valid URL for snapshot",
+                "idMissing": "Please provide snapshot ID"
+            },
+            "noData": "There are no Snapshots available. Click \"Create\" to create Snapshots.",
+            "confirmDelete": "Are you sure you want to remove this snapshot?",
+            "columns": {
+                "id": "Name",
+                "createdAt": "Created at",
+                "status": "Status",
+                "createdBy": "Creator"
+            },
+            "name": "Snapshots list",
+            "decription": "Snapshots list"
         },
         "managers": {
             "actions": {
