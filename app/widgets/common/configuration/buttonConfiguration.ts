@@ -22,7 +22,7 @@ export function getInitialConfiguration(defaultConfiguration: DefaultConfigurati
             id: 'color',
             name: translate('color.name'),
             description: translate('color.description'),
-            default: color || translate('color.default'),
+            default: color || 'blue',
             component: Stage.Common.Components.SemanticColorDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
@@ -30,7 +30,7 @@ export function getInitialConfiguration(defaultConfiguration: DefaultConfigurati
             id: 'icon',
             name: translate('icon.name'),
             description: translate('icon.description'),
-            default: icon || translate('icon.default'),
+            default: icon || 'external',
             component: Stage.Shared.SemanticIconDropdown,
             type: Stage.Basic.GenericField.CUSTOM_TYPE
         },
