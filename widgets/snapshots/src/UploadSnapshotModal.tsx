@@ -1,9 +1,10 @@
 import type { Toolbox } from 'app/utils/StageAPI';
 import { noop } from 'lodash';
 import Actions from './actions';
+import { translate } from './widget.common';
 
-const translateModal = Stage.Utils.getT('widgets.snapshots.uploadModal');
-const translateError = Stage.Utils.getT('widgets.snapshots.errors');
+const translateModal = Stage.Utils.composeT(translate, 'uploadModal');
+const translateError = Stage.Utils.composeT(translate, 'errors');
 
 export default function UploadModal({ toolbox }: { toolbox: Toolbox }) {
     const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;

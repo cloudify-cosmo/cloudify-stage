@@ -1,6 +1,7 @@
 import type { Toolbox } from 'app/utils/StageAPI';
 import type { CheckboxProps, InputOnChangeData } from 'semantic-ui-react';
 import type { SnapshotsWidget } from 'widgets/snapshots/src/widget.types';
+import { translate } from './widget.common';
 import Actions from './actions';
 
 interface CreateModalProps {
@@ -19,8 +20,8 @@ interface CreateModalState {
     snapshotId: string;
 }
 
-const translateModal = Stage.Utils.getT('widgets.snapshots.createModal');
-const translateError = Stage.Utils.getT('widgets.snapshots.errors');
+const translateModal = Stage.Utils.composeT(translate, 'createModal');
+const translateError = Stage.Utils.composeT(translate, 'errors');
 
 export default class CreateModal extends React.Component<CreateModalProps, CreateModalState> {
     static initialState = {

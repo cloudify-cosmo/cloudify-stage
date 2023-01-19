@@ -1,9 +1,10 @@
 import type { Snapshot } from 'widgets/snapshots/src/widget.types';
 import type { Toolbox } from 'app/utils/StageAPI';
 import { noop } from 'lodash';
+import { translate } from './widget.common';
 import Actions from './actions';
 
-const translate = Stage.Utils.getT('widgets.snapshots.restoreModal');
+const translateModal = Stage.Utils.composeT(translate, 'restoreModal');
 
 export default function RestoreSnapshotModal({
     onHide = noop,
@@ -51,7 +52,7 @@ export default function RestoreSnapshotModal({
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="undo" /> {translate('header')}
+                <Icon name="undo" /> {translateModal('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -59,27 +60,27 @@ export default function RestoreSnapshotModal({
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label={translate('form.tenantless.label')}
+                            label={translateModal('form.tenantless.label')}
                             name="isFromTenantlessEnv"
                             checked={isFromTenantlessEnv}
                             onChange={setInputs}
                         />
                     </Form.Field>
 
-                    {isFromTenantlessEnv && <Message>{translate('form.message')}</Message>}
+                    {isFromTenantlessEnv && <Message>{translateModal('form.message')}</Message>}
                     <Form.Field>
                         <Form.Checkbox
                             toggle
-                            label={translate('form.force.label')}
+                            label={translateModal('form.force.label')}
                             name="shouldForceRestore"
                             checked={shouldForceRestore}
                             onChange={setInputs}
                         />
                     </Form.Field>
-                    <Form.Field help={translate('form.ignoreFailure.help')}>
+                    <Form.Field help={translateModal('form.ignoreFailure.help')}>
                         <Form.Checkbox
                             toggle
-                            label={translate('form.ignoreFailure.label')}
+                            label={translateModal('form.ignoreFailure.label')}
                             name="ignorePluginFailure"
                             checked={ignorePluginFailure}
                             onChange={setInputs}
@@ -93,7 +94,7 @@ export default function RestoreSnapshotModal({
                 <ApproveButton
                     onClick={submitRestore}
                     disabled={isLoading}
-                    content={translate('actions.restore')}
+                    content={translateModal('actions.restore')}
                     icon="undo"
                 />
             </Modal.Actions>
