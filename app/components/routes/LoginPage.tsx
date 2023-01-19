@@ -3,9 +3,10 @@ import { parse } from 'query-string';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
 import styled from 'styled-components';
+
 import type { ClientConfig } from 'backend/routes/Config.types';
+import Consts from '../../utils/consts';
 import SmartRedirect from './SmartRedirect';
 import { login } from '../../actions/manager/auth';
 import type { ReduxState } from '../../reducers';
@@ -108,10 +109,13 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username, isFirstLogin } = this.state;
-        const { isLocalIdp, ssoUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
+        const { ssoUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
-        if (!isLocalIdp) return <SmartRedirect url={ssoUrl} />;
+        // TODO: Improve it
+        if (!ssoUrl.startsWith(`${Consts.CONTEXT_PATH}${Consts.PAGE_PATH.LOGIN}`)) {
+            return <SmartRedirect url={ssoUrl} />;
+        }
 
         const loginPageHeader = t('header');
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;

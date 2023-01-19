@@ -15,8 +15,8 @@
   "auth":{
     "type": "local",
     "certPath": "",
-    "ssoUrl": "",
-    "portalUrl": ""
+    "ssoUrl": "/console/login",
+    "portalUrl": "/console/login"
   },
   "whiteLabel": {
     "logoUrl": "",
