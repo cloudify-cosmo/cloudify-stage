@@ -1,7 +1,22 @@
 import { cloneDeep } from 'lodash';
+import StageUtils from '../../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
-import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
+import type { Environment, FetchedEnvironment, FilteredEnvironments } from './EnvironmentDropdown.types';
+
+const formatEnvironmentDisplayName = (environment: FetchedEnvironment) => {
+    return StageUtils.formatDisplayName({ id: environment.id, displayName: environment.display_name });
+};
+
+export const mapFetchedEnvironments = (fetchedEnvironments: FetchedEnvironment[]): Environment[] => {
+    return fetchedEnvironments.map(fetchedEnvironment => {
+        return {
+            id: fetchedEnvironment.id,
+            displayName: formatEnvironmentDisplayName(fetchedEnvironment),
+            capabilities: fetchedEnvironment.capabilities
+        };
+    });
+};
 
 const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabilities']): string[] => {
     return capabilities.map(innerCapabilities => innerCapabilities[0]);

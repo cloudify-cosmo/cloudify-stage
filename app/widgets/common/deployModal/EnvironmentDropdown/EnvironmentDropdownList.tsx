@@ -2,13 +2,7 @@ import React, { useMemo } from 'react';
 import { isEmpty } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import { Icon } from 'semantic-ui-react';
-import type { DropdownItemProps, DropdownProps } from 'semantic-ui-react';
 import type { Environment } from './EnvironmentDropdown.types';
-import StageUtils from '../../../../utils/stageUtils';
-
-const formatListItemText = (listItem: Environment) => {
-    return StageUtils.formatDisplayName({ id: listItem.id, displayName: listItem.display_name });
-};
 
 const DATA_STATE = {
     LOADING: 'LOADING',
@@ -16,10 +10,10 @@ const DATA_STATE = {
     ITEMS_LIST: 'ITEMS_LIST'
 } as const;
 
-interface EnvironmentDropdownListProps {
+export interface EnvironmentDropdownListProps {
     environments: Environment[];
-    onItemClick: DropdownItemProps['onClick'];
-    activeEnvironmentId: DropdownProps['value'];
+    onItemClick: (environment: Environment) => void;
+    activeEnvironmentId?: string;
     isSuggestedList?: boolean;
     loading?: boolean;
 }
@@ -70,10 +64,9 @@ const EnvironmentDropdownList = ({
                             key={environment.id}
                             active={environment.id === activeEnvironmentId}
                             value={environment.id}
-                            onClick={onItemClick}
-                        >
-                            {formatListItemText(environment)}
-                        </Form.Dropdown.Item>
+                            onClick={() => onItemClick(environment)}
+                            text={environment.displayName}
+                        />
                     );
                 })}
         </>
