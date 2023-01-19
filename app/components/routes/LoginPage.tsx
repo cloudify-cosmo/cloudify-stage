@@ -25,7 +25,6 @@ export interface LoginPageProps {
         search: string;
     };
     loginError: string | null;
-    isLocalIdp: boolean;
     loginPageUrl: string;
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
@@ -195,7 +194,6 @@ const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
         username: manager.auth.username,
-        isLocalIdp: config.app.auth.type === 'local',
         loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
         loginError: manager.auth.error,
