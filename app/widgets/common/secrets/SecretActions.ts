@@ -30,6 +30,10 @@ export default class SecretActions {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
+    doGetAllSecrets(): Promise<any> {
+        return this.manager.doGet('/secrets?_include=key,is_hidden_value,provider_name,provider_options');
+    }
+
     doGetAllSecretProviders(): Promise<any> {
         return this.manager.doGet('/secrets-providers?_include=name');
     }
@@ -44,7 +48,7 @@ export default class SecretActions {
         visibility: Visibility,
         hidden: boolean,
         providerName?: string,
-        providerOptions?: ProviderOptions
+        providerOptions?: ProviderOptions | null
     ) {
         return this.manager.doPut(`/secrets/${key}`, {
             body: {
@@ -57,8 +61,10 @@ export default class SecretActions {
         });
     }
 
-    doUpdate(key: Secret['key'], value: Secret['value']) {
-        return this.manager.doPatch(`/secrets/${key}`, { body: { value } });
+    doUpdate(key: Secret['key'], value?: string, providerName?: string, providerOptions?: ProviderOptions) {
+        return this.manager.doPatch(`/secrets/${key}`, {
+            body: { value, provider_name: providerName, provider_options: providerOptions }
+        });
     }
 
     doSetIsHiddenValue(key: Secret['key'], hidden: Secret['is_hidden_value']) {

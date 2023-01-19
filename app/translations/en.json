@@ -1720,7 +1720,9 @@
                 "errors": {
                     "validation": {
                         "secretValue": "Please provide secret value",
-                        "noProviders": "No Secret providers are defined in the System"
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
