@@ -45,10 +45,7 @@
               "y": 24,
               "width": 12,
               "height": 16,
-              "definition": "outputs",
-              "configuration": {},
-              "drillDownPages": {},
-              "maximized": false
+              "definition": "outputs"
             },
             {
               "name": "Events/Logs Filter",
