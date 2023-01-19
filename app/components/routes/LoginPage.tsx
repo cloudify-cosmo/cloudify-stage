@@ -6,7 +6,6 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 
 import type { ClientConfig } from 'backend/routes/Config.types';
-import Consts from '../../utils/consts';
 import SmartRedirect from './SmartRedirect';
 import { login } from '../../actions/manager/auth';
 import type { ReduxState } from '../../reducers';
@@ -22,11 +21,12 @@ export interface LoginPageProps {
     isLoggingIn: boolean;
     onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
+        pathname: string;
         search: string;
     };
     loginError: string | null;
     isLocalIdp: boolean;
-    ssoUrl: string;
+    loginPageUrl: string;
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
@@ -109,13 +109,10 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username, isFirstLogin } = this.state;
-        const { ssoUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
+        const { loginPageUrl, isLoggingIn, location, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
-        // TODO: Improve it
-        if (!ssoUrl.startsWith(`${Consts.CONTEXT_PATH}${Consts.PAGE_PATH.LOGIN}`)) {
-            return <SmartRedirect url={ssoUrl} />;
-        }
+        if (!location.pathname.startsWith(loginPageUrl)) return <SmartRedirect url={loginPageUrl} />;
 
         const loginPageHeader = t('header');
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
@@ -199,7 +196,7 @@ const mapStateToProps = (state: ReduxState) => {
     return {
         username: manager.auth.username,
         isLocalIdp: config.app.auth.type === 'local',
-        ssoUrl: config.app.auth.ssoUrl,
+        loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
         loginError: manager.auth.error,
         mode: get(config, 'mode'),

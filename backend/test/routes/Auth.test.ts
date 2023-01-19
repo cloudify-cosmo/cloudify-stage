@@ -21,8 +21,8 @@ function mockSamlConfig() {
         app: {
             auth: {
                 type: 'saml',
-                ssoUrl: 'http://sso.url',
-                portalUrl: 'http://portal.url',
+                loginPageUrl: 'http://sso.url',
+                logoutRedirectUrl: 'http://portal.url',
                 certPath: 'package.json'
             }
         }

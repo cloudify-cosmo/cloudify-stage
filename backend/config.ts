@@ -65,8 +65,8 @@ export function getClientConfig(mode: Mode): ClientConfig {
             whiteLabel: userConfig.whiteLabel,
             auth: {
                 type: config.app.auth.type,
-                ssoUrl: config.app.auth.ssoUrl,
-                portalUrl: config.app.auth.portalUrl
+                loginPageUrl: config.app.auth.loginPageUrl,
+                logoutRedirectUrl: config.app.auth.logoutRedirectUrl
             },
             maps: userConfig.maps
         },

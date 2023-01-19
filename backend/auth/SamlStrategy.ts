@@ -15,7 +15,7 @@ export default () => {
     return new Strategy(
         {
             path: '/auth/saml/callback',
-            entryPoint: getConfig().app.auth.ssoUrl,
+            entryPoint: getConfig().app.auth.loginPageUrl,
             cert
         },
         ((user, done) => done(null, user!)) as VerifyWithoutRequest

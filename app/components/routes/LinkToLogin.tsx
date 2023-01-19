@@ -8,15 +8,15 @@ import Consts from '../../utils/consts';
 import type { ReduxState } from '../../reducers';
 
 const LinkToLogin: FunctionComponent = () => {
-    const portalUrl = useSelector((state: ReduxState) => state.config.app.auth.portalUrl);
+    const logoutRedirectUrl = useSelector((state: ReduxState) => state.config.app.auth.logoutRedirectUrl);
     const searchQuery = useSelector((state: ReduxState) => state.router.location.search);
 
-    return portalUrl.startsWith(Consts.CONTEXT_PATH) ? (
-        <Link to={{ pathname: portalUrl.replace(Consts.CONTEXT_PATH, ''), search: searchQuery }}>
+    return logoutRedirectUrl.startsWith(Consts.CONTEXT_PATH) ? (
+        <Link to={{ pathname: logoutRedirectUrl.replace(Consts.CONTEXT_PATH, ''), search: searchQuery }}>
             {i18n.t('backToLogin')}
         </Link>
     ) : (
-        <a href={portalUrl}>{i18n.t('backToLogin')}</a>
+        <a href={logoutRedirectUrl}>{i18n.t('backToLogin')}</a>
     );
 };
 
