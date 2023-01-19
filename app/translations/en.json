@@ -1111,6 +1111,15 @@
                 }
             }
         },
+        "cloudButton": {
+            "name": "Setup cloud account button",
+            "description": "Displays button allowing to setup cloud account",
+            "configuration": {
+                "label": {
+                    "default": "Setup cloud account"
+                }
+            }
+        },
         "deploymentNum": {
             "name": "Number of deployments",
             "description": "Displays number of filtered deployments along with icon and label",
