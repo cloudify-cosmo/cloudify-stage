@@ -2,12 +2,12 @@ import type { Snapshot, SnapshotsWidget } from 'widgets/snapshots/src/widget.typ
 import type { Toolbox } from 'app/utils/StageAPI';
 import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
 import { camelCase } from 'lodash';
+import { translate } from './widget.common';
 import Actions from './actions';
 import CreateModal from './CreateSnapshotModal';
 import RestoreModal from './RestoreSnapshotModal';
 import UploadModal from './UploadSnapshotModal';
 
-const translate = Stage.Utils.getT('widgets.snapshots');
 const translateColumn = Stage.Utils.composeT(translate, 'columns');
 
 interface SnapshotsTableProps {

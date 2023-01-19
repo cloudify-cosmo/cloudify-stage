@@ -1,9 +1,8 @@
 import type { PaginatedResponse } from 'backend/types';
-import type { Snapshot } from 'widgets/snapshots/src/widget.types';
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { Snapshot } from './widget.types';
 import SnapshotsTable from './SnapshotsTable';
-
-const translate = Stage.Utils.getT('widgets.snapshots');
+import { translate } from './widget.common';
 
 // eslint-disable-next-line camelcase
 Stage.defineWidget<{ created_by?: string }, PaginatedResponse<Snapshot>, DataTableConfiguration>({
