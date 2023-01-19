@@ -1,6 +1,7 @@
+import React, { useCallback, useMemo } from 'react';
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { CSSProperties, FunctionComponent } from 'react';
-import { useCallback, useMemo } from 'react';
+import { Button } from '../../../components/basic';
 
 export interface ButtonLinkProps {
     basic: boolean;
@@ -12,8 +13,6 @@ export interface ButtonLinkProps {
 }
 
 const ButtonLink: FunctionComponent<ButtonLinkProps> = ({ basic, color, icon, label, url, fullHeight }) => {
-    const { Button } = Stage.Basic;
-
     const dispatch = ReactRedux.useDispatch();
     const handleClick = useCallback(() => {
         if (url.startsWith('http')) window.open(url, '_blank');
