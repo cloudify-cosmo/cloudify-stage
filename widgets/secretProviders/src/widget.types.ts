@@ -1,7 +1,7 @@
 import type { PollingTimeConfiguration, DataTableConfiguration } from '../../../app/utils/GenericConfig';
 
-export interface ConnectionParameters {
-    host: string;
+export interface VaultConnectionParameters {
+    url: string;
     token: string;
     path?: string;
 }
@@ -14,7 +14,7 @@ export declare namespace SecretProvidersWidget {
         visibility: string;
         name: string;
         type: string;
-        connection_parameters: ConnectionParameters | null;
+        connection_parameters: VaultConnectionParameters | null;
         updated_at: Date | null;
         tenant_name: string;
         created_by: string;
