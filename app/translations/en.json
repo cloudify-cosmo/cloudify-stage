@@ -333,7 +333,7 @@
     },
     "pageTitle": "Cloudify Console",
     "productName": "Cloudify",
-    "redirecting": "Redirecting to {{url}}...",
+    "redirecting": "Redirecting to",
     "shared": {
         "executionStatus": {
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
