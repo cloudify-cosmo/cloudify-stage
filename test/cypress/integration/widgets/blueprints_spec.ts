@@ -113,12 +113,6 @@ describe('Blueprints widget', () => {
                 const deploymentName = `${blueprintNamePrefix}_deploy_on`;
 
                 cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', blueprintName);
-                cy.interceptSp('GET', {
-                    pathname: '/summary/deployments',
-                    query: {
-                        _search: deploymentName
-                    }
-                }).as('deploy');
                 cy.interceptSp('PUT', '/deployments/*').as('deploy');
 
                 getBlueprintRow(blueprintName).find('.rocket').click();
