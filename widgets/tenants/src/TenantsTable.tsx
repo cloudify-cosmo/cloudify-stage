@@ -128,7 +128,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
 
         actions
             .doDelete(tenant!.name)
-            .then((/* tenant */) => {
+            .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('tenants:refresh');
             })

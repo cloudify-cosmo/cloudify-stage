@@ -95,7 +95,7 @@ export default class TenantDetails extends React.Component<TenantDetailsProps, T
                             <Icon name="user" /> Users
                             <Divider />
                             <List divided relaxed verticalAlign="middle" className="light">
-                                {_.map(tenant.users, (_data, user) => {
+                                {Object.keys(tenant.users).map(user => {
                                     const processing = processingState && processItem === user;
 
                                     return (

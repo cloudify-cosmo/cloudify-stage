@@ -9,19 +9,15 @@ const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
 const { Modal, Icon, Form, CancelButton, ApproveButton } = Stage.Basic;
 
-export default function GroupsModal({
-    onHide = noop,
-    open,
-    tenant,
-    toolbox,
-    userGroups
-}: {
+interface GroupsModalProps {
     onHide: () => void;
     open?: boolean;
     tenant: Tenant;
     toolbox: Toolbox;
     userGroups?: string[];
-}) {
+}
+
+export default function GroupsModal({ onHide = noop, open, tenant, toolbox, userGroups }: GroupsModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [editedUserGroups, setEditedUserGroups] = useInput<Record<string, string>>({});
