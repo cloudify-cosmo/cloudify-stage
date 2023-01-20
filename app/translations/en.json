@@ -2006,6 +2006,25 @@
                     }
                 }
             },
+            "groupsModal": {
+                "header": "Edit user groups for {{name}}",
+                "form": {
+                    "groups": {
+                        "label": "Groups"
+                    }
+                }
+            },
+            "usersModal": {
+                "header": "Edit users for tenant {{name}}",
+                "form": {
+                    "users": {
+                        "label": "Users"
+                    }
+                },
+                "actions": {
+                    "save": "Save"
+                }
+            },
             "tenantsTable": {
                 "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
                 "columns": {
@@ -2018,6 +2037,16 @@
                 },
                 "deleteModal": {
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                },
+                "actionMenu": {
+                    "editUsers": "Edit users",
+                    "editGroups": "Edit user groups",
+                    "delete": "Delete"
+                },
+                "details": {
+                    "noUsers": "No users available",
+                    "noGroups": "No groups available",
+                    "popup": "The users assigned to this tenant, and the assigned roles. When the roles are inherited from a user group, the name of the user group is also shown, for example: viewer (Viewers)"
                 }
             }
         },
