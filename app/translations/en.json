@@ -1658,7 +1658,15 @@
                 "header": "Create secret",
                 "buttons": {
                     "create": "Create"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                }
+            },
+            "form": {
                 "inputs": {
                     "secretKey": {
                         "label": "Secret key",
@@ -1685,47 +1693,17 @@
                         "label": "Path at the provider",
                         "placeholder": "Provide path at the secret provider"
                     }
-                },
-                "errors": {
-                    "validation": {
-                        "secretKey": "Please provide secret key",
-                        "secretValue": "Please provide secret value",
-                        "noProviders": "No Secret providers are defined in the System",
-                        "secretProviderName": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
-                    }
                 }
             },
-            "updateModal": {
-                "header": "Update secret {{secretKey}}",
-                "buttons": {
-                    "update": "Update"
+            "errors": {
+                "validation": {
+                    "secretKey": "Please provide secret key",
+                    "secretValue": "Please provide secret value",
+                    "noProviders": "No Secret providers are defined in the System",
+                    "secretProviderName": "Please select a secret provider",
+                    "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                 },
-                "inputs": {
-                    "secretValue": {
-                        "placeholder": "Secret value"
-                    },
-                    "secretProvider": {
-                        "label": "Secret provider",
-                        "placeholder": "Select secret provider"
-                    },
-                    "secretProviderPath": {
-                        "label": "Secret provider path",
-                        "placeholder": "Path"
-                    },
-                    "useSecretProvider": {
-                        "label": "Retrieve the secret value from a secret provider"
-                    }
-                },
-                "errors": {
-                    "validation": {
-                        "secretValue": "Please provide secret value",
-                        "noProviders": "No Secret providers are defined in the System",
-                        "secretProviderName": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
-                    },
-                    "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
-                }
+                "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
             }
         },
         "serviceButton": {
@@ -2211,7 +2189,7 @@
                     }
                 }
             },
-            "createModal" : {
+            "createModal": {
                 "header": "Create snapshot",
                 "actions": {
                     "create": "Create"

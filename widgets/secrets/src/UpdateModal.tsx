@@ -2,6 +2,7 @@ import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import type { Secret } from 'app/widgets/common/secrets/SecretActions';
 import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
+import { translateForm } from './widget.utils';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
@@ -75,11 +76,11 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
     function updateSecret() {
         clearErrors();
         if (isEmpty(secretValue) && !useSecretProvider) {
-            setErrors({ secretValue: translateUpdateModal('errors.validation.secretValue') });
+            setErrors({ secretValue: translateForm('errors.validation.secretValue') });
             return;
         }
         if (isEmpty(secretProvider) && useSecretProvider) {
-            setErrors({ secretProvider: translateUpdateModal('errors.validation.secretProvider') });
+            setErrors({ secretProvider: translateForm('errors.validation.secretProvider') });
             return;
         }
 
@@ -116,7 +117,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
             setErrors({ ...errors, secretValue: null });
         }
         if (isEmpty(secretProviders)) {
-            setErrors({ ...errors, secretProviderCheckbox: translateUpdateModal('errors.validation.noProviders') });
+            setErrors({ ...errors, secretProviderCheckbox: translateForm('errors.validation.noProviders') });
             return;
         }
         setUseSecretProvider(!useSecretProvider);
@@ -127,7 +128,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     const headerContent = translateUpdateModal('header', { secretKey: secret.key });
 
-    const noPermissionError = translateUpdateModal('errors.noPermission', {
+    const noPermissionError = translateForm('errors.noPermission', {
         currentUsername,
         secretKey: secret.key,
         selectedTenant
@@ -152,14 +153,14 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                             <>
                                 <Form.Field>
                                     <Form.Checkbox
-                                        label={translateUpdateModal('inputs.useSecretProvider.label')}
+                                        label={translateForm('inputs.useSecretProvider.label')}
                                         name="useSecretProvider"
                                         checked={useSecretProvider && !isEmpty(secretProviders)}
                                         onChange={onSecretProviderChange}
                                         disabled={isEmpty(secretProviders)}
                                         help={
                                             isEmpty(secretProviders)
-                                                ? translateUpdateModal('errors.validation.noProviders')
+                                                ? translateForm('errors.validation.noProviders')
                                                 : null
                                         }
                                     />
@@ -167,13 +168,13 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                                 {useSecretProvider ? (
                                     <>
                                         <Form.Field
-                                            label={translateUpdateModal('inputs.secretProvider.label')}
+                                            label={translateForm('inputs.secretProvider.label')}
                                             error={errors.secretProvider}
                                             required
                                         >
                                             <Form.Dropdown
                                                 name="secretProvider"
-                                                placeholder={translateUpdateModal('inputs.secretProvider.placeholder')}
+                                                placeholder={translateForm('inputs.secretProvider.placeholder')}
                                                 selection
                                                 options={secretProvidersDropdownOptions}
                                                 value={secretProvider}
@@ -181,15 +182,13 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                                             />
                                         </Form.Field>
                                         <Form.Field
-                                            label={translateUpdateModal('inputs.secretProviderPath.label')}
+                                            label={translateForm('inputs.secretProviderPath.label')}
                                             error={errors.secretProviderPath}
                                             required
                                         >
                                             <Form.Input
                                                 name="secretProviderPath"
-                                                placeholder={translateUpdateModal(
-                                                    'inputs.secretProviderPath.placeholder'
-                                                )}
+                                                placeholder={translateForm('inputs.secretProviderPath.placeholder')}
                                                 value={secretProviderPath}
                                                 onChange={setSecretProviderPath}
                                             />
@@ -199,7 +198,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                                     <Form.Field error={errors.secretValue}>
                                         <MultilineInput
                                             name="secretValue"
-                                            placeholder={translateUpdateModal('inputs.secretValue.placeholder')}
+                                            placeholder={translateForm('inputs.secretValue.placeholder')}
                                             value={secretValue}
                                             onChange={setSecretValue}
                                         />
