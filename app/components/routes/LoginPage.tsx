@@ -16,16 +16,16 @@ import LargeLogo from '../sidebar/banner/LargeLogo';
 import LogoLabel from '../sidebar/banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from '../basic';
 import type { ReduxThunkDispatch } from '../../configureStore';
+import Consts from '../../utils/consts';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
     onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
-        pathname: string;
         search: string;
     };
     loginError: string | null;
-    loginPageUrl: string;
+    loginPageUrl: ClientConfig['app']['auth']['loginPageUrl'];
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
@@ -108,10 +108,11 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username, isFirstLogin } = this.state;
-        const { loginPageUrl, isLoggingIn, location, loginError = null, whiteLabel } = this.props;
+        const { loginPageUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
-        if (!location.pathname.startsWith(loginPageUrl)) return <SmartRedirect url={loginPageUrl} />;
+        const defaultLoginPageUrl = `${Consts.CONTEXT_PATH}${Consts.PAGE_PATH.LOGIN}`;
+        if (loginPageUrl !== defaultLoginPageUrl) return <SmartRedirect url={loginPageUrl} />;
 
         const loginPageHeader = t('header');
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
