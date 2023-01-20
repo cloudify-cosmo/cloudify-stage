@@ -1,21 +1,40 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { CheckboxProps, InputOnChangeData } from 'semantic-ui-react';
+import type { SnapshotsWidget } from 'widgets/snapshots/src/widget.types';
+import { translate } from './widget.common';
 import Actions from './actions';
 
-export default class CreateModal extends React.Component {
+interface CreateModalProps {
+    toolbox: Toolbox;
+    widget: SnapshotsWidget;
+}
+
+interface CreateModalState {
+    errors: Record<string, string>;
+    excludeLogs: boolean;
+    excludeEvents: boolean;
+    includeCredentials: boolean;
+    queue: boolean;
+    open?: boolean;
+    loading?: boolean;
+    snapshotId: string;
+}
+
+const translateModal = Stage.Utils.composeT(translate, 'createModal');
+const translateError = Stage.Utils.composeT(translate, 'errors');
+
+export default class CreateModal extends React.Component<CreateModalProps, CreateModalState> {
     static initialState = {
-        loading: false,
         snapshotId: '',
+        errors: {},
         includeCredentials: false,
         excludeLogs: false,
         excludeEvents: false,
-        queue: false,
-        errors: {},
-        open: false
+        queue: false
     };
 
-    constructor(props, context) {
-        super(props, context);
+    constructor(props: CreateModalProps) {
+        super(props);
 
         this.state = CreateModal.initialState;
 
@@ -24,8 +43,10 @@ export default class CreateModal extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleInputChange(proxy, field) {
-        this.setState(Stage.Basic.Form.fieldNameValue(field));
+    handleInputChange(_proxy: unknown, field: CheckboxProps | InputOnChangeData) {
+        this.setState(
+            Stage.Basic.Form.fieldNameValue({ name: '', value: '', type: '', ...field }) as unknown as CreateModalState
+        );
     }
 
     onApprove() {
@@ -43,7 +64,7 @@ export default class CreateModal extends React.Component {
         const { snapshotId, includeCredentials, excludeLogs, excludeEvents, queue } = this.state;
 
         if (_.isEmpty(snapshotId)) {
-            this.setState({ errors: { snapshotId: 'Please provide snapshot ID' } });
+            this.setState({ errors: { snapshotId: translateError('idMissing') } });
             return;
         }
 
@@ -60,7 +81,7 @@ export default class CreateModal extends React.Component {
                 toolbox.getEventBus().trigger('snapshots:refresh');
                 this.setState({ errors: {}, loading: false, open: false });
             })
-            .catch(err => {
+            .catch((err: any) => {
                 this.setState({ errors: { error: err.message }, loading: false });
             });
     }
@@ -71,55 +92,55 @@ export default class CreateModal extends React.Component {
 
         return (
             <Modal
-                trigger={<Button content="Create" icon="add" labelPosition="left" />}
+                trigger={<Button content={translateModal('actions.create')} icon="add" labelPosition="left" />}
                 open={open}
                 onOpen={() => this.setState({ ...CreateModal.initialState, open: true })}
                 onClose={this.onCancel}
             >
                 <Modal.Header>
-                    <Icon name="add" /> Create snapshot
+                    <Icon name="add" /> {translateModal('header')}
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form loading={loading} errors={errors} onErrorsDismiss={() => this.setState({ errors: {} })}>
-                        <Form.Field label="Snapshot ID" required error={errors.snapshotId}>
+                        <Form.Field label={translateModal('form.id.label')} required error={errors.snapshotId}>
                             <Form.Input name="snapshotId" value={snapshotId} onChange={this.handleInputChange} />
                         </Form.Field>
 
-                        <Form.Field help="Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot">
+                        <Form.Field help={translateModal('form.includeCredentials.help')}>
                             <Form.Checkbox
                                 toggle
-                                label="Include credentials"
+                                label={translateModal('form.includeCredentials.label')}
                                 name="includeCredentials"
                                 checked={includeCredentials}
                                 onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field help="Exclude logs from the snapshot">
+                        <Form.Field help={translateModal('form.excludeLogs.help')}>
                             <Form.Checkbox
                                 toggle
-                                label="Exclude logs"
+                                label={translateModal('form.excludeLogs.label')}
                                 name="excludeLogs"
                                 checked={excludeLogs}
                                 onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field help="Exclude events from the snapshot">
+                        <Form.Field help={translateModal('form.excludeEvents.help')}>
                             <Form.Checkbox
                                 toggle
-                                label="Exclude events"
+                                label={translateModal('form.excludeEvents.label')}
                                 name="excludeEvents"
                                 checked={excludeEvents}
                                 onChange={this.handleInputChange}
                             />
                         </Form.Field>
 
-                        <Form.Field help="Queue snapshot creation workflow and run automatically when possible">
+                        <Form.Field help={translateModal('form.queue.help')}>
                             <Form.Checkbox
                                 toggle
-                                label="Queue"
+                                label={translateModal('form.queue.label')}
                                 name="queue"
                                 checked={queue}
                                 onChange={this.handleInputChange}
@@ -130,14 +151,14 @@ export default class CreateModal extends React.Component {
 
                 <Modal.Actions>
                     <CancelButton onClick={this.onCancel} disabled={loading} />
-                    <ApproveButton onClick={this.onApprove} disabled={loading} content="Create" icon="add" />
+                    <ApproveButton
+                        onClick={this.onApprove}
+                        disabled={loading}
+                        content={translateModal('actions.create')}
+                        icon="add"
+                    />
                 </Modal.Actions>
             </Modal>
         );
     }
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};
