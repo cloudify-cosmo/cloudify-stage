@@ -1693,17 +1693,17 @@
                         "label": "Path at the provider",
                         "placeholder": "Provide path at the secret provider"
                     }
-                }
-            },
-            "errors": {
-                "validation": {
-                    "secretKey": "Please provide secret key",
-                    "secretValue": "Please provide secret value",
-                    "noProviders": "No Secret providers are defined in the System",
-                    "secretProviderName": "Please select a secret provider",
-                    "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                 },
-                "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
+                "errors": {
+                    "validation": {
+                        "secretKey": "Please provide secret key",
+                        "secretValue": "Please provide secret value",
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                    },
+                    "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
+                }
             }
         },
         "serviceButton": {

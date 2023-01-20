@@ -49,9 +49,10 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     if (hasSecretProvider) {
                         setUseSecretProvider(true);
                         setSecretProvider(secretData.provider_name);
-                        setSecretProviderOptions(secretData.secretProviderOptions);
-                        setSecretProviderPath(secretData.secretProviderOptions.path);
-                        // const providerOptions = secretProviderPath ? { path: secretProviderPath } : {};
+                        actions.doGet(secretData.key).then(({ provider_options: providerOptions }) => {
+                            setSecretProviderOptions(providerOptions);
+                            setSecretProviderPath(providerOptions!.path);
+                        });
                     } else {
                         setUseSecretProvider(false);
                         actions
