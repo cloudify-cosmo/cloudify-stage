@@ -12,7 +12,7 @@ const translate = StageUtils.getT(
 const DATA_STATE = {
     LOADING: 'LOADING',
     EMPTY_LIST: 'EMPTY_LIST',
-    ITEMS_LIST: 'ITEMS_LIST'
+    ITEM_LIST: 'ITEM_LIST'
 } as const;
 
 export interface EnvironmentDropdownListProps {
@@ -40,7 +40,7 @@ const EnvironmentDropdownList = ({
             return DATA_STATE.EMPTY_LIST;
         }
 
-        return DATA_STATE.ITEMS_LIST;
+        return DATA_STATE.ITEM_LIST;
     }, [environments, loading]);
 
     return (
@@ -58,7 +58,7 @@ const EnvironmentDropdownList = ({
                 <Form.Dropdown.Item disabled>{translate('noData')}</Form.Dropdown.Item>
             )}
 
-            {dataState === DATA_STATE.ITEMS_LIST &&
+            {dataState === DATA_STATE.ITEM_LIST &&
                 environments.map(environment => {
                     return (
                         <Form.Dropdown.Item
