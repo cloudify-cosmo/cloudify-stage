@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { debounce } from 'lodash';
+import React, { useRef, useState } from 'react';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import { useBoolean } from '../../../../utils/hooks';
-import { filterEnvironments, mapFetchedEnvironments } from './EnvironmentDropdown.utils';
+import { filterEnvironments, mapFetchedEnvironments, useFetchTrigger } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
@@ -12,15 +11,6 @@ import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.ty
 import EnvironmentDropdownList from './EnvironmentDropdownList';
 import type { EnvironmentDropdownListProps } from './EnvironmentDropdownList';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
-
-function useFetchTrigger(fetchTrigger: () => void, fetchDeps: React.DependencyList) {
-    const delayMs = 500;
-    const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
-
-    useEffect(() => {
-        delayedFetchTrigger();
-    }, fetchDeps);
-}
 
 interface EnvironmentDropdownProps {
     value?: string;

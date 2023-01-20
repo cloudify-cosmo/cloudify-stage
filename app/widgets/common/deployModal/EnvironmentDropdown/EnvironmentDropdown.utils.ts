@@ -1,8 +1,19 @@
-import { cloneDeep } from 'lodash';
+import type { DependencyList } from 'react';
+import { useCallback, useEffect } from 'react';
+import { cloneDeep, debounce } from 'lodash';
 import StageUtils from '../../../../utils/stageUtils';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 import type { Environment, FetchedEnvironment, FilteredEnvironments } from './EnvironmentDropdown.types';
+
+export function useFetchTrigger(fetchTrigger: () => void, fetchDeps: DependencyList) {
+    const delayMs = 500;
+    const debouncedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
+
+    useEffect(() => {
+        debouncedFetchTrigger();
+    }, fetchDeps);
+}
 
 const formatEnvironmentDisplayName = (environment: FetchedEnvironment) => {
     return StageUtils.formatDisplayName({ id: environment.id, displayName: environment.display_name });
