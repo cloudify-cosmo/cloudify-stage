@@ -66,7 +66,7 @@ describe('Blueprints widget', () => {
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
-        describe('should allow to deploy the blueprint', () => {
+        describe.only('should allow to deploy the blueprint', () => {
             it('when deployOn value is not required', () => {
                 getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 
@@ -113,6 +113,12 @@ describe('Blueprints widget', () => {
                 const deploymentName = `${blueprintNamePrefix}_deploy_on`;
 
                 cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', blueprintName);
+                cy.interceptSp('GET', {
+                    pathname: '/summary/deployments',
+                    query: {
+                        _search: deploymentName
+                    }
+                }).as('deploy');
                 cy.interceptSp('PUT', '/deployments/*').as('deploy');
 
                 getBlueprintRow(blueprintName).find('.rocket').click();

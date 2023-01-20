@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
@@ -32,6 +32,7 @@ const EnvironmentDropdown = ({
     const searchActions = new SearchActions(toolbox);
     const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setLoading, unsetLoading] = useBoolean();
+    const [shouldFetchEnvironments, triggerEnvironmentsFetching, blockEnvironmentsFetching] = useBoolean();
     const [environmentList, setEnvironmentList] = useState<FilteredEnvironments>(defaultEnvironmentList);
     const [selectedEnvironment, setSelectedEnvironment] = useState<Environment | undefined>();
     const blurForcingElementRef = useRef<HTMLSpanElement>(null);
@@ -71,7 +72,10 @@ const EnvironmentDropdown = ({
                 const filteredEnvironments = filterEnvironments(mappedEnvironments, capabilitiesToMatch);
                 setEnvironmentList(filteredEnvironments);
             })
-            .finally(unsetLoading);
+            .finally(() => {
+                blockEnvironmentsFetching();
+                unsetLoading();
+            });
     };
 
     const handleDropdownItemClick: EnvironmentDropdownListProps['onItemClick'] = environment => {
@@ -80,8 +84,14 @@ const EnvironmentDropdown = ({
         forceDropdownBlur();
     };
 
+    useEffect(() => {
+        if (shouldFetchEnvironments) {
+            fetchEnvironments();
+        }
+    }, [shouldFetchEnvironments]);
+
     useFetchTrigger(() => {
-        fetchEnvironments();
+        triggerEnvironmentsFetching();
     }, [searchQuery]);
 
     return (
