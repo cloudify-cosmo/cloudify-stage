@@ -9,8 +9,8 @@ import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import Consts from 'utils/consts';
-import type { LicensePageProps } from 'components/LicensePage';
-import ConnectedLicensePage, { LicensePage } from 'components/LicensePage';
+import type { LicensePageProps } from 'components/license/LicensePage';
+import ConnectedLicensePage, { LicensePage } from 'components/license/LicensePage';
 
 import { createToolbox } from 'utils/Toolbox';
 import type { LicenseData, LicenseStatus } from 'reducers/managerReducer';

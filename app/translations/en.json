@@ -1424,8 +1424,61 @@
                     "name": "Show most recent execution only"
                 }
             },
+            "columns": {
+                "blueprintId": "Blueprint",
+                "deploymentDisplayName": "Deployment",
+                "deploymentId": "Deployment ID",
+                "workflowId": "Workflow",
+                "id": "Id",
+                "createdAt": "Created",
+                "scheduledFor": "Scheduled",
+                "endedAt": "Ended",
+                "createdBy": "Creator",
+                "attributes": "Attributes",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "actionMenu": {
+                "executionParameters": "Show Execution Parameters",
+                "updateDetails": "Show Update Details",
+                "errorDetails": "Show Error Details",
+                "forceResume": "Resume",
+                "cancel": "Cancel",
+                "forceCancel": "Force Cancel",
+                "kill": "Kill Cancel"
+            },
+            "parametersModal": {
+                "header": "Execution parameters",
+                "noParametersMessage": "No execution parameters.",
+                "actions": {
+                    "copy": "Copy Parameters",
+                    "close": "Close"
+                },
+                "columns": {
+                    "parameter": "Parameter",
+                    "value": "Value"
+                }
+            },
+            "errorModal": {
+                "header": "Error details",
+                "actions": {
+                    "copy": "Copy Error",
+                    "close": "Close"
+                }
+            },
+            "graph": {
+                "noTasks": "The selected execution does not have a tasks graph",
+                "focus": "Focus on tasks in progress",
+                "fitToView": "Fit to view",
+                "open": "Open in window",
+                "close": "Close window",
+                "showLogs": "Show related entries in Deployment Events/Logs widget"
+            },
             "noExecutionFound": "There are no executions that could be shown.",
-            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on."
+            "noData": "There are no Executions available. Probably there's no deployment created, yet.",
+            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on.",
+            "dryRun": "Dry Run",
+            "systemWorkflow": "System Workflow"
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
@@ -1615,22 +1668,38 @@
                 },
                 "inputs": {
                     "secretKey": {
-                        "placeholder": "Secret key"
+                        "label": "Secret key",
+                        "placeholder": "Provide secret key"
                     },
                     "secretValue": {
-                        "placeholder": "Secret value"
+                        "label": "Secret value",
+                        "placeholder": "Provide secret value"
                     },
                     "secretFile": {
                         "placeholder": "Get secret value from file (max: 50kB)"
                     },
                     "hiddenValue": {
                         "label": "Hidden Value"
+                    },
+                    "useSecretProvider": {
+                        "label": "Retrieve the secret value from a secret provider"
+                    },
+                    "secretProvider": {
+                        "label": "Secret provider",
+                        "placeholder": "Select secret provider"
+                    },
+                    "secretProviderPath": {
+                        "label": "Path at the provider",
+                        "placeholder": "Provide path at the secret provider"
                     }
                 },
                 "errors": {
                     "validation": {
                         "secretKey": "Please provide secret key",
-                        "secretValue": "Please provide secret value"
+                        "secretValue": "Please provide secret value",
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
                     }
                 }
             },
@@ -2119,7 +2188,83 @@
                 "restore": "Restore",
                 "download": "Download",
                 "delete": "Delete"
-            }
+            },
+            "uploadModal": {
+                "header": "Upload snapshot",
+                "actions": {
+                    "upload": "Upload"
+                },
+                "form": {
+                    "file": {
+                        "label": "Snapshot file",
+                        "placeholder": "Provide the snapshot's file URL or click browse to select a file"
+                    },
+                    "name": {
+                        "label": "Snapshot name"
+                    }
+                }
+            },
+            "createModal" : {
+                "header": "Create snapshot",
+                "actions": {
+                    "create": "Create"
+                },
+                "form": {
+                    "id": {
+                        "label": "Snapshot ID"
+                    },
+                    "includeCredentials": {
+                        "label": "Include credentials",
+                        "help": "Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot"
+                    },
+                    "excludeLogs": {
+                        "label": "Exclude logs",
+                        "help": "Exclude logs from the snapshot"
+                    },
+                    "excludeEvents": {
+                        "label": "Exclude events",
+                        "help": "Exclude events from the snapshot"
+                    },
+                    "queue": {
+                        "label": "Queue",
+                        "help": "Queue snapshot creation workflow and run automatically when possible"
+                    }
+                }
+            },
+            "restoreModal": {
+                "header": "Restore snapshot",
+                "actions": {
+                    "restore": "Restore"
+                },
+                "form": {
+                    "message": "When restoring from a tenant-less environment, make sure you uploaded the snapshot to a \"clean\" tenant that does not contain any other resources.",
+                    "tenantless": {
+                        "label": "Snapshot from a tenant-less environment"
+                    },
+                    "force": {
+                        "label": "Force restore even if manager is non-empty (it will delete all data)"
+                    },
+                    "ignoreFailure": {
+                        "label": "Ignore plugin failures",
+                        "help": "Ignore plugin installation failures and deployment environment creation failures due to missing plugins"
+                    }
+                }
+            },
+            "errors": {
+                "fileOrUrlMissing": "Please select snapshot file or url",
+                "urlInvalid": "Please provide valid URL for snapshot",
+                "idMissing": "Please provide snapshot ID"
+            },
+            "noData": "There are no Snapshots available. Click \"Create\" to create Snapshots.",
+            "confirmDelete": "Are you sure you want to remove this snapshot?",
+            "columns": {
+                "id": "Name",
+                "createdAt": "Created at",
+                "status": "Status",
+                "createdBy": "Creator"
+            },
+            "name": "Snapshots list",
+            "decription": "Snapshots list"
         },
         "managers": {
             "actions": {

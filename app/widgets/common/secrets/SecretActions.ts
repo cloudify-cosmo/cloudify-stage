@@ -1,6 +1,8 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Visibility } from '../types';
 
+type ProviderOptions = Record<string, string>;
+
 /* eslint-disable camelcase */
 export type Secret = {
     created_at?: string;
@@ -13,6 +15,7 @@ export type Secret = {
     value: string;
     schema: string;
     provider_name?: string;
+    provider_options?: ProviderOptions;
 };
 /* eslint-enable camelcase */
 
@@ -27,12 +30,31 @@ export default class SecretActions {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
+    doGetAllSecretProviders(): Promise<any> {
+        return this.manager.doGet('/secrets-providers?_include=name');
+    }
+
     doDelete(key: Secret['key']) {
         return this.manager.doDelete(`/secrets/${key}`);
     }
 
-    doCreate(key: Secret['key'], value: Secret['value'], visibility: Visibility, hidden: Secret['is_hidden_value']) {
-        return this.manager.doPut(`/secrets/${key}`, { body: { value, visibility, is_hidden_value: hidden } });
+    doCreate(
+        key: string,
+        value: string,
+        visibility: Visibility,
+        hidden: boolean,
+        providerName?: string,
+        providerOptions?: ProviderOptions
+    ) {
+        return this.manager.doPut(`/secrets/${key}`, {
+            body: {
+                value,
+                visibility,
+                is_hidden_value: hidden,
+                provider_name: providerName,
+                provider_options: providerOptions
+            }
+        });
     }
 
     doUpdate(key: Secret['key'], value: Secret['value']) {

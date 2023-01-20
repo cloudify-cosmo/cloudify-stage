@@ -1,5 +1,5 @@
 import passport from 'passport';
-import type { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 type AuthenticateMiddleware = (
     req: Request,
@@ -7,11 +7,15 @@ type AuthenticateMiddleware = (
     next: NextFunction
 ) => ReturnType<ReturnType<typeof authenticateWith>>;
 
-function authenticateWith(strategy: 'cookie' | 'saml') {
+function authenticateWith(strategy: 'cookie' | 'token' | 'saml') {
     return passport.authenticate(strategy, { session: false });
 }
 export const authenticateWithCookie: AuthenticateMiddleware = (req, res, next) => {
     return authenticateWith('cookie')(req, res, next);
+};
+
+export const authenticateWithToken: AuthenticateMiddleware = (req, res, next) => {
+    return authenticateWith('token')(req, res, next);
 };
 
 export const authenticateWithSaml: AuthenticateMiddleware = (req, res, next) => {

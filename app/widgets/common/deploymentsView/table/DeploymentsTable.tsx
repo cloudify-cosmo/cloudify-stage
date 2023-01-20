@@ -91,7 +91,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 })}
 
                 {keysOfLabelsToShow.map(labelKey => (
-                    <DataTable.Column key={labelKey} name={labelKey} label={labelKey} />
+                    <DataTable.Column key={labelKey} name={`label:${labelKey}`} label={labelKey} />
                 ))}
 
                 {deployments.flatMap(

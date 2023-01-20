@@ -47,7 +47,7 @@ const CreateSecretProviderModal = ({
                 body: {
                     name: providerName,
                     connection_parameters: {
-                        host: hostname,
+                        url: hostname,
                         token: authorizationToken,
                         path: defaultPath
                     },

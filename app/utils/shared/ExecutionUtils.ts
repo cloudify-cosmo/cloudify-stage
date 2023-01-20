@@ -2,9 +2,10 @@ import _ from 'lodash';
 
 export interface Execution {
     /* eslint-disable camelcase */
-    id?: string;
+    id: string;
     blueprint_id?: string;
-    deployment_id?: string;
+    deployment_id: string;
+    deployment_display_name?: string;
     status_display?: string;
     status?: string;
     scheduled_for?: string;
@@ -12,8 +13,21 @@ export interface Execution {
     finished_operations?: number;
     total_operations?: number;
     is_system_workflow?: boolean;
+    is_dry_run?: boolean;
+    created_by?: string;
+    created_at?: string;
+    ended_at?: string;
+    parameters?: Record<string, any>;
+    error?: string;
     /* eslint-enable camelcase  */
 }
+
+export type ExecutionAction =
+    | typeof ExecutionUtils.FORCE_CANCEL_ACTION
+    | typeof ExecutionUtils.CANCEL_ACTION
+    | typeof ExecutionUtils.FORCE_RESUME_ACTION
+    | typeof ExecutionUtils.RESUME_ACTION
+    | typeof ExecutionUtils.KILL_CANCEL_ACTION;
 
 export default class ExecutionUtils {
     /* Execution resume types */
@@ -101,7 +115,7 @@ export default class ExecutionUtils {
         return _.includes(ExecutionUtils.WAITING_EXECUTION_STATUSES, execution.status);
     }
 
-    static isFailedExecution(execution: Execution) {
+    static isFailedExecution(execution: Pick<Execution, 'status'>) {
         return execution.status === 'failed';
     }
 
@@ -113,7 +127,7 @@ export default class ExecutionUtils {
         return execution.workflow_id === ExecutionUtils.UPDATE_WORKFLOW_ID;
     }
 
-    static isActiveExecution(execution: Execution) {
+    static isActiveExecution(execution: Pick<Execution, 'status'>) {
         return _.includes(ExecutionUtils.ACTIVE_EXECUTION_STATUSES, execution.status);
     }
 

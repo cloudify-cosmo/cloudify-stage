@@ -6,6 +6,7 @@ import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import getTokenStrategy from './auth/TokenStrategy';
 
 import { getConfig } from './config';
 import { CONTEXT_PATH } from './consts';
@@ -14,7 +15,7 @@ import { getResourcePath } from './utils';
 
 import getCookieStrategy from './auth/CookieStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
-import { authenticateWithCookie } from './auth/AuthMiddlewares';
+import { authenticateWithCookie, authenticateWithToken } from './auth/AuthMiddlewares';
 import validateSamlConfig from './samlSetup';
 import Auth from './routes/Auth';
 
@@ -75,6 +76,7 @@ if (samlConfig.enabled) {
 }
 
 passport.use(getCookieStrategy());
+passport.use(getTokenStrategy());
 app.use(cookieParser());
 app.use(passport.initialize());
 
@@ -99,8 +101,8 @@ app.use(
         index: false
     })
 );
-// API Routes with authentication
-const authenticatedApiRoutes: Record<string, Router> = {
+// API Routes with cookie authentication
+const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     ba: BlueprintAdditions,
     bud: BlueprintUserData,
     contactDetails: ContactDetails,
@@ -118,9 +120,11 @@ const authenticatedApiRoutes: Record<string, Router> = {
     widgets: Widgets,
     snapshots: Snapshots
 };
-Object.entries(authenticatedApiRoutes).forEach(([routePath, router]) =>
+Object.entries(cookieAuthenticatedApiRoutes).forEach(([routePath, router]) =>
     app.use(`${contextPath}/${routePath}`, authenticateWithCookie, router)
 );
+
+app.use(`${contextPath}/snapshots`, authenticateWithToken, Snapshots);
 
 // API Routes without authentication
 app.use(`${contextPath}/auth`, Auth); // all routes require authentication except `/auth/login`
