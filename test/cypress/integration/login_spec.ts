@@ -1,7 +1,7 @@
 import Consts from 'app/utils/consts';
 import { testPageUrl } from 'test/cypress/support/commands';
-import type { ClientConfig } from 'backend/routes/Config.types';
 import type { GetUserAppResponse } from 'backend/routes/UserApp.types';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
@@ -90,8 +90,8 @@ describe('Login', () => {
         cy.activate();
         forceLogin();
 
-        cy.location('pathname').should('be.equal', '/console/noTenants');
-        cy.contains('User is not associated with any tenants');
+        cy.location('pathname').should('be.equal', '/console/logout');
+        cy.contains('Unfortunately you cannot login since your account is not associated with any tenants.');
     });
 
     it('fails when provided credentials are invalid', () => {
@@ -113,7 +113,19 @@ describe('Login', () => {
         cy.activate();
         forceLogin();
 
-        cy.location('pathname').should('be.equal', '/console/error');
-        cy.get('.error.message').should('have.text', 'Error getting data from the manager, cannot load page');
+        cy.location('pathname').should('be.equal', '/console/logout');
+        cy.get('.error.message').should('have.text', 'Error fetching data from the manager, cannot load page');
+    });
+
+    it('redirects to another page when app configured to use not default login page', () => {
+        const customLoginPageUrl = '/my-login-page';
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
+            clientConfig.app.auth.loginPageUrl = customLoginPageUrl;
+            return clientConfig;
+        });
+
+        cy.visit('/');
+
+        cy.location('pathname').should('be.equal', customLoginPageUrl);
     });
 });
