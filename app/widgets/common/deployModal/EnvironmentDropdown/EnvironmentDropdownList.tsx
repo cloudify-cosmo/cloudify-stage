@@ -55,11 +55,7 @@ const EnvironmentDropdownList = ({
             )}
 
             {dataState === DATA_STATE.EMPTY_LIST && (
-                <Form.Dropdown.Item disabled>
-                    {/* TODO Norbert: To discuss with Alex */}
-                    {/* <Icon name="close" /> */}
-                    {translate('noData')}
-                </Form.Dropdown.Item>
+                <Form.Dropdown.Item disabled>{translate('noData')}</Form.Dropdown.Item>
             )}
 
             {dataState === DATA_STATE.ITEMS_LIST &&
