@@ -1,11 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { PaginatedResponse } from 'backend/types';
+import type { Tenant } from './widget.types';
 import TenantsTable from './TenantsTable';
 
 const widgetId = 'tenants';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
-Stage.defineWidget({
+Stage.defineWidget<never, PaginatedResponse<Tenant>, DataTableConfiguration>({
     id: widgetId,
     name: t('name'),
     description: t('description'),
@@ -24,21 +25,15 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        const selectedTenant = toolbox.getContext().getValue('tenantName');
-
-        let formattedData = data;
-        formattedData = {
-            ...formattedData,
-            items: _.map(formattedData.items, item => {
-                return { ...item, groups: item.groups, users: item.users, isSelected: item.name === selectedTenant };
-            }),
+        const formattedData = {
+            items: data!.items,
             total: _.get(data, 'metadata.pagination.total', 0)
         };
 
