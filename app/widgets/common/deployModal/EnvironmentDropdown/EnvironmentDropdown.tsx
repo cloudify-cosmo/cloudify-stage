@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { debounce } from 'lodash';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
@@ -13,6 +13,15 @@ import EnvironmentDropdownList from './EnvironmentDropdownList';
 import type { EnvironmentDropdownListProps } from './EnvironmentDropdownList';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 
+function useFetchTrigger(fetchTrigger: () => void, fetchDeps: React.DependencyList) {
+    const delayMs = 500;
+    const delayedFetchTrigger = useCallback(debounce(fetchTrigger, delayMs), []);
+
+    useEffect(() => {
+        delayedFetchTrigger();
+    }, fetchDeps);
+}
+
 interface EnvironmentDropdownProps {
     value?: string;
     name: DynamicDropdownProps['name'];
@@ -21,9 +30,6 @@ interface EnvironmentDropdownProps {
     toolbox: Stage.Types.Toolbox;
     capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
 }
-
-// TODO:
-// - Write some tests
 
 const EnvironmentDropdown = ({
     value = '',
@@ -52,7 +58,7 @@ const EnvironmentDropdown = ({
         blurForcingElementRef.current?.click();
     };
 
-    const fetchEnvironments = debounce(() => {
+    const fetchEnvironments = () => {
         setLoading();
 
         searchActions
@@ -76,7 +82,7 @@ const EnvironmentDropdown = ({
                 setEnvironmentList(filteredEnvironments);
             })
             .finally(unsetLoading);
-    }, 500);
+    };
 
     const handleDropdownItemClick: EnvironmentDropdownListProps['onItemClick'] = environment => {
         setSelectedEnvironment(environment);
@@ -84,7 +90,7 @@ const EnvironmentDropdown = ({
         forceDropdownBlur();
     };
 
-    useEffect(() => {
+    useFetchTrigger(() => {
         fetchEnvironments();
     }, [searchQuery]);
 
