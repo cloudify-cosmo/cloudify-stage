@@ -8,7 +8,7 @@ import MenuAction from './MenuAction';
 import TenantDetails from './TenantDetails';
 import UsersModal from './UsersModal';
 
-const t = Stage.Utils.getT(`widgets.tenants.tenantsTable`);
+const translate = Stage.Utils.getT(`widgets.tenants.tenantsTable`);
 
 interface TenantsTableProps {
     data: {
@@ -116,7 +116,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
         } else if (value === MenuAction.DELETE_TENANT_ACTION) {
             this.setState({ tenant, modalType: value, showModal: true });
         } else {
-            this.setState({ error: t('errors.unknownAction', { actionName: value }) });
+            this.setState({ error: translate('errors.unknownAction', { actionName: value }) });
         }
     };
 
@@ -169,11 +169,11 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="tenantsTable"
-                    noDataMessage={t('noDataMessage')}
+                    noDataMessage={translate('noDataMessage')}
                 >
-                    <DataTable.Column label={t('columns.name')} name="name" width="30%" />
-                    <DataTable.Column label={t('columns.groups')} width="30%" />
-                    <DataTable.Column label={t('columns.users')} width="30%" />
+                    <DataTable.Column label={translate('columns.name')} name="name" width="30%" />
+                    <DataTable.Column label={translate('columns.groups')} width="30%" />
+                    <DataTable.Column label={translate('columns.users')} width="30%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
@@ -220,7 +220,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
                 {tenant && (
                     <>
                         <DeleteModal
-                            content={t('deleteModal.content', {
+                            content={translate('deleteModal.content', {
                                 tenantName: tenant.name
                             })}
                             open={modalType === MenuAction.DELETE_TENANT_ACTION && showModal}

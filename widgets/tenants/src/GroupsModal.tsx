@@ -17,6 +17,8 @@ interface GroupsModalProps {
     userGroups?: string[];
 }
 
+const translate = Stage.Utils.getT(`widgets.tenants.groupsModal`);
+
 export default function GroupsModal({ onHide = noop, open, tenant, toolbox, userGroups }: GroupsModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
@@ -72,12 +74,12 @@ export default function GroupsModal({ onHide = noop, open, tenant, toolbox, user
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="users" /> Edit user groups for {tenant.name}
+                <Icon name="users" /> {translate('header', tenant)}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Groups">
+                    <Form.Field label={translate('form.groups.label')}>
                         <Form.Dropdown
                             multiple
                             selection

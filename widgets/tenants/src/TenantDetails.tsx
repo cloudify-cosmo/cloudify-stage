@@ -14,6 +14,8 @@ interface TenantDetailsState {
     processItem?: string;
 }
 
+const translate = Stage.Utils.getT('widgets.tenants.tenantsTable.details');
+
 export default class TenantDetails extends React.Component<TenantDetailsProps, TenantDetailsState> {
     constructor(props: TenantDetailsProps) {
         super(props);
@@ -85,7 +87,7 @@ export default class TenantDetails extends React.Component<TenantDetailsProps, T
                             );
                         })}
 
-                        {_.isEmpty(tenant.groups) && <Message content="No groups available" />}
+                        {_.isEmpty(tenant.groups) && <Message content={translate('noGroups')} />}
                     </List>
                 </Segment>
 
@@ -112,14 +114,11 @@ export default class TenantDetails extends React.Component<TenantDetailsProps, T
                                     );
                                 })}
 
-                                {_.isEmpty(tenant.users) && <Message content="No users available" />}
+                                {_.isEmpty(tenant.users) && <Message content={translate('noUsers')} />}
                             </List>
                         </Segment>
                     </Popup.Trigger>
-                    <Popup.Content>
-                        The users assigned to this tenant, and the assigned roles. When the roles are inherited from a
-                        user group, the name of the user group is also shown, for example: viewer (Viewers)
-                    </Popup.Content>
+                    <Popup.Content>{translate('popup')}</Popup.Content>
                 </Popup>
             </Segment.Group>
         );

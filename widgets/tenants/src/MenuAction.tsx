@@ -1,5 +1,7 @@
 import type { MenuItemProps } from 'semantic-ui-react';
 
+const translate = Stage.Utils.getT('widgets.tenants.tenantsTable.actionMenu');
+
 export default class MenuAction<Tenant> extends React.Component<{
     onSelectAction: (name: string, tenant: Tenant) => void;
     tenant: Tenant;
@@ -23,19 +25,19 @@ export default class MenuAction<Tenant> extends React.Component<{
                 <Menu pointing vertical>
                     <Menu.Item
                         icon="user"
-                        content="Edit users"
+                        content={translate('editUsers')}
                         name={MenuAction.EDIT_USERS_ACTION}
                         onClick={this.onDropdownChange}
                     />
                     <Menu.Item
                         icon="users"
-                        content="Edit user groups"
+                        content={translate('editGroups')}
                         name={MenuAction.EDIT_USER_GROUPS_ACTION}
                         onClick={this.onDropdownChange}
                     />
                     <Menu.Item
                         icon="trash"
-                        content="Delete"
+                        content={translate('delete')}
                         name={MenuAction.DELETE_TENANT_ACTION}
                         onClick={this.onDropdownChange}
                     />

@@ -8,6 +8,8 @@ import Actions from './actions';
 const RolesPicker = Stage.Common.Roles.Picker;
 const { getDefaultRoleName } = Stage.Common.Roles.Utils;
 
+const translate = Stage.Utils.getT('widgets.tenants.usersModal');
+
 export default function UsersModal({
     onHide = noop,
     tenant,
@@ -88,12 +90,12 @@ export default function UsersModal({
     return (
         <Modal open={open} onClose={() => onHide()}>
             <Modal.Header>
-                <Icon name="user" /> Edit users for tenant {tenant.name}
+                <Icon name="user" /> {translate('header', tenant)}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Users">
+                    <Form.Field label={translate('form.users.label')}>
                         <Form.Dropdown
                             multiple
                             selection
@@ -116,7 +118,12 @@ export default function UsersModal({
 
             <Modal.Actions>
                 <CancelButton onClick={onHide} disabled={isLoading} />
-                <ApproveButton onClick={updateTenant} disabled={isLoading} content="Save" icon="user" />
+                <ApproveButton
+                    onClick={updateTenant}
+                    disabled={isLoading}
+                    content={translate('actions.save')}
+                    icon="user"
+                />
             </Modal.Actions>
         </Modal>
     );
