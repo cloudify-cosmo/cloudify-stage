@@ -1,7 +1,5 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
 
-import PropTypes from 'prop-types';
 import type { PutPluginsTitleRequestQueryParams, PutPluginsTitleResponse } from 'backend/routes/Plugins.types';
 
 const placeholders = {
@@ -9,39 +7,72 @@ const placeholders = {
     yaml: "Provide the plugin's YAML file URL or click browse to select a file",
     title: "Provide the plugin's title",
     icon: "Provide the plugin's icon file URL or click browse to select a file"
+} as const;
+
+const NO_ERRORS = { errors: {} };
+
+type Error = {
+    title: string;
 };
 
-class UploadPluginForm extends React.Component {
-    static NO_ERRORS = { errors: {} };
+export interface UploadPluginFormProps {
+    errors?: Record<string, Error>;
+    addRequiredMarks?: boolean;
+    hidePlaceholders?: boolean;
+    toolbox: Stage.Types.WidgetlessToolbox;
+    onChange: (value: any) => void;
+}
 
-    constructor(props) {
+type UploadPluginFormPropsWithDefaults = UploadPluginFormProps &
+    Required<Pick<UploadPluginFormProps, 'errors' | 'addRequiredMarks'>>;
+
+interface UploadPluginFormState {
+    title: string;
+    pluginYamlUrl?: string;
+    loading?: boolean;
+}
+
+class UploadPluginForm extends React.Component<UploadPluginFormPropsWithDefaults, UploadPluginFormState> {
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = {
+        addRequiredMarks: true,
+        errors: {}
+    };
+
+    constructor(props: UploadPluginFormPropsWithDefaults) {
         super(props);
         this.state = { title: '' };
     }
 
     componentDidMount() {
         const { onChange: cbOnChange } = this.props;
-        cbOnChange(UploadPluginForm.NO_ERRORS);
+        cbOnChange(NO_ERRORS);
     }
 
-    onChange(field, file, url) {
+    onChange(fieldName: string, file: File | null, url: string) {
         const { onChange: cbOnChange } = this.props;
         cbOnChange({
-            ...UploadPluginForm.NO_ERRORS,
-            [`${field}File`]: file,
-            [`${field}Url`]: url
+            ...NO_ERRORS,
+            [`${fieldName}File`]: file,
+            [`${fieldName}Url`]: url
         });
     }
 
-    createUrlOrFileFormField(field, required, onChangeUrl = _.noop, onChangeFile = _.noop, onBlurUrl) {
+    createUrlOrFileFormField(
+        fieldName: 'icon' | 'yaml' | 'wagon',
+        required: boolean,
+        onChangeUrl = _.noop,
+        onChangeFile = _.noop,
+        onBlurUrl = _.noop
+    ) {
         const { errors, hidePlaceholders } = this.props;
         const { Form } = Stage.Basic;
-        const fieldName = field.toLowerCase();
         const urlProp = `${fieldName}Url`;
         return (
-            <Form.Field label={`${field} file`} required={required} key={field} error={errors[urlProp]}>
+            <Form.Field label={`${fieldName} file`} required={required} key={fieldName} error={errors[urlProp]}>
                 <Form.UrlOrFile
                     name={fieldName}
+                    // @ts-ignore Form.UrlOrFile not yet fully in TS
                     value={urlProp}
                     placeholder={hidePlaceholders ? '' : placeholders[fieldName]}
                     onChangeUrl={url => {
@@ -63,19 +94,19 @@ class UploadPluginForm extends React.Component {
         const { loading, title } = this.state;
         const { Form, LoadingOverlay } = Stage.Basic;
 
-        const onTitleChange = titleChange => {
+        const onTitleChange = (titleChange: Record<'title', string>) => {
             const { onChange } = this.props;
             onChange({
-                ...UploadPluginForm.NO_ERRORS,
+                ...NO_ERRORS,
                 ...titleChange
             });
             this.setState(titleChange);
         };
 
         const formFields = [
-            this.createUrlOrFileFormField('Wagon', addRequiredMarks),
+            this.createUrlOrFileFormField('wagon', addRequiredMarks),
             this.createUrlOrFileFormField(
-                'YAML',
+                'yaml',
                 addRequiredMarks,
                 pluginYamlUrl => this.setState({ pluginYamlUrl }),
                 pluginYamlFile => {
@@ -110,10 +141,10 @@ class UploadPluginForm extends React.Component {
                     name="title"
                     value={title}
                     placeholder={hidePlaceholders ? '' : placeholders.title}
-                    onChange={(e, { value }) => onTitleChange({ title: value })}
+                    onChange={(_e, { value }) => onTitleChange({ title: value })}
                 />
             </Form.Field>,
-            this.createUrlOrFileFormField('Icon', false)
+            this.createUrlOrFileFormField('icon', false)
         ];
 
         return (
@@ -124,19 +155,5 @@ class UploadPluginForm extends React.Component {
         );
     }
 }
-
-UploadPluginForm.propTypes = {
-    errors: PropTypes.shape({ title: PropTypes.string }),
-    onChange: PropTypes.func.isRequired,
-    addRequiredMarks: PropTypes.bool,
-    hidePlaceholders: PropTypes.bool,
-    toolbox: PropTypes.shape({ getInternal: PropTypes.func }).isRequired
-};
-
-UploadPluginForm.defaultProps = {
-    hidePlaceholders: false,
-    errors: {},
-    addRequiredMarks: true
-};
 
 export default UploadPluginForm;

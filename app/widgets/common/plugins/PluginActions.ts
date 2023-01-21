@@ -1,5 +1,14 @@
 import type { PostPluginsUploadQueryParams } from 'backend/routes/Plugins.types';
 
+export type ResourceName = 'wagon' | 'yaml' | 'icon';
+export type Resources = Record<
+    ResourceName,
+    {
+        url: string;
+        file: unknown;
+    }
+>;
+
 class PluginActions {
     constructor(private readonly toolbox: Stage.Types.Toolbox) {}
 
@@ -7,11 +16,7 @@ class PluginActions {
         return this.toolbox.getManager().doDelete(`/plugins/${plugin.id}`, { body: { force } });
     }
 
-    doUpload(
-        visibility: string,
-        title: string,
-        resources: Record<'wagon' | 'yaml' | 'icon', { url: string; file: unknown }>
-    ) {
+    doUpload(visibility: string, title: string, resources: Resources) {
         const params: PostPluginsUploadQueryParams = { visibility, title };
         const files: Record<string, unknown> = {};
 
