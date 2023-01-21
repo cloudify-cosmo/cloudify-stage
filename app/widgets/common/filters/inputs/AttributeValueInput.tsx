@@ -1,8 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import React from 'react';
 
 import DynamicDropdown from '../../components/DynamicDropdown';
+import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
 import { getPlaceholderTranslation, isMultipleValuesOperator } from '../common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
@@ -27,7 +27,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
             <DynamicDropdown
                 name="ruleValue"
                 fetchUrl={fetchUrl}
-                onChange={onChange}
+                onChange={onChange as DynamicDropdownProps['onChange']}
                 toolbox={toolbox}
                 allowAdditions
                 clearable={false}
