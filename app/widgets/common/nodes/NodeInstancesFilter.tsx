@@ -1,9 +1,47 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
-import ToolboxPropType from '../../../utils/props/Toolbox';
+import { isEmpty, isEqual, chain } from 'lodash';
+import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean, useErrors, useInput } from '../../../utils/hooks';
 import { Form } from '../../../components/basic';
+
+interface NodeInstancesFilterProps {
+    /**
+     * name of the field
+     */
+    name: string;
+    /**
+     * value of the field
+     */
+    value: string[];
+    /**
+     * function to be called on field's value change
+     */
+    onChange: Stage.Types.CustomConfigurationComponentProps<DropdownProps['value']>['onChange'];
+    /**
+     * Toolbox object
+     */
+    toolbox: Stage.Types.WidgetlessToolbox;
+    /**
+     * [deploymentId=''] ID of deployment for which Node Instances will be fetched
+     */
+    deploymentId?: string;
+    /**
+     * field label
+     */
+    label?: string;
+    /**
+     * field's placeholder
+     */
+    placeholder?: string;
+    /**
+     * field's help description
+     */
+    help?: string;
+    /**
+     * make dropdown to expand upwards
+     */
+    upward?: boolean;
+}
 
 /**
  * NodeInstancesFilter - a component showing dropdown with nodes instances of specified deployment.
@@ -12,25 +50,25 @@ import { Form } from '../../../components/basic';
  * @param props
  */
 export default function NodeInstancesFilter({
-    deploymentId,
+    deploymentId = '',
     toolbox,
     name,
     onChange,
-    help,
-    label,
-    placeholder,
+    help = '',
+    label = '',
+    placeholder = '',
     upward,
     value: initialValue
-}) {
+}: NodeInstancesFilterProps) {
     const { useEffect, useState } = React;
 
     const [value, setValue, clearValue] = useInput(initialValue);
-    const [nodeInstances, setNodeInstances] = useState([]);
+    const [nodeInstances, setNodeInstances] = useState<DropdownProps['options']>([]);
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors } = useErrors();
 
     function fetchData() {
-        if (_.isEmpty(deploymentId)) {
+        if (isEmpty(deploymentId)) {
             return;
         }
 
@@ -44,10 +82,10 @@ export default function NodeInstancesFilter({
             .getManager()
             .doGet(fetchUrl, { params })
             .then(data => {
-                const parsedData = _.chain(data.items || {})
+                const parsedData = chain(data.items || {})
                     .map(item => ({ text: item.id, value: item.id, key: item.id }))
                     .unshift({ text: '', value: '', key: '' })
-                    .uniqWith(_.isEqual)
+                    .uniqWith(isEqual)
                     .value();
                 setNodeInstances(parsedData);
             })
@@ -63,11 +101,11 @@ export default function NodeInstancesFilter({
         fetchData();
     }, [deploymentId]);
 
-    function handleInputChange(event, field) {
+    const handleInputChange: DropdownProps['onChange'] = (event, field) => {
         const newValue = field.value;
         setValue(newValue);
         onChange(event, { name, value: newValue });
-    }
+    };
 
     return (
         <Form.Field error={errors.nodeInstanceIds} label={label} help={help}>
@@ -86,35 +124,3 @@ export default function NodeInstancesFilter({
         </Form.Field>
     );
 }
-
-/**
- * @property {string} name name of the field
- * @property {string} value value of the field
- * @property {object} toolbox Toolbox object
- * @property {Function} onChange function to be called on field's value change
- * @property {string} [deploymentId=''] ID of deployment for which Node Instances will be fetched
- * @property {string} [label=''] field label
- * @property {string} [placeholder=''] field's placeholder
- * @property {string} [help=''] field's help description
- * @property {boolean} [upward=false] make dropdown to expand upwards
- */
-NodeInstancesFilter.propTypes = {
-    name: PropTypes.string.isRequired,
-    // eslint-disable-next-line react/no-unused-prop-types
-    value: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onChange: PropTypes.func.isRequired,
-    toolbox: ToolboxPropType.isRequired,
-    deploymentId: PropTypes.string,
-    label: PropTypes.string,
-    placeholder: PropTypes.string,
-    help: PropTypes.string,
-    upward: PropTypes.bool
-};
-
-NodeInstancesFilter.defaultProps = {
-    deploymentId: '',
-    label: '',
-    placeholder: '',
-    help: '',
-    upward: false
-};
