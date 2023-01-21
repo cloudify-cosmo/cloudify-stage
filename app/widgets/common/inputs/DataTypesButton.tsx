@@ -1,41 +1,48 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
+import { capitalize, map, isEqual } from 'lodash';
 import getTemplateForDataType from './utils/getTemplateForDataType';
 import ParameterValue from '../components/parameter/ParameterValue';
-import StageUtils from '../../../utils/stageUtils';
-import { AnyData } from '../../../utils/props';
 import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
+import type { BlueprintPlan } from '../blueprints/BlueprintActions';
 
-const PropertiesPropType = PropTypes.objectOf(
-    PropTypes.shape({
-        description: PropTypes.string,
-        type: PropTypes.string,
-        default: AnyData,
-        required: PropTypes.bool
-    })
-);
+type Properties = BlueprintPlan['data_types']['properties'] & {
+    default: any;
+};
 
-const DataTypeProperty = ({ show, name, value }) =>
-    show && (
+type DataTypes = BlueprintPlan['data_types'] & {
+    properties: Properties;
+};
+
+interface DataTypePropertyProps {
+    name: string;
+    show: boolean;
+    value?: ReactNode;
+}
+
+const DataTypeProperty = ({ show, name, value }: DataTypePropertyProps) => {
+    return (
         <>
-            <Header as="h4">{_.capitalize(name)}</Header>
-            {value}
+            {show && (
+                <>
+                    <Header as="h4">{capitalize(name)}</Header>
+                    {value}
+                </>
+            )}
         </>
     );
-
-DataTypeProperty.propTypes = {
-    name: PropTypes.string.isRequired,
-    show: PropTypes.bool.isRequired,
-    value: PropTypes.node
 };
 
-DataTypeProperty.defaultProps = {
-    value: null
-};
+interface DataTypeProps {
+    derivedFrom?: string;
+    description?: string;
+    properties: Properties;
+    name: string;
+    version?: string;
+}
 
-function DataType({ name, description, version, derivedFrom, properties }) {
+function DataType({ name, description, version, derivedFrom, properties }: DataTypeProps) {
     const example = getTemplateForDataType({ properties });
 
     return (
@@ -65,7 +72,7 @@ function DataType({ name, description, version, derivedFrom, properties }) {
                                 </Table.Row>
                             </Table.Header>
                             <Table.Body>
-                                {_.map(properties, (propertyObject, propertyName) => (
+                                {map(properties, (propertyObject, propertyName) => (
                                     <Table.Row key={propertyName} name={propertyName}>
                                         <Table.Cell>{propertyName}</Table.Cell>
                                         <Table.Cell>{propertyObject.type}</Table.Cell>
@@ -87,33 +94,9 @@ function DataType({ name, description, version, derivedFrom, properties }) {
     );
 }
 
-DataType.propTypes = {
-    derivedFrom: PropTypes.string,
-    description: PropTypes.string,
-    properties: PropertiesPropType.isRequired,
-    name: PropTypes.string.isRequired,
-    version: PropTypes.string
-};
-
-DataType.defaultProps = {
-    derivedFrom: null,
-    description: null,
-    version: null
-};
-
 interface DataTypesButtonProps {
     iconButton?: boolean;
-    types: {
-        // eslint-disable-next-line camelcase
-        derived_from: string;
-        version: string;
-        properties: {
-            description: string;
-            type: string;
-            default: unknown;
-            required: boolean;
-        };
-    };
+    types: DataTypes;
 }
 
 interface DataTypesButtonState {
@@ -121,7 +104,7 @@ interface DataTypesButtonState {
 }
 
 class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesButtonState> {
-    constructor(props) {
+    constructor(props: DataTypesButtonProps) {
         super(props);
 
         this.state = {
@@ -132,8 +115,8 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
         this.onClose = this.onClose.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+    shouldComponentUpdate(nextProps: DataTypesButtonProps, nextState: DataTypesButtonState) {
+        return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
     }
 
     onOpen() {
@@ -170,14 +153,14 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                     <Modal.Header>Data Types</Modal.Header>
 
                     <Modal.Content>
-                        {_.map(types, (typeObject, typeName) => (
+                        {map(types, (typeValue: Record<string, any>, typeName: string) => (
                             <DataType
                                 key={typeName}
                                 name={typeName}
-                                description={typeObject.description}
-                                derivedFrom={typeObject.derived_from}
-                                version={typeObject.version}
-                                properties={typeObject.properties}
+                                description={typeValue.description}
+                                derivedFrom={typeValue.derived_from}
+                                version={typeValue.version}
+                                properties={typeValue.properties}
                             />
                         ))}
                     </Modal.Content>

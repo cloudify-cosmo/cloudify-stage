@@ -8,7 +8,6 @@ export default function GenericInputField(props: ErrorAwareInputFieldProps & Rev
 
     return (
         <>
-            {/* @ts-ignore TODO(RD-5721) Remove this ignore once Form is fully migrated to TypeScript */}
             <Form.Json name={name} value={value} onChange={onChange} error={error} />
             <PositionedRevertToDefaultIcon {...props} />
         </>
