@@ -1,12 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import type { ReactNode, CSSProperties } from 'react';
+import { isEmpty } from 'lodash';
+import type { ResourceVisibilityProps } from 'cloudify-ui-components/typings/components/cloudify/visibility/ResourceVisibility/ResourceVisibility';
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
 import Consts from '../Consts';
 import { Grid, Header, ResourceVisibility } from '../../../components/basic';
 import { TextEllipsis } from '../../../components/shared';
+import type { Deployment } from './DeploymentDetails.types';
 
-function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
+interface DeploymentParameterProps {
+    name: ReactNode;
+    as?: string;
+    headerStyle?: CSSProperties;
+    subHeaderStyle?: CSSProperties;
+    value: ReactNode;
+}
+
+function DeploymentParameter({
+    name,
+    value = '',
+    as = 'h5',
+    headerStyle = {},
+    subHeaderStyle = {}
+}: DeploymentParameterProps) {
     return (
         <Header as={as} style={{ marginBlockStart: 0, ...headerStyle }}>
             {name}
@@ -15,20 +31,17 @@ function DeploymentParameter({ name, value, as, headerStyle, subHeaderStyle }) {
     );
 }
 
-DeploymentParameter.propTypes = {
-    name: PropTypes.node.isRequired,
-    as: PropTypes.string,
-    headerStyle: PropTypes.shape({}),
-    subHeaderStyle: PropTypes.shape({}),
-    value: PropTypes.node
-};
-
-DeploymentParameter.defaultProps = {
-    as: 'h5',
-    headerStyle: {},
-    subHeaderStyle: {},
-    value: ''
-};
+interface DeploymentDetailsProps {
+    deployment: Deployment;
+    instancesCount: number;
+    instancesStates: {
+        [key: string]: number;
+    };
+    onSetVisibility: ResourceVisibilityProps['onSetVisibility'];
+    big?: boolean;
+    customName?: ReactNode;
+    customActions?: ReactNode;
+}
 
 export default function DeploymentDetails({
     big,
@@ -38,9 +51,9 @@ export default function DeploymentDetails({
     instancesCount,
     instancesStates,
     onSetVisibility
-}) {
+}: DeploymentDetailsProps) {
     const showBlueprint = 'blueprint_id' in deployment;
-    const showSiteName = 'site_name' in deployment && !_.isEmpty(deployment.site_name);
+    const showSiteName = 'site_name' in deployment && !isEmpty(deployment.site_name);
     const showCreated = 'created_at' in deployment;
     const showUpdated = 'updated_at' in deployment && deployment.isUpdated;
     const showCreator = 'created_by' in deployment;
@@ -134,30 +147,3 @@ export default function DeploymentDetails({
         </Grid>
     );
 }
-
-DeploymentDetails.propTypes = {
-    deployment: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        display_name: PropTypes.string,
-        visibility: PropTypes.string.isRequired,
-        blueprint_id: PropTypes.string,
-        description: PropTypes.string,
-        site_name: PropTypes.string,
-        created_at: PropTypes.string,
-        updated_at: PropTypes.string,
-        created_by: PropTypes.string,
-        isUpdated: PropTypes.bool
-    }).isRequired,
-    instancesCount: PropTypes.number.isRequired,
-    instancesStates: PropTypes.objectOf(PropTypes.number).isRequired,
-    onSetVisibility: PropTypes.func.isRequired,
-    big: PropTypes.bool,
-    customName: PropTypes.node,
-    customActions: PropTypes.node
-};
-
-DeploymentDetails.defaultProps = {
-    big: false,
-    customName: null,
-    customActions: null
-};
