@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form } from 'cloudify-ui-components';
+import { Dropdown } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean } from '../../../../utils/hooks';
 import { filterEnvironments, mapFetchedEnvironments, useFetchTrigger } from './EnvironmentDropdown.utils';
@@ -95,7 +95,7 @@ const EnvironmentDropdown = ({
 
     return (
         <>
-            <Form.Dropdown
+            <Dropdown
                 name={name}
                 fluid
                 loading={isLoading}
@@ -108,7 +108,7 @@ const EnvironmentDropdown = ({
                 onSearchChange={handleSearchChange}
                 onBlur={resetSearch}
             >
-                <Form.Dropdown.Menu>
+                <Dropdown.Menu>
                     <EnvironmentDropdownList
                         environments={environmentList.suggestedEnvironments}
                         onItemClick={handleDropdownItemClick}
@@ -122,8 +122,8 @@ const EnvironmentDropdown = ({
                         activeEnvironmentId={value}
                         loading={isLoading}
                     />
-                </Form.Dropdown.Menu>
-            </Form.Dropdown>
+                </Dropdown.Menu>
+            </Dropdown>
             {/* NOTE: Purpose of this element is to have a way of forcing dropdown blur when necessery */}
             <span ref={blurForcingElementRef} />
         </>
