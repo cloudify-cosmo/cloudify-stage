@@ -3,7 +3,7 @@ import { map } from 'lodash';
 import styled from 'styled-components';
 import type { HTMLProps } from 'react';
 import type { StrictIconProps } from 'semantic-ui-react';
-import { Icon } from '../../../components/basic';
+import { Icon, Dropdown } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';
 import translateInputs from './utils/translateInputs';
 
@@ -13,6 +13,9 @@ const IconsContainer = styled.div`
     float: right;
     margin-right: 10px;
     margin-top: 7px;
+    .ui.dropdown > .dropdown.icon {
+        margin-left: 0;
+    }
 `;
 
 export type SortOrder = 'original' | 'ascending' | 'descending';
@@ -33,16 +36,24 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
 
     return (
         <IconsContainer>
-            {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
-                <Icon
-                    key={sortOrder}
-                    link
-                    size="large"
-                    color={selected === sortOrder ? 'blue' : undefined}
-                    onClick={() => onChange(sortOrder)}
-                    {...iconProps}
-                />
-            ))}
+            <Dropdown
+                trigger={<Icon name={sortOrderToIconPropsMap[selected].name} size="large" aria-label="Sort order" />}
+            >
+                <Dropdown.Menu>
+                    <Dropdown.Header>
+                        {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
+                            <Icon
+                                key={sortOrder}
+                                link
+                                size="big"
+                                color={selected === sortOrder ? 'blue' : undefined}
+                                onClick={() => onChange(sortOrder)}
+                                {...iconProps}
+                            />
+                        ))}
+                    </Dropdown.Header>
+                </Dropdown.Menu>
+            </Dropdown>
         </IconsContainer>
     );
 }
