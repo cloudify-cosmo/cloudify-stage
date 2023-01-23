@@ -33,16 +33,16 @@ const simplifyCapabilities = (capabilities: BlueprintRequirements['parent_capabi
     return capabilities.map(innerCapabilities => innerCapabilities[0]);
 };
 
-const isEnvironmentSuggested = (deployment: Environment, simplifiedCapabilities: string[]): boolean => {
-    const deploymentCapabilities = Object.keys(deployment.capabilities);
-    const isSuggestedDeployment = simplifiedCapabilities.every(
+const isEnvironmentSuggested = (environment: Environment, simplifiedCapabilities: string[]): boolean => {
+    const environmentCapabilities = Object.keys(environment.capabilities);
+    const isSuggested = simplifiedCapabilities.every(
         capability =>
-            !!deploymentCapabilities.find(
-                deploymentCapability => deploymentCapability.toUpperCase() === capability.toUpperCase()
+            !!environmentCapabilities.find(
+                environmentCapability => environmentCapability.toUpperCase() === capability.toUpperCase()
             )
     );
 
-    return isSuggestedDeployment;
+    return isSuggested;
 };
 
 export const filterEnvironments = (
