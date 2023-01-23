@@ -107,7 +107,7 @@ const EnvironmentDropdown = ({
                         loading={isLoading}
                     />
                     <EnvironmentDropdownItemList
-                        environments={environmentList.nonSuggestedEnvironments}
+                        environments={environmentList.notSuggestedEnvironments}
                         onItemClick={handleDropdownItemClick}
                         activeEnvironmentId={value}
                         loading={isLoading}

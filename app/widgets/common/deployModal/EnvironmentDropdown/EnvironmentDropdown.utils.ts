@@ -57,7 +57,7 @@ export const filterEnvironments = (
         if (isSuggestedOption) {
             filteredEnvironments.suggestedEnvironments.push(environment);
         } else {
-            filteredEnvironments.nonSuggestedEnvironments.push(environment);
+            filteredEnvironments.notSuggestedEnvironments.push(environment);
         }
 
         return filteredEnvironments;

@@ -15,5 +15,5 @@ export interface Environment {
 
 export type FilteredEnvironments = {
     suggestedEnvironments: Environment[];
-    nonSuggestedEnvironments: Environment[];
+    notSuggestedEnvironments: Environment[];
 };
