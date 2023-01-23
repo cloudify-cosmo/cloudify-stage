@@ -9,11 +9,11 @@ const translate = StageUtils.getT(
     'widgets.common.deployments.deployModal.inputs.deploymentIdToDeployOn.environmentList'
 );
 
-const DATA_STATE = {
-    LOADING: 'LOADING',
-    EMPTY_LIST: 'EMPTY_LIST',
-    ITEM_LIST: 'ITEM_LIST'
-} as const;
+enum DataState {
+    LOADING,
+    EMPTY_LIST,
+    ITEM_LIST
+}
 
 export interface EnvironmentDropdownItemListProps {
     environments: Environment[];
@@ -31,34 +31,34 @@ const EnvironmentDropdownItemList = ({
     loading
 }: EnvironmentDropdownItemListProps) => {
     const listTitle = isSuggestedList ? translate('title.suggested') : translate('title.others');
-    const dataState = useMemo<keyof typeof DATA_STATE>(() => {
+    const dataState = useMemo<DataState>(() => {
         if (loading) {
-            return DATA_STATE.LOADING;
+            return DataState.LOADING;
         }
 
         if (isEmpty(environments)) {
-            return DATA_STATE.EMPTY_LIST;
+            return DataState.EMPTY_LIST;
         }
 
-        return DATA_STATE.ITEM_LIST;
+        return DataState.ITEM_LIST;
     }, [environments, loading]);
 
     return (
         <>
             <Form.Dropdown.Header>{listTitle}</Form.Dropdown.Header>
 
-            {dataState === DATA_STATE.LOADING && (
+            {dataState === DataState.LOADING && (
                 <Form.Dropdown.Item disabled>
                     <Icon name="spinner" loading />
                     {translate('loading')}
                 </Form.Dropdown.Item>
             )}
 
-            {dataState === DATA_STATE.EMPTY_LIST && (
+            {dataState === DataState.EMPTY_LIST && (
                 <Form.Dropdown.Item disabled>{translate('noData')}</Form.Dropdown.Item>
             )}
 
-            {dataState === DATA_STATE.ITEM_LIST &&
+            {dataState === DataState.ITEM_LIST &&
                 environments.map(environment => {
                     return (
                         <Form.Dropdown.Item
