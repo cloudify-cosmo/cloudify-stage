@@ -66,7 +66,7 @@ describe('Blueprints widget', () => {
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).should('not.exist');
         });
 
-        describe.only('should allow to deploy the blueprint', () => {
+        describe('should allow to deploy the blueprint', () => {
             it('when deployOn value is not required', () => {
                 getBlueprintRow(emptyBlueprintName).find('.rocket').click();
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form } from 'cloudify-ui-components';
 import type { DropdownProps } from 'semantic-ui-react';
-import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import { useBoolean } from '../../../../utils/hooks';
 import { filterEnvironments, mapFetchedEnvironments, useFetchTrigger } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
@@ -14,8 +13,8 @@ import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 
 interface EnvironmentDropdownProps {
     value?: string;
-    name: DynamicDropdownProps['name'];
-    placeholder: DynamicDropdownProps['placeholder'];
+    name: DropdownProps['name'];
+    placeholder: DropdownProps['placeholder'];
     onChange: (environmentId: string) => void;
     toolbox: Stage.Types.Toolbox;
     capabilitiesToMatch?: BlueprintRequirements['parent_capabilities'];
