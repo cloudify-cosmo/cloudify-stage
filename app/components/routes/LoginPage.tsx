@@ -52,6 +52,11 @@ const StyledInput = styled(Input)`
     }
 `;
 
+const StyledHeaderText = styled.div`
+    text-align: center;
+    margin-bottom: 30px;
+`;
+
 const t = StageUtils.getT('login');
 
 class LoginPage extends Component<LoginPageProps, LoginPageState> {
@@ -124,7 +129,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                 <div className={`loginContainer ${isHeaderTextPresent ? 'loginContainerExtended' : ''}`}>
                     <LargeLogo />
                     {isHeaderTextPresent && (
-                        <div style={{ textAlign: 'center', marginBottom: 30 }}>
+                        <StyledHeaderText>
                             {loginPageHeader && <LogoLabel color={loginPageHeaderColor} content={loginPageHeader} />}
                             {loginPageText && (
                                 <p
@@ -136,7 +141,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                     {loginPageText}
                                 </p>
                             )}
-                        </div>
+                        </StyledHeaderText>
                     )}
 
                     <Form onSubmit={this.onSubmit}>
@@ -171,7 +176,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                         />
 
                         {loginError && (
-                            <Message error style={{ display: 'block' }}>
+                            <Message error style={{ display: 'block', backgroundColor: '#fdeded', boxShadow: 'none' }}>
                                 {loginError}
                             </Message>
                         )}
