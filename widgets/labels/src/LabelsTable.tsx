@@ -1,11 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import type { Label } from 'app/widgets/common/labels/types';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
 
-export default function LabelsTable({ data, toolbox }) {
+type LabelsTableProps = {
+    data: {
+        deploymentId: string;
+        labels: Label[];
+    };
+    toolbox: Stage.Types.Toolbox;
+};
+export default function LabelsTable({ data, toolbox }: LabelsTableProps) {
     const { Button, DataTable, Icon } = Stage.Basic;
     const { Labels } = Stage.Common;
     const DeploymentActions = Stage.Common.Deployments.Actions;
@@ -13,9 +20,9 @@ export default function LabelsTable({ data, toolbox }) {
     const { i18n } = Stage;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
-    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState();
+    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState<Label | undefined>(undefined);
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
-    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState();
+    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState<Label | undefined>(undefined);
     const [labels, setLabels] = useState(data.labels);
 
     useRefreshEvent(toolbox, 'labels:refresh');
@@ -25,6 +32,7 @@ export default function LabelsTable({ data, toolbox }) {
     useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 
     function updateLabelValue() {
+        if (labelInEdit === undefined) return; // This can only happen in a synchronization error, since this callback is only in places guarded for undefined
         if (currentLabelValue === labelInEdit.value) {
             stopLabelEdit();
             return;
@@ -148,11 +156,3 @@ export default function LabelsTable({ data, toolbox }) {
         </>
     );
 }
-
-LabelsTable.propTypes = {
-    data: PropTypes.shape({
-        deploymentId: PropTypes.string.isRequired,
-        labels: PropTypes.arrayOf(PropTypes.object)
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

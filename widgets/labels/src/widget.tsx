@@ -1,10 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
+import { castArray } from 'lodash';
 import LabelsTable from './LabelsTable';
 import './widget.css';
 
 const { i18n } = Stage;
 
-Stage.defineWidget({
+Stage.defineWidget<{ deploymentId: string | null }, unknown, unknown>({
     id: 'labels',
     name: i18n.t('widgets.labels.name'),
     description: i18n.t('widgets.labels.description'),
@@ -18,13 +18,16 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
     // ensures data refetch on deploymentId change
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+
         return {
-            deploymentId: toolbox.getContext().getValue('deploymentId')
+            deploymentId
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const { deploymentId } = params;
         if (deploymentId) {
             const DeploymentActions = Stage.Common.Deployments.Actions;
@@ -33,8 +36,10 @@ Stage.defineWidget({
         return Promise.resolve([]);
     },
 
-    render(widget, data, error, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+    render(_widget, data, _error, toolbox) {
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+
         if (!deploymentId) {
             const { Message } = Stage.Basic;
             return <Message info>{i18n.t('widgets.labels.noDeployment')}</Message>;

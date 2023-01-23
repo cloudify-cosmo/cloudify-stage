@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
-export default function AddLabelsModal(props) {
+import type { LabelsModalProps } from 'app/widgets/common/labels/LabelsModal';
+
+export default function AddLabelsModal(props: Omit<LabelsModalProps, 'i18nHeaderKey' | 'i18nApplyKey'>) {
     const { Modal } = Stage.Common.Labels;
     return (
         <Modal
