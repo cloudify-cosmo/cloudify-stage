@@ -45,7 +45,7 @@
                           "width": 12,
                           "height": 16,
                           "definition": "outputs",
-                          "configuration": {},
+                          "configuration": { "pollingTime": 10, "showCapabilities": true },
                           "drillDownPages": {},
                           "maximized": false
                         },
