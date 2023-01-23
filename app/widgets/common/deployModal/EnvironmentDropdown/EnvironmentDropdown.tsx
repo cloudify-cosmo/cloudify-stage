@@ -7,8 +7,8 @@ import SearchActions from '../../actions/SearchActions';
 import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
-import EnvironmentDropdownList from './EnvironmentDropdownList';
-import type { EnvironmentDropdownListProps } from './EnvironmentDropdownList';
+import EnvironmentDropdownItemList from './EnvironmentDropdownItemList';
+import type { EnvironmentDropdownItemListProps } from './EnvironmentDropdownItemList';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
 
 interface EnvironmentDropdownProps {
@@ -77,7 +77,7 @@ const EnvironmentDropdown = ({
             });
     };
 
-    const handleDropdownItemClick: EnvironmentDropdownListProps['onItemClick'] = environment => {
+    const handleDropdownItemClick: EnvironmentDropdownItemListProps['onItemClick'] = environment => {
         setSelectedEnvironment(environment);
         onChange(environment.id);
         forceDropdownBlur();
@@ -109,14 +109,14 @@ const EnvironmentDropdown = ({
                 onBlur={resetSearch}
             >
                 <Dropdown.Menu>
-                    <EnvironmentDropdownList
+                    <EnvironmentDropdownItemList
                         environments={environmentList.suggestedEnvironments}
                         onItemClick={handleDropdownItemClick}
                         activeEnvironmentId={value}
                         isSuggestedList
                         loading={isLoading}
                     />
-                    <EnvironmentDropdownList
+                    <EnvironmentDropdownItemList
                         environments={environmentList.nonSuggestedEnvironments}
                         onItemClick={handleDropdownItemClick}
                         activeEnvironmentId={value}

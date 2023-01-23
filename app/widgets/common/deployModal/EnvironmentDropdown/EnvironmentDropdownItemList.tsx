@@ -15,7 +15,7 @@ const DATA_STATE = {
     ITEM_LIST: 'ITEM_LIST'
 } as const;
 
-export interface EnvironmentDropdownListProps {
+export interface EnvironmentDropdownItemListProps {
     environments: Environment[];
     onItemClick: (environment: Environment) => void;
     activeEnvironmentId?: string;
@@ -23,13 +23,13 @@ export interface EnvironmentDropdownListProps {
     loading?: boolean;
 }
 
-const EnvironmentDropdownList = ({
+const EnvironmentDropdownItemList = ({
     environments,
     onItemClick,
     activeEnvironmentId,
     isSuggestedList,
     loading
-}: EnvironmentDropdownListProps) => {
+}: EnvironmentDropdownItemListProps) => {
     const listTitle = isSuggestedList ? translate('title.suggested') : translate('title.others');
     const dataState = useMemo<keyof typeof DATA_STATE>(() => {
         if (loading) {
@@ -74,4 +74,4 @@ const EnvironmentDropdownList = ({
     );
 };
 
-export default EnvironmentDropdownList;
+export default EnvironmentDropdownItemList;
