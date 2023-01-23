@@ -1,5 +1,5 @@
 import { isEmpty } from 'lodash';
-import type { FileInputProps } from 'cloudify-ui-components/typings/components/form/FileInput/FileInput';
+import type { FileInputProps } from 'cloudify-ui-components';
 import { useState } from 'react';
 import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
 

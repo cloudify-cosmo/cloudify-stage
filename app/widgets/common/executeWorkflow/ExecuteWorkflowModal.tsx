@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
+import type { DateInputProps } from 'cloudify-ui-components';
 import FileActions from '../actions/FileActions';
 import DeploymentActions from '../deployments/DeploymentActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';

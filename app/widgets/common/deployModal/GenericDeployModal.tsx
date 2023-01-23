@@ -1,10 +1,11 @@
 import type { ChangeEvent, SyntheticEvent } from 'react';
 import React from 'react';
 import type { AccordionTitleProps, CheckboxProps } from 'semantic-ui-react';
-import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
-import { compact, mapValues, noop, isEmpty } from 'lodash';
+import type { DateInputProps } from 'cloudify-ui-components';
+import { compact, isEmpty, mapValues, noop } from 'lodash';
 import i18n from 'i18next';
 import FileActions from '../actions/FileActions';
+import type { BlueprintDeployParams, FullBlueprintData } from '../blueprints/BlueprintActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import Consts from '../Consts';
@@ -22,7 +23,6 @@ import type {
 } from '../executeWorkflow';
 import { executeWorkflow, ExecuteWorkflowInputs } from '../executeWorkflow';
 import type { DropdownValue, Field } from '../types';
-import type { BlueprintDeployParams, FullBlueprintData } from '../blueprints/BlueprintActions';
 import type { Label } from '../labels/types';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
 import getUpdatedInputs from '../inputs/utils/getUpdatedInputs';
