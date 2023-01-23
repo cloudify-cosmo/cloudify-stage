@@ -30,8 +30,7 @@ describe('User configuration', () => {
     describe('allows to customize Login page', () => {
         before(() => {
             mockConfigResponse();
-            cy.intercept('GET', '/console/auth/first-login', { body: true });
-            cy.visit('/console/login');
+            cy.visit('/console');
             cy.get('.loginContainer').should('be.visible');
         });
 
