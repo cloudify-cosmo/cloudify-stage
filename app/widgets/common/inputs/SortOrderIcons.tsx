@@ -37,7 +37,13 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
     return (
         <IconsContainer>
             <Dropdown
-                trigger={<Icon name={sortOrderToIconPropsMap[selected].name} size="large" aria-label="Sort order" />}
+                trigger={
+                    <Icon
+                        name={sortOrderToIconPropsMap[selected].name}
+                        size="large"
+                        aria-label={translate('dropdownLabel')}
+                    />
+                }
             >
                 <Dropdown.Menu>
                     <Dropdown.Header>

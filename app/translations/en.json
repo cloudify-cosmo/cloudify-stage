@@ -823,6 +823,7 @@
                         "title": "Show Data Types"
                     },
                     "sortOrder": {
+                        "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
