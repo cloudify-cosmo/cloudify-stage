@@ -4,12 +4,12 @@ import type { DropdownProps } from 'semantic-ui-react';
 import { useBoolean } from '../../../../utils/hooks';
 import { filterEnvironments, mapFetchedEnvironments, useFetchTrigger } from './EnvironmentDropdown.utils';
 import SearchActions from '../../actions/SearchActions';
-import { FilterRuleOperators, FilterRuleType } from '../../filters/types';
 import type { BlueprintRequirements } from '../../blueprints/BlueprintActions';
 import type { Environment, FilteredEnvironments } from './EnvironmentDropdown.types';
 import EnvironmentDropdownItemList from './EnvironmentDropdownItemList';
 import type { EnvironmentDropdownItemListProps } from './EnvironmentDropdownItemList';
 import { defaultEnvironmentList } from './EnvironmentDropdown.consts';
+import { deploymentTypeFilterRule } from '../../deploymentsView/detailsPane/drilldownButtons/SubdeploymentDrilldownButton.consts';
 
 interface EnvironmentDropdownProps {
     value?: string;
@@ -52,20 +52,10 @@ const EnvironmentDropdown = ({
         setLoading();
 
         searchActions
-            .doListAllDeployments(
-                [
-                    {
-                        key: 'csys-obj-type',
-                        values: ['environment'],
-                        type: FilterRuleType.Label,
-                        operator: FilterRuleOperators.AnyOf
-                    }
-                ],
-                {
-                    _include: 'id,display_name,capabilities',
-                    _search: searchQuery
-                }
-            )
+            .doListAllDeployments([deploymentTypeFilterRule.environments], {
+                _include: 'id,display_name,capabilities',
+                _search: searchQuery
+            })
             .then(data => {
                 const mappedEnvironments = mapFetchedEnvironments(data.items);
                 const filteredEnvironments = filterEnvironments(mappedEnvironments, capabilitiesToMatch);
