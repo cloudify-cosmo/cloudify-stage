@@ -8,7 +8,7 @@ describe('SamlStrategy', () => {
         (<jest.Mock>fs.readFileSync).mockImplementation(() => {
             throw Error();
         });
-        expect(samlStrategy).toThrowError('Could not read SAML certificate [saml.certPath]');
+        expect(samlStrategy).toThrowError('Could not read SAML certificate [auth.certPath]');
     });
     it('should return new passport Strategy', () => {
         (<jest.Mock>fs.readFileSync).mockReturnValue('cert content');
