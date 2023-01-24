@@ -1,14 +1,14 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import InputsHelpDescription from './InputsHelpDescription';
-import { Button, Popup } from '../../../components/basic';
+import { Icon, Popup } from '../../../components/basic';
 
 const InputsHelpIcon: FunctionComponent = () => {
     return (
         <Popup
             flowing
-            trigger={<Button icon="help" floated="right" />}
-            header="Value type"
+            trigger={<Icon className="rightFloated" name="help" color="blue" size="large" link />}
+            header="Value type" // TODO: Add translation support
             content={<InputsHelpDescription />}
         />
     );

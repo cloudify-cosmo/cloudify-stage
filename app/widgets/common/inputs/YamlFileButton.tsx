@@ -1,6 +1,7 @@
-import type { FunctionComponent } from 'react';
+import type { ButtonHTMLAttributes, FunctionComponent } from 'react';
 import React from 'react';
 import type { StrictButtonProps } from 'semantic-ui-react';
+import styled from 'styled-components';
 import { Form } from '../../../components/basic';
 
 export interface Props {
@@ -10,18 +11,41 @@ export interface Props {
     iconButton?: boolean;
 }
 
+const SimpleFileButton = styled(Form.File)`
+    && {
+        box-shadow: 'none';
+        background: 'none';
+        padding: 0;
+    }
+`;
+
 const YamlFileButton: FunctionComponent<Props> = ({
     dataType = 'values',
     fileLoading = false,
     onChange = _.noop,
     iconButton = false
 }) => {
+    /*
+    box-shadow: none !important;
+    background: none !important;
+    padding: 0;
+     */
     const openButtonParams: StrictButtonProps = iconButton
-        ? { floated: 'right' }
-        : { floated: 'right', content: 'Load Values', labelPosition: 'left' };
+        ? {
+              floated: 'right',
+              color: 'blue',
+              size: 'large',
+              basic: true
+          }
+        : {
+              floated: 'right',
+              color: 'blue',
+              content: 'Load Values',
+              labelPosition: 'left'
+          };
 
     return (
-        <Form.File
+        <SimpleFileButton
             name="yamlFile"
             showInput={false}
             showReset={false}

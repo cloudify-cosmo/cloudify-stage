@@ -5,7 +5,7 @@ import getTemplateForDataType from './utils/getTemplateForDataType';
 import ParameterValue from '../components/parameter/ParameterValue';
 import StageUtils from '../../../utils/stageUtils';
 import { AnyData } from '../../../utils/props';
-import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
+import { Button, CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
 
 const PropertiesPropType = PropTypes.objectOf(
@@ -154,7 +154,17 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
                 {iconButton ? (
                     <Popup
                         content={buttonTitle}
-                        trigger={<Button icon="code" onClick={this.onOpen} floated="right" aria-label={buttonTitle} />}
+                        trigger={
+                            <Icon
+                                name="code"
+                                onClick={this.onOpen}
+                                color="blue"
+                                size="large"
+                                link
+                                className="rightFloated"
+                                aria-label={buttonTitle}
+                            />
+                        }
                     />
                 ) : (
                     <Button
