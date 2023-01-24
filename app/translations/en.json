@@ -1,5 +1,4 @@
 {
-    "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
         "pluginsCatalog": "https://marketplace.cloudify.co/plugins/catalog"
@@ -225,6 +224,16 @@
             }
         }
     },
+    "errors": {
+        "header": "Error occurred",
+        "managerData": "Error fetching data from the manager, cannot load page",
+        "licenseExpired": "License has expired",
+        "noLicense": "No active license",
+        "noPages": "No pages available to display. Please try to reset application to the default settings.",
+        "noTenants": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account.",
+        "pageLoad": "Error initializing user data, cannot load page",
+        "unauthorized": "User not authorized"
+    },
     "help": {
         "about": "About",
         "aboutModal": {
@@ -238,7 +247,6 @@
         "documentation": "Documentation",
         "documentationLink": "https://docs.cloudify.co/{{version}}"
     },
-    "licenseExpired": "License has expired",
     "licenseManagement": {
         "action": {
             "activeLicense": "No action required.",
@@ -291,10 +299,6 @@
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
         },
-        "noTenants": {
-            "header": "User is not associated with any tenants.",
-            "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
-        },
         "password": "Password",
         "username": "Username",
         "submit": "LOGIN",
@@ -313,9 +317,6 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
-    "managerDataError": "Error getting data from the manager, cannot load page",
-    "noLicense": "No active license",
-    "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
         "header": "Page Not Found",
         "homepageLink": "Go to the Homepage",
@@ -325,7 +326,6 @@
         "description": "Page description",
         "emptyContainer": "This {{containerType}} is empty"
     },
-    "pageLoadError": "Error initializing user data, cannot load page",
     "pagesResetModal": {
         "confirm": "Are you sure you want to reset application screens to default?",
         "header": "Reset pages for tenants",
@@ -333,7 +333,7 @@
     },
     "pageTitle": "Cloudify Console",
     "productName": "Cloudify",
-    "redirecting": "Redirecting to {{url}}...",
+    "redirecting": "Redirecting to",
     "shared": {
         "executionStatus": {
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
@@ -531,6 +531,25 @@
     },
     "widgets": {
         "common": {
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                }
+            },
             "deployments": {
                 "actionsMenu": {
                     "install": "Install",
@@ -823,6 +842,7 @@
                         "title": "Show Data Types"
                     },
                     "sortOrder": {
+                        "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
@@ -1067,28 +1087,9 @@
             "name": "Button link",
             "description": "Opens provided URL",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button",
-                    "default": "green"
-                },
                 "fullHeight": {
                     "name": "Full height",
                     "description": "Should the button use full height reserved for the widget"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
-                    "default": "external"
-                },
-                "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
-                    "default": "Button Link"
                 },
                 "url": {
                     "name": "URL address",
@@ -1108,6 +1109,15 @@
                 "imageSrc": {
                     "name": "Image URL",
                     "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
+        },
+        "cloudButton": {
+            "name": "Setup cloud account button",
+            "description": "Displays button allowing to setup cloud account",
+            "configuration": {
+                "label": {
+                    "default": "Setup cloud account"
                 }
             }
         },
@@ -1717,22 +1727,10 @@
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create a service"
                 },
                 "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
                     "default": "add"
                 },
                 "defaultMarketplaceTab": {
@@ -1745,22 +1743,8 @@
             "name": "Create deployment button",
             "description": "Adds button to create new deployment",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create deployment"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
                     "name": "Blueprint label filter rules"
@@ -2006,6 +1990,25 @@
                     }
                 }
             },
+            "groupsModal": {
+                "header": "Edit user groups for {{name}}",
+                "form": {
+                    "groups": {
+                        "label": "Groups"
+                    }
+                }
+            },
+            "usersModal": {
+                "header": "Edit users for tenant {{name}}",
+                "form": {
+                    "users": {
+                        "label": "Users"
+                    }
+                },
+                "actions": {
+                    "save": "Save"
+                }
+            },
             "tenantsTable": {
                 "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
                 "columns": {
@@ -2018,6 +2021,16 @@
                 },
                 "deleteModal": {
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                },
+                "actionMenu": {
+                    "editUsers": "Edit users",
+                    "editGroups": "Edit user groups",
+                    "delete": "Delete"
+                },
+                "details": {
+                    "noUsers": "No users available",
+                    "noGroups": "No groups available",
+                    "popup": "The users assigned to this tenant, and the assigned roles. When the roles are inherited from a user group, the name of the user group is also shown, for example: viewer (Viewers)"
                 }
             }
         },
@@ -2180,7 +2193,83 @@
                 "restore": "Restore",
                 "download": "Download",
                 "delete": "Delete"
-            }
+            },
+            "uploadModal": {
+                "header": "Upload snapshot",
+                "actions": {
+                    "upload": "Upload"
+                },
+                "form": {
+                    "file": {
+                        "label": "Snapshot file",
+                        "placeholder": "Provide the snapshot's file URL or click browse to select a file"
+                    },
+                    "name": {
+                        "label": "Snapshot name"
+                    }
+                }
+            },
+            "createModal" : {
+                "header": "Create snapshot",
+                "actions": {
+                    "create": "Create"
+                },
+                "form": {
+                    "id": {
+                        "label": "Snapshot ID"
+                    },
+                    "includeCredentials": {
+                        "label": "Include credentials",
+                        "help": "Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot"
+                    },
+                    "excludeLogs": {
+                        "label": "Exclude logs",
+                        "help": "Exclude logs from the snapshot"
+                    },
+                    "excludeEvents": {
+                        "label": "Exclude events",
+                        "help": "Exclude events from the snapshot"
+                    },
+                    "queue": {
+                        "label": "Queue",
+                        "help": "Queue snapshot creation workflow and run automatically when possible"
+                    }
+                }
+            },
+            "restoreModal": {
+                "header": "Restore snapshot",
+                "actions": {
+                    "restore": "Restore"
+                },
+                "form": {
+                    "message": "When restoring from a tenant-less environment, make sure you uploaded the snapshot to a \"clean\" tenant that does not contain any other resources.",
+                    "tenantless": {
+                        "label": "Snapshot from a tenant-less environment"
+                    },
+                    "force": {
+                        "label": "Force restore even if manager is non-empty (it will delete all data)"
+                    },
+                    "ignoreFailure": {
+                        "label": "Ignore plugin failures",
+                        "help": "Ignore plugin installation failures and deployment environment creation failures due to missing plugins"
+                    }
+                }
+            },
+            "errors": {
+                "fileOrUrlMissing": "Please select snapshot file or url",
+                "urlInvalid": "Please provide valid URL for snapshot",
+                "idMissing": "Please provide snapshot ID"
+            },
+            "noData": "There are no Snapshots available. Click \"Create\" to create Snapshots.",
+            "confirmDelete": "Are you sure you want to remove this snapshot?",
+            "columns": {
+                "id": "Name",
+                "createdAt": "Created at",
+                "status": "Status",
+                "createdBy": "Creator"
+            },
+            "name": "Snapshots list",
+            "decription": "Snapshots list"
         },
         "managers": {
             "actions": {

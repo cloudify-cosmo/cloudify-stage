@@ -3,10 +3,10 @@ import { parse } from 'query-string';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
 import styled from 'styled-components';
-import type { ClientConfig } from 'backend/routes/Config.types';
 
+import type { ClientConfig } from 'backend/routes/Config.types';
+import SmartRedirect from './SmartRedirect';
 import { login } from '../../actions/manager/auth';
 import type { ReduxState } from '../../reducers';
 import renderMultilineText from '../../utils/shared/renderMultilineText';
@@ -16,16 +16,16 @@ import LargeLogo from '../sidebar/banner/LargeLogo';
 import LogoLabel from '../sidebar/banner/LogoLabel';
 import { Button, Form, FullScreenSegment, Input, Message, Popup } from '../basic';
 import type { ReduxThunkDispatch } from '../../configureStore';
+import Consts from '../../utils/consts';
 
 export interface LoginPageProps {
     isLoggingIn: boolean;
-    isSamlEnabled: ClientConfig['app']['saml']['enabled'];
     onLogin: (username: string, password: string, redirect?: string) => void;
     location: {
         search: string;
     };
     loginError: string | null;
-    samlSsoUrl: ClientConfig['app']['saml']['ssoUrl'];
+    loginPageUrl: ClientConfig['app']['auth']['loginPageUrl'];
     username: string;
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
@@ -50,6 +50,11 @@ const StyledInput = styled(Input)`
         box-shadow: 0 0 0 100px transparent inset !important;
         border-color: transparent !important;
     }
+`;
+
+const StyledHeaderText = styled.div`
+    text-align: center;
+    margin-bottom: 30px;
 `;
 
 const t = StageUtils.getT('login');
@@ -81,13 +86,8 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     onSubmit = () => {
         const { password, username } = this.state;
-        const { isSamlEnabled, location, onLogin, samlSsoUrl = '' } = this.props;
+        const { location, onLogin } = this.props;
         const errors: Errors = {};
-
-        if (isSamlEnabled) {
-            // eslint-disable-next-line xss/no-location-href-assign
-            window.location.href = samlSsoUrl;
-        }
 
         if (isEmpty(username)) {
             errors.username = t('error.noUsername');
@@ -113,8 +113,11 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     render() {
         const { errors, password, username, isFirstLogin } = this.state;
-        const { isLoggingIn, isSamlEnabled, loginError = null, whiteLabel } = this.props;
+        const { loginPageUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
+
+        const defaultLoginPageUrl = `${Consts.CONTEXT_PATH}${Consts.PAGE_PATH.LOGIN}`;
+        if (loginPageUrl !== defaultLoginPageUrl) return <SmartRedirect url={loginPageUrl} />;
 
         const loginPageHeader = t('header');
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
@@ -126,7 +129,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                 <div className={`loginContainer ${isHeaderTextPresent ? 'loginContainerExtended' : ''}`}>
                     <LargeLogo />
                     {isHeaderTextPresent && (
-                        <div style={{ textAlign: 'center', marginBottom: 30 }}>
+                        <StyledHeaderText>
                             {loginPageHeader && <LogoLabel color={loginPageHeaderColor} content={loginPageHeader} />}
                             {loginPageText && (
                                 <p
@@ -138,44 +141,42 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                     {loginPageText}
                                 </p>
                             )}
-                        </div>
+                        </StyledHeaderText>
                     )}
 
                     <Form onSubmit={this.onSubmit}>
-                        {!isSamlEnabled && (
-                            <Popup
-                                open={isFirstLogin}
-                                content={renderMultilineText(t('firstLoginHint'))}
-                                position="right center"
-                                style={{ marginLeft: -25 }}
-                                trigger={
-                                    <div>
-                                        <Form.Field required error={errors?.username}>
-                                            <StyledInput
-                                                name="username"
-                                                type="text"
-                                                placeholder={t('username')}
-                                                autoFocus
-                                                value={username}
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Field>
-                                        <Form.Field required error={errors?.password}>
-                                            <StyledInput
-                                                name="password"
-                                                type="password"
-                                                placeholder={t('password')}
-                                                value={password}
-                                                onChange={this.handleInputChange}
-                                            />
-                                        </Form.Field>
-                                    </div>
-                                }
-                            />
-                        )}
+                        <Popup
+                            open={isFirstLogin}
+                            content={renderMultilineText(t('firstLoginHint'))}
+                            position="right center"
+                            style={{ marginLeft: -25 }}
+                            trigger={
+                                <div>
+                                    <Form.Field required error={errors?.username}>
+                                        <StyledInput
+                                            name="username"
+                                            type="text"
+                                            placeholder={t('username')}
+                                            autoFocus
+                                            value={username}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                    <Form.Field required error={errors?.password}>
+                                        <StyledInput
+                                            name="password"
+                                            type="password"
+                                            placeholder={t('password')}
+                                            value={password}
+                                            onChange={this.handleInputChange}
+                                        />
+                                    </Form.Field>
+                                </div>
+                            }
+                        />
 
                         {loginError && (
-                            <Message error style={{ display: 'block' }}>
+                            <Message error style={{ display: 'block', backgroundColor: '#fdeded', boxShadow: 'none' }}>
                                 {loginError}
                             </Message>
                         )}
@@ -186,7 +187,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             color="yellow"
                             size="large"
                             type="submit"
-                            content={t(isSamlEnabled ? 'ssoSubmit' : 'submit')}
+                            content={t('submit')}
                         />
                     </Form>
                 </div>
@@ -199,12 +200,11 @@ const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
         username: manager.auth.username,
+        loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
         loginError: manager.auth.error,
         mode: get(config, 'mode'),
-        whiteLabel: get(config, 'app.whiteLabel'),
-        isSamlEnabled: get(config, 'app.saml.enabled', false),
-        samlSsoUrl: get(config, 'app.saml.ssoUrl', '')
+        whiteLabel: get(config, 'app.whiteLabel')
     };
 };
 

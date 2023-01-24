@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import React, { useEffect } from 'react';
+import LogoPage from './LogoPage';
 
 interface ExternalRedirectProps {
     url: string;
@@ -11,5 +12,9 @@ export default function ExternalRedirect({ url }: ExternalRedirectProps) {
         window.location.href = url;
     }, []);
 
-    return <section>{i18n.t('redirecting', { url })}</section>;
+    return (
+        <LogoPage>
+            {i18n.t('redirecting')} <a href={url}>{url}</a>...
+        </LogoPage>
+    );
 }

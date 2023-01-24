@@ -18,6 +18,7 @@ describe('WidgetHandler', () => {
             { id: 'blueprintUploadButton', isCustom: false },
             { id: 'blueprints', isCustom: false },
             { id: 'buttonLink', isCustom: false },
+            { id: 'cloudButton', isCustom: false },
             { id: 'cloudNum', isCustom: false },
             { id: 'composerLink', isCustom: false },
             { id: 'deploymentActionButtons', isCustom: false },
