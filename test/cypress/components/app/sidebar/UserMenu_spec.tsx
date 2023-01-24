@@ -5,7 +5,6 @@ import { noop } from 'lodash';
 import UserMenu from 'app/components/sidebar/UserMenu';
 import StageUtils from 'app/utils/stageUtils';
 import Consts from 'app/utils/consts';
-import Auth from 'app/utils/auth';
 import { emptyState } from 'app/reducers/managerReducer';
 import type { ManagerData } from 'app/reducers/managerReducer';
 import { mountWithProvider } from '../../utils';
@@ -114,8 +113,6 @@ describe('UserMenu', () => {
     });
 
     it('handles logout', () => {
-        const logout = cy.stub(Auth, 'logout');
-
         mountWithProvider(<UserMenu onModalOpen={noop} expanded onGroupClick={noop} />, {
             manager: getManagerData(),
             config: { mode: Consts.MODE_CUSTOMER }
@@ -123,6 +120,6 @@ describe('UserMenu', () => {
 
         cy.contains('Logout')
             .click()
-            .then(() => expect(logout).to.be.called);
+            .then(() => cy.location('pathname').should('be.equal', Consts.PAGE_PATH.LOGOUT));
     });
 });

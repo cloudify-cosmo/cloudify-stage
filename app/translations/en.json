@@ -1,5 +1,4 @@
 {
-    "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
         "pluginsCatalog": "https://marketplace.cloudify.co/plugins/catalog"
@@ -225,6 +224,16 @@
             }
         }
     },
+    "errors": {
+        "header": "Error occurred",
+        "managerData": "Error fetching data from the manager, cannot load page",
+        "licenseExpired": "License has expired",
+        "noLicense": "No active license",
+        "noPages": "No pages available to display. Please try to reset application to the default settings.",
+        "noTenants": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account.",
+        "pageLoad": "Error initializing user data, cannot load page",
+        "unauthorized": "User not authorized"
+    },
     "help": {
         "about": "About",
         "aboutModal": {
@@ -238,7 +247,6 @@
         "documentation": "Documentation",
         "documentationLink": "https://docs.cloudify.co/{{version}}"
     },
-    "licenseExpired": "License has expired",
     "licenseManagement": {
         "action": {
             "activeLicense": "No action required.",
@@ -291,10 +299,6 @@
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
         },
-        "noTenants": {
-            "header": "User is not associated with any tenants.",
-            "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
-        },
         "password": "Password",
         "username": "Username",
         "submit": "LOGIN",
@@ -313,9 +317,6 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
-    "managerDataError": "Error getting data from the manager, cannot load page",
-    "noLicense": "No active license",
-    "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
         "header": "Page Not Found",
         "homepageLink": "Go to the Homepage",
@@ -325,7 +326,6 @@
         "description": "Page description",
         "emptyContainer": "This {{containerType}} is empty"
     },
-    "pageLoadError": "Error initializing user data, cannot load page",
     "pagesResetModal": {
         "confirm": "Are you sure you want to reset application screens to default?",
         "header": "Reset pages for tenants",
@@ -333,7 +333,7 @@
     },
     "pageTitle": "Cloudify Console",
     "productName": "Cloudify",
-    "redirecting": "Redirecting to {{url}}...",
+    "redirecting": "Redirecting to",
     "shared": {
         "executionStatus": {
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"

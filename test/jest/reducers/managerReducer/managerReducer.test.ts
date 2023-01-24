@@ -146,15 +146,11 @@ describe('(Reducer) Manager', () => {
         it('triggers actions', () => {
             const store = mockStore({});
 
-            return store.dispatch(logout('License expired')).then(() => {
+            return store.dispatch(logout()).then(() => {
                 const actualActions = store.getActions();
                 const expectedActions = [
                     { type: ActionType.CLEAR_CONTEXT },
-                    { type: ActionType.LOGOUT, payload: { error: 'License expired', receivedAt: Date.now() } },
-                    {
-                        type: '@@router/CALL_HISTORY_METHOD',
-                        payload: { args: ['/error'], method: 'push' }
-                    }
+                    { type: ActionType.LOGOUT, payload: { receivedAt: Date.now() } }
                 ];
 
                 expect(actualActions).toEqual(expectedActions);
@@ -164,7 +160,7 @@ describe('(Reducer) Manager', () => {
         it('resets state', () => {
             const store = createStoreAsMockStore(managerReducer);
 
-            return store.dispatch(logout('License expired')).then(() => {
+            return store.dispatch(logout()).then(() => {
                 expect(store.getState()).toEqual({
                     ...emptyState,
                     lastUpdated: Date.now()
