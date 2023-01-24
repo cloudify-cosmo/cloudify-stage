@@ -1,3 +1,4 @@
+import ButtonLink from './ButtonLink';
 import DeleteConfirm from './DeleteConfirm';
 import DynamicDropdown from './DynamicDropdown';
 import FeedbackMessages from './FeedbackMessages';
@@ -10,6 +11,7 @@ import Parameter from './parameter';
 
 export default {
     Accordion,
+    ButtonLink,
     DeleteConfirm,
     DynamicDropdown,
     FeedbackMessages,

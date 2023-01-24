@@ -531,6 +531,25 @@
     },
     "widgets": {
         "common": {
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                }
+            },
             "deployments": {
                 "actionsMenu": {
                     "install": "Install",
@@ -1067,28 +1086,9 @@
             "name": "Button link",
             "description": "Opens provided URL",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button",
-                    "default": "green"
-                },
                 "fullHeight": {
                     "name": "Full height",
                     "description": "Should the button use full height reserved for the widget"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
-                    "default": "external"
-                },
-                "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
-                    "default": "Button Link"
                 },
                 "url": {
                     "name": "URL address",
@@ -1108,6 +1108,15 @@
                 "imageSrc": {
                     "name": "Image URL",
                     "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
+        },
+        "cloudButton": {
+            "name": "Setup cloud account button",
+            "description": "Displays button allowing to setup cloud account",
+            "configuration": {
+                "label": {
+                    "default": "Setup cloud account"
                 }
             }
         },
@@ -1710,22 +1719,10 @@
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create a service"
                 },
                 "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
                     "default": "add"
                 },
                 "defaultMarketplaceTab": {
@@ -1738,22 +1735,8 @@
             "name": "Create deployment button",
             "description": "Adds button to create new deployment",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create deployment"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
                     "name": "Blueprint label filter rules"
