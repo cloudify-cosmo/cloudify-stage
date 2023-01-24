@@ -1,5 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
+import i18n from 'i18next';
 import styled from 'styled-components';
 import { Form } from '../../../components/basic';
 
@@ -34,7 +35,7 @@ const YamlFileButton: FunctionComponent<Props> = ({ dataType = 'values', fileLoa
                     }
                 }}
                 onChange={onChange}
-                help={`You can provide YAML file with ${dataType} to automatically fill in the form.`}
+                help={i18n.t('widgets.common.inputs.buttons.yamlFile.help', { dataType })}
                 loading={fileLoading}
                 disabled={fileLoading}
             />

@@ -849,11 +849,17 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
                         "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form."
                     }
                 },
                 "types": {
