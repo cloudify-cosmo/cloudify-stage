@@ -1,8 +1,6 @@
 import type { FunctionComponent } from 'react';
 import React, { useMemo } from 'react';
 import i18n from 'i18next';
-import type { FilterRule } from '../../../filters/types';
-import { FilterRuleOperators, FilterRuleType } from '../../../filters/types';
 import {
     filterRulesContextKey,
     i18nDrillDownPrefix,
@@ -15,6 +13,7 @@ import { shouldDisplaySubdeploymentButton, tDrillDownButtons } from './common';
 import DrilldownButton from './DrilldownButton';
 import type { LoadedSubdeploymentsResult, SubdeploymentsResult } from './subdeployments-result';
 import { Icon } from '../../../../../components/basic';
+import { deploymentTypeFilterRule } from './SubdeploymentDrilldownButton.consts';
 
 export interface SubdeploymentDrilldownButtonProps {
     type: 'environments' | 'services';
@@ -39,7 +38,7 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
     const drilldownToSubdeployments = () => {
         drillDown(
             subdeploymentsDrilldownTemplateName,
-            { [filterRulesContextKey]: [deploymentTypeRule[type]], [mapOpenContextKey]: mapOpen },
+            { [filterRulesContextKey]: [deploymentTypeFilterRule[type]], [mapOpenContextKey]: mapOpen },
             `${deploymentName} [${i18n.t(`${i18nDrillDownPrefix}.breadcrumbs.${type}`)}]`
         );
     };
@@ -59,19 +58,5 @@ const SubdeploymentDrilldownButton: FunctionComponent<SubdeploymentDrilldownButt
         </>
     );
 };
-export default SubdeploymentDrilldownButton;
 
-const deploymentTypeRule: Record<SubdeploymentDrilldownButtonProps['type'], FilterRule> = {
-    environments: {
-        type: FilterRuleType.Label,
-        key: 'csys-obj-type',
-        operator: FilterRuleOperators.AnyOf,
-        values: ['environment']
-    },
-    services: {
-        type: FilterRuleType.Label,
-        key: 'csys-obj-type',
-        operator: FilterRuleOperators.IsNot,
-        values: ['environment']
-    }
-};
+export default SubdeploymentDrilldownButton;
