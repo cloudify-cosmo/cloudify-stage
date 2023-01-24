@@ -1,11 +1,14 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { PaginatedResponse } from 'backend/types';
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { Snapshot } from './widget.types';
 import SnapshotsTable from './SnapshotsTable';
+import { translate } from './widget.common';
 
-Stage.defineWidget({
+// eslint-disable-next-line camelcase
+Stage.defineWidget<{ created_by?: string }, PaginatedResponse<Snapshot>, DataTableConfiguration>({
     id: 'snapshots',
-    name: 'Snapshots list',
-    description: 'Snapshots list',
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 4,
     initialHeight: 16,
     isReact: true,
@@ -20,30 +23,28 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
     fetchUrl: '[manager]/snapshots?_include=id,created_at,status,created_by,visibility[params]',
-    fetchParams: (widget, toolbox) =>
+    fetchParams: (_widget, toolbox) =>
         toolbox.getContext().getValue('onlyMyResources')
             ? { created_by: toolbox.getManager().getCurrentUsername() }
             : {},
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
             return <Loading />;
         }
 
-        const selectedSnapshot = toolbox.getContext().getValue('snapshotId');
         const formattedData = {
             ...data,
-            items: _.map(data.items, item => {
+            items: _.map(data?.items, item => {
                 return {
                     ...item,
-                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at), // 2016-07-20 09:10:53.103579
-                    isSelected: selectedSnapshot === item.id
+                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at) // 2016-07-20 09:10:53.103579
                 };
-            })
+            }),
+            total: _.get(data, 'metadata.pagination.total', 0)
         };
-        formattedData.total = _.get(data, 'metadata.pagination.total', 0);
 
         return <SnapshotsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }

@@ -1,14 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { Toolbox } from 'app/utils/StageAPI';
+import { noop } from 'lodash';
 import Actions from './actions';
+import { translate } from './widget.common';
 
-export default function UploadModal({ toolbox }) {
+const translateModal = Stage.Utils.composeT(translate, 'uploadModal');
+const translateError = Stage.Utils.composeT(translate, 'errors');
+
+export default function UploadModal({ toolbox }: { toolbox: Toolbox }) {
     const { useBoolean, useErrors, useOpen, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [snapshotId, setSnapshotId, clearSnapshotId] = useInput('');
-    const [snapshotFile, setSnapshotFile, clearSnapshotFile] = useInput(null);
+    const [snapshotFile, setSnapshotFile, clearSnapshotFile] = useInput<File | null>(null);
     const [snapshotUrl, setSnapshotUrl, clearSnapshotUrl] = useInput('');
     const [isOpen, doOpen, doClose] = useOpen(() => {
         unsetLoading();
@@ -19,18 +23,18 @@ export default function UploadModal({ toolbox }) {
     });
 
     function submitUpload() {
-        const validationErrors = {};
+        const validationErrors: Partial<Record<'snapshotUrl' | 'snapshotId', string>> = {};
 
         if (!snapshotFile) {
             if (_.isEmpty(snapshotUrl)) {
-                validationErrors.snapshotUrl = 'Please select snapshot file or url';
+                validationErrors.snapshotUrl = translateError('fileOrUrlMissing');
             } else if (!Stage.Utils.Url.isUrl(snapshotUrl)) {
-                validationErrors.snapshotUrl = 'Please provide valid URL for snapshot';
+                validationErrors.snapshotUrl = translateError('urlInvalid');
             }
         }
 
         if (_.isEmpty(snapshotId)) {
-            validationErrors.snapshotId = 'Please provide snapshot ID';
+            validationErrors.snapshotId = translateError('idMissing');
         }
 
         if (!_.isEmpty(validationErrors)) {
@@ -53,40 +57,40 @@ export default function UploadModal({ toolbox }) {
             .finally(unsetLoading);
     }
 
-    function onSnapshotFileChange(file) {
+    function onSnapshotFileChange(file?: File) {
         if (file) {
             setSnapshotUrl(file.name);
             setSnapshotFile(file);
         }
     }
 
-    function onSnapshotUrlChange(url) {
+    function onSnapshotUrlChange(url: string) {
         setSnapshotUrl(url);
         clearSnapshotFile();
     }
 
     const { ApproveButton, Button, CancelButton, Form, Icon, Modal } = Stage.Basic;
-    const uploadButton = <Button content="Upload" icon="upload" labelPosition="left" />;
+    const uploadButton = <Button content={translateModal('actions.upload')} icon="upload" labelPosition="left" />;
 
     return (
         <Modal trigger={uploadButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="upload" /> Upload snapshot
+                <Icon name="upload" /> {translateModal('header')}
             </Modal.Header>
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Snapshot file" required error={errors.snapshotUrl}>
+                    <Form.Field label={translateModal('form.file.label')} required error={errors.snapshotUrl}>
                         <Form.UrlOrFile
                             name="snapshot"
-                            value={snapshotUrl}
-                            placeholder="Provide the snapshot's file URL or click browse to select a file"
+                            placeholder={translateModal('form.file.placeholder')}
                             onChangeUrl={onSnapshotUrlChange}
                             onChangeFile={onSnapshotFileChange}
+                            onBlurUrl={noop}
                         />
                     </Form.Field>
 
-                    <Form.Field label="Snapshot name" required error={errors.snapshotId}>
+                    <Form.Field label={translateModal('form.name.label')} required error={errors.snapshotId}>
                         <Form.Input name="snapshotId" value={snapshotId} onChange={setSnapshotId} />
                     </Form.Field>
                 </Form>
@@ -94,10 +98,13 @@ export default function UploadModal({ toolbox }) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={submitUpload} disabled={isLoading} content="Upload" icon="upload" />
+                <ApproveButton
+                    onClick={submitUpload}
+                    disabled={isLoading}
+                    content={translateModal('actions.upload')}
+                    icon="upload"
+                />
             </Modal.Actions>
         </Modal>
     );
 }
-
-UploadModal.propTypes = { toolbox: Stage.PropTypes.Toolbox.isRequired };
