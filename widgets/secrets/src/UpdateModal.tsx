@@ -60,7 +60,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                             .then(({ value }) => {
                                 setSecretValue(value);
                             })
-                            .catch(err => setErrors({ error: err.message }));
+                            .catch(setMessageAsError);
                     }
 
                     if (isHidden) {
@@ -70,7 +70,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     }
                 }
             })
-            .catch(err => setErrors({ error: err.message }))
+            .catch(setMessageAsError)
             .finally(unsetLoading);
     });
 
@@ -113,14 +113,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
     }
 
     function onSecretProviderChange() {
-        // clearErrors();
-        if (errors.secretValue) {
-            setErrors({ ...errors, secretValue: null });
-        }
-        if (isEmpty(secretProviders)) {
-            setErrors({ ...errors, secretProviderCheckbox: translateForm('errors.validation.noProviders') });
-            return;
-        }
+        clearErrors();
         setUseSecretProvider(!useSecretProvider);
     }
 
