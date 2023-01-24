@@ -26,7 +26,7 @@ const app: Reducer<AppData, AppAction | LoginSuccessAction | LogoutAction> = (st
         case ActionType.LOGIN_SUCCESS:
             return { ...state, loading: true };
         case ActionType.LOGOUT:
-            return { ...state, error: action.payload.error, loading: false };
+            return { ...state, loading: false };
         default:
             return state;
     }

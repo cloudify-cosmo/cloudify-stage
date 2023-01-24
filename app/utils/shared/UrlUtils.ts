@@ -15,6 +15,10 @@ export default class UrlUtils {
         return Const.CONTEXT_PATH + (_.startsWith(path, '/') ? '' : '/') + path;
     }
 
+    static isLocalUrl(url: string) {
+        return url.startsWith(Const.CONTEXT_PATH);
+    }
+
     static isUrl(str: string) {
         // RegEx from: https://stackoverflow.com/questions/1410311/regular-expression-for-url-validation-in-javascript#15734347
         const regexp = /^(ftp|http|https):\/\/[^ "]+$/;

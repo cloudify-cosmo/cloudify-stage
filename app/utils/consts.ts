@@ -76,8 +76,6 @@ export default {
         DASHBOARD: '/page/dashboard',
         BLUEPRINTS: '/page/blueprints',
         ERROR_404: '/404',
-        ERROR_NO_TENANTS: '/noTenants',
-        ERROR: '/error',
         HOME: '/',
         LOGIN: '/login',
         EXTERNAL_LOGIN: EXTERNAL_LOGIN_PATH,

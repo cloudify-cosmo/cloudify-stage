@@ -24,8 +24,7 @@ export interface ClientConfig {
     app: {
         maintenancePollingInterval: AppConfig['maintenancePollingInterval'];
         whiteLabel: AppConfig['whiteLabel'];
-        useLoginPage: AppConfig['useLoginPage'];
-        saml: Omit<AppConfig['saml'], 'certPath'>;
+        auth: Omit<AppConfig['auth'], 'certPath'>;
         maps: typeof userConfig['maps'];
     };
     manager: {

@@ -38,10 +38,22 @@
                             "maximized": false
                         },
                         {
+                          "id": "3dae3d26-b510-4d32-9cbf-e901a1bf0f97",
+                          "name": "Deployment output/capabilities",
+                          "x": 0,
+                          "y": 24,
+                          "width": 12,
+                          "height": 16,
+                          "definition": "outputs",
+                          "configuration": { "pollingTime": 10, "showCapabilities": true },
+                          "drillDownPages": {},
+                          "maximized": false
+                        },
+                        {
                             "id": "d76caa9b-cd29-4165-a15d-4541af9586ce",
                             "name": "Events/Logs Filter",
                             "x": 0,
-                            "y": 24,
+                            "y": 40,
                             "width": 12,
                             "height": 5,
                             "definition": "eventsFilter",
@@ -53,7 +65,7 @@
                             "id": "e30874d3-38e4-4a1f-b09c-f5e7be42d0cd",
                             "name": "Deployment Events/Logs",
                             "x": 0,
-                            "y": 29,
+                            "y": 45,
                             "width": 12,
                             "height": 18,
                             "definition": "events",

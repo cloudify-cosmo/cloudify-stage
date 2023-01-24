@@ -6,8 +6,8 @@ import { parse } from 'query-string';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import type { RouteComponentProps } from 'react-router';
-import type { Dispatch } from 'redux';
-import { storeCurrentPageId, setAppError } from '../../actions/app';
+import type { ReduxThunkDispatch } from 'app/configureStore';
+import { storeCurrentPageId, showAppError } from '../../actions/app';
 import { clearContext, setValue } from '../../actions/context';
 import type { DrilldownContext } from '../../actions/drilldownContext';
 import { setDrilldownContext } from '../../actions/drilldownContext';
@@ -62,12 +62,7 @@ class Page extends Component<PageProps> {
         }
 
         if (emptyPages) {
-            navigateToError(
-                i18n.t(
-                    'noPages',
-                    'No pages available to display. Please try to reset application to the default settings.'
-                )
-            );
+            navigateToError(i18n.t('errors.noPages'));
         }
 
         if (!pageExists) {
@@ -133,7 +128,7 @@ const mapStateToProps = (state: ReduxState, ownProps: RouteComponentProps<{ page
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => {
+const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
         onClearContext: () => {
             dispatch(clearContext());
@@ -148,8 +143,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
             dispatch(push(Consts.PAGE_PATH.ERROR_404));
         },
         navigateToError: message => {
-            dispatch(setAppError(message));
-            dispatch(push(Consts.PAGE_PATH.ERROR));
+            dispatch(showAppError(message));
         },
         navigateToMaintenancePage: () => {
             dispatch(push(Consts.PAGE_PATH.MAINTENANCE));

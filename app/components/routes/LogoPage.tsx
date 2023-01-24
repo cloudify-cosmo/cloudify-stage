@@ -1,21 +1,14 @@
+import type { PropsWithChildren } from 'react';
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Consts from '../../utils/consts';
+import type { MessageContainerProps } from 'cloudify-ui-components/typings/components/elements/MessageContainer/MessageContainer';
+import { FullScreenSegment, Logo, MessageContainer } from '../basic';
+import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
 
-import { FullScreenSegment, Logo } from '../basic';
-import ErrorPage from './ErrorPage';
-import NoTenantsPage from './NoTenantsPage';
-import NotFoundPage from './NotFoundPage';
-
-export default function LogoPage() {
+export default function LogoPage({ children }: PropsWithChildren<MessageContainerProps['children']>) {
     return (
         <FullScreenSegment>
             <Logo />
-            <Switch>
-                <Route exact path={Consts.PAGE_PATH.ERROR} component={ErrorPage} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={NoTenantsPage} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={NotFoundPage} />
-            </Switch>
+            <MessageContainer onRender={SplashLoadingScreen.turnOff}>{children}</MessageContainer>
         </FullScreenSegment>
     );
 }

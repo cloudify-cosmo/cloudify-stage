@@ -61,17 +61,9 @@
                 {
                     "width": 3,
                     "height": 3,
-                    "definition": "buttonLink",
+                    "definition": "cloudButton",
                     "x": 0,
-                    "y": 0,
-                    "configuration": {
-                        "basic": false,
-                        "color": "blue",
-                        "icon": "wizard",
-                        "label": "Setup cloud account",
-                        "url": "?cloudSetup=true",
-                        "fullHeight": false
-                    }
+                    "y": 0
                 },
                 {
                     "width": 3,
@@ -80,10 +72,6 @@
                     "x": 3,
                     "y": 0,
                     "configuration": {
-                        "basic": false,
-                        "color": "blue",
-                        "icon": "add",
-                        "label": "Create a service",
                         "defaultMarketplaceTab": "AWS"
                     }
                 },
@@ -94,9 +82,6 @@
                     "x": 6,
                     "y": 0,
                     "configuration": {
-                        "basic": false,
-                        "color": "blue",
-                        "icon": "add",
                         "label": "Create Kubernetes cluster",
                         "defaultMarketplaceTab": "Kubernetes"
                     }
@@ -108,9 +93,6 @@
                     "x": 9,
                     "y": 0,
                     "configuration": {
-                        "basic": false,
-                        "color": "blue",
-                        "icon": "add",
                         "label": "Run Terraform module",
                         "defaultMarketplaceTab": "Terraform"
                     }
