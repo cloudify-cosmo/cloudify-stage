@@ -522,6 +522,9 @@ describe('Create Deployment modal handles deployment inputs', () => {
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(1000);
         }
+        function openSortOrderDropdown() {
+            cy.get('[aria-label="Sort order"]').click();
+        }
 
         const inputsLabelsInOriginalOrder = [
             'string_no_default',
@@ -540,14 +543,17 @@ describe('Create Deployment modal handles deployment inputs', () => {
         selectBlueprintInModal('string');
 
         cy.withinAccordionSection('Deployment Inputs', () => {
+            openSortOrderDropdown();
             cy.get('[title="Original order"]').click();
             waitForInputsLabelsToBeReordered();
             verifyInputsLabels(inputsLabelsInOriginalOrder);
 
+            openSortOrderDropdown();
             cy.get('[title="Ascending alphabetical order"]').click();
             waitForInputsLabelsToBeReordered();
             verifyInputsLabels(inputsLabelsInAscendingOrder);
 
+            openSortOrderDropdown();
             cy.get('[title="Descending alphabetical order"]').click();
             waitForInputsLabelsToBeReordered();
             verifyInputsLabels(inputsLabelsInDescendingOrder);

@@ -156,6 +156,9 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
             // eslint-disable-next-line cypress/no-unnecessary-waiting
             cy.wait(1000);
         }
+        function openSortOrderDropdown() {
+            cy.get('[aria-label="Sort order"]').click();
+        }
 
         const parametersLabelsInOriginalOrder = [
             'scaling_group_all',
@@ -167,15 +170,17 @@ describe('Deployment Action Buttons widget provides Execute Workflow modal and h
         const parametersLabelsInDescendingOrder = [...parametersLabelsInAscendingOrder].reverse();
 
         openWorkflowParametersModal('scaling_group');
-
+        openSortOrderDropdown();
         cy.get('[title="Original order"]').click();
         waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInOriginalOrder);
 
+        openSortOrderDropdown();
         cy.get('[title="Ascending alphabetical order"]').click();
         waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInAscendingOrder);
 
+        openSortOrderDropdown();
         cy.get('[title="Descending alphabetical order"]').click();
         waitForParametersLabelsToBeReordered();
         verifyParametersLabels(parametersLabelsInDescendingOrder);
