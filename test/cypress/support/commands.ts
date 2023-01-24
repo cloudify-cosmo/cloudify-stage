@@ -12,7 +12,7 @@ import type { ManagerData } from 'app/reducers/managerReducer';
 import emptyState from 'app/reducers/managerReducer/emptyState';
 import Consts from 'app/utils/consts';
 import type { Mode } from 'backend/serverSettings';
-import type { GetAuthUserResponse } from 'backend/routes/Auth.types';
+import type { AuthUserResponse } from 'backend/routes/Auth.types';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 import 'cypress-file-upload';
@@ -47,7 +47,7 @@ const getCommonHeaders = () => ({
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.interceptWithoutCaching<GetAuthUserResponse>('/console/auth/user', authUserResponse => {
+    cy.interceptWithoutCaching<AuthUserResponse>('/console/auth/user', authUserResponse => {
         const responseBody = {
             ...authUserResponse,
             showGettingStarted: modalEnabled
