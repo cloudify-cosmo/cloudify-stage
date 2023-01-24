@@ -1,5 +1,4 @@
-import type { ButtonLinkProps } from './ButtonLink';
-import ButtonLink from './ButtonLink';
+import type { ButtonLinkProps } from '../../../app/widgets/common/components/ButtonLink';
 
 type ButtonLinkWidgetConfiguration = ButtonLinkProps;
 
@@ -30,29 +29,7 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
             default: t('configuration.label.default'),
             type: Stage.Basic.GenericField.STRING_TYPE
         },
-        {
-            id: 'color',
-            name: t('configuration.color.name'),
-            description: t('configuration.color.description'),
-            default: t('configuration.color.default'),
-            component: Stage.Common.Components.SemanticColorDropdown,
-            type: Stage.Basic.GenericField.CUSTOM_TYPE
-        },
-        {
-            id: 'icon',
-            name: t('configuration.icon.name'),
-            description: t('configuration.icon.description'),
-            default: t('configuration.icon.default'),
-            component: Stage.Shared.SemanticIconDropdown,
-            type: Stage.Basic.GenericField.CUSTOM_TYPE
-        },
-        {
-            id: 'basic',
-            name: t('configuration.basic.name'),
-            description: t('configuration.basic.description'),
-            default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
-        },
+        ...Stage.Common.Configuration.Button.getInitialConfiguration(),
         {
             id: 'fullHeight',
             name: t('configuration.fullHeight.name'),
@@ -65,6 +42,7 @@ Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
 
     render(widget) {
+        const { ButtonLink } = Stage.Common.Components;
         const { basic, color, fullHeight, icon, label, url } = widget.configuration;
 
         return <ButtonLink basic={basic} color={color} label={label} icon={icon} fullHeight={fullHeight} url={url} />;
