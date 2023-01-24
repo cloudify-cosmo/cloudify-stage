@@ -7,7 +7,7 @@ Displays the following information about a specific agent:
 * **Node** - Node ID associated with agent
 * **System** - agent host operation system
 * **Version** - agent version
-* **Install method** - agent installation method (described [here](/install_maintain/agents/installation))
+* **Install method** - agent installation method (described [here](/cloudify_manager/agents/installation))
 
 ![agents-management]( /images/ui/widgets/agents-management.png )
 
