@@ -7,7 +7,7 @@ import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
 import { createPagesFromTemplate, createPagesMap } from './pageMenu';
 import type { SetAppErrorAction, SetAppLoadingAction } from './app';
-import { setAppError, setAppLoading } from './app';
+import { setAppLoading, showAppError } from './app';
 import Internal from '../utils/Internal';
 import Consts from '../utils/consts';
 import UserAppDataAutoSaver from '../utils/UserAppDataAutoSaver';
@@ -43,8 +43,7 @@ export function resetPages(): ReduxThunkAction<
                 });
             })
             .catch(err => {
-                dispatch(setAppError(err.message));
-                dispatch(push(Consts.PAGE_PATH.ERROR));
+                dispatch(showAppError(err.message));
                 throw err;
             })
             .finally(() => {

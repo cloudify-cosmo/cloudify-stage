@@ -19,7 +19,7 @@ type BlueprintSecret = string | Record<string, unknown>;
 
 export interface BlueprintRequirements {
     /* eslint-disable-next-line camelcase */
-    parent_capabilities: string[];
+    parent_capabilities: string[][];
     secrets: BlueprintSecret[];
 }
 

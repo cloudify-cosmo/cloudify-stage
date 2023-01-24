@@ -2,8 +2,6 @@ import { push } from 'connected-react-router';
 import type { CallHistoryMethodAction } from 'connected-react-router';
 import type { PayloadAction, ReduxThunkAction } from './types';
 import { ActionType } from './types';
-import type { ClearContextAction } from './context';
-import { clearContext } from './context';
 import Consts from '../utils/consts';
 
 export type SetAppLoadingAction = PayloadAction<boolean, ActionType.SET_APP_LOADING>;
@@ -33,12 +31,9 @@ export function setAppError(error: string | null): SetAppErrorAction {
     };
 }
 
-export function showAppError(
-    error: string
-): ReduxThunkAction<void, ClearContextAction | SetAppErrorAction | CallHistoryMethodAction> {
+export function showAppError(error: string): ReduxThunkAction<void, SetAppErrorAction | CallHistoryMethodAction> {
     return dispatch => {
-        dispatch(clearContext());
         dispatch(setAppError(error));
-        dispatch(push(Consts.PAGE_PATH.ERROR));
+        dispatch(push(Consts.PAGE_PATH.LOGOUT));
     };
 }

@@ -132,5 +132,5 @@ See Settings section for details on how to turn on/off this feature.
 * `Enable click to drill down` - Enables redirecting to the blueprint’s drill-down page upon clicking on a specific blueprint. Default: Yes
 * `Display style` - Defines how the blueprints list should be displayed. Can be either Catalog or Table. Default: Table
 * `Hide failed blueprints` - Allows to hide blueprints not uploaded successfully. Default: Off
-* `Show Composer options` - Allows to show {{< param cfy_composer_name >}} options in menu and in the blueprints list. Default: No
+* `Show Composer options` - Allows to show {{< param cfy_composer_name >}} options in menu and in the blueprints list. Default: On
 * `Label filter rules` - Allows to define blueprint labels' filter rules. See [blueprint filters](/cli/orch_cli/blueprints#blueprint-filters) for more details. Default: empty

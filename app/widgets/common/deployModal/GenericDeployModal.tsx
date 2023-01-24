@@ -31,14 +31,12 @@ import getInputsInitialValues from '../inputs/utils/getInputsInitialValues';
 import { addErrors } from '../inputs/utils/errors';
 import getInputsWithoutValues from '../inputs/utils/getInputsWithoutValues';
 import type { FilterRule } from '../filters/types';
-import type { ListDeploymentsParams } from '../actions/SearchActions';
 import { parentDeploymentLabelKey } from '../deploymentsView/common';
-import { deployOnTextFormatter } from './GenericDeployModal.utils';
 import StageUtils from '../../../utils/stageUtils';
 import { Accordion, Form, Icon, LoadingOverlay, Message, Modal, VisibilityField } from '../../../components/basic';
+import EnvironmentDropdown from './EnvironmentDropdown';
 
 const t = StageUtils.getT('widgets.common.deployments.deployModal');
-const deploymentSearchParams: (keyof ListDeploymentsParams)[] = ['_search', '_search_name'];
 
 type Blueprint = {
     description?: string;
@@ -204,7 +202,7 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
     // eslint-disable-next-line react/static-property-placement
     static defaultProps = defaultProps;
 
-    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } } };
+    static EMPTY_BLUEPRINT = { id: '', plan: { inputs: {}, workflows: { install: {} } }, requirements: {} };
 
     static DEPLOYMENT_SECTIONS = {
         deploymentInputs: 0,
@@ -759,17 +757,15 @@ class GenericDeployModal extends React.Component<GenericDeployModalProps, Generi
                                 label={t('inputs.deploymentIdToDeployOn.label')}
                                 required
                             >
-                                <DynamicDropdown
+                                <EnvironmentDropdown
                                     value={deploymentIdToDeployOn}
                                     name="deploymentIdToDeployOn"
-                                    fetchUrl="/deployments?_include=id,display_name"
                                     placeholder={t('inputs.deploymentIdToDeployOn.placeholder')}
-                                    searchParams={deploymentSearchParams}
-                                    clearable={false}
                                     onChange={value => this.setState({ deploymentIdToDeployOn: value as string })}
-                                    textFormatter={deployOnTextFormatter}
                                     toolbox={toolbox}
-                                    prefetch
+                                    capabilitiesToMatch={
+                                        (blueprint as FullBlueprintData).requirements?.parent_capabilities
+                                    }
                                 />
                             </Form.Field>
                         )}

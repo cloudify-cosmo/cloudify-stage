@@ -10,18 +10,19 @@ import {
 } from 'handler/AuthHandler';
 import { getConfig } from 'config';
 import { CONTEXT_PATH, EXTERNAL_LOGIN_PATH } from '../../consts';
+import type { AppConfig } from '../../routes/Config.types';
 
 jest.mock('handler/AuthHandler');
 jest.mock('handler/ManagerHandler');
 jest.mock('config', () => ({ getConfig: jest.fn(jest.requireActual('config').getConfig) }));
 
 function mockSamlConfig() {
-    const samlConfig = {
+    const samlConfig: { app: Partial<AppConfig> } = {
         app: {
-            saml: {
-                enabled: true,
-                ssoUrl: 'http://sso.url',
-                portalUrl: 'http://portal.url',
+            auth: {
+                type: 'saml',
+                loginPageUrl: 'http://sso.url',
+                afterLogoutUrl: 'http://portal.url',
                 certPath: 'package.json'
             }
         }
