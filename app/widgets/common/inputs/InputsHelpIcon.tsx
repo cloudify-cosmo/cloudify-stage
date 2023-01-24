@@ -7,7 +7,7 @@ const InputsHelpIcon: FunctionComponent = () => {
     return (
         <Popup
             flowing
-            trigger={<Icon className="rightFloated" name="help" color="blue" size="large" link />}
+            trigger={<Icon name="help" color="blue" size="large" link />}
             header="Value type" // TODO: Add translation support
             content={<InputsHelpDescription />}
         />

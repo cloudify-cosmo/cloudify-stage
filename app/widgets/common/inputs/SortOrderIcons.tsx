@@ -10,9 +10,9 @@ import translateInputs from './utils/translateInputs';
 const translate = StageUtils.composeT(translateInputs, 'buttons.sortOrder');
 
 const DropdownContainer = styled.div`
-    float: right;
-    //margin-right: 10px;
-    //margin-top: 7px;
+    .ui.dropdown > i {
+        margin-right: 0;
+    }
     .ui.dropdown > .dropdown.icon {
         margin-left: 0;
     }
@@ -46,7 +46,7 @@ export default function SortOrderIcons({ onChange, selected }: SortOrderIconsPro
                     />
                 }
             >
-                <Dropdown.Menu>
+                <Dropdown.Menu direction="left">
                     <Dropdown.Header>
                         {map(sortOrderToIconPropsMap, (iconProps: SortOrderIconProps, sortOrder: SortOrder) => (
                             <Icon

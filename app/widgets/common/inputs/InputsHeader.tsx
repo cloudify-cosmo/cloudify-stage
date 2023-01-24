@@ -4,7 +4,6 @@ import { Form, Header, PopupHelp } from '../../../components/basic';
 import InputsHelpDescription from './InputsHelpDescription';
 
 export interface InputsHeaderProps {
-    iconButton?: boolean;
     compact?: boolean;
     dividing?: boolean;
     header?: string;

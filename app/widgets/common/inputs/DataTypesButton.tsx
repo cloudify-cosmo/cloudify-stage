@@ -102,7 +102,6 @@ DataType.defaultProps = {
 };
 
 interface DataTypesButtonProps {
-    iconButton?: boolean;
     types: {
         // eslint-disable-next-line camelcase
         derived_from: string;
@@ -145,36 +144,25 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
     }
 
     render() {
-        const { types, iconButton } = this.props;
+        const { types } = this.props;
         const { open } = this.state;
         const buttonTitle = translateInputs('buttons.dataTypes.title');
 
         return (
             <div>
-                {iconButton ? (
-                    <Popup
-                        content={buttonTitle}
-                        trigger={
-                            <Icon
-                                name="code"
-                                onClick={this.onOpen}
-                                color="blue"
-                                size="large"
-                                link
-                                className="rightFloated"
-                                aria-label={buttonTitle}
-                            />
-                        }
-                    />
-                ) : (
-                    <Button
-                        icon="code"
-                        content={buttonTitle}
-                        onClick={this.onOpen}
-                        floated="right"
-                        labelPosition="left"
-                    />
-                )}
+                <Popup
+                    content={buttonTitle}
+                    trigger={
+                        <Icon
+                            name="code"
+                            onClick={this.onOpen}
+                            color="blue"
+                            size="large"
+                            link
+                            aria-label={buttonTitle}
+                        />
+                    }
+                />
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
