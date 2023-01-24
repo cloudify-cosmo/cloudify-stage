@@ -1,26 +1,93 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
+import { isEmpty, isNil, includes, noop } from 'lodash';
+import type { UrlOrFileInputProps } from 'cloudify-ui-components/typings/components/form/UrlOrFileInput/UrlOrFileInput';
 import Consts from '../Consts';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import BlueprintActions from './BlueprintActions';
 import UploadBlueprintBasicForm from './UploadBlueprintBasicForm';
+import type { UploadBlueprintBasicFormProps } from './UploadBlueprintBasicForm';
 import StageUtils from '../../../utils/stageUtils';
 import { Form } from '../../../components/basic';
 
 const t = StageUtils.getT('widgets.common.blueprintUpload.inputs');
 
-export default class UploadBlueprintForm extends React.Component {
-    static initialState = {
-        loading: false,
-        yamlFiles: []
+interface UploadBlueprintFormProps {
+    blueprintUrl?: string;
+    blueprintFile?: File | null;
+    blueprintName?: string;
+    blueprintYamlFile?: string;
+    imageUrl?: string;
+    imageFile?: File | null;
+    errors?: {
+        blueprintYamlFile?: string;
+        blueprintName?: string;
+        blueprintUrl?: string;
+        imageUrl?: string;
     };
+    loading?: boolean;
+    showErrorsSummary?: boolean;
+    onChange: (value: Record<string, any>) => void;
+    toolbox: Stage.Types.WidgetlessToolbox;
+    uploadState?: string;
+    clearErrors?: () => void;
+}
+
+type UploadBlueprintFormPropsDefaults = Required<
+    Pick<
+        UploadBlueprintFormProps,
+        | 'blueprintUrl'
+        | 'blueprintFile'
+        | 'blueprintName'
+        | 'blueprintYamlFile'
+        | 'imageUrl'
+        | 'imageFile'
+        | 'errors'
+        | 'loading'
+        | 'showErrorsSummary'
+        | 'clearErrors'
+    >
+>;
+
+type UploadBlueprintFormPropsWithDefaults = UploadBlueprintFormProps & UploadBlueprintFormPropsDefaults;
+
+interface UploadBlueprintFormState {
+    loading: boolean;
+    yamlFiles: any[];
+}
+
+const defaultProps: UploadBlueprintFormPropsDefaults = {
+    blueprintUrl: '',
+    blueprintFile: null,
+    blueprintName: '',
+    blueprintYamlFile: '',
+    imageUrl: '',
+    imageFile: null,
+    errors: {},
+    loading: false,
+    showErrorsSummary: true,
+    clearErrors: noop
+};
+
+const initialState: UploadBlueprintFormState = {
+    loading: false,
+    yamlFiles: []
+};
+
+export default class UploadBlueprintForm extends React.Component<
+    UploadBlueprintFormPropsWithDefaults,
+    UploadBlueprintFormState
+> {
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = defaultProps;
+
+    static initialState = initialState;
 
     static DEFAULT_BLUEPRINT_YAML_FILE = Consts.defaultBlueprintYamlFileName;
 
     static NO_ERRORS = { errors: {} };
 
-    constructor(props) {
+    actions: BlueprintActions;
+
+    constructor(props: UploadBlueprintFormPropsWithDefaults) {
         super(props);
 
         this.state = UploadBlueprintForm.initialState;
@@ -32,14 +99,14 @@ export default class UploadBlueprintForm extends React.Component {
         const { blueprintFile, blueprintUrl, onChange } = this.props;
         this.setState(UploadBlueprintForm.initialState);
 
-        if ((!_.isEmpty(blueprintUrl) && StageUtils.Url.isUrl(blueprintUrl)) || !_.isNil(blueprintFile)) {
+        if ((!isEmpty(blueprintUrl) && StageUtils.Url.isUrl(blueprintUrl)) || !isNil(blueprintFile)) {
             this.setState({ loading: true });
             this.actions
                 .doListYamlFiles(blueprintUrl, blueprintFile, false)
                 .then(data => {
                     this.setState({ yamlFiles: data, loading: false });
                 })
-                .catch(error => {
+                .catch((error: any) => {
                     this.setState({ yamlFiles: [], loading: false });
                     onChange({ errors: { error } });
                 });
@@ -48,7 +115,7 @@ export default class UploadBlueprintForm extends React.Component {
 
     onBlueprintUrlBlur = () => {
         const { blueprintUrl, onChange } = this.props;
-        if (_.isEmpty(blueprintUrl) || !StageUtils.Url.isUrl(blueprintUrl)) {
+        if (isEmpty(blueprintUrl) || !StageUtils.Url.isUrl(blueprintUrl)) {
             this.setState({ yamlFiles: [] }, this.resetErrors);
             return;
         }
@@ -60,20 +127,20 @@ export default class UploadBlueprintForm extends React.Component {
             .then(data => {
                 this.setState({ yamlFiles: data, loading: false }, () => {
                     const blueprintName = data.shift();
-                    const blueprintYamlFile = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
+                    const blueprintYamlFile = includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
                         ? UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE
                         : data[0];
                     onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintName, blueprintYamlFile });
                 });
             })
-            .catch(error => {
+            .catch((error: any) => {
                 this.setState({ loading: false }, () =>
                     onChange({ errors: { error: error.message }, blueprintName: '', blueprintYamlFile: '' })
                 );
             });
     };
 
-    onBlueprintFileChange = file => {
+    onBlueprintFileChange: UrlOrFileInputProps['onChangeFile'] = file => {
         const { blueprintFile, onChange } = this.props;
         if (!file) {
             this.setState({ yamlFiles: [] }, this.resetErrors);
@@ -90,10 +157,10 @@ export default class UploadBlueprintForm extends React.Component {
 
         this.setState({ loading: true });
         this.actions
-            .doListYamlFiles(null, file, true)
+            .doListYamlFiles('', file, true)
             .then(data => {
                 const blueprintName = data.shift();
-                const blueprintYamlFile = _.includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
+                const blueprintYamlFile = includes(data, UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE)
                     ? UploadBlueprintForm.DEFAULT_BLUEPRINT_YAML_FILE
                     : data[0];
                 this.setState({ yamlFiles: data, loading: false }, () => {
@@ -106,33 +173,36 @@ export default class UploadBlueprintForm extends React.Component {
                     });
                 });
             })
-            .catch(error => {
+            .catch((error: any) => {
                 this.setState({ loading: false }, () =>
                     onChange({ errors: { error: error.message }, blueprintName: '', blueprintYamlFile: '' })
                 );
             });
     };
 
-    onBlueprintImageChange = file => {
+    onBlueprintImageChange: UrlOrFileInputProps['onChangeFile'] = file => {
         if (file) {
             const { onChange } = this.props;
             onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl: file.name, imageFile: file });
         }
     };
 
-    onBlueprintUrlChange = blueprintUrl => {
+    onBlueprintUrlChange: UrlOrFileInputProps['onChangeUrl'] = blueprintUrl => {
         const { onChange } = this.props;
         onChange({ ...UploadBlueprintForm.NO_ERRORS, blueprintUrl, blueprintFile: null });
     };
 
-    onBlueprintImageUrlChange = imageUrl => {
+    onBlueprintImageUrlChange: UrlOrFileInputProps['onChangeUrl'] = imageUrl => {
         const { onChange } = this.props;
         onChange({ ...UploadBlueprintForm.NO_ERRORS, imageUrl, imageFile: null });
     };
 
-    handleInputChange = (proxy, field) => {
+    handleInputChange: UploadBlueprintBasicFormProps['onInputChange'] = (_proxy, field) => {
         const { onChange } = this.props;
-        onChange({ ...UploadBlueprintForm.NO_ERRORS, ...Form.fieldNameValue(field) });
+        onChange({
+            ...UploadBlueprintForm.NO_ERRORS,
+            ...Form.fieldNameValue(field as { name: string; value: unknown; type: string })
+        });
     };
 
     resetErrors = () => {
@@ -187,6 +257,7 @@ export default class UploadBlueprintForm extends React.Component {
                             placeholder={t('blueprintIcon.placeholder')}
                             onChangeUrl={this.onBlueprintImageUrlChange}
                             onChangeFile={this.onBlueprintImageChange}
+                            onBlurUrl={noop}
                         />
                     </Form.Field>
                 }
@@ -194,37 +265,3 @@ export default class UploadBlueprintForm extends React.Component {
         );
     }
 }
-
-UploadBlueprintForm.propTypes = {
-    blueprintUrl: PropTypes.string,
-    blueprintFile: PropTypes.shape({}),
-    blueprintName: PropTypes.string,
-    blueprintYamlFile: PropTypes.string,
-    imageUrl: PropTypes.string,
-    imageFile: PropTypes.shape({}),
-    errors: PropTypes.shape({
-        blueprintYamlFile: PropTypes.string,
-        blueprintName: PropTypes.string,
-        blueprintUrl: PropTypes.string,
-        imageUrl: PropTypes.string
-    }),
-    loading: PropTypes.bool,
-    showErrorsSummary: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
-    toolbox: ToolboxPropType.isRequired,
-    uploadState: PropTypes.string,
-    clearErrors: PropTypes.func
-};
-
-UploadBlueprintForm.defaultProps = {
-    blueprintUrl: '',
-    blueprintFile: null,
-    blueprintName: '',
-    blueprintYamlFile: '',
-    imageUrl: '',
-    imageFile: null,
-    errors: {},
-    loading: false,
-    showErrorsSummary: true,
-    uploadState: null
-};
