@@ -3,7 +3,7 @@
  * The most common use case for this hook is to trigger a function on each component opening, as defined by component prop.
  */
 
-function useOpenProp(openProp: boolean, onOpen: () => void) {
+function useOpenProp(openProp: boolean | undefined, onOpen: () => void) {
     const { useEffect } = React;
 
     useEffect(() => {
