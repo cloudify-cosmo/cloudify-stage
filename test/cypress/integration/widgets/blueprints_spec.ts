@@ -151,7 +151,7 @@ describe('Blueprints widget', () => {
                 const listHeader = shouldBeSuggested ? 'Suggested' : 'Others';
                 cy.getField('Deploy On').within(() => {
                     cy.get('input').click().type(environmentName);
-                    cy.contains('.header', listHeader).next().contains('.text', deployOnEnvironmentName);
+                    cy.contains('.header', listHeader).next().should('have.text', deployOnEnvironmentName);
                 });
             };
 
@@ -159,7 +159,6 @@ describe('Blueprints widget', () => {
             cy.uploadBlueprint('blueprints/deploy_on_without_suggestion.zip', blueprintWithoutSuggestions);
 
             getBlueprintRow(blueprintWithoutSuggestions).find('.rocket').click();
-
             cy.get('.modal').within(() => {
                 checkIfEnvironmentIsSuggested(deployOnEnvironmentName);
                 cy.clickButton('Cancel');
