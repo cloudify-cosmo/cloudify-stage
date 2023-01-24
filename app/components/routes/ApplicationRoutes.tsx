@@ -3,11 +3,11 @@ import React, { useEffect } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import log from 'loglevel';
 import { useDispatch, useSelector } from 'react-redux';
+import { showAppError } from '../../actions/app';
 import type { ReduxState } from '../../reducers';
 import type { ReduxThunkDispatch } from '../../configureStore';
 
 import intialPageLoad from '../../actions/initialPageLoad';
-import { logout } from '../../actions/manager/auth';
 import stageUtils from '../../utils/stageUtils';
 import Page from '../page/Page';
 import PageManagement from '../templateManagement/pages/PageManagement';
@@ -30,8 +30,8 @@ export default function ApplicationRoutes() {
             stageUtils.isUserAuthorized(Consts.permissions.STAGE_TEMPLATE_MANAGEMENT, state.manager)
     );
     const dispatch: ReduxThunkDispatch = useDispatch();
-    const doLogout = (err: string) => {
-        return dispatch(logout(err));
+    const doShowAppError = (error: string) => {
+        return dispatch(showAppError(error));
     };
     useEffect(() => {
         dispatch(intialPageLoad())
@@ -46,11 +46,11 @@ export default function ApplicationRoutes() {
                         break;
                     case NO_PAGES_FOR_TENANT_ERR:
                         log.error('Cannot initialize user data because no pages were found for the current tenant');
-                        doLogout(i18n.t('noPages'));
+                        doShowAppError(i18n.t('errors.noPages'));
                         break;
                     default:
                         log.error('Initializing user data failed', err);
-                        doLogout(i18n.t('pageLoadError', 'Error initializing user data, cannot load page'));
+                        doShowAppError(i18n.t('errors.pageLoad'));
                 }
             });
 

@@ -1,5 +1,5 @@
 import { getConfig } from 'config';
-import validateSamlConfig from 'samlSetup';
+import validateAuthConfig from 'validateAuthConfig';
 import 'app';
 
 jest.mock('handler/ManagerHandler');
@@ -8,15 +8,15 @@ jest.mock('auth/SamlStrategy');
 jest.mock('config', () => ({
     getConfig: () => {
         const config = jest.requireActual('config').getConfig();
-        config.app.saml.enabled = true;
+        config.app.auth.type = 'saml';
         return config;
     }
 }));
 
-jest.mock('samlSetup');
+jest.mock('validateAuthConfig');
 
 describe('App', () => {
-    it('should validate SAML config', () => {
-        expect(validateSamlConfig).toHaveBeenCalledWith(getConfig().app.saml);
+    it('should validate auth config', () => {
+        expect(validateAuthConfig).toHaveBeenCalledWith(getConfig().app.auth);
     });
 });

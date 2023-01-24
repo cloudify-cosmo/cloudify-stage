@@ -18,8 +18,7 @@ describe('/config endpoint', () => {
                         whiteLabel: userConfig.whiteLabel,
                         maps: userConfig.maps,
                         maintenancePollingInterval: appConfig.maintenancePollingInterval,
-                        useLoginPage: userConfig.useLoginPage,
-                        saml: _.omit(userConfig.saml, 'certPath')
+                        auth: _.omit(userConfig.auth, 'certPath')
                     },
                     manager: {
                         ip: expect.any(String)

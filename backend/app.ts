@@ -16,7 +16,7 @@ import { getResourcePath } from './utils';
 import getCookieStrategy from './auth/CookieStrategy';
 import getSamlStrategy from './auth/SamlStrategy';
 import { authenticateWithCookie, authenticateWithToken } from './auth/AuthMiddlewares';
-import validateSamlConfig from './samlSetup';
+import validateAuthConfig from './validateAuthConfig';
 import Auth from './routes/Auth';
 
 import BlueprintAdditions from './routes/BlueprintAdditions';
@@ -69,12 +69,9 @@ app.use(contextPath, (_req, res, next) => {
     next();
 });
 
-const samlConfig = getConfig().app.saml;
-if (samlConfig.enabled) {
-    validateSamlConfig(samlConfig);
-    passport.use(getSamlStrategy());
-}
-
+const authConfig = getConfig().app.auth;
+validateAuthConfig(authConfig);
+if (authConfig.type === 'saml') passport.use(getSamlStrategy());
 passport.use(getCookieStrategy());
 passport.use(getTokenStrategy());
 app.use(cookieParser());

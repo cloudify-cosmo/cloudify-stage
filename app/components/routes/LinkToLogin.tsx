@@ -1,31 +1,24 @@
-import type { FunctionComponent } from 'react';
 import React from 'react';
+import type { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import i18n from 'i18next';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
+
+import stageUtils from '../../utils/stageUtils';
 import Consts from '../../utils/consts';
 import type { ReduxState } from '../../reducers';
 
-interface LinkToLoginProps {
-    portalUrl?: string;
-    searchQuery?: string;
-}
-const LinkToLogin: FunctionComponent<LinkToLoginProps> = ({ portalUrl, searchQuery }) =>
-    portalUrl ? (
-        <a href={portalUrl}>{i18n.t('backToApps', 'Back to apps')}</a>
-    ) : (
-        <Link to={{ pathname: Consts.PAGE_PATH.LOGIN, search: searchQuery }}>
-            {i18n.t('backToLogin', 'Back to login')}
-        </Link>
-    );
+const LinkToLogin: FunctionComponent = () => {
+    const afterLogoutUrl = useSelector((state: ReduxState) => state.config.app.auth.afterLogoutUrl);
+    const searchQuery = useSelector((state: ReduxState) => state.router.location.search);
 
-const mapStateToProps = (state: ReduxState) => {
-    return {
-        portalUrl: state.config.app.saml.enabled ? state.config.app.saml.portalUrl : undefined,
-        searchQuery: state.router.location.search
-    };
+    return stageUtils.Url.isLocalUrl(afterLogoutUrl) ? (
+        <Link to={{ pathname: afterLogoutUrl.replace(Consts.CONTEXT_PATH, ''), search: searchQuery }}>
+            {i18n.t('backToLogin')}
+        </Link>
+    ) : (
+        <a href={afterLogoutUrl}>{i18n.t('backToLogin')}</a>
+    );
 };
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(LinkToLogin);
+export default LinkToLogin;
