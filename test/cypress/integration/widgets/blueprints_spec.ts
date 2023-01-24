@@ -79,7 +79,7 @@ describe('Blueprints widget', () => {
                 cy.openAccordionSection('Advanced');
                 cy.get('input[name=deploymentId]').clear().type(deploymentId);
                 cy.openAccordionSection('Deployment Inputs');
-                cy.get('button[aria-label="Show Data Types"]').click();
+                cy.get('[aria-label="Show Data Types"]').click();
                 cy.contains('.modal button', 'Close').click();
 
                 const serverIp = '127.0.0.1';
