@@ -11,6 +11,7 @@ import { DateInput, Divider, Form, Header, Message } from '../../../components/b
 import StageUtils from '../../../utils/stageUtils';
 import type { SortOrder } from '../inputs/SortOrderIcons';
 import SortOrderIcons from '../inputs/SortOrderIcons';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 
 const t = StageUtils.getT('widgets.common.deployments.execute');
 
@@ -84,19 +85,18 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     return (
         <>
             {workflowHasInputs ? (
-                <>
+                <IconButtonsGroup>
+                    {workflowHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
+                    <InputsHelpIcon />
                     <YamlFileButton
                         onChange={onYamlFileChange}
                         dataType="execution parameters"
                         fileLoading={fileLoading}
-                        iconButton
                     />
-                    <InputsHelpIcon />
-                </>
+                </IconButtonsGroup>
             ) : (
                 <Message content={t('noParams')} />
             )}
-            {workflowHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
 
             <InputFields
                 inputs={baseWorkflowInputs}

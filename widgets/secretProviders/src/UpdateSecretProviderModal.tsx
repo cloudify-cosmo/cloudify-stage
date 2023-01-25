@@ -18,11 +18,11 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
     const { errors, setErrors, clearErrors } = useErrors();
     const connectionParameters = secretProvider?.connection_parameters;
 
-    const [hostname, setHostname] = useInput(connectionParameters?.url ?? '');
+    const [url, setUrl] = useInput(connectionParameters?.url ?? '');
     const [authorizationToken, setAuthorizationToken] = useInput(connectionParameters?.token ?? '');
     const [defaultPath, setDefaultPath] = useInput(connectionParameters?.path ?? '');
 
-    const formValues = { hostname, authorizationToken };
+    const formValues = { url, authorizationToken };
 
     const checkForm = () => {
         const newErrors = validateModalForm(formValues, false);
@@ -40,7 +40,7 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
             .doPatch<VaultConnectionParameters>(`/secrets-providers/${secretProvider.id}`, {
                 body: {
                     connection_parameters: {
-                        url: hostname,
+                        url,
                         token: authorizationToken,
                         path: defaultPath
                     }
@@ -60,12 +60,17 @@ const UpdateSecretProviderModal = ({ onClose, onSubmit, manager, secretProvider 
             <Modal.Header>{translateUpdateModal('header')}</Modal.Header>
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label={translateForm('inputs.hostname.label')} required error={errors.hostname}>
+                    <Form.Field
+                        label={translateForm('inputs.url.label')}
+                        required
+                        error={errors.url}
+                        help={translateForm('inputs.url.helper')}
+                    >
                         <Form.Input
-                            value={hostname}
-                            onChange={setHostname}
-                            name="hostname"
-                            placeholder={translateForm('inputs.hostname.placeholder')}
+                            value={url}
+                            onChange={setUrl}
+                            name="url"
+                            placeholder={translateForm('inputs.url.placeholder')}
                         />
                     </Form.Field>
                     <Form.Field
