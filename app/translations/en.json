@@ -626,6 +626,11 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "header": {
+                            "label": "Deployment inputs",
+                            "subHeader": "See values typing details: ",
+                            "popupHelp": "Value type"
+                        },
                         "deploymentId": {
                             "label": "Deployment ID",
                             "help": "Specify an ID for this deployment instance."
@@ -667,7 +672,8 @@
                         },
                         "deploymentInputs": {
                             "loading": "Loading inputs...",
-                            "noInputs": "No inputs available for the blueprint"
+                            "noInputs": "No inputs available for the blueprint",
+                            "yamlDataType": "deployment's inputs"
                         }
                     },
                     "sections": {
@@ -849,11 +855,18 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
                         "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form.",
+                        "dataType": "values"
                     }
                 },
                 "types": {
