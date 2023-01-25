@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { get, isEmpty, isEqual } from 'lodash';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
@@ -7,7 +5,22 @@ import './widget.css';
 
 const t = Stage.Utils.getT('widgets.deployments');
 
-Stage.defineWidget({
+type DeploymentsConfiguration = {
+    blueprintIdFilter: string;
+};
+
+type DeploymentData = {};
+
+type DeploymentParams = {
+    // eslint-disable-next-line camelcase
+    blueprint_id: string;
+    // eslint-disable-next-line camelcase
+    site_name?: string;
+    // eslint-disable-next-line camelcase
+    created_by?: string;
+};
+
+Stage.defineWidget<DeploymentParams, DeploymentData, DeploymentsConfiguration>({
     id: 'deployments',
     name: t('name'),
     description: t('description'),
@@ -66,7 +79,7 @@ Stage.defineWidget({
         blueprintId = isEmpty(widget.configuration.blueprintIdFilter)
             ? blueprintId
             : widget.configuration.blueprintIdFilter;
-        const obj = { blueprint_id: blueprintId };
+        const obj: DeploymentParams = { blueprint_id: blueprintId };
 
         const siteName = toolbox.getContext().getValue('siteName');
         if (siteName) {
@@ -79,7 +92,7 @@ Stage.defineWidget({
         return obj;
     },
 
-    async fetchData(widget, toolbox, params) {
+    async fetchData(_widget, toolbox, params) {
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
                 _include:
