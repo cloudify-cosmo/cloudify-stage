@@ -32,7 +32,7 @@ export default function LabelsTable({ data, toolbox }: LabelsTableProps) {
     useEffect(() => setLabels(data.labels), [JSON.stringify(data.labels)]);
 
     function updateLabelValue() {
-        if (labelInEdit === undefined) return; // This can only happen in a synchronization error, since this callback is only in places guarded for undefined
+        if (!labelInEdit) return; // This can only happen in a synchronization error, since this callback is only in places guarded for undefined
         if (currentLabelValue === labelInEdit.value) {
             stopLabelEdit();
             return;
