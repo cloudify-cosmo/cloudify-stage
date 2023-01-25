@@ -272,19 +272,17 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                         <>
                             <InputsHeader />
                             {blueprintHasInputs ? (
-                                <>
-                                    <IconButtonsGroup>
-                                        {blueprintHasMultipleInputs && (
-                                            <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
-                                        )}
-                                        {blueprintHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
-                                        <YamlFileButton
-                                            onChange={handleYamlFileChange}
-                                            dataType="deployment's inputs"
-                                            fileLoading={isFileLoading}
-                                        />
-                                    </IconButtonsGroup>
-                                </>
+                                <IconButtonsGroup>
+                                    {blueprintHasMultipleInputs && (
+                                        <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
+                                    )}
+                                    {blueprintHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                                    <YamlFileButton
+                                        onChange={handleYamlFileChange}
+                                        dataType="deployment's inputs"
+                                        fileLoading={isFileLoading}
+                                    />
+                                </IconButtonsGroup>
                             ) : (
                                 <Message content="No inputs available for the selected blueprint" />
                             )}
