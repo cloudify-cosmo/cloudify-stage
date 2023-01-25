@@ -106,7 +106,7 @@ export default class DeploymentActions {
         body.force = forceUpdate;
         body.preview = preview;
 
-        return this.toolbox.getManager().doPut(`/deployment-updates/${deploymentName}/update/initiate`, { body });
+        return this.toolbox.getManager().doPost(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
 
     doSetVisibility(deploymentId: string, visibility: any) {

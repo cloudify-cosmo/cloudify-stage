@@ -12,13 +12,14 @@ import type { ManagerData } from 'app/reducers/managerReducer';
 import emptyState from 'app/reducers/managerReducer/emptyState';
 import Consts from 'app/utils/consts';
 import type { Mode } from 'backend/serverSettings';
+import type { AuthUserResponse } from 'backend/routes/Auth.types';
 import type { GetCypressChainableFromCommands } from 'cloudify-ui-common/cypress/support';
 import { addCommands } from 'cloudify-ui-common/cypress/support';
 import 'cypress-file-upload';
 import 'cypress-get-table';
 import 'cypress-localstorage-commands';
-import type { GlobPattern, RouteHandler, RouteMatcherOptions } from 'cypress/types/net-stubbing';
-import { castArray, isString, noop } from 'lodash';
+import type { GlobPattern, RouteHandler, RouteMatcher, RouteMatcherOptions } from 'cypress/types/net-stubbing';
+import { castArray, identity, isString, noop } from 'lodash';
 import './asserts';
 import './blueprints';
 import './deployments';
@@ -46,14 +47,12 @@ const getCommonHeaders = () => ({
 const getAdminAuthorizationHeader = () => ({ Authorization: `Basic ${btoa('admin:admin')}` });
 
 const mockGettingStarted = (modalEnabled: boolean) =>
-    cy.intercept('GET', '/console/auth/user', req => {
-        req.on('response', res => {
-            const responseBody = {
-                ...res.body,
-                showGettingStarted: modalEnabled
-            };
-            res.send(responseBody);
-        });
+    cy.interceptWithoutCaching<AuthUserResponse>('/console/auth/user', authUserResponse => {
+        const responseBody = {
+            ...authUserResponse,
+            showGettingStarted: modalEnabled
+        };
+        return responseBody;
     });
 
 const collapseSidebar = () => cy.get('.breadcrumb').click();
@@ -396,6 +395,24 @@ const commands = {
 
         return cy.intercept(routeMatcher, routeHandler);
     },
+    interceptWithoutCaching: <ResponseBody>(
+        url: RouteMatcher,
+        responseBodyInterceptor: (responseBody: ResponseBody) => ResponseBody = identity
+    ) =>
+        cy.intercept(url, request => {
+            // NOTE: Deleting `if-none-match` header to avoid getting "304 Not Modified" response
+            //       which doesn't have any data in the body. For details check:
+            //       https://glebbahmutov.com/blog/cypress-intercept-problems/#cached-response
+            delete request.headers['if-none-match'];
+            request.on('response', response => {
+                const { body } = response;
+                // NOTE: Turning off response caching, so the next call to provided URL
+                //       won't use modified response. For details check:
+                //       https://docs.cypress.io/api/commands/intercept#cy-intercept-and-request-caching
+                response.headers['Cache-Control'] = 'no-cache';
+                response.send(responseBodyInterceptor(body));
+            });
+        }),
     getByTestId: (id: string) => cy.get(`[data-testid=${id}]`),
     getSearchInput: () => cy.get('input[placeholder="Search..."]'),
 
