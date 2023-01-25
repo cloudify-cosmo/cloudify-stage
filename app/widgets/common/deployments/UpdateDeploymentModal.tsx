@@ -1,11 +1,13 @@
 // @ts-nocheck File not migrated fully to TS
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import type { SortOrder } from 'app/widgets/common/inputs/SortOrderIcons';
 import { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } from '../../../components/basic';
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 import YamlFileButton from '../inputs/YamlFileButton';
 import ToolboxPropType from '../../../utils/props/Toolbox';
 import DeploymentActions from './DeploymentActions';
@@ -21,6 +23,7 @@ import NodeInstancesFilter from '../nodes/NodeInstancesFilter';
 import UpdateDetailsModal from './UpdateDetailsModal';
 import { useBoolean, useErrors, useInputs, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 
 export default function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, toolbox }) {
     const { useEffect } = React;
@@ -46,6 +49,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         skipDriftCheck: false,
         force: false
     });
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
 
     function selectBlueprint(id) {
         if (!_.isEmpty(id)) {
@@ -237,6 +241,10 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
           }
         : {};
 
+    const blueprintHasInputs = !_.isEmpty(blueprint.plan.inputs);
+    const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
+    const blueprintHasDataTypes = !_.isEmpty(blueprint.plan.data_types);
+
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
@@ -262,18 +270,20 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 
                     {blueprint.id && (
                         <>
-                            {!_.isEmpty(blueprint.plan.inputs) && (
-                                <YamlFileButton
-                                    onChange={handleYamlFileChange}
-                                    dataType="deployment's inputs"
-                                    fileLoading={isFileLoading}
-                                />
-                            )}
-                            {!_.isEmpty(blueprint.plan.data_types) && (
-                                <DataTypesButton types={blueprint.plan.data_types} />
-                            )}
                             <InputsHeader />
-                            {_.isEmpty(blueprint.plan.inputs) && (
+                            {blueprintHasInputs ? (
+                                <IconButtonsGroup>
+                                    {blueprintHasMultipleInputs && (
+                                        <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
+                                    )}
+                                    {blueprintHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                                    <YamlFileButton
+                                        onChange={handleYamlFileChange}
+                                        dataType="deployment's inputs"
+                                        fileLoading={isFileLoading}
+                                    />
+                                </IconButtonsGroup>
+                            ) : (
                                 <Message content="No inputs available for the selected blueprint" />
                             )}
                         </>
@@ -286,6 +296,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                         errorsState={errors}
                         toolbox={toolbox}
                         dataTypes={blueprint.plan.data_types}
+                        sortOrder={sortOrder}
                     />
 
                     <Form.Divider>

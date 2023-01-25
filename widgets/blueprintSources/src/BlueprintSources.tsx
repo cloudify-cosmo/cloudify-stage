@@ -1,4 +1,4 @@
-import type { NodesTreeProps } from 'cloudify-ui-components/typings/components/data/NodesTree/NodesTree';
+import type { NodesTreeProps } from 'cloudify-ui-components';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';

@@ -5,7 +5,7 @@ import getTemplateForDataType from './utils/getTemplateForDataType';
 import ParameterValue from '../components/parameter/ParameterValue';
 import StageUtils from '../../../utils/stageUtils';
 import { AnyData } from '../../../utils/props';
-import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
+import { Button, CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
 
 const PropertiesPropType = PropTypes.objectOf(
@@ -102,7 +102,6 @@ DataType.defaultProps = {
 };
 
 interface DataTypesButtonProps {
-    iconButton?: boolean;
     types: {
         // eslint-disable-next-line camelcase
         derived_from: string;
@@ -145,26 +144,25 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
     }
 
     render() {
-        const { types, iconButton } = this.props;
+        const { types } = this.props;
         const { open } = this.state;
         const buttonTitle = translateInputs('buttons.dataTypes.title');
 
         return (
             <div>
-                {iconButton ? (
-                    <Popup
-                        content={buttonTitle}
-                        trigger={<Button icon="code" onClick={this.onOpen} floated="right" aria-label={buttonTitle} />}
-                    />
-                ) : (
-                    <Button
-                        icon="code"
-                        content={buttonTitle}
-                        onClick={this.onOpen}
-                        floated="right"
-                        labelPosition="left"
-                    />
-                )}
+                <Popup
+                    content={buttonTitle}
+                    trigger={
+                        <Icon
+                            name="code"
+                            onClick={this.onOpen}
+                            color="blue"
+                            size="large"
+                            link
+                            aria-label={buttonTitle}
+                        />
+                    }
+                />
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>
