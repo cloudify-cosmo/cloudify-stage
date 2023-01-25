@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
-import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
+import type { DateInputProps } from 'cloudify-ui-components';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import InputFields from '../inputs/InputFields';
 import type { OnChange } from '../inputs/types';
