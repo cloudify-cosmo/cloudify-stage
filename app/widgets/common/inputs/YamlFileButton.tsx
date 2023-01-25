@@ -1,8 +1,11 @@
+import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 import React from 'react';
-import i18n from 'i18next';
 import styled from 'styled-components';
+import stageUtils from '../../../utils/stageUtils';
 import { Form } from '../../../components/basic';
+
+const translate = stageUtils.getT('widgets.common.inputs.buttons.yamlFile');
 
 const BasicButtonContainer = styled.div`
     &&&&&& button {
@@ -18,7 +21,11 @@ export interface Props {
     onChange: (file: File) => void;
 }
 
-const YamlFileButton: FunctionComponent<Props> = ({ dataType = 'values', fileLoading = false, onChange = _.noop }) => {
+const YamlFileButton: FunctionComponent<Props> = ({
+    dataType = translate('dataType'),
+    fileLoading = false,
+    onChange = noop
+}) => {
     return (
         <BasicButtonContainer>
             <Form.File
@@ -35,7 +42,7 @@ const YamlFileButton: FunctionComponent<Props> = ({ dataType = 'values', fileLoa
                     }
                 }}
                 onChange={onChange}
-                help={i18n.t('widgets.common.inputs.buttons.yamlFile.help', { dataType })}
+                help={translate('help', { dataType })}
                 loading={fileLoading}
                 disabled={fileLoading}
             />

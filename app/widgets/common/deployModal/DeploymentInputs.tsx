@@ -13,7 +13,7 @@ import YamlFileButton from '../inputs/YamlFileButton';
 import StageUtils from '../../../utils/stageUtils';
 import { Message } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.deploymentInputs');
 
 interface Props {
     blueprint: FullBlueprintData;
@@ -44,16 +44,12 @@ const DeploymentInputs: FunctionComponent<Props> = ({
             {blueprint.id && (
                 <IconButtonsGroup>
                     {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
-                    {deploymentHasInputs ? (
-                        <InputsHelpIcon />
-                    ) : (
-                        <Message content={t('inputs.deploymentInputs.noInputs')} />
-                    )}
+                    {deploymentHasInputs ? <InputsHelpIcon /> : <Message content={translate('noInputs')} />}
                     {deploymentHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
                     {deploymentHasInputs && (
                         <YamlFileButton
                             onChange={onYamlFileChange}
-                            dataType="deployment's inputs"
+                            dataType={translate('yamlDataType')}
                             fileLoading={fileLoading}
                         />
                     )}
