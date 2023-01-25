@@ -39,39 +39,35 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         fetchSecretProviders();
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
-        actions
-            .doGetAllSecrets()
-            .then(data => {
-                const secretData = data.items.find((item: Secret) => item.key === secret.key);
-                const hasSecretProvider = !isEmpty(secret.provider_name);
-                if (secretData) {
-                    const isHidden = secretData.is_hidden_data;
-                    if (hasSecretProvider) {
-                        setUseSecretProvider(true);
-                        setSecretProvider(secretData.provider_name);
-                        actions.doGet(secretData.key).then(({ provider_options: providerOptions }) => {
-                            setSecretProviderOptions(providerOptions);
-                            setSecretProviderPath(providerOptions!.path);
-                        });
-                    } else {
-                        setUseSecretProvider(false);
-                        actions
-                            .doGet(secretData.key)
-                            .then(({ value }) => {
-                                setSecretValue(value);
-                            })
-                            .catch(setMessageAsError);
-                    }
 
-                    if (isHidden) {
-                        disableSecretUpdate();
-                    } else {
-                        enableSecretUpdate();
-                    }
-                }
-            })
-            .catch(setMessageAsError)
-            .finally(unsetLoading);
+        const hasSecretProvider = !isEmpty(secret.provider_name);
+        if (secret) {
+            const isHidden = secret.is_hidden_value;
+            if (hasSecretProvider) {
+                setUseSecretProvider(true);
+                setSecretProvider(secret.provider_name);
+                actions.doGet(secret.key).then(({ provider_options: providerOptions }) => {
+                    setSecretProviderOptions(providerOptions);
+                    setSecretProviderPath(providerOptions!.path);
+                });
+            } else {
+                setUseSecretProvider(false);
+                actions
+                    .doGet(secret.key)
+                    .then(({ value }) => {
+                        setSecretValue(value);
+                    })
+                    .catch(setMessageAsError);
+            }
+
+            if (isHidden) {
+                disableSecretUpdate();
+            } else {
+                enableSecretUpdate();
+            }
+        }
+
+        unsetLoading();
     });
 
     function updateSecret() {

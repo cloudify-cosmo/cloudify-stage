@@ -30,10 +30,6 @@ export default class SecretActions {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
-    doGetAllSecrets(): Promise<any> {
-        return this.manager.doGet('/secrets?_include=key,is_hidden_value,provider_name');
-    }
-
     doGetAllSecretProviders(): Promise<any> {
         return this.manager.doGet('/secrets-providers?_include=name');
     }
