@@ -27,18 +27,15 @@ const commands = {
         cy.cfyRequest(`/executions/${executionId}`, 'POST', null, { action: 'kill' }),
 
     killRunningExecutions: () => {
-        const activeExecutionsUrl = `/executions?${stringify({
+        const activeStatusesQueryString = stringify({
             status: ['scheduled', 'queued', 'pending', 'started', 'cancelling', 'force_cancelling']
-        })}`;
-
-        const activeAndKillCancellingExecutionsUrl = `${activeExecutionsUrl}&${stringify({
-            status: ['kill_cancelling']
-        })}`;
+        });
+        const activeAndKillCancellingStatusesQueryString = `${activeStatusesQueryString}&status=kill_cancelling`;
 
         return cy
-            .cfyRequest(activeExecutionsUrl, 'GET')
+            .cfyRequest(`/executions?${activeStatusesQueryString}`, 'GET')
             .then(response => response.body.items.forEach(({ id }: { id: string }) => cy.killExecution(id)))
-            .then(() => waitUntilEmpty(activeAndKillCancellingExecutionsUrl));
+            .then(() => waitUntilEmpty(`executions?${activeAndKillCancellingStatusesQueryString}`));
     },
 
     waitForExecutionToEnd: (
