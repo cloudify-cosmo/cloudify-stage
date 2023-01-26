@@ -10,7 +10,7 @@ export type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
     _include?: string;
 };
 
-type ListBlueprintsParams = Stage.Types.ManagerGridParams & {
+export type ListBlueprintsParams = Stage.Types.ManagerGridParams & {
     // eslint-disable-next-line camelcase
     _search_name?: string;
     _include?: string;

@@ -1,15 +1,19 @@
-// @ts-nocheck File not migrated fully to TS
-import { join } from 'lodash';
+import type { ListBlueprintsParams } from 'app/widgets/common/actions/SearchActions';
+import { each, get, isEmpty, join, map, reduce } from 'lodash';
 import BlueprintsList from './BlueprintsList';
-import type { BlueprintsWidgetConfiguration } from './types';
+import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
-const t = Stage.Utils.getT('widgets.blueprints');
-const tCatalogConfiguration = Stage.Utils.getT('widgets.blueprintCatalog.configuration');
+const translateBlueprints = Stage.Utils.getT('widgets.blueprints');
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
-Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
+interface DataToProcess {
+    blueprints: any;
+    deployments: any;
+}
+
+Stage.defineWidget<unknown, BlueprintDataResponse, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
     name: 'Blueprints',
     description: 'Shows blueprint list',
@@ -25,24 +29,24 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(5),
         {
             id: 'fieldsToShow',
-            name: t('configuration.fieldsToShow.label'),
-            placeHolder: t('configuration.fieldsToShow.placeholder'),
-            items: fields.map(item => t(`configuration.fieldsToShow.items.${item}`)),
-            default: join(fields.map(item => t(`configuration.fieldsToShow.items.${item}`))),
+            name: translateBlueprints('configuration.fieldsToShow.label'),
+            placeHolder: translateBlueprints('configuration.fieldsToShow.placeholder'),
+            items: fields.map(item => translateBlueprints(`configuration.fieldsToShow.items.${item}`)),
+            default: join(fields.map(item => translateBlueprints(`configuration.fieldsToShow.items.${item}`))),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         },
         {
             id: 'clickToDrillDown',
-            name: t('configuration.clickToDrillDown'),
+            name: translateBlueprints('configuration.clickToDrillDown'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'displayStyle',
-            name: t('configuration.displayStyle.label'),
+            name: translateBlueprints('configuration.displayStyle.label'),
             items: [
-                { name: t('configuration.displayStyle.items.table'), value: 'table' },
-                { name: t('configuration.displayStyle.items.catalog'), value: 'catalog' }
+                { name: translateBlueprints('configuration.displayStyle.items.table'), value: 'table' },
+                { name: translateBlueprints('configuration.displayStyle.items.catalog'), value: 'catalog' }
             ],
             default: 'table',
             type: Stage.Basic.GenericField.LIST_TYPE
@@ -51,27 +55,27 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false),
         {
             id: 'hideFailedBlueprints',
-            name: t('configuration.hideFailedBlueprints'),
+            name: translateBlueprints('configuration.hideFailedBlueprints'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showComposerOptions',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
-            name: t('configuration.showComposerOptions'),
+            name: translateBlueprints('configuration.showComposerOptions'),
             default: true
         },
         {
             id: 'filterRules',
-            name: Stage.i18n.t('widgets.blueprints.configuration.labelFilterRules'),
+            name: translateBlueprints('configuration.labelFilterRules'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Common.Blueprints.LabelFilter
         }
     ],
 
-    fetchData(widget, toolbox, params) {
-        const result = {};
+    async fetchData(widget, toolbox, params) {
+        const result = {} as DataToProcess;
         const filterRules = [...(widget.configuration.filterRules || [])];
         const SearchActions = Stage.Common.Actions.Search;
         const searchActions = new SearchActions(toolbox);
@@ -85,26 +89,25 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
             });
         }
 
-        return searchActions
-            .doListBlueprints(filterRules, {
-                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                ...params
-            })
-            .then(data => {
-                result.blueprints = data;
-
-                return toolbox.getManager().doGetFull('/summary/deployments', {
-                    _target_field: 'blueprint_id',
-                    blueprint_id: _.map(data.items, item => item.id)
-                });
-            })
-            .then(data => {
-                result.deployments = data;
-                return result;
-            });
+        const blueprintsList = await searchActions.doListBlueprints(filterRules, {
+            _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+            ...(params as ListBlueprintsParams)
+        });
+        result.blueprints = blueprintsList;
+        const deploymentsList = await toolbox.getManager().doGetFull('/summary/deployments', {
+            _target_field: 'blueprint_id',
+            blueprint_id: map(blueprintsList.items, item => item.id)
+        });
+        result.deployments = deploymentsList;
+        return result as unknown as BlueprintDataResponse;
     },
     fetchParams: (widget, toolbox) => {
-        const params = {};
+        interface Params {
+            // eslint-disable-next-line camelcase
+            created_by?: string;
+            state?: string;
+        }
+        const params: Params = {};
 
         if (toolbox.getContext().getValue('onlyMyResources'))
             params.created_by = toolbox.getManager().getCurrentUsername();
@@ -116,47 +119,48 @@ Stage.defineWidget<unknown, unknown, BlueprintsWidgetConfiguration>({
         return params;
     },
 
-    processData(data, toolbox) {
-        const blueprintsData = data.blueprints;
-        const deploymentData = data.deployments;
-
-        // Count deployments
-        const depCount = _.reduce(
-            deploymentData.items,
-            (result, item) => {
-                result[item.blueprint_id] = item.deployments;
-                return result;
-            },
-            {}
-        );
-        _.each(blueprintsData.items, blueprint => {
-            blueprint.depCount = depCount[blueprint.id] || 0;
-        });
-
-        const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
-
-        return {
-            ...blueprintsData,
-            items: _.map(blueprintsData.items, item => {
-                return {
-                    ...item,
-                    created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
-                    updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
-                    isSelected: selectedBlueprint === item.id
-                };
-            }),
-            total: _.get(blueprintsData, 'metadata.pagination.total', 0)
-        };
-    },
-
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        const processData = (dataToProcess: DataToProcess) => {
+            const blueprintsData = dataToProcess.blueprints;
+            const deploymentData = dataToProcess.deployments;
+
+            // Count deployments
+            const depCount = reduce(
+                deploymentData.items,
+                // eslint-disable-next-line camelcase
+                (result: Record<string, any>, item: { blueprint_id: string; deployments: number }) => {
+                    result[item.blueprint_id] = item.deployments;
+                    return result;
+                },
+                {}
+            );
+            each(blueprintsData.items, blueprint => {
+                blueprint.depCount = depCount[blueprint.id] || 0;
+            });
+
+            const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
+
+            return {
+                ...blueprintsData,
+                items: map(blueprintsData.items, item => {
+                    return {
+                        ...item,
+                        created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+                        updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
+                        isSelected: selectedBlueprint === item.id
+                    };
+                }),
+                total: get(blueprintsData, 'metadata.pagination.total', 0)
+            };
+        };
+
+        if (isEmpty(data)) {
             return <Loading />;
         }
 
-        const formattedData = this.processData(data, toolbox);
+        const formattedData = processData(data as unknown as DataToProcess);
         return (
             <div>
                 <BlueprintsList widget={widget} data={formattedData} toolbox={toolbox} />
