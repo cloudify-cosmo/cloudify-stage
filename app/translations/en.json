@@ -626,6 +626,11 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "header": {
+                            "label": "Deployment inputs",
+                            "subHeader": "See values typing details: ",
+                            "popupHelp": "Value type"
+                        },
                         "deploymentId": {
                             "label": "Deployment ID",
                             "help": "Specify an ID for this deployment instance."
@@ -640,7 +645,15 @@
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",
-                            "placeholder": "Select a parent"
+                            "placeholder": "Select a parent",
+                            "environmentList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching environments",
+                                "noData": "no environments"
+                            }
                         },
                         "siteName": {
                             "label": "Site name",
@@ -659,7 +672,8 @@
                         },
                         "deploymentInputs": {
                             "loading": "Loading inputs...",
-                            "noInputs": "No inputs available for the blueprint"
+                            "noInputs": "No inputs available for the blueprint",
+                            "yamlDataType": "deployment's inputs"
                         }
                     },
                     "sections": {
@@ -841,11 +855,18 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
                         "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form.",
+                        "dataType": "values"
                     }
                 },
                 "types": {
@@ -1612,9 +1633,10 @@
                         "label": "Provider Name",
                         "placeholder": "Provider Name"
                     },
-                    "hostname": {
-                        "label": "Vault Hostname",
-                        "placeholder": "Vault Hostname"
+                    "url": {
+                        "label": "Vault URL",
+                        "placeholder": "Vault URL",
+                        "helper": "Example: http://172.17.0.2:8200"
                     },
                     "authorizationToken": {
                         "label": "Authorization Token",
@@ -1630,7 +1652,7 @@
                         "required": "Please provide the Provider Name.",
                         "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Please provide vault hostname.",
+                    "url": "Please provide Vault URL.",
                     "authorizationToken": "Please provide an authorization token.",
                     "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again.",
                     "update": "Couldn't update a Secret Provider, please try to submit the Secret Provider data again."
@@ -1667,7 +1689,15 @@
                 "header": "Create secret",
                 "buttons": {
                     "create": "Create"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                }
+            },
+            "form": {
                 "inputs": {
                     "secretKey": {
                         "label": "Secret key",
@@ -1702,22 +1732,6 @@
                         "noProviders": "No Secret providers are defined in the System",
                         "secretProviderName": "Please select a secret provider",
                         "secretProviderPath": "Please provide a path or a secret key on the secret provider"
-                    }
-                }
-            },
-            "updateModal": {
-                "header": "Update secret {{secretKey}}",
-                "buttons": {
-                    "update": "Update"
-                },
-                "inputs": {
-                    "secretValue": {
-                        "placeholder": "Secret value"
-                    }
-                },
-                "errors": {
-                    "validation": {
-                        "secretValue": "Please provide secret value"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -2209,7 +2223,7 @@
                     }
                 }
             },
-            "createModal" : {
+            "createModal": {
                 "header": "Create snapshot",
                 "actions": {
                     "create": "Create"
