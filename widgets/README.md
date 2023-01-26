@@ -21,14 +21,17 @@ This section describes how to create a new widget.
 ### Creating a widget
 
 To create your own widget:
-1. Create new widget structure following the instructions from [here](https://docs.cloudify.co/staging.dev/developer/writing_widgets/) 
+1. Create new widget structure following the instructions from 
+   [here](https://docs.cloudify.co/staging/dev/developer/writing_widgets/) 
 2. Place widget in [widgets](./widgets) directory
 
 ### Testing a widget
 
 To test your own widget:
 1. Start the application (see [Application start section in main README file](../README.md#Setup))
-2. Add your widget to the page using **Edit Mode** (check [this](https://docs.cloudify.co/staging/dev/working_with/customization/edit-mode/#adding-widgets) for details)
+2. Add your widget to the page using **Edit Mode** 
+   (check [this](https://docs.cloudify.co/staging/dev/working_with/console/customization/edit-mode/#adding-widgets) 
+   for details)
 
 Since now, every single change in widget's source code should be reflected by webpack dev server after page reload.
 
