@@ -31,7 +31,7 @@ export type StoreRBACAction = PayloadAction<
 >;
 export type SetUserDataAction = PayloadAction<GetAuthUserResponse, ActionType.SET_USER_DATA>;
 export type SetIdentityProvidersAction = PayloadAction<string[], ActionType.SET_IDENTITY_PROVIDERS>;
-export type LogoutAction = PayloadAction<{ error?: string | null; receivedAt: number }, ActionType.LOGOUT>;
+export type LogoutAction = PayloadAction<{ receivedAt: number }, ActionType.LOGOUT>;
 
 export type AuthAction =
     | LoginRequestAction
@@ -152,25 +152,20 @@ export function getIdentityProviders(): ReduxThunkAction<void, SetIdentityProvid
     };
 }
 
-function doLogout(error?: string | null): LogoutAction {
+function doLogout(): LogoutAction {
     return {
         type: ActionType.LOGOUT,
         payload: {
-            error,
             receivedAt: Date.now()
         }
     };
 }
 
-export function logout(
-    err?: string | null,
-    path?: string
-): ReduxThunkAction<Promise<void>, ClearContextAction | LogoutAction | CallHistoryMethodAction> {
+export function logout(): ReduxThunkAction<Promise<void>, ClearContextAction | LogoutAction | CallHistoryMethodAction> {
     return (dispatch, getState) => {
         const localLogout = () => {
             dispatch(clearContext());
-            dispatch(doLogout(err));
-            dispatch(push(path || (err ? Consts.PAGE_PATH.ERROR : Consts.PAGE_PATH.LOGOUT)));
+            dispatch(doLogout());
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);

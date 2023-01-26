@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ErrorMessageProps } from 'cloudify-ui-components/typings/components/elements/ErrorMessage/ErrorMessage';
+import type { ErrorMessageProps } from 'cloudify-ui-components';
 import { ErrorMessage } from '../../../../basic';
 import ErrorMessageWithPopup from './ErrorMessageWithPopup';
 

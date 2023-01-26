@@ -3,8 +3,7 @@ import _ from 'lodash';
 import log from 'loglevel';
 import type { RefObject } from 'react';
 import React, { Component, createRef } from 'react';
-import type { GridParams } from 'cloudify-ui-components/typings/components/data/common/types';
-import type { ErrorMessageProps } from 'cloudify-ui-components/typings/components/elements/ErrorMessage/ErrorMessage';
+import type { ErrorMessageProps, GridParams } from 'cloudify-ui-components';
 import combineClassNames from '../../../../../utils/shared/combineClassNames';
 import { getToolbox } from '../../../../../utils/Toolbox';
 import WidgetParamsHandler from '../../../../../utils/WidgetParamsHandler';
@@ -13,7 +12,7 @@ import type { ContextData } from '../../../../../reducers/contextReducer';
 import type { Widget } from '../../../../../utils/StageAPI';
 import type { ManagerData } from '../../../../../reducers/managerReducer';
 import type { CancelablePromise } from '../../../../../utils/types';
-import type { FetchWidgetDataPromises, fetchWidgetData } from '../../../../../actions/widgetData';
+import type { fetchWidgetData, FetchWidgetDataPromises } from '../../../../../actions/widgetData';
 
 export interface WidgetDynamicContentProps {
     context: ContextData;

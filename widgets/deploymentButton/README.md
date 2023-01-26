@@ -8,7 +8,7 @@ Allows creating a deployment of a chosen blueprint. After choosing a name for th
 
 * `label` - The label displayed in the button. Default: 'Create deployment'
 * `Color` - The color of the button. Available colors list can be found
-  at: [Theming - Semantic UI React](https://react.semantic-ui.com/layouts/theming). Default: 'green'
+  at: [Theming - Semantic UI React](https://react.semantic-ui.com/layouts/theming). Default: 'blue'
 * `Icon` - Name of the icon displayed in the button. Available icons list can be found
   at: [Icon - Semantic UI React](https://react.semantic-ui.com/elements/icon). Default: 'rocket'
 * `Basic button` - Allows to change button appearence, basic button is less pronounced. Default: No
