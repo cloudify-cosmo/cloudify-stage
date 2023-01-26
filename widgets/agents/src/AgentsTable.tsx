@@ -1,41 +1,42 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DataTableProps } from 'cloudify-ui-components';
+import type { AgentsConfiguration } from 'widgets/agents/src/widget';
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
-import AgentsPropType from './props/AgentsPropType';
-import type { Agents } from './types';
+import type { Agent } from './types';
 
 const t = Stage.Utils.getT('widgets.agents');
 
+export interface AgentsTableData {
+    items: Agent[];
+    total: number;
+    deploymentId: Stage.ContextEntries['deploymentId'];
+    nodeId: Stage.ContextEntries['nodeId'];
+    nodeInstanceId: Stage.ContextEntries['nodeInstanceId'];
+}
+
 interface AgentsTableProps {
-    data: {
-        items: Agents;
-        total: number;
-        deploymentId: string | string[];
-        nodeId: string | string[];
-        nodeInstanceId: string | string[];
-    };
-    widget: Stage.Types.Widget;
+    data: AgentsTableData;
+    widget: Stage.Types.Widget<AgentsConfiguration>;
     toolbox: Stage.Types.Toolbox;
 }
 
 interface AgentsTableState {
     showModal: boolean;
-    modal: string;
+    modal?: Modals;
+}
+
+enum Modals {
+    INSTALL_AGENT,
+    VALIDATE_AGENT
 }
 
 export default class AgentsTable extends React.Component<AgentsTableProps, AgentsTableState> {
-    static Modals = {
-        INSTALL_AGENT: 'install_agent',
-        VALIDATE_AGENT: 'validate_agent'
-    };
-
-    constructor(props: AgentsTableProps, context) {
-        super(props, context);
+    constructor(props: AgentsTableProps) {
+        super(props);
 
         this.state = {
             showModal: false,
-            modal: ''
+            modal: undefined
         };
     }
 
@@ -58,7 +59,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
         toolbox.getEventBus().off('agents:refresh', this.refreshData);
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -67,7 +68,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
         this.setState({ showModal: false });
     };
 
-    openModal(modal) {
+    openModal(modal: AgentsTableState['modal']) {
         this.setState({ showModal: true, modal });
     }
 
@@ -144,13 +145,13 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                             content="Install"
                             icon="download"
                             labelPosition="left"
-                            onClick={() => this.openModal(AgentsTable.Modals.INSTALL_AGENT)}
+                            onClick={() => this.openModal(Modals.INSTALL_AGENT)}
                         />
                         <Button
                             content="Validate"
                             icon="checkmark"
                             labelPosition="left"
-                            onClick={() => this.openModal(AgentsTable.Modals.VALIDATE_AGENT)}
+                            onClick={() => this.openModal(Modals.VALIDATE_AGENT)}
                         />
                     </DataTable.Action>
                 </DataTable>
@@ -158,39 +159,27 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                 <ValidateAgentsModal
                     manager={toolbox.getManager()}
                     drilldownHandler={toolbox.getDrilldownHandler()}
-                    open={showModal && modal === AgentsTable.Modals.VALIDATE_AGENT}
-                    deploymentId={data.deploymentId}
+                    open={showModal && modal === Modals.VALIDATE_AGENT}
+                    deploymentId={data.deploymentId || undefined}
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.without(configuration.installMethods, '')}
+                    installMethods={_.compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
 
                 <InstallAgentsModal
                     manager={toolbox.getManager()}
                     drilldownHandler={toolbox.getDrilldownHandler()}
-                    open={showModal && modal === AgentsTable.Modals.INSTALL_AGENT}
-                    deploymentId={data.deploymentId}
+                    open={showModal && modal === Modals.INSTALL_AGENT}
+                    deploymentId={data.deploymentId || undefined}
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.without(configuration.installMethods, '')}
+                    installMethods={_.compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
             </div>
         );
     }
 }
-
-AgentsTable.propTypes = {
-    data: PropTypes.shape({
-        items: AgentsPropType,
-        total: PropTypes.number,
-        deploymentId: Stage.PropTypes.StringOrArray,
-        nodeId: Stage.PropTypes.StringOrArray,
-        nodeInstanceId: Stage.PropTypes.StringOrArray
-    }).isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
