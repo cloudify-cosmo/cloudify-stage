@@ -35,8 +35,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
         super(props);
 
         this.state = {
-            showModal: false,
-            modal: undefined
+            showModal: false
         };
     }
 
