@@ -105,10 +105,10 @@ export default function ValidateAgentsModal({
         return true;
     }
 
-    const handleInputChange: NodeFilterProps['onChange'] &
-        StrictDropdownProps['onChange'] &
-        StrictCheckboxProps['onChange'] &
-        StrictInputProps['onChange'] = (_event, field) => {
+    const handleInputChange: (NodeFilterProps &
+        StrictDropdownProps &
+        StrictCheckboxProps &
+        StrictInputProps)['onChange'] = (_event, field) => {
         setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field as Field) });
     };
 
