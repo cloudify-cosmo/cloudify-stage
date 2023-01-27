@@ -5,43 +5,24 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
 import Consts from '../../utils/consts';
-import LogoPage from './LogoPage';
+import NotFoundPage from './NotFoundPage';
 import LoginPage from './LoginPage';
-import ExternalRedirect from './ExternalRedirect';
+import LogoutPage from './LogoutPage';
 import AuthRoutes from './AuthRoutes';
 import type { ReduxState } from '../../reducers';
 import ExternalLogin from './ExternalLogin';
 
 const Routes: FunctionComponent = () => {
     const isLoggedIn = useSelector((state: ReduxState) => state.manager.auth.state === 'loggedIn');
-    const isSamlEnabled = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.enabled', false));
-    const samlPortalUrl = useSelector((state: ReduxState) => _.get(state, 'config.app.saml.portalUrl', ''));
-    const useLoginPage = useSelector((state: ReduxState) => state.config.app.useLoginPage);
-    const theme = useSelector((state: ReduxState) => _.get(state, 'config.app.whiteLabel', {}));
+    const theme = useSelector((state: ReduxState) => state.config.app.whiteLabel);
 
     return (
         <ThemeProvider theme={theme}>
             <Switch>
-                <Route
-                    exact
-                    path={Consts.PAGE_PATH.LOGIN}
-                    render={() => (useLoginPage ? <LoginPage /> : <Redirect to={Consts.PAGE_PATH.EXTERNAL_LOGIN} />)}
-                />
+                <Route exact path={Consts.PAGE_PATH.LOGIN} component={LoginPage} />
                 <Route exact path={Consts.PAGE_PATH.EXTERNAL_LOGIN} component={ExternalLogin} />
-                <Route
-                    exact
-                    path={Consts.PAGE_PATH.LOGOUT}
-                    render={() =>
-                        isSamlEnabled ? (
-                            <ExternalRedirect url={samlPortalUrl} />
-                        ) : (
-                            <Redirect to={Consts.PAGE_PATH.LOGIN} />
-                        )
-                    }
-                />
-                <Route exact path={Consts.PAGE_PATH.ERROR} component={LogoPage} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_NO_TENANTS} component={LogoPage} />
-                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={LogoPage} />
+                <Route exact path={Consts.PAGE_PATH.LOGOUT} component={LogoutPage} />
+                <Route exact path={Consts.PAGE_PATH.ERROR_404} component={NotFoundPage} />
                 <Route
                     render={() => {
                         if (isLoggedIn) return <AuthRoutes />;

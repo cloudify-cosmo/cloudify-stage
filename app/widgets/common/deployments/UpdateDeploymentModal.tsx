@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isEmpty, forEach, join, isString } from 'lodash';
+import type { SortOrder } from 'app/widgets/common/inputs/SortOrderIcons';
 import { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } from '../../../components/basic';
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import type { DynamicDropdownProps } from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 import YamlFileButton from '../inputs/YamlFileButton';
 import DeploymentActions from './DeploymentActions';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
@@ -18,9 +20,11 @@ import InputsHeader from '../inputs/InputsHeader';
 import InputFields from '../inputs/InputFields';
 import NodeInstancesFilter from '../nodes/NodeInstancesFilter';
 import UpdateDetailsModal from './UpdateDetailsModal';
+import type { UpdateDetailsModalProps } from './UpdateDetailsModal';
 import { useBoolean, useErrors, useInputs, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
 import type { Deployment } from '../deploymentsView/types';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 
 type FetchedDeployment = Pick<Deployment, 'blueprint_id' | 'id' | 'inputs'>;
 
@@ -60,6 +64,7 @@ export default function UpdateDeploymentModal({
         skipDriftCheck: false,
         force: false
     });
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
 
     function selectBlueprint(id: string) {
         if (!isEmpty(id)) {
@@ -254,6 +259,10 @@ export default function UpdateDeploymentModal({
           }
         : {};
 
+    const blueprintHasInputs = !_.isEmpty(blueprint?.plan.inputs);
+    const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint?.plan?.inputs || {}).length > 1;
+    const blueprintHasDataTypes = !_.isEmpty(blueprint?.plan.data_types);
+
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
             <Modal.Header>
@@ -279,18 +288,20 @@ export default function UpdateDeploymentModal({
 
                     {blueprint?.id && (
                         <>
-                            {!isEmpty(blueprint.plan.inputs) && (
-                                <YamlFileButton
-                                    onChange={handleYamlFileChange}
-                                    dataType="deployment's inputs"
-                                    fileLoading={isFileLoading}
-                                />
-                            )}
-                            {!isEmpty(blueprint.plan.data_types) && (
-                                <DataTypesButton types={blueprint.plan.data_types} />
-                            )}
                             <InputsHeader />
-                            {isEmpty(blueprint.plan.inputs) && (
+                            {blueprintHasInputs ? (
+                                <IconButtonsGroup>
+                                    {blueprintHasMultipleInputs && (
+                                        <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
+                                    )}
+                                    {blueprintHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                                    <YamlFileButton
+                                        onChange={handleYamlFileChange}
+                                        dataType="deployment's inputs"
+                                        fileLoading={isFileLoading}
+                                    />
+                                </IconButtonsGroup>
+                            ) : (
                                 <Message content="No inputs available for the selected blueprint" />
                             )}
                         </>
@@ -302,7 +313,8 @@ export default function UpdateDeploymentModal({
                         inputsState={deploymentInputs}
                         errorsState={errors}
                         toolbox={toolbox}
-                        dataTypes={blueprint?.plan?.data_types || {}}
+                        dataTypes={blueprint?.plan?.data_types}
+                        sortOrder={sortOrder}
                     />
 
                     <Form.Divider>
@@ -424,8 +436,8 @@ export default function UpdateDeploymentModal({
                 <UpdateDetailsModal
                     open={isPreviewShown}
                     isPreview
-                    deploymentUpdate={previewData}
-                    executionParameters={executionParameters}
+                    deploymentUpdate={previewData as UpdateDetailsModalProps['deploymentUpdate']}
+                    executionParameters={executionParameters as UpdateDetailsModalProps['executionParameters']}
                     onClose={hidePreview}
                     onUpdate={onUpdate}
                     toolbox={toolbox}

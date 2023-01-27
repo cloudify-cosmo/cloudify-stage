@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { capitalize, map, isEqual } from 'lodash';
 import getTemplateForDataType from './utils/getTemplateForDataType';
 import ParameterValue from '../components/parameter/ParameterValue';
-import { Button, CancelButton, Header, Modal, Popup, Segment, Table } from '../../../components/basic';
+import { CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../../components/basic';
 import translateInputs from './utils/translateInputs';
 import type { BlueprintPlan } from '../blueprints/BlueprintActions';
 
@@ -128,26 +128,25 @@ class DataTypesButton extends React.Component<DataTypesButtonProps, DataTypesBut
     }
 
     render() {
-        const { types, iconButton } = this.props;
+        const { types } = this.props;
         const { open } = this.state;
         const buttonTitle = translateInputs('buttons.dataTypes.title');
 
         return (
             <div>
-                {iconButton ? (
-                    <Popup
-                        content={buttonTitle}
-                        trigger={<Button icon="code" onClick={this.onOpen} floated="right" aria-label={buttonTitle} />}
-                    />
-                ) : (
-                    <Button
-                        icon="code"
-                        content={buttonTitle}
-                        onClick={this.onOpen}
-                        floated="right"
-                        labelPosition="left"
-                    />
-                )}
+                <Popup
+                    content={buttonTitle}
+                    trigger={
+                        <Icon
+                            name="code"
+                            onClick={this.onOpen}
+                            color="blue"
+                            size="large"
+                            link
+                            aria-label={buttonTitle}
+                        />
+                    }
+                />
 
                 <Modal open={open} onClose={this.onClose}>
                     <Modal.Header>Data Types</Modal.Header>

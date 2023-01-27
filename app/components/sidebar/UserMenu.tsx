@@ -14,7 +14,6 @@ import Consts from '../../utils/consts';
 import ResetPagesModal from './ResetPagesModal';
 import { resetPagesForTenant } from '../../actions/userApp';
 import PasswordModal from '../common/PasswordModal';
-import { logout } from '../../actions/manager/auth';
 import UserInitialsIcon from './UserInitialsIcon';
 import type { SystemMenuGroupItemProps } from './SystemMenu';
 
@@ -112,7 +111,12 @@ const UserMenu: FunctionComponent<SystemMenuGroupItemProps> = ({ expanded, onMod
                             onClick={handlePasswordModalOpen}
                         />
                     )}
-                    <SideBarItem icon="log out" label={t('logout')} subItem onClick={() => dispatch(logout())} />
+                    <SideBarItem
+                        icon="log out"
+                        label={t('logout')}
+                        subItem
+                        onClick={() => dispatch(push(Consts.PAGE_PATH.LOGOUT))}
+                    />
                 </>
             )}
 

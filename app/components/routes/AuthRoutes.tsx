@@ -6,12 +6,13 @@ import type { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
+import { showAppError } from '../../actions/app';
 import { useBoolean } from '../../utils/hooks';
 import { getTenants } from '../../actions/manager/tenants';
 import Auth from '../../utils/auth';
 import Consts from '../../utils/consts';
 import type { LogoutAction } from '../../actions/manager/auth';
-import { getManagerData, getUserData, logout } from '../../actions/manager/auth';
+import { getManagerData, getUserData } from '../../actions/manager/auth';
 import ApplicationRoutes from './ApplicationRoutes';
 import LicensePage from '../license/LicensePage';
 import MaintenanceModePage from '../maintenanceMode/MaintenanceModePage';
@@ -41,10 +42,10 @@ const AuthRoutes: FunctionComponent = () => {
             })
             .catch((error: any) => {
                 if (error instanceof NoTenantsError) {
-                    dispatch(logout(null, Consts.PAGE_PATH.ERROR_NO_TENANTS));
+                    dispatch(showAppError(i18n.t('errors.noTenants')));
                 } else {
-                    log.error(i18n.t('managerDataError'), error);
-                    dispatch(logout(i18n.t('managerDataError')));
+                    log.error(i18n.t('errors.managerData'), error);
+                    dispatch(showAppError(i18n.t('errors.managerData')));
                 }
             });
     }, []);

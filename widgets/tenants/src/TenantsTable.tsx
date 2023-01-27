@@ -1,5 +1,5 @@
 import type { Toolbox } from 'app/utils/StageAPI';
-import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
+import type { DataTableProps } from 'cloudify-ui-components';
 import type { Tenant, TenantsWidget } from './widget.types';
 import Actions from './actions';
 import CreateModal from './CreateModal';

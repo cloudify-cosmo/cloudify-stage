@@ -1,5 +1,4 @@
 {
-    "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
         "pluginsCatalog": "https://marketplace.cloudify.co/plugins/catalog"
@@ -225,6 +224,16 @@
             }
         }
     },
+    "errors": {
+        "header": "Error occurred",
+        "managerData": "Error fetching data from the manager, cannot load page",
+        "licenseExpired": "License has expired",
+        "noLicense": "No active license",
+        "noPages": "No pages available to display. Please try to reset application to the default settings.",
+        "noTenants": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account.",
+        "pageLoad": "Error initializing user data, cannot load page",
+        "unauthorized": "User not authorized"
+    },
     "help": {
         "about": "About",
         "aboutModal": {
@@ -238,7 +247,6 @@
         "documentation": "Documentation",
         "documentationLink": "https://docs.cloudify.co/{{version}}"
     },
-    "licenseExpired": "License has expired",
     "licenseManagement": {
         "action": {
             "activeLicense": "No action required.",
@@ -291,10 +299,6 @@
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
         },
-        "noTenants": {
-            "header": "User is not associated with any tenants.",
-            "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
-        },
         "password": "Password",
         "username": "Username",
         "submit": "LOGIN",
@@ -313,9 +317,6 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
-    "managerDataError": "Error getting data from the manager, cannot load page",
-    "noLicense": "No active license",
-    "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
         "header": "Page Not Found",
         "homepageLink": "Go to the Homepage",
@@ -325,7 +326,6 @@
         "description": "Page description",
         "emptyContainer": "This {{containerType}} is empty"
     },
-    "pageLoadError": "Error initializing user data, cannot load page",
     "pagesResetModal": {
         "confirm": "Are you sure you want to reset application screens to default?",
         "header": "Reset pages for tenants",
@@ -333,7 +333,7 @@
     },
     "pageTitle": "Cloudify Console",
     "productName": "Cloudify",
-    "redirecting": "Redirecting to {{url}}...",
+    "redirecting": "Redirecting to",
     "shared": {
         "executionStatus": {
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
@@ -531,6 +531,25 @@
     },
     "widgets": {
         "common": {
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                }
+            },
             "deployments": {
                 "actionsMenu": {
                     "install": "Install",
@@ -607,6 +626,11 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "header": {
+                            "label": "Deployment inputs",
+                            "subHeader": "See values typing details: ",
+                            "popupHelp": "Value type"
+                        },
                         "deploymentId": {
                             "label": "Deployment ID",
                             "help": "Specify an ID for this deployment instance."
@@ -621,7 +645,15 @@
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",
-                            "placeholder": "Select a parent"
+                            "placeholder": "Select a parent",
+                            "environmentList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching environments",
+                                "noData": "no environments"
+                            }
                         },
                         "siteName": {
                             "label": "Site name",
@@ -640,7 +672,8 @@
                         },
                         "deploymentInputs": {
                             "loading": "Loading inputs...",
-                            "noInputs": "No inputs available for the blueprint"
+                            "noInputs": "No inputs available for the blueprint",
+                            "yamlDataType": "deployment's inputs"
                         }
                     },
                     "sections": {
@@ -822,10 +855,18 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
+                        "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form.",
+                        "dataType": "values"
                     }
                 },
                 "types": {
@@ -1067,28 +1108,9 @@
             "name": "Button link",
             "description": "Opens provided URL",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button",
-                    "default": "green"
-                },
                 "fullHeight": {
                     "name": "Full height",
                     "description": "Should the button use full height reserved for the widget"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
-                    "default": "external"
-                },
-                "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
-                    "default": "Button Link"
                 },
                 "url": {
                     "name": "URL address",
@@ -1108,6 +1130,15 @@
                 "imageSrc": {
                     "name": "Image URL",
                     "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
+        },
+        "cloudButton": {
+            "name": "Setup cloud account button",
+            "description": "Displays button allowing to setup cloud account",
+            "configuration": {
+                "label": {
+                    "default": "Setup cloud account"
                 }
             }
         },
@@ -1602,9 +1633,10 @@
                         "label": "Provider Name",
                         "placeholder": "Provider Name"
                     },
-                    "hostname": {
-                        "label": "Vault Hostname",
-                        "placeholder": "Vault Hostname"
+                    "url": {
+                        "label": "Vault URL",
+                        "placeholder": "Vault URL",
+                        "helper": "Example: http://172.17.0.2:8200"
                     },
                     "authorizationToken": {
                         "label": "Authorization Token",
@@ -1620,7 +1652,7 @@
                         "required": "Please provide the Provider Name.",
                         "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Please provide vault hostname.",
+                    "url": "Please provide Vault URL.",
                     "authorizationToken": "Please provide an authorization token.",
                     "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again.",
                     "update": "Couldn't update a Secret Provider, please try to submit the Secret Provider data again."
@@ -1657,7 +1689,15 @@
                 "header": "Create secret",
                 "buttons": {
                     "create": "Create"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                }
+            },
+            "form": {
                 "inputs": {
                     "secretKey": {
                         "label": "Secret key",
@@ -1692,22 +1732,6 @@
                         "noProviders": "No Secret providers are defined in the System",
                         "secretProviderName": "Please select a secret provider",
                         "secretProviderPath": "Please provide a path or a secret key on the secret provider"
-                    }
-                }
-            },
-            "updateModal": {
-                "header": "Update secret {{secretKey}}",
-                "buttons": {
-                    "update": "Update"
-                },
-                "inputs": {
-                    "secretValue": {
-                        "placeholder": "Secret value"
-                    }
-                },
-                "errors": {
-                    "validation": {
-                        "secretValue": "Please provide secret value"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -1717,22 +1741,10 @@
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create a service"
                 },
                 "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
                     "default": "add"
                 },
                 "defaultMarketplaceTab": {
@@ -1745,22 +1757,8 @@
             "name": "Create deployment button",
             "description": "Adds button to create new deployment",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create deployment"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
                     "name": "Blueprint label filter rules"
@@ -2225,7 +2223,7 @@
                     }
                 }
             },
-            "createModal" : {
+            "createModal": {
                 "header": "Create snapshot",
                 "actions": {
                     "create": "Create"
