@@ -9,7 +9,12 @@ function hasEnvironmentLabel(deploymentLabels: Label[]) {
     });
 }
 
-export function isMenuItemAvailable(item: MenuItem, workflows: Workflow[], deploymentLabels: Label[], sitesExist: boolean) {
+export function isMenuItemAvailable(
+    item: MenuItem,
+    workflows: Workflow[],
+    deploymentLabels: Label[],
+    sitesExist: boolean
+) {
     if (item.permission === permissions.executeWorkflow) {
         const workflow = workflows?.find(w => w.name === item.name);
         return !!workflow?.is_available;
