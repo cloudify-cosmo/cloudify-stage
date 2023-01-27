@@ -37,7 +37,7 @@ const getValueElement = (value: ParameterValueProps['value'], stringValue: strin
     }
 };
 
-interface ParameterValueProps {
+export interface ParameterValueProps {
     /**
      * @property [value=''] parameter value (original type)
      * @default ''
