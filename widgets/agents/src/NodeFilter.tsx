@@ -136,13 +136,6 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
         showNodeInstances: true
     };
 
-    static EMPTY_VALUE = {
-        blueprintId: '',
-        deploymentId: '',
-        nodeId: '',
-        nodeInstanceId: ''
-    };
-
     static BASIC_PARAMS = { _include: 'id' };
 
     static initialState = (props: NodeFilterProps) => ({
