@@ -72,8 +72,6 @@ class UploadPluginForm extends React.Component<UploadPluginFormPropsWithDefaults
             <Form.Field label={`${fieldName} file`} required={required} key={fieldName} error={errors[urlProp]}>
                 <Form.UrlOrFile
                     name={fieldName}
-                    // @ts-ignore Form.UrlOrFile not yet fully in TS
-                    value={urlProp}
                     placeholder={hidePlaceholders ? '' : placeholders[fieldName]}
                     onChangeUrl={url => {
                         this.onChange(fieldName, null, url);

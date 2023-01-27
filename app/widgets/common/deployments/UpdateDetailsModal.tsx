@@ -1,7 +1,6 @@
 import React from 'react';
 import { diffChars } from 'diff';
 import { map, keys, chain, isEqual, isEmpty, get, capitalize, lowerCase, filter, size, uniq, noop } from 'lodash';
-import PropTypes from 'prop-types';
 import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import {
     ApproveButton,
@@ -19,7 +18,6 @@ import {
 } from '../../../components/basic';
 import ParameterValue from '../components/parameter/ParameterValue';
 import ParameterValueDescription from '../components/parameter/ParameterValueDescription';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import DeploymentUpdatesActions from './DeploymentUpdatesActions';
 import Json from '../../../utils/shared/JsonUtils';
 import { useBoolean, useResettableState } from '../../../utils/hooks';
@@ -379,7 +377,7 @@ interface ExecutionParameters {
     /* eslint-enable camelcase */
 }
 
-interface UpdateDetailsModalProps {
+export interface UpdateDetailsModalProps {
     toolbox: Stage.Types.WidgetlessToolbox;
     open: boolean;
     isPreview?: boolean;
