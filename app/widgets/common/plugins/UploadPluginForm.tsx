@@ -9,7 +9,7 @@ const placeholders = {
     icon: "Provide the plugin's icon file URL or click browse to select a file"
 } as const;
 
-const NO_ERRORS = { errors: {} };
+const noErrors = { errors: {} };
 
 type Error = {
     title: string;
@@ -46,13 +46,13 @@ class UploadPluginForm extends React.Component<UploadPluginFormPropsWithDefaults
 
     componentDidMount() {
         const { onChange: cbOnChange } = this.props;
-        cbOnChange(NO_ERRORS);
+        cbOnChange(noErrors);
     }
 
     onChange(fieldName: string, file: File | null, url: string) {
         const { onChange: cbOnChange } = this.props;
         cbOnChange({
-            ...NO_ERRORS,
+            ...noErrors,
             [`${fieldName}File`]: file,
             [`${fieldName}Url`]: url
         });
@@ -95,7 +95,7 @@ class UploadPluginForm extends React.Component<UploadPluginFormPropsWithDefaults
         const onTitleChange = (titleChange: Record<'title', string>) => {
             const { onChange } = this.props;
             onChange({
-                ...NO_ERRORS,
+                ...noErrors,
                 ...titleChange
             });
             this.setState(titleChange);

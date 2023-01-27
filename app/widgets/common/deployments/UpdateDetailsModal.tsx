@@ -364,7 +364,7 @@ interface DeploymentUpdate {
     new_inputs: Inputs;
     old_blueprint_id: string;
     old_inputs: Inputs;
-    steps: Record<string, unknown>[];
+    steps: StepsSectionProps['steps'];
     /* eslint-enable camelcase */
 }
 

@@ -259,9 +259,9 @@ export default function UpdateDeploymentModal({
           }
         : {};
 
-    const blueprintHasInputs = !_.isEmpty(blueprint?.plan.inputs);
-    const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint?.plan?.inputs || {}).length > 1;
-    const blueprintHasDataTypes = !_.isEmpty(blueprint?.plan.data_types);
+    const blueprintHasInputs = !isEmpty(blueprint?.plan.inputs);
+    const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint!.plan.inputs).length > 1;
+    const blueprintHasDataTypes = !isEmpty(blueprint?.plan.data_types);
 
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">

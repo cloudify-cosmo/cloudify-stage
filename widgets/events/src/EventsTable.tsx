@@ -193,12 +193,6 @@ export default class EventsTable extends React.Component {
                         const messageText = Json.stringify(item.message, false);
                         const showDetailsIcon = !_.isEmpty(item.error_causes) || messageText.length > maxMessageLength;
 
-                        // eslint-disable-next-line
-                        console.log(item.event_type);
-
-                        // eslint-disable-next-line
-                        console.log(item.level);
-
                         const eventOptions = isEventType
                             ? EventUtils.getEventTypeOptions(item.event_type)
                             : EventUtils.getLogLevelOptions(item.level);

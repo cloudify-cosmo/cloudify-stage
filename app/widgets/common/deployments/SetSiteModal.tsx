@@ -21,7 +21,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
     const [siteName, setSiteName, clearSiteName] = useInput('');
     const [sites, setSites, resetSites] = useResettableState<Pick<Site, 'name'>[]>([]);
 
-    const siteOptions = _.map(sites, site => {
+    const siteOptions = sites.map(site => {
         return { text: site.name, value: site.name };
     });
 

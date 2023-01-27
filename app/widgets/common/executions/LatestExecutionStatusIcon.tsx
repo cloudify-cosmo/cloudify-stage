@@ -78,7 +78,7 @@ export default class LatestExecutionStatusIcon extends React.Component<
         );
     }
 
-    actOnExecution(execution: Execution, action: any) {
+    actOnExecution(execution: Execution, action: ExecutionAction) {
         const { onActOnExecution, toolbox } = this.props;
         const actions = new ExecutionActions(toolbox.getManager());
         actions

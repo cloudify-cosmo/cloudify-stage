@@ -7,6 +7,7 @@ import UploadBlueprintBasicForm from './UploadBlueprintBasicForm';
 import type { UploadBlueprintBasicFormProps } from './UploadBlueprintBasicForm';
 import StageUtils from '../../../utils/stageUtils';
 import { Form } from '../../../components/basic';
+import type { PutSourceListYamlResponse } from '../../../../backend/routes/SourceBrowser.types';
 
 const t = StageUtils.getT('widgets.common.blueprintUpload.inputs');
 
@@ -51,7 +52,7 @@ type UploadBlueprintFormPropsWithDefaults = UploadBlueprintFormProps & UploadBlu
 
 interface UploadBlueprintFormState {
     loading: boolean;
-    yamlFiles: any[];
+    yamlFiles: PutSourceListYamlResponse;
 }
 
 const defaultProps: UploadBlueprintFormPropsDefaults = {
