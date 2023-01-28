@@ -11,8 +11,9 @@ function useSitesExist(toolbox: Stage.Types.Toolbox) {
                 const sites = response.items;
                 if (sites.length > 0) {
                     setSitesExist(true);
+                } else {
+                    setSitesExist(false);
                 }
-                setSitesExist(false);
             });
     }, []);
 
