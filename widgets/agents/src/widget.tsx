@@ -1,11 +1,29 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DataTableConfiguration } from 'app/utils/GenericConfig';
+import type { Agent, InstallMethod } from 'widgets/agents/src/types';
+import { installMethodsOptions } from './consts';
+import type { AgentsTableData } from './AgentsTable';
 import AgentsTable from './AgentsTable';
-import Consts from './consts';
 
 const t = Stage.Utils.getT('widgets.agents');
 
-Stage.defineWidget({
+interface AgentsParams {
+    /* eslint-disable camelcase */
+    deployment_id?: Stage.ContextEntries['deploymentId'];
+    node_ids: Stage.ContextEntries['nodeId'];
+    node_instance_ids: Stage.ContextEntries['nodeInstanceId'];
+    install_methods?: InstallMethod[];
+    /* eslint-enable camelcase */
+    state: string;
+}
+
+export interface AgentsConfiguration extends DataTableConfiguration {
+    fieldsToShow: string[];
+    installMethods: InstallMethod[];
+}
+
+type AgentsData = Stage.Types.PaginatedResponse<Agent>;
+
+Stage.defineWidget<AgentsParams, AgentsData, AgentsConfiguration>({
     id: 'agents',
     name: 'Agents',
     description: 'This widget shows list of installed agents',
@@ -50,7 +68,7 @@ Stage.defineWidget({
             description:
                 'Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.',
             placeHolder: 'Select Install Methods from the list',
-            items: Consts.installMethodsOptions,
+            items: installMethodsOptions,
             default: [],
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
@@ -70,18 +88,18 @@ Stage.defineWidget({
         };
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
-        const params = this.fetchParams(widget, toolbox);
-        const formattedData = {
+        const params = this.fetchParams!(widget, toolbox);
+        const formattedData: AgentsTableData = {
             items: data.items,
             total: _.get(data, 'metadata.pagination.total', 0),
-            deploymentId: params.deployment_id,
+            deploymentId: params.deployment_id || null,
             nodeId: params.node_ids,
             nodeInstanceId: params.node_instance_ids
         };
