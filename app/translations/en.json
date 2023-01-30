@@ -951,9 +951,7 @@
                     },
                     "buttons": {
                         "close": "Close",
-                        "install": "Install",
-                        "showStatus": "Show Status and Logs",
-                        "validate": "Validate"
+                        "showStatus": "Show Status and Logs"
                     },
                     "deploymentError": "Provide deployment in Nodes filter"
                 },

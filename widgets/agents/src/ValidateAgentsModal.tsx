@@ -191,7 +191,7 @@ export default function ValidateAgentsModal({
                     <ApproveButton
                         onClick={onApprove}
                         disabled={loading}
-                        content={translateCommon('buttons.validate')}
+                        content={translate('buttons.validate')}
                         icon="checkmark"
                     />
                 )}

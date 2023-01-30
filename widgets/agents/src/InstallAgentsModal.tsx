@@ -229,7 +229,7 @@ export default function InstallAgentsModal({
                     <ApproveButton
                         onClick={onApprove}
                         disabled={loading}
-                        content={translateCommon('buttons.install')}
+                        content={translate('buttons.install')}
                         icon="download"
                     />
                 )}
