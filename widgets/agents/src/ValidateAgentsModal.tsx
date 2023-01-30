@@ -32,9 +32,9 @@ export default function ValidateAgentsModal({
         };
     }
 
-    const [allowedDeployments, setAllowedDeployments] = useState<string[] | undefined>(undefined);
-    const [allowedNodes, setAllowedNodes] = useState<string[] | undefined>(undefined);
-    const [allowedNodeInstances, setAllowedNodeInstances] = useState<string[] | undefined>(undefined);
+    const [allowedDeployments, setAllowedDeployments] = useState<string[] | undefined>();
+    const [allowedNodes, setAllowedNodes] = useState<string[] | undefined>();
+    const [allowedNodeInstances, setAllowedNodeInstances] = useState<string[] | undefined>();
     const [loading, setLoading] = useState(false);
     const [executionId, setExecutionId] = useState('');
     const [executionStarted, setExecutionStarted] = useState(false);
