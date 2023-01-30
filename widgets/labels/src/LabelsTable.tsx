@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import type { Label } from 'app/widgets/common/labels/types';
+import type { Toolbox } from 'app/utils/StageAPI';
 import LabelValueInput from './LabelValueInput';
 import DeleteConfirmModal from './DeleteConfirmModal';
 import AddLabelsModal from './AddLabelsModal';
@@ -10,7 +11,7 @@ type LabelsTableProps = {
         deploymentId: string;
         labels: Label[];
     };
-    toolbox: Stage.Types.Toolbox;
+    toolbox: Toolbox;
 };
 export default function LabelsTable({ data, toolbox }: LabelsTableProps) {
     const { Button, DataTable, Icon } = Stage.Basic;
