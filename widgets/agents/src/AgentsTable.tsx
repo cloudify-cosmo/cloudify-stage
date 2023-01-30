@@ -1,3 +1,4 @@
+import { compact, isEqual } from 'lodash';
 import type { DataTableProps } from 'cloudify-ui-components';
 import type { AgentsConfiguration } from 'widgets/agents/src/widget';
 import InstallAgentsModal from './InstallAgentsModal';
@@ -45,11 +46,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
 
     shouldComponentUpdate(nextProps: AgentsTableProps, nextState: AgentsTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -133,7 +130,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                         show={fieldsToShow.indexOf(translateColumn('installMethod')) >= 0}
                     />
 
-                    {_.map(data.items, item => (
+                    {data.items.map(item => (
                         <DataTable.Row key={item.id}>
                             <DataTable.Data>{item.id}</DataTable.Data>
                             <DataTable.Data>{item.ip}</DataTable.Data>
@@ -169,7 +166,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.compact(configuration.installMethods)}
+                    installMethods={compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
 
@@ -181,7 +178,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.compact(configuration.installMethods)}
+                    installMethods={compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
             </div>

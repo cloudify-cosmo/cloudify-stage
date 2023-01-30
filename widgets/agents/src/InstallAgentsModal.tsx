@@ -1,3 +1,4 @@
+import { castArray, chain, isArray, isEmpty, isNil } from 'lodash';
 import type { StrictDropdownProps, StrictCheckboxProps, StrictInputProps } from 'semantic-ui-react';
 import type { Field } from 'app/widgets/common/types';
 import type { Agent, AgentsModalProps } from './types';
@@ -26,14 +27,14 @@ export default function InstallAgentsModal({
 
     function getInitialInputValues() {
         return {
-            installMethods: _.isNil(installMethods) ? [] : _.castArray(installMethods),
+            installMethods: isNil(installMethods) ? [] : castArray(installMethods),
             managerCertificate: '',
             managerIp: '',
             nodeFilter: {
                 blueprintId: '',
-                deploymentId: _.isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
-                nodeId: _.isNil(nodeId) ? [] : _.castArray(nodeId),
-                nodeInstanceId: _.isNil(nodeInstanceId) ? [] : _.castArray(nodeInstanceId)
+                deploymentId: isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
+                nodeId: isNil(nodeId) ? [] : castArray(nodeId),
+                nodeInstanceId: isNil(nodeInstanceId) ? [] : castArray(nodeInstanceId)
             },
             stopOldAgent: false
         };
@@ -49,7 +50,7 @@ export default function InstallAgentsModal({
     const [inputValues, setInputValues] = useState(getInitialInputValues());
 
     function getAgentsAttributeList(attributeName: keyof Agent) {
-        return _.chain(agents).map(attributeName).uniq().value();
+        return chain(agents).map(attributeName).uniq().value();
     }
 
     useEffect(() => {
@@ -85,12 +86,12 @@ export default function InstallAgentsModal({
 
         setLoading(true);
         const params = {
-            node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
-            node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(methods) ? methods : undefined,
+            node_ids: !isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
+            node_instance_ids: !isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
+            install_methods: !isEmpty(methods) ? methods : undefined,
             stop_old_agent: stopOldAgent,
-            manager_ip: !_.isEmpty(managerIp) ? managerIp : undefined,
-            manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
+            manager_ip: !isEmpty(managerIp) ? managerIp : undefined,
+            manager_certificate: !isEmpty(managerCertificate) ? managerCertificate : undefined
         };
 
         const actions = new Stage.Common.Deployments.Actions(manager);

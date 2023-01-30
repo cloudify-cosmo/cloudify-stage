@@ -1,3 +1,4 @@
+import { isEmpty, reject } from 'lodash';
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
 import type { Agent, InstallMethod } from 'widgets/agents/src/types';
 import { installMethodsOptions } from './consts';
@@ -81,8 +82,8 @@ Stage.defineWidget<AgentsParams, AgentsData, AgentsConfiguration>({
             deployment_id: toolbox.getContext().getValue('deploymentId'),
             node_ids: toolbox.getContext().getValue('nodeId'),
             node_instance_ids: toolbox.getContext().getValue('nodeInstanceId'),
-            install_methods: !_.isEmpty(widget.configuration.installMethods)
-                ? _.reject(widget.configuration.installMethods, _.isEmpty)
+            install_methods: !isEmpty(widget.configuration.installMethods)
+                ? reject(widget.configuration.installMethods, isEmpty)
                 : undefined,
             state: agentStartedState
         };
@@ -98,7 +99,7 @@ Stage.defineWidget<AgentsParams, AgentsData, AgentsConfiguration>({
         const params = this.fetchParams!(widget, toolbox);
         const formattedData: AgentsTableData = {
             items: data.items,
-            total: _.get(data, 'metadata.pagination.total', 0),
+            total: data.metadata.pagination.total,
             deploymentId: params.deployment_id || null,
             nodeId: params.node_ids,
             nodeInstanceId: params.node_instance_ids
