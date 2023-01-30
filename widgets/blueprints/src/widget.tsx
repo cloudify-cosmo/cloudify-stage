@@ -21,8 +21,8 @@ interface BlueprintsParams {
 
 Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
-    name: 'Blueprints',
-    description: 'Shows blueprint list',
+    name: translateBlueprints('name'),
+    description: translateBlueprints('description'),
     initialWidth: 8,
     initialHeight: 20,
     isReact: true,

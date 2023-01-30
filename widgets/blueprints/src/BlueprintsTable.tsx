@@ -1,5 +1,6 @@
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
+import { translateBluprintsIcons } from './widget.utils';
 
 export default function BlueprintsTable({
     data,
@@ -84,7 +85,7 @@ export default function BlueprintsTable({
                                         {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
                                             <Icon
                                                 name="external share"
-                                                title="Edit a copy in Composer"
+                                                title={translateBluprintsIcons('editInComposer')}
                                                 onClick={(event: Event) => {
                                                     event.stopPropagation();
                                                     new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
@@ -97,7 +98,7 @@ export default function BlueprintsTable({
                                         <Icon
                                             name="rocket"
                                             link
-                                            title="Create deployment"
+                                            title={translateBluprintsIcons('createDeployment')}
                                             onClick={(event: Event) => {
                                                 event.stopPropagation();
                                                 onCreateDeployment(item);
@@ -108,7 +109,7 @@ export default function BlueprintsTable({
                                 <Icon
                                     name="trash"
                                     link
-                                    title="Delete blueprint"
+                                    title={translateBluprintsIcons('deleteBluprint')}
                                     onClick={(event: Event) => {
                                         event.stopPropagation();
                                         onDeleteBlueprint(item);
