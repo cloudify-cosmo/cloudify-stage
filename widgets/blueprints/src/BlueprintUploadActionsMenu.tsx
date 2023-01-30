@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { isEqual, map } from 'lodash';
-import { translateBluprintUploadActionsMenu } from './widget.utils';
+import { translateBlueprintUploadActionsMenu } from './widget.utils';
 
 const { Dropdown } = Stage.Basic;
 const { Menu, Item } = Dropdown;
@@ -53,14 +53,14 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
         <>
             <Dropdown
                 button
-                text={translateBluprintUploadActionsMenu('uploadButton')}
+                text={translateBlueprintUploadActionsMenu('uploadButton')}
                 direction={direction}
                 upward={upward}
             >
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
                     {map(menuItems, (clickHandler, key) => (
-                        <Item text={translateBluprintUploadActionsMenu(key)} key={key} onClick={clickHandler} />
+                        <Item text={translateBlueprintUploadActionsMenu(key)} key={key} onClick={clickHandler} />
                     ))}
                 </Menu>
             </Dropdown>

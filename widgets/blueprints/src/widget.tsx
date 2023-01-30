@@ -1,4 +1,3 @@
-import type { ListBlueprintsParams } from 'app/widgets/common/actions/SearchActions';
 import { each, get, isEmpty, join, map, reduce } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
@@ -97,7 +96,7 @@ Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConf
 
         const blueprintsList = await searchActions.doListBlueprints(filterRules, {
             _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-            ...(params as ListBlueprintsParams)
+            ...params
         });
         result.blueprints = blueprintsList;
         const deploymentsList = await toolbox.getManager().doGetFull('/summary/deployments', {
