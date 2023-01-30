@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+import { isEqual } from 'lodash';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
@@ -42,11 +43,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
     shouldComponentUpdate(nextProps: BlueprintListProps, nextState: BlueprintListState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {

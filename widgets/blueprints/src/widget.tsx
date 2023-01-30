@@ -13,7 +13,13 @@ interface DataToProcess {
     deployments: any;
 }
 
-Stage.defineWidget<unknown, BlueprintDataResponse, BlueprintsWidgetConfiguration>({
+interface BlueprintsParams {
+    // eslint-disable-next-line camelcase
+    created_by?: string;
+    state?: string;
+}
+
+Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
     name: 'Blueprints',
     description: 'Shows blueprint list',
@@ -102,12 +108,7 @@ Stage.defineWidget<unknown, BlueprintDataResponse, BlueprintsWidgetConfiguration
         return result as unknown as BlueprintDataResponse;
     },
     fetchParams: (widget, toolbox) => {
-        interface Params {
-            // eslint-disable-next-line camelcase
-            created_by?: string;
-            state?: string;
-        }
-        const params: Params = {};
+        const params: BlueprintsParams = {};
 
         if (toolbox.getContext().getValue('onlyMyResources'))
             params.created_by = toolbox.getManager().getCurrentUsername();

@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { each } from 'lodash';
 
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
@@ -190,7 +191,7 @@ export default function BlueprintsCatalog({
 
     const blueprintsRows = [];
     let row: ReactElement[] = [];
-    _.each(blueprintsItems, (blueprintItem, index) => {
+    each(blueprintsItems, (blueprintItem, index) => {
         row.push(blueprintItem);
         if ((index + 1) % 5 === 0) {
             blueprintsRows.push(
