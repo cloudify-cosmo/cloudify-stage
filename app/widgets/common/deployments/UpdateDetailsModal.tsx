@@ -166,7 +166,7 @@ function InputsSection({ oldInputs = {}, newInputs = {} }: InputSectionProps) {
                     </Table.Header>
 
                     <Table.Body>
-                        {map(showOnlyChanged ? onlyChangedInputs : newInputs, (input: string) => {
+                        {map(showOnlyChanged ? onlyChangedInputs : sortedNewInputs, (input: string) => {
                             const oldValue = get(oldInputs, input, '');
                             const oldValueString = Json.getStringValue(oldValue);
                             const newValue = get(newInputs, input, '');
