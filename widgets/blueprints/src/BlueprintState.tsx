@@ -7,15 +7,16 @@ interface BlueprintStateProps {
 
 export default function BlueprintState({ blueprint }: BlueprintStateProps) {
     const { Icon, Popup } = Stage.Basic;
+    const normalizedBlueprintState = startCase(blueprint.state);
     return (
         <>
-            {words(startCase(blueprint.state))[0]}{' '}
+            {words(normalizedBlueprintState)[0]}{' '}
             {blueprint.error && (
                 <Popup
                     offset={[-11, 0]}
                     trigger={<Icon link name="warning circle" color="red" />}
                     content={blueprint.error}
-                    header={capitalize(startCase(blueprint.state))}
+                    header={capitalize(normalizedBlueprintState)}
                 />
             )}
         </>
