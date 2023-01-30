@@ -1,20 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
-
-import Consts from './consts';
+import type { StrictDropdownProps, StrictCheckboxProps, StrictInputProps } from 'semantic-ui-react';
+import type { Field } from 'app/widgets/common/types';
+import type { Agent, AgentsModalProps } from './types';
+import { installMethodsOptions } from './consts';
+import type { NodeFilterProps } from './NodeFilter';
 import NodeFilter from './NodeFilter';
-import AgentsPropType from './props/AgentsPropType';
+
+type InstallAgentsModalProps = AgentsModalProps;
 
 export default function InstallAgentsModal({
-    agents,
-    deploymentId,
-    installMethods,
-    nodeId,
-    nodeInstanceId,
+    agents = [],
+    deploymentId = '',
+    installMethods = [],
+    nodeId = [],
+    nodeInstanceId = [],
     onHide,
     open,
     manager,
     drilldownHandler
-}) {
+}: InstallAgentsModalProps) {
     const { useEffect, useState } = React;
 
     function getInitialInputValues() {
@@ -32,16 +35,16 @@ export default function InstallAgentsModal({
         };
     }
 
-    const [allowedDeployments, setAllowedDeployments] = useState(null);
-    const [allowedNodes, setAllowedNodes] = useState(null);
-    const [allowedNodeInstances, setAllowedNodeInstances] = useState(null);
+    const [allowedDeployments, setAllowedDeployments] = useState<string[] | undefined>(undefined);
+    const [allowedNodes, setAllowedNodes] = useState<string[] | undefined>(undefined);
+    const [allowedNodeInstances, setAllowedNodeInstances] = useState<string[] | undefined>(undefined);
     const [loading, setLoading] = useState(false);
     const [executionId, setExecutionId] = useState('');
     const [executionStarted, setExecutionStarted] = useState(false);
     const [errors, setErrors] = useState({});
     const [inputValues, setInputValues] = useState(getInitialInputValues());
 
-    function getAgentsAttributeList(attributeName) {
+    function getAgentsAttributeList(attributeName: keyof Agent) {
         return _.chain(agents).map(attributeName).uniq().value();
     }
 
@@ -108,9 +111,12 @@ export default function InstallAgentsModal({
         return true;
     }
 
-    function handleInputChange(event, field) {
-        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
+    const handleInputChange: (NodeFilterProps &
+        StrictDropdownProps &
+        StrictCheckboxProps &
+        StrictInputProps)['onChange'] = (_event, field) => {
+        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field as Field) });
+    };
 
     if (!open) return null;
 
@@ -158,7 +164,7 @@ export default function InstallAgentsModal({
                                     name="installMethods"
                                     multiple
                                     selection
-                                    options={Consts.installMethodsOptions}
+                                    options={installMethodsOptions}
                                     value={inputValues.installMethods}
                                     onChange={handleInputChange}
                                 />
@@ -233,26 +239,3 @@ export default function InstallAgentsModal({
         </Modal>
     );
 }
-
-InstallAgentsModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-
-    agents: AgentsPropType,
-    // eslint-disable-next-line react/no-unused-prop-types
-    deploymentId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeInstanceId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    installMethods: Stage.PropTypes.StringOrArray
-};
-
-InstallAgentsModal.defaultProps = {
-    agents: [],
-    deploymentId: '',
-    nodeId: [],
-    nodeInstanceId: [],
-    installMethods: []
-};
