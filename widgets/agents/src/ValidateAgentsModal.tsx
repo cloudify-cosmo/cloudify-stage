@@ -4,6 +4,10 @@ import type { Agent, AgentsModalProps } from './types';
 import NodeFilter from './NodeFilter';
 import type { NodeFilterProps } from './NodeFilter';
 import { installMethodsOptions } from './consts';
+import { translate } from './utils';
+
+const translateCommon = Stage.Utils.composeT(translate, 'modals.common');
+const translateValidate = Stage.Utils.composeT(translate, 'modals.validate');
 
 type ValidateAgentsModalProps = AgentsModalProps;
 
@@ -65,14 +69,14 @@ export default function ValidateAgentsModal({
         drilldownHandler(
             'execution',
             { deploymentId: selectedDeploymentId, executionId },
-            `Validate Agents on ${selectedDeploymentId}`
+            translateValidate('pageName', { deploymentId: selectedDeploymentId })
         );
     }
 
     function submitExecute() {
         const { nodeFilter, installMethods: methods } = inputValues;
         if (!nodeFilter.deploymentId) {
-            setErrors({ error: 'Provide deployment in Nodes filter' });
+            setErrors({ error: translateCommon('deploymentError') });
             return;
         }
 
@@ -119,7 +123,7 @@ export default function ValidateAgentsModal({
     return (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="checkmark" /> Validate agents
+                <Icon name="checkmark" /> ${translateValidate('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -132,9 +136,9 @@ export default function ValidateAgentsModal({
                     {!executionStarted && (
                         <>
                             <Form.Field
-                                label="Nodes filter"
+                                label={translateCommon('fields.nodeFilter.label')}
                                 required
-                                help="Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                                help={translateCommon('fields.nodeFilter.description')}
                             >
                                 <NodeFilter
                                     name="nodeFilter"
@@ -151,8 +155,8 @@ export default function ValidateAgentsModal({
                             </Form.Field>
 
                             <Form.Field
-                                label="Install Methods filter"
-                                help="Filter agents by install methods. Filtering turned off when none selected."
+                                label={translateCommon('fields.installMethods.label')}
+                                help={translateCommon('fields.installMethods.description')}
                             >
                                 <Form.Dropdown
                                     name="installMethods"
@@ -168,20 +172,31 @@ export default function ValidateAgentsModal({
 
                     <Message
                         success
-                        header="Execution started"
-                        content="Agents validation has been started. Click 'Show Status and Logs' button to see details."
+                        header={translateCommon('executionStartedMessage.header')}
+                        content={translateCommon('executionStartedMessage.content', {
+                            execution: translateValidate('execution')
+                        })}
                     />
                 </Form>
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton content={executionStarted ? 'Close' : undefined} onClick={onCancel} disabled={loading} />
+                <CancelButton
+                    content={executionStarted ? translateCommon('buttons.close') : undefined}
+                    onClick={onCancel}
+                    disabled={loading}
+                />
                 {!executionStarted && (
-                    <ApproveButton onClick={onApprove} disabled={loading} content="Validate" icon="checkmark" />
+                    <ApproveButton
+                        onClick={onApprove}
+                        disabled={loading}
+                        content={translateCommon('buttons.validate')}
+                        icon="checkmark"
+                    />
                 )}
                 {executionStarted && (
                     <Button
-                        content="Show Status and Logs"
+                        content={translateCommon('buttons.showStatus')}
                         icon="file text"
                         color="green"
                         onClick={onShowExecutionStatus}
