@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { isEqual, map } from 'lodash';
+import { translateBluprintUploadActionsMenu } from './widget.utils';
 
 const { Dropdown } = Stage.Basic;
 const { Menu, Item } = Dropdown;
@@ -9,7 +10,6 @@ const { TerraformModal } = Stage.Common;
 const { drilldownPage } = Stage.Common.Consts;
 const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
-const translateBluroprintUploadActionsMenu = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const defaultMarketplaceTab = 'AWS';
 
 interface BlueprintUploadActionsMenuProps {
@@ -53,14 +53,14 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
         <>
             <Dropdown
                 button
-                text={translateBluroprintUploadActionsMenu('uploadButton')}
+                text={translateBluprintUploadActionsMenu('uploadButton')}
                 direction={direction}
                 upward={upward}
             >
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
                     {map(menuItems, (clickHandler, key) => (
-                        <Item text={translateBluroprintUploadActionsMenu(key)} key={key} onClick={clickHandler} />
+                        <Item text={translateBluprintUploadActionsMenu(key)} key={key} onClick={clickHandler} />
                     ))}
                 </Menu>
             </Dropdown>

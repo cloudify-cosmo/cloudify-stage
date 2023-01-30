@@ -4,7 +4,7 @@ import BlueprintsList from './BlueprintsList';
 import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
-const translateBlueprints = Stage.Utils.getT('widgets.blueprints');
+import { translateBlueprints } from './widget.utils';
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 

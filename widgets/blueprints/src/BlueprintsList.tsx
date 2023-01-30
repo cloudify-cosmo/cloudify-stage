@@ -6,6 +6,7 @@ import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
 import type { Field } from '../../../app/widgets/common/types';
+import { translateBlueprints } from './widget.utils';
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;
@@ -17,7 +18,7 @@ interface BlueprintListState {
     showDeploymentModal: boolean;
     blueprintId: string;
     confirmDelete: boolean;
-    error: any;
+    error: string | null;
     force: boolean;
 }
 
@@ -77,7 +78,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, force } = this.state;
         const { toolbox } = this.props;
         if (!blueprintId) {
-            this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
+            this.setState({ error: translateBlueprints('deleteBlueprint') });
             return;
         }
 
@@ -135,7 +136,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
     render() {
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
+        const NO_DATA_MESSAGE = translateBlueprints('noDataMessage');
         const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;

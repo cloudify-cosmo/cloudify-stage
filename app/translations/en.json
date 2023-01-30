@@ -1033,6 +1033,10 @@
                         "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     }
                 }
+            },
+            "noDataMessage": "There are no Blueprints available. Click \"Upload\" to add Blueprints.",
+            "errors:": {
+                "deleteBlueprint": "Something went wrong, no blueprint was selected for delete"
             }
         },
         "blueprintSources": {
