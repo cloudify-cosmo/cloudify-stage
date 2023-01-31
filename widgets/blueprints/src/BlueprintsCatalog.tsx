@@ -4,6 +4,8 @@ import { each } from 'lodash';
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
 
+const translateBlueprintsButtons = Stage.Utils.getT('widgets.blueprints.buttons');
+
 export default function BlueprintsCatalog({
     data,
     fetchData,
@@ -146,7 +148,7 @@ export default function BlueprintsCatalog({
                                 <Grid.Column textAlign="center" className="actionButtons">
                                     <Button
                                         icon="trash"
-                                        content="Delete"
+                                        content={translateBlueprintsButtons('deleteBlueprint')}
                                         basic
                                         onClick={event => {
                                             event.stopPropagation();
@@ -157,7 +159,7 @@ export default function BlueprintsCatalog({
                                         <>
                                             <Button
                                                 icon="rocket"
-                                                content="Deploy"
+                                                content={translateBlueprintsButtons('deploy')}
                                                 onClick={event => {
                                                     event.stopPropagation();
                                                     onCreateDeployment(item);
@@ -167,7 +169,7 @@ export default function BlueprintsCatalog({
                                             {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
                                                 <Button
                                                     icon="external share"
-                                                    content="Edit a copy in Composer"
+                                                    content={translateBlueprintsButtons('editInComposer')}
                                                     onClick={event => {
                                                         event.stopPropagation();
                                                         new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(

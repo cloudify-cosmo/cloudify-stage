@@ -1107,9 +1107,14 @@
                 "deleteBlueprint": "Something went wrong, no blueprint was selected for delete"
             },
             "icons": {
-                "editInComposer": "Edit a copy in Composer",
                 "createDeployment": "Create deployment",
-                "deleteBlueprint": "Delete blueprint"
+                "deleteBlueprint": "Delete blueprint",
+                "editInComposer": "Edit a copy in Composer"
+            },
+            "buttons": {
+                "deploy": "Deploy",
+                "delete": "Delete",
+                "editInComposer": "Edit in Composer"
             }
         },
         "blueprintSources": {
