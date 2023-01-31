@@ -1123,8 +1123,7 @@
                 "creator": "Creator",
                 "main_file_name": "Main file name",
                 "state": "State",
-                "deployments": "# Deployments",
-            },
+                "deployments": "# Deployments"
             }
         },
         "blueprintSources": {
