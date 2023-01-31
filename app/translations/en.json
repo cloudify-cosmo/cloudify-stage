@@ -904,6 +904,24 @@
             }
         },
         "agents": {
+            "name": "Agents",
+            "description": "This widget shows list of installed agents",
+            "configuration": {
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "description": "Some of the fields may be hidden depending on the context, eg. when Deployment ID is set in context then Deployment field will be hidden.",
+                    "placeholder": "Select fields from the list"
+                },
+                "installMethods": {
+                    "label": "Filter Agents by Install Method",
+                    "description": "Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.",
+                    "placeholder": "Select Install Methods from the list"
+                }
+            },
+            "buttons": {
+                "install": "Install",
+                "validate": "Validate"
+            },
             "columns": {
                 "id": "ID",
                 "ip": "IP",
@@ -913,6 +931,54 @@
                 "version": "Version",
                 "installMethod": "Install method",
                 "actions": "Actions"
+            },
+            "noDataMessage": "There are no Agents available.",
+            "modals": {
+                "common": {
+                    "fields": {
+                        "nodeFilter": {
+                            "label": "Nodes filter",
+                            "description": "Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                        },
+                        "installMethods": {
+                            "label": "Install Methods filter",
+                            "description": "Filter agents by install methods. Filtering turned off when none selected."
+                        }
+                    },
+                    "executionStartedMessage": {
+                        "header": "Execution started",
+                        "content": "{{ execution }} has been started. Click 'Show Status and Logs' button to see details."
+                    },
+                    "buttons": {
+                        "close": "Close",
+                        "showStatus": "Show Status and Logs"
+                    },
+                    "deploymentError": "Provide deployment in Nodes filter"
+                },
+                "install": {
+                    "header": "Install new agents",
+                    "fields": {
+                        "managerIp": {
+                            "label": "Manager IP",
+                            "description": "The private IP of the current leader (master) Manager. This IP is used to connect to the Manager's RabbitMQ. Relevant only in HA cluster."
+                        },
+                        "managerCertificate": {
+                            "label": "Manager Certificate",
+                            "description": "A path to a file containing the SSL certificate of the current leader Manager. The certificate is available on the Manager: /etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+                        },
+                        "stopOldAgent": {
+                            "label": "Stop old agent",
+                            "description": "If set, after installing the new agent the old agent (that is connected to the old Manager) will be stopped. *IMPORTANT* if the deployment has monitoring with auto-healing configured, you need to disable it first"
+                        }
+                    },
+                    "execution": "New agents installation",
+                    "pageName": "Install New Agents on {{ deploymentId }}"
+                },
+                "validate": {
+                    "header": "Validate agents",
+                    "execution": "Agents validation",
+                    "pageName": "Validate Agents on {{ deploymentId }}"
+                }
             }
         },
         "blueprintActionButtons": {

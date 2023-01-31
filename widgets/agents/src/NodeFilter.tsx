@@ -1,3 +1,4 @@
+import { chain, intersection, isEmpty, isEqual, isFunction, noop, upperFirst } from 'lodash';
 import type { StrictDropdownProps } from 'semantic-ui-react';
 import type Manager from 'app/utils/Manager';
 import type { ResourceId, ResourceIds } from './types';
@@ -120,7 +121,7 @@ type ResourceName = keyof Pick<NodeFilterState, 'blueprints' | 'deployments' | '
 export default class NodeFilter extends React.Component<NodeFilterProps, NodeFilterState> {
     // eslint-disable-next-line react/static-property-placement
     static defaultProps = {
-        onChange: _.noop,
+        onChange: noop,
         allowMultiple: false,
         allowMultipleBlueprints: false,
         allowMultipleDeployments: false,
@@ -168,7 +169,7 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     }
 
     shouldComponentUpdate(nextProps: NodeFilterProps, nextState: NodeFilterState) {
-        return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
+        return !isEqual(this.props, nextProps) || !isEqual(this.state, nextState);
     }
 
     handleInputChange(
@@ -179,7 +180,7 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     ) {
         const { name, onChange } = this.props;
         this.setState({ ...state, [field.name]: field.value, errors: {} }, () => {
-            if (_.isFunction(onStateChange)) {
+            if (isFunction(onStateChange)) {
                 onStateChange();
             }
 
@@ -201,7 +202,7 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     }
 
     getAllowedOptionsFor(resourcesName: ResourceName) {
-        const propKey = `allowed${_.upperFirst(resourcesName)}` as AllowedPropKey;
+        const propKey = `allowed${upperFirst(resourcesName)}` as AllowedPropKey;
         const { [propKey]: allowedOptions } = this.props;
         return allowedOptions;
     }
@@ -268,15 +269,15 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
         manager
             .doGet(fetchUrl, { params })
             .then((data: Stage.Types.PaginatedResponse<any>) => {
-                let ids = _.chain(data.items || [])
+                let ids = chain(data.items || [])
                     .map(item => item.id)
-                    .uniqWith(_.isEqual)
+                    .uniqWith(isEqual)
                     .value();
                 if (this.isFilteringSetFor(resourceName)) {
-                    ids = _.intersection(ids, this.getAllowedOptionsFor(resourceName));
+                    ids = intersection(ids, this.getAllowedOptionsFor(resourceName));
                 }
 
-                const options = _.map(ids, id => ({ text: id, value: id, key: id }));
+                const options = ids.map(id => ({ text: id, value: id, key: id }));
                 if (!this.isMultipleSetFor(resourceName)) {
                     options.unshift({ text: '', value: '', key: '' });
                 }
@@ -297,7 +298,7 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     fetchDeployments() {
         const { blueprintId } = this.state;
         const params: Params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(blueprintId)) {
+        if (!isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
         this.fetchData('/deployments', params, 'deployments');
@@ -306,10 +307,10 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     fetchNodes() {
         const { blueprintId, deploymentId } = this.state;
         const params: Params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(blueprintId)) {
+        if (!isEmpty(blueprintId)) {
             params.blueprint_id = blueprintId;
         }
-        if (!_.isEmpty(deploymentId)) {
+        if (!isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
         this.fetchData('/nodes', params, 'nodes');
@@ -318,25 +319,25 @@ export default class NodeFilter extends React.Component<NodeFilterProps, NodeFil
     fetchNodeInstances() {
         const { deploymentId, nodeId } = this.state;
         const params: Params = { ...NodeFilter.BASIC_PARAMS };
-        if (!_.isEmpty(deploymentId)) {
+        if (!isEmpty(deploymentId)) {
             params.deployment_id = deploymentId;
         }
-        if (!_.isEmpty(nodeId)) {
+        if (!isEmpty(nodeId)) {
             params.node_id = nodeId;
         }
         this.fetchData('/node-instances', params, 'nodeInstances');
     }
 
     isMultipleSetFor(resourcesName: ResourceName) {
-        const propKey = `allowMultiple${_.upperFirst(resourcesName)}` as AllowedMultiplePropKey;
+        const propKey = `allowMultiple${upperFirst(resourcesName)}` as AllowedMultiplePropKey;
         const { allowMultiple, [propKey]: resourceAllowMultiple } = this.props;
         return allowMultiple || resourceAllowMultiple;
     }
 
     isFilteringSetFor(resourcesName: ResourceName) {
-        const propKey = `allowed${_.upperFirst(resourcesName)}` as AllowedPropKey;
+        const propKey = `allowed${upperFirst(resourcesName)}` as AllowedPropKey;
         const { [propKey]: allowedOptions } = this.props;
-        return !_.isEmpty(allowedOptions);
+        return !isEmpty(allowedOptions);
     }
 
     render() {
