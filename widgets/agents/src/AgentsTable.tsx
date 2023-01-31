@@ -1,10 +1,10 @@
+import { compact, isEqual } from 'lodash';
 import type { DataTableProps } from 'cloudify-ui-components';
 import type { AgentsConfiguration } from 'widgets/agents/src/widget';
 import InstallAgentsModal from './InstallAgentsModal';
 import ValidateAgentsModal from './ValidateAgentsModal';
 import type { Agent } from './types';
-
-const t = Stage.Utils.getT('widgets.agents');
+import { translate, translateColumn } from './utils';
 
 export interface AgentsTableData {
     items: Agent[];
@@ -46,11 +46,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
 
     shouldComponentUpdate(nextProps: AgentsTableProps, nextState: AgentsTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -80,7 +76,6 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
     render() {
         const { modal, showModal } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Agents available.';
         const { configuration } = widget;
         const { fieldsToShow } = configuration;
 
@@ -97,37 +92,45 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     searchable
                     selectable={false}
                     className="agentsTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={translate('noDataMessage')}
                 >
-                    <DataTable.Column label={t('columns.id')} show={fieldsToShow.indexOf(t('columns.id')) >= 0} />
-                    <DataTable.Column label={t('columns.ip')} show={fieldsToShow.indexOf(t('columns.ip')) >= 0} />
                     <DataTable.Column
-                        label={t('columns.deployment')}
+                        label={translateColumn('id')}
+                        show={fieldsToShow.indexOf(translateColumn('id')) >= 0}
+                    />
+                    <DataTable.Column
+                        label={translateColumn('ip')}
+                        show={fieldsToShow.indexOf(translateColumn('ip')) >= 0}
+                    />
+                    <DataTable.Column
+                        label={translateColumn('deployment')}
                         show={
-                            fieldsToShow.indexOf(t('columns.deployment')) >= 0 &&
+                            fieldsToShow.indexOf(translateColumn('deployment')) >= 0 &&
                             !data.deploymentId &&
                             !data.nodeId &&
                             !data.nodeInstanceId
                         }
                     />
                     <DataTable.Column
-                        label={t('columns.node')}
-                        show={fieldsToShow.indexOf(t('columns.node')) >= 0 && !data.nodeId && !data.nodeInstanceId}
+                        label={translateColumn('node')}
+                        show={
+                            fieldsToShow.indexOf(translateColumn('node')) >= 0 && !data.nodeId && !data.nodeInstanceId
+                        }
                     />
                     <DataTable.Column
-                        label={t('columns.system')}
-                        show={fieldsToShow.indexOf(t('columns.system')) >= 0}
+                        label={translateColumn('system')}
+                        show={fieldsToShow.indexOf(translateColumn('system')) >= 0}
                     />
                     <DataTable.Column
-                        label={t('columns.version')}
-                        show={fieldsToShow.indexOf(t('columns.version')) >= 0}
+                        label={translateColumn('version')}
+                        show={fieldsToShow.indexOf(translateColumn('version')) >= 0}
                     />
                     <DataTable.Column
-                        label={t('columns.installMethod')}
-                        show={fieldsToShow.indexOf(t('columns.installMethod')) >= 0}
+                        label={translateColumn('installMethod')}
+                        show={fieldsToShow.indexOf(translateColumn('installMethod')) >= 0}
                     />
 
-                    {_.map(data.items, item => (
+                    {data.items.map(item => (
                         <DataTable.Row key={item.id}>
                             <DataTable.Data>{item.id}</DataTable.Data>
                             <DataTable.Data>{item.ip}</DataTable.Data>
@@ -141,13 +144,13 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
 
                     <DataTable.Action>
                         <Button
-                            content="Install"
+                            content={translate('buttons.install')}
                             icon="download"
                             labelPosition="left"
                             onClick={() => this.openModal(Modals.INSTALL_AGENT)}
                         />
                         <Button
-                            content="Validate"
+                            content={translate('buttons.validate')}
                             icon="checkmark"
                             labelPosition="left"
                             onClick={() => this.openModal(Modals.VALIDATE_AGENT)}
@@ -163,7 +166,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.compact(configuration.installMethods)}
+                    installMethods={compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
 
@@ -175,7 +178,7 @@ export default class AgentsTable extends React.Component<AgentsTableProps, Agent
                     nodeId={data.nodeId}
                     nodeInstanceId={data.nodeInstanceId}
                     agents={data.items}
-                    installMethods={_.compact(configuration.installMethods)}
+                    installMethods={compact(configuration.installMethods)}
                     onHide={this.hideModal}
                 />
             </div>

@@ -13,7 +13,8 @@ If the secret’s value is hidden and the logged-in user isn’t the secret’s 
 ![hidden-value-user]( /images/ui/widgets/hidden_secret_unauth_user.png )
 
 
-* **Hidden Value** Indicates if the secret’s value is hidden of not. If the logged-in user is the secret’s creator, or has admin/manager permissions in the tenant, checking/unchecking this field will be enabled, and will make the secret hidden/non-hidden.
+* **Hidden** Indicates if the secret’s value is hidden or not. If the logged-in user is the secret’s creator, or has admin/manager permissions in the tenant, checking/unchecking this field will be enabled, and will make the secret hidden/non-hidden.
+* **Secret Provider** The name of the secret provider with which the secret is associated.
 * **Creation time**
 * **Last update time**
 * **Creator**
