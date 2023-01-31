@@ -148,7 +148,7 @@ export default function BlueprintsCatalog({
                                 <Grid.Column textAlign="center" className="actionButtons">
                                     <Button
                                         icon="trash"
-                                        content={translateBlueprintsButtons('deleteBlueprint')}
+                                        content={translateBlueprintsButtons('delete')}
                                         basic
                                         onClick={event => {
                                             event.stopPropagation();
