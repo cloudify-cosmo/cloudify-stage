@@ -1,13 +1,13 @@
 import { each, get, isEmpty, join, map, reduce } from 'lodash';
 import BlueprintsList from './BlueprintsList';
-import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
+import type { BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
 import { translateBlueprints } from './widget.utils';
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
-interface DataToProcess {
+interface BlueprintsWidgetData {
     blueprints: any;
     deployments: any;
 }
@@ -18,7 +18,7 @@ interface BlueprintsParams {
     state?: string;
 }
 
-Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConfiguration>({
+Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
     name: translateBlueprints('name'),
     description: translateBlueprints('description'),
@@ -79,8 +79,11 @@ Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConf
         }
     ],
 
-    async fetchData(widget, toolbox, params) {
-        const result = {} as DataToProcess;
+    fetchData(widget, toolbox, params) {
+        const result: BlueprintsWidgetData = {
+            blueprints: {},
+            deployments: {}
+        };
         const filterRules = [...(widget.configuration.filterRules || [])];
         const SearchActions = Stage.Common.Actions.Search;
         const searchActions = new SearchActions(toolbox);
@@ -94,18 +97,25 @@ Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConf
             });
         }
 
-        const blueprintsList = await searchActions.doListBlueprints(filterRules, {
-            _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-            ...params
-        });
-        result.blueprints = blueprintsList;
-        const deploymentsList = await toolbox.getManager().doGetFull('/summary/deployments', {
-            _target_field: 'blueprint_id',
-            blueprint_id: map(blueprintsList.items, item => item.id)
-        });
-        result.deployments = deploymentsList;
-        return result as unknown as BlueprintDataResponse;
+        return searchActions
+            .doListBlueprints(filterRules, {
+                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+                ...params
+            })
+            .then(data => {
+                result.blueprints = data;
+
+                return toolbox.getManager().doGetFull('/summary/deployments', {
+                    _target_field: 'blueprint_id',
+                    blueprint_id: _.map(data.items, item => item.id)
+                });
+            })
+            .then(data => {
+                result.deployments = data;
+                return result;
+            });
     },
+
     fetchParams: (widget, toolbox) => {
         const params: BlueprintsParams = {};
 
@@ -122,7 +132,7 @@ Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConf
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        const processData = (dataToProcess: DataToProcess) => {
+        const processData = (dataToProcess: BlueprintsWidgetData) => {
             const blueprintsData = dataToProcess.blueprints;
             const deploymentData = dataToProcess.deployments;
 
@@ -159,8 +169,8 @@ Stage.defineWidget<BlueprintsParams, BlueprintDataResponse, BlueprintsWidgetConf
         if (isEmpty(data)) {
             return <Loading />;
         }
+        const formattedData = processData(data as BlueprintsWidgetData);
 
-        const formattedData = processData(data as unknown as DataToProcess);
         return (
             <div>
                 <BlueprintsList widget={widget} data={formattedData} toolbox={toolbox} />
