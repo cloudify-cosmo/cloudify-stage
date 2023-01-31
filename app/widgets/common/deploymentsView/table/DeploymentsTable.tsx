@@ -11,6 +11,7 @@ import noDataImage from './no-data-image.png';
 import { DataTable, Loader } from '../../../../components/basic';
 import StageUtils from '../../../../utils/stageUtils';
 import mapGridParamsToManagerGridParams from '../../../../utils/shared/mapGridParamsToManagerGridParams';
+import type { FetchParams } from '../../types';
 
 const TableContainer = styled.div`
     position: relative;
@@ -62,9 +63,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
         <TableContainer>
             <TableLoadingIndicator active={loadingIndicatorVisible} />
             <DataTable
-                fetchData={(params: { gridParams: Stage.Types.GridParams }) =>
-                    setGridParams(mapGridParamsToManagerGridParams(params.gridParams))
-                }
+                fetchData={(params: FetchParams) => setGridParams(mapGridParamsToManagerGridParams(params.gridParams))}
                 pageSize={pageSize}
                 selectable
                 sizeMultiplier={20}
@@ -92,7 +91,7 @@ const DeploymentsTable: FunctionComponent<DeploymentsTableProps> = ({
                 })}
 
                 {keysOfLabelsToShow.map(labelKey => (
-                    <DataTable.Column key={labelKey} name={labelKey} label={labelKey} />
+                    <DataTable.Column key={labelKey} name={`label:${labelKey}`} label={labelKey} />
                 ))}
 
                 {deployments.flatMap(

@@ -1,6 +1,7 @@
 /* eslint-disable import/no-dynamic-require */
 import _ from 'lodash';
 import widgetBackend from '../../../../widgets/executions/src/backend';
+import type { BackendServiceRegistrator, BackendService } from '../../../handler/BackendHandler.types';
 
 function getDataFor(test: string) {
     const referencesDirectory = './references';
@@ -14,11 +15,11 @@ function getDataFor(test: string) {
 
 type MiddlewareMock = (_req: any, _res: any, _next: any, _helper: any) => void;
 function getRegisterArguments() {
-    let name = '';
-    let method = '';
-    let middleware = (_req: any, _res: any, _next: any, _helper: any) => {};
+    let name;
+    let method;
+    let middleware: BackendService | undefined;
 
-    const register = (arg1: string, arg2: string, arg3: MiddlewareMock) => {
+    const register: BackendServiceRegistrator['register'] = (arg1, arg2, arg3) => {
         name = arg1;
         method = arg2;
         middleware = arg3;
@@ -69,7 +70,7 @@ describe('Executions widget backend', () => {
         const testCaseName = _.lowerCase(test);
         const { tasksGraph, operations, elkGraph } = getDataFor(test);
         it(`is providing valid layout for ${testCaseName}`, () => {
-            return getElkGraph(middleware, tasksGraph, operations).then(response =>
+            return getElkGraph(middleware!, tasksGraph, operations).then(response =>
                 expect(response).toStrictEqual(elkGraph)
             );
         });

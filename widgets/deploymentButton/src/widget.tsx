@@ -26,36 +26,10 @@ Stage.defineWidget({
     isReact: true,
     hasReadme: true,
     initialConfiguration: [
-        {
-            id: 'basic',
-            name: tConfiguration('basic.name'),
-            description: tConfiguration('basic.description'),
-            default: false,
-            type: Stage.Basic.GenericField.BOOLEAN_TYPE
-        },
-        {
-            id: 'color',
-            name: tConfiguration('color.name'),
-            description: tConfiguration('color.description'),
-            default: 'green',
-            component: Stage.Common.Components.SemanticColorDropdown,
-            type: Stage.Basic.GenericField.CUSTOM_TYPE
-        },
-        {
-            id: 'icon',
-            name: tConfiguration('icon.name'),
-            description: tConfiguration('icon.description'),
-            default: 'rocket',
-            component: Stage.Shared.SemanticIconDropdown,
-            type: Stage.Basic.GenericField.CUSTOM_TYPE
-        },
-        {
-            id: 'label',
-            name: tConfiguration('label.name'),
-            description: tConfiguration('label.description'),
-            default: tConfiguration('label.default'),
-            type: Stage.Basic.GenericField.STRING_TYPE
-        },
+        ...Stage.Common.Configuration.Button.getInitialConfiguration({
+            icon: 'rocket',
+            label: tConfiguration('label.default')
+        }),
         {
             id: 'blueprintFilterRules',
             name: tConfiguration('labelFilterRules.name'),

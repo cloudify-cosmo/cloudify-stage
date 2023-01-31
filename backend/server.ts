@@ -2,12 +2,12 @@ import 'dd-trace/init';
 import type { Server } from 'http';
 import app from './app';
 import DBConnection from './db/Connection';
-import { init as initWidgetsHandler } from './handler/WidgetsHandler';
+import { init as initWidgetsHandler } from './handler/widgets/WidgetsHandler';
 import { init as initTemplatesHandler } from './handler/templates';
 import { getLogger } from './handler/LoggerHandler';
 import { isDevelopmentOrTest } from './utils';
 
-import { init, getMode } from './serverSettings';
+import { getMode, init } from './serverSettings';
 import { getBackendConfig } from './config';
 
 const logger = getLogger('Server');

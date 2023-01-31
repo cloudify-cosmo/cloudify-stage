@@ -69,7 +69,8 @@ const deploymentPropertiesToInclude = (<T extends (keyof Deployment)[]>(keys: T)
     'sub_services_status',
     'sub_environments_count',
     'sub_environments_status',
-    'labels'
+    'labels',
+    'capabilities'
 ]);
 
 type MustBeTrue<T extends true> = T;

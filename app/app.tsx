@@ -40,7 +40,7 @@ import UserAppDataAutoSaver from './utils/UserAppDataAutoSaver';
 import widgetDefinitionLoader from './utils/widgetDefinitionsLoader';
 import Interceptor from './utils/Interceptor';
 
-import Routes from './components/Routes';
+import Routes from './components/routes';
 import translation from './translations/en.json';
 import LoaderUtils from './utils/LoaderUtils';
 

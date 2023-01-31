@@ -1,14 +1,15 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
+import i18n from 'i18next';
 import InputsHelpDescription from './InputsHelpDescription';
-import { Button, Popup } from '../../../components/basic';
+import { Icon, Popup } from '../../../components/basic';
 
 const InputsHelpIcon: FunctionComponent = () => {
     return (
         <Popup
             flowing
-            trigger={<Button icon="help" floated="right" />}
-            header="Value type"
+            trigger={<Icon name="help" color="blue" size="large" link />}
+            header={i18n.t('widgets.common.inputs.buttons.help.header')}
             content={<InputsHelpDescription />}
         />
     );

@@ -1,7 +1,7 @@
 import Consts from 'app/utils/consts';
 import { testPageUrl } from 'test/cypress/support/commands';
-import type { ClientConfig } from 'backend/routes/Config.types';
 import type { GetUserAppResponse } from 'backend/routes/UserApp.types';
+import type { ClientConfig } from 'backend/routes/Config.types';
 import { secondsToMs } from '../support/resource_commons';
 
 describe('Login', () => {
@@ -81,27 +81,6 @@ describe('Login', () => {
         cy.contains('For the first login').should('be.visible');
     });
 
-    it('provides SSO login button when SAML is enabled', () => {
-        cy.activate();
-
-        const ssoUrl = '/sso-redirect';
-        cy.intercept(ssoUrl).as('ssoRedirect');
-        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
-            clientConfig.app.saml.enabled = true;
-            clientConfig.app.saml.ssoUrl = ssoUrl;
-            return clientConfig;
-        });
-
-        cy.visit('/console/login').waitUntilAppLoaded();
-        cy.get('button').as('loginButton');
-
-        cy.get('@loginButton').should('contain.text', 'LOGIN WITH SSO');
-        cy.get('input').should('not.exist');
-
-        cy.get('@loginButton').click();
-        cy.wait('@ssoRedirect');
-    });
-
     it('fails when provided credentials are valid, license is active but user has no tenants assigned', () => {
         cy.intercept('GET', '/console/auth/user', {
             statusCode: 200,
@@ -111,8 +90,8 @@ describe('Login', () => {
         cy.activate();
         forceLogin();
 
-        cy.location('pathname').should('be.equal', '/console/noTenants');
-        cy.contains('User is not associated with any tenants');
+        cy.location('pathname').should('be.equal', '/console/logout');
+        cy.contains('Unfortunately you cannot login since your account is not associated with any tenants.');
     });
 
     it('fails when provided credentials are invalid', () => {
@@ -134,7 +113,19 @@ describe('Login', () => {
         cy.activate();
         forceLogin();
 
-        cy.location('pathname').should('be.equal', '/console/error');
-        cy.get('.error.message').should('have.text', 'Error getting data from the manager, cannot load page');
+        cy.location('pathname').should('be.equal', '/console/logout');
+        cy.get('.error.message').should('have.text', 'Error fetching data from the manager, cannot load page');
+    });
+
+    it('redirects to another page when app configured to use not default login page', () => {
+        const customLoginPageUrl = '/my-login-page';
+        cy.interceptWithoutCaching<ClientConfig>('/console/config', clientConfig => {
+            clientConfig.app.auth.loginPageUrl = customLoginPageUrl;
+            return clientConfig;
+        });
+
+        cy.visit('/');
+
+        cy.location('pathname').should('be.equal', customLoginPageUrl);
     });
 });

@@ -1,5 +1,4 @@
 {
-    "backToApps": "Back to apps",
     "backToLogin": "Back to login",
     "urls": {
         "pluginsCatalog": "https://marketplace.cloudify.co/plugins/catalog"
@@ -118,6 +117,7 @@
             }
         },
         "welcomeLogoLabel": "CLOUDIFY",
+        "loading": "Loading...",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -127,6 +127,11 @@
             "progressMessage": "Installation in progress...",
             "doneMessage": "Installation completed! (you can now close this window)",
             "failureMessage": "Installation failed."
+        },
+        "errorModal": {
+            "title": "Failed to open the setup",
+            "description": "Failed to open the setup. Please try again.",
+            "close": "Close"
         }
     },
     "editMode": {
@@ -219,6 +224,16 @@
             }
         }
     },
+    "errors": {
+        "header": "Error occurred",
+        "managerData": "Error fetching data from the manager, cannot load page",
+        "licenseExpired": "License has expired",
+        "noLicense": "No active license",
+        "noPages": "No pages available to display. Please try to reset application to the default settings.",
+        "noTenants": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account.",
+        "pageLoad": "Error initializing user data, cannot load page",
+        "unauthorized": "User not authorized"
+    },
     "help": {
         "about": "About",
         "aboutModal": {
@@ -232,7 +247,6 @@
         "documentation": "Documentation",
         "documentationLink": "https://docs.cloudify.co/{{version}}"
     },
-    "licenseExpired": "License has expired",
     "licenseManagement": {
         "action": {
             "activeLicense": "No action required.",
@@ -285,10 +299,6 @@
             "noPassword": "Please provide password",
             "noUsername": "Please provide username"
         },
-        "noTenants": {
-            "header": "User is not associated with any tenants.",
-            "message": "Unfortunately you cannot login since your account is not associated with any tenants. Please ask the administrator to assign at least one tenant to your account."
-        },
         "password": "Password",
         "username": "Username",
         "submit": "LOGIN",
@@ -307,9 +317,6 @@
         "header": "Maintenance mode",
         "message": "Server is on maintenance mode and is not available at the moment."
     },
-    "managerDataError": "Error getting data from the manager, cannot load page",
-    "noLicense": "No active license",
-    "noPages": "No pages available to display. Please try to reset application to the default settings.",
     "notFound": {
         "header": "Page Not Found",
         "homepageLink": "Go to the Homepage",
@@ -319,7 +326,6 @@
         "description": "Page description",
         "emptyContainer": "This {{containerType}} is empty"
     },
-    "pageLoadError": "Error initializing user data, cannot load page",
     "pagesResetModal": {
         "confirm": "Are you sure you want to reset application screens to default?",
         "header": "Reset pages for tenants",
@@ -327,7 +333,7 @@
     },
     "pageTitle": "Cloudify Console",
     "productName": "Cloudify",
-    "redirecting": "Redirecting to {{url}}...",
+    "redirecting": "Redirecting to",
     "shared": {
         "executionStatus": {
             "scheduledFor": "Scheduled for: <strong>{{datetime}}}</strong>"
@@ -525,10 +531,30 @@
     },
     "widgets": {
         "common": {
+            "configuration": {
+                "basic": {
+                    "name": "Basic button",
+                    "description": "A basic button is less pronounced"
+                },
+                "color": {
+                    "name": "Color",
+                    "description": "Color of the button"
+                },
+                "icon": {
+                    "name": "Icon",
+                    "description": "Icon displayed on the button"
+                },
+                "label": {
+                    "name": "Label",
+                    "description": "Label displayed on the button",
+                    "default": "Button Link"
+                }
+            },
             "deployments": {
                 "actionsMenu": {
                     "install": "Install",
                     "update": "Update",
+                    "deployOn": "Deploy On",
                     "setSite": "Set Site",
                     "manageLabels": "Manage Labels",
                     "uninstall": "Uninstall",
@@ -600,6 +626,11 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "header": {
+                            "label": "Deployment inputs",
+                            "subHeader": "See values typing details: ",
+                            "popupHelp": "Value type"
+                        },
                         "deploymentId": {
                             "label": "Deployment ID",
                             "help": "Specify an ID for this deployment instance."
@@ -614,7 +645,15 @@
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",
-                            "placeholder": "Select a parent"
+                            "placeholder": "Select a parent",
+                            "environmentList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching environments",
+                                "noData": "no environments"
+                            }
                         },
                         "siteName": {
                             "label": "Site name",
@@ -633,7 +672,8 @@
                         },
                         "deploymentInputs": {
                             "loading": "Loading inputs...",
-                            "noInputs": "No inputs available for the blueprint"
+                            "noInputs": "No inputs available for the blueprint",
+                            "yamlDataType": "deployment's inputs"
                         }
                     },
                     "sections": {
@@ -815,10 +855,18 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
+                        "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form.",
+                        "dataType": "values"
                     }
                 },
                 "types": {
@@ -856,6 +904,24 @@
             }
         },
         "agents": {
+            "name": "Agents",
+            "description": "This widget shows list of installed agents",
+            "configuration": {
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "description": "Some of the fields may be hidden depending on the context, eg. when Deployment ID is set in context then Deployment field will be hidden.",
+                    "placeholder": "Select fields from the list"
+                },
+                "installMethods": {
+                    "label": "Filter Agents by Install Method",
+                    "description": "Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.",
+                    "placeholder": "Select Install Methods from the list"
+                }
+            },
+            "buttons": {
+                "install": "Install",
+                "validate": "Validate"
+            },
             "columns": {
                 "id": "ID",
                 "ip": "IP",
@@ -865,6 +931,54 @@
                 "version": "Version",
                 "installMethod": "Install method",
                 "actions": "Actions"
+            },
+            "noDataMessage": "There are no Agents available.",
+            "modals": {
+                "common": {
+                    "fields": {
+                        "nodeFilter": {
+                            "label": "Nodes filter",
+                            "description": "Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                        },
+                        "installMethods": {
+                            "label": "Install Methods filter",
+                            "description": "Filter agents by install methods. Filtering turned off when none selected."
+                        }
+                    },
+                    "executionStartedMessage": {
+                        "header": "Execution started",
+                        "content": "{{ execution }} has been started. Click 'Show Status and Logs' button to see details."
+                    },
+                    "buttons": {
+                        "close": "Close",
+                        "showStatus": "Show Status and Logs"
+                    },
+                    "deploymentError": "Provide deployment in Nodes filter"
+                },
+                "install": {
+                    "header": "Install new agents",
+                    "fields": {
+                        "managerIp": {
+                            "label": "Manager IP",
+                            "description": "The private IP of the current leader (master) Manager. This IP is used to connect to the Manager's RabbitMQ. Relevant only in HA cluster."
+                        },
+                        "managerCertificate": {
+                            "label": "Manager Certificate",
+                            "description": "A path to a file containing the SSL certificate of the current leader Manager. The certificate is available on the Manager: /etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+                        },
+                        "stopOldAgent": {
+                            "label": "Stop old agent",
+                            "description": "If set, after installing the new agent the old agent (that is connected to the old Manager) will be stopped. *IMPORTANT* if the deployment has monitoring with auto-healing configured, you need to disable it first"
+                        }
+                    },
+                    "execution": "New agents installation",
+                    "pageName": "Install New Agents on {{ deploymentId }}"
+                },
+                "validate": {
+                    "header": "Validate agents",
+                    "execution": "Agents validation",
+                    "pageName": "Validate Agents on {{ deploymentId }}"
+                }
             }
         },
         "blueprintActionButtons": {
@@ -1060,28 +1174,9 @@
             "name": "Button link",
             "description": "Opens provided URL",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button",
-                    "default": "green"
-                },
                 "fullHeight": {
                     "name": "Full height",
                     "description": "Should the button use full height reserved for the widget"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
-                    "default": "external"
-                },
-                "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
-                    "default": "Button Link"
                 },
                 "url": {
                     "name": "URL address",
@@ -1101,6 +1196,15 @@
                 "imageSrc": {
                     "name": "Image URL",
                     "description": "URL of the image displayed on the left side of the cloud environments count"
+                }
+            }
+        },
+        "cloudButton": {
+            "name": "Setup cloud account button",
+            "description": "Displays button allowing to setup cloud account",
+            "configuration": {
+                "label": {
+                    "default": "Setup cloud account"
                 }
             }
         },
@@ -1409,8 +1513,61 @@
                     "name": "Show most recent execution only"
                 }
             },
+            "columns": {
+                "blueprintId": "Blueprint",
+                "deploymentDisplayName": "Deployment",
+                "deploymentId": "Deployment ID",
+                "workflowId": "Workflow",
+                "id": "Id",
+                "createdAt": "Created",
+                "scheduledFor": "Scheduled",
+                "endedAt": "Ended",
+                "createdBy": "Creator",
+                "attributes": "Attributes",
+                "status": "Status",
+                "actions": "Actions"
+            },
+            "actionMenu": {
+                "executionParameters": "Show Execution Parameters",
+                "updateDetails": "Show Update Details",
+                "errorDetails": "Show Error Details",
+                "forceResume": "Resume",
+                "cancel": "Cancel",
+                "forceCancel": "Force Cancel",
+                "kill": "Kill Cancel"
+            },
+            "parametersModal": {
+                "header": "Execution parameters",
+                "noParametersMessage": "No execution parameters.",
+                "actions": {
+                    "copy": "Copy Parameters",
+                    "close": "Close"
+                },
+                "columns": {
+                    "parameter": "Parameter",
+                    "value": "Value"
+                }
+            },
+            "errorModal": {
+                "header": "Error details",
+                "actions": {
+                    "copy": "Copy Error",
+                    "close": "Close"
+                }
+            },
+            "graph": {
+                "noTasks": "The selected execution does not have a tasks graph",
+                "focus": "Focus on tasks in progress",
+                "fitToView": "Fit to view",
+                "open": "Open in window",
+                "close": "Close window",
+                "showLogs": "Show related entries in Deployment Events/Logs widget"
+            },
             "noExecutionFound": "There are no executions that could be shown.",
-            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on."
+            "noData": "There are no Executions available. Probably there's no deployment created, yet.",
+            "invalidConfigurationError": "Deployment ID must be selected when \"Show most recent execution only\" configuration option is turned on.",
+            "dryRun": "Dry Run",
+            "systemWorkflow": "System Workflow"
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
@@ -1498,7 +1655,7 @@
                 "noSecretProviders": "There are no Secret Providers available. Click \"Create\" to add Secret Provider.",
                 "buttons": {
                     "removeSecretProvider": "Delete Secret Provider",
-                    "updateSecretPRovider": "Update Secret Provider",
+                    "updateSecretProvider": "Update Secret Provider",
                     "create": "Create"
                 }
             },
@@ -1527,15 +1684,25 @@
                 "buttons": {
                     "create": "Create",
                     "cancel": "Cancel"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update a Vault Secret Provider",
+                "buttons": {
+                    "update": "Update",
+                    "cancel": "Cancel"
+                }
+            },
+            "form": {
                 "inputs": {
                     "providerName": {
                         "label": "Provider Name",
                         "placeholder": "Provider Name"
                     },
-                    "hostname": {
-                        "label": "Vault Hostname",
-                        "placeholder": "Vault Hostname"
+                    "url": {
+                        "label": "Vault URL",
+                        "placeholder": "Vault URL",
+                        "helper": "Example: http://172.17.0.2:8200"
                     },
                     "authorizationToken": {
                         "label": "Authorization Token",
@@ -1551,47 +1718,99 @@
                         "required": "Please provide the Provider Name.",
                         "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Please provide vault hostname.",
+                    "url": "Please provide Vault URL.",
                     "authorizationToken": "Please provide an authorization token.",
-                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again."
+                    "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again.",
+                    "update": "Couldn't update a Secret Provider, please try to submit the Secret Provider data again."
                 }
             }
         },
         "secrets": {
+            "name": "Secret Store Management",
+            "description": "This widget shows a list of available secrets and allow managing them",
+            "noSecrets": "There are no Secrets available. Click \"Create\" to add Secret.",
             "columns": {
                 "key": "Key",
                 "value": "Value",
-                "hiddenValue": "Hidden value",
+                "hidden": "Hidden",
                 "created": "Created",
                 "updated": "Updated",
                 "creator": "Creator",
-                "tenant": "Tenant"
+                "tenant": "Tenant",
+                "secretProvider": "Secret provider"
             },
             "actions": {
                 "updateSecret": "Update secret",
                 "deleteSecret": "Delete secret"
+            },
+            "icons": {
+                "hide": "Hide secret value",
+                "show": "Show secret value"
+            },
+            "popupMessage": "User {{currentUsername}} is not permitted to show the secret {{secretKey}} in the tenant {{selectedTenant}}.",
+            "deleteModal": {
+                "content": "Are you sure you want to delete secret {{secretKey}}?"
+            },
+            "createModal": {
+                "header": "Create secret",
+                "buttons": {
+                    "create": "Create"
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                }
+            },
+            "form": {
+                "inputs": {
+                    "secretKey": {
+                        "label": "Secret key",
+                        "placeholder": "Provide secret key"
+                    },
+                    "secretValue": {
+                        "label": "Secret value",
+                        "placeholder": "Provide secret value"
+                    },
+                    "secretFile": {
+                        "placeholder": "Get secret value from file (max: 50kB)"
+                    },
+                    "hiddenValue": {
+                        "label": "Hidden Value"
+                    },
+                    "useSecretProvider": {
+                        "label": "Retrieve the secret value from a secret provider"
+                    },
+                    "secretProvider": {
+                        "label": "Secret provider",
+                        "placeholder": "Select secret provider"
+                    },
+                    "secretProviderPath": {
+                        "label": "Path at the provider",
+                        "placeholder": "Provide path at the secret provider"
+                    }
+                },
+                "errors": {
+                    "validation": {
+                        "secretKey": "Please provide secret key",
+                        "secretValue": "Please provide secret value",
+                        "noProviders": "No Secret providers are defined in the System",
+                        "secretProviderName": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                    },
+                    "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
+                }
             }
         },
         "serviceButton": {
             "name": "Service button",
             "description": "Displays button allowing to create a new service",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create a service"
                 },
                 "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button",
                     "default": "add"
                 },
                 "defaultMarketplaceTab": {
@@ -1604,22 +1823,8 @@
             "name": "Create deployment button",
             "description": "Adds button to create new deployment",
             "configuration": {
-                "basic": {
-                    "name": "Basic button",
-                    "description": "A basic button is less pronounced"
-                },
-                "color": {
-                    "name": "Color",
-                    "description": "Color of the button"
-                },
                 "label": {
-                    "name": "Label",
-                    "description": "Label displayed on the button",
                     "default": "Create deployment"
-                },
-                "icon": {
-                    "name": "Icon",
-                    "description": "Icon displayed on the button"
                 },
                 "labelFilterRules": {
                     "name": "Blueprint label filter rules"
@@ -1865,6 +2070,25 @@
                     }
                 }
             },
+            "groupsModal": {
+                "header": "Edit user groups for {{name}}",
+                "form": {
+                    "groups": {
+                        "label": "Groups"
+                    }
+                }
+            },
+            "usersModal": {
+                "header": "Edit users for tenant {{name}}",
+                "form": {
+                    "users": {
+                        "label": "Users"
+                    }
+                },
+                "actions": {
+                    "save": "Save"
+                }
+            },
             "tenantsTable": {
                 "noDataMessage": "There are no Tenants available. Click \"Add\" to add Tenants.",
                 "columns": {
@@ -1877,6 +2101,16 @@
                 },
                 "deleteModal": {
                     "content": "Are you sure you want to delete tenant {{tenantName}}?"
+                },
+                "actionMenu": {
+                    "editUsers": "Edit users",
+                    "editGroups": "Edit user groups",
+                    "delete": "Delete"
+                },
+                "details": {
+                    "noUsers": "No users available",
+                    "noGroups": "No groups available",
+                    "popup": "The users assigned to this tenant, and the assigned roles. When the roles are inherited from a user group, the name of the user group is also shown, for example: viewer (Viewers)"
                 }
             }
         },
@@ -2039,13 +2273,118 @@
                 "restore": "Restore",
                 "download": "Download",
                 "delete": "Delete"
-            }
+            },
+            "uploadModal": {
+                "header": "Upload snapshot",
+                "actions": {
+                    "upload": "Upload"
+                },
+                "form": {
+                    "file": {
+                        "label": "Snapshot file",
+                        "placeholder": "Provide the snapshot's file URL or click browse to select a file"
+                    },
+                    "name": {
+                        "label": "Snapshot name"
+                    }
+                }
+            },
+            "createModal": {
+                "header": "Create snapshot",
+                "actions": {
+                    "create": "Create"
+                },
+                "form": {
+                    "id": {
+                        "label": "Snapshot ID"
+                    },
+                    "includeCredentials": {
+                        "label": "Include credentials",
+                        "help": "Includes agent SSH keys (including those specified in uploaded blueprints) in the snapshot"
+                    },
+                    "excludeLogs": {
+                        "label": "Exclude logs",
+                        "help": "Exclude logs from the snapshot"
+                    },
+                    "excludeEvents": {
+                        "label": "Exclude events",
+                        "help": "Exclude events from the snapshot"
+                    },
+                    "queue": {
+                        "label": "Queue",
+                        "help": "Queue snapshot creation workflow and run automatically when possible"
+                    }
+                }
+            },
+            "restoreModal": {
+                "header": "Restore snapshot",
+                "actions": {
+                    "restore": "Restore"
+                },
+                "form": {
+                    "message": "When restoring from a tenant-less environment, make sure you uploaded the snapshot to a \"clean\" tenant that does not contain any other resources.",
+                    "tenantless": {
+                        "label": "Snapshot from a tenant-less environment"
+                    },
+                    "force": {
+                        "label": "Force restore even if manager is non-empty (it will delete all data)"
+                    },
+                    "ignoreFailure": {
+                        "label": "Ignore plugin failures",
+                        "help": "Ignore plugin installation failures and deployment environment creation failures due to missing plugins"
+                    }
+                }
+            },
+            "errors": {
+                "fileOrUrlMissing": "Please select snapshot file or url",
+                "urlInvalid": "Please provide valid URL for snapshot",
+                "idMissing": "Please provide snapshot ID"
+            },
+            "noData": "There are no Snapshots available. Click \"Create\" to create Snapshots.",
+            "confirmDelete": "Are you sure you want to remove this snapshot?",
+            "columns": {
+                "id": "Name",
+                "createdAt": "Created at",
+                "status": "Status",
+                "createdBy": "Creator"
+            },
+            "name": "Snapshots list",
+            "decription": "Snapshots list"
         },
         "managers": {
             "actions": {
                 "openConsole": "Open Console",
                 "refreshStatus": "Refresh Status",
                 "refreshStatusInProgress": "Status refresh in progress..."
+            }
+        },
+        "deploymentActionButtons": {
+            "name": "Deployment action buttons",
+            "description": "Provides set of action buttons for deployment",
+            "errors": {
+                "fetchData": "No deployment selected, cannot determine deployment ID"
+            },
+            "buttons": {
+                "executeWorkflow": "Execute workflow",
+                "deploymentActions": "Deployment actions"
+            },
+            "modals": {
+                "deployOn": {
+                    "header": "Deploy On {{deploymentName}}"
+                }
+            }
+        },
+        "topology": {
+            "scrollerMessage": "Click to release scroller",
+            "layoutSaveConfirmation": "Topology layout saved",
+            "name": "Topology",
+            "description": "Shows topology (blueprint or deployment)",
+            "configuration": {
+                "enableNodeClick": "Enable node click",
+                "enableGroupClick": "Enable group click",
+                "enableZoom": "Enable zoom",
+                "enableDrag": "Enable drag",
+                "showToolbar": "Show toolbar"
             }
         }
     }

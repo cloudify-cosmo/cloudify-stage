@@ -39,13 +39,23 @@ describe('Secret Providers widget', () => {
         cy.get('.modal').within(() => {
             cy.clickButton('Create');
             cy.contains('Please provide the Provider Name.').should('be.visible');
-            cy.contains('Please provide vault hostname.').should('be.visible');
+            cy.contains('Please provide Vault URL.').should('be.visible');
             cy.contains('Please provide an authorization token').should('be.visible');
             cy.typeToFieldInput('Provider Name', 'Secret_Provider_2');
-            cy.typeToFieldInput('Vault Hostname', 'localhost');
+            cy.typeToFieldInput('Vault URL', 'http://localhost');
             cy.typeToFieldInput('Authorization Token', 'token');
             cy.clickButton('Create');
         });
         cy.contains('Secret_Provider_2').should('be.visible');
+    });
+
+    it('should allow to update secret provider', () => {
+        getSecretProviderRow('Secret_Provider_2').find('td').eq(3).should('be.empty');
+        getSecretProviderRow('Secret_Provider_2').find('i[title="Update Secret Provider"]').click();
+        cy.typeToFieldInput('Vault URL', 'http://localhost_test');
+        cy.typeToFieldInput('Authorization Token', 'token_test');
+        cy.typeToFieldInput('Vault Default Path', 'path_test');
+        cy.clickButton('Update');
+        getSecretProviderRow('Secret_Provider_2').find('td').eq(3).should('not.be.empty');
     });
 });

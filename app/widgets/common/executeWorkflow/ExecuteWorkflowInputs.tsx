@@ -1,7 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
-import type { DateInputProps } from 'cloudify-ui-components/typings/components/form/DateInput/DateInput';
+import type { DateInputProps } from 'cloudify-ui-components';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
 import InputFields from '../inputs/InputFields';
 import type { OnChange } from '../inputs/types';
@@ -11,6 +11,7 @@ import { DateInput, Divider, Form, Header, Message } from '../../../components/b
 import StageUtils from '../../../utils/stageUtils';
 import type { SortOrder } from '../inputs/SortOrderIcons';
 import SortOrderIcons from '../inputs/SortOrderIcons';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 
 const t = StageUtils.getT('widgets.common.deployments.execute');
 
@@ -84,19 +85,18 @@ const ExecuteWorkflowInputs: FunctionComponent<ExecuteWorkflowInputsProps> = ({
     return (
         <>
             {workflowHasInputs ? (
-                <>
+                <IconButtonsGroup>
+                    {workflowHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
+                    <InputsHelpIcon />
                     <YamlFileButton
                         onChange={onYamlFileChange}
                         dataType="execution parameters"
                         fileLoading={fileLoading}
-                        iconButton
                     />
-                    <InputsHelpIcon />
-                </>
+                </IconButtonsGroup>
             ) : (
                 <Message content={t('noParams')} />
             )}
-            {workflowHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
 
             <InputFields
                 inputs={baseWorkflowInputs}

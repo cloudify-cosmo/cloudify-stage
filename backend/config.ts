@@ -62,12 +62,11 @@ export function getClientConfig(mode: Mode): ClientConfig {
     return {
         app: {
             maintenancePollingInterval: config.app.maintenancePollingInterval,
-            singleManager: config.app.singleManager,
             whiteLabel: userConfig.whiteLabel,
-            saml: {
-                enabled: config.app.saml.enabled,
-                ssoUrl: config.app.saml.ssoUrl,
-                portalUrl: config.app.saml.portalUrl
+            auth: {
+                type: config.app.auth.type,
+                loginPageUrl: config.app.auth.loginPageUrl,
+                afterLogoutUrl: config.app.auth.afterLogoutUrl
             },
             maps: userConfig.maps
         },

@@ -12,11 +12,11 @@
     },
     "maxBodySize": "2gb"
   },
-  "saml":{
-    "enabled": false,
+  "auth":{
+    "type": "local",
     "certPath": "",
-    "ssoUrl": "",
-    "portalUrl": ""
+    "loginPageUrl": "/console/login",
+    "afterLogoutUrl": "/console/login"
   },
   "whiteLabel": {
     "logoUrl": "",
