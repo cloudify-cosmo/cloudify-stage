@@ -1,48 +1,56 @@
-// @ts-nocheck File not migrated fully to TS
-
-import Consts from './consts';
+import { castArray, chain, isArray, isEmpty, isNil } from 'lodash';
+import type { StrictDropdownProps, StrictCheckboxProps, StrictInputProps } from 'semantic-ui-react';
+import type { Field } from 'app/widgets/common/types';
+import type { Agent, AgentsModalProps } from './types';
+import { installMethodsOptions } from './consts';
+import type { NodeFilterProps } from './NodeFilter';
 import NodeFilter from './NodeFilter';
-import AgentsPropType from './props/AgentsPropType';
+import { translate } from './utils';
+
+const translateCommon = Stage.Utils.composeT(translate, 'modals.common');
+const translateInstall = Stage.Utils.composeT(translate, 'modals.install');
+
+type InstallAgentsModalProps = AgentsModalProps;
 
 export default function InstallAgentsModal({
-    agents,
-    deploymentId,
-    installMethods,
-    nodeId,
-    nodeInstanceId,
+    agents = [],
+    deploymentId = '',
+    installMethods = [],
+    nodeId = [],
+    nodeInstanceId = [],
     onHide,
     open,
     manager,
     drilldownHandler
-}) {
+}: InstallAgentsModalProps) {
     const { useEffect, useState } = React;
 
     function getInitialInputValues() {
         return {
-            installMethods: _.isNil(installMethods) ? [] : _.castArray(installMethods),
+            installMethods: isNil(installMethods) ? [] : castArray(installMethods),
             managerCertificate: '',
             managerIp: '',
             nodeFilter: {
                 blueprintId: '',
-                deploymentId: _.isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
-                nodeId: _.isNil(nodeId) ? [] : _.castArray(nodeId),
-                nodeInstanceId: _.isNil(nodeInstanceId) ? [] : _.castArray(nodeInstanceId)
+                deploymentId: isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
+                nodeId: isNil(nodeId) ? [] : castArray(nodeId),
+                nodeInstanceId: isNil(nodeInstanceId) ? [] : castArray(nodeInstanceId)
             },
             stopOldAgent: false
         };
     }
 
-    const [allowedDeployments, setAllowedDeployments] = useState(null);
-    const [allowedNodes, setAllowedNodes] = useState(null);
-    const [allowedNodeInstances, setAllowedNodeInstances] = useState(null);
+    const [allowedDeployments, setAllowedDeployments] = useState<string[] | undefined>();
+    const [allowedNodes, setAllowedNodes] = useState<string[] | undefined>();
+    const [allowedNodeInstances, setAllowedNodeInstances] = useState<string[] | undefined>();
     const [loading, setLoading] = useState(false);
     const [executionId, setExecutionId] = useState('');
     const [executionStarted, setExecutionStarted] = useState(false);
     const [errors, setErrors] = useState({});
     const [inputValues, setInputValues] = useState(getInitialInputValues());
 
-    function getAgentsAttributeList(attributeName) {
-        return _.chain(agents).map(attributeName).uniq().value();
+    function getAgentsAttributeList(attributeName: keyof Agent) {
+        return chain(agents).map(attributeName).uniq().value();
     }
 
     useEffect(() => {
@@ -65,25 +73,25 @@ export default function InstallAgentsModal({
         drilldownHandler(
             'execution',
             { deploymentId: selectedDeploymentId, executionId },
-            `Install New Agents on ${selectedDeploymentId}`
+            translateInstall('pageName', { deploymentId: selectedDeploymentId })
         );
     }
 
     function submitExecute() {
         const { nodeFilter, installMethods: methods, managerCertificate, managerIp, stopOldAgent } = inputValues;
         if (!nodeFilter.deploymentId) {
-            setErrors({ error: 'Provide deployment in Nodes filter' });
+            setErrors({ error: translateCommon('deploymentError') });
             return;
         }
 
         setLoading(true);
         const params = {
-            node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
-            node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(methods) ? methods : undefined,
+            node_ids: !isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
+            node_instance_ids: !isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
+            install_methods: !isEmpty(methods) ? methods : undefined,
             stop_old_agent: stopOldAgent,
-            manager_ip: !_.isEmpty(managerIp) ? managerIp : undefined,
-            manager_certificate: !_.isEmpty(managerCertificate) ? managerCertificate : undefined
+            manager_ip: !isEmpty(managerIp) ? managerIp : undefined,
+            manager_certificate: !isEmpty(managerCertificate) ? managerCertificate : undefined
         };
 
         const actions = new Stage.Common.Deployments.Actions(manager);
@@ -108,9 +116,12 @@ export default function InstallAgentsModal({
         return true;
     }
 
-    function handleInputChange(event, field) {
-        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
+    const handleInputChange: (NodeFilterProps &
+        StrictDropdownProps &
+        StrictCheckboxProps &
+        StrictInputProps)['onChange'] = (_event, field) => {
+        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field as Field) });
+    };
 
     if (!open) return null;
 
@@ -119,7 +130,7 @@ export default function InstallAgentsModal({
     return (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="download" /> Install new agents
+                <Icon name="download" /> ${translateInstall('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -132,9 +143,9 @@ export default function InstallAgentsModal({
                     {!executionStarted && (
                         <>
                             <Form.Field
-                                label="Nodes filter"
+                                label={translateCommon('fields.nodeFilter.label')}
                                 required
-                                help="Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                                help={translateCommon('fields.nodeFilter.description')}
                             >
                                 <NodeFilter
                                     name="nodeFilter"
@@ -151,24 +162,22 @@ export default function InstallAgentsModal({
                             </Form.Field>
 
                             <Form.Field
-                                label="Install Methods filter"
-                                help="Filter agents by install methods. Filtering turned off when none selected."
+                                label={translateCommon('fields.installMethods.label')}
+                                help={translateCommon('fields.installMethods.description')}
                             >
                                 <Form.Dropdown
                                     name="installMethods"
                                     multiple
                                     selection
-                                    options={Consts.installMethodsOptions}
+                                    options={installMethodsOptions}
                                     value={inputValues.installMethods}
                                     onChange={handleInputChange}
                                 />
                             </Form.Field>
 
                             <Form.Field
-                                label="Manager IP"
-                                help="The private IP of the current leader (master) Manager.
-                                          This IP is used to connect to the Manager's RabbitMQ.
-                                          Relevant only in HA cluster."
+                                label={translateInstall('fields.managerIp.label')}
+                                help={translateInstall('fields.managerIp.description')}
                             >
                                 <Form.Input
                                     name="managerIp"
@@ -178,11 +187,8 @@ export default function InstallAgentsModal({
                             </Form.Field>
 
                             <Form.Field
-                                label="Manager Certificate"
-                                help="A path to a file containing the SSL certificate
-                                          of the current leader Manager. The certificate
-                                          is available on the Manager:
-                                          /etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+                                label={translateInstall('fields.managerCertificate.label')}
+                                help={translateInstall('fields.managerCertificate.description')}
                             >
                                 <Form.Input
                                     name="managerCertificate"
@@ -191,14 +197,9 @@ export default function InstallAgentsModal({
                                 />
                             </Form.Field>
 
-                            <Form.Field
-                                help="If set, after installing the new agent the old agent
-                                          (that is connected to the old Manager) will be stopped.
-                                          *IMPORTANT* if the deployment has monitoring with auto-healing configured,
-                                          you need to disable it first"
-                            >
+                            <Form.Field help={translateInstall('fields.stopOldAgent.description')}>
                                 <Form.Checkbox
-                                    label="Stop old agent"
+                                    label={translateInstall('fields.stopOldAgent.label')}
                                     toggle
                                     name="stopOldAgent"
                                     checked={inputValues.stopOldAgent}
@@ -210,20 +211,31 @@ export default function InstallAgentsModal({
 
                     <Message
                         success
-                        header="Execution started"
-                        content="New agents installation has been started. Click 'Show Status and Logs' button to see details."
+                        header={translateCommon('executionStartedMessage.header')}
+                        content={translateCommon('executionStartedMessage.content', {
+                            execution: translateInstall('execution')
+                        })}
                     />
                 </Form>
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton content={executionStarted ? 'Close' : undefined} onClick={onCancel} disabled={loading} />
+                <CancelButton
+                    content={executionStarted ? translateCommon('buttons.close') : undefined}
+                    onClick={onCancel}
+                    disabled={loading}
+                />
                 {!executionStarted && (
-                    <ApproveButton onClick={onApprove} disabled={loading} content="Install" icon="download" />
+                    <ApproveButton
+                        onClick={onApprove}
+                        disabled={loading}
+                        content={translate('buttons.install')}
+                        icon="download"
+                    />
                 )}
                 {executionStarted && (
                     <Button
-                        content="Show Status and Logs"
+                        content={translateCommon('buttons.showStatus')}
                         icon="file text"
                         color="green"
                         onClick={onShowExecutionStatus}
@@ -233,26 +245,3 @@ export default function InstallAgentsModal({
         </Modal>
     );
 }
-
-InstallAgentsModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-
-    agents: AgentsPropType,
-    // eslint-disable-next-line react/no-unused-prop-types
-    deploymentId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeInstanceId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    installMethods: Stage.PropTypes.StringOrArray
-};
-
-InstallAgentsModal.defaultProps = {
-    agents: [],
-    deploymentId: '',
-    nodeId: [],
-    nodeInstanceId: [],
-    installMethods: []
-};
