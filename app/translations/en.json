@@ -1115,6 +1115,16 @@
                 "deploy": "Deploy",
                 "delete": "Delete",
                 "editInComposer": "Edit in Composer"
+            },
+            "columns": {
+                "name": "Name",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "main_file_name": "Main file name",
+                "state": "State",
+                "deployments": "# Deployments",
+            },
             }
         },
         "blueprintSources": {

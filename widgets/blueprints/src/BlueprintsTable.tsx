@@ -2,6 +2,7 @@ import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
 
 const translateBlueprintsIcons = Stage.Utils.getT('widgets.blueprints.icons');
+const translateBlueprintsColumns = Stage.Utils.getT('widgets.blueprints.columns');
 
 export default function BlueprintsTable({
     data,
@@ -33,13 +34,35 @@ export default function BlueprintsTable({
             className={tableName}
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label="Name" name="id" width="20%" />
-            <DataTable.Column show={fieldsToShow?.includes('Created')} label="Created" name="created_at" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('Updated')} label="Updated" name="updated_at" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('Creator')} label="Creator" name="created_by" width="15%" />
-            <DataTable.Column label="Main blueprint file" name="main_file_name" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('State')} label="State" name="state" />
-            <DataTable.Column show={fieldsToShow?.includes('Deployments')} label="# Deployments" />
+            <DataTable.Column label={translateBlueprintsColumns('name')} name="id" width="20%" />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Created')}
+                label={translateBlueprintsColumns('created')}
+                name="created_at"
+                width="15%"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Updated')}
+                label={translateBlueprintsColumns('updated')}
+                name="updated_at"
+                width="15%"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Creator')}
+                label={translateBlueprintsColumns('creator')}
+                name="created_by"
+                width="15%"
+            />
+            <DataTable.Column label={translateBlueprintsColumns('main_file_name')} name="main_file_name" width="15%" />
+            <DataTable.Column
+                show={fieldsToShow?.includes('State')}
+                label={translateBlueprintsColumns('state')}
+                name="state"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Deployments')}
+                label={translateBlueprintsColumns('deployments')}
+            />
             <DataTable.Column width="10%" />
 
             {data.items.map(item => (
