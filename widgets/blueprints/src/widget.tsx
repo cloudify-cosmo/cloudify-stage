@@ -7,6 +7,40 @@ import { translateBlueprints } from './widget.utils';
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
+const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) => {
+    const blueprintsData = data.blueprints;
+    const deploymentData = data.deployments;
+
+    // Count deployments
+    const depCount = reduce(
+        deploymentData.items,
+        // eslint-disable-next-line camelcase
+        (result: Record<string, any>, item: { blueprint_id: string; deployments: number }) => {
+            result[item.blueprint_id] = item.deployments;
+            return result;
+        },
+        {}
+    );
+    each(blueprintsData.items, blueprint => {
+        blueprint.depCount = depCount[blueprint.id] || 0;
+    });
+
+    const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
+
+    return {
+        ...blueprintsData,
+        items: map(blueprintsData.items, item => {
+            return {
+                ...item,
+                created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+                updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
+                isSelected: selectedBlueprint === item.id
+            };
+        }),
+        total: get(blueprintsData, 'metadata.pagination.total', 0)
+    };
+};
+
 interface BlueprintsWidgetData {
     blueprints: any;
     deployments: any;
@@ -132,44 +166,10 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        const processData = (dataToProcess: BlueprintsWidgetData) => {
-            const blueprintsData = dataToProcess.blueprints;
-            const deploymentData = dataToProcess.deployments;
-
-            // Count deployments
-            const depCount = reduce(
-                deploymentData.items,
-                // eslint-disable-next-line camelcase
-                (result: Record<string, any>, item: { blueprint_id: string; deployments: number }) => {
-                    result[item.blueprint_id] = item.deployments;
-                    return result;
-                },
-                {}
-            );
-            each(blueprintsData.items, blueprint => {
-                blueprint.depCount = depCount[blueprint.id] || 0;
-            });
-
-            const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
-
-            return {
-                ...blueprintsData,
-                items: map(blueprintsData.items, item => {
-                    return {
-                        ...item,
-                        created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
-                        updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
-                        isSelected: selectedBlueprint === item.id
-                    };
-                }),
-                total: get(blueprintsData, 'metadata.pagination.total', 0)
-            };
-        };
-
         if (isEmpty(data)) {
             return <Loading />;
         }
-        const formattedData = processData(data as BlueprintsWidgetData);
+        const formattedData = processData(data as BlueprintsWidgetData, toolbox);
 
         return (
             <div>
