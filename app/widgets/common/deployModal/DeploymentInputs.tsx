@@ -39,23 +39,18 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     const deploymentHasMultipleInputs = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
     const deploymentHasDataTypes = !isEmpty(blueprint.plan.data_types);
 
-    return (
+    return blueprint.id && deploymentHasInputs ? (
         <>
-            {blueprint.id && (
-                <IconButtonsGroup>
-                    {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
-                    {deploymentHasInputs ? <InputsHelpIcon /> : <Message content={translate('noInputs')} />}
-                    {deploymentHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
-                    {deploymentHasInputs && (
-                        <YamlFileButton
-                            onChange={onYamlFileChange}
-                            dataType={translate('yamlDataType')}
-                            fileLoading={fileLoading}
-                        />
-                    )}
-                </IconButtonsGroup>
-            )}
-
+            <IconButtonsGroup>
+                {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
+                <InputsHelpIcon />
+                {deploymentHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                <YamlFileButton
+                    onChange={onYamlFileChange}
+                    dataType={translate('yamlDataType')}
+                    fileLoading={fileLoading}
+                />
+            </IconButtonsGroup>
             <InputFields
                 inputs={blueprint.plan.inputs}
                 onChange={onDeploymentInputChange}
@@ -66,6 +61,8 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 sortOrder={sortOrder}
             />
         </>
+    ) : (
+        <Message content={translate('noInputs')} />
     );
 };
 
