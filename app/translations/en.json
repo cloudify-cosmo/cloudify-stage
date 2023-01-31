@@ -1043,7 +1043,7 @@
             "icons": {
                 "editInComposer": "Edit a copy in Composer",
                 "createDeployment": "Create deployment",
-                "deleteBluprint": "Delete blueprint"
+                "deleteBlueprint": "Delete blueprint"
             }
         },
         "blueprintSources": {

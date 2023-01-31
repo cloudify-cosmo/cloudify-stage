@@ -109,7 +109,7 @@ export default function BlueprintsTable({
                                 <Icon
                                     name="trash"
                                     link
-                                    title={translateBlueprintsIcons('deleteBluprint')}
+                                    title={translateBlueprintsIcons('deleteBlueprint')}
                                     onClick={(event: Event) => {
                                         event.stopPropagation();
                                         onDeleteBlueprint(item);
