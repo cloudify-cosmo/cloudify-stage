@@ -21,9 +21,9 @@ export default function LabelsTable({ data, toolbox }: LabelsTableProps) {
     const { i18n } = Stage;
 
     const [isAddModalOpen, openAddModal, closeAddModal] = useBoolean();
-    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState<Label | undefined>();
+    const [labelInEdit, setLabelInEdit, stopLabelEdit] = useResettableState<Label | undefined>(undefined);
     const [currentLabelValue, setCurrentLabelValue] = useInput('');
-    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState<Label | undefined>();
+    const [labelToDelete, setLabelToDelete, unsetLabelToDelete] = useResettableState<Label | undefined>(undefined);
     const [labels, setLabels] = useState(data.labels);
 
     useRefreshEvent(toolbox, 'labels:refresh');

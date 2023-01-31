@@ -1,13 +1,15 @@
 import { castArray } from 'lodash';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { Label } from 'app/widgets/common/labels/types';
 import LabelsTable from './LabelsTable';
 import './widget.css';
 
-const { i18n } = Stage;
+const translate = Stage.Utils.getT('widgets.labels');
 
-Stage.defineWidget<{ deploymentId: string | null }, unknown, unknown>({
+Stage.defineWidget<{ deploymentId: string | null }, Label[], PollingTimeConfiguration>({
     id: 'labels',
-    name: i18n.t('widgets.labels.name'),
-    description: i18n.t('widgets.labels.description'),
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 12,
     initialHeight: 24,
     isReact: true,
@@ -42,7 +44,7 @@ Stage.defineWidget<{ deploymentId: string | null }, unknown, unknown>({
 
         if (!deploymentId) {
             const { Message } = Stage.Basic;
-            return <Message info>{i18n.t('widgets.labels.noDeployment')}</Message>;
+            return <Message info>{translate('noDeployment')}</Message>;
         }
 
         if (!Array.isArray(data)) {
