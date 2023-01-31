@@ -1,6 +1,7 @@
 import type { LabelsModalProps } from 'app/widgets/common/labels/LabelsModal';
 
-export default function AddLabelsModal(props: Omit<LabelsModalProps, 'i18nHeaderKey' | 'i18nApplyKey'>) {
+type AddLabelsModalProps = Omit<LabelsModalProps, 'i18nHeaderKey' | 'i18nApplyKey'>;
+export default function AddLabelsModal(props: AddLabelsModalProps) {
     const { Modal } = Stage.Common.Labels;
     return (
         <Modal
