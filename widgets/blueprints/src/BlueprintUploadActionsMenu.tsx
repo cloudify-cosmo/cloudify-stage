@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { FunctionComponent } from 'react';
 import { isEqual, map } from 'lodash';
-import { translateBlueprintUploadActionsMenu } from './widget.utils';
 
 const { Dropdown } = Stage.Basic;
 const { Menu, Item } = Dropdown;
@@ -10,6 +9,7 @@ const { TerraformModal } = Stage.Common;
 const { drilldownPage } = Stage.Common.Consts;
 const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
+const translateBlueprintUploadActionsMenu = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const defaultMarketplaceTab = 'AWS';
 
 interface BlueprintUploadActionsMenuProps {

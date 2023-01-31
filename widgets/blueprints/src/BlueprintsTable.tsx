@@ -1,6 +1,7 @@
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
-import { translateBlueprintsIcons } from './widget.utils';
+
+const translateBlueprintsIcons = Stage.Utils.getT('widgets.blueprints.icons');
 
 export default function BlueprintsTable({
     data,
