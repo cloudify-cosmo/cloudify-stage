@@ -2,7 +2,6 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 
 import DynamicDropdown from '../../components/DynamicDropdown';
-import type { DynamicDropdownProps } from '../../components/DynamicDropdown';
 import type { CommonAttributeValueInputProps } from './types';
 import { getPlaceholderTranslation, isMultipleValuesOperator } from '../common';
 import MultipleStringValuesInput from './MultipleStringValuesInput';
@@ -27,7 +26,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
             <DynamicDropdown
                 name="ruleValue"
                 fetchUrl={fetchUrl}
-                onChange={onChange as DynamicDropdownProps['onChange']}
+                onChange={ruleValue => onChange(ruleValue as string[])}
                 toolbox={toolbox}
                 allowAdditions
                 clearable={false}
