@@ -8,7 +8,6 @@ import { translateBlueprints } from './widget.utils';
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
 interface Deployments {
-    // eslint-disable-next-line camelcase
     items: Deployment[];
     gridParams?: any;
     metadata?: any;
