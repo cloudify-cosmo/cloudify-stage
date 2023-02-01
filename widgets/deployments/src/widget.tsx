@@ -1,15 +1,25 @@
 import { get, isEmpty, isEqual } from 'lodash';
+import type {
+    PageSizeConfiguration,
+    PollingTimeConfiguration,
+    SortAscendingConfiguration,
+    SortColumnConfiguration
+} from 'app/utils/GenericConfig';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import './widget.css';
+import type { PaginatedResponse } from 'backend/types';
+import type { DeploymentViewData } from 'widgets/deployments/src/props/DeploymentsViewPropTypes';
 
-const t = Stage.Utils.getT('widgets.deployments');
+const translate = Stage.Utils.getT('widgets.deployments');
 
-type DeploymentsConfiguration = {
+interface DeploymentsConfiguration
+    extends PollingTimeConfiguration,
+        PageSizeConfiguration,
+        SortColumnConfiguration,
+        SortAscendingConfiguration {
     blueprintIdFilter: string;
-};
-
-type DeploymentData = {};
+}
 
 type DeploymentParams = {
     // eslint-disable-next-line camelcase
@@ -20,10 +30,10 @@ type DeploymentParams = {
     created_by?: string;
 };
 
-Stage.defineWidget<DeploymentParams, DeploymentData, DeploymentsConfiguration>({
+Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
     id: 'deployments',
-    name: t('name'),
-    description: t('description'),
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 8,
     initialHeight: 24,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
@@ -33,33 +43,33 @@ Stage.defineWidget<DeploymentParams, DeploymentData, DeploymentsConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'clickToDrillDown',
-            name: t('configuration.clickToDrillDown.name'),
+            name: translate('configuration.clickToDrillDown.name'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showExecutionStatusLabel',
-            name: t('configuration.showExecutionStatusLabel.name'),
-            description: t('configuration.showExecutionStatusLabel.description'),
+            name: translate('configuration.showExecutionStatusLabel.name'),
+            description: translate('configuration.showExecutionStatusLabel.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'showFirstUserJourneyButtons',
-            name: t('configuration.showFirstUserJourneyButtons.name'),
-            description: t('configuration.showFirstUserJourneyButtons.description'),
+            name: translate('configuration.showFirstUserJourneyButtons.name'),
+            description: translate('configuration.showFirstUserJourneyButtons.description'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'blueprintIdFilter',
-            name: t('configuration.blueprintIdFilter.name'),
+            name: translate('configuration.blueprintIdFilter.name'),
             placeHolder: 'Enter the blueprint id you wish to filter by',
             type: Stage.Basic.GenericField.STRING_TYPE
         },
         {
             id: 'displayStyle',
-            name: t('configuration.displayStyle.name'),
+            name: translate('configuration.displayStyle.name'),
             items: [
                 { name: 'Table', value: 'table' },
                 { name: 'List', value: 'list' }
@@ -92,8 +102,10 @@ Stage.defineWidget<DeploymentParams, DeploymentData, DeploymentsConfiguration>({
         return obj;
     },
 
-    async fetchData(_widget, toolbox, params) {
-        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments(
+    async fetchData(_widget, toolbox, params): Promise<DeploymentViewData> {
+        const deploymentDataPromise: Promise<PaginatedResponse<{ id: string }>> = new Stage.Common.Deployments.Actions(
+            toolbox.getManager()
+        ).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
                 _include:
                     'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
@@ -156,7 +168,7 @@ Stage.defineWidget<DeploymentParams, DeploymentData, DeploymentsConfiguration>({
         });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
         const {
             configuration: { showFirstUserJourneyButtons }
