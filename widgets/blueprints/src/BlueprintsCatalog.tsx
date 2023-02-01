@@ -1,10 +1,11 @@
 import type { ReactElement } from 'react';
 import { each } from 'lodash';
+import { translateBlueprints } from './widget.utils';
 
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
 
-const translateBlueprintsButtons = Stage.Utils.getT('widgets.blueprints.buttons');
+const translateBlueprintsButtons = Stage.Utils.composeT(translateBlueprints, 'buttons');
 
 export default function BlueprintsCatalog({
     data,

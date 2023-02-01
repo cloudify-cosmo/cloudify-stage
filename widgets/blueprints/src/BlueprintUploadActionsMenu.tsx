@@ -9,7 +9,7 @@ const { TerraformModal } = Stage.Common;
 const { drilldownPage } = Stage.Common.Consts;
 const { UploadModal: UploadBlueprintModal } = Stage.Common.Blueprints;
 
-const translateBlueprintUploadActionsMenu = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
+const translate = Stage.Utils.getT('widgets.common.blueprintUpload.actionsMenu');
 const defaultMarketplaceTab = 'AWS';
 
 interface BlueprintUploadActionsMenuProps {
@@ -51,16 +51,11 @@ const BlueprintUploadActionsMenu: FunctionComponent<BlueprintUploadActionsMenuPr
 
     return (
         <>
-            <Dropdown
-                button
-                text={translateBlueprintUploadActionsMenu('uploadButton')}
-                direction={direction}
-                upward={upward}
-            >
+            <Dropdown button text={translate('uploadButton')} direction={direction} upward={upward}>
                 {/* Display the menu above all leaflet components, see https://leafletjs.com/reference-1.7.1.html#map-pane */}
                 <Menu>
                     {map(menuItems, (clickHandler, key) => (
-                        <Item text={translateBlueprintUploadActionsMenu(key)} key={key} onClick={clickHandler} />
+                        <Item text={translate(key)} key={key} onClick={clickHandler} />
                     ))}
                 </Menu>
             </Dropdown>

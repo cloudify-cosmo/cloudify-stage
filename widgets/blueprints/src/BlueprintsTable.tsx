@@ -1,8 +1,9 @@
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
+import { translateBlueprints } from './widget.utils';
 
-const translateBlueprintsIcons = Stage.Utils.getT('widgets.blueprints.icons');
-const translateBlueprintsColumns = Stage.Utils.getT('widgets.blueprints.columns');
+const translateBlueprintsIcons = Stage.Utils.composeT(translateBlueprints, 'icons');
+const translateBlueprintsColumns = Stage.Utils.composeT(translateBlueprints, 'columns');
 
 export default function BlueprintsTable({
     data,
