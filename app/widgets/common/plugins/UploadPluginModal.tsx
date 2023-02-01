@@ -73,7 +73,11 @@ function UploadPluginModal({ open, onHide, toolbox }: UploadPluginModalProps) {
         setLoading();
 
         const createUploadResource = (name: ResourceName): Resources => {
-            const { [`${name}Url`]: url, [`${name}File`]: file } = inputs as Record<string, unknown>;
+            type AvailableInputName = keyof typeof inputs;
+            const urlInputName: AvailableInputName = `${name}Url`;
+            const fileInputName: AvailableInputName = `${name}File`;
+
+            const { [urlInputName]: url, [fileInputName]: file } = inputs;
 
             return {
                 [name]: { url, file }

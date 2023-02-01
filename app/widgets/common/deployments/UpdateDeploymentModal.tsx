@@ -5,7 +5,6 @@ import { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } from 
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
-import type { DynamicDropdownProps } from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
 import SortOrderIcons from '../inputs/SortOrderIcons';
 import YamlFileButton from '../inputs/YamlFileButton';
@@ -20,7 +19,7 @@ import InputsHeader from '../inputs/InputsHeader';
 import InputFields from '../inputs/InputFields';
 import NodeInstancesFilter from '../nodes/NodeInstancesFilter';
 import UpdateDetailsModal from './UpdateDetailsModal';
-import type { UpdateDetailsModalProps } from './UpdateDetailsModal';
+import type { DeploymentUpdate } from './UpdateDetailsModal';
 import { useBoolean, useErrors, useInputs, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
 import type { Deployment } from '../deploymentsView/types';
@@ -49,8 +48,7 @@ export default function UpdateDeploymentModal({
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
 
     const [blueprint, setBlueprint, resetBlueprint] = useResettableState<FullBlueprintData | undefined>(undefined);
-    const [previewData, setPreviewData, resetPreviewData] = useResettableState({});
-
+    const [previewData, setPreviewData, resetPreviewData] = useResettableState<DeploymentUpdate | undefined>(undefined);
     const [deployment, setDeployment, resetDeployment] = useResettableState<FetchedDeployment | undefined>(undefined);
     const [deploymentInputs, setDeploymentInputs, resetDeploymentInputs] = useInputs({});
     const [inputs, setInput, resetInputs] = useInputs({
@@ -257,7 +255,7 @@ export default function UpdateDeploymentModal({
               skip_reinstall: !automaticReinstall,
               reinstall_list: reinstallList
           }
-        : {};
+        : undefined;
 
     const blueprintHasInputs = !isEmpty(blueprint?.plan.inputs);
     const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint!.plan.inputs).length > 1;
@@ -436,8 +434,8 @@ export default function UpdateDeploymentModal({
                 <UpdateDetailsModal
                     open={isPreviewShown}
                     isPreview
-                    deploymentUpdate={previewData as UpdateDetailsModalProps['deploymentUpdate']}
-                    executionParameters={executionParameters as UpdateDetailsModalProps['executionParameters']}
+                    deploymentUpdate={previewData}
+                    executionParameters={executionParameters}
                     onClose={hidePreview}
                     onUpdate={onUpdate}
                     toolbox={toolbox}

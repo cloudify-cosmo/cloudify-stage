@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmpty, isNil, includes, noop } from 'lodash';
+import { isNil, includes, noop } from 'lodash';
 import type { UrlOrFileInputProps } from 'cloudify-ui-components/typings/components/form/UrlOrFileInput/UrlOrFileInput';
 import Consts from '../Consts';
 import BlueprintActions from './BlueprintActions';

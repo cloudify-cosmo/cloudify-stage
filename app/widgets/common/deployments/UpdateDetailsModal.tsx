@@ -366,7 +366,7 @@ const EMPTY_EXECUTION_PARAMETERS = {
     reinstall_list: []
 };
 
-interface DeploymentUpdate {
+export interface DeploymentUpdate {
     /* eslint-disable camelcase */
     id: string;
     new_blueprint_id: string;

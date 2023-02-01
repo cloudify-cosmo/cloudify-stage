@@ -71,7 +71,7 @@ export interface BlueprintPlan {
         properties: {
             description: string;
             type: string;
-            default: any;
+            default: unknown;
             required: boolean;
         };
     };
