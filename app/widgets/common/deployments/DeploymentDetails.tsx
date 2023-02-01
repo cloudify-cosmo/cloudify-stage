@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ReactNode, CSSProperties } from 'react';
 import { isEmpty } from 'lodash';
-import type { ResourceVisibilityProps } from 'cloudify-ui-components/typings/components/cloudify/visibility/ResourceVisibility/ResourceVisibility';
+import type { ResourceVisibilityProps } from 'cloudify-ui-components';
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
 import Consts from '../Consts';
 import { Grid, Header, ResourceVisibility } from '../../../components/basic';
