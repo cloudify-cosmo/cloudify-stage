@@ -1,6 +1,7 @@
 import { each, get, isEmpty, join, map, reduce } from 'lodash';
+import type { DeploymentsResponse } from 'app/widgets/common/deploymentsView/types';
 import BlueprintsList from './BlueprintsList';
-import type { BlueprintsWidgetConfiguration } from './types';
+import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
 
 import { translateBlueprints } from './widget.utils';
@@ -14,8 +15,7 @@ const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) =
     // Count deployments
     const depCount = reduce(
         deploymentData.items,
-        // eslint-disable-next-line camelcase
-        (result: Record<string, any>, item: { blueprint_id: string; deployments: number }) => {
+        (result: any, item: any) => {
             result[item.blueprint_id] = item.deployments;
             return result;
         },
@@ -42,8 +42,8 @@ const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) =
 };
 
 interface BlueprintsWidgetData {
-    blueprints: any;
-    deployments: any;
+    blueprints: BlueprintDataResponse;
+    deployments: DeploymentsResponse;
 }
 
 interface BlueprintsParams {
@@ -113,10 +113,15 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
         }
     ],
 
-    fetchData(widget, toolbox, params) {
+    async fetchData(widget, toolbox, params) {
         const result: BlueprintsWidgetData = {
-            blueprints: {},
-            deployments: {}
+            blueprints: { items: [], total: 0 },
+            deployments: {
+                items: [],
+                metadata: {
+                    pagination: { offset: 0, size: 0, total: 0 }
+                }
+            }
         };
         const filterRules = [...(widget.configuration.filterRules || [])];
         const SearchActions = Stage.Common.Actions.Search;
@@ -131,23 +136,21 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             });
         }
 
-        return searchActions
-            .doListBlueprints(filterRules, {
-                _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
-                ...params
-            })
-            .then(data => {
-                result.blueprints = data;
+        const blueprints = await searchActions.doListBlueprints(filterRules, {
+            _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
+            ...params
+        });
 
-                return toolbox.getManager().doGetFull('/summary/deployments', {
-                    _target_field: 'blueprint_id',
-                    blueprint_id: _.map(data.items, item => item.id)
-                });
-            })
-            .then(data => {
-                result.deployments = data;
-                return result;
-            });
+        result.blueprints = blueprints;
+
+        const deployments = await toolbox.getManager().doGetFull('/summary/deployments', {
+            _target_field: 'blueprint_id',
+            blueprint_id: _.map(blueprints.items, item => item.id)
+        });
+
+        result.deployments = deployments as DeploymentsResponse;
+
+        return result;
     },
 
     fetchParams: (widget, toolbox) => {
