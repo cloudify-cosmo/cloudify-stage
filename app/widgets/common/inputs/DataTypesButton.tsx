@@ -7,9 +7,7 @@ import { CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../
 import translateInputs from './utils/translateInputs';
 import type { BlueprintPlan } from '../blueprints/BlueprintActions';
 
-type Properties = BlueprintPlan['data_types']['properties'] & {
-    default: any;
-};
+type Properties = BlueprintPlan['data_types']['properties'];
 
 type DataTypes = BlueprintPlan['data_types'] & {
     properties: Properties;

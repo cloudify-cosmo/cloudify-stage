@@ -8,6 +8,7 @@ import type { UploadBlueprintBasicFormProps } from './UploadBlueprintBasicForm';
 import StageUtils from '../../../utils/stageUtils';
 import { Form } from '../../../components/basic';
 import type { PutSourceListYamlResponse } from '../../../../backend/routes/SourceBrowser.types';
+import type { Field } from '../types';
 
 const t = StageUtils.getT('widgets.common.blueprintUpload.inputs');
 
@@ -100,7 +101,7 @@ export default class UploadBlueprintForm extends React.Component<
         const { blueprintFile, blueprintUrl, onChange } = this.props;
         this.setState(UploadBlueprintForm.initialState);
 
-        if ((!isEmpty(blueprintUrl) && StageUtils.Url.isUrl(blueprintUrl)) || !isNil(blueprintFile)) {
+        if ((blueprintUrl && StageUtils.Url.isUrl(blueprintUrl)) || !isNil(blueprintFile)) {
             this.setState({ loading: true });
             this.actions
                 .doListYamlFiles(blueprintUrl, blueprintFile, false)
@@ -116,7 +117,7 @@ export default class UploadBlueprintForm extends React.Component<
 
     onBlueprintUrlBlur = () => {
         const { blueprintUrl, onChange } = this.props;
-        if (isEmpty(blueprintUrl) || !StageUtils.Url.isUrl(blueprintUrl)) {
+        if (!blueprintUrl || !StageUtils.Url.isUrl(blueprintUrl)) {
             this.setState({ yamlFiles: [] }, this.resetErrors);
             return;
         }
@@ -202,7 +203,7 @@ export default class UploadBlueprintForm extends React.Component<
         const { onChange } = this.props;
         onChange({
             ...UploadBlueprintForm.NO_ERRORS,
-            ...Form.fieldNameValue(field as { name: string; value: unknown; type: string })
+            ...Form.fieldNameValue(field as Field)
         });
     };
 

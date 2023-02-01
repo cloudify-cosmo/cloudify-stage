@@ -1,5 +1,5 @@
-import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
-import type { Deployment } from '../../../app/widgets/common/deployments/DeploymentDetails.types';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { Deployment } from 'app/widgets/common/deployments/DeploymentDetails.types';
 
 export declare namespace DeploymentInfoWidget {
     export interface Params {

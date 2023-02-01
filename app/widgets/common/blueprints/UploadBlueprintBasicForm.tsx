@@ -15,7 +15,7 @@ export interface UploadBlueprintBasicFormProps {
     formLoading?: boolean;
     lastFormField?: ReactNode;
     onErrorsDismiss: () => void;
-    onInputChange: InputProps['onChange'];
+    onInputChange: (InputProps & DropdownProps)['onChange'];
     uploadState?: string;
     yamlFiles?: string[];
     yamlFileHelp: string;
@@ -88,7 +88,7 @@ export default function UploadBlueprintBasicForm({
                         return { text: item, value: item };
                     })}
                     value={blueprintYamlFile}
-                    onChange={onInputChange as DropdownProps['onChange']}
+                    onChange={onInputChange}
                 />
             </Form.Field>
             {lastFormField}

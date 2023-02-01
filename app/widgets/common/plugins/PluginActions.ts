@@ -5,7 +5,7 @@ export type Resources = Record<
     ResourceName,
     {
         url: string;
-        file: unknown;
+        file: File | null;
     }
 >;
 
@@ -18,7 +18,7 @@ class PluginActions {
 
     doUpload(visibility: string, title: string, resources: Resources) {
         const params: PostPluginsUploadQueryParams = { visibility, title };
-        const files: Record<string, unknown> = {};
+        const files: Record<string, File | null> = {};
 
         _.each(resources, ({ url, file }, name) => {
             const paramName = `${name}Url` as keyof PostPluginsUploadQueryParams;

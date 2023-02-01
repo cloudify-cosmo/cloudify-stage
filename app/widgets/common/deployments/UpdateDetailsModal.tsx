@@ -299,8 +299,17 @@ function NodeInstancesSection({ types }: NodeInstancesSectionProps) {
     );
 }
 
+interface Step {
+    /* eslint-disable camelcase */
+    id: string;
+    action: string;
+    entity_type: string;
+    entity_id: string;
+    /* eslint-enable camelcase */
+}
+
 interface StepsSectionProps {
-    steps: Record<string, any>[];
+    steps: Step[];
 }
 
 function StepsSection({ steps }: StepsSectionProps) {
@@ -402,13 +411,13 @@ function UpdateDetailsModal({
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [deploymentUpdate, setDeploymentUpdate, resetDeploymentUpdate] = useResettableState(
-        !isEmpty(deploymentUpdateId) ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
+        deploymentUpdateId ? EMPTY_DEPLOYMENT_UPDATE : providedDeploymentUpdate
     );
     const [executionParameters, setExecutionParameters, resetExecutionParameters] =
         useResettableState(EMPTY_EXECUTION_PARAMETERS);
 
     useEffect(() => {
-        if (!isEmpty(deploymentUpdateId) && open) {
+        if (deploymentUpdateId && open) {
             setLoading();
             const actions = new DeploymentUpdatesActions(toolbox);
             actions
@@ -513,7 +522,7 @@ function UpdateDetailsModal({
                             ]}
                         />
 
-                        <StepsSection steps={deploymentUpdate?.steps || [{}]} />
+                        <StepsSection steps={deploymentUpdate?.steps || []} />
                     </Form>
                 </Modal.Content>
 
