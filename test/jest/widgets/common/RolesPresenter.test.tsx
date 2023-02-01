@@ -1,4 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
+import React from 'react';
 import { shallow } from 'enzyme';
 
 import RolesPresenter from 'widgets/common/roles/RolesPresenter';
