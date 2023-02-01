@@ -1,3 +1,4 @@
+import type { GridParams } from 'cloudify-ui-components';
 import { each, get, isEmpty, join, map, reduce } from 'lodash';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
@@ -9,7 +10,7 @@ const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
 interface Deployments {
     items: Deployment[];
-    gridParams?: any;
+    gridParams?: GridParams;
     metadata?: any;
 }
 interface Deployment {
@@ -126,11 +127,7 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
         const result: BlueprintsWidgetData = {
             blueprints: { items: [], total: 0 },
             deployments: {
-                items: [],
-                gridParams: {},
-                metadata: {
-                    pagination: { offset: 0, size: 0, total: 0 }
-                }
+                items: []
             }
         };
         const filterRules = [...(widget.configuration.filterRules || [])];
