@@ -281,7 +281,7 @@ export default function UpdateDeploymentModal({
                             placeholder="Select Blueprint"
                             name="blueprintName"
                             fetchUrl="/blueprints?_include=id&state=uploaded"
-                            onChange={selectBlueprint as DynamicDropdownProps['onChange']}
+                            onChange={blueprintName => selectBlueprint(blueprintName as string)}
                             toolbox={toolbox}
                         />
                     </Form.Field>
