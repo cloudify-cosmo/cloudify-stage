@@ -1,5 +1,4 @@
 import { each, get, isEmpty, join, map, reduce } from 'lodash';
-import type { DeploymentsResponse } from 'app/widgets/common/deploymentsView/types';
 import BlueprintsList from './BlueprintsList';
 import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
@@ -8,6 +7,17 @@ import { translateBlueprints } from './widget.utils';
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
+interface Deployments {
+    // eslint-disable-next-line camelcase
+    items: Deployment[];
+    gridParams?: any;
+    metadata?: any;
+}
+interface Deployment {
+    // eslint-disable-next-line camelcase
+    blueprint_id: string;
+    deployments: number;
+}
 const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) => {
     const blueprintsData = data.blueprints;
     const deploymentData = data.deployments;
@@ -15,7 +25,7 @@ const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) =
     // Count deployments
     const depCount = reduce(
         deploymentData.items,
-        (result: any, item: any) => {
+        (result: any, item: Deployment) => {
             result[item.blueprint_id] = item.deployments;
             return result;
         },
@@ -43,7 +53,7 @@ const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) =
 
 interface BlueprintsWidgetData {
     blueprints: BlueprintDataResponse;
-    deployments: DeploymentsResponse;
+    deployments: Deployments;
 }
 
 interface BlueprintsParams {
@@ -118,6 +128,7 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             blueprints: { items: [], total: 0 },
             deployments: {
                 items: [],
+                gridParams: {},
                 metadata: {
                     pagination: { offset: 0, size: 0, total: 0 }
                 }
@@ -148,7 +159,7 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             blueprint_id: _.map(blueprints.items, item => item.id)
         });
 
-        result.deployments = deployments as DeploymentsResponse;
+        result.deployments = deployments as Deployments;
 
         return result;
     },
