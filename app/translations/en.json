@@ -995,6 +995,8 @@
             }
         },
         "blueprints": {
+            "name": "Blueprints",
+            "description": "Shows blueprints list",
             "configuration": {
                 "fieldsToShow": {
                     "label": "List of fields to show",
@@ -1099,6 +1101,29 @@
                         "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     }
                 }
+            },
+            "noDataMessage": "There are no Blueprints available. Click \"Upload\" to add Blueprints.",
+            "errors:": {
+                "deleteBlueprint": "Something went wrong, no blueprint was selected for delete"
+            },
+            "icons": {
+                "createDeployment": "Create deployment",
+                "deleteBlueprint": "Delete blueprint",
+                "editInComposer": "Edit a copy in Composer"
+            },
+            "buttons": {
+                "deploy": "Deploy",
+                "delete": "Delete",
+                "editInComposer": "Edit in Composer"
+            },
+            "columns": {
+                "name": "Name",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "main_file_name": "Main file name",
+                "state": "State",
+                "deployments": "# Deployments"
             }
         },
         "blueprintSources": {
