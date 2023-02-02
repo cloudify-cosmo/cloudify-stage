@@ -4,8 +4,6 @@ import type { Deployment } from '../deploymentsView/types';
 import type { Workflow } from '../executeWorkflow';
 import type { FilterRule } from '../filters/types';
 
-type WithRequired<T, K extends keyof T> = T & Required<Pick<T, K>>;
-
 type ResourceName = 'blueprints' | 'deployments' | 'workflows';
 type Params = Record<string, any>;
 export type ListDeploymentsParams = Stage.Types.ManagerGridParams & {
@@ -57,7 +55,7 @@ export default class SearchActions {
         filterRules: FilterRule[],
         params?: ListDeploymentsParams
     ) {
-        return this.doList<WithRequired<Deployment, IncludeKeys>>(
+        return this.doList<Pick<Deployment, IncludeKeys>>(
             'deployments',
             filterRules,
             SearchActions.searchAlsoByDeploymentName(params)
@@ -72,7 +70,7 @@ export default class SearchActions {
         filterRules: FilterRule[],
         params?: ListBlueprintsParams
     ) {
-        return this.doList<WithRequired<FullBlueprintData, IncludeKeys>>('blueprints', filterRules, params);
+        return this.doList<Pick<FullBlueprintData, IncludeKeys>>('blueprints', filterRules, params);
     }
 
     doListAllWorkflows(filterRules: FilterRule[], params?: Params) {
