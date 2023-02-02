@@ -1,59 +1,20 @@
-import type { GridParams } from 'cloudify-ui-components';
-import { each, get, isEmpty, join, map, reduce } from 'lodash';
+import { get, join, reduce } from 'lodash';
 import BlueprintsList from './BlueprintsList';
-import type { BlueprintDataResponse, BlueprintsWidgetConfiguration } from './types';
+import type { Blueprint, BlueprintsWidgetConfiguration } from './types';
 import './widget.css';
-
 import { translateBlueprints } from './widget.utils';
 
 const fields = ['Created', 'Updated', 'Creator', 'State', 'Deployments'];
 
-interface Deployments {
-    items: Deployment[];
-    gridParams?: GridParams;
-    metadata?: any;
-}
 interface Deployment {
     // eslint-disable-next-line camelcase
     blueprint_id: string;
     deployments: number;
 }
-const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) => {
-    const blueprintsData = data.blueprints;
-    const deploymentData = data.deployments;
-
-    // Count deployments
-    const depCount = reduce(
-        deploymentData.items,
-        (result: any, item: Deployment) => {
-            result[item.blueprint_id] = item.deployments;
-            return result;
-        },
-        {}
-    );
-    each(blueprintsData.items, blueprint => {
-        blueprint.depCount = depCount[blueprint.id] || 0;
-    });
-
-    const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
-
-    return {
-        ...blueprintsData,
-        items: map(blueprintsData.items, item => {
-            return {
-                ...item,
-                created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
-                updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
-                isSelected: selectedBlueprint === item.id
-            };
-        }),
-        total: get(blueprintsData, 'metadata.pagination.total', 0)
-    };
-};
 
 interface BlueprintsWidgetData {
-    blueprints: BlueprintDataResponse;
-    deployments: Deployments;
+    blueprints: Stage.Types.PaginatedResponse<Blueprint>;
+    deployments: Stage.Types.PaginatedResponse<Deployment>;
 }
 
 interface BlueprintsParams {
@@ -61,6 +22,35 @@ interface BlueprintsParams {
     created_by?: string;
     state?: string;
 }
+
+const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) => {
+    const blueprintsData = data.blueprints;
+    const deploymentData = data.deployments;
+
+    // Count deployments
+    const depCount = reduce(
+        deploymentData.items,
+        (result: Record<string, number>, item: Deployment) => {
+            result[item.blueprint_id] = item.deployments;
+            return result;
+        },
+        {}
+    );
+
+    const selectedBlueprint = toolbox.getContext().getValue('blueprintId');
+
+    return {
+        ...blueprintsData,
+        items: blueprintsData.items.map(item => ({
+            ...item,
+            created_at: Stage.Utils.Time.formatTimestamp(item.created_at),
+            updated_at: Stage.Utils.Time.formatTimestamp(item.updated_at),
+            depCount: depCount[item.id] || 0,
+            isSelected: selectedBlueprint === item.id
+        })),
+        total: get(blueprintsData, 'metadata.pagination.total', 0)
+    };
+};
 
 Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
@@ -125,10 +115,8 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
 
     async fetchData(widget, toolbox, params) {
         const result: BlueprintsWidgetData = {
-            blueprints: { items: [], total: 0 },
-            deployments: {
-                items: []
-            }
+            blueprints: { items: [], metadata: { pagination: { offset: 0, size: 0, total: 0 } } },
+            deployments: { items: [], metadata: { pagination: { offset: 0, size: 0, total: 0 } } }
         };
         const filterRules = [...(widget.configuration.filterRules || [])];
         const SearchActions = Stage.Common.Actions.Search;
@@ -143,19 +131,19 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
             });
         }
 
-        const blueprints = await searchActions.doListBlueprints(filterRules, {
+        const blueprints = await searchActions.doListBlueprints<keyof Blueprint>(filterRules, {
             _include: 'id,updated_at,created_at,description,created_by,visibility,main_file_name,state,error',
             ...params
         });
 
         result.blueprints = blueprints;
 
-        const deployments = await toolbox.getManager().doGetFull('/summary/deployments', {
+        const deployments = await toolbox.getManager().doGetFull<Deployment>('/summary/deployments', {
             _target_field: 'blueprint_id',
             blueprint_id: _.map(blueprints.items, item => item.id)
         });
 
-        result.deployments = deployments as Deployments;
+        result.deployments = deployments;
 
         return result;
     },
@@ -176,10 +164,11 @@ Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfi
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
-        const formattedData = processData(data as BlueprintsWidgetData, toolbox);
+
+        const formattedData = processData(data, toolbox);
 
         return (
             <div>

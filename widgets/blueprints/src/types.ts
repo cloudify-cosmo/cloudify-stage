@@ -11,7 +11,7 @@ export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration,
     fieldsToShow: string;
 }
 
-interface Blueprint {
+export interface Blueprint {
     // NOTE: properties come from backend
     /* eslint-disable camelcase */
     created_at: string;
