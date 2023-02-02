@@ -1,6 +1,7 @@
-import type { FilterRule } from '../../../app/widgets/common/filters/types';
-import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
-import type { FetchParams, Visibility } from '../../../app/widgets/common/types';
+import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
+import type { FilterRule } from 'app/widgets/common/filters/types';
+import type { DataTableConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { FetchParams } from 'app/widgets/common/types';
 
 export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration, DataTableConfiguration {
     clickToDrillDown: boolean;
@@ -11,20 +12,18 @@ export interface BlueprintsWidgetConfiguration extends PollingTimeConfiguration,
     fieldsToShow: string;
 }
 
-export interface Blueprint {
-    // NOTE: properties come from backend
-    /* eslint-disable camelcase */
-    created_at: string;
-    created_by: string;
-    description: string | null;
-    id: string;
-    main_file_name: string;
-    updated_at: string;
-    visibility: Visibility;
-    state: string;
-    error: string | null;
-    /* eslint-enable camelcase */
-}
+export type Blueprint = Pick<
+    FullBlueprintData,
+    | 'created_at'
+    | 'created_by'
+    | 'description'
+    | 'id'
+    | 'main_file_name'
+    | 'updated_at'
+    | 'visibility'
+    | 'state'
+    | 'error'
+>;
 
 /** Blueprint extended with frontend-only fields */
 export interface ExtendedBlueprint extends Blueprint {
