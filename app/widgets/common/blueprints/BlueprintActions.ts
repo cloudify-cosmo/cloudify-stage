@@ -67,13 +67,15 @@ export interface BlueprintPlan {
     imported_blueprints: unknown[];
     namespaces_mapping: { [key: string]: unknown };
     data_types: {
-        derived_from: string;
-        version: string;
-        properties: {
-            description: string;
-            type: string;
-            default: unknown;
-            required: boolean;
+        [key: string]: {
+            derived_from: string;
+            version: string;
+            properties: {
+                description: string;
+                type: string;
+                default: unknown;
+                required: boolean;
+            };
         };
     };
     labels: { [key: string]: unknown };
@@ -97,7 +99,12 @@ export interface FullBlueprintData {
     created_by: string;
     resource_availability: string;
     private_resource: false;
-    labels: [];
+    labels: {
+        created_at: string;
+        created_by: string;
+        key: string;
+        value: string;
+    }[];
     upload_execution: {
         visibility: string;
         created_at: string;
