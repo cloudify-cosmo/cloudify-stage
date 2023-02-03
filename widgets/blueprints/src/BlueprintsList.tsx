@@ -1,10 +1,12 @@
 import type { ComponentProps } from 'react';
+import { isEqual } from 'lodash';
 
 import BlueprintsCatalog from './BlueprintsCatalog';
 import BlueprintsTable from './BlueprintsTable';
 import type { BlueprintDataResponse, BlueprintsViewProps, BlueprintsWidgetConfiguration } from './types';
 import BlueprintUploadActionsMenu from './BlueprintUploadActionsMenu';
 import type { Field } from '../../../app/widgets/common/types';
+import { translateBlueprints } from './widget.utils';
 
 interface BlueprintListProps {
     toolbox: Stage.Types.Toolbox;
@@ -16,7 +18,7 @@ interface BlueprintListState {
     showDeploymentModal: boolean;
     blueprintId: string;
     confirmDelete: boolean;
-    error: any;
+    error: string | null;
     force: boolean;
 }
 
@@ -42,11 +44,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
 
     shouldComponentUpdate(nextProps: BlueprintListProps, nextState: BlueprintListState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -80,7 +78,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
         const { blueprintId, force } = this.state;
         const { toolbox } = this.props;
         if (!blueprintId) {
-            this.setState({ error: 'Something went wrong, no blueprint was selected for delete' });
+            this.setState({ error: translateBlueprints('deleteBlueprint') });
             return;
         }
 
@@ -138,7 +136,7 @@ export default class BlueprintList extends React.Component<BlueprintListProps, B
     render() {
         const { blueprintId, confirmDelete, error, force, showDeploymentModal } = this.state;
         const { data, toolbox, widget } = this.props;
-        const NO_DATA_MESSAGE = 'There are no Blueprints available. Click "Upload" to add Blueprints.';
+        const NO_DATA_MESSAGE = translateBlueprints('noDataMessage');
         const { ErrorMessage } = Stage.Basic;
         const { DeployBlueprintModal } = Stage.Common;
         const { DeleteConfirm } = Stage.Common.Components;

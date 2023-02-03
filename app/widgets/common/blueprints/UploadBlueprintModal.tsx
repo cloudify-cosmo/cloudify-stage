@@ -143,7 +143,6 @@ const UploadBlueprintModal: FunctionComponent<UploadBlueprintModalProps> = ({ to
 
                 <Modal.Content>
                     <UploadBlueprintForm
-                        // @ts-ignore UploadBlueprintForm not yet fully in TS
                         blueprintUrl={blueprintUrl}
                         blueprintFile={blueprintFile}
                         blueprintName={blueprintName}

@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import type { FunctionComponent } from 'react';
 import React from 'react';
 
@@ -27,7 +26,7 @@ const AttributeValueInput: FunctionComponent<AttributeValueInputProps> = ({
             <DynamicDropdown
                 name="ruleValue"
                 fetchUrl={fetchUrl}
-                onChange={onChange}
+                onChange={ruleValue => onChange(ruleValue as string[])}
                 toolbox={toolbox}
                 allowAdditions
                 clearable={false}
