@@ -1,5 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
-
 import { icons } from 'cloudify-ui-common-frontend';
 
 export default class EventUtils {
@@ -101,7 +99,7 @@ export default class EventUtils {
         workflow_event: {
             text: 'Workflow event'
         }
-    };
+    } as const;
 
     static logLevelOptions = {
         debug: {
@@ -133,13 +131,13 @@ export default class EventUtils {
             rowClass: 'row-error',
             text: 'Critical'
         }
-    };
+    } as const;
 
-    static getEventTypeOptions(event) {
+    static getEventTypeOptions(event: keyof typeof EventUtils.eventTypeOptions) {
         return { ...{ iconChar: icons.getEventIcon(event) }, ...EventUtils.eventTypeOptions[event] };
     }
 
-    static getLogLevelOptions(log) {
+    static getLogLevelOptions(log: keyof typeof EventUtils.logLevelOptions) {
         return { ...{ icon: 'question', color: 'orange' }, ...EventUtils.logLevelOptions[log] };
     }
 }

@@ -43,22 +43,24 @@ export default class SecretActions {
         value: string,
         visibility: Visibility,
         hidden: boolean,
-        provider?: string,
-        providerOptions?: ProviderOptions
+        providerName?: string,
+        providerOptions?: ProviderOptions | null
     ) {
         return this.manager.doPut(`/secrets/${key}`, {
             body: {
                 value,
                 visibility,
                 is_hidden_value: hidden,
-                provider,
+                provider_name: providerName,
                 provider_options: providerOptions
             }
         });
     }
 
-    doUpdate(key: Secret['key'], value: Secret['value']) {
-        return this.manager.doPatch(`/secrets/${key}`, { body: { value } });
+    doUpdate(key: Secret['key'], value?: string, providerName?: string, providerOptions?: ProviderOptions) {
+        return this.manager.doPatch(`/secrets/${key}`, {
+            body: { value, provider_name: providerName, provider_options: providerOptions }
+        });
     }
 
     doSetIsHiddenValue(key: Secret['key'], hidden: Secret['is_hidden_value']) {

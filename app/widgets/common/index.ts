@@ -1,6 +1,7 @@
 import Actions from './actions';
 import Blueprints from './blueprints';
 import Components from './components';
+import Configuration from './configuration';
 import Consts from './Consts';
 import Deployments from './deployments';
 import DeploymentsView from './deploymentsView';
@@ -23,6 +24,7 @@ const StageCommon = {
     Actions,
     Blueprints,
     Components,
+    Configuration,
     Deployments,
     DeploymentsView,
     DeployBlueprintModal,

@@ -3,6 +3,7 @@ import app from 'app';
 import mockDb from '../../mockDb';
 
 jest.mock('db/Connection');
+jest.mock('handler/AuthHandler');
 
 describe('/snapshots/ua endpoint', () => {
     const userAppRow = {

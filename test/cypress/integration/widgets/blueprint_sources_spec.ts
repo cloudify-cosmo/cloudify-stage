@@ -51,10 +51,12 @@ describe('Blueprint Sources widget', () => {
                     cy.get('@leftPane').within(() => {
                         cy.contains('blueprint.yaml').click();
                     });
-                    cy.get('@rightPane').within(() => {
-                        cy.get('pre').should('contain.text', 'tosca_definitions_version: cloudify_dsl_1_3');
-                        cy.get('.attached.label').should('have.text', 'blueprint.yamlMain').click();
-                    });
+
+                    // within was removed here due to rerenders causing flakiness
+                    cy.get('@rightPane')
+                        .find('pre')
+                        .should('contain.text', 'tosca_definitions_version: cloudify_dsl_1_3');
+                    cy.get('@rightPane').find('.attached.label').should('have.text', 'blueprint.yamlMain').click();
                 });
 
             cy.get('.modal')

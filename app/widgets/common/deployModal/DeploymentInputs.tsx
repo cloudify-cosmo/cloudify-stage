@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useState } from 'react';
 import { isEmpty } from 'lodash';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import DataTypesButton from '../inputs/DataTypesButton';
 import InputsHelpIcon from '../inputs/InputsHelpIcon';
@@ -12,7 +13,7 @@ import YamlFileButton from '../inputs/YamlFileButton';
 import StageUtils from '../../../utils/stageUtils';
 import { Message } from '../../../components/basic';
 
-const t = StageUtils.getT('widgets.common.deployments.deployModal');
+const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.deploymentInputs');
 
 interface Props {
     blueprint: FullBlueprintData;
@@ -38,28 +39,18 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     const deploymentHasMultipleInputs = deploymentHasInputs && Object.keys(blueprint.plan.inputs).length > 1;
     const deploymentHasDataTypes = !isEmpty(blueprint.plan.data_types);
 
-    return (
+    return blueprint.id && deploymentHasInputs ? (
         <>
-            {blueprint.id && (
-                <>
-                    {deploymentHasInputs && (
-                        <YamlFileButton
-                            onChange={onYamlFileChange}
-                            dataType="deployment's inputs"
-                            fileLoading={fileLoading}
-                            iconButton
-                        />
-                    )}
-                    {deploymentHasDataTypes && <DataTypesButton iconButton types={blueprint.plan.data_types} />}
-                    {deploymentHasInputs ? (
-                        <InputsHelpIcon />
-                    ) : (
-                        <Message content={t('inputs.deploymentInputs.noInputs')} />
-                    )}
-                    {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
-                </>
-            )}
-
+            <IconButtonsGroup>
+                {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
+                <InputsHelpIcon />
+                {deploymentHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                <YamlFileButton
+                    onChange={onYamlFileChange}
+                    dataType={translate('yamlDataType')}
+                    fileLoading={fileLoading}
+                />
+            </IconButtonsGroup>
             <InputFields
                 inputs={blueprint.plan.inputs}
                 onChange={onDeploymentInputChange}
@@ -70,6 +61,8 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 sortOrder={sortOrder}
             />
         </>
+    ) : (
+        <Message content={translate('noInputs')} />
     );
 };
 

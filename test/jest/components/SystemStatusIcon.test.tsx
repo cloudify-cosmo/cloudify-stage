@@ -3,8 +3,8 @@ import { mount } from 'enzyme';
 import { Provider } from 'react-redux';
 import configureMockStore from 'redux-mock-store';
 import type { IconProps } from 'semantic-ui-react';
-import SystemStatusIcon from 'components/status/SystemStatusIcon';
-import { ClusterServiceStatus } from 'components/shared/cluster/types';
+import SystemStatusIcon from 'components/common/status/SystemStatusIcon';
+import { ClusterServiceStatus } from 'components/common/status/cluster/types';
 
 describe('(Component) SystemStatusIcon', () => {
     const { Icon } = Stage.Basic;

@@ -21,7 +21,7 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
             id: 'showEditCopyInComposerButton',
             type: Stage.Basic.GenericField.BOOLEAN_TYPE,
             name: t('configuration.showEditCopyInComposerButton'),
-            default: false
+            default: true
         }
     ],
     isReact: true,

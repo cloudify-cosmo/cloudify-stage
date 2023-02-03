@@ -1,6 +1,6 @@
 import type { Toolbox, Widget } from 'app/utils/StageAPI';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
-import type { DataTableProps } from 'cloudify-ui-components/typings/components/data/DataTable/DataTable';
+import type { DataTableProps } from 'cloudify-ui-components';
 import type { MenuItemProps } from 'semantic-ui-react';
 import { Component } from 'react';
 import { camelCase } from 'lodash';

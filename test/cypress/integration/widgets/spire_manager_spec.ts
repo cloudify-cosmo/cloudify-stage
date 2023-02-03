@@ -1,4 +1,4 @@
-import { ClusterServiceStatus } from 'app/components/shared/cluster/types';
+import { ClusterServiceStatus } from 'app/components/common/status/cluster/types';
 import { styles } from '../../support/cluster_status_commons';
 import type { StatusColor } from './cluster_status_spec';
 

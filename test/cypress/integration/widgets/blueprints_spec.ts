@@ -36,9 +36,15 @@ describe('Blueprints widget', () => {
     }
 
     describe('for specific blueprint', () => {
-        before(() => cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName).refreshPage());
-
+        const deployOnEnvironmentName = `${blueprintNamePrefix}_deploy_environment`;
         const editCopyInComposerButtonSelector = '[title="Edit a copy in Composer"]';
+
+        before(() => {
+            cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
+                .uploadBlueprint('blueprints/deploy_on_environment.zip', deployOnEnvironmentName)
+                .deployBlueprint(deployOnEnvironmentName, deployOnEnvironmentName)
+                .refreshPage();
+        });
 
         it('should open Composer with the blueprint imported on "Edit a copy in Composer" icon click', () => {
             getBlueprintRow(emptyBlueprintName).find(editCopyInComposerButtonSelector).click();
@@ -73,7 +79,7 @@ describe('Blueprints widget', () => {
                 cy.openAccordionSection('Advanced');
                 cy.get('input[name=deploymentId]').clear().type(deploymentId);
                 cy.openAccordionSection('Deployment Inputs');
-                cy.get('button[aria-label="Show Data Types"]').click();
+                cy.get('[aria-label="Show Data Types"]').click();
                 cy.contains('.modal button', 'Close').click();
 
                 const serverIp = '127.0.0.1';
@@ -105,15 +111,8 @@ describe('Blueprints widget', () => {
             it('when deployOn value is required', () => {
                 const blueprintName = `${blueprintNamePrefix}_deploy_on`;
                 const deploymentName = `${blueprintNamePrefix}_deploy_on`;
-                // NOTE: string assigned to the "environmentDeploymentName" variable is also being referenced inside "blueprints/deploy_on.zip" fixture - changing the value of this string would also require a modification of the mentioned fixture
-                const environmentDeploymentName = `${blueprintNamePrefix}_deploy_environment`;
-                const environmentBlueprintName = `${blueprintNamePrefix}_deploy_environment`;
 
-                cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
-                    environmentBlueprintName,
-                    environmentDeploymentName
-                );
-                cy.uploadBlueprint('blueprints/deploy_on.zip', blueprintName);
+                cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', blueprintName);
                 cy.interceptSp('PUT', '/deployments/*').as('deploy');
 
                 getBlueprintRow(blueprintName).find('.rocket').click();
@@ -128,8 +127,10 @@ describe('Blueprints widget', () => {
                     );
 
                     cy.getField('Deploy On').within(() => {
-                        cy.get('input').click().type(environmentDeploymentName);
-                        cy.get(`div[option-value*="${environmentDeploymentName}"]`).click();
+                        cy.get('input').click().type(deployOnEnvironmentName);
+                        cy.contains('div[role="option"] .text', deployOnEnvironmentName).click({
+                            force: true
+                        });
                     });
                     cy.contains('button', 'Deploy').click();
                 });
@@ -139,6 +140,34 @@ describe('Blueprints widget', () => {
                 });
 
                 cy.get('.modal').should('not.exist');
+            });
+        });
+
+        it('should show deployOn environment suggestions', () => {
+            const blueprintWithSuggestions = `${blueprintNamePrefix}_with_suggestions`;
+            const blueprintWithoutSuggestions = `${blueprintNamePrefix}_without_suggestions`;
+
+            const checkIfEnvironmentIsSuggested = (environmentName: string, shouldBeSuggested?: boolean) => {
+                const listHeader = shouldBeSuggested ? 'Suggested' : 'Others';
+                cy.getField('Deploy On').within(() => {
+                    cy.get('input').click().type(environmentName);
+                    cy.contains('.header', listHeader).next().should('have.text', deployOnEnvironmentName);
+                });
+            };
+
+            cy.uploadBlueprint('blueprints/deploy_on_with_suggestion.zip', blueprintWithSuggestions);
+            cy.uploadBlueprint('blueprints/deploy_on_without_suggestion.zip', blueprintWithoutSuggestions);
+
+            getBlueprintRow(blueprintWithoutSuggestions).find('.rocket').click();
+            cy.get('.modal').within(() => {
+                checkIfEnvironmentIsSuggested(deployOnEnvironmentName);
+                cy.clickButton('Cancel');
+            });
+
+            getBlueprintRow(blueprintWithSuggestions).find('.rocket').click();
+            cy.get('.modal').within(() => {
+                checkIfEnvironmentIsSuggested(deployOnEnvironmentName, true);
+                cy.clickButton('Cancel');
             });
         });
 

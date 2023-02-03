@@ -1,7 +1,7 @@
 import StageUtils from 'utils/stageUtils';
 
-// @ts-expect-error Necessary global API
-Stage.Utils = StageUtils;
+// NOTE: Necessary global API - `any` assertion has been made, as Stage properties are readonly
+(Stage as any).Utils = StageUtils;
 
 // NOTE: use `require` to lazily load the module after `Stage.Utils` is set
 // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -74,14 +74,12 @@ This configuration can be overridden by: `/dist/userData/userConfig.json`.
     * `delete` - integer, DELETE request timeout (milliseconds)
   * `maxBodySize` - string, maximum body size to handle (number + unit, see https://www.npmjs.com/package/bytes)
 
-* `useLoginPage` - boolean, if set to true then login page is reachable, if set to false it's not reachable
-  and in order to log in a token cookie must be set in the browser
-
-* `saml` - object, SAML configuration
-  * `enabled` - boolean, if set to true SAML will be enabled
-  * `certPath` - string, SAML certificate path
-  * `ssoUrl` - string, redirect URL to the application at the Single Sign-On identity provider
-  * `portalUrl` - string, redirect URL to the organization portal
+* `auth` - object, authentication configuration
+  * `type` - string, valid values for different authentication types: "local" - local (default), "saml" - SAML, 
+    "saas" - SaaS
+  * `certPath` - string, SAML certificate path (relevant only when type is set to "saml")
+  * `loginPageUrl` - string, login page URL (both - absolute and relative URLs are supported)
+  * `afterLogoutUrl` - string, URL to redirect to after logout (both - absolute and relative URLs are supported)
 
 * `whiteLabel` - object, UI white-labelling configuration
   * `logoUrl` - string, relative URL to logo image

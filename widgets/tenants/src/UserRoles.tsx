@@ -1,13 +1,6 @@
-type Groups = Record<string, { users: any; role: string }>;
+import type { Groups, Tenant } from './widget.types';
 
-export default function UserRoles({
-    tenant,
-    user
-}: {
-    // eslint-disable-next-line camelcase
-    tenant: { user_roles: { direct: Record<string, string>; groups: Groups } };
-    user: string;
-}) {
+export default function UserRoles({ tenant, user }: { tenant: Tenant; user: string }) {
     function groupGroupsByRole(groups: Groups) {
         const roles: Record<string, string[]> = {};
 

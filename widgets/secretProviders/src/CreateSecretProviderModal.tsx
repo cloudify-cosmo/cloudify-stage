@@ -21,13 +21,13 @@ const CreateSecretProviderModal = ({
 }: CreateSecretProviderModalProps) => {
     const { errors, setErrors, clearErrors } = useErrors();
     const [providerName, setProviderName] = useInput('');
-    const [hostname, setHostname] = useInput('');
+    const [url, setUrl] = useInput('');
     const [authorizationToken, setAuthorizationToken] = useInput('');
     const [defaultPath, setDefaultPath] = useInput('');
 
     const translateCreateModal = Stage.Utils.composeT(translateSecretProviders, 'createModal');
 
-    const formValues = { providerName, hostname, authorizationToken, defaultPath };
+    const formValues = { providerName, url, authorizationToken, defaultPath };
 
     const checkForm = () => {
         const newErrors = validateModalForm(formValues, true);
@@ -47,7 +47,7 @@ const CreateSecretProviderModal = ({
                 body: {
                     name: providerName,
                     connection_parameters: {
-                        host: hostname,
+                        url,
                         token: authorizationToken,
                         path: defaultPath
                     },
@@ -77,12 +77,17 @@ const CreateSecretProviderModal = ({
                             required
                         />
                     </Form.Field>
-                    <Form.Field label={translateForm('inputs.hostname.label')} required error={errors.hostname}>
+                    <Form.Field
+                        label={translateForm('inputs.url.label')}
+                        required
+                        error={errors.url}
+                        help={translateForm('inputs.url.helper')}
+                    >
                         <Form.Input
-                            value={hostname}
-                            onChange={setHostname}
-                            name="hostname"
-                            placeholder={translateForm('inputs.hostname.placeholder')}
+                            value={url}
+                            onChange={setUrl}
+                            name="url"
+                            placeholder={translateForm('inputs.url.placeholder')}
                         />
                     </Form.Field>
                     <Form.Field

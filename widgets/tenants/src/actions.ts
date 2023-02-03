@@ -1,19 +1,18 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Toolbox } from 'app/utils/StageAPI';
+import type { PaginatedResponse } from 'backend/types';
 
 export default class {
-    constructor(toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private toolbox: Toolbox) {}
 
-    doDelete(tenantName) {
+    doDelete(tenantName: string) {
         return this.toolbox.getManager().doDelete(`/tenants/${tenantName}`);
     }
 
-    doCreate(tenantName) {
+    doCreate(tenantName: string) {
         return this.toolbox.getManager().doPost(`/tenants/${tenantName}`);
     }
 
-    doAddUser(tenantName, username, role) {
+    doAddUser(tenantName: string, username: string, role: string) {
         return this.toolbox.getManager().doPut('/tenants/users', {
             body: {
                 username,
@@ -23,7 +22,7 @@ export default class {
         });
     }
 
-    doRemoveUser(tenantName, username) {
+    doRemoveUser(tenantName: string, username: string) {
         return this.toolbox.getManager().doDelete('/tenants/users', {
             body: {
                 username,
@@ -32,7 +31,7 @@ export default class {
         });
     }
 
-    doUpdateUser(tenantName, username, role) {
+    doUpdateUser(tenantName: string, username: string, role: string) {
         return this.toolbox.getManager().doPatch('/tenants/users', {
             body: {
                 username,
@@ -42,7 +41,12 @@ export default class {
         });
     }
 
-    doHandleUsers(tenantName, usersToAdd, usersToDelete, usersToUpdate) {
+    doHandleUsers(
+        tenantName: string,
+        usersToAdd: Record<string, string>,
+        usersToDelete: string[],
+        usersToUpdate: Record<string, string>
+    ) {
         const addActions = _.map(usersToAdd, (role, username) => this.doAddUser(tenantName, username, role));
         const deleteActions = _.map(usersToDelete, username => this.doRemoveUser(tenantName, username));
         const updateActions = _.map(usersToUpdate, (role, username) => this.doUpdateUser(tenantName, username, role));
@@ -50,7 +54,7 @@ export default class {
         return Promise.all(_.concat(addActions, deleteActions, updateActions));
     }
 
-    doAddUserGroup(tenantName, userGroup, role) {
+    doAddUserGroup(tenantName: string, userGroup: string, role: string) {
         return this.toolbox.getManager().doPut('/tenants/user-groups', {
             body: {
                 group_name: userGroup,
@@ -60,7 +64,7 @@ export default class {
         });
     }
 
-    doRemoveUserGroup(tenantName, userGroup) {
+    doRemoveUserGroup(tenantName: string, userGroup: string) {
         return this.toolbox.getManager().doDelete('/tenants/user-groups', {
             body: {
                 group_name: userGroup,
@@ -69,7 +73,7 @@ export default class {
         });
     }
 
-    doUpdateUserGroup(tenantName, userGroup, role) {
+    doUpdateUserGroup(tenantName: string, userGroup: string, role: string) {
         return this.toolbox.getManager().doPatch('/tenants/user-groups', {
             body: {
                 group_name: userGroup,
@@ -79,7 +83,12 @@ export default class {
         });
     }
 
-    doHandleUserGroups(tenantName, groupsToAdd, groupsToDelete, groupsToUpdate) {
+    doHandleUserGroups(
+        tenantName: string,
+        groupsToAdd: Record<string, string>,
+        groupsToDelete: string[],
+        groupsToUpdate: Record<string, string>
+    ) {
         const addActions = _.map(groupsToAdd, (role, userGroup) => this.doAddUserGroup(tenantName, userGroup, role));
         const deleteActions = _.map(groupsToDelete, userGroup => this.doRemoveUserGroup(tenantName, userGroup));
         const updateActions = _.map(groupsToUpdate, (role, userGroup) =>
@@ -90,10 +99,10 @@ export default class {
     }
 
     doGetUserGroups() {
-        return this.toolbox.getManager().doGet('/user-groups?_include=name');
+        return this.toolbox.getManager().doGet<PaginatedResponse<{ name: string }>>('/user-groups?_include=name');
     }
 
     doGetUsers() {
-        return this.toolbox.getManager().doGet('/users?_include=username');
+        return this.toolbox.getManager().doGet<PaginatedResponse<{ username: string }>>('/users?_include=username');
     }
 }
