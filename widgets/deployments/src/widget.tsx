@@ -5,23 +5,33 @@ import type {
     SortAscendingConfiguration,
     SortColumnConfiguration
 } from 'app/utils/GenericConfig';
-import DeploymentsList from './DeploymentsList';
-import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import './widget.css';
 import type { PaginatedResponse } from 'backend/types';
 import type { DeploymentViewData } from 'widgets/deployments/src/props/DeploymentsViewPropTypes';
+import type { Execution } from 'app/utils/shared/ExecutionUtils';
+import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
+import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { Workflow } from 'app/widgets/common/executeWorkflow';
+import DeploymentsList from './DeploymentsList';
+import FirstUserJourneyButtons from './FirstUserJourneyButtons';
+import type { DeploymentViewDataWithSelected } from './props/DeploymentsViewPropTypes';
 
 const translate = Stage.Utils.getT('widgets.deployments');
 
-interface DeploymentsConfiguration
+export interface DeploymentsConfiguration
     extends PollingTimeConfiguration,
         PageSizeConfiguration,
         SortColumnConfiguration,
         SortAscendingConfiguration {
     blueprintIdFilter: string;
+    showFirstUserJourneyButtons: boolean;
+    clickToDrillDown: boolean;
+    displayStyle: 'table' | 'list';
+    showExecutionStatusLabel: boolean;
 }
 
 type DeploymentParams = {
+    _search?: string;
     // eslint-disable-next-line camelcase
     blueprint_id: string;
     // eslint-disable-next-line camelcase
@@ -29,6 +39,29 @@ type DeploymentParams = {
     // eslint-disable-next-line camelcase
     created_by?: string;
 };
+
+interface DeploymentData extends Deployment {
+    id: string;
+    blueprintId: string;
+    // eslint-disable-next-line camelcase
+    latest_execution: string;
+    // eslint-disable-next-line camelcase
+    blueprint_id: string;
+    // eslint-disable-next-line camelcase
+    site_name: string;
+    // eslint-disable-next-line camelcase
+    created_by?: string;
+
+    // eslint-disable-next-line camelcase
+    created_at?: string;
+    // eslint-disable-next-line camelcase
+    updated_at?: string;
+
+    isSelected: boolean;
+    visibility: string;
+
+    workflows: Workflow[]; // TBD
+}
 
 Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
     id: 'deployments',
@@ -103,7 +136,7 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
     },
 
     async fetchData(_widget, toolbox, params): Promise<DeploymentViewData> {
-        const deploymentDataPromise: Promise<PaginatedResponse<{ id: string }>> = new Stage.Common.Deployments.Actions(
+        const deploymentDataPromise: Promise<PaginatedResponse<DeploymentData>> = new Stage.Common.Deployments.Actions(
             toolbox.getManager()
         ).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
@@ -135,14 +168,20 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, latestExecutionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
-            const nodeInstanceData = data[1].items.reduce((result, item) => {
-                result[item.deployment_id] = {
-                    states: NodeInstancesConsts.extractStatesFrom(item),
-                    count: item.node_instances
-                };
-                return result;
-            }, {});
-            const latestExecutionData = data[2].items.reduce((result, latestExecution) => {
+            const nodeInstanceData = data[1].items.reduce(
+                (
+                    result: Record<string, { states: Record<string, number>; count: number }>,
+                    item: InstanceSummaryItem
+                ) => {
+                    result[item.deployment_id] = {
+                        states: NodeInstancesConsts.extractStatesFrom(item),
+                        count: item.node_instances
+                    };
+                    return result;
+                },
+                {}
+            );
+            const latestExecutionData = data[2].items.reduce((result: Record<string, Execution>, latestExecution) => {
                 result[latestExecution.deployment_id] = latestExecution;
                 return result;
             }, {});
@@ -173,9 +212,11 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         const {
             configuration: { showFirstUserJourneyButtons }
         } = widget;
-        if (isEmpty(data)) {
+        if (isEmpty(data) || !data) {
             return <Loading />;
         }
+        const deploymentViewData = data as DeploymentViewData; // this is here because above line is taking care of Record<string, never> type
+
         const searchValue = data?.searchValue;
         const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && !searchValue && isEmpty(data?.items);
 
@@ -184,9 +225,9 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
-        const formattedData = {
-            ...data,
-            items: data.items.map(item => {
+        const formattedData: DeploymentViewDataWithSelected = {
+            ...deploymentViewData,
+            items: deploymentViewData.items.map(item => {
                 return {
                     ...item,
                     isSelected: selectedDeployment === item.id

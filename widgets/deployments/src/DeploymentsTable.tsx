@@ -1,7 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
+import type { DeploymentViewProps, EnhancedDeployment } from './props/DeploymentsViewPropTypes';
 import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
 
 const t = Stage.Utils.getT('widgets.deployments.table');
@@ -19,12 +19,12 @@ export default function DeploymentsTable({
     showExecutionStatusLabel,
     toolbox,
     widget
-}) {
+}: DeploymentViewProps) {
     const { useResettableState } = Stage.Hooks;
     const { IdPopup } = Stage.Shared;
     const { DataTable, ResourceVisibility } = Stage.Basic;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
-    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
+    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState<string | null>(null);
     const tableName = 'deploymentsTable';
 
     return (
@@ -49,17 +49,15 @@ export default function DeploymentsTable({
             <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
             <DataTable.Column width="5%" />
 
-            {data.items.map(item => {
+            {data.items.map((item: EnhancedDeployment & { isSelected: boolean }) => {
                 return (
                     <DataTable.Row
                         id={`${tableName}_${item.id}`}
                         key={item.id}
                         selected={item.isSelected}
                         onClick={() => onSelectDeployment(item)}
-                        onMouseOver={setHoveredDeployment}
-                        onFocus={setHoveredDeployment}
+                        onMouseOver={() => setHoveredDeployment(item.id)}
                         onMouseOut={clearHoveredDeployment}
-                        onBlur={clearHoveredDeployment}
                     >
                         <DataTable.Data>
                             <IdPopup selected={item.id === hoveredDeployment} id={item.id} />

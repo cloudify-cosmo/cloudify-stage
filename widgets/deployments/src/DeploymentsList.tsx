@@ -1,3 +1,4 @@
+import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
 import type { Deployment } from '../../../app/widgets/common/deploymentsView/types';
 import type { Visibility } from '../../../app/widgets/common/types';
 import DeploymentsSegment from './DeploymentsSegment';
@@ -5,7 +6,7 @@ import DeploymentsTable from './DeploymentsTable';
 
 const t = Stage.Utils.getT('widgets.deployments.list');
 
-type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & DeploymentData;
+export type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & DeploymentData;
 
 interface DeploymentData {
     blueprintId?: string;
@@ -15,7 +16,7 @@ interface DeploymentData {
 interface DeploymentsListProps {
     data: DeploymentResponse;
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget;
+    widget: Stage.Types.Widget<DeploymentsConfiguration>;
 }
 
 interface DeploymentsListState {

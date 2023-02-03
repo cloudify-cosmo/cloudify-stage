@@ -4,10 +4,10 @@ import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 
 interface ExecutionProgressProps {
     execution: {
-        status: string;
+        status?: string;
         /* eslint-disable camelcase */
-        finished_operations: number;
-        total_operations: number;
+        finished_operations?: number;
+        total_operations?: number;
         /* eslint-enable camelcase */
     };
 }
@@ -23,11 +23,3 @@ const ExecutionProgress: React.FunctionComponent<ExecutionProgressProps> = ({ ex
     return <Progress percent={progress} error={error} attached="bottom" color={color} />;
 };
 export default ExecutionProgress;
-
-ExecutionProgress.propTypes = {
-    execution: PropTypes.shape({
-        status: PropTypes.string.isRequired,
-        finished_operations: PropTypes.number.isRequired,
-        total_operations: PropTypes.number.isRequired
-    }).isRequired
-};

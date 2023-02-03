@@ -1,3 +1,30 @@
+import type { PaginatedResponse } from 'backend/types';
+import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { FetchDataFunction } from 'cloudify-ui-components';
+import type { Execution, ExecutionAction } from 'app/utils/shared/ExecutionUtils';
+import type { Toolbox, Widget } from 'app/utils/StageAPI';
+import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
+import type { Workflow } from 'app/widgets/common/executeWorkflow';
+import type { Visibility } from 'app/widgets/common/types';
+
+export interface EnhancedDeployment extends Deployment {
+    nodeInstancesCount: number;
+    nodeInstancesStates: Record<string, number | null | undefined>;
+    // eslint-disable-next-line camelcase
+    created_at: string; // date string
+    // eslint-disable-next-line camelcase
+    updated_at: string; // date string,
+
+    // eslint-disable-next-line camelcase
+    created_by: string;
+
+    isUpdated: boolean;
+    lastExecution: Execution;
+    visibility: Visibility;
+
+    workflows: Workflow[]; // TODO CR: not sure of that one, but deployment segement assumes it
+}
+
 export default {
     data: PropTypes.shape({
         blueprintId: PropTypes.string,
@@ -30,38 +57,27 @@ export default {
     toolbox: Stage.PropTypes.Toolbox.isRequired
 };
 
-export interface DeploymentViewData {
+export interface DeploymentViewData extends PaginatedResponse<EnhancedDeployment> {
     blueprintId: string;
-    items: {
-        // eslint-disable-next-line camelcase
-        blueprint_id: string;
-        // eslint-disable-next-line camelcase
-        created_at: string;
-        id: string;
-        isSelected: boolean;
-        lastExecution: Record<string, any>;
-        nodeInstancesCount: number;
-        nodeInstancesStates: Record<string, number>;
-        // eslint-disable-next-line camelcase
-        site_name: string;
-        // eslint-disable-next-line camelcase
-        updated_at: string;
-        visibility: string;
-    }[];
     total: number;
+    searchValue?: string;
 }
 
+export type DeploymentViewDataWithSelected = DeploymentViewData &
+    PaginatedResponse<EnhancedDeployment & { isSelected: boolean }>;
+
 export interface DeploymentViewProps {
-    data: DeploymentViewData;
-    widget: Stage.PropTypes.Widget.isRequired;
-    // fetchData: PropTypes.func.isRequired,
-    // onSelectDeployment: PropTypes.func.isRequired,
-    // onActOnExecution: PropTypes.func.isRequired,
-    // onDeploymentAction: PropTypes.func.isRequired,
-    // onWorkflowAction: PropTypes.func.isRequired,
-    // onSetVisibility: PropTypes.func.isRequired,
-    allowedSettingTo: string[];
+    data: DeploymentViewDataWithSelected;
+    widget: Widget<DeploymentsConfiguration>;
+    fetchData: FetchDataFunction;
+    onSelectDeployment: (deployment: Deployment) => void;
+    onActOnExecution?: (execution: Execution, action: ExecutionAction, errorMessage: any) => void;
+    onDeploymentAction: (deployment: Deployment | undefined, actionName: string) => void;
+    onWorkflowAction: (deployment: Deployment | undefined, workflowName: string) => void;
+
+    onSetVisibility: (id: string, visibility: string) => void;
+    allowedSettingTo: Visibility[];
     noDataMessage: string;
     showExecutionStatusLabel: boolean;
-    // toolbox: Stage.PropTypes.Toolbox.isRequired
+    toolbox: Toolbox;
 }
