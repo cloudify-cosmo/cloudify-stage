@@ -1,13 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
+import { castArray } from 'lodash';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
+import type { Label } from 'app/widgets/common/labels/types';
 import LabelsTable from './LabelsTable';
 import './widget.css';
 
-const { i18n } = Stage;
+const translate = Stage.Utils.getT('widgets.labels');
 
-Stage.defineWidget({
+Stage.defineWidget<{ deploymentId: string | null }, Label[], PollingTimeConfiguration>({
     id: 'labels',
-    name: i18n.t('widgets.labels.name'),
-    description: i18n.t('widgets.labels.description'),
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 12,
     initialHeight: 24,
     isReact: true,
@@ -18,13 +20,16 @@ Stage.defineWidget({
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30)],
 
     // ensures data refetch on deploymentId change
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+
         return {
-            deploymentId: toolbox.getContext().getValue('deploymentId')
+            deploymentId
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const { deploymentId } = params;
         if (deploymentId) {
             const DeploymentActions = Stage.Common.Deployments.Actions;
@@ -33,11 +38,13 @@ Stage.defineWidget({
         return Promise.resolve([]);
     },
 
-    render(widget, data, error, toolbox) {
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+    render(_widget, data, _error, toolbox) {
+        // TODO(RD-2130): Use common utility function to get only the first ID
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+
         if (!deploymentId) {
             const { Message } = Stage.Basic;
-            return <Message info>{i18n.t('widgets.labels.noDeployment')}</Message>;
+            return <Message info>{translate('noDeployment')}</Message>;
         }
 
         if (!Array.isArray(data)) {
