@@ -263,6 +263,11 @@ const GettingStartedModal = () => {
         }
     };
 
+    const nextButtonDisabled = useMemo(() => {
+        const isEnvironmentsStep = stepName === StepName.Environments;
+        return isEnvironmentsStep || !schema;
+    }, [stepName, environmentsStepData, schema]);
+
     if (error) {
         return <GettingStartedErrorModal onClose={clearError} />;
     }
@@ -290,7 +295,10 @@ const GettingStartedModal = () => {
                     errors={errors}
                 />
             ) : (
-                <Modal.Content>{i18n.t('gettingStartedModal.loading')}</Modal.Content>
+                <Modal.Content>
+                    {i18n.t('gettingStartedModal.loading')}
+                    {/* Todo: add loader icon */}
+                </Modal.Content>
             )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
                 <Modal.Content style={{ minHeight: 60, overflow: 'hidden' }}>
@@ -309,8 +317,8 @@ const GettingStartedModal = () => {
                 installationProcessing={installationProcessing}
                 onBackClick={handleBackClick}
                 onNextClick={handleNextClick}
+                nextButtonDisabled={nextButtonDisabled}
                 onModalClose={handleModalClose}
-                environmentsStepData={environmentsStepData}
             />
             <Confirm
                 open={cancelConfirmOpen}

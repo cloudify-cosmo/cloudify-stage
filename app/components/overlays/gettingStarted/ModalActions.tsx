@@ -13,22 +13,18 @@ type Props = {
     onBackClick: () => void;
     onNextClick: () => void;
     onModalClose: () => void;
-    environmentsStepData: GettingStartedEnvironmentsData;
+    nextButtonDisabled: boolean;
 };
 
 const ModalActions = ({
     stepName,
+    nextButtonDisabled,
     installationProcessing,
-    environmentsStepData,
     onBackClick,
     onNextClick,
     onModalClose
 }: Props) => {
     const statusStepActive = stepName === StepName.Status;
-    const disableNextButton = useMemo(() => {
-        const isEnvironmentsStep = stepName === StepName.Environments;
-        return isEnvironmentsStep;
-    }, [stepName, environmentsStepData]);
 
     return (
         <Modal.Actions style={{ minHeight: 60 }}>
@@ -52,7 +48,7 @@ const ModalActions = ({
                         content={stepName === StepName.Summary ? t('stepFinish') : t('stepNext')}
                         labelPosition="right"
                         onClick={onNextClick}
-                        disabled={disableNextButton}
+                        disabled={nextButtonDisabled}
                     />
                 </Button.Group>
             )}
