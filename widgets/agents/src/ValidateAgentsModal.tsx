@@ -1,45 +1,53 @@
-// @ts-nocheck File not migrated fully to TS
-
-import Consts from './consts';
+import { castArray, chain, isArray, isEmpty, isNil } from 'lodash';
+import type { StrictDropdownProps, StrictCheckboxProps, StrictInputProps } from 'semantic-ui-react';
+import type { Field } from 'app/widgets/common/types';
+import type { Agent, AgentsModalProps } from './types';
 import NodeFilter from './NodeFilter';
-import AgentsPropType from './props/AgentsPropType';
+import type { NodeFilterProps } from './NodeFilter';
+import { installMethodsOptions } from './consts';
+import { translate } from './utils';
+
+const translateCommon = Stage.Utils.composeT(translate, 'modals.common');
+const translateValidate = Stage.Utils.composeT(translate, 'modals.validate');
+
+type ValidateAgentsModalProps = AgentsModalProps;
 
 export default function ValidateAgentsModal({
-    agents,
-    deploymentId,
-    installMethods,
-    nodeId,
-    nodeInstanceId,
+    agents = [],
+    deploymentId = '',
+    installMethods = [],
+    nodeId = [],
+    nodeInstanceId = [],
     onHide,
     open,
     manager,
     drilldownHandler
-}) {
+}: ValidateAgentsModalProps) {
     const { useEffect, useState } = React;
 
     function getInitialInputValues() {
         return {
-            installMethods: _.isNil(installMethods) ? [] : _.castArray(installMethods),
+            installMethods: isNil(installMethods) ? [] : castArray(installMethods),
             nodeFilter: {
                 blueprintId: '',
-                deploymentId: _.isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
-                nodeId: _.isNil(nodeId) ? [] : _.castArray(nodeId),
-                nodeInstanceId: _.isNil(nodeInstanceId) ? [] : _.castArray(nodeInstanceId)
+                deploymentId: isArray(deploymentId) ? deploymentId[0] : deploymentId || '',
+                nodeId: isNil(nodeId) ? [] : castArray(nodeId),
+                nodeInstanceId: isNil(nodeInstanceId) ? [] : castArray(nodeInstanceId)
             }
         };
     }
 
-    const [allowedDeployments, setAllowedDeployments] = useState(null);
-    const [allowedNodes, setAllowedNodes] = useState(null);
-    const [allowedNodeInstances, setAllowedNodeInstances] = useState(null);
+    const [allowedDeployments, setAllowedDeployments] = useState<string[] | undefined>();
+    const [allowedNodes, setAllowedNodes] = useState<string[] | undefined>();
+    const [allowedNodeInstances, setAllowedNodeInstances] = useState<string[] | undefined>();
     const [loading, setLoading] = useState(false);
     const [executionId, setExecutionId] = useState('');
     const [executionStarted, setExecutionStarted] = useState(false);
     const [errors, setErrors] = useState({});
     const [inputValues, setInputValues] = useState(getInitialInputValues());
 
-    function getAgentsAttributeList(attributeName) {
-        return _.chain(agents).map(attributeName).uniq().value();
+    function getAgentsAttributeList(attributeName: keyof Agent) {
+        return chain(agents).map(attributeName).uniq().value();
     }
 
     useEffect(() => {
@@ -62,22 +70,22 @@ export default function ValidateAgentsModal({
         drilldownHandler(
             'execution',
             { deploymentId: selectedDeploymentId, executionId },
-            `Validate Agents on ${selectedDeploymentId}`
+            translateValidate('pageName', { deploymentId: selectedDeploymentId })
         );
     }
 
     function submitExecute() {
         const { nodeFilter, installMethods: methods } = inputValues;
         if (!nodeFilter.deploymentId) {
-            setErrors({ error: 'Provide deployment in Nodes filter' });
+            setErrors({ error: translateCommon('deploymentError') });
             return;
         }
 
         setLoading(true);
         const params = {
-            node_ids: !_.isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
-            node_instance_ids: !_.isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
-            install_methods: !_.isEmpty(methods) ? methods : undefined
+            node_ids: !isEmpty(nodeFilter.nodeId) ? nodeFilter.nodeId : undefined,
+            node_instance_ids: !isEmpty(nodeFilter.nodeInstanceId) ? nodeFilter.nodeInstanceId : undefined,
+            install_methods: !isEmpty(methods) ? methods : undefined
         };
 
         const actions = new Stage.Common.Deployments.Actions(manager);
@@ -102,9 +110,12 @@ export default function ValidateAgentsModal({
         return true;
     }
 
-    function handleInputChange(event, field) {
-        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field) });
-    }
+    const handleInputChange: (NodeFilterProps &
+        StrictDropdownProps &
+        StrictCheckboxProps &
+        StrictInputProps)['onChange'] = (_event, field) => {
+        setInputValues({ ...inputValues, ...Stage.Basic.Form.fieldNameValue(field as Field) });
+    };
 
     if (!open) return null;
 
@@ -113,7 +124,7 @@ export default function ValidateAgentsModal({
     return (
         <Modal open onClose={onHide}>
             <Modal.Header>
-                <Icon name="checkmark" /> Validate agents
+                <Icon name="checkmark" /> ${translateValidate('header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -126,9 +137,9 @@ export default function ValidateAgentsModal({
                     {!executionStarted && (
                         <>
                             <Form.Field
-                                label="Nodes filter"
+                                label={translateCommon('fields.nodeFilter.label')}
                                 required
-                                help="Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                                help={translateCommon('fields.nodeFilter.description')}
                             >
                                 <NodeFilter
                                     name="nodeFilter"
@@ -145,14 +156,14 @@ export default function ValidateAgentsModal({
                             </Form.Field>
 
                             <Form.Field
-                                label="Install Methods filter"
-                                help="Filter agents by install methods. Filtering turned off when none selected."
+                                label={translateCommon('fields.installMethods.label')}
+                                help={translateCommon('fields.installMethods.description')}
                             >
                                 <Form.Dropdown
                                     name="installMethods"
                                     multiple
                                     selection
-                                    options={Consts.installMethodsOptions}
+                                    options={installMethodsOptions}
                                     value={inputValues.installMethods}
                                     onChange={handleInputChange}
                                 />
@@ -162,20 +173,31 @@ export default function ValidateAgentsModal({
 
                     <Message
                         success
-                        header="Execution started"
-                        content="Agents validation has been started. Click 'Show Status and Logs' button to see details."
+                        header={translateCommon('executionStartedMessage.header')}
+                        content={translateCommon('executionStartedMessage.content', {
+                            execution: translateValidate('execution')
+                        })}
                     />
                 </Form>
             </Modal.Content>
 
             <Modal.Actions>
-                <CancelButton content={executionStarted ? 'Close' : undefined} onClick={onCancel} disabled={loading} />
+                <CancelButton
+                    content={executionStarted ? translateCommon('buttons.close') : undefined}
+                    onClick={onCancel}
+                    disabled={loading}
+                />
                 {!executionStarted && (
-                    <ApproveButton onClick={onApprove} disabled={loading} content="Validate" icon="checkmark" />
+                    <ApproveButton
+                        onClick={onApprove}
+                        disabled={loading}
+                        content={translate('buttons.validate')}
+                        icon="checkmark"
+                    />
                 )}
                 {executionStarted && (
                     <Button
-                        content="Show Status and Logs"
+                        content={translateCommon('buttons.showStatus')}
                         icon="file text"
                         color="green"
                         onClick={onShowExecutionStatus}
@@ -185,26 +207,3 @@ export default function ValidateAgentsModal({
         </Modal>
     );
 }
-
-ValidateAgentsModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-
-    agents: AgentsPropType,
-    // eslint-disable-next-line react/no-unused-prop-types
-    deploymentId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    nodeInstanceId: Stage.PropTypes.StringOrArray,
-    // eslint-disable-next-line react/no-unused-prop-types
-    installMethods: Stage.PropTypes.StringOrArray
-};
-
-ValidateAgentsModal.defaultProps = {
-    agents: [],
-    deploymentId: '',
-    nodeId: [],
-    nodeInstanceId: [],
-    installMethods: []
-};

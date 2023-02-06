@@ -1,5 +1,8 @@
 import { isEmpty } from 'lodash';
+import { useState } from 'react';
 import type { Secret } from 'app/widgets/common/secrets/SecretActions';
+import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
+import { translateForm } from './widget.utils';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
@@ -20,33 +23,65 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [canUpdateSecret, enableSecretUpdate, disableSecretUpdate] = useBoolean(true);
     const [secretValue, setSecretValue, clearSecretValue] = useInput('');
+    const [useSecretProvider, setUseSecretProvider] = useState(secret.provider_name !== null);
+    const [secretProvider, setSecretProvider, clearSecretProvider] = useInput('');
+    const [secretProviderPath, setSecretProviderPath, clearSecretProviderPath] = useInput('');
+    const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
+    const [secretProviderOptions, setSecretProviderOptions] = useState<Record<string, any>>();
 
     useOpenProp(open, () => {
         setLoading();
         enableSecretUpdate();
         clearErrors();
         clearSecretValue();
+        clearSecretProvider();
+        clearSecretProviderPath();
+        fetchSecretProviders();
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
-        actions
-            .doGet(secret.key)
-            .then(({ is_hidden_value: isHidden, value }) => {
-                clearErrors();
-                setSecretValue(value);
 
-                if (isHidden && isEmpty(value)) {
-                    disableSecretUpdate();
-                } else {
-                    enableSecretUpdate();
-                }
-            })
-            .catch(err => setErrors({ secretValue: err.message }))
-            .finally(unsetLoading);
+        const hasSecretProvider = !isEmpty(secret.provider_name);
+        if (secret) {
+            const isHidden = secret.is_hidden_value;
+            if (hasSecretProvider) {
+                setUseSecretProvider(true);
+                setSecretProvider(secret.provider_name);
+                actions.doGet(secret.key).then(({ provider_options: providerOptions }) => {
+                    setSecretProviderOptions(providerOptions);
+                    setSecretProviderPath(providerOptions!.path);
+                });
+            } else {
+                setUseSecretProvider(false);
+                actions
+                    .doGet(secret.key)
+                    .then(({ value }) => {
+                        setSecretValue(value);
+                    })
+                    .catch(setMessageAsError);
+            }
+
+            if (isHidden) {
+                disableSecretUpdate();
+            } else {
+                enableSecretUpdate();
+            }
+        }
+
+        unsetLoading();
     });
 
     function updateSecret() {
-        if (isEmpty(secretValue)) {
-            setErrors({ secretValue: translateUpdateModal('errors.validation.secretValue') });
+        clearErrors();
+        if (isEmpty(secretValue) && !useSecretProvider) {
+            setErrors({ secretValue: translateForm('errors.validation.secretValue') });
+            return;
+        }
+        if (isEmpty(secretProvider) && useSecretProvider) {
+            setErrors({ secretProvider: translateForm('errors.validation.secretProvider') });
+            return;
+        }
+
+        if (!isEmpty(errors)) {
             return;
         }
 
@@ -55,7 +90,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions
-            .doUpdate(secret.key, secretValue)
+            .doUpdate(secret.key, secretValue, secretProvider, secretProviderOptions)
             .then(() => {
                 clearErrors();
                 onHide();
@@ -65,16 +100,34 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
             .finally(unsetLoading);
     }
 
+    function fetchSecretProviders() {
+        const secretActions = new Stage.Common.Secrets.Actions(toolbox.getManager());
+        secretActions
+            .doGetAllSecretProviders()
+            .then(data => setSecretProviders(data.items))
+            .catch(setMessageAsError);
+    }
+
+    function onSecretProviderChange() {
+        clearErrors();
+        setUseSecretProvider(!useSecretProvider);
+    }
+
     const currentUsername = toolbox.getManager().getCurrentUsername();
     const selectedTenant = toolbox.getManager().getSelectedTenant();
 
     const headerContent = translateUpdateModal('header', { secretKey: secret.key });
 
-    const noPermissionError = translateUpdateModal('errors.noPermission', {
+    const noPermissionError = translateForm('errors.noPermission', {
         currentUsername,
         secretKey: secret.key,
         selectedTenant
     });
+
+    const secretProvidersDropdownOptions = secretProviders?.map((item: { name: string }) => ({
+        text: item.name,
+        value: item.name
+    }));
 
     return (
         <div>
@@ -87,14 +140,61 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     {!canUpdateSecret && <ErrorMessage error={noPermissionError} />}
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         {canUpdateSecret && (
-                            <Form.Field error={errors.secretValue}>
-                                <MultilineInput
-                                    name="secretValue"
-                                    placeholder={translateUpdateModal('inputs.secretValue.placeholder')}
-                                    value={secretValue}
-                                    onChange={setSecretValue}
-                                />
-                            </Form.Field>
+                            <>
+                                <Form.Field>
+                                    <Form.Checkbox
+                                        label={translateForm('inputs.useSecretProvider.label')}
+                                        name="useSecretProvider"
+                                        checked={useSecretProvider && !isEmpty(secretProviders)}
+                                        onChange={onSecretProviderChange}
+                                        disabled={isEmpty(secretProviders)}
+                                        help={
+                                            isEmpty(secretProviders)
+                                                ? translateForm('errors.validation.noProviders')
+                                                : null
+                                        }
+                                    />
+                                </Form.Field>
+                                {useSecretProvider ? (
+                                    <>
+                                        <Form.Field
+                                            label={translateForm('inputs.secretProvider.label')}
+                                            error={errors.secretProvider}
+                                            required
+                                        >
+                                            <Form.Dropdown
+                                                name="secretProvider"
+                                                placeholder={translateForm('inputs.secretProvider.placeholder')}
+                                                selection
+                                                options={secretProvidersDropdownOptions}
+                                                value={secretProvider}
+                                                onChange={setSecretProvider}
+                                            />
+                                        </Form.Field>
+                                        <Form.Field
+                                            label={translateForm('inputs.secretProviderPath.label')}
+                                            error={errors.secretProviderPath}
+                                            required
+                                        >
+                                            <Form.Input
+                                                name="secretProviderPath"
+                                                placeholder={translateForm('inputs.secretProviderPath.placeholder')}
+                                                value={secretProviderPath}
+                                                onChange={setSecretProviderPath}
+                                            />
+                                        </Form.Field>
+                                    </>
+                                ) : (
+                                    <Form.Field error={errors.secretValue}>
+                                        <MultilineInput
+                                            name="secretValue"
+                                            placeholder={translateForm('inputs.secretValue.placeholder')}
+                                            value={secretValue}
+                                            onChange={setSecretValue}
+                                        />
+                                    </Form.Field>
+                                )}
+                            </>
                         )}
                     </Form>
                 </Modal.Content>

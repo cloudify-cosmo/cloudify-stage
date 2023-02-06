@@ -626,6 +626,11 @@
                 "deployModal": {
                     "header": "Deploy blueprint {{blueprintId}}",
                     "inputs": {
+                        "header": {
+                            "label": "Deployment inputs",
+                            "subHeader": "See values typing details: ",
+                            "popupHelp": "Value type"
+                        },
                         "deploymentId": {
                             "label": "Deployment ID",
                             "help": "Specify an ID for this deployment instance."
@@ -640,7 +645,15 @@
                         },
                         "deploymentIdToDeployOn": {
                             "label": "Deploy On",
-                            "placeholder": "Select a parent"
+                            "placeholder": "Select a parent",
+                            "environmentList": {
+                                "title": {
+                                    "suggested": "Suggested",
+                                    "others": "Others"
+                                },
+                                "loading": "fetching environments",
+                                "noData": "no environments"
+                            }
                         },
                         "siteName": {
                             "label": "Site name",
@@ -659,7 +672,8 @@
                         },
                         "deploymentInputs": {
                             "loading": "Loading inputs...",
-                            "noInputs": "No inputs available for the blueprint"
+                            "noInputs": "No inputs available for the blueprint",
+                            "yamlDataType": "deployment's inputs"
                         }
                     },
                     "sections": {
@@ -841,11 +855,18 @@
                     "dataTypes": {
                         "title": "Show Data Types"
                     },
+                    "help": {
+                        "header": "Value type"
+                    },
                     "sortOrder": {
                         "dropdownLabel": "Sort order",
                         "original": "Original order",
                         "ascending": "Ascending alphabetical order",
                         "descending": "Descending alphabetical order"
+                    },
+                    "yamlFile": {
+                        "help": "You can provide YAML file with {{- dataType }} to automatically fill in the form.",
+                        "dataType": "values"
                     }
                 },
                 "types": {
@@ -883,6 +904,24 @@
             }
         },
         "agents": {
+            "name": "Agents",
+            "description": "This widget shows list of installed agents",
+            "configuration": {
+                "fieldsToShow": {
+                    "label": "List of fields to show in the table",
+                    "description": "Some of the fields may be hidden depending on the context, eg. when Deployment ID is set in context then Deployment field will be hidden.",
+                    "placeholder": "Select fields from the list"
+                },
+                "installMethods": {
+                    "label": "Filter Agents by Install Method",
+                    "description": "Choose Install Methods to filter Agents. Unset all options to disable this type of filtering.",
+                    "placeholder": "Select Install Methods from the list"
+                }
+            },
+            "buttons": {
+                "install": "Install",
+                "validate": "Validate"
+            },
             "columns": {
                 "id": "ID",
                 "ip": "IP",
@@ -892,6 +931,54 @@
                 "version": "Version",
                 "installMethod": "Install method",
                 "actions": "Actions"
+            },
+            "noDataMessage": "There are no Agents available.",
+            "modals": {
+                "common": {
+                    "fields": {
+                        "nodeFilter": {
+                            "label": "Nodes filter",
+                            "description": "Filter agents by deployment, nodes and node instances. Filtering turned off when none selected."
+                        },
+                        "installMethods": {
+                            "label": "Install Methods filter",
+                            "description": "Filter agents by install methods. Filtering turned off when none selected."
+                        }
+                    },
+                    "executionStartedMessage": {
+                        "header": "Execution started",
+                        "content": "{{ execution }} has been started. Click 'Show Status and Logs' button to see details."
+                    },
+                    "buttons": {
+                        "close": "Close",
+                        "showStatus": "Show Status and Logs"
+                    },
+                    "deploymentError": "Provide deployment in Nodes filter"
+                },
+                "install": {
+                    "header": "Install new agents",
+                    "fields": {
+                        "managerIp": {
+                            "label": "Manager IP",
+                            "description": "The private IP of the current leader (master) Manager. This IP is used to connect to the Manager's RabbitMQ. Relevant only in HA cluster."
+                        },
+                        "managerCertificate": {
+                            "label": "Manager Certificate",
+                            "description": "A path to a file containing the SSL certificate of the current leader Manager. The certificate is available on the Manager: /etc/cloudify/ssl/cloudify_internal_ca_cert.pem"
+                        },
+                        "stopOldAgent": {
+                            "label": "Stop old agent",
+                            "description": "If set, after installing the new agent the old agent (that is connected to the old Manager) will be stopped. *IMPORTANT* if the deployment has monitoring with auto-healing configured, you need to disable it first"
+                        }
+                    },
+                    "execution": "New agents installation",
+                    "pageName": "Install New Agents on {{ deploymentId }}"
+                },
+                "validate": {
+                    "header": "Validate agents",
+                    "execution": "Agents validation",
+                    "pageName": "Validate Agents on {{ deploymentId }}"
+                }
             }
         },
         "blueprintActionButtons": {
@@ -908,6 +995,8 @@
             }
         },
         "blueprints": {
+            "name": "Blueprints",
+            "description": "Shows blueprints list",
             "configuration": {
                 "fieldsToShow": {
                     "label": "List of fields to show",
@@ -1012,6 +1101,29 @@
                         "outputInvalid": "Please provide valid Terraform output - only letters, digits and the characters \"-\", \".\" and \"_\" are allowed"
                     }
                 }
+            },
+            "noDataMessage": "There are no Blueprints available. Click \"Upload\" to add Blueprints.",
+            "errors:": {
+                "deleteBlueprint": "Something went wrong, no blueprint was selected for delete"
+            },
+            "icons": {
+                "createDeployment": "Create deployment",
+                "deleteBlueprint": "Delete blueprint",
+                "editInComposer": "Edit a copy in Composer"
+            },
+            "buttons": {
+                "deploy": "Deploy",
+                "delete": "Delete",
+                "editInComposer": "Edit in Composer"
+            },
+            "columns": {
+                "name": "Name",
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "main_file_name": "Main file name",
+                "state": "State",
+                "deployments": "# Deployments"
             }
         },
         "blueprintSources": {
@@ -1612,9 +1724,10 @@
                         "label": "Provider Name",
                         "placeholder": "Provider Name"
                     },
-                    "hostname": {
-                        "label": "Vault Hostname",
-                        "placeholder": "Vault Hostname"
+                    "url": {
+                        "label": "Vault URL",
+                        "placeholder": "Vault URL",
+                        "helper": "Example: http://172.17.0.2:8200"
                     },
                     "authorizationToken": {
                         "label": "Authorization Token",
@@ -1630,7 +1743,7 @@
                         "required": "Please provide the Provider Name.",
                         "invalid": "The Provider Name contains illegal characters. Only letters, digits, and the characters \"-\", \".\" and \"_\" are allowed."
                     },
-                    "hostname": "Please provide vault hostname.",
+                    "url": "Please provide Vault URL.",
                     "authorizationToken": "Please provide an authorization token.",
                     "create": "Couldn't create a Secret Provider, please try to submit the Secret Provider data again.",
                     "update": "Couldn't update a Secret Provider, please try to submit the Secret Provider data again."
@@ -1667,7 +1780,15 @@
                 "header": "Create secret",
                 "buttons": {
                     "create": "Create"
-                },
+                }
+            },
+            "updateModal": {
+                "header": "Update secret {{secretKey}}",
+                "buttons": {
+                    "update": "Update"
+                }
+            },
+            "form": {
                 "inputs": {
                     "secretKey": {
                         "label": "Secret key",
@@ -1702,22 +1823,6 @@
                         "noProviders": "No Secret providers are defined in the System",
                         "secretProviderName": "Please select a secret provider",
                         "secretProviderPath": "Please provide a path or a secret key on the secret provider"
-                    }
-                }
-            },
-            "updateModal": {
-                "header": "Update secret {{secretKey}}",
-                "buttons": {
-                    "update": "Update"
-                },
-                "inputs": {
-                    "secretValue": {
-                        "placeholder": "Secret value"
-                    }
-                },
-                "errors": {
-                    "validation": {
-                        "secretValue": "Please provide secret value"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -2209,7 +2314,7 @@
                     }
                 }
             },
-            "createModal" : {
+            "createModal": {
                 "header": "Create snapshot",
                 "actions": {
                     "create": "Create"

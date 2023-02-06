@@ -2,6 +2,7 @@
 import i18n from 'i18next';
 import type { GetExternalContentQueryParams } from 'backend/routes/External.types';
 import type { PutSourceListYamlQueryParams, PutSourceListYamlResponse } from 'backend/routes/SourceBrowser.types';
+import type { Visibility } from 'app/widgets/common/types';
 import Consts from '../Consts';
 import DeploymentActions from '../deployments/DeploymentActions';
 import type { Label } from '../labels/types';
@@ -19,7 +20,7 @@ type BlueprintSecret = string | Record<string, unknown>;
 
 export interface BlueprintRequirements {
     /* eslint-disable-next-line camelcase */
-    parent_capabilities: string[];
+    parent_capabilities: string[][];
     secrets: BlueprintSecret[];
 }
 
@@ -82,12 +83,12 @@ export interface BlueprintPlan {
 
 export interface FullBlueprintData {
     id: string;
-    visibility: string;
+    visibility: Visibility;
     created_at: string;
     main_file_name: string;
     plan: BlueprintPlan;
     updated_at: string;
-    description: null | unknown;
+    description: string | null;
     is_hidden: boolean;
     state: string;
     error: null | string;
@@ -356,7 +357,7 @@ export default class BlueprintActions {
         return this.toolbox.getManager().doPatch(`/blueprints/${blueprintId}/set-visibility`, { body: { visibility } });
     }
 
-    doListYamlFiles(blueprintUrl: string, file = null, includeFilename = false) {
+    doListYamlFiles(blueprintUrl: string, file: File | null = null, includeFilename = false) {
         if (file) {
             return this.toolbox
                 .getInternal()

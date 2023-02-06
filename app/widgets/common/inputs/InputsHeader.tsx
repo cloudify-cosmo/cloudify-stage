@@ -2,22 +2,24 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import { Form, Header, PopupHelp } from '../../../components/basic';
 import InputsHelpDescription from './InputsHelpDescription';
+import stageUtils from '../../../utils/stageUtils';
+
+const translate = stageUtils.getT('widgets.common.deployments.deployModal.inputs.header');
 
 export interface InputsHeaderProps {
-    iconButton?: boolean;
     compact?: boolean;
     dividing?: boolean;
     header?: string;
 }
 
 const InputsHeader: FunctionComponent<InputsHeaderProps> = React.memo(
-    ({ compact = false, dividing = true, header = 'Deployment inputs' }) => {
+    ({ compact = false, dividing = true, header = translate('label') }) => {
         const HeaderWithDescription = () => (
             <Header size="tiny">
                 {header}
                 <Header.Subheader>
-                    See values typing details:&nbsp;
-                    <PopupHelp flowing header="Value type" content={<InputsHelpDescription />} />
+                    {translate('subHeader')}
+                    <PopupHelp flowing header={translate('popupHelp')} content={<InputsHelpDescription />} />
                 </Header.Subheader>
             </Header>
         );

@@ -1,15 +1,15 @@
-// @ts-nocheck File not migrated fully to TS
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { isEmpty, forEach, join, isString } from 'lodash';
+import type { SortOrder } from 'app/widgets/common/inputs/SortOrderIcons';
 import { ApproveButton, CancelButton, Form, Header, Icon, Message, Modal } from '../../../components/basic';
 import FileActions from '../actions/FileActions';
 import BlueprintActions from '../blueprints/BlueprintActions';
 import DynamicDropdown from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
+import SortOrderIcons from '../inputs/SortOrderIcons';
 import YamlFileButton from '../inputs/YamlFileButton';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import DeploymentActions from './DeploymentActions';
-import GenericDeployModal from '../deployModal/GenericDeployModal';
+import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
 import getPlanForUpdate from '../inputs/utils/getPlanForUpdate';
 import getInputsMap from '../inputs/utils/getInputsMap';
@@ -19,21 +19,37 @@ import InputsHeader from '../inputs/InputsHeader';
 import InputFields from '../inputs/InputFields';
 import NodeInstancesFilter from '../nodes/NodeInstancesFilter';
 import UpdateDetailsModal from './UpdateDetailsModal';
+import type { DeploymentUpdate } from './UpdateDetailsModal';
 import { useBoolean, useErrors, useInputs, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
+import type { Deployment } from '../deploymentsView/types';
+import IconButtonsGroup from '../components/IconButtonsGroup';
 
-export default function UpdateDeploymentModal({ open, deploymentId, deploymentName, onHide, toolbox }) {
-    const { useEffect } = React;
+type FetchedDeployment = Pick<Deployment, 'blueprint_id' | 'id' | 'inputs'>;
 
+interface UpdateDeploymentModalProps {
+    toolbox: Stage.Types.Toolbox;
+    open: boolean;
+    deploymentId: string;
+    deploymentName: string;
+    onHide: () => void;
+}
+
+export default function UpdateDeploymentModal({
+    open,
+    deploymentId,
+    deploymentName,
+    onHide,
+    toolbox
+}: UpdateDeploymentModalProps) {
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const [isFileLoading, setFileLoading, unsetFileLoading] = useBoolean();
     const [isPreviewShown, showPreview, hidePreview] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
 
-    const [blueprint, setBlueprint, resetBlueprint] = useResettableState(GenericDeployModal.EMPTY_BLUEPRINT);
-    const [previewData, setPreviewData, resetPreviewData] = useResettableState({});
-
-    const [deployment, setDeployment, resetDeployment] = useResettableState({});
+    const [blueprint, setBlueprint, resetBlueprint] = useResettableState<FullBlueprintData | undefined>(undefined);
+    const [previewData, setPreviewData, resetPreviewData] = useResettableState<DeploymentUpdate | undefined>(undefined);
+    const [deployment, setDeployment, resetDeployment] = useResettableState<FetchedDeployment | undefined>(undefined);
     const [deploymentInputs, setDeploymentInputs, resetDeploymentInputs] = useInputs({});
     const [inputs, setInput, resetInputs] = useInputs({
         installWorkflow: true,
@@ -46,25 +62,29 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         skipDriftCheck: false,
         force: false
     });
+    const [sortOrder, setSortOrder] = useState<SortOrder>('original');
 
-    function selectBlueprint(id) {
-        if (!_.isEmpty(id)) {
+    function selectBlueprint(id: string) {
+        if (!isEmpty(id)) {
             setLoading();
 
             const actions = new BlueprintActions(toolbox);
             actions
                 .doGetFullBlueprintData(id)
                 .then(fetchedBlueprint => {
-                    const newDeploymentInputs = {};
-                    const currentDeploymentInputs = deployment.inputs;
+                    const newDeploymentInputs: Record<string, string> = {};
+                    const currentDeploymentInputs = deployment?.inputs;
                     const { data_types: dataTypes, inputs: plannedDeploymentInputs } = fetchedBlueprint.plan;
 
-                    _.forEach(plannedDeploymentInputs, (inputObj, inputName) => {
-                        const { default: defaultValue, type } = inputObj;
-                        const dataType = dataTypes?.[type];
+                    forEach(plannedDeploymentInputs, (inputObj, inputName) => {
+                        const { default: defaultValue, type } = inputObj as {
+                            type: string;
+                            default: unknown;
+                        };
+                        const dataType = (dataTypes as Record<string, any>)?.[type];
 
                         newDeploymentInputs[inputName] = getInputFieldInitialValue(
-                            currentDeploymentInputs[inputName] ?? defaultValue,
+                            currentDeploymentInputs?.[inputName] ?? defaultValue,
                             type,
                             dataType
                         );
@@ -104,7 +124,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
 
         const actions = new DeploymentActions(toolbox.getManager());
         actions
-            .doGet({ id: deploymentId }, { _include: _.join(['id', 'blueprint_id', 'inputs']) })
+            .doGet({ id: deploymentId }, { _include: join(['id', 'blueprint_id', 'inputs']) })
             .then(setDeployment)
             .catch(error => {
                 unsetLoading();
@@ -112,7 +132,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             });
     });
 
-    function submitUpdate(preview) {
+    function submitUpdate(preview: boolean) {
         const {
             automaticReinstall,
             force,
@@ -124,27 +144,27 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
             skipHeal,
             skipDriftCheck
         } = inputs;
-        const validationErrors = {};
+        const validationErrors: Record<string, string> = {};
 
-        if (_.isEmpty(blueprint.id)) {
+        if (isEmpty(blueprint?.id)) {
             validationErrors.blueprintName = 'Please select blueprint';
         }
 
-        if (!_.isEmpty(validationErrors)) {
+        if (!isEmpty(validationErrors)) {
             setErrors(validationErrors);
             unsetLoading();
             return;
         }
 
-        const inputsPlanForUpdate = getPlanForUpdate(blueprint.plan.inputs, deployment.inputs);
+        const inputsPlanForUpdate = getPlanForUpdate(blueprint!.plan.inputs, deployment!.inputs);
         const inputsMap = getInputsMap(inputsPlanForUpdate, deploymentInputs);
-        const blueprintId = blueprint.id === deployment.blueprint_id && _.isEmpty(inputsMap) ? null : blueprint.id;
+        const blueprintId = blueprint!.id === deployment!.blueprint_id && isEmpty(inputsMap) ? null : blueprint!.id;
 
         const actions = new DeploymentActions(toolbox.getManager());
         actions
             .doUpdate(
-                deployment.id,
-                blueprintId,
+                deployment!.id,
+                blueprintId || '',
                 inputsMap,
                 installWorkflow,
                 uninstallWorkflow,
@@ -196,8 +216,8 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         return true;
     }
 
-    function handleYamlFileChange(file) {
-        if (!file) {
+    function handleYamlFileChange(file: File | null) {
+        if (!file || !blueprint) {
             return;
         }
 
@@ -211,7 +231,7 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                 setDeploymentInputs(getUpdatedInputs(blueprint.plan.inputs, deploymentInputs, yamlInputs));
             })
             .catch(err =>
-                setErrors({ yamlFile: `Loading values from YAML file failed: ${_.isString(err) ? err : err.message}` })
+                setErrors({ yamlFile: `Loading values from YAML file failed: ${isString(err) ? err : err.message}` })
             )
             .finally(unsetFileLoading);
     }
@@ -235,7 +255,11 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
               skip_reinstall: !automaticReinstall,
               reinstall_list: reinstallList
           }
-        : {};
+        : undefined;
+
+    const blueprintHasInputs = !isEmpty(blueprint?.plan.inputs);
+    const blueprintHasMultipleInputs = blueprintHasInputs && Object.keys(blueprint!.plan.inputs).length > 1;
+    const blueprintHasDataTypes = !isEmpty(blueprint?.plan.data_types);
 
     return (
         <Modal open={open} onClose={onHide} className="updateDeploymentModal">
@@ -251,41 +275,44 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
                 <Form loading={isLoading} errors={errors} scrollToError onErrorsDismiss={clearErrors}>
                     <Form.Field error={errors.blueprintName} label="Blueprint" required>
                         <DynamicDropdown
-                            value={blueprint.id}
+                            value={blueprint?.id || ''}
                             placeholder="Select Blueprint"
                             name="blueprintName"
                             fetchUrl="/blueprints?_include=id&state=uploaded"
-                            onChange={selectBlueprint}
+                            onChange={blueprintName => selectBlueprint(blueprintName as string)}
                             toolbox={toolbox}
                         />
                     </Form.Field>
 
-                    {blueprint.id && (
+                    {blueprint?.id && (
                         <>
-                            {!_.isEmpty(blueprint.plan.inputs) && (
-                                <YamlFileButton
-                                    onChange={handleYamlFileChange}
-                                    dataType="deployment's inputs"
-                                    fileLoading={isFileLoading}
-                                />
-                            )}
-                            {!_.isEmpty(blueprint.plan.data_types) && (
-                                <DataTypesButton types={blueprint.plan.data_types} />
-                            )}
                             <InputsHeader />
-                            {_.isEmpty(blueprint.plan.inputs) && (
+                            {blueprintHasInputs ? (
+                                <IconButtonsGroup>
+                                    {blueprintHasMultipleInputs && (
+                                        <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />
+                                    )}
+                                    {blueprintHasDataTypes && <DataTypesButton types={blueprint.plan.data_types} />}
+                                    <YamlFileButton
+                                        onChange={handleYamlFileChange}
+                                        dataType="deployment's inputs"
+                                        fileLoading={isFileLoading}
+                                    />
+                                </IconButtonsGroup>
+                            ) : (
                                 <Message content="No inputs available for the selected blueprint" />
                             )}
                         </>
                     )}
 
                     <InputFields
-                        inputs={blueprint.plan.inputs}
+                        inputs={blueprint?.plan?.inputs || {}}
                         onChange={setDeploymentInputs}
                         inputsState={deploymentInputs}
                         errorsState={errors}
                         toolbox={toolbox}
-                        dataTypes={blueprint.plan.data_types}
+                        dataTypes={blueprint?.plan?.data_types}
+                        sortOrder={sortOrder}
                     />
 
                     <Form.Divider>
@@ -423,11 +450,3 @@ export default function UpdateDeploymentModal({ open, deploymentId, deploymentNa
         </Modal>
     );
 }
-
-UpdateDeploymentModal.propTypes = {
-    toolbox: ToolboxPropType.isRequired,
-    open: PropTypes.bool.isRequired,
-    deploymentId: PropTypes.string.isRequired,
-    deploymentName: PropTypes.string.isRequired,
-    onHide: PropTypes.func.isRequired
-};

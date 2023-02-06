@@ -71,10 +71,8 @@ const AccordionWorkflowsMenu: FunctionComponent<AccordionWorkflowsMenuProps> = (
                         style={{ padding: '13px 16px' }}
                     />
                     <Accordion.Content active={activeGroup === group.name} style={{ paddingTop: 0, paddingLeft: 16 }}>
-                        {/* @ts-ignore Missing 'Menu' property declaration on 'Menu' component */}
                         <Menu.Menu>
                             <WorkflowsMenuItems workflows={group.workflows} onClick={onClick} />
-                            {/* @ts-ignore Missing 'Menu' property declaration on 'Menu' component */}
                         </Menu.Menu>
                     </Accordion.Content>
                 </Menu.Item>

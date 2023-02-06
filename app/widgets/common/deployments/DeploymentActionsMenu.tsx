@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react';
 import React from 'react';
-import type { PopupMenuProps } from 'cloudify-ui-components/typings/components/popups/PopupMenu/PopupMenu';
+import type { PopupMenuProps } from 'cloudify-ui-components';
 import type { Workflow } from '../executeWorkflow';
 import { Menu, Popup, PopupMenu } from '../../../components/basic';
 import StageUtils from '../../../utils/stageUtils';

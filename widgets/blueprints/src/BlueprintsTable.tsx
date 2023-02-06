@@ -1,5 +1,9 @@
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
+import { translateBlueprints } from './widget.utils';
+
+const translateBlueprintsIcons = Stage.Utils.composeT(translateBlueprints, 'icons');
+const translateBlueprintsColumns = Stage.Utils.composeT(translateBlueprints, 'columns');
 
 export default function BlueprintsTable({
     data,
@@ -31,13 +35,35 @@ export default function BlueprintsTable({
             className={tableName}
             noDataMessage={noDataMessage}
         >
-            <DataTable.Column label="Name" name="id" width="20%" />
-            <DataTable.Column show={fieldsToShow?.includes('Created')} label="Created" name="created_at" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('Updated')} label="Updated" name="updated_at" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('Creator')} label="Creator" name="created_by" width="15%" />
-            <DataTable.Column label="Main blueprint file" name="main_file_name" width="15%" />
-            <DataTable.Column show={fieldsToShow?.includes('State')} label="State" name="state" />
-            <DataTable.Column show={fieldsToShow?.includes('Deployments')} label="# Deployments" />
+            <DataTable.Column label={translateBlueprintsColumns('name')} name="id" width="20%" />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Created')}
+                label={translateBlueprintsColumns('created')}
+                name="created_at"
+                width="15%"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Updated')}
+                label={translateBlueprintsColumns('updated')}
+                name="updated_at"
+                width="15%"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Creator')}
+                label={translateBlueprintsColumns('creator')}
+                name="created_by"
+                width="15%"
+            />
+            <DataTable.Column label={translateBlueprintsColumns('main_file_name')} name="main_file_name" width="15%" />
+            <DataTable.Column
+                show={fieldsToShow?.includes('State')}
+                label={translateBlueprintsColumns('state')}
+                name="state"
+            />
+            <DataTable.Column
+                show={fieldsToShow?.includes('Deployments')}
+                label={translateBlueprintsColumns('deployments')}
+            />
             <DataTable.Column width="10%" />
 
             {data.items.map(item => (
@@ -84,7 +110,7 @@ export default function BlueprintsTable({
                                         {!manager.isCommunityEdition() && widget.configuration.showComposerOptions && (
                                             <Icon
                                                 name="external share"
-                                                title="Edit a copy in Composer"
+                                                title={translateBlueprintsIcons('editInComposer')}
                                                 onClick={(event: Event) => {
                                                     event.stopPropagation();
                                                     new Stage.Common.Blueprints.Actions(toolbox).doEditInComposer(
@@ -97,7 +123,7 @@ export default function BlueprintsTable({
                                         <Icon
                                             name="rocket"
                                             link
-                                            title="Create deployment"
+                                            title={translateBlueprintsIcons('createDeployment')}
                                             onClick={(event: Event) => {
                                                 event.stopPropagation();
                                                 onCreateDeployment(item);
@@ -108,7 +134,7 @@ export default function BlueprintsTable({
                                 <Icon
                                     name="trash"
                                     link
-                                    title="Delete blueprint"
+                                    title={translateBlueprintsIcons('deleteBlueprint')}
                                     onClick={(event: Event) => {
                                         event.stopPropagation();
                                         onDeleteBlueprint(item);

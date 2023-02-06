@@ -10,7 +10,7 @@ import configureMockStore from 'redux-mock-store';
 import { MemoryRouter as Router } from 'react-router-dom';
 import type { ReduxState } from 'reducers';
 import Consts from 'utils/consts';
-import type { HeaderBannerProps } from 'cloudify-ui-components/typings/components/layout/HeaderBanner/HeaderBanner';
+import type { HeaderBannerProps } from 'cloudify-ui-components';
 import Banner from 'components/sidebar/banner/Banner';
 import type { LicenseStatus } from 'reducers/managerReducer';
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
