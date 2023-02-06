@@ -10,7 +10,7 @@ export default function ScalingGroupInputField({
     toolbox,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = useFetchUrlWithDeploymentId('/searches/scaling-groups?_include=name', restProps.constraints);
+    const fetchUrl = useFetchUrlWithDeploymentId('/searches/scaling-groups?_include=name', restProps.constraints, true);
 
     return (
         <DynamicDropdown

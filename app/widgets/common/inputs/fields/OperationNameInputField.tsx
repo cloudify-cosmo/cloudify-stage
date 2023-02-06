@@ -12,7 +12,7 @@ export default function OperationNameInputField({
     constraints,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = useFetchUrlWithDeploymentId('/nodes?_include=operations', constraints);
+    const fetchUrl = useFetchUrlWithDeploymentId('/nodes?_include=operations', constraints, true);
 
     return (
         <DynamicDropdown

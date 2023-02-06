@@ -12,7 +12,7 @@ import type { OnChange } from '../inputs/types';
 import YamlFileButton from '../inputs/YamlFileButton';
 import StageUtils from '../../../utils/stageUtils';
 import { Message } from '../../../components/basic';
-import DeploymentIdContext from '../inputs/utils/deploymentIdContext';
+import BlueprintIdContext from '../inputs/utils/blueprintIdContext';
 
 const translate = StageUtils.getT('widgets.common.deployments.deployModal.inputs.deploymentInputs');
 
@@ -41,7 +41,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
     const deploymentHasDataTypes = !isEmpty(blueprint.plan.data_types);
 
     return (
-        <DeploymentIdContext.Provider value={blueprint.id}>
+        <BlueprintIdContext.Provider value={blueprint.id}>
             {blueprint.id && (
                 <IconButtonsGroup>
                     {deploymentHasMultipleInputs && <SortOrderIcons selected={sortOrder} onChange={setSortOrder} />}
@@ -66,7 +66,7 @@ const DeploymentInputs: FunctionComponent<Props> = ({
                 dataTypes={blueprint.plan.data_types}
                 sortOrder={sortOrder}
             />
-        </DeploymentIdContext.Provider>
+        </BlueprintIdContext.Provider>
     );
 };
 
