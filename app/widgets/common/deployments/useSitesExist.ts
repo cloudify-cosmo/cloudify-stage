@@ -9,11 +9,7 @@ function useSitesExist(toolbox: Stage.Types.Toolbox) {
             .doGet('/sites?_size=1')
             .then((response: any) => {
                 const sites = response.items;
-                if (sites.length > 0) {
-                    setSitesExist(true);
-                } else {
-                    setSitesExist(false);
-                }
+                setSitesExist(sites.length > 0);
             });
     }, []);
 
