@@ -52,7 +52,9 @@ describe('Filter', () => {
 
             getDropdownItems().should('have.length', 1);
             cy.get('input').clear();
+            cy.get('.loader').should('be.visible');
             cy.wait('@fetchDeployments');
+            cy.get('.loader').should('not.exist');
             getDropdownItems().should('have.length', 2);
 
             cy.contains('uuu').click();
