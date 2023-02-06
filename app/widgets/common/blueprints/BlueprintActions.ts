@@ -71,10 +71,12 @@ export interface BlueprintPlan {
             derived_from: string;
             version: string;
             properties: {
-                description: string;
-                type: string;
-                default: unknown;
-                required: boolean;
+                [key: string]: {
+                    description: string;
+                    type: string;
+                    default: unknown;
+                    required: boolean;
+                };
             };
         };
     };

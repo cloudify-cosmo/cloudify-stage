@@ -7,14 +7,6 @@ import { CancelButton, Header, Icon, Modal, Popup, Segment, Table } from '../../
 import translateInputs from './utils/translateInputs';
 import type { BlueprintPlan } from '../blueprints/BlueprintActions';
 
-type Properties = BlueprintPlan['data_types']['properties'] & {
-    default: any;
-};
-
-type DataTypes = BlueprintPlan['data_types'] & {
-    properties: Properties;
-};
-
 interface DataTypePropertyProps {
     name: string;
     show: boolean;
@@ -22,22 +14,18 @@ interface DataTypePropertyProps {
 }
 
 const DataTypeProperty = ({ show, name, value }: DataTypePropertyProps) => {
-    return (
+    return show ? (
         <>
-            {show && (
-                <>
-                    <Header as="h4">{capitalize(name)}</Header>
-                    {value}
-                </>
-            )}
+            <Header as="h4">{capitalize(name)}</Header>
+            {value}
         </>
-    );
+    ) : null;
 };
 
 interface DataTypeProps {
     derivedFrom?: string;
     description?: string;
-    properties: Properties;
+    properties: BlueprintPlan['data_types'][string]['properties'];
     name: string;
     version?: string;
 }
@@ -96,7 +84,7 @@ function DataType({ name, description, version, derivedFrom, properties }: DataT
 
 interface DataTypesButtonProps {
     iconButton?: boolean;
-    types: DataTypes;
+    types: BlueprintPlan['data_types'];
 }
 
 interface DataTypesButtonState {
