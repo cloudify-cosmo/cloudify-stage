@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
 import glob from 'glob';
-import fs from 'fs';
+import { existsSync, rmSync } from 'fs-extra';
 import _ from 'lodash';
 
 import TerserPlugin from 'terser-webpack-plugin';
@@ -14,7 +14,10 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const CONTEXT_PATH = '/console';
 
-module.exports = (env, argv) => {
+export default (
+    env: { analyse?: 'widgets' | 'main'; widget?: string },
+    argv: { debug?: boolean; mode?: webpack.Configuration['mode'] | 'test' }
+) => {
     const isProduction = argv.mode === 'production';
     const isDevelopment = argv.mode === 'development';
     const isSingleWidgetBuild = !!env.widget;
@@ -35,7 +38,7 @@ module.exports = (env, argv) => {
         'styled-components': 'Stage.styled'
     };
 
-    const module = {
+    const module: webpack.Configuration['module'] = {
         rules: _.compact([
             !isProduction && {
                 test: /\.js$/,
@@ -152,15 +155,15 @@ module.exports = (env, argv) => {
         process.exit(-1);
     };
 
-    if (isProduction && fs.existsSync(outputPath)) {
+    if (isProduction && existsSync(outputPath)) {
         try {
-            fs.rmdirSync(outputPath);
+            rmSync(outputPath, { recursive: true });
         } catch (err) {
             exitWithError(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
         }
     }
 
-    const widgetsConfiguration = {
+    const widgetsConfiguration: webpack.Configuration = {
         mode,
         context,
         devtool,
@@ -207,13 +210,13 @@ module.exports = (env, argv) => {
 
     if (isSingleWidgetBuild) {
         const widgetPath = path.join(__dirname, `./widgets/${widgetName}`);
-        if (fs.existsSync(widgetPath)) {
+        if (existsSync(widgetPath)) {
             console.log('Building widget', widgetName);
         } else {
             exitWithError(`Invalid widget name provided. Widget directory "${widgetPath}" does not exist.`);
         }
 
-        return {
+        const singleWidgetConfiguration: webpack.Configuration = {
             ...widgetsConfiguration,
             entry: glob.sync(`./widgets/${widgetName}/src/widget.${globExtensions}`).reduce((acc, item) => {
                 const name = item
@@ -251,9 +254,11 @@ module.exports = (env, argv) => {
                 ])
             )
         };
+
+        return singleWidgetConfiguration;
     }
 
-    const configuration = [
+    const configuration: webpack.Configuration[] = [
         {
             mode,
             optimization: isProduction

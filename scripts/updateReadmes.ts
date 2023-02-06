@@ -6,7 +6,7 @@ import config from './readmesConfig.json';
 
 const supportedParams: Record<string, string> = translationFile.widgets.common.readmes.params;
 
-function log(prefix: string, message: string | RegExpMatchArray) {
+function log(prefix: string, message: string | RegExpMatchArray | null) {
     console.log(`[${prefix}]:`, message);
 }
 
@@ -14,7 +14,7 @@ function logError(prefix: string, message: string) {
     console.error(`[${prefix}]:`, message);
 }
 
-function logChange(prefix: string, type: string, changes?: string | RegExpMatchArray) {
+function logChange(prefix: string, type: string, changes: string | RegExpMatchArray | null) {
     if (changes) {
         log(prefix, changes);
     } else {
@@ -42,7 +42,7 @@ function updateTitle(widget: string, content: string) {
         let newContent = content;
 
         log(widget, 'Updating title:');
-        logChange(widget, 'title', newContent.match(titleRegex)?.[1]);
+        logChange(widget, 'title', newContent.match(titleRegex)?.[1] || null);
 
         newContent = newContent.replace(titleRegex, '# $1');
 

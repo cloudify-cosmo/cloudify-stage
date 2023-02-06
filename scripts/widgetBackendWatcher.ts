@@ -44,7 +44,7 @@ const triggerBackendRestart = () => {
     utimesSync(backendFile, now, now);
 };
 
-module.exports = function start() {
+export default function start() {
     watch(widgetBackendFilesGlob)
         .on('add', file => {
             updateWidgetBackendFile(file, 'add');
@@ -60,4 +60,4 @@ module.exports = function start() {
         })
         .on('ready', () => logger.log(`Widget Backend files watcher ready and set on: ${widgetBackendFilesGlob}`))
         .on('error', error => logger.error(`Watcher error: ${error}`));
-};
+}
