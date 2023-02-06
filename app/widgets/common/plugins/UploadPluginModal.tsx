@@ -1,18 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
 import Consts from '../Consts';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import PluginActions from './PluginActions';
 import UploadPluginForm from './UploadPluginForm';
+import type { Resources, ResourceName } from './PluginActions';
+import type { UploadPluginFormProps } from './UploadPluginForm';
+import type { Visibility } from '../types';
 
-function UploadPluginModal({ open, onHide, toolbox }) {
+interface UploadPluginModalProps {
+    open: boolean;
+    onHide: () => void;
+    toolbox: Stage.Types.Toolbox;
+}
+
+function UploadPluginModal({ open, onHide, toolbox }: UploadPluginModalProps) {
     const { useResettableState, useBoolean, useErrors, useInputs, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setErrors, clearErrors, setMessageAsError } = useErrors();
-    const [visibility, setVisibility, clearVisibility] = useResettableState(Consts.defaultVisibility);
+    const [visibility, setVisibility, clearVisibility] = useResettableState<Visibility>(Consts.defaultVisibility);
     const [inputs, setInputs, clearInputs] = useInputs({
+        title: '',
         wagonUrl: '',
         wagonFile: null,
         yamlUrl: '',
@@ -31,7 +38,7 @@ function UploadPluginModal({ open, onHide, toolbox }) {
     function uploadPlugin() {
         const { wagonUrl, yamlUrl, iconUrl, iconFile, title, wagonFile, yamlFile } = inputs;
 
-        const validationErrors = {};
+        const validationErrors: Record<string, string> = {};
 
         if (!wagonFile) {
             if (_.isEmpty(wagonUrl)) {
@@ -65,11 +72,16 @@ function UploadPluginModal({ open, onHide, toolbox }) {
         // Disable the form
         setLoading();
 
-        const createUploadResource = name => {
-            const { [`${name}Url`]: url, [`${name}File`]: file } = inputs;
+        const createUploadResource = (name: ResourceName): Resources => {
+            type AvailableInputName = keyof typeof inputs;
+            const urlInputName: AvailableInputName = `${name}Url`;
+            const fileInputName: AvailableInputName = `${name}File`;
+
+            const { [urlInputName]: url, [fileInputName]: file } = inputs;
+
             return {
                 [name]: { url, file }
-            };
+            } as Resources;
         };
 
         const actions = new PluginActions(toolbox);
@@ -88,11 +100,10 @@ function UploadPluginModal({ open, onHide, toolbox }) {
             .finally(unsetLoading);
     }
 
-    function onFormFieldChange(values) {
+    const onFormFieldChange: UploadPluginFormProps['onChange'] = values => {
         setInputs(values);
-    }
+    };
 
-    const { iconUrl, wagonUrl, yamlUrl } = inputs;
     const { ApproveButton, CancelButton, Form, Icon, Modal, VisibilityField } = Stage.Basic;
 
     return (
@@ -104,14 +115,7 @@ function UploadPluginModal({ open, onHide, toolbox }) {
 
             <Modal.Content>
                 <Form errors={errors} onErrorsDismiss={clearErrors} loading={isLoading}>
-                    <UploadPluginForm
-                        wagonUrl={wagonUrl}
-                        yamlUrl={yamlUrl}
-                        iconUrl={iconUrl}
-                        errors={errors}
-                        onChange={onFormFieldChange}
-                        toolbox={toolbox}
-                    />
+                    <UploadPluginForm errors={errors} onChange={onFormFieldChange} toolbox={toolbox} />
                 </Form>
             </Modal.Content>
 
@@ -122,11 +126,5 @@ function UploadPluginModal({ open, onHide, toolbox }) {
         </Modal>
     );
 }
-
-UploadPluginModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired,
-    toolbox: ToolboxPropType.isRequired
-};
 
 export default UploadPluginModal;

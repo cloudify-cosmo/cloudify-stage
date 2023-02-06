@@ -7,7 +7,7 @@ import ResourceTypeContext from '../filters/resourceTypeContext';
 
 export interface LabelsModalProps {
     deploymentId: string;
-    deploymentName: string;
+    deploymentName?: string;
     hideInitialLabels?: boolean;
     i18nHeaderKey: string;
     i18nApplyKey: string;

@@ -37,6 +37,7 @@ export interface Deployment {
     /** Can be null when there are no subenvironments */
     sub_environments_status: DeploymentStatus | null;
     labels?: Label[];
+    inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };
     /* eslint-enable camelcase */
 }
