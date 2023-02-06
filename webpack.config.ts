@@ -1,16 +1,16 @@
-const webpack = require('webpack');
-const path = require('path');
-const glob = require('glob');
-const fs = require('fs');
-const _ = require('lodash');
+import webpack from 'webpack';
+import path from 'path';
+import glob from 'glob';
+import fs from 'fs';
+import _ from 'lodash';
 
-const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+import TerserPlugin from 'terser-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import ImageminPlugin from 'imagemin-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const CONTEXT_PATH = '/console';
 
@@ -130,7 +130,7 @@ module.exports = (env, argv) => {
         ])
     };
 
-    const getProductionPlugins = isAnalysisMode =>
+    const getProductionPlugins = (isAnalysisMode: boolean) =>
         isAnalysisMode
             ? [new BundleAnalyzerPlugin()]
             : [
@@ -147,14 +147,14 @@ module.exports = (env, argv) => {
         'process.env.TEST': ''
     });
 
-    const exitWithError = error => {
+    const exitWithError = (error: string) => {
         console.error(`ERROR: ${error}`);
         process.exit(-1);
     };
 
     if (isProduction && fs.existsSync(outputPath)) {
         try {
-            fs.rmdirSync(outputPath, { recursive: true });
+            fs.rmdirSync(outputPath);
         } catch (err) {
             exitWithError(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
         }

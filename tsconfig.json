@@ -11,6 +11,7 @@
     "references": [
         { "path": "./tsconfig.ui.json" },
         { "path": "test/jest" },
-        { "path": "test/cypress" }
+        { "path": "test/cypress" },
+        { "path": "scripts" }
     ]
 }
