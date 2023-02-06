@@ -1,7 +1,7 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Visibility } from '../types';
 
-type ProviderOptions = Record<string, string>;
+export type ProviderOptions = Record<string, string>;
 
 /* eslint-disable camelcase */
 export type Secret = {
@@ -28,6 +28,10 @@ export default class SecretActions {
 
     doGet(key: Secret['key']): Promise<Secret> {
         return this.manager.doGet(`/secrets/${key}`);
+    }
+
+    doGetSkipValue(key: Secret['key']): Promise<Secret> {
+        return this.manager.doGet(`/secrets/${key}?_skip_value=true`);
     }
 
     doGetAllSecretProviders(): Promise<any> {
