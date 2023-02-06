@@ -1,21 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import PropTypes from 'prop-types';
 import i18n from 'i18next';
-import ToolboxPropType from '../../../utils/props/Toolbox';
 import DeploymentActions from './DeploymentActions';
 import { ApproveButton, CancelButton, Form, Icon, Modal } from '../../../components/basic';
 import { useBoolean, useErrors, useInput, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
+import type { Site } from '../map/site';
 
-export default function SetSiteModal({ deploymentId, deploymentName, onHide, open, toolbox }) {
+interface SetSiteModalProps {
+    deploymentId: string;
+    deploymentName: string;
+    toolbox: Stage.Types.WidgetlessToolbox;
+    open: boolean;
+    onHide: () => void;
+}
+
+export default function SetSiteModal({ deploymentId, deploymentName, onHide, open, toolbox }: SetSiteModalProps) {
     const [detachSite, setDetachSite, clearDetachSite] = useInput(false);
     const { errors, clearErrors, setMessageAsError } = useErrors();
     const [loading, setLoading, unsetLoading] = useBoolean();
     const [siteName, setSiteName, clearSiteName] = useInput('');
-    const [sites, setSites, resetSites] = useResettableState({ items: [] });
+    const [sites, setSites, resetSites] = useResettableState<Pick<Site, 'name'>[]>([]);
 
-    const siteOptions = _.map(sites.items, site => {
+    const siteOptions = sites.map(site => {
         return { text: site.name, value: site.name };
     });
 
@@ -30,7 +36,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
 
         Promise.all([actions.doGetSitesNames(), actions.doGetSiteName(deploymentId)])
             .then(([fetchedSites, fetchedSiteName]) => {
-                setSites(fetchedSites);
+                setSites(fetchedSites.items);
                 setSiteName(fetchedSiteName);
             })
             .catch(setMessageAsError)
@@ -78,7 +84,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
                             value={siteName}
                             name="siteName"
                             options={siteOptions}
-                            onChange={(event, field) => setSiteName(field.value)}
+                            onChange={(_event, field) => setSiteName(field.value)}
                         />
                     </Form.Field>
                     <Form.Field className="detachSite">
@@ -87,7 +93,7 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
                             label={i18n.t('widgets.common.deployments.setSiteModal.detachSiteLabel')}
                             name="detachSite"
                             checked={detachSite}
-                            onChange={(event, field) => setDetachSite(field.checked)}
+                            onChange={(_event, field) => setDetachSite(field.checked)}
                         />
                     </Form.Field>
                 </Form>
@@ -105,11 +111,3 @@ export default function SetSiteModal({ deploymentId, deploymentName, onHide, ope
         </Modal>
     );
 }
-
-SetSiteModal.propTypes = {
-    deploymentId: PropTypes.string.isRequired,
-    deploymentName: PropTypes.string.isRequired,
-    toolbox: ToolboxPropType.isRequired,
-    open: PropTypes.bool.isRequired,
-    onHide: PropTypes.func.isRequired
-};

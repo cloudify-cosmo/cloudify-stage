@@ -1,6 +1,4 @@
-// @ts-nocheck File not migrated fully to TS
 import React from 'react';
-import type { Toolbox } from 'app/utils/StageAPI';
 import {
     Button,
     CancelButton,
@@ -26,19 +24,46 @@ export interface LatestExecutionStatusIconProps {
     onActOnExecution?: (execution: Execution, action: ExecutionAction, errorMessage: any) => void;
     showLabel?: boolean;
     labelAttached?: boolean;
-    toolbox: Toolbox;
+    toolbox: Stage.Types.Toolbox;
 }
 
-export default class LatestExecutionStatusIcon extends React.Component<LatestExecutionStatusIconProps> {
-    constructor(props, context) {
-        super(props, context);
-        this.state = { errorModalOpen: false, updateModalOpen: false, open: false };
+type LatestExecutionStatusIconPropsWithDefaults = LatestExecutionStatusIconProps &
+    Required<Pick<LatestExecutionStatusIconProps, 'execution' | 'onActOnExecution' | 'showLabel' | 'labelAttached'>>;
+
+interface LatestExecutionStatusIconState {
+    errorModalOpen: boolean;
+    open: boolean;
+    updateModalOpen: boolean;
+}
+
+const defaultProps = {
+    execution: { workflow_id: '', status: '', id: '', deployment_id: '' },
+    onActOnExecution: _.noop,
+    showLabel: false,
+    labelAttached: true
+};
+
+const defaultState: LatestExecutionStatusIconState = { errorModalOpen: false, updateModalOpen: false, open: false };
+
+export default class LatestExecutionStatusIcon extends React.Component<
+    LatestExecutionStatusIconPropsWithDefaults,
+    LatestExecutionStatusIconState
+> {
+    // eslint-disable-next-line react/static-property-placement
+    static defaultProps = defaultProps;
+
+    constructor(props: LatestExecutionStatusIconPropsWithDefaults) {
+        super(props);
+        this.state = defaultState;
 
         this.actOnExecution = this.actOnExecution.bind(this);
         this.showLogs = this.showLogs.bind(this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(
+        nextProps: LatestExecutionStatusIconPropsWithDefaults,
+        nextState: LatestExecutionStatusIconState
+    ) {
         return !_.isEqual(this.props, nextProps) || !_.isEqual(this.state, nextState);
     }
 
@@ -53,9 +78,9 @@ export default class LatestExecutionStatusIcon extends React.Component<LatestExe
         );
     }
 
-    actOnExecution(execution, action) {
+    actOnExecution(execution: Execution, action: ExecutionAction) {
         const { onActOnExecution, toolbox } = this.props;
-        const actions = new ExecutionActions(toolbox);
+        const actions = new ExecutionActions(toolbox.getManager());
         actions
             .doAct(execution, action)
             .then(() => {
@@ -85,8 +110,8 @@ export default class LatestExecutionStatusIcon extends React.Component<LatestExe
                     open={open}
                     onOpen={() => this.setState({ open: true })}
                     onClose={() => this.setState({ open: false })}
-                    onClick={e => {
-                        e.stopPropagation();
+                    onClick={(event: React.MouseEvent) => {
+                        event.stopPropagation();
                         this.setState({ open: false });
                     }}
                 >
@@ -229,7 +254,7 @@ export default class LatestExecutionStatusIcon extends React.Component<LatestExe
                             {execution.deployment_id}&apos; deployment
                         </Modal.Header>
                         <Modal.Content>
-                            <HighlightText>{execution.error || t('noErrorDetails')}</HighlightText>
+                            <HighlightText language="json">{execution.error || t('noErrorDetails')}</HighlightText>
                         </Modal.Content>
                         <Modal.Actions>
                             <CopyToClipboardButton content="Copy Error" text={execution.error} />
@@ -255,10 +280,3 @@ export default class LatestExecutionStatusIcon extends React.Component<LatestExe
         ) : null;
     }
 }
-
-LatestExecutionStatusIcon.defaultProps = {
-    execution: { workflow_id: '', status: '' },
-    onActOnExecution: _.noop,
-    showLabel: false,
-    labelAttached: true
-};

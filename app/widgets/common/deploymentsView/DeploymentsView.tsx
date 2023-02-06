@@ -73,12 +73,6 @@ const deploymentPropertiesToInclude = (<T extends (keyof Deployment)[]>(keys: T)
     'capabilities'
 ]);
 
-type MustBeTrue<T extends true> = T;
-// @ts-expect-error Only for type-checking
-type AllPropertiesIncluded = MustBeTrue<
-    keyof Deployment extends typeof deploymentPropertiesToInclude[number] ? true : false
->;
-
 export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
     toolbox,
     widget,
