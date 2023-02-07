@@ -11,8 +11,6 @@ import type { DeploymentViewData } from 'widgets/deployments/src/DeploymentViewT
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
-import type { Workflow } from 'app/widgets/common/executeWorkflow';
-import type { Visibility } from 'app/widgets/common/types';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import type { DeploymentViewDataWithSelected } from './DeploymentViewTypes';
@@ -42,26 +40,10 @@ type DeploymentParams = {
 };
 
 interface DeploymentData extends Deployment {
-    id: string;
     blueprintId: string;
     // eslint-disable-next-line camelcase
     latest_execution: string;
-    // eslint-disable-next-line camelcase
-    blueprint_id: string;
-    // eslint-disable-next-line camelcase
-    site_name: string;
-    // eslint-disable-next-line camelcase
-    created_by?: string;
-
-    // eslint-disable-next-line camelcase
-    created_at?: string;
-    // eslint-disable-next-line camelcase
-    updated_at?: string;
-
     isSelected: boolean;
-    visibility: Visibility;
-
-    workflows: Workflow[]; // TBD
 }
 
 Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
