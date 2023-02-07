@@ -21,12 +21,14 @@ export default function useFetchUrlWithDeploymentId(
     );
 
     return useMemo(() => {
-        if (evaluateBlueprintIdConstraint && !hasConstraint('blueprint_id') && blueprintIdFromContext) {
-            return appendQueryParam(fetchUrl, { blueprint_id: blueprintIdFromContext });
-        }
+        if (!hasConstraint('deployment_id')) {
+            if (evaluateBlueprintIdConstraint && blueprintIdFromContext) {
+                return appendQueryParam(fetchUrl, { blueprint_id: blueprintIdFromContext });
+            }
 
-        if (!hasConstraint('deployment_id') && deploymentIdFromContext) {
-            return appendQueryParam(fetchUrl, { deployment_id: deploymentIdFromContext });
+            if (deploymentIdFromContext) {
+                return appendQueryParam(fetchUrl, { deployment_id: deploymentIdFromContext });
+            }
         }
 
         return fetchUrl;
