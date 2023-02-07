@@ -1,20 +1,23 @@
-const webpack = require('webpack');
-const path = require('path');
-const glob = require('glob');
-const fs = require('fs');
-const _ = require('lodash');
+import webpack from 'webpack';
+import path from 'path';
+import glob from 'glob';
+import { existsSync, rmSync } from 'fs-extra';
+import _ from 'lodash';
 
-const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+import TerserPlugin from 'terser-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import CompressionPlugin from 'compression-webpack-plugin';
+import ImageminPlugin from 'imagemin-webpack-plugin';
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const CONTEXT_PATH = '/console';
 
-module.exports = (env, argv) => {
+export default (
+    env: { analyse?: 'widgets' | 'main'; widget?: string },
+    argv: { debug?: boolean; mode?: webpack.Configuration['mode'] | 'test' }
+) => {
     const isProduction = argv.mode === 'production';
     const isDevelopment = argv.mode === 'development';
     const isSingleWidgetBuild = !!env.widget;
@@ -35,7 +38,7 @@ module.exports = (env, argv) => {
         'styled-components': 'Stage.styled'
     };
 
-    const module = {
+    const module: webpack.Configuration['module'] = {
         rules: _.compact([
             !isProduction && {
                 test: /\.js$/,
@@ -130,7 +133,7 @@ module.exports = (env, argv) => {
         ])
     };
 
-    const getProductionPlugins = isAnalysisMode =>
+    const getProductionPlugins = (isAnalysisMode: boolean) =>
         isAnalysisMode
             ? [new BundleAnalyzerPlugin()]
             : [
@@ -147,20 +150,20 @@ module.exports = (env, argv) => {
         'process.env.TEST': ''
     });
 
-    const exitWithError = error => {
+    const exitWithError = (error: string) => {
         console.error(`ERROR: ${error}`);
         process.exit(-1);
     };
 
-    if (isProduction && fs.existsSync(outputPath)) {
+    if (isProduction && existsSync(outputPath)) {
         try {
-            fs.rmdirSync(outputPath, { recursive: true });
+            rmSync(outputPath, { recursive: true });
         } catch (err) {
             exitWithError(`Cannot delete output directory: ${outputPath}. Error: ${err}.`);
         }
     }
 
-    const widgetsConfiguration = {
+    const widgetsConfiguration: webpack.Configuration = {
         mode,
         context,
         devtool,
@@ -207,13 +210,13 @@ module.exports = (env, argv) => {
 
     if (isSingleWidgetBuild) {
         const widgetPath = path.join(__dirname, `./widgets/${widgetName}`);
-        if (fs.existsSync(widgetPath)) {
+        if (existsSync(widgetPath)) {
             console.log('Building widget', widgetName);
         } else {
             exitWithError(`Invalid widget name provided. Widget directory "${widgetPath}" does not exist.`);
         }
 
-        return {
+        const singleWidgetConfiguration: webpack.Configuration = {
             ...widgetsConfiguration,
             entry: glob.sync(`./widgets/${widgetName}/src/widget.${globExtensions}`).reduce((acc, item) => {
                 const name = item
@@ -251,9 +254,11 @@ module.exports = (env, argv) => {
                 ])
             )
         };
+
+        return singleWidgetConfiguration;
     }
 
-    const configuration = [
+    const configuration: webpack.Configuration[] = [
         {
             mode,
             optimization: isProduction

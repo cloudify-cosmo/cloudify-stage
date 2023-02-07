@@ -1,5 +1,6 @@
-// @ts-nocheck File not migrated fully to TS
+import { each, size } from 'lodash';
 import { createBlueprintData, createHierarchy } from 'topology/src/DataProcessor';
+import type { ManagerData } from 'topology/src/widget.types';
 import nodecellarExampleData from './data/ExampleData.json';
 import nodecellarInstancesData from './data/InstancesDataDone.json';
 import nodecellarExecutionData from './data/ExecutionsData.json';
@@ -9,16 +10,16 @@ describe('(Widget) Topology', () => {
         it('supports `plan` from manager', () => {
             const data = {
                 data: nodecellarExampleData
-            };
+            } as unknown as ManagerData;
             expect(data.data).not.toBeUndefined();
             expect(data.data).not.toBeNull();
 
             const blueprintData = createBlueprintData(data);
 
-            expect(_.size(blueprintData)).toBe(2);
+            expect(size(blueprintData)).toBe(2);
             expect(blueprintData).toHaveProperty('groups');
-            expect(_.size(blueprintData.node_templates)).toBe(4);
-            _.each(data.data.plan.nodes, node => expect(blueprintData.node_templates[node.name]).toMatchObject(node));
+            expect(size(blueprintData.node_templates)).toBe(4);
+            each(data.data!.plan.nodes, node => expect(blueprintData.node_templates[node.id]).toMatchObject(node));
         });
 
         it('supports deployed instances and executions', () => {
@@ -26,11 +27,11 @@ describe('(Widget) Topology', () => {
                 executions: nodecellarExecutionData,
                 instances: nodecellarInstancesData,
                 data: nodecellarExampleData
-            };
+            } as unknown as ManagerData;
 
             const result = createBlueprintData(data);
 
-            const { deployStatus } = result.node_templates[data.data.plan.nodes[0].name];
+            const deployStatus = result.node_templates[data.data!.plan.nodes[0].id].deployStatus!;
             expect(deployStatus.label).toBe('done');
             expect(deployStatus.completed).toBe(1);
             expect(deployStatus.icon).not.toBeUndefined();
@@ -43,7 +44,7 @@ describe('(Widget) Topology', () => {
     it('DataProcessor createHierarchy', () => {
         const hierarchy = createHierarchy(nodecellarExampleData.plan);
 
-        expect(_.size(hierarchy)).toBe(7);
+        expect(size(hierarchy)).toBe(7);
         expect(hierarchy['cloudify.nodes.Compute']).toEqual(['cloudify.nodes.Compute', 'cloudify.nodes.Root']);
         expect(hierarchy['nodecellar.nodes.NodecellarApplicationModule']).toEqual([
             'nodecellar.nodes.NodecellarApplicationModule',

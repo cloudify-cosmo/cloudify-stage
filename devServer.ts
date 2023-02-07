@@ -65,7 +65,8 @@ const options: WebpackDevServer.Configuration = {
     }
 };
 
-const compiler = webpack(webpackConfig);
+// NOTE: TypeScript is not capable of figuring out which version of overloaded function to use without this condition
+const compiler = Array.isArray(webpackConfig) ? webpack(webpackConfig) : webpack(webpackConfig);
 const server = new WebpackDevServer(options, compiler);
 
 server.startCallback(err => {
