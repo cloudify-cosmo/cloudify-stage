@@ -1,13 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { DOMWindow } from 'jsdom';
 import { JSDOM } from 'jsdom';
-import _ from 'lodash';
+import _, { noop } from 'lodash';
 import d3 from 'd3';
 import log from 'loglevel';
 import moment from 'moment';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import PropTypes from 'prop-types';
 import React from 'react';
 import Utils from 'utils/stageUtils';
 import * as Basic from 'components/basic';
@@ -15,33 +13,35 @@ import i18nInit from './i18n';
 
 configure({ adapter: new Adapter() });
 
-function noop() {
-    return {};
+declare global {
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace NodeJS {
+        interface Global {
+            d3: typeof d3;
+            moment: typeof moment;
+            document: Document;
+            HTMLElement: HTMLElement;
+            window: DOMWindow;
+            navigator: Navigator;
+            _: typeof _;
+            log: typeof log;
+            React: typeof React;
+            Stage: typeof Stage;
+        }
+    }
 }
-
 process.env.NODE_ENV = 'test';
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
 global.document = jsdom.window.document;
 global.window = jsdom.window;
-global.window.open = noop;
 global.navigator = window.navigator;
-Object.keys(document.defaultView).forEach(property => {
-    if (typeof global[property] === 'undefined') {
-        global[property] = document.defaultView[property];
-    }
-});
 
 global._ = _;
 global.d3 = d3;
 global.moment = moment;
-global.HTMLElement = window.HTMLElement;
 global.log = log;
-global.Stage = { defineCommon: noop, Basic, Shared: {}, Utils, Hooks: {} };
-global.PropTypes = PropTypes;
+global.Stage = { Basic, Shared: {}, Utils } as typeof Stage; // No need to include all properties
 global.React = React;
-global.ResizeObserver = function ResizeObserver() {
-    return { observe: jest.fn(), unobserve: jest.fn() };
-};
 
 i18nInit();
 
