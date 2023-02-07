@@ -1,22 +1,20 @@
-const axios = require('axios');
-const fs = require('fs');
-const path = require('path');
+import axios from 'axios';
+import { resolve as resolvePath } from 'path';
+import { writeFileSync } from 'fs';
+import translationFile from '../app/translations/en.json';
+import config from './readmesConfig.json';
 
-const config = require('./readmesConfig.json');
+const supportedParams: Record<string, string> = translationFile.widgets.common.readmes.params;
 
-const i18nBundlePath = '../app/translations/en.json';
-// eslint-disable-next-line import/no-dynamic-require
-const supportedParams = require(i18nBundlePath).widgets.common.readmes.params;
-
-function log(prefix, message) {
+function log(prefix: string, message: string | RegExpMatchArray | null) {
     console.log(`[${prefix}]:`, message);
 }
 
-function logError(prefix, message) {
+function logError(prefix: string, message: string) {
     console.error(`[${prefix}]:`, message);
 }
 
-function logChange(prefix, type, changes) {
+function logChange(prefix: string, type: string, changes: string | RegExpMatchArray | null) {
     if (changes) {
         log(prefix, changes);
     } else {
@@ -24,7 +22,7 @@ function logChange(prefix, type, changes) {
     }
 }
 
-function downloadFile(widget, url) {
+async function downloadFile(widget: string, url: string) {
     return axios(url, { responseEncoding: 'utf8' })
         .then(({ data }) => {
             log(widget, `Downloaded ${url}.`);
@@ -37,14 +35,14 @@ function downloadFile(widget, url) {
         });
 }
 
-function updateTitle(widget, content) {
-    return new Promise(resolve => {
+function updateTitle(widget: string, content: string) {
+    return new Promise<string>(resolve => {
         // NOTE: [^]* are used instead of .* to capture line breaks
         const titleRegex = /---[^]*title: ([^\n]*)[^]*---/m;
         let newContent = content;
 
         log(widget, 'Updating title:');
-        logChange(widget, 'title', newContent.match(titleRegex)[1]);
+        logChange(widget, 'title', newContent.match(titleRegex)?.[1] || null);
 
         newContent = newContent.replace(titleRegex, '# $1');
 
@@ -52,8 +50,8 @@ function updateTitle(widget, content) {
     });
 }
 
-function validateHugoParams(widget, content) {
-    return new Promise((resolve, reject) => {
+function validateHugoParams(widget: string, content: string) {
+    return new Promise<string>((resolve, reject) => {
         const paramRegex = /{{<\s*param\s*(\S*)\s*>}}/gm;
 
         log(widget, 'Validating Hugo params:');
@@ -65,7 +63,7 @@ function validateHugoParams(widget, content) {
             if (paramValue === undefined) {
                 reject(
                     new Error(
-                        `${paramName} not found in supported parameters. Add support by extending ${i18nBundlePath} file`
+                        `${paramName} not found in supported parameters. Add support by extending translation file`
                     )
                 );
             }
@@ -75,8 +73,8 @@ function validateHugoParams(widget, content) {
     });
 }
 
-function convertHugoShortcodes(widget, content) {
-    return new Promise(resolve => {
+function convertHugoShortcodes(widget: string, content: string) {
+    return new Promise<string>(resolve => {
         // NOTE: See http://www.regular-expressions.info/repeat.html#lazy for an explanation of `*?`
         const anyCharacterRegex = '[^]*?';
 
@@ -135,10 +133,10 @@ function convertHugoShortcodes(widget, content) {
     });
 }
 
-function saveToReadmeFile(widget, content, readmePath) {
+function saveToReadmeFile(widget: string, content: string, readmePath: string) {
     log(widget, `Saving content to ${readmePath}...`);
 
-    fs.writeFileSync(readmePath, content);
+    writeFileSync(readmePath, content);
 }
 
 function updateFiles() {
@@ -147,7 +145,7 @@ function updateFiles() {
     const promises = config.files.map(file => {
         const widgetsPath = 'widgets';
         const readmeFileName = 'README.md';
-        const readmePath = path.resolve(`${widgetsPath}/${file.widget}/${readmeFileName}`);
+        const readmePath = resolvePath(`${widgetsPath}/${file.widget}/${readmeFileName}`);
         const url = `${config.rawContentBasePath}${file.link}`;
         const { widget } = file;
 
