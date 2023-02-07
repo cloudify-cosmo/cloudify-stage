@@ -26,13 +26,13 @@ function DeploymentParameter({
     return (
         <Header as={as} style={{ marginBlockStart: 0, ...headerStyle }}>
             {name}
-            <Header.Subheader style={subHeaderStyle}>{value}</Header.Subheader>
+            <Header.Subheader style={subHeaderStyle}>5jh{value}</Header.Subheader>
         </Header>
     );
 }
 
 interface DeploymentDetailsProps {
-    deployment: Deployment;
+    deployment: Deployment & { isUpdated: boolean };
     instancesCount: number;
     instancesStates: {
         [key: string]: number | unknown;
