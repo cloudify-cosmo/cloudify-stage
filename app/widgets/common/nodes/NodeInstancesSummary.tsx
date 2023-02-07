@@ -13,7 +13,11 @@ function StateDescription({ states, value }: { states: string[]; value: number }
     );
 }
 
-export default function NodeInstancesSummary({ instancesStates }: { instancesStates: Record<string, number> }) {
+export default function NodeInstancesSummary({
+    instancesStates
+}: {
+    instancesStates: Record<string, number | unknown>;
+}) {
     const { Grid } = Stage.Basic;
 
     return (

@@ -7,14 +7,15 @@ import type {
 } from 'app/utils/GenericConfig';
 import './widget.css';
 import type { PaginatedResponse } from 'backend/types';
-import type { DeploymentViewData } from 'widgets/deployments/src/props/DeploymentsViewPropTypes';
+import type { DeploymentViewData } from 'widgets/deployments/src/DeploymentViewTypes';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import type { Workflow } from 'app/widgets/common/executeWorkflow';
+import type { Visibility } from 'app/widgets/common/types';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
-import type { DeploymentViewDataWithSelected } from './props/DeploymentsViewPropTypes';
+import type { DeploymentViewDataWithSelected } from './DeploymentViewTypes';
 
 const translate = Stage.Utils.getT('widgets.deployments');
 
@@ -58,7 +59,7 @@ interface DeploymentData extends Deployment {
     updated_at?: string;
 
     isSelected: boolean;
-    visibility: string;
+    visibility: Visibility;
 
     workflows: Workflow[]; // TBD
 }

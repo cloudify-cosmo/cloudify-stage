@@ -2,11 +2,11 @@ import React from 'react';
 import type { ReactNode, CSSProperties } from 'react';
 import { isEmpty } from 'lodash';
 import type { ResourceVisibilityProps } from 'cloudify-ui-components';
+import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
 import Consts from '../Consts';
 import { Grid, Header, ResourceVisibility } from '../../../components/basic';
 import { TextEllipsis } from '../../../components/shared';
-import type { Deployment } from './DeploymentDetails.types';
 
 interface DeploymentParameterProps {
     name: ReactNode;
@@ -35,7 +35,7 @@ interface DeploymentDetailsProps {
     deployment: Deployment;
     instancesCount: number;
     instancesStates: {
-        [key: string]: number;
+        [key: string]: number | unknown;
     };
     onSetVisibility: ResourceVisibilityProps['onSetVisibility'];
     big?: boolean;
@@ -55,7 +55,7 @@ export default function DeploymentDetails({
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !isEmpty(deployment.site_name);
     const showCreated = 'created_at' in deployment;
-    const showUpdated = 'updated_at' in deployment && deployment.isUpdated;
+    const showUpdated = 'updated_at' in deployment && deployment?.isUpdated;
     const showCreator = 'created_by' in deployment;
     const showNodeInstances = instancesStates !== null;
     const as = big ? 'h3' : 'h5';

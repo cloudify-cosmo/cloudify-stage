@@ -2,9 +2,7 @@ import styled from 'styled-components';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
-import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
-import type { DeploymentViewProps, EnhancedDeployment } from './props/DeploymentsViewPropTypes';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
+import type { DeploymentViewProps, EnhancedDeployment } from './DeploymentViewTypes';
 
 const DeploymentName = styled.span`
     display: -webkit-box;
@@ -100,7 +98,3 @@ export default function DeploymentsSegment({
         </DataSegment>
     );
 }
-
-DeploymentsSegment.propTypes = DeploymentsViewPropTypes;
-
-DeploymentsSegment.defaultProps = DeploymentsViewDefaultProps;

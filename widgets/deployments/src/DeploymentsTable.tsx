@@ -1,13 +1,11 @@
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
-import type { DeploymentViewProps, EnhancedDeployment } from './props/DeploymentsViewPropTypes';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
+import type { DeploymentViewProps, EnhancedDeployment } from './DeploymentViewTypes';
 
 const t = Stage.Utils.getT('widgets.deployments.table');
 
 export default function DeploymentsTable({
-    allowedSettingTo,
+    allowedSettingTo = ['tenant', 'global'],
     data,
     fetchData,
     noDataMessage,
@@ -105,7 +103,3 @@ export default function DeploymentsTable({
         </DataTable>
     );
 }
-
-DeploymentsTable.propTypes = DeploymentsViewPropTypes;
-
-DeploymentsTable.defaultProps = DeploymentsViewDefaultProps;

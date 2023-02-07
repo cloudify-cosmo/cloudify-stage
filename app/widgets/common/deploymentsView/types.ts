@@ -1,3 +1,5 @@
+import type { Workflow } from 'app/widgets/common/executeWorkflow';
+import type { Visibility } from 'app/widgets/common/types';
 import type { Label } from '../labels/types';
 
 export enum LatestExecutionStatus {
@@ -22,6 +24,12 @@ export interface Deployment {
     id: string;
     // NOTE: the property names come from the backend
     /* eslint-disable camelcase */
+    created_at: string; // date string
+    updated_at: string; // date string,
+    created_by?: string;
+    visibility: Visibility;
+    description: string | null;
+
     display_name: string;
     site_name: string;
     blueprint_id: string;
@@ -37,9 +45,12 @@ export interface Deployment {
     /** Can be null when there are no subenvironments */
     sub_environments_status: DeploymentStatus | null;
     labels?: Label[];
+    workflows: Workflow[];
     inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };
     /* eslint-enable camelcase */
+
+    isUpdated?: boolean;
 }
 
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
