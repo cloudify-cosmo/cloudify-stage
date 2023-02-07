@@ -1,4 +1,3 @@
-// @ts-nocheck File not migrated fully to TS
 import './styles/style.scss';
 import 'cloudify-ui-common-frontend/styles/font-cloudify.css';
 
@@ -29,6 +28,7 @@ import { ConnectedRouter, push, replace } from 'connected-react-router';
 import { Switch } from 'react-router-dom';
 
 import i18n from 'i18next';
+import type { ReduxStore } from './configureStore';
 import configureStore from './configureStore';
 import { createToolbox } from './utils/Toolbox';
 import ConfigLoader from './utils/ConfigLoader';
@@ -109,7 +109,7 @@ export default class app {
         ]).then(results => results[0]);
     }
 
-    static start(store) {
+    static start(store: ReduxStore) {
         const { Provider } = ReactRedux;
 
         ReactDOM.render(

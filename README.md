@@ -137,7 +137,7 @@ Package tarball archive contains the following resources:
 
 * `backend` - Stage Backend - whole [backend](./backend) folder
 * `conf` - configuration files (see [Configuration](./conf/README.md) for details)
-* `dist` - Stage Frontend - directory created by Webpack according to the [production configuration](./webpack.config.js)
+* `dist` - Stage Frontend - directory created by Webpack according to the [production configuration](./webpack.config.ts)
   * `appData` - built-in application data
     * `widgets` - built-in widgets
       * `<widget-name>` - every widget has its own folder 
