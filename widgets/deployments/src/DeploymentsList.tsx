@@ -1,18 +1,15 @@
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
+import type { DeploymentViewDataWithSelected } from 'widgets/deployments/src/DeploymentViewTypes';
+import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { Deployment } from '../../../app/widgets/common/deploymentsView/types';
 import type { Visibility } from '../../../app/widgets/common/types';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
-const t = Stage.Utils.getT('widgets.deployments.list');
+const translate = Stage.Utils.getT('widgets.deployments.list');
 
-export type DeploymentResponse = Stage.Types.PaginatedResponse<Deployment> & DeploymentData;
+export type DeploymentResponse = DeploymentViewDataWithSelected;
 
-interface DeploymentData {
-    blueprintId?: string;
-    searchValue?: string;
-    total: number;
-}
 interface DeploymentsListProps {
     data: DeploymentResponse;
     toolbox: Stage.Types.Toolbox;
@@ -95,23 +92,23 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
         this.setError(executionError);
     };
 
-    openExecuteModal = (deployment: Deployment, workflowName: string) => {
-        this.setState({ deployment, executeModalOpen: true, workflowName });
+    openExecuteModal = (deployment: Deployment | undefined, workflowName: string) => {
+        this.setState({ deployment: deployment || null, executeModalOpen: true, workflowName });
     };
 
     hideExecuteModal = () => {
         this.setState({ executeModalOpen: false, workflowName: null });
     };
 
-    openActionModal = (deployment: Deployment, actionName: string) => {
-        this.setState({ deployment, activeAction: actionName });
+    openActionModal = (deployment: Deployment | undefined, actionName: string) => {
+        this.setState({ deployment: deployment || null, activeAction: actionName });
     };
 
     hideActionModal = () => {
         this.setState({ activeAction: null });
     };
 
-    fetchData = (fetchParams: Stage.Types.ManagerGridParams) => {
+    fetchData: FetchDataFunction = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -145,7 +142,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
                     onWorkflowAction={this.openExecuteModal}
                     onActOnExecution={this.actOnExecution}
                     onSetVisibility={this.setDeploymentVisibility}
-                    noDataMessage={t('noDeployments')}
+                    noDataMessage={translate('noDeployments')}
                     showExecutionStatusLabel={showExecutionStatusLabel as boolean}
                     toolbox={toolbox}
                 />

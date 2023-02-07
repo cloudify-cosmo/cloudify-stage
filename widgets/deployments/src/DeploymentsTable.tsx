@@ -2,7 +2,7 @@ import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
 import type { DeploymentViewProps, EnhancedDeployment } from './DeploymentViewTypes';
 
-const t = Stage.Utils.getT('widgets.deployments.table');
+const translate = Stage.Utils.getT('widgets.deployments.table');
 
 export default function DeploymentsTable({
     allowedSettingTo = ['tenant', 'global'],
@@ -38,13 +38,18 @@ export default function DeploymentsTable({
             noDataMessage={noDataMessage}
         >
             <DataTable.Column name="id" />
-            <DataTable.Column label={t('columns.name')} name="name" width="20%" />
-            <DataTable.Column label={t('columns.lastExecution')} width="5%" />
-            <DataTable.Column label={t('columns.blueprint')} name="blueprint_id" width="15%" show={!data.blueprintId} />
-            <DataTable.Column label={t('columns.siteName')} name="site_name" width="15%" />
-            <DataTable.Column label={t('columns.created')} name="created_at" width="15%" />
-            <DataTable.Column label={t('columns.updated')} name="updated_at" width="15%" />
-            <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
+            <DataTable.Column label={translate('columns.name')} name="name" width="20%" />
+            <DataTable.Column label={translate('columns.lastExecution')} width="5%" />
+            <DataTable.Column
+                label={translate('columns.blueprint')}
+                name="blueprint_id"
+                width="15%"
+                show={!data.blueprintId}
+            />
+            <DataTable.Column label={translate('columns.siteName')} name="site_name" width="15%" />
+            <DataTable.Column label={translate('columns.created')} name="created_at" width="15%" />
+            <DataTable.Column label={translate('columns.updated')} name="updated_at" width="15%" />
+            <DataTable.Column label={translate('columns.creator')} name="created_by" width="10%" />
             <DataTable.Column width="5%" />
 
             {data.items.map((item: EnhancedDeployment & { isSelected: boolean }) => {

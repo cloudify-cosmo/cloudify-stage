@@ -32,8 +32,8 @@ export interface DeploymentViewProps {
     onDeploymentAction: (deployment: Deployment | undefined, actionName: string) => void;
     onWorkflowAction: (deployment: Deployment | undefined, workflowName: string) => void;
 
-    onSetVisibility: (id: string, visibility: string) => void;
-    allowedSettingTo: Visibility[];
+    onSetVisibility: (id: string, visibility: Visibility) => void;
+    allowedSettingTo?: Visibility[];
     noDataMessage: string;
     showExecutionStatusLabel: boolean;
     toolbox: Toolbox;

@@ -29,7 +29,7 @@ export interface Deployment {
     created_by?: string;
     visibility: Visibility;
     description: string | null;
-
+    latest_execution: string;
     display_name: string;
     site_name: string;
     blueprint_id: string;
@@ -49,8 +49,6 @@ export interface Deployment {
     inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };
     /* eslint-enable camelcase */
-
-    isUpdated?: boolean;
 }
 
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;

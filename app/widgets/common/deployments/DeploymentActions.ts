@@ -1,4 +1,7 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
+import type { PaginatedResponse } from 'backend/types';
+import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { Visibility } from 'app/widgets/common/types';
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
 import type { Label } from '../labels/types';
@@ -23,7 +26,7 @@ export default class DeploymentActions {
         return this.manager.doGet(`/deployments/${deployment.id}`, { params });
     }
 
-    doGetDeployments(params: any) {
+    doGetDeployments(params: any): Promise<PaginatedResponse<Deployment>> {
         return this.manager.doGet('/deployments', { params });
     }
 
@@ -110,7 +113,7 @@ export default class DeploymentActions {
         return this.manager.doPost(`/deployment-updates/${deploymentName}/update/initiate`, { body });
     }
 
-    doSetVisibility(deploymentId: string, visibility: any) {
+    doSetVisibility(deploymentId: string, visibility: Visibility) {
         return this.manager.doPatch(`/deployments/${deploymentId}/set-visibility`, { body: { visibility } });
     }
 

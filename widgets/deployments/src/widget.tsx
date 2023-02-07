@@ -39,13 +39,6 @@ type DeploymentParams = {
     created_by?: string;
 };
 
-interface DeploymentData extends Deployment {
-    blueprintId: string;
-    // eslint-disable-next-line camelcase
-    latest_execution: string;
-    isSelected: boolean;
-}
-
 Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
     id: 'deployments',
     name: translate('name'),
@@ -119,7 +112,7 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
     },
 
     async fetchData(_widget, toolbox, params): Promise<DeploymentViewData> {
-        const deploymentDataPromise: Promise<PaginatedResponse<DeploymentData>> = new Stage.Common.Deployments.Actions(
+        const deploymentDataPromise: Promise<PaginatedResponse<Deployment>> = new Stage.Common.Deployments.Actions(
             toolbox.getManager()
         ).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
