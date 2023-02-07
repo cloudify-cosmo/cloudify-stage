@@ -4,11 +4,7 @@ import BlueprintIdContext from '../utils/blueprintIdContext';
 import getConstraintValueFunction from '../utils/getConstraintValueFunction';
 import type { Constraint } from '../types';
 
-export default function useFetchUrlWithDeploymentId(
-    fetchUrl: string,
-    constraints: Constraint[],
-    preferBlueprintId?: boolean
-) {
+export default function useFetchUrlWithDeploymentId(fetchUrl: string, constraints: Constraint[]) {
     const { appendQueryParam } = Stage.Utils.Url;
     const deploymentIdFromContext = useContext(DeploymentIdContext);
     const blueprintIdFromContext = useContext(BlueprintIdContext);
@@ -22,7 +18,7 @@ export default function useFetchUrlWithDeploymentId(
 
     return useMemo(() => {
         if (!hasConstraint('deployment_id')) {
-            if (preferBlueprintId && blueprintIdFromContext) {
+            if (blueprintIdFromContext) {
                 return appendQueryParam(fetchUrl, { blueprint_id: blueprintIdFromContext });
             }
 

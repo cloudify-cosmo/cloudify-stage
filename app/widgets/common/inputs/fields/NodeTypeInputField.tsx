@@ -5,7 +5,7 @@ import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
 import translateInputs from '../utils/translateInputs';
 
 export default function NodeTypeInputField({ name, onChange, toolbox, ...restProps }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = useFetchUrlWithDeploymentId('/searches/node-types?_include=type', restProps.constraints, true);
+    const fetchUrl = useFetchUrlWithDeploymentId('/searches/node-types?_include=type', restProps.constraints);
 
     return (
         <DynamicDropdown
