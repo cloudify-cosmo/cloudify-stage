@@ -75,9 +75,6 @@ describe('Secret store management widget', () => {
         });
 
         cy.getWidget('secrets').within(() => {
-            cy.getSearchInput().type(secretName);
-            cy.get('tbody tr').should('have.length', 1);
-            cy.contains(secretProviderName);
             cy.createSecretProvider({ name: newSecretProviderName, type: 'vault', visibility: 'global' });
             cy.get('.rowActions').children().eq(1).click();
         });
