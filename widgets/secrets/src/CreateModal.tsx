@@ -48,7 +48,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
         if (useSecretProvider) {
             if (isEmpty(secretProvider)) {
-                validationErrors.secretProvider = translateForm('errors.validation.secretProviderName');
+                validationErrors.secretProvider = translateForm('errors.validation.secretProvider');
             }
             if (isEmpty(secretProviderPath)) {
                 validationErrors.secretProviderPath = translateForm('errors.validation.secretProviderPath');

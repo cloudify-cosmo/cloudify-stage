@@ -1,6 +1,7 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
     const secretProviderName = 'Secret_Provider_1';
+    const newSecretProviderName = 'Secret_Provider_2';
 
     before(() =>
         cy
@@ -77,6 +78,19 @@ describe('Secret store management widget', () => {
             cy.getSearchInput().type(secretName);
             cy.get('tbody tr').should('have.length', 1);
             cy.contains(secretProviderName);
+            cy.createSecretProvider({ name: newSecretProviderName, type: 'vault', visibility: 'global' });
+            cy.get('.rowActions').children().eq(1).click();
+        });
+
+        cy.get('.modal').within(() => {
+            cy.setSingleDropdownValue(secretProviderName, newSecretProviderName);
+            cy.getField('Path at the provider').find('input').type('new/path');
+            cy.clickButton('Update');
+        });
+
+        cy.getWidget('secrets').within(() => {
+            cy.get('tbody tr').should('have.length', 1);
+            cy.contains(newSecretProviderName);
         });
     });
 
