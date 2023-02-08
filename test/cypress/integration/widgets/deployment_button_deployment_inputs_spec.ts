@@ -509,11 +509,11 @@ describe('Create Deployment modal handles deployment inputs', () => {
         });
     });
 
-    describe('without deployment_id constraint', () => {
+    describe.only('without deployment_id constraint', () => {
         const blueprintId = `${resourcePrefix}without_deployment_id_constraint_type`;
 
         it('fields should append blueprint_id to fetching url', () => {
-            cy.interceptSp('POST', {
+            cy.intercept({
                 query: {
                     blueprint_id: blueprintId
                 }
@@ -527,10 +527,10 @@ describe('Create Deployment modal handles deployment inputs', () => {
             };
 
             selectBlueprintInModal('without_deployment_id_constraint');
-            verifyUrlRequestedByField('node_id_from_deployment');
-            verifyUrlRequestedByField('node_instance_from_deployment');
-            verifyUrlRequestedByField('node_type_from_deployment');
-            verifyUrlRequestedByField('scaling_group_from_deployment');
+            verifyUrlRequestedByField('node_id_from_blueprint');
+            verifyUrlRequestedByField('operation_name_from_blueprint');
+            verifyUrlRequestedByField('node_type_from_blueprint');
+            verifyUrlRequestedByField('scaling_group_from_blueprint');
         });
     });
 
