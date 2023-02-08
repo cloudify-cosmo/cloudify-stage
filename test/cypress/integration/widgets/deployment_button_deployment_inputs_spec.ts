@@ -16,7 +16,8 @@ describe('Create Deployment modal handles deployment inputs', () => {
         'deployment_id_list',
         'capability_value',
         'secret_key',
-        'with_deployment_id_constraint'
+        'with_deployment_id_constraint',
+        'without_deployment_id_constraint'
     ];
 
     const checkAttribute = (input: JQuery<any>, attrName: string, attrValue?: string | number) => {
@@ -505,6 +506,31 @@ describe('Create Deployment modal handles deployment inputs', () => {
             cy.getField('node_instance_from_deployment').within(() => verifyNumberOfOptions(4, false, ''));
             cy.getField('node_type_from_deployment').within(() => verifyNumberOfOptions(1, false, ''));
             cy.getField('scaling_group_from_deployment').within(() => verifyNumberOfOptions(3, false, ''));
+        });
+    });
+
+    describe('without deployment_id constraint', () => {
+        const blueprintId = `${resourcePrefix}without_deployment_id_constraint_type`;
+
+        it('fields should append blueprint_id to fetching url', () => {
+            cy.interceptSp('POST', {
+                query: {
+                    blueprint_id: blueprintId
+                }
+            }).as('appendedSearchRequest');
+
+            const verifyUrlRequestedByField = (fieldName: string) => {
+                cy.getField(fieldName).within(() => {
+                    cy.get('div.dropdown').click({ force: true });
+                    cy.wait('@appendedSearchRequest');
+                });
+            };
+
+            selectBlueprintInModal('without_deployment_id_constraint');
+            verifyUrlRequestedByField('node_id_from_deployment');
+            verifyUrlRequestedByField('node_instance_from_deployment');
+            verifyUrlRequestedByField('node_type_from_deployment');
+            verifyUrlRequestedByField('scaling_group_from_deployment');
         });
     });
 
