@@ -509,7 +509,7 @@ describe('Create Deployment modal handles deployment inputs', () => {
         });
     });
 
-    describe.only('without deployment_id constraint', () => {
+    describe('without deployment_id constraint', () => {
         const blueprintId = `${resourcePrefix}without_deployment_id_constraint_type`;
 
         it('fields should append blueprint_id to fetching url', () => {
