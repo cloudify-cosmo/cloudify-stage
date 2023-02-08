@@ -1,7 +1,7 @@
 import React from 'react';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import type { DynamicDropdownInputFieldProps } from './types';
-import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
+import useFetchUrlWithIdFromContext from './useFetchUrlWithIdFromContext';
 import translateInputs from '../utils/translateInputs';
 
 export default function ScalingGroupInputField({
@@ -10,7 +10,7 @@ export default function ScalingGroupInputField({
     toolbox,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = useFetchUrlWithDeploymentId('/searches/scaling-groups?_include=name', restProps.constraints);
+    const fetchUrl = useFetchUrlWithIdFromContext('/searches/scaling-groups?_include=name', restProps.constraints);
 
     return (
         <DynamicDropdown
