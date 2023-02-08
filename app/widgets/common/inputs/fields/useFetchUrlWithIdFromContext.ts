@@ -4,7 +4,7 @@ import BlueprintIdContext from '../utils/blueprintIdContext';
 import getConstraintValueFunction from '../utils/getConstraintValueFunction';
 import type { Constraint } from '../types';
 
-export default function useFetchUrlWithDeploymentId(fetchUrl: string, constraints: Constraint[]) {
+export default function useFetchUrlWithIdFromContext(fetchUrl: string, constraints: Constraint[]) {
     const { appendQueryParam } = Stage.Utils.Url;
     const deploymentIdFromContext = useContext(DeploymentIdContext);
     const blueprintIdFromContext = useContext(BlueprintIdContext);
