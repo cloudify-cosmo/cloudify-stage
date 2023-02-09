@@ -1,6 +1,7 @@
 import { isEmpty } from 'lodash';
 import type { FileInputProps } from 'cloudify-ui-components';
 import { useState } from 'react';
+import type { ProviderOptions } from 'app/widgets/common/secrets/SecretActions';
 import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
 import { translateForm } from './widget.utils';
 
@@ -65,7 +66,10 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretProviderOptions = useSecretProvider ? { path: secretProviderPath } : undefined;
+        const secretProviderOptions: ProviderOptions = {};
+        if (useSecretProvider) {
+            secretProviderOptions.path = secretProviderPath;
+        }
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions

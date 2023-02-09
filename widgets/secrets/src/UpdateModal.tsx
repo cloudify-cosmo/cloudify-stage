@@ -49,11 +49,9 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     .then(({ provider_name: providerName, provider_options: providerOptions }) => {
                         setSecretProvider(providerName);
 
-                        try {
-                            const parsedSecretProvideOptions = JSON.parse(providerOptions as unknown as string);
+                        if (providerOptions) {
+                            const parsedSecretProvideOptions = JSON.parse(providerOptions);
                             setSecretProviderPath(parsedSecretProvideOptions.path);
-                        } catch (e) {
-                            clearSecretProviderPath();
                         }
                     });
             } else {
@@ -94,10 +92,6 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                 });
                 return;
             }
-        }
-
-        if (!isEmpty(errors)) {
-            return;
         }
 
         // Disable the form

@@ -15,7 +15,7 @@ export type Secret = {
     value: string;
     schema: string;
     provider_name?: string;
-    provider_options?: ProviderOptions;
+    provider_options?: string;
 };
 /* eslint-enable camelcase */
 
