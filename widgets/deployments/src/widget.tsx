@@ -188,7 +188,7 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         const {
             configuration: { showFirstUserJourneyButtons }
         } = widget;
-        if (isEmpty(data) || !data) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
         const deploymentViewData = data as DeploymentViewData; // this is here because above line is taking care of Record<string, never> type
