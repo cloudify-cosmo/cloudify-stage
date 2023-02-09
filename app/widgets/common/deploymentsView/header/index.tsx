@@ -9,8 +9,9 @@ import DeployOnModal from './DeployOnModal';
 import type { FilterRule } from '../../filters/types';
 import { useFilterIdFromUrl } from './common';
 import { useBoolean } from '../../../../utils/hooks';
+import type { DeployOnModalProps } from './DeployOnModal';
 
-interface DeploymentsViewHeaderProps {
+interface DeploymentsViewHeaderProps extends Pick<DeployOnModalProps, 'selectedDeployment'> {
     filterRules: FilterRule[];
     mapOpen: boolean;
     toggleMap: () => void;
@@ -28,7 +29,8 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
     onFilterChange,
     toolbox,
     filterRules,
-    disableBulkActions
+    disableBulkActions,
+    selectedDeployment
 }) => {
     const [filterModalOpen, openFilterModal, closeFilterModal] = useBoolean();
     const [deployOnModalOpen, openDeployOnModal, closeDeployOnModal] = useBoolean();
@@ -105,7 +107,12 @@ const DeploymentsViewHeader: FunctionComponent<DeploymentsViewHeaderProps> = ({
             />
 
             {deployOnModalOpen && (
-                <DeployOnModal filterRules={filterRules} onHide={closeDeployOnModal} toolbox={toolbox} />
+                <DeployOnModal
+                    filterRules={filterRules}
+                    onHide={closeDeployOnModal}
+                    toolbox={toolbox}
+                    selectedDeployment={selectedDeployment}
+                />
             )}
 
             {runWorkflowModalOpen && (
