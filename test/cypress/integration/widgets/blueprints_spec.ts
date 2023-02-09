@@ -36,12 +36,14 @@ describe('Blueprints widget', () => {
     }
 
     describe('for specific blueprint', () => {
+        const inputsBlueprintName = `${blueprintNamePrefix}_inputs`;
         const deployOnEnvironmentName = `${blueprintNamePrefix}_deploy_environment`;
         const editCopyInComposerButtonSelector = '[title="Edit a copy in Composer"]';
 
         before(() => {
             cy.uploadBlueprint('blueprints/simple.zip', emptyBlueprintName)
                 .uploadBlueprint('blueprints/deploy_on_environment.zip', deployOnEnvironmentName)
+                .uploadBlueprint('blueprints/without_required_inputs', inputsBlueprintName)
                 .deployBlueprint(deployOnEnvironmentName, deployOnEnvironmentName)
                 .refreshPage();
         });
@@ -137,6 +139,33 @@ describe('Blueprints widget', () => {
 
                 cy.wait('@deploy').then(({ request }) => {
                     expect(request.body.labels[0]['csys-obj-parent']).to.be.a('string');
+                });
+
+                cy.get('.modal').should('not.exist');
+            });
+
+            it('when not every input is required', () => {
+                getBlueprintRow(inputsBlueprintName).find('.rocket').click();
+
+                cy.get('.modal').within(() => {
+                    cy.typeToFieldInput('Deployment name', inputsBlueprintName);
+
+                    cy.contains('.field', 'Implicitly required').should('have.class', 'required');
+                    cy.contains('.field', 'Explicitly required').should('have.class', 'required');
+                    cy.contains('.field', 'Not required').should('not.have.class', 'required');
+
+                    cy.selectAndClickDeploy();
+
+                    cy.get('.message.error').within(() => {
+                        cy.contains('implicitly_required');
+                        cy.contains('explicitly_required');
+                        cy.contains('not_required').should('not.exist');
+                    });
+
+                    cy.typeToFieldInput('Implicitly required', 'test');
+                    cy.typeToFieldInput('Explicitly required', 'test');
+
+                    cy.selectAndClickDeploy();
                 });
 
                 cy.get('.modal').should('not.exist');
