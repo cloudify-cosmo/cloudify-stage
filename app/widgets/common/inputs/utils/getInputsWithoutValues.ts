@@ -5,7 +5,7 @@ export default function getInputsWithoutValues(inputs: Record<string, any>, inpu
     const inputsWithoutValues: Record<string, true> = {};
 
     forEach(inputs, (inputObj, inputName) => {
-        if (inputObj.default !== undefined || inputObj.hidden || inputObj.required === false) return;
+        if (inputObj.default !== undefined || inputObj.required === false || inputObj.hidden) return;
 
         const stringInputValue = Json.getStringValue(inputsValues[inputName]);
 
