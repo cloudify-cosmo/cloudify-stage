@@ -31,12 +31,11 @@ export interface DeploymentsConfiguration
 
 type DeploymentParams = {
     _search?: string;
-    // eslint-disable-next-line camelcase
+    /* eslint-disable camelcase */
     blueprint_id: string;
-    // eslint-disable-next-line camelcase
     site_name?: string;
-    // eslint-disable-next-line camelcase
     created_by?: string;
+    /* eslint-enable camelcase */
 };
 
 Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
