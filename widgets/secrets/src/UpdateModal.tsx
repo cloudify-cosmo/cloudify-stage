@@ -104,9 +104,9 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         setLoading();
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
-        const formattedOptions = secretProviderPath ? { path: secretProviderPath } : undefined;
+        const secretProviderOptions = secretProviderPath ? { path: secretProviderPath } : undefined;
         actions
-            .doUpdate(secret.key, secretValue, secretProvider, formattedOptions)
+            .doUpdate(secret.key, secretValue, secretProvider, secretProviderOptions)
             .then(() => {
                 clearErrors();
                 onHide();
