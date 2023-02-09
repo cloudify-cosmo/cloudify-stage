@@ -27,16 +27,21 @@ function getOrderByArguments(sortOrder: SortOrder) {
     return [iteratee, order];
 }
 
-interface FormFieldProps {
+function FormField({
+    input,
+    value,
+    onChange,
+    error,
+    toolbox,
+    dataType
+}: {
     input: Input;
     value: any;
     onChange: OnChange;
     error: boolean;
     toolbox: Stage.Types.WidgetlessToolbox;
     dataType: DataType;
-}
-
-function FormField({ input, value, onChange, error, toolbox, dataType }: FormFieldProps) {
+}) {
     const {
         name,
         display_label: displayLabel,
