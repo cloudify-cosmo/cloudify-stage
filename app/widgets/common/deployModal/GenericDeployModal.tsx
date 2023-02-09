@@ -62,7 +62,7 @@ type StepsProp = {
     executeStep: ExecuteStep;
 };
 
-type GenericDeployModalProps = {
+export type GenericDeployModalProps = {
     /**
      * specifies whether the deploy modal is displayed
      */

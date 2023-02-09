@@ -184,6 +184,7 @@ export const DeploymentsView: FunctionComponent<DeploymentsViewProps> = ({
                     onFilterChange={setUserFilterRules}
                     filterRules={finalFilterRules}
                     disableBulkActions={disableBulkActions}
+                    selectedDeployment={selectedOrFallbackDeployment}
                 />
             </DeploymentsViewHeaderContainer>
 
