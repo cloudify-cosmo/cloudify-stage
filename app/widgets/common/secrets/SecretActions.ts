@@ -30,7 +30,7 @@ export default class SecretActions {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
-    doGetSkipValue(key: Secret['key']): Promise<Secret> {
+    doGetWithoutValue(key: Secret['key']): Promise<Omit<Secret, 'value'>> {
         return this.manager.doGet(`/secrets/${key}?_skip_value=true`);
     }
 

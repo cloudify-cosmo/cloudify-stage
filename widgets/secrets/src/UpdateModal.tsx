@@ -45,7 +45,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
             if (hasSecretProvider) {
                 setUseSecretProvider();
                 actions
-                    .doGetSkipValue(secret.key)
+                    .doGetWithoutValue(secret.key)
                     .then(({ provider_name: providerName, provider_options: providerOptions }) => {
                         setSecretProvider(providerName);
 
@@ -53,7 +53,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                             const parsedSecretProvideOptions = JSON.parse(providerOptions as unknown as string);
                             setSecretProviderPath(parsedSecretProvideOptions.path);
                         } catch (e) {
-                            setSecretProviderPath('');
+                            clearSecretProviderPath();
                         }
                     });
             } else {
@@ -62,8 +62,8 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     .doGet(secret.key)
                     .then(({ value }) => {
                         setSecretValue(value);
-                        setSecretProvider('');
-                        setSecretProviderPath('');
+                        clearSecretProvider();
+                        clearSecretProviderPath();
                     })
                     .catch(setMessageAsError);
             }
@@ -80,17 +80,15 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     function updateSecret() {
         clearErrors();
-        if (!useSecretProvider && isEmpty(secretValue)) {
+        if (!useSecretProvider && !secretValue) {
             setErrors({ secretValue: translateForm('errors.validation.secretValue') });
             return;
         }
         if (useSecretProvider) {
-            if (isEmpty(secretProvider) || isEmpty(secretProviderPath)) {
+            if (!secretProvider || !secretProviderPath) {
                 setErrors({
-                    secretProvider: isEmpty(secretProvider)
-                        ? translateForm('errors.validation.secretProvider')
-                        : undefined,
-                    secretProviderPath: isEmpty(secretProviderPath)
+                    secretProvider: !secretProvider ? translateForm('errors.validation.secretProvider') : undefined,
+                    secretProviderPath: !secretProviderPath
                         ? translateForm('errors.validation.secretProviderPath')
                         : undefined
                 });
@@ -133,8 +131,8 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
             unsetUseSecretProvider();
             clearSecretProvider();
             clearSecretProviderPath();
-        }
-        if (!useSecretProvider) {
+        } else {
+            clearSecretValue();
             setUseSecretProvider();
         }
     }
