@@ -1,3 +1,4 @@
+import type { Visibility } from 'app/widgets/common/types';
 import type { DeploymentInfoWidget } from './widget.types';
 
 const { ErrorPopup } = Stage.Shared;
@@ -15,7 +16,7 @@ export default function DeploymentInfo({ data, toolbox }: DeploymentsInfoProps) 
     const { deployment, instancesCount, instancesStates } = data;
     const [visibilityError, setVisibilityError, clearVisibilityError] = useResettableState('');
 
-    const setVisibility = (visibility: string) => {
+    const setVisibility = (visibility: Visibility) => {
         const actions = new DeploymentActions(toolbox.getManager());
 
         toolbox.loading(true);
