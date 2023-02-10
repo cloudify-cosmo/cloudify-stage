@@ -150,9 +150,9 @@ describe('Blueprints widget', () => {
                 cy.get('.modal').within(() => {
                     cy.typeToFieldInput('Deployment name', inputsBlueprintName);
 
-                    cy.contains('.field', 'Implicitly required').should('have.class', 'required');
-                    cy.contains('.field', 'Explicitly required').should('have.class', 'required');
-                    cy.contains('.field', 'Not required').should('not.have.class', 'required');
+                    cy.getField('Implicitly required').should('have.class', 'required');
+                    cy.getField('Explicitly required').should('have.class', 'required');
+                    cy.getField('Not required').should('not.have.class', 'required');
 
                     cy.selectAndClickDeploy();
 
