@@ -26,7 +26,7 @@ function DeploymentParameter({
     return (
         <Header as={as} style={{ marginBlockStart: 0, ...headerStyle }}>
             {name}
-            <Header.Subheader style={subHeaderStyle}>5jh{value}</Header.Subheader>
+            <Header.Subheader style={subHeaderStyle}>{value}</Header.Subheader>
         </Header>
     );
 }
@@ -55,7 +55,7 @@ export default function DeploymentDetails({
     const showBlueprint = 'blueprint_id' in deployment;
     const showSiteName = 'site_name' in deployment && !isEmpty(deployment.site_name);
     const showCreated = 'created_at' in deployment;
-    const showUpdated = 'updated_at' in deployment && deployment?.isUpdated;
+    const showUpdated = 'updated_at' in deployment && deployment.isUpdated;
     const showCreator = 'created_by' in deployment;
     const showNodeInstances = instancesStates !== null;
     const as = big ? 'h3' : 'h5';

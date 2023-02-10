@@ -29,7 +29,7 @@ export interface DeploymentsConfiguration
     showExecutionStatusLabel: boolean;
 }
 
-type DeploymentParams = {
+type DeploymentsParams = {
     _search?: string;
     /* eslint-disable camelcase */
     blueprint_id: string;
@@ -38,7 +38,7 @@ type DeploymentParams = {
     /* eslint-enable camelcase */
 };
 
-Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguration>({
+Stage.defineWidget<DeploymentsParams, DeploymentViewData, DeploymentsConfiguration>({
     id: 'deployments',
     name: translate('name'),
     description: translate('description'),
@@ -97,7 +97,7 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         blueprintId = isEmpty(widget.configuration.blueprintIdFilter)
             ? blueprintId
             : widget.configuration.blueprintIdFilter;
-        const obj: DeploymentParams = { blueprint_id: blueprintId };
+        const obj: DeploymentsParams = { blueprint_id: blueprintId };
 
         const siteName = toolbox.getContext().getValue('siteName');
         if (siteName) {
@@ -110,7 +110,7 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         return obj;
     },
 
-    async fetchData(_widget, toolbox, params): Promise<DeploymentViewData> {
+    async fetchData(_widget, toolbox, params) {
         const deploymentDataPromise: Promise<PaginatedResponse<Deployment>> = new Stage.Common.Deployments.Actions(
             toolbox.getManager()
         ).doGetDeployments(
@@ -190,7 +190,6 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
         if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
-        const deploymentViewData = data as DeploymentViewData; // this is here because above line is taking care of Record<string, never> type
 
         const searchValue = data?.searchValue;
         const shouldShowFirstUserJourneyButtons = showFirstUserJourneyButtons && !searchValue && isEmpty(data?.items);
@@ -201,8 +200,8 @@ Stage.defineWidget<DeploymentParams, DeploymentViewData, DeploymentsConfiguratio
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
         const formattedData: DeploymentViewDataWithSelected = {
-            ...deploymentViewData,
-            items: deploymentViewData.items.map(item => {
+            ...data,
+            items: data.items.map(item => {
                 return {
                     ...item,
                     isSelected: selectedDeployment === item.id

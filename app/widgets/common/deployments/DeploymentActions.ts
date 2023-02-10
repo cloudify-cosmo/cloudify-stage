@@ -26,7 +26,7 @@ export default class DeploymentActions {
         return this.manager.doGet(`/deployments/${deployment.id}`, { params });
     }
 
-    doGetDeployments<IncludeKeys extends keyof Deployment = keyof Deployment>(params: Record<keyof Deployment, string | string[]> ) {
+    doGetDeployments<IncludeKeys extends keyof Deployment = keyof Deployment>(params: any) {
         return this.manager.doGet<PaginatedResponse<Pick<Deployment, IncludeKeys>>>('/deployments', { params });
     }
 
