@@ -2,6 +2,7 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import type { WorkflowParameters } from '../../executeWorkflow';
 import GenericDeployModal from '../../deployModal/GenericDeployModal';
+import type { GenericDeployModalProps } from '../../deployModal/GenericDeployModal';
 import type { FilterRule } from '../../filters/types';
 import type { BlueprintDeployParams } from '../../blueprints/BlueprintActions';
 import { i18nPrefix, parentDeploymentLabelKey } from '../common';
@@ -13,17 +14,25 @@ import DeploymentActions from '../../deployments/DeploymentActions';
 import ExecutionStartedModal from './ExecutionStartedModal';
 import StageUtils from '../../../../utils/stageUtils';
 import { useBoolean } from '../../../../utils/hooks';
+import type { Deployment } from '../types';
 
-interface DeployOnModalProps {
+export interface DeployOnModalProps {
     filterRules: FilterRule[];
     toolbox: Stage.Types.Toolbox;
     onHide: () => void;
+    selectedDeployment?: Deployment;
 }
 
 const tModal = StageUtils.getT(`${i18nPrefix}.header.bulkActions.deployOn.modal`);
 
-const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, toolbox, onHide }) => {
+const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, toolbox, selectedDeployment, onHide }) => {
     const [executionStarted, setExecutionStarted] = useBoolean();
+    const environmentToDeployOn: GenericDeployModalProps['environmentToDeployOn'] = selectedDeployment
+        ? {
+              displayName: selectedDeployment.display_name,
+              id: selectedDeployment.id
+          }
+        : undefined;
 
     function fetchEnvironments() {
         return new SearchActions(toolbox)
@@ -103,6 +112,7 @@ const DeployOnModal: FunctionComponent<DeployOnModalProps> = ({ filterRules, too
             showDeploymentNameInput
             deploymentNameLabel={tModal('inputs.name.label')}
             deploymentNameHelp={tModal('inputs.name.help')}
+            environmentToDeployOn={environmentToDeployOn}
         />
     );
 };

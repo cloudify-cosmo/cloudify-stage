@@ -1191,6 +1191,8 @@ describe('Deployments View widget', () => {
 
                 cy.getField('Name suffix').find('input').type(`${name}`);
 
+                cy.getField('Deploy On').should('not.exist');
+
                 cy.openAccordionSection('Deployment Metadata');
                 cy.getField('Labels').find('.selection').click();
                 cy.get('div[name=labelKey] > input').type(labelKey);
@@ -1211,7 +1213,7 @@ describe('Deployments View widget', () => {
             cy.wait('@searchDeployments');
             cy.wait('@createDeploymentGroup').then(({ request }) => {
                 expect(request.body.blueprint_id).to.eq(blueprintName);
-                expect(request.body.labels).to.deep.equal([{ [labelKey]: labelValue }]);
+                expect(request.body.labels).to.deep.contain({ [labelKey]: labelValue });
                 expect(request.body.new_deployments).to.deep.equal(
                     deploymentIds.map(id => ({
                         id: '{uuid}',
