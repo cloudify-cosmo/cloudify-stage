@@ -7,13 +7,13 @@ import type {
 } from 'app/utils/GenericConfig';
 import './widget.css';
 import type { PaginatedResponse } from 'backend/types';
-import type { DeploymentViewData } from 'widgets/deployments/src/DeploymentViewTypes';
+import type { DeploymentViewData } from 'widgets/deployments/src/types';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
-import type { DeploymentViewDataWithSelected } from './DeploymentViewTypes';
+import type { DeploymentViewDataWithSelected } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments');
 

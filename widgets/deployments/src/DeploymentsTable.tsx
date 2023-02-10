@@ -1,6 +1,6 @@
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import type { DeploymentViewProps, EnhancedDeployment } from './DeploymentViewTypes';
+import type { DeploymentViewProps, EnhancedDeployment } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments.table');
 

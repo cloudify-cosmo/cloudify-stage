@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
-import type { DeploymentViewProps, EnhancedDeployment } from './DeploymentViewTypes';
+import type { DeploymentViewProps, EnhancedDeployment } from './types';
 
 const DeploymentName = styled.span`
     display: -webkit-box;

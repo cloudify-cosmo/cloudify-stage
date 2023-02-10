@@ -1,5 +1,5 @@
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
-import type { DeploymentViewDataWithSelected } from 'widgets/deployments/src/DeploymentViewTypes';
+import type { DeploymentViewDataWithSelected } from 'widgets/deployments/src/types';
 import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { Deployment } from '../../../app/widgets/common/deploymentsView/types';
 import type { Visibility } from '../../../app/widgets/common/types';
