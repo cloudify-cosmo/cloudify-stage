@@ -10,7 +10,7 @@ import StageUtils from '../../../utils/stageUtils';
 import EventBus from '../../../utils/EventBus';
 import { useInput, useOpenProp, useBoolean } from '../../../utils/hooks';
 import useResettableState from '../../../utils/hooks/useResettableState';
-import { Confirm, Form, Modal } from '../../basic';
+import { Confirm, Form, Loading, Modal } from '../../basic';
 import useModalOpenState from './useModalOpenState';
 import createEnvironmentsGroups from './createEnvironmentsGroups';
 import type {
@@ -297,7 +297,7 @@ const GettingStartedModal = () => {
             ) : (
                 <Modal.Content>
                     {i18n.t('gettingStartedModal.loading')}
-                    {/* Todo: add loader icon */}
+                    <Loading />
                 </Modal.Content>
             )}
             {stepName !== StepName.Welcome && !cloudSetupUrlParam && (
