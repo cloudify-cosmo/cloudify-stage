@@ -42,7 +42,16 @@ function FormField({
     toolbox: Stage.Types.WidgetlessToolbox;
     dataType: DataType;
 }) {
-    const { name, display_label: displayLabel, default: defaultValue, description, type, constraints } = input;
+    const {
+        name,
+        display_label: displayLabel,
+        default: defaultValue,
+        description,
+        type,
+        constraints,
+        required
+    } = input;
+
     const help = (
         <Help
             description={description}
@@ -52,7 +61,8 @@ function FormField({
             dataType={dataType}
         />
     );
-    const required = _.isUndefined(defaultValue);
+
+    const isFieldRequired = required || _.isUndefined(required);
     const booleanType = type === 'boolean';
 
     return (
@@ -60,7 +70,7 @@ function FormField({
             key={name}
             error={booleanType ? null : error}
             help={help}
-            required={required}
+            required={isFieldRequired}
             label={booleanType ? null : displayLabel ?? name}
         >
             <InputField input={input} value={value} onChange={onChange} error={error} toolbox={toolbox} />

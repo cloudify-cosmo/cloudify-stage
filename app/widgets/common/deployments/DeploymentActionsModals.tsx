@@ -1,6 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React from 'react';
 import DeployBlueprintModal from '../deployModal/DeployBlueprintModal';
+import type { GenericDeployModalProps } from '../deployModal/GenericDeployModal';
 import ExecuteWorkflowModal from '../executeWorkflow/ExecuteWorkflowModal';
 import ManageLabelsModal from '../labels/ManageLabelsModal';
 import { actions } from './DeploymentActionsMenu.consts';
@@ -26,7 +27,7 @@ const DeploymentActionsModals: FunctionComponent<DeploymentActionsModalsProps> =
     redirectToParentPageAfterDelete
 }) => {
     const commonProps = { deploymentId, deploymentName, open: true, onHide, toolbox };
-    const environmentToDeployOn = {
+    const environmentToDeployOn: GenericDeployModalProps['environmentToDeployOn'] = {
         id: deploymentId,
         displayName: deploymentName
     };
