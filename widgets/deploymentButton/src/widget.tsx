@@ -17,13 +17,10 @@ type DeploymentButtonConfiguration = {
 
 Stage.defineWidget({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 3,
     initialHeight: 3,
     showHeader: false,
     showBorder: false,
-    isReact: true,
     hasReadme: true,
     initialConfiguration: [
         ...Stage.Common.Configuration.Button.getInitialConfiguration({

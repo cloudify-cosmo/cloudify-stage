@@ -9,11 +9,8 @@ const translateConfiguration = Stage.Utils.composeT(translate, 'configuration');
 
 Stage.defineWidget<TopologyWidget.Params, TopologyWidget.Data, TopologyWidget.Configuration>({
     id: 'topology',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 8,
     initialHeight: 16,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('topology'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],

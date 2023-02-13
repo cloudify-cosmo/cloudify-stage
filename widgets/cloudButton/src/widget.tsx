@@ -5,8 +5,6 @@ const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<unknown, unknown, Omit<ButtonLinkProps, 'fullHeight' | 'url'>>({
     id: widgetId,
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 2,
     initialHeight: 4,
     showHeader: false,

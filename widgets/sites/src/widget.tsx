@@ -12,7 +12,6 @@ Stage.defineWidget({
         sites: '[manager]/sites[params]',
         siteDeploymentCount: '[manager]/summary/deployments?_target_field=site_name'
     },
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sites'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

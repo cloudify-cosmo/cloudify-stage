@@ -8,7 +8,6 @@ Stage.defineWidget<unknown, { items: { host_id: unknown }[] }, unknown>({
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesComputeNum'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

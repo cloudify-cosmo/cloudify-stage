@@ -123,7 +123,7 @@ export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinitio
 
 export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
-    name: string;
+    name?: string;
     categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color?: SemanticCOLORS;
     description?: string;

@@ -12,12 +12,9 @@ interface FormattedSecrets {
 
 Stage.defineWidget<never, SecretsWidget.Data, SecretsWidget.Configuration>({
     id: 'secrets',
-    name: translateSecrets('name'),
-    description: translateSecrets('description'),
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: '[manager]/secrets[params]',
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('secrets'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
