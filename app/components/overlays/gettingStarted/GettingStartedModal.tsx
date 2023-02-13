@@ -296,7 +296,6 @@ const GettingStartedModal = () => {
                 />
             ) : (
                 <Modal.Content>
-                    {i18n.t('gettingStartedModal.loading')}
                     <Loading />
                 </Modal.Content>
             )}
