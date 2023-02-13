@@ -1,8 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
 import { isNil, omitBy } from 'lodash';
 
 export default class SiteActions {
-    constructor(toolbox) {
+    toolbox: Stage.Types.WidgetlessToolbox;
+
+    constructor(toolbox: Stage.Types.WidgetlessToolbox) {
         this.toolbox = toolbox;
     }
 

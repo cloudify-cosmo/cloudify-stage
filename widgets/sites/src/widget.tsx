@@ -1,9 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import SitesTable from './SitesTable';
 import './widget.css';
+import type { SitesWidget } from './widgets.types';
 
-Stage.defineWidget({
+// TODO Norbert: Migrate labels to translation file
+
+Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
     id: 'sites',
     name: 'Sites',
     description: 'This widget shows a list of available sites and allow managing them',
@@ -24,17 +26,22 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(true)
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (isEmpty(data)) {
+        if (!data || isEmpty(data)) {
             return <Loading />;
         }
+
         const { sites, siteDeploymentCount } = data;
-        const deploymentsPerSite = {};
+        const deploymentsPerSite: Record<string, number> = {};
+
         siteDeploymentCount.items.forEach(item => {
-            deploymentsPerSite[item.site_name] = item.deployments;
+            if (item.site_name) {
+                deploymentsPerSite[item.site_name] = item.deployments;
+            }
         });
+
         const formattedData = {
             items: sites.items.map(site => {
                 return {
