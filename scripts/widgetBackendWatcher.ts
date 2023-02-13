@@ -1,34 +1,34 @@
-const chokidar = require('chokidar');
-const fs = require('fs');
-const path = require('path');
+import { watch } from 'chokidar';
+import { copyFileSync, unlinkSync, utimesSync } from 'fs';
+import { basename, join, dirname } from 'path';
 
-const appConfig = require('../conf/config.json');
+import appConfig from '../conf/config.json';
 
 const widgetBackendFilesGlob = `./widgets/*/src/${
     appConfig.widgets.backendFilename
 }.{${appConfig.widgets.backendFilenameExtensions.join()}}`;
 
 const logger = {
-    log: logString => console.log(`[widgetBackendWatcher] ${logString}`),
-    error: errorString => console.error(`[widgetBackendWatcher] ${errorString}`)
+    log: (logString: string) => console.log(`[widgetBackendWatcher] ${logString}`),
+    error: (errorString: string) => console.error(`[widgetBackendWatcher] ${errorString}`)
 };
 
 // Update Widget Backend file
-const updateWidgetBackendFile = (srcFilePath, event) => {
-    const destFilePath = path.join(path.dirname(srcFilePath), '..', path.basename(srcFilePath));
+const updateWidgetBackendFile = (srcFilePath: string, event: 'add' | 'change' | 'unlink') => {
+    const destFilePath = join(dirname(srcFilePath), '..', basename(srcFilePath));
 
     switch (event) {
         case 'add':
             logger.log(`File ${srcFilePath} has been added. Copying it to ${destFilePath}...`);
-            fs.copyFileSync(srcFilePath, destFilePath);
+            copyFileSync(srcFilePath, destFilePath);
             break;
         case 'change':
             logger.log(`File ${srcFilePath} has been changed. Updating ${destFilePath}...`);
-            fs.copyFileSync(srcFilePath, destFilePath);
+            copyFileSync(srcFilePath, destFilePath);
             break;
         case 'unlink':
             logger.log(`File ${srcFilePath} has been removed. Removing ${destFilePath}...`);
-            fs.unlinkSync(destFilePath);
+            unlinkSync(destFilePath);
             break;
         default:
             logger.log(`Unhandled event on ${srcFilePath}.`);
@@ -37,16 +37,15 @@ const updateWidgetBackendFile = (srcFilePath, event) => {
 
 // Touch file in backend folder to trigger stage-backend server restart
 const triggerBackendRestart = () => {
-    const backendFile = path.join(__dirname, '..', 'backend/package.json');
+    const backendFile = join(__dirname, '..', 'backend/package.json');
     const now = new Date();
 
     logger.log(`Touching ${backendFile} to trigger stage-backend restart...`);
-    fs.utimesSync(backendFile, now, now);
+    utimesSync(backendFile, now, now);
 };
 
-module.exports = function start() {
-    chokidar
-        .watch(widgetBackendFilesGlob)
+export default function start() {
+    watch(widgetBackendFilesGlob)
         .on('add', file => {
             updateWidgetBackendFile(file, 'add');
             triggerBackendRestart();
@@ -61,4 +60,4 @@ module.exports = function start() {
         })
         .on('ready', () => logger.log(`Widget Backend files watcher ready and set on: ${widgetBackendFilesGlob}`))
         .on('error', error => logger.error(`Watcher error: ${error}`));
-};
+}

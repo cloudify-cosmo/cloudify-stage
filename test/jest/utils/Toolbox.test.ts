@@ -1,34 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
-
 import configureMockStore from 'redux-mock-store';
 import { createToolbox, getToolbox } from 'utils/Toolbox';
+import type { ReduxState } from 'reducers';
+import type { ReduxStore } from 'configureStore';
 
-const mockStore = configureMockStore();
+const mockStore = configureMockStore<Partial<ReduxState>>();
 
 describe('(Utils) Toolbox', () => {
-    const initialState = {
-        templates: {
-            tmp1: {
-                name: 'tmp1',
-                widgets: [{ name: 'some widget', definition: 'widet1g' }]
-            }
-        },
-        manager: {
-            ip: '1.1.1.1'
-        },
-        context: {},
-        config: { widgets: {} },
-        widgetDefinitions: [{ id: 'widget1' }]
-    };
+    const initialState: Partial<ReduxState> = {};
 
-    const store = mockStore(initialState);
+    const store = mockStore(initialState) as ReduxStore;
     createToolbox(store);
 
     it('Toolbox created properly', () => {
-        const toolbox = getToolbox(() => {});
+        const onRefresh = jest.fn();
+        const onLoading = jest.fn();
+        const toolbox = getToolbox(onRefresh, onLoading);
 
-        expect(toolbox.store).not.toBeUndefined();
-        expect(toolbox.store).not.toBeNull();
+        toolbox.loading();
+        expect(onLoading).toHaveBeenCalled();
+
+        toolbox.refresh();
+        expect(onRefresh).toHaveBeenCalled();
     });
 
     /**

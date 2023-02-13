@@ -1,7 +1,7 @@
 import React from 'react';
 import { flatten } from 'lodash';
 import type { DynamicDropdownInputFieldProps } from './types';
-import useFetchUrlWithDeploymentId from './useFetchUrlWithDeploymentId';
+import useFetchUrlWithIdFromContext from './useFetchUrlWithIdFromContext';
 import DynamicDropdown from '../../components/DynamicDropdown';
 import translateInputs from '../utils/translateInputs';
 
@@ -12,7 +12,7 @@ export default function OperationNameInputField({
     constraints,
     ...restProps
 }: DynamicDropdownInputFieldProps) {
-    const fetchUrl = useFetchUrlWithDeploymentId('/nodes?_include=operations', constraints);
+    const fetchUrl = useFetchUrlWithIdFromContext('/nodes?_include=operations', constraints);
 
     return (
         <DynamicDropdown
