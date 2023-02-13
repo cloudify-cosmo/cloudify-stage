@@ -57,11 +57,10 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.executeWorkflowModal').should('not.exist');
         });
 
-        it.only('should allow to start an action on the deployment', () => {
+        it('should allow to start an action on the deployment', () => {
             const siteName = 'deployment_action_buttons_test';
-            cy.deleteSites(siteName);
             cy.interceptSp('PUT', `/sites/${siteName}`).as('createSite');
-            cy.createSite({ name: siteName });
+            cy.deleteSites(siteName).createSite({ name: siteName });
             cy.wait('@createSite');
             cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setSite');
 
