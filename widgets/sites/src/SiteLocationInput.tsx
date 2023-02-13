@@ -1,17 +1,22 @@
-// @ts-nocheck File not migrated fully to TS
+import { useState, useEffect } from 'react';
 import SiteLocationMap from './SiteLocationMap';
 
-export default function SiteLocationInput({ value, onChange, toolbox }) {
-    const { useState, useEffect } = React;
+interface SiteLocationInputProps {
+    value?: string;
+    toolbox: Stage.Types.Toolbox;
+    // TODO Norbert: Adjust onChange handler
+    onChange: any;
+}
 
+export default function SiteLocationInput({ value = '', onChange, toolbox }: SiteLocationInputProps) {
     const [mapOpen, setMapOpen] = useState(false);
     const [enteredValue, setEnteredValue] = useState(value || '');
 
     useEffect(() => setEnteredValue(value), [value]);
 
-    function onLocationChange(newValue) {
-        setEnteredValue(newValue);
-        onChange(null, { name: 'siteLocation', value: newValue });
+    function onLocationChange(changedLocation: string) {
+        setEnteredValue(changedLocation);
+        onChange(null, { name: 'siteLocation', value: changedLocation });
     }
 
     const { Button, Form } = Stage.Basic;
@@ -22,7 +27,7 @@ export default function SiteLocationInput({ value, onChange, toolbox }) {
                 label="Location"
                 value={enteredValue}
                 placeholder="latitude, longitude (32.166369, 34.810893)"
-                onChange={(e, data) => onLocationChange(data.value)}
+                onChange={(_event, data) => onLocationChange(data.value)}
                 action={<Button active={mapOpen} icon="crosshairs" onClick={() => setMapOpen(!mapOpen)} />}
             />
             {mapOpen && (
@@ -38,13 +43,3 @@ export default function SiteLocationInput({ value, onChange, toolbox }) {
         </>
     );
 }
-
-SiteLocationInput.propTypes = {
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    value: PropTypes.string
-};
-
-SiteLocationInput.defaultProps = {
-    value: null
-};
