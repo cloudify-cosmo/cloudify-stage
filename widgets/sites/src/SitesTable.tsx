@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import { isEqual } from 'lodash';
 import CreateModal from './CreateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
@@ -30,11 +31,7 @@ export default class SitesTable extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {

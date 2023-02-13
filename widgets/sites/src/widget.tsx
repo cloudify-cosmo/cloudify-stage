@@ -1,4 +1,5 @@
 // @ts-nocheck File not migrated fully to TS
+import { isEmpty } from 'lodash';
 import SitesTable from './SitesTable';
 import './widget.css';
 
@@ -26,23 +27,23 @@ Stage.defineWidget({
     render(widget, data, error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (isEmpty(data)) {
             return <Loading />;
         }
         const { sites, siteDeploymentCount } = data;
         const deploymentsPerSite = {};
-        _.forEach(siteDeploymentCount.items, item => {
+        siteDeploymentCount.items.forEach(item => {
             deploymentsPerSite[item.site_name] = item.deployments;
         });
         const formattedData = {
-            items: _.map(sites.items, site => {
+            items: sites.items.map(site => {
                 return {
                     ...site,
                     created_at: Stage.Utils.Time.formatTimestamp(site.created_at),
                     deploymentCount: deploymentsPerSite[site.name] || 0
                 };
             }),
-            total: _.get(sites, 'metadata.pagination.total', 0)
+            total: get(sites, 'metadata.pagination.total', 0)
         };
 
         return <SitesTable widget={widget} data={formattedData} toolbox={toolbox} />;

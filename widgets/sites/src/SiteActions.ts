@@ -1,4 +1,6 @@
 // @ts-nocheck File not migrated fully to TS
+import { isNil, omitBy } from 'lodash';
+
 export default class SiteActions {
     constructor(toolbox) {
         this.toolbox = toolbox;
@@ -17,7 +19,7 @@ export default class SiteActions {
     }
 
     doUpdate(name, visibility, location = null, newName = null) {
-        const body = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
+        const body = omitBy({ location, visibility, new_name: newName }, isNil);
         return this.toolbox.getManager().doPost(`/sites/${name}`, { body });
     }
 }
