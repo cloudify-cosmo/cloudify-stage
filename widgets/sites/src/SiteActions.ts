@@ -1,3 +1,4 @@
+import type { Visibility } from 'app/widgets/common/types';
 import { isNil, omitBy } from 'lodash';
 
 export default class SiteActions {
@@ -7,19 +8,20 @@ export default class SiteActions {
         this.toolbox = toolbox;
     }
 
-    doGet(name) {
+    doGet(name: string) {
         return this.toolbox.getManager().doGet(`/sites/${name}`);
     }
 
-    doDelete(name) {
+    doDelete(name: string) {
         return this.toolbox.getManager().doDelete(`/sites/${name}`);
     }
 
-    doCreate(name, visibility, location) {
+    doCreate(name: string, visibility: Visibility, location: string) {
         return this.toolbox.getManager().doPut(`/sites/${name}`, { body: { location, visibility } });
     }
 
-    doUpdate(name, visibility, location = null, newName = null) {
+    // TODO Norbert: Migrate null to be undefined
+    doUpdate(name: string, visibility: Visibility, location: string | null = null, newName: string | null = null) {
         const body = omitBy({ location, visibility, new_name: newName }, isNil);
         return this.toolbox.getManager().doPost(`/sites/${name}`, { body });
     }
