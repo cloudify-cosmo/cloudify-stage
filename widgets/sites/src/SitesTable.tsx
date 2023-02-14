@@ -219,19 +219,23 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
                     </DataTable.Action>
                 </DataTable>
 
-                <DeleteModal
-                    content={`Are you sure you want to delete the site '${site!.name}'?`}
-                    open={modalType === TableActions.DELETE_SITE && showModal}
-                    onConfirm={this.deleteSite}
-                    onCancel={this.hideModal}
-                />
+                {site && (
+                    <>
+                        <DeleteModal
+                            content={`Are you sure you want to delete the site '${site.name}'?`}
+                            open={modalType === TableActions.DELETE_SITE && showModal}
+                            onConfirm={this.deleteSite}
+                            onCancel={this.hideModal}
+                        />
 
-                <UpdateModal
-                    toolbox={toolbox}
-                    open={modalType === TableActions.UPDATE_SITE && showModal}
-                    onHide={this.hideModal}
-                    site={site}
-                />
+                        <UpdateModal
+                            toolbox={toolbox}
+                            open={modalType === TableActions.UPDATE_SITE && showModal}
+                            onHide={this.hideModal}
+                            site={site}
+                        />
+                    </>
+                )}
             </div>
         );
     }

@@ -33,7 +33,7 @@ interface SiteLocationMapProps {
 }
 
 interface SiteLocationMapState {
-    isMapAvailable?: boolean;
+    isMapAvailable: boolean | null;
 }
 
 class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocationMapState> {
@@ -43,6 +43,9 @@ class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocation
         super(props);
         const { location } = this.props;
         this.initialLocation = location;
+        this.state = {
+            isMapAvailable: null
+        };
     }
 
     componentDidMount() {

@@ -20,7 +20,6 @@ export default class SiteActions {
         return this.toolbox.getManager().doPut(`/sites/${name}`, { body: { location, visibility } });
     }
 
-    // TODO Norbert: Migrate null to be undefined
     doUpdate(
         name: string,
         visibility: Visibility | null,
