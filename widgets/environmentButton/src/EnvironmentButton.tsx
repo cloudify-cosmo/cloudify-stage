@@ -15,7 +15,6 @@ const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configur
 
     const { Dropdown, Button, Icon } = Stage.Basic;
     const { DeployBlueprintModal } = Stage.Common;
-    const { FilterRuleType, FilterRuleOperators } = Stage.Common.Filters;
     return (
         <>
             <Dropdown
@@ -40,14 +39,7 @@ const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configur
                 open={fromBlueprintModalOpen}
                 onHide={closeFromBlueprintModal}
                 toolbox={toolbox}
-                blueprintFilterRules={[
-                    {
-                        operator: FilterRuleOperators.AnyOf,
-                        type: FilterRuleType.Label,
-                        key: 'csys-obj-type',
-                        values: ['environment']
-                    }
-                ]}
+                blueprintFilterRules={[Stage.Common.Filters.environmentFilterRule]}
             />
         </>
     );
