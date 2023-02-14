@@ -1821,7 +1821,8 @@
                         "secretValue": "Please provide secret value",
                         "noProviders": "No Secret providers are defined in the System",
                         "secretProvider": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider",
+                        "secretProviderOptions": "Invalid Provider Options"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
