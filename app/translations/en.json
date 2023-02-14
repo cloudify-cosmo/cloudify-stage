@@ -2287,6 +2287,8 @@
             "noDeploymentSelected": "No deployment selected"
         },
         "sites": {
+            "name": "Sites",
+            "description": "This widget shows a list of available sites and allow managing them",
             "actions": {
                 "updateSite": "Update site",
                 "deleteSite": "Delete site"
