@@ -1,19 +1,15 @@
-import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
-import type { FilterRule } from '../../../app/widgets/common/filters/types';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
+import type { FilterRule } from 'app/widgets/common/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
 const t = Stage.Utils.getT(`widgets.${widgetId}`);
 const tConfiguration = (suffix: string) => t(`configuration.${suffix}`);
 
-type DeploymentButtonConfiguration = {
+interface DeploymentButtonConfiguration extends ButtonConfiguration {
     toolbox: Stage.Types.Toolbox;
-    basic: boolean;
-    color: SemanticCOLORS;
-    icon: SemanticICONS;
-    label: string;
     blueprintFilterRules: FilterRule[];
-};
+}
 
 Stage.defineWidget({
     id: widgetId,

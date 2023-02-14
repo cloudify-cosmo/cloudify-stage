@@ -1,9 +1,9 @@
-import type { EnvironmentButtonConfiguration } from 'widgets/environmentButton/src/widget.types';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 import EnvironmentButton from './EnvironmentButton';
 
 const translate = Stage.Utils.getT('widgets.environmentButton');
 
-Stage.defineWidget<never, never, EnvironmentButtonConfiguration>({
+Stage.defineWidget<never, never, ButtonConfiguration>({
     id: 'environmentButton',
     initialWidth: 2,
     initialHeight: 3,

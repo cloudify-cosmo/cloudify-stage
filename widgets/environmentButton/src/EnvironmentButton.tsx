@@ -1,12 +1,12 @@
 import type { FunctionComponent } from 'react';
 import type { Toolbox } from 'app/utils/StageAPI';
-import type { EnvironmentButtonConfiguration } from 'widgets/environmentButton/src/widget.types';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 
 const translateMenu = Stage.Utils.getT('widgets.environmentButton.menu');
 
 interface EnvironemntButtonProps {
     toolbox: Toolbox;
-    configuration: EnvironmentButtonConfiguration;
+    configuration: ButtonConfiguration;
 }
 
 const EnvironemntButton: FunctionComponent<EnvironemntButtonProps> = ({ configuration, toolbox }) => {
