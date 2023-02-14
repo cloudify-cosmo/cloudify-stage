@@ -4,12 +4,12 @@ import type { ButtonConfiguration } from 'app/widgets/common/configuration/butto
 
 const translateMenu = Stage.Utils.getT('widgets.environmentButton.menu');
 
-interface EnvironemntButtonProps {
+interface EnvironmentButtonProps {
     toolbox: Toolbox;
     configuration: ButtonConfiguration;
 }
 
-const EnvironemntButton: FunctionComponent<EnvironemntButtonProps> = ({ configuration, toolbox }) => {
+const EnvironmentButton: FunctionComponent<EnvironmentButtonProps> = ({ configuration, toolbox }) => {
     const { useBoolean } = Stage.Hooks;
     const [fromBlueprintModalOpen, openFromBlueprintModal, closeFromBlueprintModal] = useBoolean();
 
@@ -53,4 +53,4 @@ const EnvironemntButton: FunctionComponent<EnvironemntButtonProps> = ({ configur
     );
 };
 
-export default EnvironemntButton;
+export default EnvironmentButton;
