@@ -66,7 +66,7 @@ class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocation
 
         const url = Stage.Utils.Url.url(urlTemplate);
 
-        if (isMapAvailable === undefined) {
+        if (isMapAvailable === null) {
             return (
                 <div style={{ width: 50, height: 50, margin: '0 auto' }}>
                     <Loading />
