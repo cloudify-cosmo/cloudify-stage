@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import type { SyntheticEvent } from 'react';
 import SiteLocationMap from './SiteLocationMap';
 
-interface SiteLocationInputProps {
+export interface SiteLocationInputProps {
     value?: string;
     toolbox: Stage.Types.Toolbox;
     onChange: (event: SyntheticEvent | null, field: Omit<Field, 'type' | 'checked'>) => void;

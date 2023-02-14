@@ -21,7 +21,12 @@ export default class SiteActions {
     }
 
     // TODO Norbert: Migrate null to be undefined
-    doUpdate(name: string, visibility: Visibility, location: string | null = null, newName: string | null = null) {
+    doUpdate(
+        name: string,
+        visibility: Visibility | null,
+        location: string | null = null,
+        newName: string | null = null
+    ) {
         const body = omitBy({ location, visibility, new_name: newName }, isNil);
         return this.toolbox.getManager().doPost(`/sites/${name}`, { body });
     }
