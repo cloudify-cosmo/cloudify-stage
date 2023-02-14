@@ -2289,9 +2289,26 @@
         "sites": {
             "name": "Sites",
             "description": "This widget shows a list of available sites and allow managing them",
-            "actions": {
-                "updateSite": "Update site",
-                "deleteSite": "Delete site"
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "location": "Location",
+                    "created": "Created",
+                    "creator": "Creator",
+                    "tenant": "Tenant",
+                    "deploymentsCount": "# Deployments"
+                },
+                "items": {
+                    "location": "Latitude: {{latitude}}, Longitude: {{longitude}}"
+                },
+                "actions": {
+                    "updateSite": "Update site",
+                    "deleteSite": "Delete site"
+                },
+                "confirm": {
+                    "delete": "Are you sure you want to delete the site '{{siteName}}'?"
+                },
+                "noDataMessage": "There are no Sites available. Click \"Create\" to create Sites."
             },
             "modals": {
                 "create": {
