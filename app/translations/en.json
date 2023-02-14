@@ -2318,6 +2318,14 @@
                         "siteNewName": "Name"
                     }
                 }
+            },
+            "common": {
+                "fields": {
+                    "siteLocation": {
+                        "label": "Location",
+                        "placeholder": "latitude, longitude (32.166369, 34.810893)"
+                    }
+                }
             }
         },
         "snapshots": {

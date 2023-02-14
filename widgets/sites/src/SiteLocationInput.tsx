@@ -2,6 +2,9 @@ import type { Field } from 'app/widgets/common/types';
 import { useState, useEffect } from 'react';
 import type { SyntheticEvent } from 'react';
 import SiteLocationMap from './SiteLocationMap';
+import { translateWidget } from './widget.utils';
+
+const translate = Stage.Utils.composeT(translateWidget, 'common.fields.siteLocation');
 
 export interface SiteLocationInputProps {
     value?: string;
@@ -25,9 +28,9 @@ export default function SiteLocationInput({ value = '', onChange, toolbox }: Sit
     return (
         <>
             <Form.Input
-                label="Location"
+                label={translate('label')}
                 value={enteredValue}
-                placeholder="latitude, longitude (32.166369, 34.810893)"
+                placeholder={translate('placeholder')}
                 onChange={(_event, data) => onLocationChange(data.value)}
                 action={<Button active={mapOpen} icon="crosshairs" onClick={() => setMapOpen(!mapOpen)} />}
             />
