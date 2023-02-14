@@ -5,17 +5,17 @@ export type ProviderOptions = Record<string, string>;
 
 /* eslint-disable camelcase */
 export type Secret = {
-    created_at?: string;
-    created_by?: string;
-    is_hidden_value?: boolean;
+    created_at: string;
+    created_by: string;
+    is_hidden_value: boolean;
     key: string;
-    tenant_name?: string;
-    updated_at?: string;
-    visibility?: Visibility;
+    tenant_name: string;
+    updated_at: string;
+    visibility: Visibility;
     value: string;
     schema: string;
-    provider_name?: string;
-    provider_options?: string;
+    provider_name: string;
+    provider_options: string;
 };
 /* eslint-enable camelcase */
 
@@ -30,8 +30,8 @@ export default class SecretActions {
         return this.manager.doGet(`/secrets/${key}`);
     }
 
-    doGetWithoutValue(key: Secret['key']): Promise<Omit<Secret, 'value'>> {
-        return this.manager.doGet(`/secrets/${key}?_skip_value=true`);
+    doGetWithoutValue(key: Secret['key']) {
+        return this.manager.doGet<Omit<Secret, 'value'>>(`/secrets/${key}?_skip_value=true`);
     }
 
     doGetAllSecretProviders(): Promise<any> {

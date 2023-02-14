@@ -44,7 +44,15 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             secret: {
                 key: '',
                 value: '',
-                schema: ''
+                schema: '',
+                is_hidden_value: false,
+                visibility: 'tenant',
+                created_by: '',
+                created_at: '',
+                updated_at: '',
+                tenant_name: '',
+                provider_name: '',
+                provider_options: ''
             },
             canShowSecret: true,
             showSecretKey: '',
