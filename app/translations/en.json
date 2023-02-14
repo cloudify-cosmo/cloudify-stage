@@ -2319,6 +2319,9 @@
                     }
                 }
             },
+            "map": {
+                "noInternetMessage": "Map cannot be displayed because there is no connection to the maps repository. Please check network connection."
+            },
             "common": {
                 "fields": {
                     "siteLocation": {
