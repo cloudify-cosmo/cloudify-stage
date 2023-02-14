@@ -2292,6 +2292,21 @@
             "actions": {
                 "updateSite": "Update site",
                 "deleteSite": "Delete site"
+            },
+            "modals": {
+                "create": {
+                    "header": "Create site",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "create": "Create"
+                    },
+                    "fields": {
+                        "siteName": "Name"
+                    }
+                },
+                "update": {}
             }
         },
         "snapshots": {
