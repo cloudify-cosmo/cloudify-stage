@@ -1,9 +1,5 @@
 import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
-export {};
-
-const t = Stage.Utils.getT('widgets.nodesStats');
-
 type Item = {
     // eslint-disable-next-line camelcase
     node_instances: number;

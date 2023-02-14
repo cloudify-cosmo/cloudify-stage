@@ -3,8 +3,6 @@ import { isEmpty } from 'lodash';
 import SecretsTable from './SecretsTable';
 import type { SecretsWidget } from './widget.types';
 
-const translateSecrets = Stage.Utils.getT('widgets.secrets');
-
 interface FormattedSecrets {
     items: Secret[];
     total: number;

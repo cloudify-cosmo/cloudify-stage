@@ -123,7 +123,7 @@ export type { StageWidgetConfigurationDefinition as WidgetConfigurationDefinitio
 
 export interface CommonWidgetDefinition<Params, Data, Configuration> {
     id: string;
-    name?: string;
+    name: string;
     categories: ObjectKeys<typeof GenericConfigType['CATEGORY']>[];
     color?: SemanticCOLORS;
     description?: string;
@@ -206,6 +206,7 @@ type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.Wit
      * Thus, the duplication of combining `Common`, `React`, and `HTMLWidgetDefinitionPart`s is necessary
      */
     Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme' | 'template' | 'isCustom'>,
+    | 'name'
     | 'color'
     | 'categories'
     | 'hasReadme'
