@@ -2295,7 +2295,7 @@
             },
             "modals": {
                 "create": {
-                    "header": "Create site",
+                    "header": "Create site {{siteName}}",
                     "errors": {
                         "noSiteName": "Please provide site name"
                     },
@@ -2306,7 +2306,18 @@
                         "siteName": "Name"
                     }
                 },
-                "update": {}
+                "update": {
+                    "header": "Create site",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "update": "Update"
+                    },
+                    "fields": {
+                        "siteNewName": "Name"
+                    }
+                }
             }
         },
         "snapshots": {

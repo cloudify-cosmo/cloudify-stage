@@ -2,8 +2,10 @@ import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
 import type { SiteLocationInputProps } from './SiteLocationInput';
 import type { Site } from './widgets.types';
+import { translateWidget } from './widget.utils';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+const translate = Stage.Utils.composeT(translateWidget, 'modals.update');
 
 interface UpdateModalProps {
     onHide: () => void;
@@ -51,13 +53,21 @@ export default function UpdateModal({ onHide, open, site, toolbox }: UpdateModal
         <div>
             <Modal open={open} onClose={onHide}>
                 <Modal.Header>
-                    <Icon name="edit" /> Update site {site.name}
+                    <Icon name="edit" />{' '}
+                    {translate('header', {
+                        siteName: site.name
+                    })}
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         <Form.Field error={errors.siteNewName}>
-                            <Form.Input label="Name" name="siteNewName" value={siteNewName} onChange={setSiteNewName} />
+                            <Form.Input
+                                label={translate('fields.siteNewName')}
+                                name="siteNewName"
+                                value={siteNewName}
+                                onChange={setSiteNewName}
+                            />
                         </Form.Field>
                         <Form.Field error={errors.siteLocation}>
                             <SiteLocationInput
@@ -71,7 +81,12 @@ export default function UpdateModal({ onHide, open, site, toolbox }: UpdateModal
 
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
-                    <ApproveButton onClick={updateSite} disabled={isLoading} content="Update" icon="edit" />
+                    <ApproveButton
+                        onClick={updateSite}
+                        disabled={isLoading}
+                        content={translate('buttons.update')}
+                        icon="edit"
+                    />
                 </Modal.Actions>
             </Modal>
         </div>
