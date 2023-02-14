@@ -3,7 +3,7 @@ import SitesTable from './SitesTable';
 import './widget.css';
 import type { SitesWidget } from './widgets.types';
 
-// TODO Norbert: Migrate labels to translation file
+// TODO Norbert: Migrate labels to translation file - probably as a separate PR
 
 Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
     id: 'sites',

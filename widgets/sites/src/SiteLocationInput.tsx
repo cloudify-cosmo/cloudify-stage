@@ -1,11 +1,12 @@
+import type { Field } from 'app/widgets/common/types';
 import { useState, useEffect } from 'react';
+import type { SyntheticEvent } from 'react';
 import SiteLocationMap from './SiteLocationMap';
 
 interface SiteLocationInputProps {
     value?: string;
     toolbox: Stage.Types.Toolbox;
-    // TODO Norbert: Adjust onChange handler
-    onChange: any;
+    onChange: (event: SyntheticEvent | null, field: Omit<Field, 'type' | 'checked'>) => void;
 }
 
 export default function SiteLocationInput({ value = '', onChange, toolbox }: SiteLocationInputProps) {
