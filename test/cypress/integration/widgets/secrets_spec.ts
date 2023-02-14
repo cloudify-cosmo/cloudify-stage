@@ -74,8 +74,10 @@ describe('Secret store management widget', () => {
             cy.clickButton('Create');
         });
 
+        cy.createSecretProvider({ name: newSecretProviderName, type: 'vault', visibility: 'global' });
+
         cy.getWidget('secrets').within(() => {
-            cy.createSecretProvider({ name: newSecretProviderName, type: 'vault', visibility: 'global' });
+            cy.getSearchInput().clear().type(secretName);
             cy.get('.rowActions').find('i[title="Update secret"]').click();
         });
 
