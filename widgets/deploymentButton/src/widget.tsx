@@ -3,8 +3,7 @@ import type { FilterRule } from 'app/widgets/common/filters/types';
 import DeploymentButton from './DeploymentButton';
 
 const widgetId = 'deploymentButton';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
-const tConfiguration = (suffix: string) => t(`configuration.${suffix}`);
+const translateConfiguration = Stage.Utils.getT(`widgets.${widgetId}.configuration`);
 
 interface DeploymentButtonConfiguration extends ButtonConfiguration {
     toolbox: Stage.Types.Toolbox;
@@ -21,11 +20,11 @@ Stage.defineWidget({
     initialConfiguration: [
         ...Stage.Common.Configuration.Button.getInitialConfiguration({
             icon: 'rocket',
-            label: tConfiguration('label.default')
+            label: translateConfiguration('label.default')
         }),
         {
             id: 'blueprintFilterRules',
-            name: tConfiguration('labelFilterRules.name'),
+            name: translateConfiguration('labelFilterRules.name'),
             default: [],
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             component: Stage.Common.Blueprints.LabelFilter
