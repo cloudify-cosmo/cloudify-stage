@@ -206,6 +206,7 @@ type StageInitialWidgetDefinition<Params, Data, Configuration> = Stage.Types.Wit
      * Thus, the duplication of combining `Common`, `React`, and `HTMLWidgetDefinitionPart`s is necessary
      */
     Omit<CommonWidgetDefinition<Params, Data, Configuration>, 'readme' | 'template' | 'isCustom'>,
+    | 'name'
     | 'color'
     | 'categories'
     | 'hasReadme'

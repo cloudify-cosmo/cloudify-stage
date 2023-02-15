@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'This widget shows nodes',
     initialWidth: 6,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodes'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],

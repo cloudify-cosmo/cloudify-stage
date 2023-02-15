@@ -1,5 +1,6 @@
 import log from 'loglevel';
 
+import StageUtils from './stageUtils';
 import GenericConfig from './GenericConfig';
 import type { InitialWidgetDefinition, WidgetDefinition } from './StageAPI';
 
@@ -8,12 +9,11 @@ export default function normalizeWidgetDefinition<Params, Data, Configuration>(
 ): WidgetDefinition<Params, Data, Configuration> {
     // TODO(RD-1604): take ID from initialDefinition into account
     const id = document.currentScript?.id ?? '';
-    if (!initialDefinition.name) {
-        log.error('Missing widget name. Widget data is :', initialDefinition);
-    }
     if (!id) {
         log.error('Missing widget id. Widget data is :', initialDefinition);
     }
+
+    const translate = StageUtils.getT(`widgets.${initialDefinition.id}`);
 
     return {
         // Set default values for optional properties
@@ -31,6 +31,8 @@ export default function normalizeWidgetDefinition<Params, Data, Configuration>(
         showHeader: true,
         // By default don't check the supported editions and keep backwards compatibility
         supportedEditions: [],
+        name: translate('name'),
+        description: translate('description', '') || undefined,
 
         ...initialDefinition,
         id

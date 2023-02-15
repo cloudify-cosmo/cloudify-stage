@@ -7,11 +7,8 @@ const t = Utils.getWidgetTranslation();
 
 Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, DeploymentInfoWidget.Configuration>({
     id: Consts.WIDGET_ID,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 16,
     initialHeight: 7,
-    isReact: true,
     hasReadme: true,
     showHeader: false,
     showBorder: false,

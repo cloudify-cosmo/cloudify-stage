@@ -1,14 +1,10 @@
 import type { SecretProvidersWidget } from './widget.types';
 import SecretProvidersTable from './SecretProvidersTable';
-import { translateSecretProviders } from './widget.utils';
 
 Stage.defineWidget<never, SecretProvidersWidget.Data, SecretProvidersWidget.Configuration>({
     id: 'secretProviders',
-    name: translateSecretProviders('name'),
-    description: translateSecretProviders('description'),
     initialWidth: 12,
     initialHeight: 16,
-    isReact: true,
     hasReadme: true,
     fetchUrl: '[manager]/secrets-providers[params]',
     permission: Stage.GenericConfig.WIDGET_PERMISSION('secretProviders'),
