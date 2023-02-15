@@ -65,7 +65,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
         // Disable the form
         setLoading();
 
-        const secretProviderOptions = getSecretProviderOptions(useSecretProvider, secretProviderPath);
+        const secretProviderOptions = getSecretProviderOptions(secretProviderPath);
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         actions

@@ -48,7 +48,7 @@ export default class SecretActions {
         visibility: Visibility,
         hidden: boolean,
         providerName?: string,
-        providerOptions?: ProviderOptions | null
+        providerOptions?: ProviderOptions
     ) {
         return this.manager.doPut(`/secrets/${key}`, {
             body: {
