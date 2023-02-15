@@ -1,5 +1,6 @@
-/* eslint-disable node/no-unpublished-import,global-require,import/no-dynamic-require */
-import _ from 'lodash';
+/* eslint-disable node/no-unpublished-import,global-require,import/no-dynamic-require,no-console */
+import { defaultsDeep, keys, merge, pick } from 'lodash';
+import { writeJsonSync } from 'fs-extra';
 import flatten from 'flat';
 
 import { getResourcePath } from './utils';
@@ -10,24 +11,59 @@ import logging from '../conf/logging.json';
 import dbOptions from '../conf/db.options.json';
 import manager from '../conf/manager.json';
 import type { Mode } from './serverSettings';
-import type { Config, ClientConfig, UserConfig } from './routes/Config.types';
+import type { Config, ClientConfig, UserConfig, UserDataConfig } from './routes/Config.types';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 let userConfig: UserConfig = require('../conf/userConfig.json');
 
-try {
-    const userDataConfigPath = getResourcePath('userConfig.json', true);
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    let userDataConfig: Partial<UserConfig> = require(userDataConfigPath);
-    userDataConfig = _.pick(userDataConfig, _.keys(flatten(userConfig, { safe: true }))); // Security reason - get only allowed parameters
-    userConfig = _.defaultsDeep(userDataConfig, userConfig); // Create full user configuration
-} catch (err: any) {
-    if (err.code !== 'MODULE_NOT_FOUND') {
-        throw err;
+let me: Partial<Config> | null = null;
+
+function initUserConfig() {
+    try {
+        const userDataConfigPath = getResourcePath('userConfig.json', true);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        let userDataConfig: UserDataConfig = require(userDataConfigPath);
+        let convertedSamlSection = false;
+
+        // Backward-compatibility layer - convert `saml` section to `auth` section
+        if (userDataConfig.saml?.enabled) {
+            console.warn(
+                `WARNING: You are using deprecated section "saml" in user configuration file (${userDataConfigPath}).`
+            );
+
+            const { certPath, portalUrl, ssoUrl } = userDataConfig.saml;
+
+            userDataConfig.auth = {
+                ...userDataConfig.auth,
+                type: 'saml',
+                certPath,
+                loginPageUrl: ssoUrl,
+                afterLogoutUrl: portalUrl
+            };
+
+            convertedSamlSection = true;
+        }
+
+        // Security reason - get only allowed parameters
+        userDataConfig = pick(userDataConfig, keys(flatten(userConfig, { safe: true })));
+
+        if (convertedSamlSection) {
+            const newUserDataConfigPath = `${userDataConfigPath}.new`;
+            writeJsonSync(newUserDataConfigPath, userDataConfig, { spaces: 2, EOL: '\n', encoding: 'utf8', flag: 'w' });
+            console.warn(
+                `WARNING: User configuration was migrated automatically and it is ` +
+                    `available at ${newUserDataConfigPath}. Please verify it and use it to replace ${userDataConfigPath}.`
+            );
+        }
+
+        // Create full user configuration
+        userConfig = defaultsDeep(userDataConfig, userConfig);
+    } catch (err: any) {
+        if (err.code !== 'MODULE_NOT_FOUND') {
+            throw err;
+        }
     }
 }
-
-let me: Partial<Config> | null = null;
 
 export function loadMeJson() {
     try {
@@ -40,17 +76,18 @@ export function loadMeJson() {
     }
 }
 
+initUserConfig();
 loadMeJson();
 
 export function getConfig(mode?: Mode): Config {
     const config = {
-        app: _.merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
+        app: merge(app, root, logging, { db: { options: dbOptions } }, userConfig),
         manager,
         mode,
         managerUrl: `${manager.protocol}://${manager.ip}:${manager.port}`
     };
 
-    _.merge(config, me);
+    merge(config, me);
 
     return config;
 }
