@@ -15,9 +15,9 @@ export default function SiteLocationInput({ value = '', onChange, toolbox }: Sit
 
     useEffect(() => setEnteredValue(value), [value]);
 
-    function onLocationChange(changedLocation: string) {
-        setEnteredValue(changedLocation);
-        onChange(null, { name: 'siteLocation', value: changedLocation });
+    function onLocationChange(newLocation: string) {
+        setEnteredValue(newLocation);
+        onChange(null, { name: 'siteLocation', value: newLocation });
     }
 
     const { Button, Form } = Stage.Basic;
