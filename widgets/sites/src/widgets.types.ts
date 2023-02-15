@@ -23,10 +23,9 @@ export interface Site extends Omit<FetchedSite, 'created_at'> {
 }
 
 export interface DeploymentSummary {
-    /* eslint-disable camelcase */
+    /* eslint-disable-next-line camelcase */
     site_name?: string;
     deployments: number;
-    /* eslint-enable camelcase */
 }
 
 export declare namespace SitesWidget {
