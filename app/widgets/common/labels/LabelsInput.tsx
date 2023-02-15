@@ -1,5 +1,7 @@
 import type { CSSProperties, FunctionComponent, SyntheticEvent } from 'react';
 import React from 'react';
+import { toNumber } from 'lodash';
+import LabelErrorPopup from './LabelErrorPopup';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
@@ -31,14 +33,42 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(keys => {
-                setReservedKeys(keys.filter(isLabelModifiable));
+            .then(labelKeys => {
+                setReservedKeys(labelKeys.filter(isLabelModifiable));
             })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);
 
     return { reservedKeys, fetchingReservedKeys };
+}
+
+const getLabelNumberValidation =
+    (minmax: number) =>
+    (value: string): string | undefined => {
+        const number = toNumber(value);
+
+        if (Number.isNaN(number) || number > minmax || number < -minmax) {
+            return Stage.i18n.t('widgets.common.labels.validationNumber', { to: minmax, from: -minmax });
+        }
+
+        return undefined;
+    };
+
+/**
+ * keys of this record will be validated,
+ * additionally, there will be a check if they are added more than once
+ */
+const specialValidation: Record<string, (v: string) => (string | undefined) | undefined> = {
+    'csys-location-lat': getLabelNumberValidation(90),
+    'csys-location-long': getLabelNumberValidation(180)
+};
+
+function checkUniqueness(newLabelKey: string, existingLabelKeys: string[]) {
+    if (existingLabelKeys.find(label => label === newLabelKey)) {
+        return Stage.i18n.t('widgets.common.labels.labelDuplicatedKeyError');
+    }
+    return undefined;
 }
 
 export interface LabelsInputProps {
@@ -77,9 +107,20 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
         return !!_.find(allLabels, newLabel);
     })();
+    const specialValidationError =
+        specialValidation[newLabelKey] &&
+        (specialValidation[newLabelKey](newLabelValue) ||
+            checkUniqueness(
+                newLabelKey,
+                labels.map(({ key }) => key)
+            ));
     const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
-        !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel || newLabelKeyIsNotPermitted;
+        !newLabelIsProvided ||
+        newLabelIsAlreadyPresent ||
+        addingLabel ||
+        newLabelKeyIsNotPermitted ||
+        !!specialValidationError;
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
@@ -177,6 +218,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                         </Form.Field>
                         <Form.Field width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
+                            {specialValidationError && <LabelErrorPopup content={specialValidationError} />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}
