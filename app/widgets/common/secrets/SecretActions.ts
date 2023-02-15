@@ -1,4 +1,5 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
+
 import type { Visibility } from '../types';
 
 const getSecretProviderOptions = (path: string): ProviderOptions => ({ path });
@@ -15,19 +16,16 @@ export type Secret = {
     updated_at: string;
     visibility: Visibility;
     value: string;
-    schema: string;
+    schema: Record<string, any>;
     provider_name: string;
-    provider_options: string;
+    provider_options: ProviderOptions;
 };
 
-interface SecretRequestBody {
-    key: string;
-    value: string;
-    visibility: Visibility;
-    is_hidden_value: boolean;
-    provider_name?: string;
-    provider_options?: ProviderOptions;
-}
+type CreateSecretRequestBody = Pick<Secret, 'value'> &
+    Partial<Pick<Secret, 'visibility' | 'is_hidden_value' | 'schema' | 'provider_name' | 'provider_options'>>;
+
+type UpdateSecretRequestBody = Partial<Pick<Secret, 'value' | 'provider_name' | 'provider_options'>>;
+
 /* eslint-enable camelcase */
 
 export default class SecretActions {
@@ -61,32 +59,25 @@ export default class SecretActions {
         providerName?: string,
         providerPath?: string
     ) {
-        let body: SecretRequestBody = {
-            key,
+        const body: CreateSecretRequestBody = {
             value,
             visibility,
             is_hidden_value: hidden
         };
         if (providerName && providerPath) {
-            body = {
-                ...body,
-                provider_name: providerName,
-                provider_options: getSecretProviderOptions(providerPath)
-            };
+            body.provider_name = providerName;
+            body.provider_options = getSecretProviderOptions(providerPath);
         }
-        return this.manager.doPut(`/secrets/${key}`, { body });
+        return this.manager.doPut<Secret, UpdateSecretRequestBody>(`/secrets/${key}`, { body });
     }
 
     doUpdate(key: Secret['key'], value?: string, providerName?: string, providerPath?: string) {
-        let body: any = { value };
+        const body: UpdateSecretRequestBody = { value };
         if (providerName && providerPath) {
-            body = {
-                ...body,
-                provider_name: providerName,
-                provider_options: getSecretProviderOptions(providerPath)
-            };
+            body.provider_name = providerName;
+            body.provider_options = getSecretProviderOptions(providerPath);
         }
-        return this.manager.doPatch(`/secrets/${key}`, { body });
+        return this.manager.doPatch<Secret, UpdateSecretRequestBody>(`/secrets/${key}`, { body });
     }
 
     doSetIsHiddenValue(key: Secret['key'], hidden: Secret['is_hidden_value']) {
