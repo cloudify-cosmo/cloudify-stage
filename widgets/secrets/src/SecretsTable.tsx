@@ -20,7 +20,7 @@ interface SecretsTableState {
     error: null | string;
     showModal: boolean;
     modalType: string;
-    secret: Secret;
+    secret?: Secret;
     canShowSecret: boolean;
     showSecretKey: string;
     showSecretValue: string;
@@ -41,19 +41,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
             error: null,
             showModal: false,
             modalType: '',
-            secret: {
-                key: '',
-                value: '',
-                schema: '',
-                is_hidden_value: false,
-                visibility: 'tenant',
-                created_by: '',
-                created_at: '',
-                updated_at: '',
-                tenant_name: '',
-                provider_name: '',
-                provider_options: ''
-            },
+            secret: undefined,
             canShowSecret: true,
             showSecretKey: '',
             showSecretValue: '',
@@ -159,7 +147,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
     deleteSecret = () => {
         const { toolbox } = this.props;
         const { secret } = this.state;
-        const secretKey = secret.key;
+        const secretKey = secret!.key;
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
         const HIDE_DELETE_MODAL_STATE = { modalType: SecretsTable.DELETE_SECRET_ACTION, showModal: false };
 
