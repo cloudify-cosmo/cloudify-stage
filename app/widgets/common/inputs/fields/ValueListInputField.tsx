@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { isPlainObject, noop } from 'lodash';
+import { isEmpty, isPlainObject, noop } from 'lodash';
 import type { DropdownItemProps } from 'semantic-ui-react';
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import i18n from 'i18next';
@@ -24,7 +24,7 @@ const parseOptionValue = (value: any) => {
 };
 
 function getOptionsFromSecret(secretValue: string, schema: Record<string, any>) {
-    if (schema) {
+    if (!isEmpty(schema)) {
         const parsedValue = JSON.parse(secretValue);
         if (Array.isArray(parsedValue)) {
             return parsedValue;

@@ -70,7 +70,7 @@ describe('Secret store management widget', () => {
             cy.contains('Please select a secret provider').should('be.visible');
             cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
             cy.setSingleDropdownValue('Secret provider', secretProviderName);
-            cy.getField('Path at the provider').find('input').type(secretName);
+            cy.typeToFieldInput('Path at the provider', secretName);
             cy.clickButton('Create');
         });
 
@@ -83,7 +83,7 @@ describe('Secret store management widget', () => {
 
         cy.get('.modal').within(() => {
             cy.setSingleDropdownValue('Secret provider', newSecretProviderName);
-            cy.getField('Path at the provider').find('input').type('new/path');
+            cy.typeToFieldInput('Path at the provider', 'secret/path');
             cy.clickButton('Update');
         });
 
@@ -99,7 +99,7 @@ describe('Secret store management widget', () => {
 
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
-            cy.getField('Secret key').find('input').type(secretName);
+            cy.typeToFieldInput('Secret key', secretName);
             cy.contains('.checkbox', 'Retrieve the secret value from a secret provider').should(
                 'have.class',
                 'disabled'

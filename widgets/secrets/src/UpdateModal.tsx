@@ -80,20 +80,21 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     function updateSecret() {
         clearErrors();
+        const emptySecretProvider = !secretProvider;
+        const emptySecretProviderPath = !secretProviderPath;
+
         if (!useSecretProvider && !secretValue) {
             setErrors({ secretValue: translateForm('errors.validation.secretValue') });
             return;
         }
-        if (useSecretProvider) {
-            if (!secretProvider || !secretProviderPath) {
-                setErrors({
-                    secretProvider: !secretProvider ? translateForm('errors.validation.secretProvider') : undefined,
-                    secretProviderPath: !secretProviderPath
-                        ? translateForm('errors.validation.secretProviderPath')
-                        : undefined
-                });
-                return;
-            }
+        if (useSecretProvider && (emptySecretProvider || emptySecretProviderPath)) {
+            setErrors({
+                secretProvider: emptySecretProviderPath ? translateForm('errors.validation.secretProvider') : undefined,
+                secretProviderPath: emptySecretProviderPath
+                    ? translateForm('errors.validation.secretProviderPath')
+                    : undefined
+            });
+            return;
         }
 
         // Disable the form
