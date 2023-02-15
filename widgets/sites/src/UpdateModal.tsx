@@ -1,7 +1,7 @@
 import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
 import type { SiteLocationInputProps } from './SiteLocationInput';
-import type { Site } from './widgets.types';
+import type { Site } from './widget.types';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
 

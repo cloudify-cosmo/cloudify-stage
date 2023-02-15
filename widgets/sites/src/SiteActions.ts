@@ -8,10 +8,6 @@ export default class SiteActions {
         this.toolbox = toolbox;
     }
 
-    doGet(name: string) {
-        return this.toolbox.getManager().doGet(`/sites/${name}`);
-    }
-
     doDelete(name: string) {
         return this.toolbox.getManager().doDelete(`/sites/${name}`);
     }

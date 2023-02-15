@@ -3,7 +3,7 @@ import type { DataTableConfiguration, PollingTimeConfiguration } from 'app/utils
 
 export interface FetchedSite {
     /* eslint-disable camelcase */
-    created_at: Date;
+    created_at: string;
     created_by: string;
     latitude?: number;
     longitude?: number;

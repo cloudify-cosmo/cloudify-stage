@@ -4,7 +4,7 @@ import CreateModal from './CreateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
 import UpdateModal from './UpdateModal';
-import type { Site, SitesWidget } from './widgets.types';
+import type { Site, SitesWidget } from './widget.types';
 
 const t = Stage.Utils.getT('widgets.sites');
 

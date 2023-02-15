@@ -1,7 +1,6 @@
-import { isEmpty, get } from 'lodash';
 import SitesTable from './SitesTable';
 import './widget.css';
-import type { SitesWidget } from './widgets.types';
+import type { SitesWidget } from './widget.types';
 
 // TODO Norbert: Migrate labels to translation file - probably as a separate PR
 
@@ -29,7 +28,7 @@ Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (!data || isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -50,7 +49,7 @@ Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
                     deploymentCount: deploymentsPerSite[site.name] || 0
                 };
             }),
-            total: get(sites, 'metadata.pagination.total', 0)
+            total: sites.metadata.pagination.total
         };
 
         return <SitesTable widget={widget} data={formattedData} toolbox={toolbox} />;
