@@ -1,5 +1,5 @@
 import type { Visibility } from 'app/widgets/common/types';
-import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { DataTableConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
 
 export interface FetchedSite {
     /* eslint-disable camelcase */
