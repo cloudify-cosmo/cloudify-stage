@@ -1,6 +1,8 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { Visibility } from '../types';
 
+const getSecretProviderOptions = (path: string): ProviderOptions => ({ path });
+
 export type ProviderOptions = Record<string, string>;
 
 /* eslint-disable camelcase */
@@ -48,8 +50,9 @@ export default class SecretActions {
         visibility: Visibility,
         hidden: boolean,
         providerName?: string,
-        providerOptions?: ProviderOptions
+        providerPath?: string
     ) {
+        const providerOptions = providerPath ? getSecretProviderOptions(providerPath) : undefined;
         return this.manager.doPut(`/secrets/${key}`, {
             body: {
                 value,
@@ -61,7 +64,8 @@ export default class SecretActions {
         });
     }
 
-    doUpdate(key: Secret['key'], value?: string, providerName?: string, providerOptions?: ProviderOptions) {
+    doUpdate(key: Secret['key'], value?: string, providerName?: string, providerPath?: string) {
+        const providerOptions = providerPath ? getSecretProviderOptions(providerPath) : undefined;
         return this.manager.doPatch(`/secrets/${key}`, {
             body: { value, provider_name: providerName, provider_options: providerOptions }
         });

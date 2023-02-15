@@ -2,7 +2,7 @@ import { isEmpty } from 'lodash';
 import { useState } from 'react';
 import type { Secret } from 'app/widgets/common/secrets/SecretActions';
 import type { SecretProvidersWidget } from '../../secretProviders/src/widget.types';
-import { getSecretProviderOptions, translateForm } from './widget.utils';
+import { translateForm } from './widget.utils';
 
 const { Modal, Icon, Form, ApproveButton, CancelButton, ErrorMessage } = Stage.Basic;
 const { MultilineInput } = Stage.Common.Secrets;
@@ -102,10 +102,9 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         setLoading();
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
-        const secretProviderOptions = getSecretProviderOptions(secretProviderPath);
 
         actions
-            .doUpdate(secret.key, secretValue, secretProvider, secretProviderOptions)
+            .doUpdate(secret.key, secretValue, secretProvider, secretProviderPath)
             .then(() => {
                 clearErrors();
                 onHide();
