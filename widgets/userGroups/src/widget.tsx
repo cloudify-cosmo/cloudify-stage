@@ -1,8 +1,7 @@
-import { isEmpty, map, size, has } from 'lodash';
+import { has, isEmpty, map, size } from 'lodash';
 import type { UserGroup, UserGroupManagmentWidget } from './widget.types';
 import UserGroupsTable from './UserGroupsTable';
 
-const t = Stage.Utils.getT('widgets.userGroups');
 export interface UserGroupViewItem extends UserGroup {
     tenantCount: number;
     userCount: number;
@@ -21,12 +20,9 @@ Stage.defineWidget<
     UserGroupManagmentWidget.Configuration
 >({
     id: 'userGroups',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: '[manager]/user-groups?_get_data=true[params]',
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('userGroups'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

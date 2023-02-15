@@ -7,8 +7,6 @@ const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<unknown, unknown, ButtonLinkWidgetConfiguration>({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 2,
     initialHeight: 4,
     showHeader: false,
