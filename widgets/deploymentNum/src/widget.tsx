@@ -22,12 +22,9 @@ const t = Stage.Utils.getT('widgets.deploymentNum');
 
 Stage.defineWidget<unknown, WidgetData, DeploymentNumWidgetConfiguration>({
     id: 'deploymentNum',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentNum'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

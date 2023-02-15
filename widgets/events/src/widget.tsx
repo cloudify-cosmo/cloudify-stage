@@ -27,12 +27,9 @@ const fieldsToShowDefaultItems = [
 
 Stage.defineWidget({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 12,
     initialHeight: 18,
     fetchUrl: '[manager]/events[params]',
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

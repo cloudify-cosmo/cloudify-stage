@@ -5,9 +5,9 @@ import Consts from './consts';
 import Utils from './utils';
 
 import type {
+    Blueprint,
     BlueprintCatalogPayload,
     BlueprintCatalogWidgetConfiguration,
-    Blueprint,
     WidgetParameters
 } from './types';
 import './widget.css';
@@ -28,11 +28,8 @@ const fieldsToShowItems = [
 Stage.defineWidget<WidgetParameters, BlueprintCatalogPayload | Error, BlueprintCatalogWidgetConfiguration>({
     hasTemplate: false,
     id: Consts.WIDGET_ID,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 8,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     showHeader: false,
     showBorder: false,

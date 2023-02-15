@@ -21,11 +21,8 @@ const textFonts = [
 
 Stage.defineWidget<never, never, Configuration>({
     id: 'text',
-    name: t('name'),
-    description: t('description'),
     showHeader: false,
     showBorder: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('text'),
     initialConfiguration: [

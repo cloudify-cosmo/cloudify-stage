@@ -1,12 +1,14 @@
+import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import StageUtils from '../../../utils/stageUtils';
 
-interface DefaultConfiguration {
-    label?: string;
-    color?: string;
-    icon?: string;
-    basic?: boolean;
+export interface ButtonConfiguration {
+    label: string;
+    color: SemanticCOLORS;
+    icon: SemanticICONS;
+    basic: boolean;
 }
-export function getInitialConfiguration(defaultConfiguration: DefaultConfiguration = {}) {
+
+export function getInitialConfiguration(defaultConfiguration: Partial<ButtonConfiguration> = {}) {
     const { label, color, icon, basic } = defaultConfiguration;
     const translate = StageUtils.getT(`widgets.common.configuration`);
 

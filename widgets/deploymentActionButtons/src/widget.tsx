@@ -17,8 +17,6 @@ interface WidgetConfiguration {
 
 Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
     id: widgetId,
-    name: translateWidget('name'),
-    description: translateWidget('description'),
     initialWidth: 5,
     initialHeight: 5,
     showHeader: false,
@@ -35,7 +33,6 @@ Stage.defineWidget<WidgetParams, WidgetData, WidgetConfiguration>({
             default: false
         }
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deploymentActionButtons'),
 
