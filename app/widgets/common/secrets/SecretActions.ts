@@ -19,6 +19,15 @@ export type Secret = {
     provider_name: string;
     provider_options: string;
 };
+
+interface SecretRequestBody {
+    key: string;
+    value: string;
+    visibility: Visibility;
+    is_hidden_value: boolean;
+    provider_name?: string;
+    provider_options?: ProviderOptions;
+}
 /* eslint-enable camelcase */
 
 export default class SecretActions {
@@ -52,23 +61,32 @@ export default class SecretActions {
         providerName?: string,
         providerPath?: string
     ) {
-        const providerOptions = providerPath ? getSecretProviderOptions(providerPath) : undefined;
-        return this.manager.doPut(`/secrets/${key}`, {
-            body: {
-                value,
-                visibility,
-                is_hidden_value: hidden,
+        let body: SecretRequestBody = {
+            key,
+            value,
+            visibility,
+            is_hidden_value: hidden
+        };
+        if (providerName && providerPath) {
+            body = {
+                ...body,
                 provider_name: providerName,
-                provider_options: providerOptions
-            }
-        });
+                provider_options: getSecretProviderOptions(providerPath)
+            };
+        }
+        return this.manager.doPut(`/secrets/${key}`, { body });
     }
 
     doUpdate(key: Secret['key'], value?: string, providerName?: string, providerPath?: string) {
-        const providerOptions = providerPath ? getSecretProviderOptions(providerPath) : undefined;
-        return this.manager.doPatch(`/secrets/${key}`, {
-            body: { value, provider_name: providerName, provider_options: providerOptions }
-        });
+        let body: any = { value };
+        if (providerName && providerPath) {
+            body = {
+                ...body,
+                provider_name: providerName,
+                provider_options: getSecretProviderOptions(providerPath)
+            };
+        }
+        return this.manager.doPatch(`/secrets/${key}`, { body });
     }
 
     doSetIsHiddenValue(key: Secret['key'], hidden: Secret['is_hidden_value']) {
