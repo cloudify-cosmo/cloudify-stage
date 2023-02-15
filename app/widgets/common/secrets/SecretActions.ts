@@ -18,13 +18,15 @@ export type Secret = {
     value: string;
     schema: Record<string, any>;
     provider_name: string;
-    provider_options: ProviderOptions;
+    provider_options: string;
 };
 
-type CreateSecretRequestBody = Pick<Secret, 'value'> &
-    Partial<Pick<Secret, 'visibility' | 'is_hidden_value' | 'schema' | 'provider_name' | 'provider_options'>>;
+type CreateSecretRequestBody = Pick<Secret, 'value' | 'visibility' | 'is_hidden_value'> & {
+    provider_name?: string;
+    provider_options?: ProviderOptions;
+};
 
-type UpdateSecretRequestBody = Partial<Pick<Secret, 'value' | 'provider_name' | 'provider_options'>>;
+type UpdateSecretRequestBody = Partial<CreateSecretRequestBody>;
 
 /* eslint-enable camelcase */
 
@@ -68,7 +70,7 @@ export default class SecretActions {
             body.provider_name = providerName;
             body.provider_options = getSecretProviderOptions(providerPath);
         }
-        return this.manager.doPut<Secret, UpdateSecretRequestBody>(`/secrets/${key}`, { body });
+        return this.manager.doPut<Secret, CreateSecretRequestBody>(`/secrets/${key}`, { body });
     }
 
     doUpdate(key: Secret['key'], value?: string, providerName?: string, providerPath?: string) {

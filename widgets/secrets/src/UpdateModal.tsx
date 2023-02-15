@@ -49,8 +49,11 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                     .then(({ provider_name: providerName, provider_options: providerOptions }) => {
                         setSecretProvider(providerName);
 
-                        if (providerOptions) {
-                            setSecretProviderPath(providerOptions.path);
+                        try {
+                            const parsedSecretProvideOptions = JSON.parse(providerOptions);
+                            setSecretProviderPath(parsedSecretProvideOptions.path);
+                        } catch (error) {
+                            setMessageAsError(translateForm('errors.validation.secretProviderOptions'));
                         }
                     });
             } else {
