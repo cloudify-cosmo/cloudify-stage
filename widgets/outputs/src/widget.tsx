@@ -1,6 +1,6 @@
 import { castArray } from 'lodash';
 import type { OutputsTableProps } from './OutputsTable';
-import OutputsTable, { translateOutputsWidget } from './OutputsTable';
+import OutputsTable from './OutputsTable';
 import type { OutputsAndCapabilitiesItem, OutputsWidgetConfiguration } from './types';
 
 interface Data {
@@ -9,11 +9,8 @@ interface Data {
 
 Stage.defineWidget<unknown, Data, OutputsWidgetConfiguration>({
     id: 'outputs',
-    name: translateOutputsWidget('name'),
-    description: translateOutputsWidget('description'),
     initialWidth: 8,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('outputs'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],

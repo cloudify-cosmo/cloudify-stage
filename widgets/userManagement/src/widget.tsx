@@ -1,6 +1,5 @@
 import UsersTable from './UsersTable';
 import type { User, UserManagementWidget } from './widget.types';
-import getWidgetT from './getWidgetT';
 
 export interface UserViewItem extends User {
     groupCount: number;
@@ -14,18 +13,13 @@ export interface FormattedUsers {
     total: number;
 }
 
-const t = getWidgetT();
-
 Stage.defineWidget<UserManagementWidget.Params, UserManagementWidget.Data, UserManagementWidget.Configuration>({
     id: 'userManagement',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: {
         users: '[manager]/users?_get_data=true[params]'
     },
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('userManagement'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

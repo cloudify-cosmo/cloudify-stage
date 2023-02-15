@@ -10,8 +10,6 @@ const t = Utils.getWidgetTranslation();
 
 Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
     id: Consts.WIDGET_ID,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 3,
     initialHeight: 5,
     showHeader: false,
@@ -24,7 +22,6 @@ Stage.defineWidget<unknown, unknown, BlueprintActionButtonsConfiguration>({
             default: true
         }
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(Consts.WIDGET_ID),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],

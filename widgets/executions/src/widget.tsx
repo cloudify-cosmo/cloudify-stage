@@ -27,11 +27,8 @@ const translateColumns = Stage.Utils.composeT(translate, 'columns');
 
 Stage.defineWidget<ExecutionsWidgetParams, Execution | PaginatedResponse<Execution>, ExecutionsWidgetConfiguration>({
     id: 'executions',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 8,
     initialHeight: 24,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executions'),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],

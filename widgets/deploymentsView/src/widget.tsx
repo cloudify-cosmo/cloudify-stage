@@ -18,8 +18,6 @@ Stage.defineWidget<never, never, DeploymentsViewWidgetConfiguration>({
     ...sharedDefinition,
 
     id: 'deploymentsView',
-    name: Stage.i18n.t(`${i18nPrefix}.name`),
-    description: Stage.i18n.t(`${i18nPrefix}.description`),
 
     initialConfiguration: [
         ...getSharedConfiguration(),
