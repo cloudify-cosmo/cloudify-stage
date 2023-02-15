@@ -1,0 +1,59 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+<% if (description) { _%>
+description: '<%- description.replace("'", "''") %>'
+
+<% } _%>
+imports:
+    - cloudify/types/types.yaml
+<% if (Object.keys(inputs).length) { _%>
+
+inputs:
+<% } _%>
+<% Object.keys(inputs).forEach(inputName => { _%>
+    <%= inputName %>:
+        type: string
+<% if (inputs[inputName]?.defaultSource === 'static') { _%>
+        default: '<%= String(inputs[inputName].defaultValue).replace("'", "''") %>'
+<% } _%>
+<% if (inputs[inputName]?.defaultSource === 'secret') { _%>
+        default: { get-secret: <%= String(inputs[inputName].defaultValue).replace("'", "''") %> }
+<% } _%>
+<% }) _%>
+
+labels:
+    csys-obj-type:
+        values:
+            - environment
+<% Object.keys(labels).forEach(labelKey => { _%>
+    <%= labelKey %>:
+        values:
+            - <%= labels[labelKey] %>
+<% }) _%>
+
+blueprint_labels:
+    csys-obj-type:
+        values:
+            - environment
+<% Object.keys(labels).forEach(labelKey => { _%>
+    <%= labelKey %>:
+        values:
+            - <%= labels[labelKey] %>
+<% }) _%>
+
+node_templates:
+    EnvironmentNode:
+        type: cloudify.nodes.Root
+<% if (Object.keys(capabilities).length) { _%>
+
+capabilities:
+<% } _%>
+<% Object.keys(capabilities).forEach(capabilityName => { _%>
+    <%= capabilityName %>:
+<% if (capabilities[capabilityName].source === 'static') { _%>
+        value: '<%= String(capabilities[capabilityName].value).replace("'", "''") %>'
+<% } _%>
+<% if (capabilities[capabilityName].source === 'input') { _%>
+        value: { get-input: <%= capabilityName %> }
+<% } _%>
+<% }) _%>
