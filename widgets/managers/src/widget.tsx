@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'This widget allows to manage Managers created using Spire plugin',
     initialWidth: 12,
     initialHeight: 24,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('managers'),
     categories: [Stage.GenericConfig.CATEGORY.SPIRE],

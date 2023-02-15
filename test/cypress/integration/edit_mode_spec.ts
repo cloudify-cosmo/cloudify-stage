@@ -191,12 +191,13 @@ describe('Edit mode', () => {
                 200,
                 true
             );
-            submitInvalidWidget(
-                'MandatoryFieldMissingName',
-                "Mandatory field - 'name' - not specified in widget definition.",
-                200,
-                true
-            );
+            // TODO: Re-enable (or remove together with corresponding widget zip) once RD-1604 is resolved
+            // submitInvalidWidget(
+            //     'MandatoryFieldMissing',
+            //     "Mandatory field - 'id' - not specified in widget definition.",
+            //     200,
+            //     true
+            // );
             submitInvalidWidget('ModuleNotAllowed', "Cannot find module 'fs-extra'", 404);
         });
 

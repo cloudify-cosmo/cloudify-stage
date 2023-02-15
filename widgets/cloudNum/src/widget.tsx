@@ -11,12 +11,9 @@ interface CloudNumWidgetConfiguration {
 
 Stage.defineWidget<unknown, unknown, CloudNumWidgetConfiguration>({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

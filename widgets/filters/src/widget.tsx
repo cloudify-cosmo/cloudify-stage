@@ -5,11 +5,8 @@ import type { Filter } from '../../../app/widgets/common/filters/types';
 
 Stage.defineWidget<Filter, Stage.Types.PaginatedResponse<Filter>, FilterWidgetConfiguration>({
     id: 'filters',
-    name: Stage.i18n.t('widgets.filters.name'),
-    description: Stage.i18n.t('widgets.filters.description'),
     initialWidth: 12,
     initialHeight: 22,
-    isReact: true,
     hasStyle: false,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('filters'),

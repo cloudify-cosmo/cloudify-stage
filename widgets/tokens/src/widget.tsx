@@ -24,10 +24,8 @@ const mapFetchedData = (data: TokensWidget.Data, showExpiredTokens: boolean): To
 
 Stage.defineWidget<never, TokensWidget.Data, TokensWidget.Configuration>({
     id: 'tokens',
-    name: t('name'),
     initialWidth: 12,
     initialHeight: 16,
-    isReact: true,
     hasReadme: true,
     fetchUrl: '[manager]/tokens[params]',
     permission: Stage.GenericConfig.WIDGET_PERMISSION('tokens'),
