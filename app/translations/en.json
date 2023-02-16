@@ -117,7 +117,6 @@
             }
         },
         "welcomeLogoLabel": "CLOUDIFY",
-        "loading": "Loading...",
         "messages": {
             "pluginInstallError": "{{pluginName}} plugin installation error.",
             "secretUpdateError": "{{secretName}} secret update operation error.",
@@ -2410,6 +2409,15 @@
                 "enableZoom": "Enable zoom",
                 "enableDrag": "Enable drag",
                 "showToolbar": "Show toolbar"
+            }
+        },
+        "environmentButton": {
+            "name": "Create environment button",
+            "description": "Adds button to create a new environment",
+            "buttonLabel": "Create Environment",
+            "menu": {
+                "new": "New",
+                "fromBlueprint": "From Blueprint"
             }
         }
     }

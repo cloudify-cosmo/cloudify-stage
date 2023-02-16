@@ -1,25 +1,41 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEqual } from 'lodash';
+import type { Visibility, FetchParams } from 'app/widgets/common/types';
 import CreateModal from './CreateModal';
 import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
 import UpdateModal from './UpdateModal';
-import SitePropType from './props/SitePropType';
+import type { Site, SitesWidget } from './widget.types';
 
 const t = Stage.Utils.getT('widgets.sites');
 
-export default class SitesTable extends React.Component {
-    static DELETE_SITE_ACTION = 'delete';
+enum TableActions {
+    DELETE_SITE,
+    UPDATE_SITE
+}
 
-    static UPDATE_SITE_ACTION = 'update';
+interface SitesTableProps {
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<SitesWidget.Configuration>;
+    data: {
+        items: Site[];
+        total: number;
+    };
+}
 
-    constructor(props, context) {
-        super(props, context);
+interface SitesTableState {
+    error: string | null;
+    showModal: boolean;
+    modalType?: TableActions;
+    site?: Site;
+}
+
+export default class SitesTable extends React.Component<SitesTableProps, SitesTableState> {
+    constructor(props: SitesTableProps) {
+        super(props);
 
         this.state = {
             error: null,
-            showModal: false,
-            modalType: '',
-            site: {}
+            showModal: false
         };
     }
 
@@ -28,13 +44,9 @@ export default class SitesTable extends React.Component {
         toolbox.getEventBus().on('sites:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: SitesTableProps, nextState: SitesTableState) {
         const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
+        return !isEqual(widget, nextProps.widget) || !isEqual(this.state, nextState) || !isEqual(data, nextProps.data);
     }
 
     componentWillUnmount() {
@@ -42,15 +54,15 @@ export default class SitesTable extends React.Component {
         toolbox.getEventBus().off('sites:refresh', this.refreshData);
     }
 
-    onUpdateSite(site) {
-        this.setState({ site, modalType: SitesTable.UPDATE_SITE_ACTION, showModal: true });
+    onUpdateSite(site: Site) {
+        this.setState({ site, modalType: TableActions.UPDATE_SITE, showModal: true });
     }
 
-    onDeleteSite(site) {
-        this.setState({ site, modalType: SitesTable.DELETE_SITE_ACTION, showModal: true });
+    onDeleteSite(site: Site) {
+        this.setState({ site, modalType: TableActions.DELETE_SITE, showModal: true });
     }
 
-    setSiteVisibility(siteName, visibility) {
+    setSiteVisibility(siteName: string, visibility: Visibility) {
         const { toolbox } = this.props;
         const actions = new SiteActions(toolbox);
         toolbox.loading(true);
@@ -66,7 +78,7 @@ export default class SitesTable extends React.Component {
             });
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData = (fetchParams: FetchParams) => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -74,11 +86,11 @@ export default class SitesTable extends React.Component {
     deleteSite = () => {
         const { toolbox } = this.props;
         const { site } = this.state;
-        const HIDE_DELETE_MODAL_STATE = { modalType: SitesTable.DELETE_SITE_ACTION, showModal: false };
+        const HIDE_DELETE_MODAL_STATE = { modalType: TableActions.DELETE_SITE, showModal: false };
         const actions = new SiteActions(toolbox);
 
         actions
-            .doDelete(site.name)
+            .doDelete(site!.name)
             .then(() => {
                 this.setState({ ...HIDE_DELETE_MODAL_STATE, error: null });
                 toolbox.getEventBus().trigger('sites:refresh');
@@ -106,8 +118,8 @@ export default class SitesTable extends React.Component {
         const DeleteModal = Stage.Basic.Confirm;
         const { allowedVisibilitySettings } = Stage.Common.Consts;
         const { data, toolbox, widget } = this.props;
-        let latitude;
-        let longitude = null;
+        let latitude: string | undefined;
+        let longitude: string | undefined;
 
         return (
             <div>
@@ -159,7 +171,7 @@ export default class SitesTable extends React.Component {
                                                         name="crosshairs"
                                                         link
                                                         className="rightFloated"
-                                                        onClick={event => event.stopPropagation()}
+                                                        onClick={(event: Event) => event.stopPropagation()}
                                                     />
                                                 </Popup.Trigger>
                                                 <Popup.Content>
@@ -207,29 +219,24 @@ export default class SitesTable extends React.Component {
                     </DataTable.Action>
                 </DataTable>
 
-                <DeleteModal
-                    content={`Are you sure you want to delete the site '${site.name}'?`}
-                    open={modalType === SitesTable.DELETE_SITE_ACTION && showModal}
-                    onConfirm={this.deleteSite}
-                    onCancel={this.hideModal}
-                />
+                {site && (
+                    <>
+                        <DeleteModal
+                            content={`Are you sure you want to delete the site '${site.name}'?`}
+                            open={modalType === TableActions.DELETE_SITE && showModal}
+                            onConfirm={this.deleteSite}
+                            onCancel={this.hideModal}
+                        />
 
-                <UpdateModal
-                    toolbox={toolbox}
-                    open={modalType === SitesTable.UPDATE_SITE_ACTION && showModal}
-                    onHide={this.hideModal}
-                    site={site}
-                />
+                        <UpdateModal
+                            toolbox={toolbox}
+                            open={modalType === TableActions.UPDATE_SITE && showModal}
+                            onHide={this.hideModal}
+                            site={site}
+                        />
+                    </>
+                )}
             </div>
         );
     }
 }
-
-SitesTable.propTypes = {
-    data: PropTypes.shape({
-        items: PropTypes.arrayOf(SitePropType),
-        total: PropTypes.number
-    }).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

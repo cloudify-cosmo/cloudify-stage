@@ -8,7 +8,6 @@ Stage.defineWidget<never, never, never>({
     initialHeight: 4,
     showHeader: false,
     showBorder: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('onlyMyResources'),
 

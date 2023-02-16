@@ -1,8 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
+import { isEmpty } from 'lodash';
 import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
 
-export default function CreateModal({ toolbox }) {
+interface CreateModalProps {
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function CreateModal({ toolbox }: CreateModalProps) {
     const { useBoolean, useErrors, useOpen, useInputs, useInput } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
@@ -21,7 +25,7 @@ export default function CreateModal({ toolbox }) {
 
     function createSite() {
         const { siteName, siteLocation } = inputs;
-        if (_.isEmpty(siteName)) {
+        if (isEmpty(siteName)) {
             setErrors({ siteName: 'Please provide site name' });
             return;
         }
@@ -74,7 +78,3 @@ export default function CreateModal({ toolbox }) {
         </Modal>
     );
 }
-
-CreateModal.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

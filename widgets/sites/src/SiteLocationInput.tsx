@@ -1,17 +1,23 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Field } from 'app/widgets/common/types';
+import { useState, useEffect } from 'react';
+import type { SyntheticEvent } from 'react';
 import SiteLocationMap from './SiteLocationMap';
 
-export default function SiteLocationInput({ value, onChange, toolbox }) {
-    const { useState, useEffect } = React;
+export interface SiteLocationInputProps {
+    value?: string;
+    toolbox: Stage.Types.Toolbox;
+    onChange: (event: SyntheticEvent | null, field: Omit<Field, 'type' | 'checked'>) => void;
+}
 
+export default function SiteLocationInput({ value = '', onChange, toolbox }: SiteLocationInputProps) {
     const [mapOpen, setMapOpen] = useState(false);
     const [enteredValue, setEnteredValue] = useState(value || '');
 
     useEffect(() => setEnteredValue(value), [value]);
 
-    function onLocationChange(newValue) {
-        setEnteredValue(newValue);
-        onChange(null, { name: 'siteLocation', value: newValue });
+    function onLocationChange(newLocation: string) {
+        setEnteredValue(newLocation);
+        onChange(null, { name: 'siteLocation', value: newLocation });
     }
 
     const { Button, Form } = Stage.Basic;
@@ -22,7 +28,7 @@ export default function SiteLocationInput({ value, onChange, toolbox }) {
                 label="Location"
                 value={enteredValue}
                 placeholder="latitude, longitude (32.166369, 34.810893)"
-                onChange={(e, data) => onLocationChange(data.value)}
+                onChange={(_event, data) => onLocationChange(data.value)}
                 action={<Button active={mapOpen} icon="crosshairs" onClick={() => setMapOpen(!mapOpen)} />}
             />
             {mapOpen && (
@@ -38,13 +44,3 @@ export default function SiteLocationInput({ value, onChange, toolbox }) {
         </>
     );
 }
-
-SiteLocationInput.propTypes = {
-    onChange: PropTypes.func.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    value: PropTypes.string
-};
-
-SiteLocationInput.defaultProps = {
-    value: null
-};

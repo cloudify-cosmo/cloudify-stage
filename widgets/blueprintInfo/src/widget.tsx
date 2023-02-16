@@ -9,7 +9,6 @@ Stage.defineWidget({
     description: 'Shows blueprint basic information and status',
     initialWidth: 3,
     initialHeight: 14,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprintInfo'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

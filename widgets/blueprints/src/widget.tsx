@@ -54,11 +54,8 @@ const processData = (data: BlueprintsWidgetData, toolbox: Stage.Types.Toolbox) =
 
 Stage.defineWidget<BlueprintsParams, BlueprintsWidgetData, BlueprintsWidgetConfiguration>({
     id: 'blueprints',
-    name: translateBlueprints('name'),
-    description: translateBlueprints('description'),
     initialWidth: 8,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('blueprints'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS],

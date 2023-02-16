@@ -8,7 +8,6 @@ Stage.defineWidget({
     description: 'Plugins list',
     initialWidth: 8,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('plugins'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
