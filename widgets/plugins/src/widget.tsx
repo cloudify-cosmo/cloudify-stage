@@ -2,11 +2,8 @@ import { constant } from 'lodash';
 import PluginsTable from './PluginsTable';
 import type { PluginsWidget } from './widget.types';
 
-// TODO Norbert: Migrate labels to translation file
 Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, PluginsWidget.Configuration>({
     id: 'plugins',
-    name: 'Plugins list',
-    description: 'Plugins list',
     initialWidth: 8,
     initialHeight: 20,
     hasReadme: true,

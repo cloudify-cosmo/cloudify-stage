@@ -1,7 +1,6 @@
 import type { DataTableConfiguration } from 'app/utils/GenericConfig';
 import type { Visibility } from 'app/widgets/common/types';
 
-// TODO Norbert: Evaluate if this typing is accurate
 export interface FetchedPluginItem {
     /* eslint-disable camelcase */
     created_by: string;
