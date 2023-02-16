@@ -3,7 +3,7 @@ import PluginsTable from './PluginsTable';
 import type { PluginsWidget } from './widget.types';
 
 // TODO Norbert: Migrate labels to translation file
-Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
+Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, PluginsWidget.Configuration>({
     id: 'plugins',
     name: 'Plugins list',
     description: 'Plugins list',
