@@ -89,7 +89,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         }
         if (useSecretProvider && (emptySecretProvider || emptySecretProviderPath)) {
             setErrors({
-                secretProvider: emptySecretProviderPath ? translateForm('errors.validation.secretProvider') : undefined,
+                secretProvider: emptySecretProvider ? translateForm('errors.validation.secretProvider') : undefined,
                 secretProviderPath: emptySecretProviderPath
                     ? translateForm('errors.validation.secretProviderPath')
                     : undefined
