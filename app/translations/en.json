@@ -2293,6 +2293,17 @@
                 "deleteSite": "Delete site"
             }
         },
+        "pluginsNum": {
+            "name": "Number of plugins",
+            "description": "Number of plugins",
+            "configuration": {
+                "page": {
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on widget content"
+                }
+            },
+            "quantityDescription": "Plugins"
+        },
         "snapshots": {
             "actions": {
                 "restore": "Restore",

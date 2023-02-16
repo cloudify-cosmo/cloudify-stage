@@ -1,15 +1,18 @@
 import React from 'react';
 import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
 
+const widgetId = 'pluginsNum';
+const translate = Stage.Utils.getT(`widgets.${widgetId}`);
+
 interface WidgetConfiguration extends PollingTimeConfiguration {
     page: string;
 }
 type WidgetData = Stage.Types.PaginatedResponse<any>;
 
 Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
-    id: 'pluginsNum',
-    name: 'Number of plugins',
-    description: 'Number of plugins',
+    id: widgetId,
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
@@ -21,8 +24,8 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(30),
         {
             id: 'page',
-            name: 'Page to open on click',
-            description: 'Page to open when user clicks on widget content',
+            name: translate('configuration.page.name'),
+            description: translate('configuration.page.description'),
             type: Stage.Basic.GenericField.CUSTOM_TYPE,
             default: 'plugins',
             component: Stage.Shared.PageFilter
@@ -43,7 +46,7 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
 
         return (
             <Link to={to}>
-                <KeyIndicator title="Plugins" icon="plug" number={num} />
+                <KeyIndicator title={translate('quantityDescription')} icon="plug" number={num} />
             </Link>
         );
     }
