@@ -4,20 +4,20 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import axios from 'axios';
+import type { File } from 'decompress';
 import decompress from 'decompress';
 import directoryTree from 'directory-tree';
 import ejs from 'ejs';
 import _, { escapeRegExp, merge, trimStart } from 'lodash';
 import uniqueDirectoryName from 'short-uuid';
-import simpleGit from 'simple-git';
-import type { File } from 'decompress';
-import type { NextFunction, Request, Response } from 'express';
 import type { GitError } from 'simple-git';
+import simpleGit from 'simple-git';
+import type { NextFunction, Request, Response } from 'express';
 import { getLogger } from './LoggerHandler';
 import type { TerraformBlueprintData, TerraformParserResult } from './TerraformHandler.types';
 
 const logger = getLogger('Terraform');
-const templatePath = path.resolve(__dirname, '../templates/terraform');
+const templatePath = path.resolve(__dirname, '../templates/blueprints/terraform');
 const template = fs.readFileSync(path.resolve(templatePath, 'blueprint.ejs'), 'utf8');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
 const disableGitAuthenticationPromptOption = '-c core.askPass=echo';
