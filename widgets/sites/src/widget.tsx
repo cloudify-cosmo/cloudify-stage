@@ -2,12 +2,9 @@ import SitesTable from './SitesTable';
 import './widget.css';
 import type { SitesWidget } from './widget.types';
 import { widgetId } from './widget.consts';
-import { translateWidget } from './widget.utils';
 
 Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
     id: widgetId,
-    name: translateWidget('name'),
-    description: translateWidget('description'),
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: {
