@@ -1629,6 +1629,8 @@
             "successMessage": "{{pluginTitle}} successfully uploaded"
         },
         "plugins": {
+            "name": "Plugins list",
+            "description": "Plugins list",
             "upload": {
                 "button": "Upload",
                 "marketplace": "Upload from Marketplace",

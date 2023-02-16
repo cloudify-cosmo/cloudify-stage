@@ -1,6 +1,6 @@
 import type { TemplatePageDefinition } from '../../../app/actions/templateManagement/pages';
 
-const t = Stage.Utils.getT('widgets.plugins');
+const translate = Stage.Utils.getT('widgets.plugins');
 
 const pluginsMarketplacePage: TemplatePageDefinition = {
     name: '',
@@ -10,7 +10,7 @@ const pluginsMarketplacePage: TemplatePageDefinition = {
             content: [
                 {
                     id: 'pluginsCatalog',
-                    name: t('upload.catalog'),
+                    name: translate('upload.catalog'),
                     height: 24,
                     width: 12,
                     definition: 'pluginsCatalog',
@@ -33,13 +33,13 @@ export default function MarketplaceModal({ open, onHide }: { open: boolean; onHi
     return (
         <Modal open={open} onClose={onHide}>
             <Modal.Header>
-                <Icon name="upload" /> {t(`upload.marketplace`)}
+                <Icon name="upload" /> {translate(`upload.marketplace`)}
             </Modal.Header>
             <Modal.Content>
                 <PageContent page={pluginsMarketplacePage} />
             </Modal.Content>
             <Modal.Actions>
-                <CancelButton onClick={onHide} content={t(`upload.close`)} />
+                <CancelButton onClick={onHide} content={translate(`upload.close`)} />
             </Modal.Actions>
         </Modal>
     );
