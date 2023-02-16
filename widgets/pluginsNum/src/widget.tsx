@@ -1,9 +1,13 @@
-// @ts-nocheck File not migrated fully to TS
-
 import _ from 'lodash';
 import React from 'react';
+import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
 
-Stage.defineWidget({
+interface WidgetConfiguration extends PollingTimeConfiguration {
+    page: string;
+}
+type WidgetData = Stage.Types.PaginatedResponse<any>;
+
+Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
     id: 'pluginsNum',
     name: 'Number of plugins',
     description: 'Number of plugins',
