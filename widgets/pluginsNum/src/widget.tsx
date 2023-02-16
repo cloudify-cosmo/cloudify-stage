@@ -14,8 +14,6 @@ type WidgetData = Stage.Types.PaginatedResponse<{
 
 Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
     id: widgetId,
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
@@ -44,12 +42,12 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
             return <Loading />;
         }
 
-        const pluginsQuantity = data.metadata.pagination.total;
+        const pluginsCount = data.metadata.pagination.total;
         const redirectionLink = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
             <Link to={redirectionLink}>
-                <KeyIndicator title={translate('quantityDescription')} icon="plug" number={pluginsQuantity} />
+                <KeyIndicator title={translate('quantityDescription')} icon="plug" number={pluginsCount} />
             </Link>
         );
     }
