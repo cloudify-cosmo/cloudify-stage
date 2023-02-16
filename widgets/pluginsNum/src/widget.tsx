@@ -44,12 +44,12 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
             return <Loading />;
         }
 
-        const num = data.metadata.pagination.total;
-        const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
+        const pluginsQuantity = data.metadata.pagination.total;
+        const redirectionLink = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
-            <Link to={to}>
-                <KeyIndicator title={translate('quantityDescription')} icon="plug" number={num} />
+            <Link to={redirectionLink}>
+                <KeyIndicator title={translate('quantityDescription')} icon="plug" number={pluginsQuantity} />
             </Link>
         );
     }
