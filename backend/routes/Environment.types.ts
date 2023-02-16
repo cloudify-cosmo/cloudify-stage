@@ -3,14 +3,18 @@ interface CapabilityBase {
     value: string;
 }
 
-export interface ExternallCapability extends CapabilityBase {
+export interface ExternalCapability extends CapabilityBase {
     source: 'input' | 'secret';
     blueprintDefault: boolean;
 }
 
+interface StaticCapability extends CapabilityBase {
+    source: 'static';
+}
+
 export interface PostEnvironmentBlueprintRequestBody {
     description: string;
-    capabilities: ((CapabilityBase & { source: 'static' }) | ExternallCapability)[];
+    capabilities: (StaticCapability | ExternalCapability)[];
     labels: { key: string; value: string; blueprintDefault: boolean }[];
 }
 

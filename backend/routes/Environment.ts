@@ -2,7 +2,7 @@ import express from 'express';
 import _ from 'lodash';
 import { renderBlueprint } from '../handler/EnvironmentHandler';
 import type {
-    ExternallCapability,
+    ExternalCapability,
     PostEnvironmentBlueprintRequestBody,
     PostEnvironmentBlueprintResponse
 } from './Environment.types';
@@ -20,7 +20,7 @@ router.post<never, PostEnvironmentBlueprintResponse, PostEnvironmentBlueprintReq
             inputs: _(environmentData.capabilities.filter(capability => capability.source !== 'static'))
                 .keyBy('name')
                 .mapValues(capability =>
-                    (<ExternallCapability>capability).blueprintDefault
+                    (<ExternalCapability>capability).blueprintDefault
                         ? {
                               defaultSource: capability.source === 'input' ? ('static' as const) : ('secret' as const),
                               defaultValue: capability.value
