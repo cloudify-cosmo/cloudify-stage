@@ -54,7 +54,6 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
     description: 'This widget displays a map view of sites by location with site deployments status summary',
     initialWidth: 6,
     initialHeight: 30,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sitesMap'),
     categories: [Stage.GenericConfig.CATEGORY.SPIRE],

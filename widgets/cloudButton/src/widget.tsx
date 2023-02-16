@@ -1,12 +1,10 @@
-import type { ButtonLinkProps } from '../../../app/widgets/common/components/ButtonLink';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 
 const widgetId = 'cloudButton';
 const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 
-Stage.defineWidget<unknown, unknown, Omit<ButtonLinkProps, 'fullHeight' | 'url'>>({
+Stage.defineWidget<unknown, unknown, ButtonConfiguration>({
     id: widgetId,
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 2,
     initialHeight: 4,
     showHeader: false,

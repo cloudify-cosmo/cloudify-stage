@@ -1,9 +1,5 @@
 import type { PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
 
-export {};
-
-const t = Stage.Utils.getT('widgets.nodesStats');
-
 type Item = {
     // eslint-disable-next-line camelcase
     node_instances: number;
@@ -19,11 +15,8 @@ interface WidgetParams {
 
 Stage.defineWidget<WidgetParams, NodeInstancesSummaryResponse, PollingTimeConfiguration>({
     id: 'nodesStats',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 4,
     initialHeight: 22,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('nodesStats'),
     categories: [Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

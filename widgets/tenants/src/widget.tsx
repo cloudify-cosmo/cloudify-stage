@@ -4,16 +4,12 @@ import type { Tenant } from './widget.types';
 import TenantsTable from './TenantsTable';
 
 const widgetId = 'tenants';
-const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<never, PaginatedResponse<Tenant>, DataTableConfiguration>({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: '[manager]/tenants?_get_data=true[params]',
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],

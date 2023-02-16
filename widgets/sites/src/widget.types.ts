@@ -1,9 +1,9 @@
 import type { Visibility } from 'app/widgets/common/types';
-import type { DataTableConfiguration, PollingTimeConfiguration } from '../../../app/utils/GenericConfig';
+import type { DataTableConfiguration, PollingTimeConfiguration } from 'app/utils/GenericConfig';
 
 export interface FetchedSite {
     /* eslint-disable camelcase */
-    created_at: Date;
+    created_at: string;
     created_by: string;
     latitude?: number;
     longitude?: number;
@@ -17,17 +17,15 @@ export interface FetchedSite {
 }
 
 export interface Site extends Omit<FetchedSite, 'created_at'> {
-    /* eslint-disable camelcase */
+    /* eslint-disable-next-line camelcase */
     created_at: string;
     deploymentCount: number;
-    /* eslint-enable camelcase */
 }
 
 export interface DeploymentSummary {
-    /* eslint-disable camelcase */
+    /* eslint-disable-next-line camelcase */
     site_name?: string;
     deployments: number;
-    /* eslint-enable camelcase */
 }
 
 export declare namespace SitesWidget {

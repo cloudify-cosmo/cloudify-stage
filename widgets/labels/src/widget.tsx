@@ -8,11 +8,8 @@ const translate = Stage.Utils.getT('widgets.labels');
 
 Stage.defineWidget<{ deploymentId: string | null }, Label[], PollingTimeConfiguration>({
     id: 'labels',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 12,
     initialHeight: 24,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('labels'),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],

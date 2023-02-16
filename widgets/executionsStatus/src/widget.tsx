@@ -9,11 +9,8 @@ const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<ExecutionsStatusWidget.Params, ExecutionsStatusWidget.Data, ExecutionsStatusWidget.Configuration>({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 4,
     initialHeight: 24,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

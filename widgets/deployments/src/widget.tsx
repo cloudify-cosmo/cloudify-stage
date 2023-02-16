@@ -9,8 +9,6 @@ const t = Stage.Utils.getT('widgets.deployments');
 
 Stage.defineWidget({
     id: 'deployments',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 8,
     initialHeight: 24,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
@@ -57,7 +55,6 @@ Stage.defineWidget({
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 

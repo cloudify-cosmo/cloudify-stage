@@ -1,7 +1,6 @@
-import { isEmpty, get } from 'lodash';
 import SitesTable from './SitesTable';
 import './widget.css';
-import type { SitesWidget } from './widgets.types';
+import type { SitesWidget } from './widget.types';
 import { widgetId } from './widget.consts';
 import { translateWidget } from './widget.utils';
 
@@ -15,7 +14,6 @@ Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
         sites: '[manager]/sites[params]',
         siteDeploymentCount: '[manager]/summary/deployments?_target_field=site_name'
     },
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('sites'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
@@ -29,7 +27,7 @@ Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (!data || isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -50,7 +48,7 @@ Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
                     deploymentCount: deploymentsPerSite[site.name] || 0
                 };
             }),
-            total: get(sites, 'metadata.pagination.total', 0)
+            total: sites.metadata.pagination.total
         };
 
         return <SitesTable widget={widget} data={formattedData} toolbox={toolbox} />;

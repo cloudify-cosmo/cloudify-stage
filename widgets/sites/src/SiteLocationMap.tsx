@@ -22,6 +22,10 @@ interface MapOptions {
 
 interface SiteLocationMapProps {
     /**
+     * @property {string} attribution - map attribution to be added to map view
+     */
+    attribution?: string;
+    /**
      * @property {string} location - location, format: "<latitude>, <longitude>"
      */
     location: string;
@@ -64,7 +68,7 @@ class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocation
         const { createMarkerIcon } = Stage.Common.Map;
         const { mapOptions: defaultMapOptions, initialZoom, urlTemplate } = Consts.leaflet;
 
-        const { location, mapOptions } = this.props;
+        const { location, mapOptions, attribution } = this.props;
         const { isMapAvailable } = this.state;
 
         const url = Stage.Utils.Url.url(urlTemplate);
@@ -97,7 +101,7 @@ class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocation
                 zoom={initialZoom}
                 center={toLatLng(this.initialLocation)}
             >
-                <Leaflet.TileLayer url={url} />
+                <Leaflet.TileLayer attribution={attribution} url={url} />
                 {location && <Leaflet.Marker position={toLatLng(location)} icon={createMarkerIcon('grey')} />}
             </Leaflet.Map>
         );

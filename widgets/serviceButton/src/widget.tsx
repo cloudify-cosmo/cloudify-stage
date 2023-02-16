@@ -8,13 +8,10 @@ const t = Stage.Utils.getT(`widgets.${widgetId}`);
 
 Stage.defineWidget<unknown, undefined, ServiceButtonWidgetConfiguration>({
     id: widgetId,
-    name: t('name'),
-    description: t('description'),
     initialWidth: 2,
     initialHeight: 3,
     showHeader: false,
     showBorder: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS, Stage.GenericConfig.CATEGORY.BUTTONS_AND_FILTERS],
