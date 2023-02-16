@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import type { PollingTimeConfiguration } from 'app/utils/GenericConfig';
 
@@ -32,16 +31,14 @@ Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
     fetchUrl: '[manager]/plugins?_include=id&_size=1',
 
     render(widget, data) {
-        const { Loading } = Stage.Basic;
+        const { Loading, KeyIndicator } = Stage.Basic;
+        const { Link } = Stage.Shared;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
-        const { KeyIndicator } = Stage.Basic;
-        const { Link } = Stage.Shared;
-
-        const num = _.get(data, 'metadata.pagination.total', 0);
+        const num = data.metadata.pagination.total;
         const to = widget.configuration.page ? `/page/${widget.configuration.page}` : '/';
 
         return (
