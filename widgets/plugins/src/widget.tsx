@@ -1,3 +1,4 @@
+import { constant } from 'lodash';
 import PluginsTable from './PluginsTable';
 import type { PluginsWidget } from './widget.types';
 
@@ -25,9 +26,9 @@ Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
                         : params
                 }
             )
-            .then(data =>
+            .then((data: PluginsWidget.Data) =>
                 Promise.all(
-                    _.map(data.items, item =>
+                    data.items.map(item =>
                         toolbox
                             .getInternal()
                             .doGet<Response>(`/plugins/icons/${item.id}`, { parseResponse: false })
@@ -39,7 +40,7 @@ Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
                                             const reader = new FileReader();
                                             reader.addEventListener('error', () => resolve());
                                             reader.addEventListener('load', () => {
-                                                item.icon = reader.result;
+                                                item.icon = reader.result as string;
                                                 resolve();
                                             });
                                             reader.readAsDataURL(blob);
@@ -49,7 +50,7 @@ Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
                                     })
                             )
                     )
-                ).then(_.constant(data))
+                ).then(constant(data))
             );
     },
 
@@ -63,7 +64,7 @@ Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
         const selectedPlugin = toolbox.getContext().getValue('pluginId');
         const formattedData = {
             ...data,
-            items: _.map(data.items, item => {
+            items: data.items.map(item => {
                 return {
                     ...item,
                     uploaded_at: Stage.Utils.Time.formatTimestamp(item.uploaded_at), // 2016-07-20 09:10:53.103579

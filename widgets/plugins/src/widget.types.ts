@@ -7,7 +7,7 @@ export interface FetchedPluginItem {
     created_by: string;
     distribution: string;
     distribution_release: string;
-    icon: string;
+    icon?: string;
     id: string;
     title: string;
     package_name: string;
