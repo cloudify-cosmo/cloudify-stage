@@ -1,8 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
-
 import PluginsTable from './PluginsTable';
+import type { PluginsWidget } from './widget.types';
 
-Stage.defineWidget({
+// TODO Norbert: Migrate labels to translation file
+Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, never>({
     id: 'plugins',
     name: 'Plugins list',
     description: 'Plugins list',
@@ -14,7 +14,7 @@ Stage.defineWidget({
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30), Stage.GenericConfig.PAGE_SIZE_CONFIG()],
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         return toolbox
             .getManager()
             .doGet(
@@ -34,7 +34,7 @@ Stage.defineWidget({
                             .then(response => response.blob())
                             .then(
                                 blob =>
-                                    new Promise(resolve => {
+                                    new Promise<void>(resolve => {
                                         if (blob.size) {
                                             const reader = new FileReader();
                                             reader.addEventListener('error', () => resolve());
@@ -53,10 +53,10 @@ Stage.defineWidget({
             );
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -69,9 +69,9 @@ Stage.defineWidget({
                     uploaded_at: Stage.Utils.Time.formatTimestamp(item.uploaded_at), // 2016-07-20 09:10:53.103579
                     isSelected: selectedPlugin === item.id
                 };
-            })
+            }),
+            total: data.metadata.pagination.total
         };
-        formattedData.total = _.get(data, 'metadata.pagination.total', 0);
 
         return <PluginsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }

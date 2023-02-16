@@ -1,26 +1,12 @@
 import type { FunctionComponent } from 'react';
 import { useState } from 'react';
-import type { Visibility } from '../../../app/widgets/common/types';
 import MarketplaceModal from './MarketplaceModal';
-import type { DataTableConfiguration } from '../../../app/utils/GenericConfig';
+import type { FetchedPluginItem, PluginsWidget } from './widget.types';
 
 const t = Stage.Utils.getT('widgets.plugins');
 
-interface PluginItem {
-    /* eslint-disable camelcase */
-    created_by: string;
-    distribution: string;
-    distribution_release: string;
-    icon: string;
-    id: string;
+interface PluginItem extends FetchedPluginItem {
     isSelected: boolean;
-    title: string;
-    package_name: string;
-    package_version: string;
-    supported_platform: string;
-    uploaded_at: string;
-    visibility: Visibility;
-    /* eslint-enable camelcase */
 }
 
 interface PluginsTableProps {
@@ -29,7 +15,7 @@ interface PluginsTableProps {
         total: number;
     };
     toolbox: Stage.Types.Toolbox;
-    widget: Stage.Types.Widget<DataTableConfiguration>;
+    widget: Stage.Types.Widget<PluginsWidget.Configuration>;
 }
 
 const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, widget }) => {
