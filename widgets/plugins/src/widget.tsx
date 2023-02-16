@@ -1,11 +1,9 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { constant } from 'lodash';
 import PluginsTable from './PluginsTable';
+import type { PluginsWidget } from './widget.types';
 
-Stage.defineWidget({
+Stage.defineWidget<PluginsWidget.Parameters, PluginsWidget.Data, PluginsWidget.Configuration>({
     id: 'plugins',
-    name: 'Plugins list',
-    description: 'Plugins list',
     initialWidth: 8,
     initialHeight: 20,
     hasReadme: true,
@@ -14,7 +12,7 @@ Stage.defineWidget({
 
     initialConfiguration: [Stage.GenericConfig.POLLING_TIME_CONFIG(30), Stage.GenericConfig.PAGE_SIZE_CONFIG()],
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         return toolbox
             .getManager()
             .doGet(
@@ -25,21 +23,21 @@ Stage.defineWidget({
                         : params
                 }
             )
-            .then(data =>
+            .then((data: PluginsWidget.Data) =>
                 Promise.all(
-                    _.map(data.items, item =>
+                    data.items.map(item =>
                         toolbox
                             .getInternal()
                             .doGet<Response>(`/plugins/icons/${item.id}`, { parseResponse: false })
                             .then(response => response.blob())
                             .then(
                                 blob =>
-                                    new Promise(resolve => {
+                                    new Promise<void>(resolve => {
                                         if (blob.size) {
                                             const reader = new FileReader();
                                             reader.addEventListener('error', () => resolve());
                                             reader.addEventListener('load', () => {
-                                                item.icon = reader.result;
+                                                item.icon = reader.result as string;
                                                 resolve();
                                             });
                                             reader.readAsDataURL(blob);
@@ -49,29 +47,29 @@ Stage.defineWidget({
                                     })
                             )
                     )
-                ).then(_.constant(data))
+                ).then(constant(data))
             );
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
         const selectedPlugin = toolbox.getContext().getValue('pluginId');
         const formattedData = {
             ...data,
-            items: _.map(data.items, item => {
+            items: data.items.map(item => {
                 return {
                     ...item,
                     uploaded_at: Stage.Utils.Time.formatTimestamp(item.uploaded_at), // 2016-07-20 09:10:53.103579
                     isSelected: selectedPlugin === item.id
                 };
-            })
+            }),
+            total: data.metadata.pagination.total
         };
-        formattedData.total = _.get(data, 'metadata.pagination.total', 0);
 
         return <PluginsTable widget={widget} data={formattedData} toolbox={toolbox} />;
     }
