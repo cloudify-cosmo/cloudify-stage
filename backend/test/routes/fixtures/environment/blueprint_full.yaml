@@ -1,0 +1,50 @@
+tosca_definitions_version: cloudify_dsl_1_4
+
+description: 'description'
+
+imports:
+    - cloudify/types/types.yaml
+
+inputs:
+    team:
+        type: string
+    unit:
+        type: string
+        default: 'UnitA'
+    key:
+        type: string
+    cert:
+        type: string
+        default: { get-secret: MySecretCert }
+
+labels:
+    csys-obj-type:
+        values:
+            - environment
+    app:
+        values:
+            - platform
+
+blueprint_labels:
+    csys-obj-type:
+        values:
+            - environment
+    app:
+        values:
+            - platform
+
+node_templates:
+    EnvironmentNode:
+        type: cloudify.nodes.Root
+
+capabilities:
+    team:
+        value: { get-input: team }
+    unit:
+        value: { get-input: unit }
+    region:
+        value: 'US-WEST'
+    key:
+        value: { get-input: key }
+    cert:
+        value: { get-input: cert }

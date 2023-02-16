@@ -23,11 +23,10 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
     const { errors, setMessageAsError, clearErrors, setErrors } = useErrors();
     const [canUpdateSecret, enableSecretUpdate, disableSecretUpdate] = useBoolean(true);
     const [secretValue, setSecretValue, clearSecretValue] = useInput('');
-    const [useSecretProvider, setUseSecretProvider] = useState(secret.provider_name !== null);
+    const [useSecretProvider, setUseSecretProvider, unsetUseSecretProvider] = useBoolean();
     const [secretProvider, setSecretProvider, clearSecretProvider] = useInput('');
     const [secretProviderPath, setSecretProviderPath, clearSecretProviderPath] = useInput('');
     const [secretProviders, setSecretProviders] = useState<SecretProvidersWidget.DataItem[]>();
-    const [secretProviderOptions, setSecretProviderOptions] = useState<Record<string, any>>();
 
     useOpenProp(open, () => {
         setLoading();
@@ -44,18 +43,27 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         if (secret) {
             const isHidden = secret.is_hidden_value;
             if (hasSecretProvider) {
-                setUseSecretProvider(true);
-                setSecretProvider(secret.provider_name);
-                actions.doGet(secret.key).then(({ provider_options: providerOptions }) => {
-                    setSecretProviderOptions(providerOptions);
-                    setSecretProviderPath(providerOptions!.path);
-                });
+                setUseSecretProvider();
+                actions
+                    .doGetWithoutValue(secret.key)
+                    .then(({ provider_name: providerName, provider_options: providerOptions }) => {
+                        setSecretProvider(providerName);
+
+                        try {
+                            const parsedSecretProvideOptions = JSON.parse(providerOptions);
+                            setSecretProviderPath(parsedSecretProvideOptions.path);
+                        } catch (error) {
+                            setMessageAsError(translateForm('errors.validation.secretProviderOptions'));
+                        }
+                    });
             } else {
-                setUseSecretProvider(false);
+                unsetUseSecretProvider();
                 actions
                     .doGet(secret.key)
                     .then(({ value }) => {
                         setSecretValue(value);
+                        clearSecretProvider();
+                        clearSecretProviderPath();
                     })
                     .catch(setMessageAsError);
             }
@@ -72,16 +80,20 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     function updateSecret() {
         clearErrors();
-        if (isEmpty(secretValue) && !useSecretProvider) {
+        const emptySecretProvider = !secretProvider;
+        const emptySecretProviderPath = !secretProviderPath;
+
+        if (!useSecretProvider && !secretValue) {
             setErrors({ secretValue: translateForm('errors.validation.secretValue') });
             return;
         }
-        if (isEmpty(secretProvider) && useSecretProvider) {
-            setErrors({ secretProvider: translateForm('errors.validation.secretProvider') });
-            return;
-        }
-
-        if (!isEmpty(errors)) {
+        if (useSecretProvider && (emptySecretProvider || emptySecretProviderPath)) {
+            setErrors({
+                secretProvider: emptySecretProvider ? translateForm('errors.validation.secretProvider') : undefined,
+                secretProviderPath: emptySecretProviderPath
+                    ? translateForm('errors.validation.secretProviderPath')
+                    : undefined
+            });
             return;
         }
 
@@ -89,8 +101,9 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
         setLoading();
 
         const actions = new Stage.Common.Secrets.Actions(toolbox.getManager());
+
         actions
-            .doUpdate(secret.key, secretValue, secretProvider, secretProviderOptions)
+            .doUpdate(secret.key, secretValue, secretProvider, secretProviderPath)
             .then(() => {
                 clearErrors();
                 onHide();
@@ -110,7 +123,15 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
 
     function onSecretProviderChange() {
         clearErrors();
-        setUseSecretProvider(!useSecretProvider);
+
+        if (useSecretProvider) {
+            unsetUseSecretProvider();
+            clearSecretProvider();
+            clearSecretProviderPath();
+        } else {
+            clearSecretValue();
+            setUseSecretProvider();
+        }
     }
 
     const currentUsername = toolbox.getManager().getCurrentUsername();
