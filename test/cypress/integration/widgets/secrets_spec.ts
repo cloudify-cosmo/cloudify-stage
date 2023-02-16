@@ -1,6 +1,7 @@
 describe('Secret store management widget', () => {
     const secretName = 'secrets_test';
     const secretProviderName = 'Secret_Provider_1';
+    const newSecretProviderName = 'Secret_Provider_2';
 
     before(() =>
         cy
@@ -68,15 +69,27 @@ describe('Secret store management widget', () => {
             cy.clickButton('Create');
             cy.contains('Please select a secret provider').should('be.visible');
             cy.contains('Please provide a path or a secret key on the secret provider').should('be.visible');
-            cy.setSingleDropdownValue(secretProviderName, secretProviderName);
-            cy.getField('Path at the provider').find('input').type(secretName);
+            cy.setSingleDropdownValue('Secret provider', secretProviderName);
+            cy.typeToFieldInput('Path at the provider', secretName);
             cy.clickButton('Create');
         });
 
+        cy.createSecretProvider({ name: newSecretProviderName, type: 'vault', visibility: 'global' });
+
         cy.getWidget('secrets').within(() => {
-            cy.getSearchInput().type(secretName);
+            cy.getSearchInput().clear().type(secretName);
+            cy.get('.rowActions').find('i[title="Update secret"]').click();
+        });
+
+        cy.get('.modal').within(() => {
+            cy.setSingleDropdownValue('Secret provider', newSecretProviderName);
+            cy.typeToFieldInput('Path at the provider', 'secret/path');
+            cy.clickButton('Update');
+        });
+
+        cy.getWidget('secrets').within(() => {
             cy.get('tbody tr').should('have.length', 1);
-            cy.contains(secretProviderName);
+            cy.contains(newSecretProviderName);
         });
     });
 
@@ -86,7 +99,7 @@ describe('Secret store management widget', () => {
 
         cy.contains('Create').click();
         cy.get('.modal').within(() => {
-            cy.getField('Secret key').find('input').type(secretName);
+            cy.typeToFieldInput('Secret key', secretName);
             cy.contains('.checkbox', 'Retrieve the secret value from a secret provider').should(
                 'have.class',
                 'disabled'
