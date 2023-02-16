@@ -59,9 +59,7 @@ describe('Deployment Action Buttons widget', () => {
 
         it('should allow to start an action on the deployment', () => {
             const siteName = 'deployment_action_buttons_test';
-            cy.interceptSp('PUT', `/sites/${siteName}`).as('createSite');
             cy.deleteSites(siteName).createSite({ name: siteName });
-            cy.wait('@createSite');
             cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setSite');
 
             cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
