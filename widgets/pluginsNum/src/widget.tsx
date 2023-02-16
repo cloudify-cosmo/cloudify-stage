@@ -7,7 +7,10 @@ const translate = Stage.Utils.getT(`widgets.${widgetId}`);
 interface WidgetConfiguration extends PollingTimeConfiguration {
     page: string;
 }
-type WidgetData = Stage.Types.PaginatedResponse<any>;
+
+type WidgetData = Stage.Types.PaginatedResponse<{
+    id: string;
+}>;
 
 Stage.defineWidget<never, WidgetData, WidgetConfiguration>({
     id: widgetId,
