@@ -6,14 +6,13 @@ import type {
     SortColumnConfiguration
 } from 'app/utils/GenericConfig';
 import './widget.css';
-import type { PaginatedResponse } from 'backend/types';
 import type { DeploymentViewData } from 'widgets/deployments/src/types';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
-import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import type { DeploymentViewDataWithSelected } from './types';
+import { FetchedDataFieldsOfExecution } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments');
 
@@ -111,12 +110,11 @@ Stage.defineWidget<DeploymentsParams, DeploymentViewData, DeploymentsConfigurati
     },
 
     async fetchData(_widget, toolbox, params) {
-        const deploymentDataPromise: Promise<PaginatedResponse<Deployment>> = new Stage.Common.Deployments.Actions(
-            toolbox.getManager()
-        ).doGetDeployments(
+        const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments<
+            typeof FetchedDataFieldsOfExecution[number]
+        >(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
-                _include:
-                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+                _include: FetchedDataFieldsOfExecution.join(','),
                 ...params
             })
         );
@@ -130,12 +128,27 @@ Stage.defineWidget<DeploymentsParams, DeploymentViewData, DeploymentsConfigurati
                 })
             );
 
+        const latestExecutionLabels = [
+            'id',
+            'deployment_id',
+            'workflow_id',
+            'status',
+            'status_display',
+            'created_at',
+            'scheduled_for',
+            'ended_at',
+            'parameters',
+            'error',
+            'total_operations',
+            'finished_operations'
+        ] as const;
         const latestExecutionsDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.latest_execution))
             .then(ids =>
-                new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll({
-                    _include:
-                        'id,deployment_id,workflow_id,status,status_display,created_at,scheduled_for,ended_at,parameters,error,total_operations,finished_operations',
+                new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll<
+                    typeof latestExecutionLabels[number]
+                >({
+                    _include: latestExecutionLabels.join(','),
                     id: ids
                 })
             );

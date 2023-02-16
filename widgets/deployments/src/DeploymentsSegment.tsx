@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
-import type { DeploymentViewProps, EnhancedDeployment } from './types';
+import type { DeploymentViewProps } from './types';
 
 const DeploymentName = styled.span`
     display: -webkit-box;
@@ -44,7 +44,7 @@ export default function DeploymentsSegment({
             searchable
             noDataMessage={noDataMessage}
         >
-            {data.items.map((item: EnhancedDeployment & { isSelected: boolean }) => (
+            {data.items.map(item => (
                 <DataSegment.Item
                     key={item.id}
                     selected={item.isSelected}

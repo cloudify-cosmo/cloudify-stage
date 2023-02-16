@@ -9,8 +9,8 @@ export default class ExecutionActions {
         return this.manager.doGet<Execution>(`/executions/${executionId}`);
     }
 
-    doGetAll(params: Record<string, any> = {}) {
-        return this.manager.doGet<PaginatedResponse<Execution>>('/executions', { params });
+    doGetAll<PossibleValues extends keyof Execution>(params: Record<string, any> = {}) {
+        return this.manager.doGet<PaginatedResponse<Pick<Execution, PossibleValues>>>('/executions', { params });
     }
 
     doGetStatus(executionId: string) {

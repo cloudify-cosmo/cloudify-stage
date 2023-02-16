@@ -1,6 +1,6 @@
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import type { DeploymentViewProps, EnhancedDeployment } from './types';
+import type { DeploymentViewProps } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments.table');
 
@@ -52,7 +52,7 @@ export default function DeploymentsTable({
             <DataTable.Column label={translate('columns.creator')} name="created_by" width="10%" />
             <DataTable.Column width="5%" />
 
-            {data.items.map((item: EnhancedDeployment & { isSelected: boolean }) => {
+            {data.items.map(item => {
                 return (
                     <DataTable.Row
                         id={`${tableName}_${item.id}`}
