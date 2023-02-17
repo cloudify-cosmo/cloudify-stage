@@ -1,13 +1,13 @@
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
-import type { DeploymentViewDataWithSelected, EnhancedDeployment } from 'widgets/deployments/src/types';
+import type { DeploymentsListData, EnhancedDeployment } from 'widgets/deployments/src/types';
 import type { FetchDataFunction } from 'cloudify-ui-components';
-import type { Visibility } from '../../../app/widgets/common/types';
+import type { Visibility } from 'app/widgets/common/types';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
 
 const translate = Stage.Utils.getT('widgets.deployments.list');
 
-export type DeploymentResponse = DeploymentViewDataWithSelected;
+export type DeploymentResponse = DeploymentsListData;
 
 interface DeploymentsListProps {
     data: DeploymentResponse;

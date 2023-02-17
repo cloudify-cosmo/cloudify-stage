@@ -22,22 +22,22 @@ export const FetchedDataFieldsOfExecution = [
 
 export type EnhancedDeployment = Pick<Deployment, typeof FetchedDataFieldsOfExecution[number]> & {
     nodeInstancesCount: number;
-    nodeInstancesStates: Record<string, number | null | undefined>;
+    nodeInstancesStates: Record<string, number>;
 
     isUpdated: boolean;
     lastExecution: Execution;
 };
 
-export interface DeploymentViewData<ItemsData = EnhancedDeployment> extends PaginatedResponse<ItemsData> {
+export interface DeploymentsData<ItemsData = EnhancedDeployment> extends PaginatedResponse<ItemsData> {
     blueprintId: string;
     total: number;
     searchValue?: string;
 }
 
-export type DeploymentViewDataWithSelected = DeploymentViewData<EnhancedDeployment & { isSelected: boolean }>;
+export type DeploymentsListData = DeploymentsData<EnhancedDeployment & { isSelected: boolean }>;
 
 export interface DeploymentViewProps {
-    data: DeploymentViewDataWithSelected;
+    data: DeploymentsListData;
     widget: Widget<DeploymentsConfiguration>;
     fetchData: FetchDataFunction;
     onSelectDeployment: (deployment: EnhancedDeployment) => void;

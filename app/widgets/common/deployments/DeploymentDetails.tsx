@@ -35,7 +35,7 @@ interface DeploymentDetailsProps {
     deployment: Partial<DeploymentWithUpdate>;
     instancesCount: number;
     instancesStates: {
-        [key: string]: number | unknown;
+        [key: string]: number;
     };
     onSetVisibility: ResourceVisibilityProps['onSetVisibility'];
     big?: boolean;

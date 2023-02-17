@@ -6,12 +6,12 @@ import type {
     SortColumnConfiguration
 } from 'app/utils/GenericConfig';
 import './widget.css';
-import type { DeploymentViewData } from 'widgets/deployments/src/types';
+import type { DeploymentsData } from 'widgets/deployments/src/types';
 import type { Execution } from 'app/utils/shared/ExecutionUtils';
 import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstancesConsts';
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
-import type { DeploymentViewDataWithSelected } from './types';
+import type { DeploymentsListData } from './types';
 import { FetchedDataFieldsOfExecution } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments');
@@ -37,7 +37,7 @@ type DeploymentsParams = {
     /* eslint-enable camelcase */
 };
 
-Stage.defineWidget<DeploymentsParams, DeploymentViewData, DeploymentsConfiguration>({
+Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>({
     id: 'deployments',
     name: translate('name'),
     description: translate('description'),
@@ -212,7 +212,7 @@ Stage.defineWidget<DeploymentsParams, DeploymentViewData, DeploymentsConfigurati
         }
 
         const selectedDeployment = toolbox.getContext().getValue('deploymentId');
-        const formattedData: DeploymentViewDataWithSelected = {
+        const formattedData: DeploymentsListData = {
             ...data,
             items: data.items.map(item => {
                 return {
