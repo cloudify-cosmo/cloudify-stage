@@ -296,7 +296,8 @@
         "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
             "noPassword": "Please provide password",
-            "noUsername": "Please provide username"
+            "noUsername": "Please provide username",
+            "missingCredentials": "Please fill your credentials"
         },
         "password": "Password",
         "username": "Username",

@@ -40,6 +40,7 @@ interface LoginPageState {
 type Errors = {
     username?: string;
     password?: string;
+    missingCredentials?: string;
 } | null;
 
 const StyledInput = styled(Input)`
@@ -89,12 +90,17 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const { location, onLogin } = this.props;
         const errors: Errors = {};
 
-        if (isEmpty(username)) {
+        if (!username) {
             errors.username = t('error.noUsername');
         }
-        if (isEmpty(password)) {
+        if (!password) {
             errors.password = t('error.noPassword');
         }
+
+        if (!username || !password) {
+            errors.missingCredentials = t('error.missingCredentials');
+        }
+
         if (!isEmpty(errors)) {
             this.setState({ errors });
             return false;
@@ -123,6 +129,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
         const loginPageText = t('message');
         const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
+        const errorMessage = errors?.missingCredentials || loginError;
 
         return (
             <FullScreenSegment>
@@ -175,9 +182,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             }
                         />
 
-                        {loginError && (
+                        {errorMessage && (
                             <Message error style={{ display: 'block', backgroundColor: '#fdeded', boxShadow: 'none' }}>
-                                {loginError}
+                                {errorMessage}
                             </Message>
                         )}
 
@@ -196,13 +203,20 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     }
 }
 
+const mapLoginError = (error: any) => {
+    // eslint-disable-next-line
+    console.log(error);
+
+    return error;
+};
+
 const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
         username: manager.auth.username,
         loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
-        loginError: manager.auth.error,
+        loginError: mapLoginError(manager.auth.error),
         mode: get(config, 'mode'),
         whiteLabel: get(config, 'app.whiteLabel')
     };
