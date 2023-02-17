@@ -1,13 +1,10 @@
 import SitesTable from './SitesTable';
 import './widget.css';
 import type { SitesWidget } from './widget.types';
-
-// TODO Norbert: Migrate labels to translation file - probably as a separate PR
+import { widgetId } from './widget.consts';
 
 Stage.defineWidget<never, SitesWidget.Data, SitesWidget.Configuration>({
-    id: 'sites',
-    name: 'Sites',
-    description: 'This widget shows a list of available sites and allow managing them',
+    id: widgetId,
     initialWidth: 5,
     initialHeight: 16,
     fetchUrl: {
