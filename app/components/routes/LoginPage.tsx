@@ -203,11 +203,14 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     }
 }
 
-const mapLoginError = (error: any) => {
-    // eslint-disable-next-line
-    console.log(error);
+const mapLoginError = (errorMessage: string | null) => {
+    const isAuthenticationError = errorMessage === 'User unauthorized: No authentication info provided';
 
-    return error;
+    if (isAuthenticationError) {
+        return 'Incorrect username and/or password. Please check and try again.';
+    }
+
+    return errorMessage;
 };
 
 const mapStateToProps = (state: ReduxState) => {
