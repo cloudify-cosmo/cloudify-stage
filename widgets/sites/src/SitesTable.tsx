@@ -5,8 +5,10 @@ import SiteActions from './SiteActions';
 import SiteLocationMap from './SiteLocationMap';
 import UpdateModal from './UpdateModal';
 import type { Site, SitesWidget } from './widget.types';
+import { translateWidget } from './widget.utils';
 
-const t = Stage.Utils.getT('widgets.sites');
+const translate = Stage.Utils.composeT(translateWidget, 'table');
+const translateColumns = Stage.Utils.composeT(translate, 'columns');
 
 enum TableActions {
     DELETE_SITE,
@@ -113,7 +115,6 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
 
     render() {
         const { error, modalType, showModal, site } = this.state;
-        const NO_DATA_MESSAGE = 'There are no Sites available. Click "Create" to create Sites.';
         const { DataTable, ErrorMessage, Icon, ResourceVisibility, Label, Popup } = Stage.Basic;
         const DeleteModal = Stage.Basic.Confirm;
         const { allowedVisibilitySettings } = Stage.Common.Consts;
@@ -133,14 +134,14 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
                     sortAscending={widget.configuration.sortAscending}
                     searchable
                     className="sitesTable"
-                    noDataMessage={NO_DATA_MESSAGE}
+                    noDataMessage={translate('noDataMessage')}
                 >
-                    <DataTable.Column label="Name" name="name" width="20%" />
-                    <DataTable.Column label="Location" width="20%" />
-                    <DataTable.Column label="Created" name="created_at" width="20%" />
-                    <DataTable.Column label="Creator" name="created_by" width="10%" />
-                    <DataTable.Column label="Tenant" name="tenant_name" width="10%" />
-                    <DataTable.Column label="# Deployments" width="10%" />
+                    <DataTable.Column label={translateColumns('name')} name="name" width="20%" />
+                    <DataTable.Column label={translateColumns('location')} width="20%" />
+                    <DataTable.Column label={translateColumns('created')} name="created_at" width="20%" />
+                    <DataTable.Column label={translateColumns('creator')} name="created_by" width="10%" />
+                    <DataTable.Column label={translateColumns('tenant')} name="tenant_name" width="10%" />
+                    <DataTable.Column label={translateColumns('deploymentsCount')} width="10%" />
                     <DataTable.Column width="10%" />
 
                     {data.items.map(item => {
@@ -164,7 +165,10 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
                                 <DataTable.Data>
                                     {item.location && (
                                         <>
-                                            Latitude: {latitude}, Longitude: {longitude}
+                                            {translate('items.location', {
+                                                latitude,
+                                                longitude
+                                            })}
                                             <Popup hoverable>
                                                 <Popup.Trigger>
                                                     <Icon
@@ -200,13 +204,13 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
                                     <Icon
                                         link
                                         name="edit"
-                                        title={t('actions.updateSite')}
+                                        title={translate('actions.updateSite')}
                                         onClick={() => this.onUpdateSite(item)}
                                     />
                                     <Icon
                                         link
                                         name="trash"
-                                        title={t('actions.deleteSite')}
+                                        title={translate('actions.deleteSite')}
                                         onClick={() => this.onDeleteSite(item)}
                                     />
                                 </DataTable.Data>
@@ -222,7 +226,9 @@ export default class SitesTable extends React.Component<SitesTableProps, SitesTa
                 {site && (
                     <>
                         <DeleteModal
-                            content={`Are you sure you want to delete the site '${site.name}'?`}
+                            content={translate('confirm.delete', {
+                                siteName: site.name
+                            })}
                             open={modalType === TableActions.DELETE_SITE && showModal}
                             onConfirm={this.deleteSite}
                             onCancel={this.hideModal}

@@ -1,6 +1,9 @@
 import { get } from 'lodash';
 import type { LatLngExpression, LeafletEventHandlerFnMap } from 'leaflet';
 import type { CSSProperties } from 'react';
+import { translateWidget } from './widget.utils';
+
+const translate = Stage.Utils.composeT(translateWidget, 'map');
 
 function toLatLng(location: string) {
     return _(location)
@@ -79,11 +82,9 @@ class SiteLocationMap extends React.Component<SiteLocationMapProps, SiteLocation
         }
 
         if (isMapAvailable === false) {
-            const NO_INTERNET_MESSAGE = `Map cannot be displayed because there is no connection
-                                         to the maps repository. Please check network connection.`;
             return (
                 <Message warning style={{ display: 'block' }}>
-                    {NO_INTERNET_MESSAGE}
+                    {translate('noInternetMessage')}
                 </Message>
             );
         }
