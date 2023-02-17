@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import i18n from 'i18next';
 
 import type { ClientConfig } from 'backend/routes/Config.types';
 import SmartRedirect from './SmartRedirect';
@@ -204,10 +205,10 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 }
 
 const mapLoginError = (errorMessage: string | null) => {
-    const isAuthenticationError = errorMessage === 'User unauthorized: No authentication info provided';
+    const incorrectCredentialsError = errorMessage === 'User unauthorized: No authentication info provided';
 
-    if (isAuthenticationError) {
-        return 'Incorrect username and/or password. Please check and try again.';
+    if (incorrectCredentialsError) {
+        return i18n.t('login.error.incorrectCredentials');
     }
 
     return errorMessage;

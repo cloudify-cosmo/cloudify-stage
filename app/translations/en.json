@@ -297,7 +297,8 @@
         "error": {
             "noPassword": "Please provide password",
             "noUsername": "Please provide username",
-            "missingCredentials": "Please fill your credentials"
+            "missingCredentials": "Please fill your credentials",
+            "incorrectCredentials": "Incorrect username and/or password. Please check and try again."
         },
         "password": "Password",
         "username": "Username",
