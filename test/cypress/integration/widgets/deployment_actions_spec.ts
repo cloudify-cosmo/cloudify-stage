@@ -57,15 +57,6 @@ describe('Deployment Action Buttons widget', () => {
             cy.get('.executeWorkflowModal').should('not.exist');
         });
 
-        it('should disable set site if there are no sites', () => {
-            cy.deleteSites();
-
-            cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
-            cy.clickButton('Deployment actions');
-
-            cy.get('.popupMenu > .menu').contains('Set Site').should('have.class', 'disabled');
-        });
-
         it('should allow to start an action on the deployment', () => {
             const siteName = 'deployment_action_buttons_test';
             cy.deleteSites(siteName).createSite({ name: siteName });
@@ -86,6 +77,17 @@ describe('Deployment Action Buttons widget', () => {
 
             cy.wait('@setSite');
             cy.get('.modal').should('not.exist');
+        });
+
+        it('should disable set site if there are no sites', () => {
+            cy.deleteSites();
+            cy.refreshTemplate();
+            cy.clearDeploymentContext().setDeploymentContext(deploymentId);
+
+            cy.contains('button', 'Deployment actions').should('not.have.attr', 'disabled');
+            cy.clickButton('Deployment actions');
+
+            cy.get('.popupMenu > .menu').contains('Set Site').should('have.class', 'disabled');
         });
 
         it('should show only available workflows and actions', () => {
