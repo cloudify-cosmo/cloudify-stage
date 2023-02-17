@@ -1,6 +1,9 @@
 import { isEmpty } from 'lodash';
 import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
+import { translateWidget } from './widget.utils';
+
+const translate = Stage.Utils.composeT(translateWidget, 'modals.create');
 
 interface CreateModalProps {
     toolbox: Stage.Types.Toolbox;
@@ -26,7 +29,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
     function createSite() {
         const { siteName, siteLocation } = inputs;
         if (isEmpty(siteName)) {
-            setErrors({ siteName: 'Please provide site name' });
+            setErrors({ siteName: translate('errors.noSiteName') });
             return;
         }
 
@@ -47,12 +50,12 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
     const { siteName } = inputs;
     const { ApproveButton, Button, CancelButton, Icon, Form, Modal, VisibilityField } = Stage.Basic;
-    const createButton = <Button content="Create" icon="add" labelPosition="left" />;
+    const createButton = <Button content={translate('buttons.create')} icon="add" labelPosition="left" />;
 
     return (
         <Modal trigger={createButton} open={isOpen} onOpen={doOpen} onClose={doClose}>
             <Modal.Header>
-                <Icon name="add" /> Create site
+                <Icon name="add" /> {translate('header')}
                 <VisibilityField
                     visibility={siteVisibility}
                     className="rightFloated"
@@ -62,7 +65,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field label="Name" error={errors.siteName} required>
+                    <Form.Field label={translate('fields.siteName')} error={errors.siteName} required>
                         <Form.Input name="siteName" value={siteName} onChange={setInput} />
                     </Form.Field>
                     <Form.Field error={errors.siteLocation}>
@@ -73,7 +76,12 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
 
             <Modal.Actions>
                 <CancelButton onClick={doClose} disabled={isLoading} />
-                <ApproveButton onClick={createSite} disabled={isLoading} content="Create" icon="add" />
+                <ApproveButton
+                    onClick={createSite}
+                    disabled={isLoading}
+                    content={translate('buttons.create')}
+                    icon="add"
+                />
             </Modal.Actions>
         </Modal>
     );
