@@ -1,7 +1,6 @@
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
-import type { DeploymentViewDataWithSelected } from 'widgets/deployments/src/types';
+import type { DeploymentViewDataWithSelected, EnhancedDeployment } from 'widgets/deployments/src/types';
 import type { FetchDataFunction } from 'cloudify-ui-components';
-import type { Deployment } from '../../../app/widgets/common/deploymentsView/types';
 import type { Visibility } from '../../../app/widgets/common/types';
 import DeploymentsSegment from './DeploymentsSegment';
 import DeploymentsTable from './DeploymentsTable';
@@ -18,7 +17,7 @@ interface DeploymentsListProps {
 
 interface DeploymentsListState {
     activeAction: string | null;
-    deployment: Deployment | null;
+    deployment: EnhancedDeployment | null;
     error: string | null;
     executeModalOpen: boolean;
     workflowName: string | null;
@@ -92,7 +91,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
         this.setError(executionError);
     };
 
-    openExecuteModal = (deployment: Deployment | undefined, workflowName: string) => {
+    openExecuteModal = (deployment: EnhancedDeployment | undefined, workflowName: string) => {
         this.setState({ deployment: deployment || null, executeModalOpen: true, workflowName });
     };
 
@@ -100,7 +99,7 @@ export default class DeploymentsList extends React.Component<DeploymentsListProp
         this.setState({ executeModalOpen: false, workflowName: null });
     };
 
-    openActionModal = (deployment: Deployment | undefined, actionName: string) => {
+    openActionModal = (deployment: EnhancedDeployment | undefined, actionName: string) => {
         this.setState({ deployment: deployment || null, activeAction: actionName });
     };
 
