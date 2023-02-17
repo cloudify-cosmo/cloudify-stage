@@ -33,7 +33,7 @@ export default function DeploymentsSegment({
     const { IdPopup } = Stage.Shared;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
-    const formatName = (item: Deployment) =>
+    const formatName = (item: Pick<Deployment, 'id' | 'display_name'>) =>
         Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
 
     return (

@@ -32,7 +32,7 @@ function DeploymentParameter({
 }
 
 interface DeploymentDetailsProps {
-    deployment: DeploymentWithUpdate;
+    deployment: Partial<DeploymentWithUpdate>;
     instancesCount: number;
     instancesStates: {
         [key: string]: number | unknown;
