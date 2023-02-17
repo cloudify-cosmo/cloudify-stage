@@ -7,6 +7,7 @@ import StageUtils from '../../../utils/stageUtils';
 import type { Label } from '../labels/types';
 import { menuItems } from './DeploymentActionsMenu.consts';
 import { isMenuItemAvailable } from './DeploymentActionsMenu.utils';
+import useSitesExist from './useSitesExist';
 
 const translate = StageUtils.getT('widgets.common.deployments.actionsMenu');
 
@@ -25,6 +26,7 @@ export default function DeploymentActionsMenu({
     workflows,
     deploymentLabels = []
 }: DeploymentActionsMenuProps) {
+    const [sitesExist] = useSitesExist(toolbox);
     const managerState = toolbox.getManagerState();
     const items = menuItems.map(item => ({
         ...item,
@@ -32,7 +34,7 @@ export default function DeploymentActionsMenu({
         content: translate(item.name),
         disabled:
             !StageUtils.isUserAuthorized(item.permission, managerState) ||
-            !isMenuItemAvailable(item, workflows, deploymentLabels)
+            !isMenuItemAvailable(item, workflows, deploymentLabels, sitesExist)
     }));
     const popupMenuProps: Partial<PopupMenuProps> = !trigger ? { help: translate('tooltip'), offset: [0, 5] } : {};
 
