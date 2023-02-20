@@ -295,8 +295,6 @@
         "message": "Welcome to the Cloudify Management Console, Please log in",
         "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
-            "noPassword": "Please provide password",
-            "noUsername": "Please provide username",
             "missingCredentials": "Please fill your credentials",
             "incorrectCredentials": "Incorrect username and/or password. Please check and try again."
         },

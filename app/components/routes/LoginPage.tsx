@@ -31,18 +31,22 @@ export interface LoginPageProps {
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
 
+type InvalidInputs = {
+    username?: boolean;
+    password?: boolean;
+};
+
+type Validation = {
+    invalidInputs: InvalidInputs;
+    errorMessage?: string;
+};
+
 interface LoginPageState {
     username: string;
     password: string;
-    errors: Errors;
+    validation: Validation;
     isFirstLogin: boolean;
 }
-
-type Errors = {
-    username?: string;
-    password?: string;
-    missingCredentials?: string;
-} | null;
 
 const StyledInput = styled(Input)`
     &&&&&& input:autofill,
@@ -68,7 +72,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         this.state = {
             username: props.username,
             password: '',
-            errors: {},
+            validation: {
+                invalidInputs: {}
+            },
             isFirstLogin: false
         };
     }
@@ -89,21 +95,24 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     onSubmit = () => {
         const { password, username } = this.state;
         const { location, onLogin } = this.props;
-        const errors: Errors = {};
+        const validation: Validation = {
+            invalidInputs: {}
+        };
 
         if (!username) {
-            errors.username = t('error.noUsername');
+            validation.invalidInputs.username = true;
         }
+
         if (!password) {
-            errors.password = t('error.noPassword');
+            validation.invalidInputs.password = true;
         }
 
         if (!username || !password) {
-            errors.missingCredentials = t('error.missingCredentials');
+            validation.errorMessage = t('error.missingCredentials');
         }
 
-        if (!isEmpty(errors)) {
-            this.setState({ errors });
+        if (!isEmpty(validation.invalidInputs) || !!validation.errorMessage) {
+            this.setState({ validation });
             return false;
         }
 
@@ -115,11 +124,11 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
-        this.setState({ ...fieldNameValue, errors: {} });
+        this.setState({ ...fieldNameValue, validation: { invalidInputs: {} } });
     };
 
     render() {
-        const { errors, password, username, isFirstLogin } = this.state;
+        const { validation, password, username, isFirstLogin } = this.state;
         const { loginPageUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
@@ -130,7 +139,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
         const loginPageText = t('message');
         const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
-        const errorMessage = errors?.missingCredentials || loginError;
+        const errorMessage = validation.errorMessage || loginError;
 
         return (
             <FullScreenSegment>
@@ -160,7 +169,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             style={{ marginLeft: -25 }}
                             trigger={
                                 <div>
-                                    <Form.Field required error={errors?.username}>
+                                    <Form.Field required error={validation.invalidInputs?.username}>
                                         <StyledInput
                                             name="username"
                                             type="text"
@@ -170,7 +179,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                             onChange={this.handleInputChange}
                                         />
                                     </Form.Field>
-                                    <Form.Field required error={errors?.password}>
+                                    <Form.Field required error={validation.invalidInputs?.password}>
                                         <StyledInput
                                             name="password"
                                             type="password"
