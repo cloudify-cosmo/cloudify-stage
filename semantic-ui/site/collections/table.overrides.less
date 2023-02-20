@@ -1,10 +1,13 @@
 /*******************************
          Site Overrides
 *******************************/
-@fontSize: 14px;
 
 .ui.table {
     font-size: @fontSize;
+    border-color: @borderColor;
+    tr.active {
+        background-color: @hoveredItemBackground !important;
+    }
 }
 
 .ui.sortable.table thead th {
@@ -14,23 +17,24 @@
     padding-bottom: 8px;
     color: @grey;
     &:hover {
+        border-color: @borderColor;
+        background-color: @hoveredItemBackground;
+    }
+    &.sorted {
         background-color: white;
+        // table descending/ascending icon
+        &::after {
+            display: inline;
+            vertical-align: bottom;
+            position: absolute;
+        }
     }
-    &.disabled:hover {
-        color: @grey;
+    &.disabled {
+        &:hover {
+            color: @grey;
+            background-color: white;
+        }
     }
-
-    // table descending/ascending icon
-    .sorted::after {
-        display: inline;
-        vertical-align: bottom;
-        position: absolute;
-    }
-}
-
-.ui.table tr.active,
-.ui.table td.active {
-    background-color: @lightGrey !important;
 }
 
 // pagination
