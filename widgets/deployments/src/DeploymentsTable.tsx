@@ -92,7 +92,7 @@ export default function DeploymentsTable({
                         </DataTable.Data>
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data>{item.created_by}</DataTable.Data>
-                        <DataTable.Data style={{ display: 'inline-flex' }}>
+                        <DataTable.Data>
                             <ActionsMenus
                                 deployment={item}
                                 onDeploymentAction={onDeploymentAction}
