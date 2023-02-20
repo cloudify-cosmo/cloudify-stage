@@ -26,7 +26,7 @@ const getValueElement = (value: ParameterValueProps['value'], stringValue: strin
             return <code style={{ ...commonStyle, ...highlighterStyles['hljs-keyword'] }}>{stringValue}</code>;
         case 'string':
             return Url.isUrl(stringValue) ? (
-                <a rel="noopener noreferrer" target="_blank" href={stringValue}>
+                <a rel="noopener noreferrer" target="_blank" href={stringValue} style={{ wordBreak: 'break-word' }}>
                     {stringValue}
                 </a>
             ) : (
