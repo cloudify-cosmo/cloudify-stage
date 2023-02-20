@@ -111,7 +111,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
             validation.errorMessage = t('error.missingCredentials');
         }
 
-        if (!isEmpty(validation.invalidInputs) || !!validation.errorMessage) {
+        if (!isEmpty(validation.invalidInputs)) {
             this.setState({ validation });
             return false;
         }
