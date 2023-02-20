@@ -47,7 +47,7 @@ export default function DeploymentsTable({
             <DataTable.Column label={t('columns.created')} name="created_at" width="15%" />
             <DataTable.Column label={t('columns.updated')} name="updated_at" width="15%" />
             <DataTable.Column label={t('columns.creator')} name="created_by" width="10%" />
-            <DataTable.Column width="5%" />
+            <DataTable.Column className="rowActions" width="5%" />
 
             {data.items.map(item => {
                 return (
