@@ -63,7 +63,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                 <DataTable.Column width="40%" label={tColumn('creator')} name="created_by" />
                 <DataTable.Column width="134px" label={tColumn('created')} name="created_at" />
                 <DataTable.Column width="64px" label={tColumn('system')} name="is_system_filter" />
-                <DataTable.Column width="112px" />
+                <DataTable.Column width="80px" />
                 {data.filters.map(filter => (
                     <DataTable.Row key={filter.id}>
                         <DataTable.Data style={{ wordBreak: 'break-word' }}>{filter.id}</DataTable.Data>
