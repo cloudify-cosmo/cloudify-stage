@@ -129,7 +129,11 @@ const Pages: FunctionComponent<PagesProps> = ({
                                 </DataTable.Data>
                             </DataTable.Row>
 
-                            <DataTable.DataExpandable key={item.id} numberOfColumns={1}>
+                            <DataTable.DataExpandable
+                                key={item.id}
+                                numberOfColumns={1}
+                                style={{ backgroundColor: 'white' }}
+                            >
                                 <Segment.Group horizontal>
                                     <TemplateList
                                         width="50%"

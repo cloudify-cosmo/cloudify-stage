@@ -400,7 +400,7 @@ export default class UsersTable extends React.Component<UsersTableProps, UsersTa
                                     <ActionsMenu item={item} onSelectAction={this.invokeAction} />
                                 </DataTable.Data>
                             </DataTable.Row>
-                            <DataTable.DataExpandable key={item.username}>
+                            <DataTable.DataExpandable key={item.username} style={{ backgroundColor: 'white' }}>
                                 <UserDetails data={item} toolbox={toolbox} onError={this.handleError} />
                             </DataTable.DataExpandable>
                         </DataTable.RowExpandable>

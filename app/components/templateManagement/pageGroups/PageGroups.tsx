@@ -162,7 +162,11 @@ const PageGroups: FunctionComponent<PageGroupsProps> = ({ pageGroups = [] }) => 
                                 )}
                             </DataTable.Data>
                         </DataTable.Row>
-                        <DataTable.DataExpandable numberOfColumns={1} key={item.id}>
+                        <DataTable.DataExpandable
+                            numberOfColumns={1}
+                            key={item.id}
+                            style={{ backgroundColor: 'white' }}
+                        >
                             <Segment.Group horizontal>
                                 <ItemsList
                                     removable={item.pages?.length > 1 && item.custom}

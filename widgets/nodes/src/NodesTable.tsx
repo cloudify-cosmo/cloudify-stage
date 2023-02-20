@@ -57,7 +57,7 @@ export default class NodesTable extends React.Component {
         const { data, toolbox, widget } = this.props;
         const { error } = this.state;
         const NO_DATA_MESSAGE = "There are no Nodes available. Probably there's no deployment created, yet.";
-        const { CopyToClipboardButton, DataTable, ErrorMessage, Icon, Popup } = Stage.Basic;
+        const { CopyToClipboardButton, DataTable, ErrorMessage, Icon, Label, Popup } = Stage.Basic;
 
         const { fieldsToShow } = widget.configuration;
 
@@ -178,12 +178,17 @@ export default class NodesTable extends React.Component {
                                     <DataTable.Data>{node.host_id}</DataTable.Data>
                                     <DataTable.Data>{node.created_by}</DataTable.Data>
                                     <DataTable.Data>
-                                        <div className="ui green horizontal label">{node.numberOfInstances}</div>
+                                        <Label color="green" horizontal>
+                                            {node.numberOfInstances}
+                                        </Label>
                                     </DataTable.Data>
                                     <DataTable.Data>{node.groups}</DataTable.Data>
                                 </DataTable.Row>
 
-                                <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
+                                <DataTable.DataExpandable
+                                    key={`${node.id + node.deployment_id}_Expanded`}
+                                    style={{ backgroundColor: 'white' }}
+                                >
                                     <NodeInstancesTable instances={node.instances} widget={widget} toolbox={toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
