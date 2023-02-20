@@ -8,11 +8,8 @@ const t = Stage.Utils.getT('widgets.pluginsCatalog');
 
 Stage.defineWidget<unknown, PluginsCatalogResponse | Error, PluginsCatalogWidgetConfiguration>({
     id: 'pluginsCatalog',
-    name: t('name'),
-    description: t('description'),
     initialWidth: 12,
     initialHeight: 20,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('pluginsCatalog'),
     initialConfiguration: [

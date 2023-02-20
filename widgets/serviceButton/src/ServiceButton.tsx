@@ -1,14 +1,10 @@
-import type { SemanticCOLORS, SemanticICONS } from 'semantic-ui-react';
 import type { FunctionComponent } from 'react';
+import type { ButtonConfiguration } from 'app/widgets/common/configuration/buttonConfiguration';
 
 const { Button } = Stage.Basic;
 const { drilldownPage } = Stage.Common.Consts;
 
-export interface ServiceButtonProps {
-    basic: boolean;
-    color: SemanticCOLORS;
-    icon: SemanticICONS;
-    label: string;
+export interface ServiceButtonProps extends ButtonConfiguration {
     defaultMarketplaceTab?: string;
     toolbox: Stage.Types.Toolbox;
 }

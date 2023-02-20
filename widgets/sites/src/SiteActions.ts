@@ -1,23 +1,28 @@
-// @ts-nocheck File not migrated fully to TS
+import type { Visibility } from 'app/widgets/common/types';
+import { isNil, omitBy } from 'lodash';
+
 export default class SiteActions {
-    constructor(toolbox) {
+    toolbox: Stage.Types.WidgetlessToolbox;
+
+    constructor(toolbox: Stage.Types.WidgetlessToolbox) {
         this.toolbox = toolbox;
     }
 
-    doGet(name) {
-        return this.toolbox.getManager().doGet(`/sites/${name}`);
-    }
-
-    doDelete(name) {
+    doDelete(name: string) {
         return this.toolbox.getManager().doDelete(`/sites/${name}`);
     }
 
-    doCreate(name, visibility, location) {
+    doCreate(name: string, visibility: Visibility, location: string) {
         return this.toolbox.getManager().doPut(`/sites/${name}`, { body: { location, visibility } });
     }
 
-    doUpdate(name, visibility, location = null, newName = null) {
-        const body = _.omitBy({ location, visibility, new_name: newName }, _.isNil);
+    doUpdate(
+        name: string,
+        visibility: Visibility | null,
+        location: string | null = null,
+        newName: string | null = null
+    ) {
+        const body = omitBy({ location, visibility, new_name: newName }, isNil);
         return this.toolbox.getManager().doPost(`/sites/${name}`, { body });
     }
 }

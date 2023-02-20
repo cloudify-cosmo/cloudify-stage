@@ -1629,6 +1629,8 @@
             "successMessage": "{{pluginTitle}} successfully uploaded"
         },
         "plugins": {
+            "name": "Plugins list",
+            "description": "Plugins list",
             "upload": {
                 "button": "Upload",
                 "marketplace": "Upload from Marketplace",
@@ -1820,8 +1822,9 @@
                         "secretKey": "Please provide secret key",
                         "secretValue": "Please provide secret value",
                         "noProviders": "No Secret providers are defined in the System",
-                        "secretProviderName": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                        "secretProvider": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider",
+                        "secretProviderOptions": "Invalid Provider Options"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -2287,10 +2290,77 @@
             "noDeploymentSelected": "No deployment selected"
         },
         "sites": {
-            "actions": {
-                "updateSite": "Update site",
-                "deleteSite": "Delete site"
+            "name": "Sites",
+            "description": "This widget shows a list of available sites and allow managing them",
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "location": "Location",
+                    "created": "Created",
+                    "creator": "Creator",
+                    "tenant": "Tenant",
+                    "deploymentsCount": "# Deployments"
+                },
+                "items": {
+                    "location": "Latitude: {{latitude}}, Longitude: {{longitude}}"
+                },
+                "actions": {
+                    "updateSite": "Update site",
+                    "deleteSite": "Delete site"
+                },
+                "confirm": {
+                    "delete": "Are you sure you want to delete the site '{{siteName}}'?"
+                },
+                "noDataMessage": "There are no Sites available. Click \"Create\" to create Sites."
+            },
+            "modals": {
+                "create": {
+                    "header": "Create site {{siteName}}",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "create": "Create"
+                    },
+                    "fields": {
+                        "siteName": "Name"
+                    }
+                },
+                "update": {
+                    "header": "Create site",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "update": "Update"
+                    },
+                    "fields": {
+                        "siteNewName": "Name"
+                    }
+                }
+            },
+            "map": {
+                "noInternetMessage": "Map cannot be displayed because there is no connection to the maps repository. Please check network connection."
+            },
+            "common": {
+                "fields": {
+                    "siteLocation": {
+                        "label": "Location",
+                        "placeholder": "latitude, longitude (32.166369, 34.810893)"
+                    }
+                }
             }
+        },
+        "pluginsNum": {
+            "name": "Number of plugins",
+            "description": "Number of plugins",
+            "configuration": {
+                "page": {
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on widget content"
+                }
+            },
+            "quantityDescription": "Plugins"
         },
         "snapshots": {
             "actions": {
@@ -2409,6 +2479,15 @@
                 "enableZoom": "Enable zoom",
                 "enableDrag": "Enable drag",
                 "showToolbar": "Show toolbar"
+            }
+        },
+        "environmentButton": {
+            "name": "Create environment button",
+            "description": "Adds button to create a new environment",
+            "buttonLabel": "Create Environment",
+            "menu": {
+                "new": "New",
+                "fromBlueprint": "From Blueprint"
             }
         }
     }

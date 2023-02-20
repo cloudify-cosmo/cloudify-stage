@@ -72,7 +72,6 @@ export const sharedDefinition = getSharedDefinition({
     initialHeight: 28,
     categories: [GenericConfig.CATEGORY.DEPLOYMENTS],
 
-    isReact: true,
     hasReadme: true,
     hasStyle: false,
     permission: GenericConfig.WIDGET_PERMISSION('deploymentsView')
