@@ -233,7 +233,7 @@ export default class SecretsTable extends React.Component<SecretsTableProps, Sec
                                         className="rightFloated"
                                     />
                                 </DataTable.Data>
-                                <DataTable.Data textAlign="center" className="rowActions">
+                                <DataTable.Data className="rowActions">
                                     <SecretValue
                                         canShowSecret={canShowSecret}
                                         secretKey={item.key}
