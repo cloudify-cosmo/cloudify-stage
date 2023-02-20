@@ -116,7 +116,6 @@ describe('Login', () => {
         cy.get('.error.message').should('have.text', expectedErrorMessage);
 
         getLoginField('Username').clear();
-
         typeToLoginField('Password', 'test');
         submitLoginForm();
         cy.get('.error.message').should('have.text', expectedErrorMessage);
