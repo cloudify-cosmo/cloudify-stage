@@ -1,3 +1,53 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.sortable.table thead th {
+    border-left: 0;
+    background-color: white;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: @grey;
+    &:hover {
+        background-color: white;
+    }
+    &.disabled:hover {
+        color: @grey;
+    }
+
+    // table descending/ascending icon
+    .sorted::after {
+        display: inline;
+        vertical-align: bottom;
+        position: absolute;
+    }
+}
+
+.ui.table tr.active,
+.ui.table td.active {
+    background-color: @lightGrey !important;
+}
+
+// pagination
+.ui.pagination.menu {
+    box-shadow: none;
+    border-color: @lightGrey;
+    .item {
+        color: @grey;
+        &::before {
+            width: 0;
+        }
+        &.active {
+            color: @blue;
+            &::before {
+                width: 0;
+            }
+        }
+        &.disabled {
+            color: #efefef !important;
+        }
+        &:hover {
+            color: @blue;
+        }
+    }
+}
