@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import i18n from 'i18next';
 
 import type { ClientConfig } from 'backend/routes/Config.types';
 import SmartRedirect from './SmartRedirect';
@@ -30,17 +31,22 @@ export interface LoginPageProps {
     whiteLabel: ClientConfig['app']['whiteLabel'];
 }
 
+type InvalidInputs = {
+    username?: boolean;
+    password?: boolean;
+};
+
+type Validation = {
+    invalidInputs: InvalidInputs;
+    errorMessage?: string;
+};
+
 interface LoginPageState {
     username: string;
     password: string;
-    errors: Errors;
+    validation: Validation;
     isFirstLogin: boolean;
 }
-
-type Errors = {
-    username?: string;
-    password?: string;
-} | null;
 
 const StyledInput = styled(Input)`
     &&&&&& input:autofill,
@@ -66,7 +72,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         this.state = {
             username: props.username,
             password: '',
-            errors: {},
+            validation: {
+                invalidInputs: {}
+            },
             isFirstLogin: false
         };
     }
@@ -87,16 +95,24 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     onSubmit = () => {
         const { password, username } = this.state;
         const { location, onLogin } = this.props;
-        const errors: Errors = {};
+        const validation: Validation = {
+            invalidInputs: {}
+        };
 
-        if (isEmpty(username)) {
-            errors.username = t('error.noUsername');
+        if (!username) {
+            validation.invalidInputs.username = true;
         }
-        if (isEmpty(password)) {
-            errors.password = t('error.noPassword');
+
+        if (!password) {
+            validation.invalidInputs.password = true;
         }
-        if (!isEmpty(errors)) {
-            this.setState({ errors });
+
+        if (!username || !password) {
+            validation.errorMessage = t('error.missingCredentials');
+        }
+
+        if (!isEmpty(validation.invalidInputs)) {
+            this.setState({ validation });
             return false;
         }
 
@@ -108,11 +124,11 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 
     handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
         const fieldNameValue = Form.fieldNameValue(field);
-        this.setState({ ...fieldNameValue, errors: {} });
+        this.setState({ ...fieldNameValue, validation: { invalidInputs: {} } });
     };
 
     render() {
-        const { errors, password, username, isFirstLogin } = this.state;
+        const { validation, password, username, isFirstLogin } = this.state;
         const { loginPageUrl, isLoggingIn, loginError = null, whiteLabel } = this.props;
         SplashLoadingScreen.turnOff();
 
@@ -123,6 +139,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const { loginPageHeaderColor, loginPageTextColor } = whiteLabel;
         const loginPageText = t('message');
         const isHeaderTextPresent = !isEmpty(loginPageHeader) || !isEmpty(loginPageText);
+        const errorMessage = validation.errorMessage || loginError;
 
         return (
             <FullScreenSegment>
@@ -152,7 +169,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             style={{ marginLeft: -25 }}
                             trigger={
                                 <div>
-                                    <Form.Field required error={errors?.username}>
+                                    <Form.Field required error={validation.invalidInputs?.username}>
                                         <StyledInput
                                             name="username"
                                             type="text"
@@ -162,7 +179,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                                             onChange={this.handleInputChange}
                                         />
                                     </Form.Field>
-                                    <Form.Field required error={errors?.password}>
+                                    <Form.Field required error={validation.invalidInputs?.password}>
                                         <StyledInput
                                             name="password"
                                             type="password"
@@ -175,9 +192,9 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
                             }
                         />
 
-                        {loginError && (
+                        {errorMessage && (
                             <Message error style={{ display: 'block', backgroundColor: '#fdeded', boxShadow: 'none' }}>
-                                {loginError}
+                                {errorMessage}
                             </Message>
                         )}
 
@@ -196,13 +213,23 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     }
 }
 
+const mapLoginError = (errorMessage: string | null) => {
+    const incorrectCredentialsError = errorMessage === 'User unauthorized: No authentication info provided';
+
+    if (incorrectCredentialsError) {
+        return i18n.t('login.error.incorrectCredentials');
+    }
+
+    return errorMessage;
+};
+
 const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
     return {
         username: manager.auth.username,
         loginPageUrl: config.app.auth.loginPageUrl,
         isLoggingIn: manager.auth.state === 'loggingIn',
-        loginError: manager.auth.error,
+        loginError: mapLoginError(manager.auth.error),
         mode: get(config, 'mode'),
         whiteLabel: get(config, 'app.whiteLabel')
     };
