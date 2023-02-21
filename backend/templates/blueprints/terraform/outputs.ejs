@@ -1,7 +1,0 @@
-<% if (Array.isArray(outputs) && outputs.length) { _%>
-<%= name %>:
-<% } _%>
-<% outputs.forEach(output => { _%>
-  <%= output.name %>:
-    value: { get_attribute: [ cloud_resources, outputs, '<%= String(output.terraformOutput).replace("'", "''") %>', value ] }
-<% }) _%>
