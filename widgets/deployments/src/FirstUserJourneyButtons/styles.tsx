@@ -13,7 +13,7 @@ interface StyledIconProps {
     name: SemanticICONS;
 }
 export const StyledIcon = styled(Icon)<StyledIconProps>`
-    color: #65adff;
+    color: $cloudifyBlue;
     line-height: 1;
 
     && {

@@ -12,7 +12,7 @@ export const StyledIcon = styled(Icon)`
     &&&& {
         display: inline-block;
         float: left;
-        color: #65adff;
+        color: $cloudifyBlue;
         font-size: 18px;
     }
 `;
