@@ -19,50 +19,51 @@ let userConfig: UserConfig = require('../conf/userConfig.json');
 let me: Partial<Config> | null = null;
 
 function initUserConfig() {
+    let userDataConfig: UserDataConfig;
+    const userDataConfigPath = getResourcePath('userConfig.json', true);
+
     try {
-        const userDataConfigPath = getResourcePath('userConfig.json', true);
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        let userDataConfig: UserDataConfig = require(userDataConfigPath);
-        let convertedSamlSection = false;
-
-        // Backward-compatibility layer - convert `saml` section to `auth` section
-        if (userDataConfig.saml?.enabled) {
-            console.warn(
-                `WARNING: You are using deprecated section "saml" in user configuration file (${userDataConfigPath}).`
-            );
-
-            const { certPath, portalUrl, ssoUrl } = userDataConfig.saml;
-
-            userDataConfig.auth = {
-                ...userDataConfig.auth,
-                type: 'saml',
-                certPath,
-                loginPageUrl: ssoUrl,
-                afterLogoutUrl: portalUrl
-            };
-
-            convertedSamlSection = true;
-        }
-
-        // Security reason - get only allowed parameters
-        userDataConfig = pick(userDataConfig, keys(flatten(userConfig, { safe: true })));
-
-        if (convertedSamlSection) {
-            const newUserDataConfigPath = `${userDataConfigPath}.new`;
-            writeJsonSync(newUserDataConfigPath, userDataConfig, { spaces: 2, EOL: '\n', encoding: 'utf8', flag: 'w' });
-            console.warn(
-                `WARNING: User configuration was migrated automatically and it is ` +
-                    `available at ${newUserDataConfigPath}. Please verify it and use it to replace ${userDataConfigPath}.`
-            );
-        }
-
-        // Create full user configuration
-        userConfig = defaultsDeep(userDataConfig, userConfig);
+        userDataConfig = require(userDataConfigPath);
     } catch (err: any) {
-        if (err.code !== 'MODULE_NOT_FOUND') {
-            throw err;
-        }
+        return;
     }
+
+    let convertedSamlSection = false;
+
+    // Backward-compatibility layer - convert `saml` section to `auth` section
+    if (userDataConfig.saml?.enabled) {
+        console.warn(
+            `WARNING: You are using deprecated section "saml" in user configuration file (${userDataConfigPath}).`
+        );
+
+        const { certPath, portalUrl, ssoUrl } = userDataConfig.saml;
+
+        userDataConfig.auth = {
+            ...userDataConfig.auth,
+            type: 'saml',
+            certPath,
+            loginPageUrl: ssoUrl,
+            afterLogoutUrl: portalUrl
+        };
+
+        convertedSamlSection = true;
+    }
+
+    // Security reason - get only allowed parameters
+    userDataConfig = pick(userDataConfig, keys(flatten(userConfig, { safe: true })));
+
+    if (convertedSamlSection) {
+        const newUserDataConfigPath = `${userDataConfigPath}.new`;
+        writeJsonSync(newUserDataConfigPath, userDataConfig, { spaces: 2, EOL: '\n', encoding: 'utf8', flag: 'w' });
+        console.warn(
+            `WARNING: User configuration was migrated automatically and it is ` +
+                `available at ${newUserDataConfigPath}. Please verify it and use it to replace ${userDataConfigPath}.`
+        );
+    }
+
+    // Create full user configuration
+    userConfig = defaultsDeep(userDataConfig, userConfig);
 }
 
 export function loadMeJson() {
