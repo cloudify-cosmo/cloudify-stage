@@ -94,14 +94,57 @@ describe('Login', () => {
         cy.contains('Unfortunately you cannot login since your account is not associated with any tenants.');
     });
 
-    it('fails when provided credentials are invalid', () => {
-        cy.login({ password: 'invalid-password', expectSuccessfulLogin: false });
+    it('fails when all credentials are not provided', () => {
+        const expectedErrorMessage = 'Please fill your credentials';
+        const getLoginField = (fieldPlaceholder: string) => {
+            return cy.get(`input[placeholder="${fieldPlaceholder}"]`);
+        };
+        const typeToLoginField = (fieldPlaceholder: string, value: string) => {
+            getLoginField(fieldPlaceholder).clear().type(value);
+        };
+        const submitLoginForm = () => {
+            cy.clickButton('LOGIN');
+        };
 
-        cy.get('.error.message').should(
-            'have.text',
-            'User unauthorized: Authentication failed for user admin. Wrong credentials or locked account'
-        );
-        cy.location('pathname').should('be.equal', '/console/login');
+        cy.visit('/console/login');
+
+        submitLoginForm();
+        cy.get('.error.message').should('have.text', expectedErrorMessage);
+
+        typeToLoginField('Username', 'test');
+        submitLoginForm();
+        cy.get('.error.message').should('have.text', expectedErrorMessage);
+
+        getLoginField('Username').clear();
+        typeToLoginField('Password', 'test');
+        submitLoginForm();
+        cy.get('.error.message').should('have.text', expectedErrorMessage);
+
+        typeToLoginField('Username', 'test');
+        submitLoginForm();
+        cy.get('.error.message').should('not.have.text', expectedErrorMessage);
+    });
+
+    describe('fails when provided credentials are invalid', () => {
+        it('for admin user', () => {
+            cy.login({ password: 'invalid-password', expectSuccessfulLogin: false });
+
+            cy.get('.error.message').should(
+                'have.text',
+                'User unauthorized: Authentication failed for user admin. Wrong credentials or locked account'
+            );
+            cy.location('pathname').should('be.equal', '/console/login');
+        });
+
+        it('for non admin user', () => {
+            cy.login({ username: 'invalid-username', expectSuccessfulLogin: false });
+
+            cy.get('.error.message').should(
+                'have.text',
+                'Incorrect username and/or password. Please check and try again.'
+            );
+            cy.location('pathname').should('be.equal', '/console/login');
+        });
     });
 
     it('fails when manager data cannot be fetched', () => {
