@@ -84,7 +84,7 @@ const RepositoryTable: FunctionComponent<RepositoryViewProps> = ({
                         onClick={() => onSelect(item)}
                     >
                         <DataTable.Data>
-                            <ExternalBlueprintImage url={image_url} width={25} />{' '}
+                            <ExternalBlueprintImage url={image_url} width={25} />
                             <span style={{ marginLeft: '5px' }}>{name}</span>
                         </DataTable.Data>
                         <DataTable.Data>{description}</DataTable.Data>
