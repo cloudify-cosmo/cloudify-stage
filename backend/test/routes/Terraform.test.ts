@@ -7,7 +7,7 @@ import { readJsonSync } from 'fs-extra';
 import nock from 'nock';
 import yaml from 'js-yaml';
 import { size } from 'lodash';
-import type { Blueprint } from '../../handler/BlueprintRenderHandler.types';
+import type { Blueprint } from 'cloudify-ui-common-backend';
 
 const getFixturePath = (filename: string) => resolve(join(__dirname, `fixtures/terraform/${filename}`));
 const getInputs = (id: 'full' | 'minimal' | 'fetch-data-file' | 'fetch-data') =>
