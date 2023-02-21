@@ -43,31 +43,24 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     return { reservedKeys, fetchingReservedKeys };
 }
 
-const getLabelNumberValidation =
-    (minmax: number) =>
-    (value: string): string | undefined => {
-        const number = toNumber(value);
+const latLongKeys = ['csys-location-lat', 'csys-location-long'];
 
-        if (Number.isNaN(number) || number > minmax || number < -minmax) {
-            return Stage.i18n.t('widgets.common.labels.validationNumber', { to: minmax, from: -minmax });
-        }
-
+function validateLatLong(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
+    if (latLongKeys.find(key => key === newLabelKey)) {
         return undefined;
-    };
+    }
+    const boundary = newLabelKey === 'csys-location-lat' ? 90 : 180;
 
-/**
- * keys of this record will be validated,
- * additionally, there will be a check if they are added more than once
- */
-const specialValidation: Record<string, (v: string) => (string | undefined) | undefined> = {
-    'csys-location-lat': getLabelNumberValidation(90),
-    'csys-location-long': getLabelNumberValidation(180)
-};
+    const number = toNumber(newValue);
 
-function checkUniqueness(newLabelKey: string, existingLabelKeys: string[]) {
+    if (Number.isNaN(number) || number > boundary || number < -boundary) {
+        return Stage.i18n.t('widgets.common.labels.validationNumber', { to: boundary, from: -boundary });
+    }
+
     if (existingLabelKeys.find(label => label === newLabelKey)) {
         return Stage.i18n.t('widgets.common.labels.labelDuplicatedKeyError');
     }
+
     return undefined;
 }
 
@@ -107,20 +100,18 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
         return !!_.find(allLabels, newLabel);
     })();
-    const specialValidationError =
-        specialValidation[newLabelKey] &&
-        (specialValidation[newLabelKey](newLabelValue) ||
-            checkUniqueness(
-                newLabelKey,
-                labels.map(({ key }) => key)
-            ));
+    const keyValidationError = validateLatLong(
+        newLabelKey,
+        newLabelKey,
+        labels.map(({ key }) => key)
+    );
     const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
         !newLabelIsProvided ||
         newLabelIsAlreadyPresent ||
         addingLabel ||
         newLabelKeyIsNotPermitted ||
-        !!specialValidationError;
+        !!keyValidationError;
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
@@ -218,7 +209,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                         </Form.Field>
                         <Form.Field width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
-                            {specialValidationError && <LabelErrorPopup content={specialValidationError} />}
+                            {keyValidationError && <LabelErrorPopup content={keyValidationError} />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}
