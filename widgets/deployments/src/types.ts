@@ -6,7 +6,7 @@ import type { Toolbox, Widget } from 'app/utils/StageAPI';
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
 import type { Visibility } from 'app/widgets/common/types';
 
-export const FetchedDataFieldsOfExecution = [
+export const FetchedDeploymentFields = [
     'id',
     'display_name',
     'blueprint_id',
@@ -20,12 +20,29 @@ export const FetchedDataFieldsOfExecution = [
     'latest_execution'
 ] as const;
 
-export type EnhancedDeployment = Pick<Deployment, typeof FetchedDataFieldsOfExecution[number]> & {
+export const FetchedLastExecutionFields = [
+    'id',
+    'deployment_id',
+    'workflow_id',
+    'status',
+    'status_display',
+    'created_at',
+    'scheduled_for',
+    'ended_at',
+    'parameters',
+    'error',
+    'total_operations',
+    'finished_operations'
+] as const;
+
+export type FetchedLastExecutionType = Required<Pick<Execution, typeof FetchedLastExecutionFields[number]>>
+
+export type EnhancedDeployment = Pick<Deployment, typeof FetchedDeploymentFields[number]> & {
     nodeInstancesCount: number;
     nodeInstancesStates: Record<string, number>;
 
     isUpdated: boolean;
-    lastExecution: Execution;
+    lastExecution: FetchedLastExecutionType;
 };
 
 export interface DeploymentsData<ItemsData = EnhancedDeployment> extends PaginatedResponse<ItemsData> {

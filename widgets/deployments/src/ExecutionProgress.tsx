@@ -6,8 +6,8 @@ interface ExecutionProgressProps {
     execution: {
         status?: string;
         /* eslint-disable camelcase */
-        finished_operations?: number;
-        total_operations?: number;
+        finished_operations: number;
+        total_operations: number;
         /* eslint-enable camelcase */
     };
 }

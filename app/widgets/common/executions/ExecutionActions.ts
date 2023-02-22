@@ -9,8 +9,10 @@ export default class ExecutionActions {
         return this.manager.doGet<Execution>(`/executions/${executionId}`);
     }
 
-    doGetAll<PossibleValues extends keyof Execution>(params: Record<string, any> = {}) {
-        return this.manager.doGet<PaginatedResponse<Pick<Execution, PossibleValues>>>('/executions', { params });
+    doGetAll<IncludeKeys extends keyof Execution>(params: Record<string, any> = {}) {
+        return this.manager.doGet<PaginatedResponse<Required<Pick<Execution, IncludeKeys>>>>('/executions', {
+            params
+        });
     }
 
     doGetStatus(executionId: string) {

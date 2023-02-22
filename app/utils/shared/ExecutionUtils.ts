@@ -154,11 +154,8 @@ export default class ExecutionUtils {
     /**
      * @param {{ total_operations: number, finished_operations: number }} execution
      */
-    static getProgress(execution: Pick<Execution, 'finished_operations' | 'total_operations'>) {
+    static getProgress(execution: Required<Pick<Execution, 'finished_operations' | 'total_operations'>>) {
         const { finished_operations: finishedOperations, total_operations: totalOperations } = execution;
-        if (!finishedOperations || !totalOperations) {
-            return 0;
-        }
         const ratio = finishedOperations / totalOperations;
         return Number.isFinite(ratio) ? Math.round(ratio * 100) : 0;
     }
