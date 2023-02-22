@@ -7,10 +7,8 @@ import DeploymentsTable from './DeploymentsTable';
 
 const translate = Stage.Utils.getT('widgets.deployments.list');
 
-export type DeploymentResponse = DeploymentsListData;
-
 interface DeploymentsListProps {
-    data: DeploymentResponse;
+    data: DeploymentsListData;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget<DeploymentsConfiguration>;
 }
