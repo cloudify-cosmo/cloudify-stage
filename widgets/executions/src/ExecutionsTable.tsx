@@ -346,7 +346,7 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                         </PopupMenu>
                                     </DataTable.Data>
                                 </DataTable.Row>
-                                <DataTable.DataExpandable key={item.id} style={{ backgroundColor: 'white' }}>
+                                <DataTable.DataExpandable key={item.id}>
                                     <ExecutionWorkflowGraph
                                         selectedExecution={item}
                                         toolbox={toolbox}

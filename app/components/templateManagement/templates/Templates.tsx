@@ -126,7 +126,7 @@ export default function Templates({
                                 </DataTable.Data>
                             </DataTable.Row>
 
-                            <DataTable.DataExpandable key={template.id} style={{ backgroundColor: 'white' }}>
+                            <DataTable.DataExpandable key={template.id}>
                                 <Segment.Group horizontal>
                                     <PageMenuItemsList
                                         pages={template.pages}

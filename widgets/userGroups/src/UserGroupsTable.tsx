@@ -280,7 +280,7 @@ class UserGroupsTable extends React.Component<UserGroupsTableProps, UserGroupsTa
                                         />
                                     </DataTable.Data>
                                 </DataTable.Row>
-                                <DataTable.DataExpandable key={item.name} style={{ backgroundColor: 'white' }}>
+                                <DataTable.DataExpandable key={item.name}>
                                     <GroupDetails
                                         data={item}
                                         groups={data.items}

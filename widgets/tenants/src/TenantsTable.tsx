@@ -201,7 +201,7 @@ export default class TenantsTable extends React.Component<TenantsTableProps, Ten
                                     </DataTable.Data>
                                 </DataTable.Row>
 
-                                <DataTable.DataExpandable key={item.name} style={{ backgroundColor: 'white' }}>
+                                <DataTable.DataExpandable key={item.name}>
                                     <TenantDetails
                                         tenant={item}
                                         toolbox={toolbox}

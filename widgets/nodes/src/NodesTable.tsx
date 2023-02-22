@@ -185,10 +185,7 @@ export default class NodesTable extends React.Component {
                                     <DataTable.Data>{node.groups}</DataTable.Data>
                                 </DataTable.Row>
 
-                                <DataTable.DataExpandable
-                                    key={`${node.id + node.deployment_id}_Expanded`}
-                                    style={{ backgroundColor: 'white' }}
-                                >
+                                <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
                                     <NodeInstancesTable instances={node.instances} widget={widget} toolbox={toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
