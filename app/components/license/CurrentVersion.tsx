@@ -5,7 +5,7 @@ import React from 'react';
 
 import type { VersionResponse } from 'backend/handler/AuthHandler.types';
 import { Header, Message, Table } from '../basic';
-import { StyledIcon } from './CurrentLicense';
+import { HeaderIcon } from './CurrentLicense';
 
 interface ExtendedVersion extends Partial<VersionResponse> {
     distro: string;
@@ -54,7 +54,7 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
                         <Table.Row key={field.header}>
                             <Table.Cell width={5}>
                                 <Header as="h4">
-                                    <StyledIcon name={field.icon} />
+                                    <HeaderIcon name={field.icon} />
                                     <Header.Content>{field.header}</Header.Content>
                                 </Header>
                             </Table.Cell>

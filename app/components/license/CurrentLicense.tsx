@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import StageUtils from '../../utils/stageUtils';
 import { Header, Icon, Table } from '../basic';
 
-export const StyledIcon = styled(Icon)`
+export const HeaderIcon = styled(Icon)`
     &&&& {
         display: inline-block;
         float: left;
@@ -93,7 +93,7 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
                         <Table.Row key={field.header}>
                             <Table.Cell width={5}>
                                 <Header as="h4">
-                                    <StyledIcon name={field.icon} />
+                                    <HeaderIcon name={field.icon} />
                                     <Header.Content>{field.header}</Header.Content>
                                 </Header>
                             </Table.Cell>
