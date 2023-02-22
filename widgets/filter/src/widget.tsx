@@ -1,8 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-
+import { FilterWidgetConfiguration } from '../../filters/src/types';
 import Filter from './Filter';
 
-Stage.defineWidget({
+Stage.defineWidget<never, never, FilterWidgetConfiguration>({
     id: 'filter',
     name: 'Resource filter',
     description: 'Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions',
@@ -62,7 +61,7 @@ Stage.defineWidget({
         }
     ],
 
-    render(widget, data, error, toolbox) {
+    render(widget, _data, _error, toolbox) {
         return <Filter configuration={widget.configuration} toolbox={toolbox} />;
     }
 });
