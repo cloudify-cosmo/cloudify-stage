@@ -8,7 +8,7 @@ import i18n from 'i18next';
 
 import type { ClientConfig } from 'backend/routes/Config.types';
 import SmartRedirect from './SmartRedirect';
-import { login } from '../../actions/manager/auth';
+import { clearLoginError, login } from '../../actions/manager/auth';
 import type { ReduxState } from '../../reducers';
 import renderMultilineText from '../../utils/shared/renderMultilineText';
 import SplashLoadingScreen from '../../utils/SplashLoadingScreen';
@@ -22,6 +22,7 @@ import Consts from '../../utils/consts';
 export interface LoginPageProps {
     isLoggingIn: boolean;
     onLogin: (username: string, password: string, redirect?: string) => void;
+    onClearLoginError: () => void;
     location: {
         search: string;
     };
@@ -123,8 +124,14 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
     };
 
     handleInputChange = (_proxy: any, field: Parameters<typeof Form.fieldNameValue>[0]) => {
+        const { loginError, onClearLoginError } = this.props;
         const fieldNameValue = Form.fieldNameValue(field);
+
         this.setState({ ...fieldNameValue, validation: { invalidInputs: {} } });
+
+        if (loginError) {
+            onClearLoginError();
+        }
     };
 
     render() {
@@ -214,7 +221,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
 }
 
 const mapLoginError = (errorMessage: string | null) => {
-    const incorrectCredentialsError = errorMessage === 'User unauthorized: No authentication info provided';
+    const incorrectCredentialsError = errorMessage?.includes('User unauthorized');
 
     if (incorrectCredentialsError) {
         return i18n.t('login.error.incorrectCredentials');
@@ -239,6 +246,9 @@ const mapDispatchToProps = (dispatch: ReduxThunkDispatch) => {
     return {
         onLogin: (username: string, password: string, redirect?: string) => {
             dispatch(login(username, password, redirect));
+        },
+        onClearLoginError: () => {
+            dispatch(clearLoginError());
         }
     };
 };

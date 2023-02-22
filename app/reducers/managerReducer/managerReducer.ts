@@ -61,6 +61,8 @@ const manager: Reducer<ManagerData, ManagerAction> = (state = emptyState, action
         case ActionType.SET_IDENTITY_PROVIDERS:
         case ActionType.SET_USER_DATA:
             return { ...state, auth: auth(state.auth, action) };
+        case ActionType.CLEAR_LOGIN_ERROR:
+            return { ...state, auth: auth(state.auth, action) };
         case ActionType.FETCH_CLUSTER_STATUS_REQUEST:
         case ActionType.FETCH_CLUSTER_STATUS_SUCCESS:
         case ActionType.FETCH_CLUSTER_STATUS_FAILURE:
