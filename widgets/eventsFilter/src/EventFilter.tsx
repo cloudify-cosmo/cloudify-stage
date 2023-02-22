@@ -1,6 +1,10 @@
-// @ts-nocheck File not migrated fully to TS
+import type { DateRangeInputOnChangeData } from 'cloudify-ui-components';
+import type { DropdownItemProps, DropdownProps, InputOnChangeData } from 'semantic-ui-react';
+
 const contextValueKey = 'eventFilter';
 const refreshEvent = 'eventsFilter:refresh';
+
+const translate = Stage.Utils.getT('widgets.eventsFilter.inputs');
 
 const initialFields = Object.freeze({
     eventType: [],
@@ -10,7 +14,8 @@ const initialFields = Object.freeze({
     type: '',
     messageText: '',
     operationText: '',
-    logLevel: []
+    logLevel: [],
+    name: ''
 });
 
 const { EventUtils } = Stage.Common;
@@ -28,15 +33,18 @@ const defaultLogLevelOptions = _.map(_.keys(EventUtils.logLevelOptions), log => 
     value: log
 }));
 
-function isDirty(fields) {
-    return !_.every(initialFields, (value, name) => fields[name] === initialFields[name]);
+function isDirty(fields: { [x: string]: any }) {
+    return !_.every(
+        initialFields,
+        (_value, name) => fields[name] === initialFields[name as keyof typeof initialFields]
+    );
 }
 
 const debouncedContextUpdate = _.debounce((toolbox, fields) => {
     toolbox.getContext().setValue(contextValueKey, fields);
 }, 500);
 
-function EventFilter({ toolbox }) {
+function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
     const { useState, useEffect } = React;
     const { useEventListener } = Stage.Hooks;
 
@@ -50,16 +58,23 @@ function EventFilter({ toolbox }) {
 
     useEffect(() => setDirty(isDirty(fields)), [JSON.stringify(fields)]);
 
-    function renderLabel(data) {
-        return _.truncate(data.text, { length: 30 });
+    function renderLabel(data: DropdownItemProps) {
+        return _.truncate(data.text as string, { length: 30 });
     }
 
-    function handleInputChange(proxy, field) {
+    function handleInputChange(
+        _event: React.SyntheticEvent<HTMLElement, Event> | unknown,
+        field: InputOnChangeData | DateRangeInputOnChangeData | DropdownProps
+    ) {
         const updatedFields = { ...fields };
         updatedFields[field.name] = field.value;
         if (field.name === 'timeRange') {
-            updatedFields.timeStart = _.isEmpty(field.value.start) ? '' : moment(field.value.start);
-            updatedFields.timeEnd = _.isEmpty(field.value.end) ? '' : moment(field.value.end);
+            const { value } = field as DateRangeInputOnChangeData;
+            const emptyStartValue = !value.start;
+            const emptyEndValue = !value.end;
+
+            updatedFields.timeStart = emptyStartValue ? '' : moment(value.start);
+            updatedFields.timeEnd = emptyEndValue ? '' : moment(value.end);
         }
 
         if (field.name === 'type') {
@@ -82,8 +97,9 @@ function EventFilter({ toolbox }) {
         debouncedContextUpdate(toolbox, updatedFields);
     }
 
-    function handleOptionAddition(e, { name, value }) {
-        setOptions({ ...options, [name]: [{ text: value, value }, ...options[name]] });
+    function handleOptionAddition(_event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) {
+        const { name, value } = data;
+        setOptions({ ...options, [name]: [{ text: value, value }, ...options[name as keyof typeof options]] });
     }
 
     function resetFilter() {
@@ -93,7 +109,7 @@ function EventFilter({ toolbox }) {
         toolbox.getEventBus().trigger('events:refresh');
     }
 
-    function isTypeSet(type) {
+    function isTypeSet(type: string) {
         return !fields.type || fields.type === type;
     }
 
@@ -131,7 +147,7 @@ function EventFilter({ toolbox }) {
             <Form.Group inline widths="equal">
                 <Form.Field>
                     <Form.Dropdown
-                        placeholder="Type"
+                        placeholder={translate('type.placeholder')}
                         fluid
                         selection
                         options={EventUtils.typesOptions}
@@ -142,7 +158,7 @@ function EventFilter({ toolbox }) {
                 </Form.Field>
                 <Form.Field>
                     <Form.Dropdown
-                        placeholder="Event Types"
+                        placeholder={translate('eventType.placeholder')}
                         fluid
                         multiple
                         search
@@ -150,7 +166,7 @@ function EventFilter({ toolbox }) {
                         options={options.eventType}
                         name="eventType"
                         renderLabel={renderLabel}
-                        additionLabel="Add custom Event Type: "
+                        additionLabel={translate('eventType.additionLabel')}
                         value={fields.eventType}
                         allowAdditions
                         disabled={!isTypeSet(EventUtils.eventType)}
@@ -160,7 +176,7 @@ function EventFilter({ toolbox }) {
                 </Form.Field>
                 <Form.Field>
                     <Form.Dropdown
-                        placeholder="Log Levels"
+                        placeholder={translate('logLevel.placeholder')}
                         fluid
                         multiple
                         search
@@ -169,7 +185,7 @@ function EventFilter({ toolbox }) {
                         name="logLevel"
                         allowAdditions
                         disabled={!isTypeSet(EventUtils.logType)}
-                        additionLabel="Add custom Log Level: "
+                        additionLabel={translate('logLevel.additionLabel')}
                         value={fields.logLevel}
                         onAddItem={handleOptionAddition}
                         onChange={handleInputChange}
@@ -178,20 +194,20 @@ function EventFilter({ toolbox }) {
                 <Form.Field>
                     <Popup
                         trigger={<Form.Button icon="undo" basic onClick={resetFilter} disabled={!dirty} />}
-                        content="Reset filter"
+                        content={translate('resetFilter.content')}
                     />
                 </Form.Field>
             </Form.Group>
             <Form.Group inline widths="equal">
                 <Form.Input
-                    placeholder="Operation"
+                    placeholder={translate('operationText.placeholder')}
                     name="operationText"
                     fluid
                     value={fields.operationText}
                     onChange={handleInputChange}
                 />
                 <Form.Input
-                    placeholder="Message"
+                    placeholder={translate('messageText.placeholder')}
                     name="messageText"
                     fluid
                     value={fields.messageText}
@@ -199,8 +215,7 @@ function EventFilter({ toolbox }) {
                 />
                 <Form.Field>
                     <Form.DateRange
-                        fluid
-                        placeholder="Time Range"
+                        placeholder={translate('timeRange.placeholder')}
                         name="timeRange"
                         ranges={timeRanges}
                         defaultValue={DateRangeInput.EMPTY_VALUE}
@@ -212,9 +227,5 @@ function EventFilter({ toolbox }) {
         </Form>
     );
 }
-
-EventFilter.propTypes = {
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
 
 export default React.memo(EventFilter, _.isEqual);

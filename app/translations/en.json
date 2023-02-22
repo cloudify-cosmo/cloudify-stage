@@ -1523,6 +1523,35 @@
                 "message": "Message"
             }
         },
+        "eventsFilter": {
+            "name": "Events/logs filter",
+            "description": "Adds a filter section for events and logs",
+            "inputs": {
+                "type": {
+                    "placeholder": "Type"
+                },
+                "eventType": {
+                    "placeholder": "Event Types",
+                    "additionLabel": "Add custom Event Type: "
+                },
+                "logLevel": {
+                    "placeholder": "Log Levels",
+                    "additionLabel": "Add custom Log Level: "
+                },
+                "operationText": {
+                    "placeholder": "Operation"
+                },
+                "messageText": {
+                    "placeholder": "Message"
+                },
+                "timeRange": {
+                    "placeholder": "Time Range"
+                },
+                "resetFilter": {
+                    "content": "Reset filter"
+                }
+            }
+        },
         "executions": {
             "name": "Executions",
             "description": "This widget shows the deployment executions",

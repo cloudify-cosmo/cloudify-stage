@@ -1,5 +1,22 @@
 import { icons } from 'cloudify-ui-common-frontend';
 
+type EventTypeOptionsProps = {
+    text: string;
+    iconClass?: string;
+    rowClass?: string;
+};
+
+type EventTypeOptions = Record<string, EventTypeOptionsProps>;
+
+type LogLevelOptionsProps = {
+    icon: string;
+    color: string;
+    rowClass?: string;
+    text: string;
+};
+
+type LogLevelOptions = Record<string, LogLevelOptionsProps>;
+
 export default class EventUtils {
     static eventType = 'cloudify_event';
 
@@ -11,7 +28,7 @@ export default class EventUtils {
         { text: 'Events', value: EventUtils.eventType }
     ];
 
-    static eventTypeOptions = {
+    static eventTypeOptions: EventTypeOptions = {
         workflow_received: {
             text: 'Workflow received'
         },
@@ -101,7 +118,7 @@ export default class EventUtils {
         }
     } as const;
 
-    static logLevelOptions = {
+    static logLevelOptions: LogLevelOptions = {
         debug: {
             icon: 'bug',
             color: 'green',
