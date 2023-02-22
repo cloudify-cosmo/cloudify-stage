@@ -46,6 +46,7 @@ The hamburger menu (![list icon]( /images/ui/icons/list-icon.png ))
 on the right of every deployment allows performing the following operations:
 
 * Install/Uninstall deployment
+* Deploy blueprint on deployment - this option is only available when the deployment is containing `csys-obj-type: environment` label
 * Update deployment
 * Set site for deployment
 * Manage deployment labels

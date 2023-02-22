@@ -38,8 +38,6 @@ type DeploymentsParams = {
 
 Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>({
     id: 'deployments',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 8,
     initialHeight: 24,
     categories: [Stage.GenericConfig.CATEGORY.DEPLOYMENTS],
@@ -86,7 +84,6 @@ Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>
         Stage.GenericConfig.SORT_COLUMN_CONFIG('created_at'),
         Stage.GenericConfig.SORT_ASCENDING_CONFIG(false)
     ],
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('deployments'),
 

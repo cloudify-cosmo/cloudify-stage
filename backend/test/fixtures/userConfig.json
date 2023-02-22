@@ -1,0 +1,8 @@
+{
+  "saml": {
+    "enabled": true,
+    "certPath": "/path/to/cert",
+    "ssoUrl": "sso",
+    "portalUrl": "portal"
+  }
+}

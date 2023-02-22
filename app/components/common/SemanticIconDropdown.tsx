@@ -1264,7 +1264,7 @@ const semanticIconsOptions: ComponentProps<typeof Dropdown>['options'] = semanti
     icon
 }));
 
-interface SemanticIconDropdownProps extends Omit<DropdownProps, 'onChange'> {
+export interface SemanticIconDropdownProps extends Omit<DropdownProps, 'onChange'> {
     name?: string;
     onChange: CustomConfigurationComponentProps<string>['onChange'];
 }

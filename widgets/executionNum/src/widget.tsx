@@ -7,7 +7,6 @@ Stage.defineWidget({
     initialWidth: 2,
     initialHeight: 8,
     showHeader: false,
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('executionNum'),
     categories: [Stage.GenericConfig.CATEGORY.BLUEPRINTS, Stage.GenericConfig.CATEGORY.CHARTS_AND_STATISTICS],

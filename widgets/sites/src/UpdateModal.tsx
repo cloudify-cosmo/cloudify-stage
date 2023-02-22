@@ -1,15 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
 import SiteActions from './SiteActions';
 import SiteLocationInput from './SiteLocationInput';
-import SitePropType from './props/SitePropType';
+import type { SiteLocationInputProps } from './SiteLocationInput';
+import type { Site } from './widget.types';
+import { translateWidget } from './widget.utils';
 
-export default function UpdateModal({ onHide, open, site, toolbox }) {
+const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+const translate = Stage.Utils.composeT(translateWidget, 'modals.update');
+
+interface UpdateModalProps {
+    onHide: () => void;
+    open: boolean;
+    site: Site;
+    toolbox: Stage.Types.Toolbox;
+}
+
+export default function UpdateModal({ onHide, open, site, toolbox }: UpdateModalProps) {
     const { useBoolean, useErrors, useInput, useOpenProp } = Stage.Hooks;
 
     const [isLoading, setLoading, unsetLoading] = useBoolean();
     const { errors, setMessageAsError, clearErrors } = useErrors();
     const [siteNewName, setSiteNewName] = useInput('');
-    const [siteLocation, setSiteLocation] = useInput();
+    const [siteLocation, setSiteLocation] = useInput('');
 
     useOpenProp(open, () => {
         unsetLoading();
@@ -34,38 +45,50 @@ export default function UpdateModal({ onHide, open, site, toolbox }) {
             .finally(unsetLoading);
     }
 
-    const { Modal, Icon, Form, ApproveButton, CancelButton } = Stage.Basic;
+    const handleSiteLocationInputChange: SiteLocationInputProps['onChange'] = (_event, field) => {
+        setSiteLocation(field.value);
+    };
 
     return (
         <div>
-            <Modal open={open} onClose={() => onHide()}>
+            <Modal open={open} onClose={onHide}>
                 <Modal.Header>
-                    <Icon name="edit" /> Update site {site.name}
+                    <Icon name="edit" />{' '}
+                    {translate('header', {
+                        siteName: site.name
+                    })}
                 </Modal.Header>
 
                 <Modal.Content>
                     <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
                         <Form.Field error={errors.siteNewName}>
-                            <Form.Input label="Name" name="siteNewName" value={siteNewName} onChange={setSiteNewName} />
+                            <Form.Input
+                                label={translate('fields.siteNewName')}
+                                name="siteNewName"
+                                value={siteNewName}
+                                onChange={setSiteNewName}
+                            />
                         </Form.Field>
                         <Form.Field error={errors.siteLocation}>
-                            <SiteLocationInput value={siteLocation} onChange={setSiteLocation} toolbox={toolbox} />
+                            <SiteLocationInput
+                                value={siteLocation}
+                                onChange={handleSiteLocationInputChange}
+                                toolbox={toolbox}
+                            />
                         </Form.Field>
                     </Form>
                 </Modal.Content>
 
                 <Modal.Actions>
                     <CancelButton onClick={onHide} disabled={isLoading} />
-                    <ApproveButton onClick={updateSite} disabled={isLoading} content="Update" icon="edit" />
+                    <ApproveButton
+                        onClick={updateSite}
+                        disabled={isLoading}
+                        content={translate('buttons.update')}
+                        icon="edit"
+                    />
                 </Modal.Actions>
             </Modal>
         </div>
     );
 }
-
-UpdateModal.propTypes = {
-    onHide: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    site: SitePropType.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};

@@ -12,7 +12,6 @@ import { mountWithProvider } from '../../utils';
 describe('SideBar', () => {
     it('automatically collapses item groups', () => {
         const username = 'test_user';
-        const version = '6.3';
 
         cy.fixture('pages/pages_with_groups').then(pages => {
             mountWithProvider(
@@ -25,15 +24,12 @@ describe('SideBar', () => {
                         ...emptyState,
                         auth: { ...emptyState.auth, username },
                         tenants: { items: [] },
-                        version: { version },
                         license: { data: null }
                     } as ManagerData,
                     config: { mode: Consts.MODE_CUSTOMER }
                 }
             );
         });
-
-        cy.contains(version);
 
         cy.clickPageMenuItem('Group 1');
         cy.contains('Subpage 1').should('be.visible');

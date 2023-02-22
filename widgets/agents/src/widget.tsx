@@ -27,12 +27,9 @@ type AgentsData = Stage.Types.PaginatedResponse<Agent>;
 
 Stage.defineWidget<AgentsParams, AgentsData, AgentsConfiguration>({
     id: 'agents',
-    name: translate('name'),
-    description: translate('description'),
     initialWidth: 12,
     initialHeight: 24,
     fetchUrl: '[manager]/agents?[params:gridParams,deployment_id,node_ids,node_instance_ids,install_methods,state]',
-    isReact: true,
     hasReadme: true,
     permission: Stage.GenericConfig.WIDGET_PERMISSION('agents'),
     categories: [Stage.GenericConfig.CATEGORY.SYSTEM_RESOURCES],
