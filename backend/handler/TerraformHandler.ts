@@ -16,6 +16,7 @@ import type { Blueprint } from 'cloudify-ui-common-backend';
 import { renderBlueprintYaml } from 'cloudify-ui-common-backend';
 import { getLogger } from './LoggerHandler';
 import type { TerraformBlueprintData, TerraformParserResult, Variable } from './TerraformHandler.types';
+import { createGetAttributeCall, createGetSecretCall, createIntrinsicFunctionCall } from './services/BlueprintBuilder';
 
 const logger = getLogger('Terraform');
 // NOTE: The idea behind the code below has been described in more details here: https://serverfault.com/questions/544156/git-clone-fail-instead-of-prompting-for-credentials
@@ -161,7 +162,9 @@ export const renderTerraformBlueprint = (terraformBlueprintData: TerraformBluepr
         return variables
             .map(variable => ({
                 [variable.variable]:
-                    variable.source === 'static' ? variable.value : { [`get_${variable.source}`]: variable.name }
+                    variable.source === 'static'
+                        ? variable.value
+                        : createIntrinsicFunctionCall(`get_${variable.source}`, variable.name)
             }))
             .reduce(merge, {});
     }
@@ -171,7 +174,7 @@ export const renderTerraformBlueprint = (terraformBlueprintData: TerraformBluepr
             ?.filter(output => output.type === type)
             .map(output => ({
                 [output.name]: {
-                    value: { get_attribute: ['cloud_resources', 'outputs', output.terraformOutput, 'value'] }
+                    value: createGetAttributeCall('cloud_resources', 'outputs', output.terraformOutput, 'value')
                 }
             }))
             .reduce(merge, {});
@@ -213,8 +216,8 @@ export const renderTerraformBlueprint = (terraformBlueprintData: TerraformBluepr
                     resource_config: {
                         source: {
                             location: terraformTemplate,
-                            username: urlAuthentication ? { get_secret: `${blueprintName}.username` } : undefined,
-                            password: urlAuthentication ? { get_secret: `${blueprintName}.password` } : undefined
+                            username: urlAuthentication ? createGetSecretCall(`${blueprintName}.username`) : undefined,
+                            password: urlAuthentication ? createGetSecretCall(`${blueprintName}.password`) : undefined
                         },
                         source_path: resourceLocation,
                         variables: createVariables(variables),

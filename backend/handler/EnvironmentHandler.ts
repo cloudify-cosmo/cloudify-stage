@@ -2,6 +2,7 @@ import _, { cloneDeep } from 'lodash';
 import type { Blueprint, Input } from 'cloudify-ui-common-backend';
 import { renderBlueprintYaml } from 'cloudify-ui-common-backend';
 import type { EnvironmentRenderParams, ExternalCapability } from './EnvironmentHandler.types';
+import { createGetInputCall, createGetSecretCall } from './services/BlueprintBuilder';
 
 export const renderEnvironmentBlueprint = (renderParams: EnvironmentRenderParams) => {
     const labels: Blueprint['labels'] = {
@@ -30,7 +31,7 @@ export const renderEnvironmentBlueprint = (renderParams: EnvironmentRenderParams
 
                 if ((<ExternalCapability>capability).blueprintDefault)
                     input.default =
-                        capability.source === 'input' ? capability.value : { 'get-secret': capability.value };
+                        capability.source === 'input' ? capability.value : createGetSecretCall(capability.value);
 
                 return input;
             })
@@ -38,7 +39,7 @@ export const renderEnvironmentBlueprint = (renderParams: EnvironmentRenderParams
         capabilities: _(renderParams.capabilities)
             .keyBy('name')
             .mapValues(capability => ({
-                value: capability.source === 'static' ? capability.value : { 'get-input': capability.name }
+                value: capability.source === 'static' ? capability.value : createGetInputCall(capability.name)
             }))
             .value()
     };
