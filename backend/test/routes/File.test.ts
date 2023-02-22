@@ -18,7 +18,7 @@ describe('/file endpoint', () => {
     it('allows to get JSON content from YAML file', () =>
         request(app)
             .post('/console/file/yaml')
-            .attach('file', path.resolve(path.join(__dirname, 'fixtures/terraform/1_blueprint.yaml')))
+            .attach('file', path.resolve(path.join(__dirname, 'fixtures/blueprint.yaml')))
             .then(response => {
                 expect(response.type).toContain('application/json');
                 expect(response.statusCode).toBe(200);

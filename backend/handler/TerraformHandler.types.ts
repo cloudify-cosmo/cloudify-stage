@@ -24,11 +24,11 @@ export interface TerraformBlueprintData {
     outputs?: Output[];
 }
 
-export interface TerraformParserOutputDefinition {
+interface TerraformParserOutputDefinition {
     name: string;
     pos: { filename: string; line: number };
 }
-export interface TerraformParserVariableDefinition extends TerraformParserOutputDefinition {
+interface TerraformParserVariableDefinition extends TerraformParserOutputDefinition {
     default: any;
     description?: string;
     required: boolean;
