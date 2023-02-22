@@ -81,7 +81,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
             .value();
     }
 
-    setValue(name: string, value: any) {
+    setValue(name: string, value: string | null) {
         const { toolbox } = this.props;
         toolbox.getContext().setValue(name, value);
         this.setState({ [name]: value });
