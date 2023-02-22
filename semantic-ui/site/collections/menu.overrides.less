@@ -1,3 +1,21 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.pagination.menu {
+    box-shadow: none;
+    border-color: @lightGrey;
+    .item {
+        &::before {
+            width: 0;
+        }
+        &.active {
+            &::before {
+                width: 0;
+            }
+        }
+        &:hover {
+            color: @blue;
+        }
+    }
+}

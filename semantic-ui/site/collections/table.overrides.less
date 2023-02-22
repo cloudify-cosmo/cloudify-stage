@@ -5,8 +5,8 @@
 .ui.table {
     font-size: @fontSize;
     border-color: @borderColor;
-    tr.active {
-        background-color: @hoveredItemBackground !important;
+    tr td {
+        border-color: #ebebeb;
     }
 }
 
@@ -18,7 +18,6 @@
     color: @grey;
     &:hover {
         border-color: @borderColor;
-        background-color: @hoveredItemBackground;
     }
     &.sorted {
         background-color: white;
@@ -33,29 +32,6 @@
         &:hover {
             color: @grey;
             background-color: white;
-        }
-    }
-}
-
-.ui.pagination.menu {
-    box-shadow: none;
-    border-color: @lightGrey;
-    .item {
-        color: @grey;
-        &::before {
-            width: 0;
-        }
-        &.active {
-            color: @blue;
-            &::before {
-                width: 0;
-            }
-        }
-        &.disabled {
-            color: @disabledTextColor !important;
-        }
-        &:hover {
-            color: @blue;
         }
     }
 }
