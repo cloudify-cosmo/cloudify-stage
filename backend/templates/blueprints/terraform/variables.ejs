@@ -1,7 +1,0 @@
-<% if (Array.isArray(variables) && variables.length) { _%>
-        <%= name %>:
-<% } _%>
-<% variables.forEach(variable => { _%>
-          <%= variable.variable %>: <% if (variable.source === "input" || variable.source === "secret") { _%>{ get_<%=
-              variable.source %>: '<%= String(variable.name).replace("'", "''") %>' }<% } else { _%>'<%= String(variable.value).replace("'", "''") %>'<% } %>
-<% }) _%>
