@@ -80,7 +80,7 @@ Stage.defineWidget({
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
                 _include:
-                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution',
+                    'id,display_name,blueprint_id,visibility,created_at,created_by,updated_at,inputs,workflows,site_name,latest_execution,labels',
                 ...params
             })
         );

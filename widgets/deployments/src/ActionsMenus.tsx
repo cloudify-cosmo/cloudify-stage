@@ -1,4 +1,5 @@
-import type { WorkflowsMenuProps } from '../../../app/widgets/common/executeWorkflow/WorkflowsMenu';
+import type { Label } from 'app/widgets/common/labels/types';
+import type { WorkflowsMenuProps } from 'app/widgets/common/executeWorkflow/WorkflowsMenu';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
@@ -10,13 +11,11 @@ interface ActionsMenusProps<D> {
     toolbox: Stage.Types.Toolbox;
 }
 
-export default function ActionsMenus<D>({
-    deployment,
-    onDeploymentAction,
-    onWorkflowAction,
-    toolbox,
-    workflows
-}: ActionsMenusProps<D>) {
+export default function ActionsMenus<
+    D extends {
+        labels: Label[];
+    }
+>({ deployment, onDeploymentAction, onWorkflowAction, toolbox, workflows }: ActionsMenusProps<D>) {
     const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
 
     return (
@@ -26,6 +25,7 @@ export default function ActionsMenus<D>({
                 onActionClick={actionName => onDeploymentAction(deployment, actionName)}
                 toolbox={toolbox}
                 workflows={workflows}
+                deploymentLabels={deployment?.labels}
             />
         </>
     );
