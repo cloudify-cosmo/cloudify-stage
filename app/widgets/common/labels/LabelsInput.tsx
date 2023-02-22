@@ -46,7 +46,7 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
 const latLongKeys = ['csys-location-lat', 'csys-location-long'];
 
 function validateLatLong(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
-    if (latLongKeys.find(key => key === newLabelKey)) {
+    if (!latLongKeys.find(key => key === newLabelKey)) {
         return undefined;
     }
     const boundary = newLabelKey === 'csys-location-lat' ? 90 : 180;
@@ -101,7 +101,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         return !!_.find(allLabels, newLabel);
     })();
     const keyValidationError = validateLatLong(
-        newLabelKey,
+        newLabelValue,
         newLabelKey,
         labels.map(({ key }) => key)
     );

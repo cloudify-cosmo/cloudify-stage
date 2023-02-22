@@ -59,4 +59,28 @@ describe('Labels widget', () => {
         });
         cy.contains('There are no Labels defined');
     });
+
+    it('should properly validate lat-long labels', () => {
+        const CHECKED_KEY = 'csys-location-lat';
+
+        cy.contains('Add').click();
+        cy.get('.modal').within(() => {
+            getCreatedLabel().should('not.exist');
+            cy.contains('button', 'Add').should('have.attr', 'disabled');
+
+            cy.prepareAddingLabels(CHECKED_KEY, '90');
+            cy.get('.add').parent().should('not.have.attr', 'disabled');
+
+            cy.typeLabelValue('101');
+            cy.get('.add').parent().should('have.attr', 'disabled');
+
+            cy.typeLabelValue('0');
+            cy.get('.add').parent().should('not.have.attr', 'disabled');
+
+            cy.typeLabelValue('sample_valeu');
+            cy.get('.add').parent().should('have.attr', 'disabled');
+
+            cy.contains('button', 'Cancel').click();
+        });
+    });
 });
