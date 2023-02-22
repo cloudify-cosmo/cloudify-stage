@@ -54,7 +54,7 @@ function validateLatLong(newValue: string, newLabelKey: string, existingLabelKey
     const number = toNumber(newValue);
 
     if (Number.isNaN(number) || number > boundary || number < -boundary) {
-        return Stage.i18n.t('widgets.common.labels.validationNumber', { to: boundary, from: -boundary });
+        return Stage.i18n.t('widgets.common.labels.labelNumberValidationError', { to: boundary, from: -boundary });
     }
 
     if (existingLabelKeys.find(label => label === newLabelKey)) {
