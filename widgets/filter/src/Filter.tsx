@@ -87,7 +87,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         this.setState({ [name]: value });
     }
 
-    selectBlueprint = (blueprintIds = null) => {
+    selectBlueprint = (blueprintIds: string | null = null) => {
         this.setValue('blueprintId', blueprintIds);
         this.setValue('deploymentId', null);
         this.setValue('nodeId', null);
@@ -95,7 +95,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         this.updateDeplomentNodeIdValue(null, null);
     };
 
-    selectDeployment = (deploymentIds = null) => {
+    selectDeployment = (deploymentIds: string | null = null) => {
         this.setValue('deploymentId', deploymentIds);
         this.setValue('nodeInstanceId', null);
         this.setValue('nodeId', null);
@@ -103,7 +103,7 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         this.updateDeplomentNodeIdValue(null, null);
     };
 
-    selectNode = (nodeIds: any) => {
+    selectNode = (nodeIds: string | null) => {
         const { deploymentId } = this.state;
         this.setValue('nodeId', nodeIds);
         this.setValue('nodeInstanceId', null);
@@ -111,19 +111,19 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         this.updateTopologyWidget(nodeIds);
     };
 
-    selectNodeInstance = (nodeInstanceIds: any) => {
+    selectNodeInstance = (nodeInstanceIds: string | null) => {
         this.setValue('nodeInstanceId', nodeInstanceIds);
     };
 
-    selectExecution = (executionIds: any) => {
+    selectExecution = (executionIds: string | null) => {
         this.setValue('executionId', executionIds);
     };
 
-    selectExecutionStatus = (executionStatuses: any) => {
+    selectExecutionStatus = (executionStatuses: string | null) => {
         this.setValue('executionStatus', executionStatuses);
     };
 
-    selectSiteName = (siteNames: any) => {
+    selectSiteName = (siteNames: string | null) => {
         this.setValue('siteName', siteNames);
     };
 
