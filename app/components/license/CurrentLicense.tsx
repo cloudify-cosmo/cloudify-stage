@@ -7,12 +7,13 @@ import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
 import styled from 'styled-components';
 import StageUtils from '../../utils/stageUtils';
 import { Header, Icon, Table } from '../basic';
+import colors from '../../styles/colors.scss';
 
 export const HeaderIcon = styled(Icon)`
     &&&& {
         display: inline-block;
         float: left;
-        color: $cloudifyBlue;
+        color: ${colors.cloudifyBlue};
         font-size: 18px;
     }
 `;
