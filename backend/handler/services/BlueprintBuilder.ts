@@ -1,5 +1,5 @@
-export function createIntrinsicFunctionCall(name: 'get_secret' | 'get_input' | 'get_attribute', ...args: string[]) {
-    return { [name]: args };
+export function createIntrinsicFunctionCall(name: 'get_secret' | 'get_input' | 'get_attribute', arg: any) {
+    return { [name]: arg };
 }
 
 export function createGetSecretCall(arg: string) {
@@ -11,5 +11,5 @@ export function createGetInputCall(arg: string) {
 }
 
 export function createGetAttributeCall(...args: string[]) {
-    return createIntrinsicFunctionCall('get_attribute', ...args);
+    return createIntrinsicFunctionCall('get_attribute', args);
 }

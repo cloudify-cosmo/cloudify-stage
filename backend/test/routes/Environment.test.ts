@@ -56,7 +56,7 @@ describe('/environment/blueprint endpoint', () => {
         }
 
         function assertInputCapability(key: string) {
-            assertCapability(key, { 'get-input': key });
+            assertCapability(key, { get_input: key });
         }
 
         const body: PostEnvironmentBlueprintRequestBody = {
@@ -88,7 +88,7 @@ describe('/environment/blueprint endpoint', () => {
         assertInput(body.capabilities[0].name);
         assertInput(body.capabilities[1].name, body.capabilities[1].value);
         assertInput(body.capabilities[3].name);
-        assertInput(body.capabilities[4].name, { 'get-secret': body.capabilities[4].value });
+        assertInput(body.capabilities[4].name, { get_secret: body.capabilities[4].value });
 
         assertLabels(generatedBlueprint, body.labels[1].key, body.labels[1].value);
 
