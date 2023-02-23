@@ -1,7 +1,0 @@
-<% variables.forEach(variable => { if (variable.source === "input" && !variable.duplicated) { _%>
-  <%= variable.name %>:
-    type: string
-<% if (variable.value) { _%>
-    default: '<%= String(variable.value).replace("'", "''") %>'
-<% } _%>
-<% }}) _%>
