@@ -1,4 +1,4 @@
-import { FilterWidgetConfiguration } from '../../filters/src/types';
+import type { FilterWidgetConfiguration } from '../../filters/src/types';
 import Filter from './Filter';
 
 Stage.defineWidget<never, never, FilterWidgetConfiguration>({
