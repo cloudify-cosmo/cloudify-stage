@@ -1596,6 +1596,10 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "nodes": {
+            "name": "Nodes list",
+            "description": "This widget shows nodes"
+        },
         "nodesStats": {
             "name": "Nodes statistics",
             "description": "This widget shows number of node instances in different states"

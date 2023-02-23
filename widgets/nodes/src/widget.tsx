@@ -1,15 +1,47 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { PaginatedResponse } from 'backend/types';
+import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
+import { castArray } from 'lodash';
+import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
 
-Stage.defineWidget({
-    id: 'nodes',
-    name: 'Nodes list',
-    description: 'This widget shows nodes',
+const widgetId = 'nodes';
+
+function getGroups(deployments: Deployment[]) {
+    const groups: Record<string, string[]> = {};
+    _.forEach(deployments, deployment => {
+        _.forIn(deployment.groups, (group, groupId) => {
+            _.forEach(group.members, nodeId => {
+                groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
+                const groupList = groups[nodeId + deployment.id];
+                groupList.push(groupId);
+            });
+        });
+    });
+    return groups;
+}
+
+interface NodesParams {
+    /* eslint-disable camelcase */
+    deployment_id: string | null;
+    blueprint_id: string;
+    /* eslint-enable camelcase */
+    id: string | null;
+}
+
+type Deployment = Pick<FullDeployment, 'id' | 'groups'>;
+
+interface NodesData {
+    nodes: PaginatedResponse<Node>;
+    nodeInstances: PaginatedResponse<NodeInstance>;
+    deployments: PaginatedResponse<Deployment>;
+}
+
+Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
+    id: widgetId,
     initialWidth: 6,
     initialHeight: 20,
     hasReadme: true,
-    permission: Stage.GenericConfig.WIDGET_PERMISSION('nodes'),
+    permission: Stage.GenericConfig.WIDGET_PERMISSION(widgetId),
     categories: [Stage.GenericConfig.CATEGORY.EXECUTIONS_NODES],
 
     initialConfiguration: [
@@ -43,32 +75,21 @@ Stage.defineWidget({
         deployments: '[manager]/deployments?_include=id,groups[params:blueprint_id,id]'
     },
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
+        const deploymentId = castArray(toolbox.getContext().getValue('deploymentId'))[0];
+        const blueprintId = castArray(toolbox.getContext().getValue('blueprintId'))[0];
+
         return {
-            deployment_id: toolbox.getContext().getValue('deploymentId'),
-            blueprint_id: toolbox.getContext().getValue('blueprintId'),
-            id: toolbox.getContext().getValue('deploymentId')
+            deployment_id: deploymentId,
+            blueprint_id: blueprintId,
+            id: deploymentId
         };
     },
 
-    getGroups(deployments) {
-        const groups = {};
-        _.forEach(deployments, deployment => {
-            _.forIn(deployment.groups, (group, groupId) => {
-                _.forEach(group.members, nodeId => {
-                    groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
-                    const groupList = groups[nodeId + deployment.id];
-                    groupList.push(groupId);
-                });
-            });
-        });
-        return groups;
-    },
-
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (Stage.Utils.isEmptyWidgetData(data)) {
             return <Loading />;
         }
 
@@ -76,11 +97,11 @@ Stage.defineWidget({
         const SELECTED_NODE_ID = toolbox.getContext().getValue('depNodeId');
         const SELECTED_NODE_INSTANCE_ID = toolbox.getContext().getValue('nodeInstanceId');
 
-        const params = this.fetchParams(widget, toolbox);
+        const params = this.fetchParams!(widget, toolbox);
 
         const nodes = data.nodes.items;
         const instances = data.nodeInstances.items;
-        const groups = this.getGroups(data.deployments.items);
+        const groups = getGroups(data.deployments.items);
 
         const formattedData = {
             items: _.map(nodes, node => {

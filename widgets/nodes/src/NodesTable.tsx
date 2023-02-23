@@ -1,12 +1,27 @@
-// @ts-nocheck File not migrated fully to TS
-
-import { icons } from 'cloudify-ui-common-frontend';
+import type { DataTableProps } from 'cloudify-ui-components';
+import TypeHierarchyTree from './TypeHierarchyTree';
+import NodeTypeIcon from './NodeType';
+import type { ExtendedNode, NodesConfiguration } from './types';
 import NodeInstancesTable from './NodeInstancesTable';
-import NodeInstancePropType from './props/NodeInstancePropType';
 
-export default class NodesTable extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface NodesTableProps {
+    data: {
+        blueprintSelected: boolean;
+        deploymentSelected: boolean;
+        items: ExtendedNode[];
+        total: number;
+    };
+    toolbox: Stage.Types.Toolbox;
+    widget: Stage.Types.Widget<NodesConfiguration>;
+}
+
+interface NodesTableState {
+    error: string | null;
+}
+
+export default class NodesTable extends React.Component<NodesTableProps, NodesTableState> {
+    constructor(props: NodesTableProps) {
+        super(props);
 
         this.state = {
             error: null
@@ -18,7 +33,7 @@ export default class NodesTable extends React.Component {
         toolbox.getEventBus().on('nodes:refresh', this.refreshData, this);
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: NodesTableProps, nextState: NodesTableState) {
         const { data, widget } = this.props;
         return (
             !_.isEqual(widget, nextProps.widget) ||
@@ -32,7 +47,7 @@ export default class NodesTable extends React.Component {
         toolbox.getEventBus().off('nodes:refresh', this.refreshData);
     }
 
-    fetchGridData = fetchParams => {
+    fetchGridData: DataTableProps['fetchData'] = fetchParams => {
         const { toolbox } = this.props;
         return toolbox.refresh(fetchParams);
     };
@@ -42,7 +57,7 @@ export default class NodesTable extends React.Component {
         toolbox.refresh();
     }
 
-    selectNode(item) {
+    selectNode(item: ExtendedNode) {
         const { toolbox } = this.props;
         const selectedDepNodeId = toolbox.getContext().getValue('depNodeId');
         const clickedDepNodeId = item.id + item.deployment_id;
@@ -154,7 +169,7 @@ export default class NodesTable extends React.Component {
                                                         name="sitemap"
                                                         link
                                                         className="rightFloated"
-                                                        onClick={event => event.stopPropagation()}
+                                                        onClick={(event: Event) => event.stopPropagation()}
                                                     />
                                                 </Popup.Trigger>
                                                 <Popup.Header>
@@ -184,7 +199,7 @@ export default class NodesTable extends React.Component {
                                 </DataTable.Row>
 
                                 <DataTable.DataExpandable key={`${node.id + node.deployment_id}_Expanded`}>
-                                    <NodeInstancesTable instances={node.instances} widget={widget} toolbox={toolbox} />
+                                    <NodeInstancesTable instances={node.instances} toolbox={toolbox} />
                                 </DataTable.DataExpandable>
                             </DataTable.RowExpandable>
                         );
@@ -194,83 +209,3 @@ export default class NodesTable extends React.Component {
         );
     }
 }
-
-NodesTable.propTypes = {
-    data: PropTypes.shape({
-        blueprintSelected: PropTypes.bool,
-        deploymentSelected: PropTypes.bool,
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                blueprint_id: PropTypes.string,
-                connectedTo: PropTypes.string,
-                containedIn: PropTypes.string,
-                created_by: PropTypes.string,
-                deployment_id: PropTypes.string,
-                groups: PropTypes.string,
-                host_id: PropTypes.string,
-                id: PropTypes.string,
-                instances: PropTypes.arrayOf(NodeInstancePropType),
-                isSelected: PropTypes.bool,
-                numberOfInstances: PropTypes.number,
-                type: PropTypes.string,
-                type_hierarchy: PropTypes.arrayOf(PropTypes.string)
-            })
-        ),
-        total: PropTypes.number
-    }).isRequired,
-    widget: Stage.PropTypes.Widget.isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired
-};
-
-function NodeTypeIcon({ typeHierarchy }) {
-    const icon = icons.getNodeIcon(_.reverse(_.clone(typeHierarchy)));
-
-    return <span style={{ fontSize: 20, fontFamily: 'cloudify' }}>{icon}</span>;
-}
-
-NodeTypeIcon.propTypes = {
-    typeHierarchy: PropTypes.arrayOf(PropTypes.string).isRequired
-};
-
-function TypeHierarchyTree({ typeHierarchy }) {
-    const { Icon, NodesTree } = Stage.Basic;
-
-    const getNodes = types => {
-        const type = types[0];
-        if (types.length > 1) {
-            return (
-                <NodesTree.Node
-                    key={type}
-                    title={
-                        <span>
-                            <Icon name="triangle down" />
-                            {type}
-                        </span>
-                    }
-                >
-                    {getNodes(_.slice(types, 1))}
-                </NodesTree.Node>
-            );
-        }
-        return (
-            <NodesTree.Node
-                key={type}
-                title={
-                    <span>
-                        <strong>{type}</strong>
-                    </span>
-                }
-            />
-        );
-    };
-
-    return (
-        <NodesTree showLine selectable={false} defaultExpandAll className="typesHierarchy">
-            {getNodes(typeHierarchy)}
-        </NodesTree>
-    );
-}
-
-TypeHierarchyTree.propTypes = {
-    typeHierarchy: PropTypes.arrayOf(PropTypes.string).isRequired
-};
