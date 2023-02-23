@@ -1,10 +1,12 @@
 import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
 import type { Deployment } from 'app/widgets/common/deploymentsView/types';
 
+// TODO(RD-5879): Use Awaited (introduced in TS 4.5) instead of creating custom utility type
+type Unpromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
+export type BlueprintDetails = Unpromise<ReturnType<Actions['doGetBlueprintDetails']>>;
+
 export default class Actions {
-    constructor(private readonly toolbox: Stage.Types.Toolbox) {
-        this.toolbox = toolbox;
-    }
+    constructor(private readonly toolbox: Stage.Types.Toolbox) {}
 
     doGetBlueprintId(deploymentId: string) {
         const deploymentKeys = ['id', 'blueprint_id'] as const;

@@ -7,9 +7,22 @@ type DeploymentsTargetField = 'blueprint_id' | 'tenant_name' | 'visibility' | 's
 type NodeInstancesTargetField = 'deployment_id' | 'node_id' | 'host_id' | 'state' | 'tenant_name' | 'visibility';
 type TargetField = DeploymentsTargetField | NodeInstancesTargetField;
 
+type ResourceCount<Name extends string> = { [name in Name]: number };
+type TargetValue<Name extends string, Type> = { [name in Name]: Type };
+
 type SubTargetObject<Resource extends ResourceName, SubTarget extends TargetField, SubTargetType> = {
-    [sub in `by ${SubTarget}`]: ({ [name in SubTarget]: SubTargetType } & { [resource in Resource]: number })[];
+    [sub in `by ${SubTarget}`]: (TargetValue<SubTarget, SubTargetType> & ResourceCount<Resource>)[];
 };
+
+type SummaryItem<
+    Resource extends ResourceName,
+    Target extends TargetField,
+    TargetType,
+    SubTarget extends TargetField,
+    SubTargetType
+> = ResourceCount<Resource> &
+    TargetValue<Target, TargetType> &
+    ([SubTarget] extends [never] ? unknown : SubTargetObject<Resource, SubTarget, SubTargetType>);
 
 export default class SummaryActions {
     constructor(private toolbox: Stage.Types.Toolbox) {}
@@ -23,20 +36,15 @@ export default class SummaryActions {
     >(resourceName: ResourceName, targetField: string, params?: Params) {
         return this.toolbox
             .getManager()
-            .doGet<
-                PaginatedResponse<
-                    { [resource in Resource]: number } & { [target in Target]: TargetType } & ([SubTarget] extends [
-                            never
-                        ]
-                            ? unknown
-                            : SubTargetObject<Resource, SubTarget, SubTargetType>)
-                >
-            >(`/summary/${resourceName}`, {
-                params: {
-                    _target_field: targetField,
-                    ...params
+            .doGet<PaginatedResponse<SummaryItem<Resource, Target, TargetType, SubTarget, SubTargetType>>>(
+                `/summary/${resourceName}`,
+                {
+                    params: {
+                        _target_field: targetField,
+                        ...params
+                    }
                 }
-            });
+            );
     }
 
     doGetDeployments<

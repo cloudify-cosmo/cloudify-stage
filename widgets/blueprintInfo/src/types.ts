@@ -1,7 +1,5 @@
-import type Actions from './actions';
+import type { BlueprintDetails } from './actions';
 
-type Unpromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
-
-export interface BlueprintInfoData extends Unpromise<ReturnType<Actions['doGetBlueprintDetails']>> {
+export interface BlueprintInfoData extends BlueprintDetails {
     deployments: number;
 }
