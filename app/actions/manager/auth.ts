@@ -32,7 +32,6 @@ export type StoreRBACAction = PayloadAction<
 export type SetUserDataAction = PayloadAction<GetAuthUserResponse, ActionType.SET_USER_DATA>;
 export type SetIdentityProvidersAction = PayloadAction<string[], ActionType.SET_IDENTITY_PROVIDERS>;
 export type LogoutAction = PayloadAction<{ receivedAt: number }, ActionType.LOGOUT>;
-export type ClearLoginErrorAction = Action<ActionType.CLEAR_LOGIN_ERROR>;
 
 export type AuthAction =
     | LoginRequestAction
@@ -41,8 +40,7 @@ export type AuthAction =
     | StoreRBACAction
     | SetUserDataAction
     | SetIdentityProvidersAction
-    | LogoutAction
-    | ClearLoginErrorAction;
+    | LogoutAction;
 
 function loginRequest(): LoginRequestAction {
     return {
@@ -104,6 +102,7 @@ export function login(
             .catch(err => {
                 log.log(err);
                 dispatch(loginFailure(username, err));
+                throw err;
             });
     };
 }
@@ -171,11 +170,5 @@ export function logout(): ReduxThunkAction<Promise<void>, ClearContextAction | L
         };
 
         return Auth.logout(getState().manager).then(localLogout, localLogout);
-    };
-}
-
-export function clearLoginError(): ClearLoginErrorAction {
-    return {
-        type: ActionType.CLEAR_LOGIN_ERROR
     };
 }

@@ -60,7 +60,6 @@ export enum ActionType {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_FAILURE,
-    CLEAR_LOGIN_ERROR,
     LOGOUT,
 
     SET_USER_DATA,
