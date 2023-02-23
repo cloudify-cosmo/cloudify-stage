@@ -35,7 +35,7 @@ export const FetchedLastExecutionFields = [
     'finished_operations'
 ] as const;
 
-export type FetchedLastExecutionType = Required<Pick<Execution, typeof FetchedLastExecutionFields[number]>>
+export type FetchedLastExecutionType = Required<Pick<Execution, typeof FetchedLastExecutionFields[number]>>;
 
 export type EnhancedDeployment = Pick<Deployment, typeof FetchedDeploymentFields[number]> & {
     nodeInstancesCount: number;
