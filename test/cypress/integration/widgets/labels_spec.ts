@@ -80,7 +80,7 @@ describe('Labels widget', () => {
             cy.typeLabelValue('sample_valeu');
             cy.get('.add').parent().should('have.attr', 'disabled');
 
-            cy.contains('button', 'Cancel').click();
+            cy.clickButton('Cancel');
         });
     });
 });
