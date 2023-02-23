@@ -1,4 +1,4 @@
-import type { DateRangeInputOnChangeData, DateRangeInputProps } from 'cloudify-ui-components';
+import type { DateRangeInputOnChangeData, DateRangeInputProps, DateRange } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps, InputProps } from 'semantic-ui-react';
 import { map, keys, pick, sortBy, every, debounce, truncate, isEqual } from 'lodash';
 
@@ -7,7 +7,19 @@ const refreshEvent = 'eventsFilter:refresh';
 
 const translate = Stage.Utils.getT('widgets.eventsFilter.inputs');
 
-const initialFields = Object.freeze({
+interface Fields {
+    eventType: string[];
+    timeRange: DateRange;
+    timeStart: string | moment.Moment;
+    timeEnd: string | moment.Moment;
+    type: string;
+    messageText: string;
+    operationText: string;
+    logLevel: string[];
+    name: string;
+}
+
+const initialFields: Fields = Object.freeze({
     eventType: [],
     timeRange: Stage.Basic.DateRangeInput.EMPTY_VALUE,
     timeStart: '',
@@ -34,8 +46,11 @@ const defaultLogLevelOptions = map(keys(EventUtils.logLevelOptions), log => ({
     value: log
 }));
 
-function isDirty(fields: { [x: string]: any }) {
-    return !every(initialFields, (_value, name) => fields[name] === initialFields[name as keyof typeof initialFields]);
+function isDirty(fields: Fields) {
+    return !every(
+        initialFields,
+        (_value, name) => fields[name as keyof Fields] === initialFields[name as keyof Fields]
+    );
 }
 
 const debouncedContextUpdate = debounce((toolbox, fields) => {
@@ -46,7 +61,7 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
     const { useState, useEffect } = React;
     const { useEventListener } = Stage.Hooks;
 
-    const [fields, setFields] = useState(toolbox.getContext().getValue('eventFilter') || initialFields);
+    const [fields, setFields] = useState<Fields>(toolbox.getContext().getValue('eventFilter') || initialFields);
     const [options, setOptions] = useState({ eventType: defaultEventTypeOptions, logLevel: defaultLogLevelOptions });
     const [dirty, setDirty] = useState(isDirty(fields));
 
@@ -64,8 +79,7 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
         _event,
         field
     ) => {
-        const updatedFields = { ...fields };
-        updatedFields[field.name] = field.value;
+        const updatedFields = { ...fields, [field.name]: field.value };
         if (field.name === 'timeRange') {
             const { value } = field as DateRangeInputOnChangeData;
             const emptyStartValue = !value.start;
