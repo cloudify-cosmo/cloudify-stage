@@ -1,6 +1,6 @@
 import type { PaginatedResponse } from 'backend/types';
 import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
-import { castArray } from 'lodash';
+import { castArray, forEach, forIn, isEmpty, isNil } from 'lodash';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
 
@@ -8,9 +8,9 @@ const widgetId = 'nodes';
 
 function getGroups(deployments: Deployment[]) {
     const groups: Record<string, string[]> = {};
-    _.forEach(deployments, deployment => {
-        _.forIn(deployment.groups, (group, groupId) => {
-            _.forEach(group.members, nodeId => {
+    forEach(deployments, deployment => {
+        forIn(deployment.groups, (group, groupId) => {
+            forEach(group.members, nodeId => {
                 groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
                 const groupList = groups[nodeId + deployment.id];
                 groupList.push(groupId);
@@ -104,7 +104,7 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
         const groups = getGroups(data.deployments.items);
 
         const formattedData = {
-            items: _.map(nodes, node => {
+            items: nodes.map(node => {
                 const group = groups[node.id + node.deployment_id];
                 return {
                     ...node,
@@ -112,8 +112,8 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
                     blueprintId: node.blueprint_id,
                     containedIn: node.host_id,
                     connectedTo: node.relationships
-                        .filter(r => r.type === CONNECTED_TO_RELATIONSHIP)
-                        .map(r => r.target_id)
+                        .filter(relationship => relationship.type === CONNECTED_TO_RELATIONSHIP)
+                        .map(relationship => relationship.target_id)
                         .join(),
                     numberOfInstances: node.actual_number_of_instances,
                     instances: instances
@@ -122,12 +122,12 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
                         )
                         .map(instance => ({ ...instance, isSelected: instance.id === SELECTED_NODE_INSTANCE_ID })),
                     isSelected: node.id + node.deployment_id === SELECTED_NODE_ID,
-                    groups: !_.isNil(group) ? group.join(', ') : ''
+                    groups: !isNil(group) ? group.join(', ') : ''
                 };
             }),
-            total: _.get(data.nodes, 'metadata.pagination.total', 0),
-            blueprintSelected: !_.isEmpty(params.blueprint_id),
-            deploymentSelected: !_.isEmpty(params.deployment_id)
+            total: data.nodes.metadata.pagination.total,
+            blueprintSelected: !isEmpty(params.blueprint_id),
+            deploymentSelected: !isEmpty(params.deployment_id)
         };
 
         return <NodesTable widget={widget} data={formattedData} toolbox={toolbox} />;

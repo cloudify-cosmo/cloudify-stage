@@ -20,7 +20,7 @@ export default function TypeHierarchyTree({ typeHierarchy }: TypeHierarchyTreePr
                         </span>
                     }
                 >
-                    {getNodes(_.slice(hierarchy, 1))}
+                    {getNodes(hierarchy.slice(1))}
                 </NodesTree.Node>
             );
         }

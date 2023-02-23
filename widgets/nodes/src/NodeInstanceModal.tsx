@@ -1,3 +1,4 @@
+import { size } from 'lodash';
 import type { ExtendedNodeInstance } from './types';
 
 interface NodeInstanceModalProps {
@@ -17,8 +18,8 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
     // Setting totalSize on DataTable components to:
     // 1. Show no-data message when there's no elements
     // 2. Don't show pagination
-    const runtimePropertiesTotalSize = _.size(instance.runtime_properties) > 0 ? undefined : 0;
-    const relationshipsTotalSize = _.size(instance.relationships) > 0 ? undefined : 0;
+    const runtimePropertiesTotalSize = size(instance.runtime_properties) > 0 ? undefined : 0;
+    const relationshipsTotalSize = size(instance.relationships) > 0 ? undefined : 0;
 
     return (
         <div>
@@ -40,11 +41,13 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
                             <DataTable.Column label="Relationship type" name="relationship" width="40%" />
                             <DataTable.Column label="Source node" name="source" width="30%" />
 
-                            {instance.relationships.map(r => {
+                            {instance.relationships.map(relationship => {
                                 return (
-                                    <DataTable.Row key={r.target_name + r.type + instance.node_id}>
-                                        <DataTable.Data>{r.target_name}</DataTable.Data>
-                                        <DataTable.Data>{r.type}</DataTable.Data>
+                                    <DataTable.Row
+                                        key={relationship.target_name + relationship.type + instance.node_id}
+                                    >
+                                        <DataTable.Data>{relationship.target_name}</DataTable.Data>
+                                        <DataTable.Data>{relationship.type}</DataTable.Data>
                                         <DataTable.Data>{instance.node_id}</DataTable.Data>
                                     </DataTable.Row>
                                 );
