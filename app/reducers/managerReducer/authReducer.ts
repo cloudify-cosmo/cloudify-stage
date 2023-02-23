@@ -44,11 +44,6 @@ const auth: Reducer<AuthData, AuthAction> = (state = emptyAuthState, action) => 
                         ? action.payload.error.message
                         : action.payload.error
             };
-        case ActionType.CLEAR_LOGIN_ERROR:
-            return {
-                ...state,
-                error: emptyAuthState.error
-            };
         case ActionType.SET_USER_DATA:
             return {
                 ...state,

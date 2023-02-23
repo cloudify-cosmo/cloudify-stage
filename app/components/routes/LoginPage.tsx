@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import i18n from 'i18next';
 
 import type { ClientConfig } from 'backend/routes/Config.types';
 import SmartRedirect from './SmartRedirect';
@@ -78,6 +77,16 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         }
     }
 
+    mapLoginError = (errorMessage?: string) => {
+        const incorrectCredentialsError = errorMessage?.includes('User unauthorized');
+
+        if (incorrectCredentialsError) {
+            return t('error.incorrectCredentials');
+        }
+
+        return errorMessage;
+    };
+
     onSubmit = () => {
         const { password, username } = this.state;
         const { location, onLogin } = this.props;
@@ -91,7 +100,7 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         const redirect = query.redirect as string;
 
         return onLogin(username, password, redirect).catch(error => {
-            this.setState({ error: mapLoginError(error.message) });
+            this.setState({ error: this.mapLoginError(error.message) });
         });
     };
 
@@ -185,16 +194,6 @@ class LoginPage extends Component<LoginPageProps, LoginPageState> {
         );
     }
 }
-
-const mapLoginError = (errorMessage?: string) => {
-    const incorrectCredentialsError = errorMessage?.includes('User unauthorized');
-
-    if (incorrectCredentialsError) {
-        return i18n.t('login.error.incorrectCredentials');
-    }
-
-    return errorMessage;
-};
 
 const mapStateToProps = (state: ReduxState) => {
     const { config, manager } = state;
