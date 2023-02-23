@@ -8,15 +8,15 @@ export default function TypeHierarchyTree({ typeHierarchy }: TypeHierarchyTreePr
     const { Icon, NodesTree } = Stage.Basic;
 
     const getNodes = (hierarchy: TypeHierarchy) => {
-        const type = hierarchy[0];
+        const firstType = hierarchy[0];
         if (hierarchy.length > 1) {
             return (
                 <NodesTree.Node
-                    key={type}
+                    key={firstType}
                     title={
                         <span>
                             <Icon name="triangle down" />
-                            {type}
+                            {firstType}
                         </span>
                     }
                 >
@@ -26,10 +26,10 @@ export default function TypeHierarchyTree({ typeHierarchy }: TypeHierarchyTreePr
         }
         return (
             <NodesTree.Node
-                key={type}
+                key={firstType}
                 title={
                     <span>
-                        <strong>{type}</strong>
+                        <strong>{firstType}</strong>
                     </span>
                 }
             />

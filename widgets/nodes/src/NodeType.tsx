@@ -1,7 +1,8 @@
 import { icons } from 'cloudify-ui-common-frontend';
+import type { TypeHierarchy } from './types';
 
 interface NodeTypeIconProps {
-    typeHierarchy: string[];
+    typeHierarchy: TypeHierarchy;
 }
 
 export default function NodeTypeIcon({ typeHierarchy }: NodeTypeIconProps) {

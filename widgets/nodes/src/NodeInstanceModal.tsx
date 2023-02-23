@@ -8,8 +8,8 @@ interface NodeInstanceModalProps {
 }
 
 export default function NodeInstanceModal({ instance, onClose, open }: NodeInstanceModalProps) {
-    const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
-    const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
+    const noRelationshipsMessage = 'There are no Relationships defined for that Node Instance.';
+    const noRuntimePropertiesMessage = 'There are no Runtime Properties defined for that Node Instance.';
     const { CancelButton, CopyToClipboardButton, DataTable, Modal } = Stage.Basic;
     const ParameterValue = Stage.Common.Components.Parameter.Value;
     const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
@@ -35,7 +35,7 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
                         <DataTable
                             className="nodeInstanceRelationshipsTable"
                             totalSize={relationshipsTotalSize}
-                            noDataMessage={NO_DATA_MESSAGE_RELATIONSHIPS}
+                            noDataMessage={noRelationshipsMessage}
                         >
                             <DataTable.Column label="Target node" name="target" width="30%" />
                             <DataTable.Column label="Relationship type" name="relationship" width="40%" />
@@ -64,7 +64,7 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
                         <DataTable
                             className="nodeInstanceRuntimePropertiesTable"
                             totalSize={runtimePropertiesTotalSize}
-                            noDataMessage={NO_DATA_MESSAGE_RUNTIME_PROPERTIES}
+                            noDataMessage={noRuntimePropertiesMessage}
                         >
                             <DataTable.Column label="Key" name="key" />
                             <DataTable.Column

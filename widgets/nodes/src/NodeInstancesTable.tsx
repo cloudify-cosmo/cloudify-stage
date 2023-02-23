@@ -23,12 +23,12 @@ export default function NodeInstancesTable({ instances, toolbox }: NodeInstances
             );
     };
 
-    const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
+    const noDataMessage = 'There are no Node Instances of selected Node available.';
     const { CopyToClipboardButton, DataTable, Icon } = Stage.Basic;
 
     return (
         <div>
-            <DataTable className="nodesInstancesTable" noDataMessage={NO_DATA_MESSAGE}>
+            <DataTable className="nodesInstancesTable" noDataMessage={noDataMessage}>
                 <DataTable.Column label="Instance" name="id" width="40%" />
                 <DataTable.Column label="Status" name="state" width="30%" />
                 <DataTable.Column label="Details" name="details" width="30%" />
