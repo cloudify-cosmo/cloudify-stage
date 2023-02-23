@@ -1,5 +1,6 @@
 import type { DateRangeInputOnChangeData, DateRangeInputProps } from 'cloudify-ui-components';
 import type { DropdownItemProps, DropdownProps, InputProps } from 'semantic-ui-react';
+import { map, keys, pick, sortBy, every, debounce, truncate, isEqual } from 'lodash';
 
 const contextValueKey = 'eventFilter';
 const refreshEvent = 'eventsFilter:refresh';
@@ -20,27 +21,24 @@ const initialFields = Object.freeze({
 
 const { EventUtils } = Stage.Common;
 
-const defaultEventTypeOptions = _.sortBy(
-    _.map(_.keys(EventUtils.eventTypeOptions), event => ({
-        ..._.pick(EventUtils.eventTypeOptions[event], ['text']),
+const defaultEventTypeOptions = sortBy(
+    map(keys(EventUtils.eventTypeOptions), event => ({
+        ...pick(EventUtils.eventTypeOptions[event], ['text']),
         value: event
     })),
     event => event.text
 );
 
-const defaultLogLevelOptions = _.map(_.keys(EventUtils.logLevelOptions), log => ({
-    ..._.pick(EventUtils.logLevelOptions[log], ['text', 'icon']),
+const defaultLogLevelOptions = map(keys(EventUtils.logLevelOptions), log => ({
+    ...pick(EventUtils.logLevelOptions[log], ['text', 'icon']),
     value: log
 }));
 
 function isDirty(fields: { [x: string]: any }) {
-    return !_.every(
-        initialFields,
-        (_value, name) => fields[name] === initialFields[name as keyof typeof initialFields]
-    );
+    return !every(initialFields, (_value, name) => fields[name] === initialFields[name as keyof typeof initialFields]);
 }
 
-const debouncedContextUpdate = _.debounce((toolbox, fields) => {
+const debouncedContextUpdate = debounce((toolbox, fields) => {
     toolbox.getContext().setValue(contextValueKey, fields);
 }, 500);
 
@@ -59,7 +57,7 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
     useEffect(() => setDirty(isDirty(fields)), [JSON.stringify(fields)]);
 
     function renderLabel(data: DropdownItemProps) {
-        return _.truncate(data.text as string, { length: 30 });
+        return truncate(data.text as string, { length: 30 });
     }
 
     const handleInputChange: InputProps['onChange'] & DateRangeInputProps['onChange'] & DropdownProps['onChange'] = (
@@ -228,4 +226,4 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
     );
 }
 
-export default React.memo(EventFilter, _.isEqual);
+export default React.memo(EventFilter, isEqual);
