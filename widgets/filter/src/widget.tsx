@@ -1,5 +1,6 @@
-import type { FilterWidgetConfiguration } from '../../filters/src/types';
 import Filter from './Filter';
+
+export type FilterWidgetConfiguration = { allowMultipleSelection: boolean };
 
 Stage.defineWidget<never, never, FilterWidgetConfiguration>({
     id: 'filter',

@@ -1,5 +1,5 @@
 import type { DropdownValue } from 'app/widgets/common/types';
-import type { FilterWidgetConfiguration } from '../../filters/src/types';
+import type { FilterWidgetConfiguration } from './widget';
 
 const deploymentFilter = { deployment_id: 'deploymentId' };
 const blueprintFilter = { blueprint_id: 'blueprintId' };
@@ -17,7 +17,7 @@ const filterFields = [
 
 interface FilterProps {
     toolbox: Stage.Types.Toolbox;
-    configuration: FilterWidgetConfiguration & { allowMultipleSelection: boolean };
+    configuration: FilterWidgetConfiguration;
 }
 
 interface FilterState {
