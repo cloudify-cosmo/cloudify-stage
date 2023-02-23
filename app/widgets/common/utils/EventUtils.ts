@@ -1,21 +1,23 @@
 import { icons } from 'cloudify-ui-common-frontend';
 
-type EventTypeOptionsProps = {
-    text: string;
-    iconClass?: string;
-    rowClass?: string;
-};
+type EventTypeOptions = Record<
+    string,
+    {
+        text: string;
+        iconClass?: string;
+        rowClass?: string;
+    }
+>;
 
-type EventTypeOptions = Record<string, EventTypeOptionsProps>;
-
-type LogLevelOptionsProps = {
-    icon: string;
-    color: string;
-    rowClass?: string;
-    text: string;
-};
-
-type LogLevelOptions = Record<string, LogLevelOptionsProps>;
+type LogLevelOptions = Record<
+    string,
+    {
+        icon: string;
+        color: string;
+        rowClass?: string;
+        text: string;
+    }
+>;
 
 export default class EventUtils {
     static eventType = 'cloudify_event';
