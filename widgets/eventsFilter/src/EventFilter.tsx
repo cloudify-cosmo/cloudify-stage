@@ -1,5 +1,5 @@
-import type { DateRangeInputOnChangeData } from 'cloudify-ui-components';
-import type { DropdownItemProps, DropdownProps, InputOnChangeData } from 'semantic-ui-react';
+import type { DateRangeInputOnChangeData, DateRangeInputProps } from 'cloudify-ui-components';
+import type { DropdownItemProps, DropdownProps, InputProps } from 'semantic-ui-react';
 
 const contextValueKey = 'eventFilter';
 const refreshEvent = 'eventsFilter:refresh';
@@ -62,10 +62,10 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
         return _.truncate(data.text as string, { length: 30 });
     }
 
-    function handleInputChange(
-        _event: React.SyntheticEvent<HTMLElement, Event> | unknown,
-        field: InputOnChangeData | DateRangeInputOnChangeData | DropdownProps
-    ) {
+    const handleInputChange: InputProps['onChange'] & DateRangeInputProps['onChange'] & DropdownProps['onChange'] = (
+        _event,
+        field
+    ) => {
         const updatedFields = { ...fields };
         updatedFields[field.name] = field.value;
         if (field.name === 'timeRange') {
@@ -95,12 +95,12 @@ function EventFilter({ toolbox }: { toolbox: Stage.Types.Toolbox }) {
 
         setFields(updatedFields);
         debouncedContextUpdate(toolbox, updatedFields);
-    }
+    };
 
-    function handleOptionAddition(_event: React.SyntheticEvent<HTMLElement, Event>, data: DropdownProps) {
+    const handleOptionAddition: DropdownProps['onAddItem'] = (_event, data) => {
         const { name, value } = data;
         setOptions({ ...options, [name]: [{ text: value, value }, ...options[name as keyof typeof options]] });
-    }
+    };
 
     function resetFilter() {
         setDirty(false);
