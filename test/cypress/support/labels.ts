@@ -12,7 +12,7 @@ declare global {
 const commands = {
     typeLabelKey: (key: string) => cy.get('div[name=labelKey] > input').clear().type(key),
     typeLabelValue: (value: string) => cy.get('div[name=labelValue] > input').clear().type(value),
-    prepareAddingLabels: (key: string, value: string) => {
+    fillLabelInputs: (key: string, value: string) => {
         cy.get('.selection').eq(0).click();
         cy.interceptSp('GET', { path: `/labels/deployments/${key}?_search=${value}` }).as('fetchLabel');
 
