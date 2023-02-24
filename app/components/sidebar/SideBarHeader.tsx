@@ -1,10 +1,7 @@
 import type { FunctionComponent } from 'react';
 import React, { useContext } from 'react';
 import i18n from 'i18next';
-import { useSelector } from 'react-redux';
 import styled, { ThemeContext } from 'styled-components';
-import { ProductVersion } from '../basic';
-import type { ReduxState } from '../../reducers';
 import LicenseLabel from './LicenseLabel';
 import { Link } from '../shared';
 import Consts from '../../utils/consts';
@@ -20,7 +17,6 @@ const StyledLink = styled(Link)`
 `;
 
 const SideBarHeader: FunctionComponent = () => {
-    const productVersion = useSelector((state: ReduxState) => state.manager.version.version)!;
     const theme = useContext(ThemeContext) || {};
     const { showVersionDetails } = theme;
 
@@ -58,15 +54,6 @@ const SideBarHeader: FunctionComponent = () => {
                     >
                         {i18n.t('productName')}
                     </span>
-                    {showVersionDetails && (
-                        <>
-                            v
-                            <ProductVersion
-                                version={productVersion}
-                                style={{ color: 'inherit', marginLeft: '-0.3em' }}
-                            />
-                        </>
-                    )}
                 </div>
             </StyledLink>
         </div>
