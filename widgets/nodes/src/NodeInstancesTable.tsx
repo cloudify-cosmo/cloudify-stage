@@ -1,36 +1,38 @@
-// @ts-nocheck File not migrated fully to TS
-
+import type { ExtendedNodeInstance } from './types';
 import InstanceModal from './NodeInstanceModal';
-import NodeInstancePropType from './props/NodeInstancePropType';
 
-const EMPTY_NODE_INSTANCE_OBJ = { id: '', relationships: [], runtime_properties: {} };
+interface NodeInstancesTableProps {
+    instances: ExtendedNodeInstance[];
+    toolbox: Stage.Types.Toolbox;
+}
 
-export default class NodeInstancesTable extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+interface NodeInstancesTableState {
+    instance?: ExtendedNodeInstance;
+}
+
+export default class NodeInstancesTable extends React.Component<NodeInstancesTableProps, NodeInstancesTableState> {
+    constructor(props: NodeInstancesTableProps) {
+        super(props);
 
         this.state = {
-            showModal: false,
-            instance: EMPTY_NODE_INSTANCE_OBJ
+            instance: undefined
         };
     }
 
     closeInstanceModal = () => {
         this.setState({
-            showModal: false,
-            instance: EMPTY_NODE_INSTANCE_OBJ
+            instance: undefined
         });
         return true;
     };
 
-    showInstanceModal(instance) {
+    showInstanceModal(instance: ExtendedNodeInstance) {
         this.setState({
-            showModal: true,
             instance
         });
     }
 
-    selectNodeInstance(item) {
+    selectNodeInstance(item: ExtendedNodeInstance) {
         const { toolbox } = this.props;
         const selectedNodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
         const clickedNodeInstanceId = item.id;
@@ -43,8 +45,8 @@ export default class NodeInstancesTable extends React.Component {
     }
 
     render() {
-        const { instance: selectedInstance, showModal } = this.state;
-        const { instances, widget } = this.props;
+        const { instance: selectedInstance } = this.state;
+        const { instances } = this.props;
         const NO_DATA_MESSAGE = 'There are no Node Instances of selected Node available.';
         const { CopyToClipboardButton, DataTable, Icon } = Stage.Basic;
 
@@ -71,7 +73,7 @@ export default class NodeInstancesTable extends React.Component {
                                     <Icon
                                         link
                                         className="table"
-                                        onClick={event => {
+                                        onClick={(event: Event) => {
                                             event.stopPropagation();
                                             this.showInstanceModal(instance);
                                         }}
@@ -82,19 +84,10 @@ export default class NodeInstancesTable extends React.Component {
                     })}
                 </DataTable>
 
-                <InstanceModal
-                    open={showModal}
-                    onClose={this.closeInstanceModal}
-                    widget={widget}
-                    instance={selectedInstance}
-                />
+                {selectedInstance && (
+                    <InstanceModal open onClose={this.closeInstanceModal} instance={selectedInstance} />
+                )}
             </div>
         );
     }
 }
-
-NodeInstancesTable.propTypes = {
-    instances: PropTypes.arrayOf(NodeInstancePropType).isRequired,
-    toolbox: Stage.PropTypes.Toolbox.isRequired,
-    widget: Stage.PropTypes.Widget.isRequired
-};

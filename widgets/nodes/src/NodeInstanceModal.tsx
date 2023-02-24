@@ -1,7 +1,12 @@
-// @ts-nocheck File not migrated fully to TS
-import NodeInstancePropType from './props/NodeInstancePropType';
+import type { ExtendedNodeInstance } from './types';
 
-export default function NodeInstanceModal({ instance, onClose, open }) {
+interface NodeInstanceModalProps {
+    instance: ExtendedNodeInstance;
+    onClose: () => void;
+    open: boolean;
+}
+
+export default function NodeInstanceModal({ instance, onClose, open }: NodeInstanceModalProps) {
     const NO_DATA_MESSAGE_RELATIONSHIPS = 'There are no Relationships defined for that Node Instance.';
     const NO_DATA_MESSAGE_RUNTIME_PROPERTIES = 'There are no Runtime Properties defined for that Node Instance.';
     const { CancelButton, CopyToClipboardButton, DataTable, Modal } = Stage.Basic;
@@ -90,9 +95,3 @@ export default function NodeInstanceModal({ instance, onClose, open }) {
         </div>
     );
 }
-
-NodeInstanceModal.propTypes = {
-    instance: NodeInstancePropType.isRequired,
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired
-};
