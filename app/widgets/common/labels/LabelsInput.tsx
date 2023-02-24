@@ -43,16 +43,16 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
     return { reservedKeys, fetchingReservedKeys };
 }
 
-const latLongKeys = {
+const coordinateLabelKeys = {
     latitude: 'csys-location-lat',
     longitude: 'csys-location-long'
 };
 
-function validateLatLong(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
-    if (!Object.values(latLongKeys).find(key => key === newLabelKey)) {
+function validateCoordinateLabels(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
+    if (!Object.values(coordinateLabelKeys).find(key => key === newLabelKey)) {
         return undefined;
     }
-    const boundary = newLabelKey === latLongKeys.latitude ? 90 : 180;
+    const boundary = newLabelKey === coordinateLabelKeys.latitude ? 90 : 180;
 
     const number = toNumber(newValue);
 
@@ -103,7 +103,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
         return !!_.find(allLabels, newLabel);
     })();
-    const keyValidationError = validateLatLong(
+    const keyValidationError = validateCoordinateLabels(
         newLabelValue,
         newLabelKey,
         labels.map(({ key }) => key)

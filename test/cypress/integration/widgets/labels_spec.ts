@@ -67,19 +67,32 @@ describe('Labels widget', () => {
         cy.get('.modal').within(() => {
             getCreatedLabel().should('not.exist');
             cy.contains('button', 'Add').should('have.attr', 'disabled');
+        });
 
-            cy.prepareAddingLabels(CHECKED_KEY, '90');
+        cy.get('.modal').within(() => {
+            cy.fillLabelInputs(CHECKED_KEY, '90');
             cy.get('.add').parent().should('not.have.attr', 'disabled');
+        });
+        cy.contains('This label should be a number').should('not.exist');
 
+        cy.get('.modal').within(() => {
             cy.typeLabelValue('101');
             cy.get('.add').parent().should('have.attr', 'disabled');
+        });
 
+        cy.contains('This label should be a number').should('be.visible');
+        cy.get('.modal').within(() => {
             cy.typeLabelValue('0');
             cy.get('.add').parent().should('not.have.attr', 'disabled');
+        });
 
+        cy.contains('This label should be a number').should('not.exist');
+        cy.get('.modal').within(() => {
             cy.typeLabelValue('sample_valeu');
             cy.get('.add').parent().should('have.attr', 'disabled');
-
+        });
+        cy.contains('This label should be a number').should('be.visible');
+        cy.get('.modal').within(() => {
             cy.clickButton('Cancel');
         });
     });

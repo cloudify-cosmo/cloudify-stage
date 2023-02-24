@@ -20,7 +20,7 @@ const commands = {
         cy.typeLabelValue(value);
     },
     addLabel: (key: string, value: string) => {
-        cy.prepareAddingLabels(key, value);
+        cy.fillLabelInputs(key, value);
         cy.get('.add').click();
 
         cy.wait('@fetchLabel');
