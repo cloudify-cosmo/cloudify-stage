@@ -1,41 +1,39 @@
 import type { TypeHierarchy } from './types';
 
-interface TypeHierarchyTreeProps {
+const { Icon, NodesTree } = Stage.Basic;
+
+interface TypeHierarchyProps {
     typeHierarchy: TypeHierarchy;
 }
 
-export default function TypeHierarchyTree({ typeHierarchy }: TypeHierarchyTreeProps) {
-    const { Icon, NodesTree } = Stage.Basic;
+function getNodes(typeHierarchy: TypeHierarchy) {
+    const firstType = typeHierarchy[0];
 
-    const getNodes = (hierarchy: TypeHierarchy) => {
-        const firstType = hierarchy[0];
-        if (hierarchy.length > 1) {
-            return (
-                <NodesTree.Node
-                    key={firstType}
-                    title={
-                        <span>
-                            <Icon name="triangle down" />
-                            {firstType}
-                        </span>
-                    }
-                >
-                    {getNodes(hierarchy.slice(1))}
-                </NodesTree.Node>
-            );
-        }
-        return (
-            <NodesTree.Node
-                key={firstType}
-                title={
-                    <span>
-                        <strong>{firstType}</strong>
-                    </span>
-                }
-            />
-        );
-    };
+    return typeHierarchy.length > 1 ? (
+        <NodesTree.Node
+            key={firstType}
+            title={
+                <span>
+                    <Icon name="triangle down" />
+                    {firstType}
+                </span>
+            }
+        >
+            {getNodes(typeHierarchy.slice(1))}
+        </NodesTree.Node>
+    ) : (
+        <NodesTree.Node
+            key={firstType}
+            title={
+                <span>
+                    <strong>{firstType}</strong>
+                </span>
+            }
+        />
+    );
+}
 
+export default function TypeHierarchyTree({ typeHierarchy }: TypeHierarchyProps) {
     return (
         <NodesTree showLine selectable={false} defaultExpandAll className="typesHierarchy">
             {getNodes(typeHierarchy)}
