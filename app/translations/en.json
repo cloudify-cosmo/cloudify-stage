@@ -993,6 +993,24 @@
                 "editCopy": "Edit a copy in Composer"
             }
         },
+        "blueprintInfo": {
+            "name": "Blueprint Info",
+            "description": "Shows blueprint basic information and status",
+            "configuration": {
+                "blueprintId": {
+                    "name": "Blueprint ID",
+                    "placeholder": "Enter the blueprint ID you wish to show info for"
+                }
+            },
+            "fields": {
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "mainFile": "Main Blueprint File",
+                "deployments": "Deployments"
+            },
+            "noBlueprintError": "No blueprint selected"
+        },
         "blueprints": {
             "name": "Blueprints",
             "description": "Shows blueprints list",
