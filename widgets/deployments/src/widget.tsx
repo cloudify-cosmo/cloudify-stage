@@ -88,10 +88,13 @@ Stage.defineWidget({
         const nodeInstanceDataPromise = deploymentDataPromise
             .then(data => data.items.map(item => item.id))
             .then(ids =>
-                new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
-                    _sub_field: 'state',
-                    deployment_id: ids
-                })
+                new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances<'deployment_id', string, 'state', string>(
+                    'deployment_id',
+                    {
+                        _sub_field: 'state',
+                        deployment_id: ids
+                    }
+                )
             );
 
         const latestExecutionsDataPromise = deploymentDataPromise
@@ -107,6 +110,7 @@ Stage.defineWidget({
         return Promise.all([deploymentDataPromise, nodeInstanceDataPromise, latestExecutionsDataPromise]).then(data => {
             const { NodeInstancesConsts } = Stage.Common;
             const deploymentData = data[0];
+
             const nodeInstanceData = data[1].items.reduce((result, item) => {
                 result[item.deployment_id] = {
                     states: NodeInstancesConsts.extractStatesFrom(item),

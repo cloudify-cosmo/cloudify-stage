@@ -105,7 +105,12 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
                 });
 
             const nodeInstancesSummary = configuration.showNodeInstances
-                ? await new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances('deployment_id', {
+                ? await new Stage.Common.Actions.Summary(toolbox).doGetNodeInstances<
+                      'deployment_id',
+                      string,
+                      'state',
+                      string
+                  >('deployment_id', {
                       _sub_field: 'state',
                       deployment_id: deploymentId
                   })
