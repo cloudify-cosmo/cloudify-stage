@@ -1,6 +1,6 @@
 import type { PaginatedResponse } from 'backend/types';
 import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
-import { castArray, isNil } from 'lodash';
+import { castArray } from 'lodash';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
 import { translateWidget, widgetId } from './utils';
@@ -106,27 +106,22 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
         const groups = getGroups(data.deployments.items);
 
         const formattedData = {
-            items: nodes.map(node => {
-                const group = groups[node.id + node.deployment_id];
-                return {
-                    ...node,
-                    deploymentId: node.deployment_id,
-                    blueprintId: node.blueprint_id,
-                    containedIn: node.host_id,
-                    connectedTo: node.relationships
-                        .filter(relationship => relationship.type === connectedToRelationship)
-                        .map(relationship => relationship.target_id)
-                        .join(),
-                    numberOfInstances: node.actual_number_of_instances,
-                    instances: instances
-                        .filter(
-                            instance => instance.node_id === node.id && instance.deployment_id === node.deployment_id
-                        )
-                        .map(instance => ({ ...instance, isSelected: instance.id === selectedNodeInstanceId })),
-                    isSelected: node.id + node.deployment_id === selectedNodeId,
-                    groups: !isNil(group) ? group.join(', ') : ''
-                };
-            }),
+            items: nodes.map(node => ({
+                ...node,
+                deploymentId: node.deployment_id,
+                blueprintId: node.blueprint_id,
+                containedIn: node.host_id,
+                connectedTo: node.relationships
+                    .filter(relationship => relationship.type === connectedToRelationship)
+                    .map(relationship => relationship.target_id)
+                    .join(),
+                numberOfInstances: node.actual_number_of_instances,
+                instances: instances
+                    .filter(instance => instance.node_id === node.id && instance.deployment_id === node.deployment_id)
+                    .map(instance => ({ ...instance, isSelected: instance.id === selectedNodeInstanceId })),
+                isSelected: node.id + node.deployment_id === selectedNodeId,
+                groups: groups[node.id + node.deployment_id]?.join(', ') || ''
+            })),
             total: data.nodes.metadata.pagination.total,
             blueprintSelected: !!params.blueprint_id,
             deploymentSelected: !!params.deployment_id
