@@ -1,5 +1,8 @@
 import { size } from 'lodash';
+import { translateWidget } from './utils';
 import type { ExtendedNodeInstance } from './types';
+
+const translate = Stage.Utils.composeT(translateWidget, 'nodeInstanceModal');
 
 interface NodeInstanceModalProps {
     instance: ExtendedNodeInstance;
@@ -8,8 +11,6 @@ interface NodeInstanceModalProps {
 }
 
 export default function NodeInstanceModal({ instance, onClose, open }: NodeInstanceModalProps) {
-    const noRelationshipsMessage = 'There are no Relationships defined for that Node Instance.';
-    const noRuntimePropertiesMessage = 'There are no Runtime Properties defined for that Node Instance.';
     const { CancelButton, CopyToClipboardButton, DataTable, Modal } = Stage.Basic;
     const ParameterValue = Stage.Common.Components.Parameter.Value;
     const ParameterValueDescription = Stage.Common.Components.Parameter.ValueDescription;
@@ -23,23 +24,25 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
 
     return (
         <div>
-            <Modal open={open} onClose={() => onClose()} className="nodeInstanceModal">
-                <Modal.Header>Node instance {instance.id}</Modal.Header>
+            <Modal open={open} onClose={onClose}>
+                <Modal.Header>{translate('header', { id: instance.id })}</Modal.Header>
 
                 <Modal.Content>
                     <div>
                         <h3>
-                            Relationships&nbsp;&nbsp;
-                            <CopyToClipboardButton content="Copy" text={Json.stringify(instance.relationships, true)} />
+                            {translate('relationships.header')}&nbsp;&nbsp;
+                            <CopyToClipboardButton
+                                content={translate('buttons.copy')}
+                                text={Json.stringify(instance.relationships, true)}
+                            />
                         </h3>
                         <DataTable
-                            className="nodeInstanceRelationshipsTable"
                             totalSize={relationshipsTotalSize}
-                            noDataMessage={noRelationshipsMessage}
+                            noDataMessage={translate('relationships.noDataMessage')}
                         >
-                            <DataTable.Column label="Target node" name="target" width="30%" />
-                            <DataTable.Column label="Relationship type" name="relationship" width="40%" />
-                            <DataTable.Column label="Source node" name="source" width="30%" />
+                            <DataTable.Column label={translate('relationships.targetNode')} name="target" width="30%" />
+                            <DataTable.Column label={translate('relationships.type')} name="relationship" width="40%" />
+                            <DataTable.Column label={translate('relationships.sourceNode')} name="source" width="30%" />
 
                             {instance.relationships.map(relationship => {
                                 return (
@@ -55,22 +58,21 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
                         </DataTable>
 
                         <h3>
-                            Runtime properties&nbsp;&nbsp;
+                            {translate('runtimeProperties.header')}&nbsp;&nbsp;
                             <CopyToClipboardButton
-                                content="Copy"
+                                content={translate('buttons.copy')}
                                 text={Json.stringify(instance.runtime_properties, true)}
                             />
                         </h3>
                         <DataTable
-                            className="nodeInstanceRuntimePropertiesTable"
                             totalSize={runtimePropertiesTotalSize}
-                            noDataMessage={noRuntimePropertiesMessage}
+                            noDataMessage={translate('runtimeProperties.noDataMessage')}
                         >
-                            <DataTable.Column label="Key" name="key" />
+                            <DataTable.Column label={translate('runtimeProperties.key')} name="key" />
                             <DataTable.Column
                                 label={
                                     <span>
-                                        Value <ParameterValueDescription />
+                                        {translate('runtimeProperties.value')} <ParameterValueDescription />
                                     </span>
                                 }
                                 name="value"
@@ -92,7 +94,7 @@ export default function NodeInstanceModal({ instance, onClose, open }: NodeInsta
                 </Modal.Content>
 
                 <Modal.Actions>
-                    <CancelButton onClick={onClose} content="Close" />
+                    <CancelButton onClick={onClose} content={translate('buttons.close')} />
                 </Modal.Actions>
             </Modal>
         </div>

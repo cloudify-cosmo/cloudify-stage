@@ -1,9 +1,13 @@
 import type { DataTableProps } from 'cloudify-ui-components';
 import { useEffect } from 'react';
+import { translateWidget } from './utils';
 import TypeHierarchyTree from './TypeHierarchyTree';
 import NodeTypeIcon from './NodeType';
 import type { ExtendedNode, NodesConfiguration } from './types';
 import NodeInstancesTable from './NodeInstancesTable';
+
+const translate = Stage.Utils.composeT(translateWidget, 'nodesTable');
+const translateColumn = Stage.Utils.composeT(translateWidget, 'configuration.fieldsToShow.items');
 
 interface NodesTableProps {
     data: {
@@ -34,7 +38,6 @@ export default function NodesTable({ data, toolbox, widget }: NodesTableProps) {
         toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : node.id);
     };
 
-    const noDataMessage = "There are no Nodes available. Probably there's no deployment created, yet.";
     const { CopyToClipboardButton, DataTable, Icon, Label, Popup } = Stage.Basic;
 
     const { fieldsToShow } = widget.configuration;
@@ -49,53 +52,75 @@ export default function NodesTable({ data, toolbox, widget }: NodesTableProps) {
             searchable
             selectable
             className="nodesTable"
-            noDataMessage={noDataMessage}
+            noDataMessage={translate('noDataMessage')}
         >
             <DataTable.Column width="5%" />
-            <DataTable.Column label="Name" name="id" width="15%" show={fieldsToShow.indexOf('Name') >= 0} />
-            <DataTable.Column label="Type" name="type" width="20%" show={fieldsToShow.indexOf('Type') >= 0} />
             <DataTable.Column
-                label="Blueprint"
+                label={translateColumn('name')}
+                name="id"
+                width="15%"
+                show={fieldsToShow.indexOf(translateColumn('name')) >= 0}
+            />
+            <DataTable.Column
+                label={translateColumn('type')}
+                name="type"
+                width="20%"
+                show={fieldsToShow.indexOf(translateColumn('type')) >= 0}
+            />
+            <DataTable.Column
+                label={translateColumn('blueprint')}
                 name="blueprint_id"
                 width="10%"
-                show={fieldsToShow.indexOf('Blueprint') >= 0 && !data.blueprintSelected}
+                show={fieldsToShow.indexOf(translateColumn('blueprint')) >= 0 && !data.blueprintSelected}
             />
             <DataTable.Column
-                label="Deployment"
+                label={translateColumn('deployment')}
                 name="deployment_display_name"
                 width="10%"
-                show={fieldsToShow.indexOf('Deployment') >= 0 && !data.deploymentSelected}
+                show={fieldsToShow.indexOf(translateColumn('deployment')) >= 0 && !data.deploymentSelected}
             />
             <DataTable.Column
-                label="Deployment ID"
+                label={translateColumn('deploymentId')}
                 name="deployment_id"
                 width="10%"
-                show={fieldsToShow.indexOf('Deployment ID') >= 0 && !data.deploymentSelected}
+                show={fieldsToShow.indexOf(translateColumn('deploymentId')) >= 0 && !data.deploymentSelected}
             />
             <DataTable.Column
-                label="Contained in"
+                label={translateColumn('containedIn')}
                 name="host_id"
                 width="7%"
-                show={fieldsToShow.indexOf('Contained in') >= 0}
+                show={fieldsToShow.indexOf(translateColumn('containedIn')) >= 0}
             />
-            <DataTable.Column label="Connected to" width="7%" show={fieldsToShow.indexOf('Connected to') >= 0} />
-            <DataTable.Column label="Host" name="host_id" width="7%" show={fieldsToShow.indexOf('Host') >= 0} />
             <DataTable.Column
-                label="Creator"
+                label={translateColumn('connectedTo')}
+                width="7%"
+                show={fieldsToShow.indexOf(translateColumn('connectedTo')) >= 0}
+            />
+            <DataTable.Column
+                label={translateColumn('host')}
+                name="host_id"
+                width="7%"
+                show={fieldsToShow.indexOf(translateColumn('host')) >= 0}
+            />
+            <DataTable.Column
+                label={translateColumn('creator')}
                 name="created_by"
                 width="7%"
-                show={fieldsToShow.indexOf('Creator') >= 0}
+                show={fieldsToShow.indexOf(translateColumn('creator')) >= 0}
             />
             <DataTable.Column
-                label="# Instances"
+                label={translateColumn('instancesCount')}
                 name="actual_number_of_instances"
                 width="9%"
-                show={fieldsToShow.indexOf('# Instances') >= 0}
+                show={fieldsToShow.indexOf(translateColumn('instancesCount')) >= 0}
             />
             <DataTable.Column
-                label="Groups"
+                label={translateColumn('groups')}
                 width="10%"
-                show={fieldsToShow.indexOf('Groups') >= 0 && (data.blueprintSelected || data.deploymentSelected)}
+                show={
+                    fieldsToShow.indexOf(translateColumn('groups')) >= 0 &&
+                    (data.blueprintSelected || data.deploymentSelected)
+                }
             />
 
             {data.items.map(node => {
@@ -127,7 +152,7 @@ export default function NodesTable({ data, toolbox, widget }: NodesTableProps) {
                                             />
                                         </Popup.Trigger>
                                         <Popup.Header>
-                                            Type Hierarchy
+                                            {translate('typeHierarchy')}
                                             <CopyToClipboardButton
                                                 text={String(node.type_hierarchy)}
                                                 className="rightFloated"

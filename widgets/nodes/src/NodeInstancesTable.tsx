@@ -1,5 +1,8 @@
 import type { ExtendedNodeInstance } from './types';
+import { translateWidget } from './utils';
 import InstanceModal from './NodeInstanceModal';
+
+const translate = Stage.Utils.composeT(translateWidget, 'nodeInstancesTable');
 
 interface NodeInstancesTableProps {
     instances: ExtendedNodeInstance[];
@@ -23,15 +26,14 @@ export default function NodeInstancesTable({ instances, toolbox }: NodeInstances
             );
     };
 
-    const noDataMessage = 'There are no Node Instances of selected Node available.';
     const { CopyToClipboardButton, DataTable, Icon } = Stage.Basic;
 
     return (
         <div>
-            <DataTable className="nodesInstancesTable" noDataMessage={noDataMessage}>
-                <DataTable.Column label="Instance" name="id" width="40%" />
-                <DataTable.Column label="Status" name="state" width="30%" />
-                <DataTable.Column label="Details" name="details" width="30%" />
+            <DataTable noDataMessage={translate('noDataMessage')}>
+                <DataTable.Column label={translate('columns.instance')} name="id" width="40%" />
+                <DataTable.Column label={translate('columns.status')} name="state" width="30%" />
+                <DataTable.Column label={translate('columns.details')} name="details" width="30%" />
 
                 {instances.map(instance => {
                     return (

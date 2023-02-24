@@ -3,6 +3,22 @@ import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
 import { castArray, isNil } from 'lodash';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
+import { translateWidget, widgetId } from './utils';
+
+const defaultFieldsToShow = [
+    'name',
+    'type',
+    'blueprint',
+    'deployment',
+    'containedIn',
+    'connectedTo',
+    'host',
+    'creator',
+    'instancesCount',
+    'groups'
+];
+const allFieldsToShow = [...defaultFieldsToShow, 'deploymentId'];
+const translateFieldsToShow = Stage.Utils.composeT(translateWidget, 'configuration.fieldsToShow');
 
 type Deployment = Pick<FullDeployment, 'id' | 'groups'>;
 
@@ -47,22 +63,10 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
-            items: [
-                'Name',
-                'Type',
-                'Blueprint',
-                'Deployment',
-                'Deployment ID',
-                'Contained in',
-                'Connected to',
-                'Host',
-                'Creator',
-                '# Instances',
-                'Groups'
-            ],
-            default: 'Name,Type,Blueprint,Deployment,Contained in,Connected to,Host,Creator,# Instances,Groups',
+            name: translateFieldsToShow('name'),
+            placeHolder: translateFieldsToShow('placeholder'),
+            items: allFieldsToShow.map(item => translateFieldsToShow(`items.${item}`)),
+            default: defaultFieldsToShow.map(item => translateFieldsToShow(`items.${item}`)).join(','),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
