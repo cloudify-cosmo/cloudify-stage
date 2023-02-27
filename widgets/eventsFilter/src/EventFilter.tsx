@@ -16,7 +16,6 @@ interface Fields {
     messageText: string;
     operationText: string;
     logLevel: string[];
-    name: string;
 }
 
 const initialFields: Fields = Object.freeze({
@@ -27,8 +26,7 @@ const initialFields: Fields = Object.freeze({
     type: '',
     messageText: '',
     operationText: '',
-    logLevel: [],
-    name: ''
+    logLevel: []
 });
 
 const { EventUtils } = Stage.Common;
