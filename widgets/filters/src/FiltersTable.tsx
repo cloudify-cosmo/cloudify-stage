@@ -72,7 +72,7 @@ const FiltersTable: FunctionComponent<FiltersTableProps> = ({ data, toolbox, wid
                         <DataTable.Data>
                             <Checkbox checked={filter.is_system_filter} disabled />
                         </DataTable.Data>
-                        <DataTable.Data>
+                        <DataTable.Data className="rowActions">
                             <Icon
                                 name="clone"
                                 link
