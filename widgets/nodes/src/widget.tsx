@@ -3,14 +3,30 @@ import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
 import { castArray } from 'lodash';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
+import { translateWidget, widgetId } from './common';
 
-const widgetId = 'nodes';
+const defaultFieldsToShow = [
+    'name',
+    'type',
+    'blueprint',
+    'deployment',
+    'containedIn',
+    'connectedTo',
+    'host',
+    'creator',
+    'instancesCount',
+    'groups'
+];
+const allFieldsToShow = [...defaultFieldsToShow, 'deploymentId'];
+const translateFieldsToShow = Stage.Utils.composeT(translateWidget, 'configuration.fieldsToShow');
+
+type Deployment = Pick<FullDeployment, 'id' | 'groups'>;
 
 function getGroups(deployments: Deployment[]) {
     const groups: Record<string, string[]> = {};
-    _.forEach(deployments, deployment => {
-        _.forIn(deployment.groups, (group, groupId) => {
-            _.forEach(group.members, nodeId => {
+    deployments.forEach(deployment => {
+        Object.entries(deployment.groups).forEach(([groupId, group]) => {
+            group.members.forEach(nodeId => {
                 groups[nodeId + deployment.id] = groups[nodeId + deployment.id] || [];
                 const groupList = groups[nodeId + deployment.id];
                 groupList.push(groupId);
@@ -27,8 +43,6 @@ interface NodesParams {
     /* eslint-enable camelcase */
     id: string | null;
 }
-
-type Deployment = Pick<FullDeployment, 'id' | 'groups'>;
 
 interface NodesData {
     nodes: PaginatedResponse<Node>;
@@ -49,22 +63,10 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
         Stage.GenericConfig.PAGE_SIZE_CONFIG(),
         {
             id: 'fieldsToShow',
-            name: 'List of fields to show in the table',
-            placeHolder: 'Select fields from the list',
-            items: [
-                'Name',
-                'Type',
-                'Blueprint',
-                'Deployment',
-                'Deployment ID',
-                'Contained in',
-                'Connected to',
-                'Host',
-                'Creator',
-                '# Instances',
-                'Groups'
-            ],
-            default: 'Name,Type,Blueprint,Deployment,Contained in,Connected to,Host,Creator,# Instances,Groups',
+            name: translateFieldsToShow('name'),
+            placeHolder: translateFieldsToShow('placeholder'),
+            items: allFieldsToShow.map(item => translateFieldsToShow(`items.${item}`)),
+            default: defaultFieldsToShow.map(item => translateFieldsToShow(`items.${item}`)).join(','),
             type: Stage.Basic.GenericField.MULTI_SELECT_LIST_TYPE
         }
     ],
@@ -93,9 +95,9 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
             return <Loading />;
         }
 
-        const CONNECTED_TO_RELATIONSHIP = 'cloudify.relationships.connected_to';
-        const SELECTED_NODE_ID = toolbox.getContext().getValue('depNodeId');
-        const SELECTED_NODE_INSTANCE_ID = toolbox.getContext().getValue('nodeInstanceId');
+        const connectedToRelationship = 'cloudify.relationships.connected_to';
+        const selectedNodeId = toolbox.getContext().getValue('depNodeId');
+        const selectedNodeInstanceId = toolbox.getContext().getValue('nodeInstanceId');
 
         const params = this.fetchParams!(widget, toolbox);
 
@@ -104,30 +106,25 @@ Stage.defineWidget<NodesParams, NodesData, NodesConfiguration>({
         const groups = getGroups(data.deployments.items);
 
         const formattedData = {
-            items: _.map(nodes, node => {
-                const group = groups[node.id + node.deployment_id];
-                return {
-                    ...node,
-                    deploymentId: node.deployment_id,
-                    blueprintId: node.blueprint_id,
-                    containedIn: node.host_id,
-                    connectedTo: node.relationships
-                        .filter(r => r.type === CONNECTED_TO_RELATIONSHIP)
-                        .map(r => r.target_id)
-                        .join(),
-                    numberOfInstances: node.actual_number_of_instances,
-                    instances: instances
-                        .filter(
-                            instance => instance.node_id === node.id && instance.deployment_id === node.deployment_id
-                        )
-                        .map(instance => ({ ...instance, isSelected: instance.id === SELECTED_NODE_INSTANCE_ID })),
-                    isSelected: node.id + node.deployment_id === SELECTED_NODE_ID,
-                    groups: !_.isNil(group) ? group.join(', ') : ''
-                };
-            }),
-            total: _.get(data.nodes, 'metadata.pagination.total', 0),
-            blueprintSelected: !_.isEmpty(params.blueprint_id),
-            deploymentSelected: !_.isEmpty(params.deployment_id)
+            items: nodes.map(node => ({
+                ...node,
+                deploymentId: node.deployment_id,
+                blueprintId: node.blueprint_id,
+                containedIn: node.host_id,
+                connectedTo: node.relationships
+                    .filter(relationship => relationship.type === connectedToRelationship)
+                    .map(relationship => relationship.target_id)
+                    .join(),
+                numberOfInstances: node.actual_number_of_instances,
+                instances: instances
+                    .filter(instance => instance.node_id === node.id && instance.deployment_id === node.deployment_id)
+                    .map(instance => ({ ...instance, isSelected: instance.id === selectedNodeInstanceId })),
+                isSelected: node.id + node.deployment_id === selectedNodeId,
+                groups: groups[node.id + node.deployment_id]?.join(', ') || ''
+            })),
+            total: data.nodes.metadata.pagination.total,
+            blueprintSelected: !!params.blueprint_id,
+            deploymentSelected: !!params.deployment_id
         };
 
         return <NodesTable widget={widget} data={formattedData} toolbox={toolbox} />;
