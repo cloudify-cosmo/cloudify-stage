@@ -1616,7 +1616,58 @@
         },
         "nodes": {
             "name": "Nodes list",
-            "description": "This widget shows nodes"
+            "description": "This widget shows nodes",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "containedIn": "Contained in",
+                        "connectedTo": "Connected to",
+                        "host": "Host",
+                        "creator": "Creator",
+                        "instancesCount": "# Instances",
+                        "groups": "Groups"
+                    }
+                }
+            },
+            "nodeInstanceModal": {
+                "header": "Node instance {{ id }}",
+                "relationships": {
+                    "header": "Relationships",
+                    "targetNode": "Target node",
+                    "type": "Relationship type",
+                    "sourceNode": "Source node",
+                    "noDataMessage": "There are no Relationships defined for that Node Instance."
+                },
+                "runtimeProperties": {
+                    "header": "Runtime properties",
+                    "key": "Key",
+                    "value": "Value",
+                    "noDataMessage": "There are no Runtime Properties defined for that Node Instance."
+                },
+                "buttons": {
+                    "close": "Close",
+                    "copy": "Copy"
+                }
+            },
+            "nodeInstancesTable": {
+                "columns": {
+                    "instance": "Instance",
+                    "status": "Status",
+                    "details": "Details"
+                },
+                "noDataMessage": "There are no Node Instances of selected Node available."
+            },
+            "nodesTable":{
+                "noDataMessage": "There are no Nodes available. Probably there's no deployment created, yet.",
+                "typeHierarchy": "Type Hierarchy"
+            }
         },
         "nodesStats": {
             "name": "Nodes statistics",

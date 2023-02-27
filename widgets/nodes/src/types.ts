@@ -19,7 +19,6 @@ export interface Node {
     created_by: string;
     deployment_display_name: string;
     deployment_id: string;
-    groups: string;
     host_id: string;
     id: string;
     relationships: NodeRelationship[];
@@ -30,6 +29,7 @@ export interface Node {
 export interface ExtendedNode extends Node {
     connectedTo: string;
     containedIn: string;
+    groups: string;
     instances: ExtendedNodeInstance[];
     isSelected: boolean;
     numberOfInstances: number;
