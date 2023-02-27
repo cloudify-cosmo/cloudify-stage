@@ -80,9 +80,12 @@ Stage.defineWidget<SitesMapWidgetParams, SitesMapWidgetData, SitesMapWidgetConfi
         const DeploymentActions = Stage.Common.Deployments.Actions;
         const sitesWithNamesAndLocations = new DeploymentActions(toolbox.getManager()).doGetSitesNamesAndLocations();
 
-        const sitesSummary: Promise<Stage.Types.PaginatedResponse<SiteSummary>> = new SummaryActions(
-            toolbox
-        ).doGetDeployments('site_name', {
+        const sitesSummary = new SummaryActions(toolbox).doGetDeployments<
+            'site_name',
+            string,
+            'deployment_status',
+            DeploymentStatus
+        >('site_name', {
             _include: 'id,site_name,deployment_status',
             _sub_field: 'deployment_status',
             ...params
