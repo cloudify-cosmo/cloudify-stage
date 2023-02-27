@@ -86,6 +86,8 @@ describe('(Reducer) Manager', () => {
         });
 
         describe('when failed', () => {
+            const expectedError = { code: undefined, message: 'User unauthorized', status: 401 };
+
             beforeEach(() => {
                 fetchMock.post('/console/auth/login', {
                     body: {
@@ -99,38 +101,48 @@ describe('(Reducer) Manager', () => {
             it('triggers actions', () => {
                 const store = mockStore({});
 
-                return store.dispatch(login(username, password)).then(() => {
-                    const actualActions = store.getActions();
-                    const expectedActions = [
-                        { type: ActionType.LOGIN_REQUEST },
-                        {
-                            type: ActionType.LOGIN_FAILURE,
-                            payload: {
-                                username,
-                                error: { code: undefined, message: 'User unauthorized', status: 401 },
-                                receivedAt: Date.now()
+                return store
+                    .dispatch(login(username, password))
+                    .then(() => {
+                        const actualActions = store.getActions();
+                        const expectedActions = [
+                            { type: ActionType.LOGIN_REQUEST },
+                            {
+                                type: ActionType.LOGIN_FAILURE,
+                                payload: {
+                                    username,
+                                    error: expectedError,
+                                    receivedAt: Date.now()
+                                }
                             }
-                        }
-                    ];
+                        ];
 
-                    expect(actualActions).toEqual(expectedActions);
-                });
+                        expect(actualActions).toEqual(expectedActions);
+                    })
+                    .catch(error => {
+                        expect(error).toEqual(expectedError);
+                    });
             });
 
             it('sets error state', () => {
                 const store = createStoreAsMockStore(managerReducer);
 
-                return store.dispatch(login(username, password)).then(() => {
-                    expect(store.getState()).toEqual({
-                        ...emptyState,
-                        auth: {
-                            ...emptyState.auth,
-                            username,
-                            error: 'User unauthorized'
-                        },
-                        lastUpdated: Date.now()
+                return store
+                    .dispatch(login(username, password))
+                    .then(() => {
+                        expect(store.getState()).toEqual({
+                            ...emptyState,
+                            auth: {
+                                ...emptyState.auth,
+                                username,
+                                error: expectedError.message
+                            },
+                            lastUpdated: Date.now()
+                        });
+                    })
+                    .catch(error => {
+                        expect(error).toEqual(expectedError);
                     });
-                });
             });
         });
     });
