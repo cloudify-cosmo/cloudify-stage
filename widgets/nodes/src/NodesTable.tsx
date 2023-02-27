@@ -7,6 +7,8 @@ import NodeInstancesTable from './NodeInstancesTable';
 
 const translate = Stage.Utils.composeT(translateWidget, 'nodesTable');
 const translateColumn = Stage.Utils.composeT(translateWidget, 'configuration.fieldsToShow.items');
+const { useRefreshEvent } = Stage.Hooks;
+const { CopyToClipboardButton, DataTable, Icon, Label, Popup } = Stage.Basic;
 
 interface NodesTableProps {
     data: {
@@ -20,12 +22,9 @@ interface NodesTableProps {
 }
 
 export default function NodesTable({ data, toolbox, widget }: NodesTableProps) {
-    const refreshData = () => toolbox.refresh();
+    useRefreshEvent(toolbox, 'nodes:refresh');
+
     const fetchGridData: DataTableProps['fetchData'] = fetchParams => toolbox.refresh(fetchParams);
-    useEffect(() => {
-        toolbox.getEventBus().on('nodes:refresh', refreshData);
-        return () => toolbox.getEventBus().off('nodes:refresh', refreshData);
-    }, []);
 
     const selectNode = (node: ExtendedNode) => {
         const selectedDepNodeId = toolbox.getContext().getValue('depNodeId');
@@ -36,8 +35,6 @@ export default function NodesTable({ data, toolbox, widget }: NodesTableProps) {
         toolbox.getContext().setValue('nodeInstanceId', null);
         toolbox.getEventBus().trigger('topology:selectNode', clickedAlreadySelectedNode ? null : node.id);
     };
-
-    const { CopyToClipboardButton, DataTable, Icon, Label, Popup } = Stage.Basic;
 
     const { fieldsToShow } = widget.configuration;
 
