@@ -31,8 +31,13 @@ function DeploymentParameter({
     );
 }
 
-export type DeploymentWithUpdate = Pick<FullDeploymentData, 'id' | 'display_name' | 'description' | 'visibility'> &
-    Partial<Pick<FullDeploymentData, 'blueprint_id' | 'site_name' | 'created_at' | 'updated_at' | 'created_by'>> & {
+export type DeploymentWithUpdate = Pick<FullDeploymentData, 'id' | 'display_name' | 'visibility'> &
+    Partial<
+        Pick<
+            FullDeploymentData,
+            'description' | 'blueprint_id' | 'site_name' | 'created_at' | 'updated_at' | 'created_by'
+        >
+    > & {
         isUpdated: boolean;
     };
 
