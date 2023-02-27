@@ -295,8 +295,8 @@
         "message": "Welcome to the Cloudify Management Console, Please log in",
         "firstLoginHint": "For the first login please use\nUsername: admin\nPassword: admin\n\nIt's recommended to change the password after login.",
         "error": {
-            "noPassword": "Please provide password",
-            "noUsername": "Please provide username"
+            "missingCredentials": "Please fill your credentials",
+            "incorrectCredentials": "Incorrect username and/or password. Please check and try again."
         },
         "password": "Password",
         "username": "Username",
@@ -995,6 +995,24 @@
                 "editCopy": "Edit a copy in Composer"
             }
         },
+        "blueprintInfo": {
+            "name": "Blueprint Info",
+            "description": "Shows blueprint basic information and status",
+            "configuration": {
+                "blueprintId": {
+                    "name": "Blueprint ID",
+                    "placeholder": "Enter the blueprint ID you wish to show info for"
+                }
+            },
+            "fields": {
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "mainFile": "Main Blueprint File",
+                "deployments": "Deployments"
+            },
+            "noBlueprintError": "No blueprint selected"
+        },
         "blueprints": {
             "name": "Blueprints",
             "description": "Shows blueprints list",
@@ -1598,6 +1616,61 @@
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
         },
+        "nodes": {
+            "name": "Nodes list",
+            "description": "This widget shows nodes",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "containedIn": "Contained in",
+                        "connectedTo": "Connected to",
+                        "host": "Host",
+                        "creator": "Creator",
+                        "instancesCount": "# Instances",
+                        "groups": "Groups"
+                    }
+                }
+            },
+            "nodeInstanceModal": {
+                "header": "Node instance {{ id }}",
+                "relationships": {
+                    "header": "Relationships",
+                    "targetNode": "Target node",
+                    "type": "Relationship type",
+                    "sourceNode": "Source node",
+                    "noDataMessage": "There are no Relationships defined for that Node Instance."
+                },
+                "runtimeProperties": {
+                    "header": "Runtime properties",
+                    "key": "Key",
+                    "value": "Value",
+                    "noDataMessage": "There are no Runtime Properties defined for that Node Instance."
+                },
+                "buttons": {
+                    "close": "Close",
+                    "copy": "Copy"
+                }
+            },
+            "nodeInstancesTable": {
+                "columns": {
+                    "instance": "Instance",
+                    "status": "Status",
+                    "details": "Details"
+                },
+                "noDataMessage": "There are no Node Instances of selected Node available."
+            },
+            "nodesTable":{
+                "noDataMessage": "There are no Nodes available. Probably there's no deployment created, yet.",
+                "typeHierarchy": "Type Hierarchy"
+            }
+        },
         "nodesStats": {
             "name": "Nodes statistics",
             "description": "This widget shows number of node instances in different states"
@@ -1631,6 +1704,8 @@
             "successMessage": "{{pluginTitle}} successfully uploaded"
         },
         "plugins": {
+            "name": "Plugins list",
+            "description": "Plugins list",
             "upload": {
                 "button": "Upload",
                 "marketplace": "Upload from Marketplace",
@@ -1822,8 +1897,9 @@
                         "secretKey": "Please provide secret key",
                         "secretValue": "Please provide secret value",
                         "noProviders": "No Secret providers are defined in the System",
-                        "secretProviderName": "Please select a secret provider",
-                        "secretProviderPath": "Please provide a path or a secret key on the secret provider"
+                        "secretProvider": "Please select a secret provider",
+                        "secretProviderPath": "Please provide a path or a secret key on the secret provider",
+                        "secretProviderOptions": "Invalid Provider Options"
                     },
                     "noPermission": "User {{currentUsername}} is not permitted to update the secret {{secretKey}} in the tenant {{selectedTenant}}."
                 }
@@ -2289,10 +2365,77 @@
             "noDeploymentSelected": "No deployment selected"
         },
         "sites": {
-            "actions": {
-                "updateSite": "Update site",
-                "deleteSite": "Delete site"
+            "name": "Sites",
+            "description": "This widget shows a list of available sites and allow managing them",
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "location": "Location",
+                    "created": "Created",
+                    "creator": "Creator",
+                    "tenant": "Tenant",
+                    "deploymentsCount": "# Deployments"
+                },
+                "items": {
+                    "location": "Latitude: {{latitude}}, Longitude: {{longitude}}"
+                },
+                "actions": {
+                    "updateSite": "Update site",
+                    "deleteSite": "Delete site"
+                },
+                "confirm": {
+                    "delete": "Are you sure you want to delete the site '{{siteName}}'?"
+                },
+                "noDataMessage": "There are no Sites available. Click \"Create\" to create Sites."
+            },
+            "modals": {
+                "create": {
+                    "header": "Create site {{siteName}}",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "create": "Create"
+                    },
+                    "fields": {
+                        "siteName": "Name"
+                    }
+                },
+                "update": {
+                    "header": "Create site",
+                    "errors": {
+                        "noSiteName": "Please provide site name"
+                    },
+                    "buttons": {
+                        "update": "Update"
+                    },
+                    "fields": {
+                        "siteNewName": "Name"
+                    }
+                }
+            },
+            "map": {
+                "noInternetMessage": "Map cannot be displayed because there is no connection to the maps repository. Please check network connection."
+            },
+            "common": {
+                "fields": {
+                    "siteLocation": {
+                        "label": "Location",
+                        "placeholder": "latitude, longitude (32.166369, 34.810893)"
+                    }
+                }
             }
+        },
+        "pluginsNum": {
+            "name": "Number of plugins",
+            "description": "Number of plugins",
+            "configuration": {
+                "page": {
+                    "name": "Page to open on click",
+                    "description": "Page to open when user clicks on widget content"
+                }
+            },
+            "quantityDescription": "Plugins"
         },
         "snapshots": {
             "actions": {
