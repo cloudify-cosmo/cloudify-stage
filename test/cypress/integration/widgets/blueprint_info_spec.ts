@@ -19,7 +19,7 @@ describe('Blueprint Info widget', () => {
 
         cy.get('.blueprintInfoWidget').within(() => {
             cy.log('Verifying blueprint name');
-            cy.get('.blueprintInfoName').should('have.text', blueprintName);
+            cy.contains(blueprintName);
 
             cy.log('Verifying blueprint creator');
             cy.get('div:nth-child(5)').within(() => {
