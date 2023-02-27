@@ -102,6 +102,7 @@ export function login(
             .catch(err => {
                 log.log(err);
                 dispatch(loginFailure(username, err));
+                throw err;
             });
     };
 }
