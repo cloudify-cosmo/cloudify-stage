@@ -16,7 +16,7 @@ describe('Filter', () => {
         ).as('fetchBlueprints');
         cy.interceptSp(
             'GET',
-            { pathname: '/deployments', query: { _offset: '0' } },
+            { pathname: '/deployments', query: { _offset: '0', _search: '', _search_name: '' } },
             {
                 fixture: 'filter/deployments0.json'
             }
