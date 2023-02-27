@@ -42,7 +42,7 @@ describe('Deployments widget', () => {
     });
 
     describe('should be present and', () => {
-        it('should allow to search by depyloyment ID', () => {
+        it('search by depyloyment ID', () => {
             cy.searchInDeploymentsWidget(deploymentId);
             checkDeploymentNameField();
         });
@@ -179,7 +179,168 @@ describe('Deployments widget', () => {
         });
     });
 
-    describe('should allow to execute', () => {
+    describe('should allow to', () => {
+        beforeEach(() => {
+            cy.refreshPage();
+        });
+
+        it('set site for deployment', () => {
+            cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setDeploymentSite');
+
+            executeDeploymentAction(deploymentId, deploymentName, 'Set Site');
+
+            cy.get('.modal').within(() => {
+                cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
+                cy.get('div[name="siteName"]').click();
+                cy.get(`div[option-value="${siteName}"]`).click();
+                cy.get('button.ok').click();
+            });
+
+            cy.wait('@setDeploymentSite');
+            cy.contains('div.row', deploymentId)
+                .find('div.column:nth-child(2) h5:nth-child(2) .sub.header')
+                .should('have.text', siteName);
+        });
+
+        it('update deployment', () => {
+            const anotherBlueprintName = `${blueprintName}_another`;
+            cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
+
+            cy.interceptSp('POST', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
+
+            cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
+            executeDeploymentAction(deploymentId, deploymentName, 'Update');
+
+            cy.get('.updateDeploymentModal').within(() => {
+                cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
+
+                cy.setSearchableDropdownValue('Blueprint', anotherBlueprintName);
+
+                cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
+
+                cy.get('div[name=blueprintName]').click();
+                cy.contains(RegExp(`${blueprintName}$`)).click();
+
+                cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
+                cy.contains('Skip heal').click();
+                cy.contains('Skip drift check').click();
+                cy.clickButton('Preview');
+            });
+
+            cy.get('.updateDetailsModal').within(() => {
+                cy.contains('tr', 'webserver_port').within(() => {
+                    cy.get('td:nth-child(2)').should('have.text', '9123');
+                    cy.get('td:nth-child(3)').should('have.text', '9321');
+                });
+                cy.clickButton('Update');
+            });
+
+            cy.wait('@updateDeployment').then(({ request }) => {
+                expect(request.body).to.deep.equal({
+                    blueprint_id: blueprintName,
+                    force: false,
+                    ignore_failure: false,
+                    inputs: { webserver_port: 9321 },
+                    install_first: false,
+                    preview: true,
+                    reinstall_list: [],
+                    skip_drift_check: true,
+                    skip_heal: true,
+                    skip_install: false,
+                    skip_reinstall: false,
+                    skip_uninstall: false
+                });
+            });
+            cy.get('.updateDetailsModal').should('not.exist');
+            verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
+            cy.contains('div.row', deploymentId)
+                .get('div.column:nth-child(3) h5:nth-child(2)')
+                .should('contain.text', 'Updated');
+        });
+
+        it('deploy blueprint on environment', () => {
+            const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
+            const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
+
+            cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
+                environmentBlueprintName,
+                environmentDeploymentName
+            );
+
+            executeDeploymentAction(environmentDeploymentName, environmentDeploymentName, 'Deploy On');
+
+            cy.get('.modal').within(() => {
+                cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
+                cy.typeToFieldInput('Deployment name', `${environmentDeploymentName}_child_service`);
+                cy.clickButton('Install');
+            });
+
+            cy.get('.modal').should('not.exist');
+        });
+
+        it('manage deployment labels', () => {
+            const labelKey = 'test-key';
+            const labelValue = 'test-value';
+
+            cy.setLabels(deploymentId, [{ a: 'b' }]);
+            cy.interceptSp('PATCH', `/deployments/${deploymentId}`).as('updateLabels');
+            cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
+            cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
+
+            const typeInput = (name: string, value: string) => {
+                cy.get(`div[name=${name}]`).click();
+                cy.get(`div[name=${name}] input`).type(value);
+            };
+            executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
+            cy.get('.modal').within(() => {
+                cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
+                cy.wait('@fetchLabels');
+                cy.get('form.loading').should('not.exist');
+
+                cy.get('.segment.dropdown').click();
+                typeInput('labelKey', labelKey);
+                typeInput('labelValue', labelValue);
+                cy.get('button .add').click();
+
+                cy.wait('@checkLabelPresence');
+                cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
+
+                cy.get('button.ok').click();
+            });
+            cy.wait('@updateLabels');
+
+            cy.getDeployment(deploymentId).then(response => {
+                const { labels } = response.body;
+                const verifyLabel = (index: number, key: string, value: string) => {
+                    expect(labels[index]).to.have.property('key', key);
+                    expect(labels[index]).to.have.property('value', value);
+                };
+
+                expect(labels).to.have.length(2);
+                verifyLabel(0, 'a', 'b');
+                verifyLabel(1, labelKey, labelValue);
+            });
+        });
+
+        it('remove deployment', () => {
+            const testDeploymentId = `${deploymentId}_remove_id`;
+            const testDeploymentName = `${deploymentId}_remove_name`;
+            cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
+            cy.interceptSp('DELETE', { path: `/deployments/${testDeploymentId}?force=true` }).as('deleteDeployment');
+
+            executeDeploymentAction(testDeploymentId, testDeploymentName, 'Force Delete');
+
+            cy.contains(
+                `Are you sure you want to ignore the live nodes and delete the deployment ${testDeploymentName} (${testDeploymentId})?`
+            );
+            cy.get('.modal button.primary').click();
+
+            cy.wait('@deleteDeployment');
+            cy.contains('div.row', testDeploymentId).should('not.exist');
+        });
+    });
+
+    describe('to execute', () => {
         const startAndVerifyWorkflowExecution = (workflow: string) => {
             cy.get('.executeWorkflowModal').within(() => {
                 cy.contains(`Execute workflow ${workflow} on ${deploymentName} (${deploymentId})`);
@@ -197,160 +358,5 @@ describe('Deployments widget', () => {
             executeDeploymentWorkflow(deploymentId, deploymentName, 'Restart');
             startAndVerifyWorkflowExecution('restart');
         });
-    });
-
-    it('should allow to set site for deployment', () => {
-        cy.interceptSp('POST', `/deployments/${deploymentId}/set-site`).as('setDeploymentSite');
-
-        executeDeploymentAction(deploymentId, deploymentName, 'Set Site');
-
-        cy.get('.modal').within(() => {
-            cy.contains(`Set the site of deployment ${deploymentName} (${deploymentId})`);
-            cy.get('div[name="siteName"]').click();
-            cy.get(`div[option-value="${siteName}"]`).click();
-            cy.get('button.ok').click();
-        });
-
-        cy.wait('@setDeploymentSite');
-        cy.contains('div.row', deploymentId)
-            .find('div.column:nth-child(2) h5:nth-child(2) .sub.header')
-            .should('have.text', siteName);
-    });
-
-    it('should allow to update deployment', () => {
-        const anotherBlueprintName = `${blueprintName}_another`;
-        cy.uploadBlueprint('blueprints/input_types.zip', anotherBlueprintName, { yamlFile: 'string_type.yaml' });
-
-        cy.interceptSp('POST', `/deployment-updates/${deploymentId}/update/initiate`).as('updateDeployment');
-
-        cy.interceptSp('GET', { pathname: '/blueprints', query: { state: 'uploaded' } }).as('uploadedBlueprints');
-        executeDeploymentAction(deploymentId, deploymentName, 'Update');
-
-        cy.get('.updateDeploymentModal').within(() => {
-            cy.contains(`Update deployment ${deploymentName} (${deploymentId})`);
-
-            cy.setSearchableDropdownValue('Blueprint', anotherBlueprintName);
-
-            cy.getField('string_constraint_pattern').find('input').should('have.value', 'Ubuntu 18.04');
-
-            cy.get('div[name=blueprintName]').click();
-            cy.contains(RegExp(`${blueprintName}$`)).click();
-
-            cy.get('textarea[name="webserver_port"]').clear({ force: true }).type('9321');
-            cy.contains('Skip heal').click();
-            cy.contains('Skip drift check').click();
-            cy.clickButton('Preview');
-        });
-
-        cy.get('.updateDetailsModal').within(() => {
-            cy.contains('tr', 'webserver_port').within(() => {
-                cy.get('td:nth-child(2)').should('have.text', '9123');
-                cy.get('td:nth-child(3)').should('have.text', '9321');
-            });
-            cy.clickButton('Update');
-        });
-
-        cy.wait('@updateDeployment').then(({ request }) => {
-            expect(request.body).to.deep.equal({
-                blueprint_id: blueprintName,
-                force: false,
-                ignore_failure: false,
-                inputs: { webserver_port: 9321 },
-                install_first: false,
-                preview: true,
-                reinstall_list: [],
-                skip_drift_check: true,
-                skip_heal: true,
-                skip_install: false,
-                skip_reinstall: false,
-                skip_uninstall: false
-            });
-        });
-        cy.get('.updateDetailsModal').should('not.exist');
-        verifyExecutionHasEnded(ExecutionUtils.UPDATE_WORKFLOW_ID);
-        cy.contains('div.row', deploymentId)
-            .get('div.column:nth-child(3) h5:nth-child(2)')
-            .should('contain.text', 'Updated');
-    });
-
-    it('should allow to deploy blueprint on environment', () => {
-        const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
-        const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
-
-        cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
-            environmentBlueprintName,
-            environmentDeploymentName
-        );
-
-        executeDeploymentAction(environmentDeploymentName, environmentDeploymentName, 'Deploy On');
-
-        cy.get('.modal').within(() => {
-            cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
-            cy.typeToFieldInput('Deployment name', `${environmentDeploymentName}_child_service`);
-            cy.clickButton('Install');
-        });
-
-        cy.get('.modal').should('not.exist');
-    });
-
-    it('should allow to manage deployment labels', () => {
-        const labelKey = 'test-key';
-        const labelValue = 'test-value';
-
-        cy.setLabels(deploymentId, [{ a: 'b' }]);
-        cy.interceptSp('PATCH', `/deployments/${deploymentId}`).as('updateLabels');
-        cy.interceptSp('GET', { path: `/deployments/${deploymentId}?_include=labels` }).as('fetchLabels');
-        cy.interceptSp('GET', `/labels/deployments`).as('checkLabelPresence');
-
-        const typeInput = (name: string, value: string) => {
-            cy.get(`div[name=${name}]`).click();
-            cy.get(`div[name=${name}] input`).type(value);
-        };
-        executeDeploymentAction(deploymentId, deploymentName, 'Manage Labels');
-        cy.get('.modal').within(() => {
-            cy.contains(`Manage labels for deployment ${deploymentName} (${deploymentId})`);
-            cy.wait('@fetchLabels');
-            cy.get('form.loading').should('not.exist');
-
-            cy.get('.segment.dropdown').click();
-            typeInput('labelKey', labelKey);
-            typeInput('labelValue', labelValue);
-            cy.get('button .add').click();
-
-            cy.wait('@checkLabelPresence');
-            cy.get('.blue.label').should('have.text', `${labelKey} ${labelValue}`);
-
-            cy.get('button.ok').click();
-        });
-        cy.wait('@updateLabels');
-
-        cy.getDeployment(deploymentId).then(response => {
-            const { labels } = response.body;
-            const verifyLabel = (index: number, key: string, value: string) => {
-                expect(labels[index]).to.have.property('key', key);
-                expect(labels[index]).to.have.property('value', value);
-            };
-
-            expect(labels).to.have.length(2);
-            verifyLabel(0, 'a', 'b');
-            verifyLabel(1, labelKey, labelValue);
-        });
-    });
-
-    it('should allow to remove deployment', () => {
-        const testDeploymentId = `${deploymentId}_remove_id`;
-        const testDeploymentName = `${deploymentId}_remove_name`;
-        cy.deployBlueprint(blueprintName, testDeploymentId, {}, { display_name: testDeploymentName });
-        cy.interceptSp('DELETE', { path: `/deployments/${testDeploymentId}?force=true` }).as('deleteDeployment');
-
-        executeDeploymentAction(testDeploymentId, testDeploymentName, 'Force Delete');
-
-        cy.contains(
-            `Are you sure you want to ignore the live nodes and delete the deployment ${testDeploymentName} (${testDeploymentId})?`
-        );
-        cy.get('.modal button.primary').click();
-
-        cy.wait('@deleteDeployment');
-        cy.contains('div.row', testDeploymentId).should('not.exist');
     });
 });
