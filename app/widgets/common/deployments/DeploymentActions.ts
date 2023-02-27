@@ -1,12 +1,43 @@
 import type { Manager } from 'cloudify-ui-components/toolbox';
 import type { PaginatedResponse } from 'backend/types';
-import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { DeploymentStatus, LatestExecutionStatus } from 'app/widgets/common/deploymentsView/types';
 import type { Visibility } from 'app/widgets/common/types';
 import type { Workflow } from '../executeWorkflow';
 import ExecutionActions from '../executions/ExecutionActions';
 import type { Label } from '../labels/types';
 import type { Site } from '../map/site';
 import PollHelper from '../utils/PollHelper';
+
+export interface FullDeploymentData {
+    id: string;
+    /* eslint-disable camelcase */
+    created_at: string;
+    updated_at: string;
+    created_by?: string;
+    visibility: Visibility;
+    description: string | null;
+    latest_execution: string;
+    display_name: string;
+    site_name: string;
+    blueprint_id: string;
+    latest_execution_status: LatestExecutionStatus;
+    deployment_status: DeploymentStatus;
+    environment_type: string;
+    latest_execution_total_operations: number;
+    latest_execution_finished_operations: number;
+    sub_services_count: number;
+    /** Can be null when there are no subservices */
+    sub_services_status: DeploymentStatus | null;
+    sub_environments_count: number;
+    /** Can be null when there are no subenvironments */
+    sub_environments_status: DeploymentStatus | null;
+    labels?: Label[];
+    workflows: Workflow[];
+    inputs: { [key: string]: unknown };
+    capabilities: { [key: string]: unknown };
+    groups: Record<string, { members: string[] }>;
+    /* eslint-enable camelcase */
+}
 
 export interface WorkflowOptions {
     force: boolean;
@@ -26,8 +57,8 @@ export default class DeploymentActions {
         return this.manager.doGet(`/deployments/${deployment.id}`, { params });
     }
 
-    doGetDeployments<IncludeKeys extends keyof Deployment = keyof Deployment>(params: any) {
-        return this.manager.doGet<PaginatedResponse<Pick<Deployment, IncludeKeys>>>('/deployments', { params });
+    doGetDeployments<IncludeKeys extends keyof FullDeploymentData = keyof FullDeploymentData>(params: any) {
+        return this.manager.doGet<PaginatedResponse<Pick<FullDeploymentData, IncludeKeys>>>('/deployments', { params });
     }
 
     doDelete(deployment: { id: string }) {

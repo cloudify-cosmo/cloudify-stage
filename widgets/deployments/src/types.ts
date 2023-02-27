@@ -1,5 +1,5 @@
 import type { PaginatedResponse } from 'backend/types';
-import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 import type { FetchDataFunction } from 'cloudify-ui-components';
 import type { Execution, ExecutionAction } from 'app/utils/shared/ExecutionUtils';
 import type { Toolbox, Widget } from 'app/utils/StageAPI';
@@ -37,10 +37,9 @@ export const FetchedLastExecutionFields = [
 
 export type FetchedLastExecutionType = Required<Pick<Execution, typeof FetchedLastExecutionFields[number]>>;
 
-export type EnhancedDeployment = Pick<Deployment, typeof FetchedDeploymentFields[number]> & {
+export type EnhancedDeployment = Pick<FullDeploymentData, typeof FetchedDeploymentFields[number]> & {
     nodeInstancesCount: number;
     nodeInstancesStates: Record<string, number>;
-
     isUpdated: boolean;
     lastExecution: FetchedLastExecutionType;
 };
@@ -61,7 +60,6 @@ export interface DeploymentViewProps {
     onActOnExecution?: (execution: Execution, action: ExecutionAction, errorMessage: any) => void;
     onDeploymentAction: (deployment: EnhancedDeployment | undefined, actionName: string) => void;
     onWorkflowAction: (deployment: EnhancedDeployment | undefined, workflowName: string) => void;
-
     onSetVisibility: (id: string, visibility: Visibility) => void;
     allowedSettingTo?: Visibility[];
     noDataMessage: string;

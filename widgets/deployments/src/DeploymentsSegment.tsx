@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
 import type { DeploymentViewProps } from './types';
@@ -33,7 +33,7 @@ export default function DeploymentsSegment({
     const { IdPopup } = Stage.Shared;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
-    const formatName = (item: Pick<Deployment, 'id' | 'display_name'>) =>
+    const formatName = (item: Pick<FullDeploymentData, 'id' | 'display_name'>) =>
         Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
 
     return (
