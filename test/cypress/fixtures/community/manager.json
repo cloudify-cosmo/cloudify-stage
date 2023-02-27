@@ -200,7 +200,6 @@
       "widget_highAvailability": ["sys_admin"],
       "widget_inputs": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_maintenanceModeButton": ["sys_admin"],
-      "widget_managers": ["sys_admin"],
       "widget_nodes": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_nodesComputeNum": ["sys_admin", "manager", "user", "operations", "viewer"],
       "widget_nodesStats": ["sys_admin", "manager", "user", "operations", "viewer"],

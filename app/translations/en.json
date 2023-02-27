@@ -2518,13 +2518,6 @@
             "name": "Snapshots list",
             "decription": "Snapshots list"
         },
-        "managers": {
-            "actions": {
-                "openConsole": "Open Console",
-                "refreshStatus": "Refresh Status",
-                "refreshStatusInProgress": "Status refresh in progress..."
-            }
-        },
         "deploymentActionButtons": {
             "name": "Deployment action buttons",
             "description": "Provides set of action buttons for deployment",
