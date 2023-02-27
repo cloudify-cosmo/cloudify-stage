@@ -273,6 +273,26 @@ describe('Deployments widget', () => {
             .should('contain.text', 'Updated');
     });
 
+    it('should allow to deploy blueprint on environment', () => {
+        const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
+        const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
+
+        cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
+            environmentBlueprintName,
+            environmentDeploymentName
+        );
+
+        executeDeploymentAction(environmentDeploymentName, environmentDeploymentName, 'Deploy On');
+
+        cy.get('.modal').within(() => {
+            cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
+            cy.typeToFieldInput('Deployment name', `${environmentDeploymentName}_child_service`);
+            cy.clickButton('Install');
+        });
+
+        cy.get('.modal').should('not.exist');
+    });
+
     it('should allow to manage deployment labels', () => {
         const labelKey = 'test-key';
         const labelValue = 'test-value';
