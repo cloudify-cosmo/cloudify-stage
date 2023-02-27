@@ -62,9 +62,7 @@ describe('Labels widget', () => {
     it('should properly validate lat-long labels', () => {
         const CHECKED_KEY = 'csys-location-lat';
         const checkValidationErrorVisbility = (shouldBeVisible: boolean) =>
-            shouldBeVisible
-                ? cy.contains('This label should be a number').should('be.visible')
-                : cy.contains('This label should be a number').should('not.exist');
+            cy.contains('This label should be a number').should(shouldBeVisible ? 'be.visible' : 'not.exist');
 
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
