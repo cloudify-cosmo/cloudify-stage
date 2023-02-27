@@ -52,13 +52,22 @@ interface DescriptionMessageProps {
 }
 
 const { redirectToPage } = StageUtils.Url;
-const StyledMessageContent = styled(Message.Content)`
+const StyledMessageContentCenter = styled(Message.Content)`
     &&&& {
         display: flex;
         justify-content: center;
         align-items: center;
     }
 `;
+
+const StyledMessageContentSpaceBetween = styled(Message.Content)`
+    &&&& {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+`;
+
 function DescriptionMessage({
     canUploadLicense,
     isTrial,
@@ -71,7 +80,7 @@ function DescriptionMessage({
             return (
                 <Message negative icon>
                     <Icon name="ban" />
-                    <StyledMessageContent>
+                    <StyledMessageContentCenter>
                         <div>
                             <Message.Header>{t('subheader.noLicense')}</Message.Header>
                             {canUploadLicense ? (
@@ -94,7 +103,7 @@ function DescriptionMessage({
                             onClick={() => redirectToPage(t('getLicenseLink'))}
                             style={{ minWidth: '160px' }}
                         />
-                    </StyledMessageContent>
+                    </StyledMessageContentCenter>
                 </Message>
             );
         case Consts.LICENSE.EXPIRED:
@@ -152,7 +161,11 @@ function DescriptionMessage({
             return (
                 <Message positive icon>
                     <Icon name="checkmark" />
-                    <Message.Content>
+                    <StyledMessageContentSpaceBetween>
+                        <span>
+                            <Message.Header>{t('subheader.activeLicense')}</Message.Header>
+                            <span>{t('action.activeLicense')}</span>
+                        </span>
                         {canUploadLicense && (
                             <LicenseSwitchButton
                                 isEditLicenseActive={isEditLicenseActive}
@@ -160,9 +173,7 @@ function DescriptionMessage({
                                 color="green"
                             />
                         )}
-                        <Message.Header>{t('subheader.activeLicense')}</Message.Header>
-                        <span>{t('action.activeLicense')}</span>
-                    </Message.Content>
+                    </StyledMessageContentSpaceBetween>
                 </Message>
             );
         default:
