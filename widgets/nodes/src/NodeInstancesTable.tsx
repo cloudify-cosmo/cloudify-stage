@@ -1,5 +1,5 @@
 import type { ExtendedNodeInstance } from './types';
-import { translateWidget } from './utils';
+import { translateWidget } from './common';
 import InstanceModal from './NodeInstanceModal';
 
 const translate = Stage.Utils.composeT(translateWidget, 'nodeInstancesTable');

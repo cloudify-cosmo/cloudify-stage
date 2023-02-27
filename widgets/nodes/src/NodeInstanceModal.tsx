@@ -1,5 +1,5 @@
 import { size } from 'lodash';
-import { translateWidget } from './utils';
+import { translateWidget } from './common';
 import type { ExtendedNodeInstance } from './types';
 
 const translate = Stage.Utils.composeT(translateWidget, 'nodeInstanceModal');

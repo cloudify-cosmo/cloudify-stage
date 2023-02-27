@@ -1,6 +1,5 @@
 import type { DataTableProps } from 'cloudify-ui-components';
-import { useEffect } from 'react';
-import { translateWidget } from './utils';
+import { translateWidget } from './common';
 import TypeHierarchyTree from './TypeHierarchyTree';
 import NodeTypeIcon from './NodeType';
 import type { ExtendedNode, NodesConfiguration } from './types';

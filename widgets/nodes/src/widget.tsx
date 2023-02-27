@@ -3,7 +3,7 @@ import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
 import { castArray } from 'lodash';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
-import { translateWidget, widgetId } from './utils';
+import { translateWidget, widgetId } from './common';
 
 const defaultFieldsToShow = [
     'name',
