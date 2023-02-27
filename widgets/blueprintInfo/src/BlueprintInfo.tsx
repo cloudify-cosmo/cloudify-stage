@@ -1,45 +1,25 @@
-// @ts-nocheck File not migrated fully to TS
+import type { BlueprintInfoData } from 'widgets/blueprintInfo/src/types';
+import type { FunctionComponent } from 'react';
 
-export default class BlueprintInfo extends React.Component {
-    constructor(props, context) {
-        super(props, context);
+const translate = Stage.Utils.getT('widgets.blueprintInfo.fields');
 
-        this.state = {
-            error: ''
-        };
-    }
+interface BlueprintInfoProps {
+    data: BlueprintInfoData;
+    toolbox: Stage.Types.Toolbox;
+}
 
-    shouldComponentUpdate(nextProps, nextState) {
-        const { data, widget } = this.props;
-        return (
-            !_.isEqual(widget, nextProps.widget) ||
-            !_.isEqual(this.state, nextState) ||
-            !_.isEqual(data, nextProps.data)
-        );
-    }
+const BlueprintInfo: FunctionComponent<BlueprintInfoProps> = ({ data, toolbox }) => {
+    const { Grid, Header, ResourceVisibility, Label } = Stage.Basic;
+    const { Blueprints } = Stage.Common;
+    const tenantName = toolbox.getManager().getSelectedTenant();
+    const blueprint = data;
 
-    render() {
-        const { data, toolbox } = this.props;
-        const { error } = this.state;
-        const { ErrorMessage, Grid, Image, ResourceVisibility, Message, Label } = Stage.Basic;
-        const { Blueprints } = Stage.Common;
-        const tenantName = toolbox.getManager().getSelectedTenant();
-        const blueprint = data;
-
-        if (!blueprint.id) {
-            return (
-                <div>
-                    <Message info>No blueprint selected</Message>
-                </div>
-            );
-        }
-
-        return (
-            <div>
-                <ErrorMessage error={error} onDismiss={() => this.setState({ error: null })} autoHide />
-                <Grid>
-                    <Grid.Row className="bottomDivider">
-                        <Grid.Column width="4">
+    return (
+        <div>
+            <Grid>
+                <Grid.Row className="bottomDivider">
+                    <Grid.Column width="14">
+                        <Header as="h3">
                             {Blueprints.Actions.isUploaded(blueprint) && (
                                 <Blueprints.UploadedImage
                                     blueprintId={blueprint.id}
@@ -47,72 +27,57 @@ export default class BlueprintInfo extends React.Component {
                                     width={50}
                                 />
                             )}
-                        </Grid.Column>
-                        <Grid.Column width="12">
-                            <h3 className="ui icon header verticalCenter">
-                                <a className="underline blueprintInfoName" href="#!">
-                                    {blueprint.id}
-                                </a>
-                            </h3>
-                            <ResourceVisibility visibility={blueprint.visibility} className="rightFloated" />
-                        </Grid.Column>
-                    </Grid.Row>
+                            <span style={{ marginLeft: 10 }}>{blueprint.id}</span>
+                        </Header>
+                    </Grid.Column>
+                    <Grid.Column width="2">
+                        <ResourceVisibility visibility={blueprint.visibility} className="rightFloated" />
+                    </Grid.Column>
+                </Grid.Row>
 
-                    <Grid.Column width="16">{blueprint.description}</Grid.Column>
+                <Grid.Column width="16">{blueprint.description}</Grid.Column>
 
-                    <Grid.Row className="noPadded">
-                        <Grid.Column width="7">
-                            <h5 className="ui icon header">Created</h5>
-                        </Grid.Column>
-                        <Grid.Column width="9">{blueprint.created_at}</Grid.Column>
-                    </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width="7">
+                        <Header as="h5">{translate('created')}</Header>
+                    </Grid.Column>
+                    <Grid.Column width="9">{blueprint.created_at}</Grid.Column>
+                </Grid.Row>
 
-                    <Grid.Row className="noPadded">
-                        <Grid.Column width="7">
-                            <h5 className="ui icon header">Updated</h5>
-                        </Grid.Column>
-                        <Grid.Column width="9">{blueprint.updated_at}</Grid.Column>
-                    </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width="7">
+                        <Header as="h5">{translate('updated')}</Header>
+                    </Grid.Column>
+                    <Grid.Column width="9">{blueprint.updated_at}</Grid.Column>
+                </Grid.Row>
 
-                    <Grid.Row className="noPadded">
-                        <Grid.Column width="7">
-                            <h5 className="ui icon header">Creator</h5>
-                        </Grid.Column>
-                        <Grid.Column width="9">{blueprint.created_by}</Grid.Column>
-                    </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width="7">
+                        <Header as="h5">{translate('creator')}</Header>
+                    </Grid.Column>
+                    <Grid.Column width="9">{blueprint.created_by}</Grid.Column>
+                </Grid.Row>
 
-                    <Grid.Row className="noPadded">
-                        <Grid.Column width="7">
-                            <h5 className="ui icon header">Main Blueprint File</h5>
-                        </Grid.Column>
-                        <Grid.Column width="9">{blueprint.main_file_name}</Grid.Column>
-                    </Grid.Row>
+                <Grid.Row>
+                    <Grid.Column width="7">
+                        <Header as="h5">{translate('mainFile')}</Header>
+                    </Grid.Column>
+                    <Grid.Column width="9">{blueprint.main_file_name}</Grid.Column>
+                </Grid.Row>
 
-                    <Grid.Row className="noPadded">
-                        <Grid.Column width="7">
-                            <h5 className="ui icon header">Deployments</h5>
-                        </Grid.Column>
-                        <Grid.Column width="9">
-                            <Label color="green" horizontal>
-                                {blueprint.deployments}
-                            </Label>
-                        </Grid.Column>
-                    </Grid.Row>
-                </Grid>
-            </div>
-        );
-    }
-}
-
-BlueprintInfo.propTypes = {
-    widget: Stage.PropTypes.Widget.isRequired,
-    data: PropTypes.shape({
-        created_by: PropTypes.string,
-        deployments: PropTypes.number,
-        description: PropTypes.string,
-        id: PropTypes.string,
-        main_file_name: PropTypes.string,
-        updated_at: PropTypes.string,
-        visibility: PropTypes.string
-    }).isRequired
+                <Grid.Row>
+                    <Grid.Column width="7">
+                        <Header as="h5">{translate('deployments')}</Header>
+                    </Grid.Column>
+                    <Grid.Column width="9">
+                        <Label color="green" horizontal>
+                            {blueprint.deployments}
+                        </Label>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+        </div>
+    );
 };
+
+export default BlueprintInfo;

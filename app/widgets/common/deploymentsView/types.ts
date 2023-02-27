@@ -20,7 +20,7 @@ export enum DeploymentStatus {
     RequiresAttention = 'requires_attention'
 }
 
-export interface Deployment {
+export interface FullDeployment {
     id: string;
     // NOTE: the property names come from the backend
     /* eslint-disable camelcase */
@@ -48,8 +48,11 @@ export interface Deployment {
     workflows: Workflow[];
     inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };
+    groups: Record<string, { members: string[] }>;
     /* eslint-enable camelcase */
 }
+
+export type Deployment = Omit<FullDeployment, 'groups'>;
 
 export interface DeploymentWithUpdate extends Deployment {
     // Many fetching functions add this prop
