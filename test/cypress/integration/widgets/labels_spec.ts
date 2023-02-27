@@ -2,7 +2,6 @@ describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
     const getCreatedLabel = () => cy.get('a.label');
-
     before(() => {
         cy.usePageMock('labels')
             .activate()
@@ -62,6 +61,10 @@ describe('Labels widget', () => {
 
     it('should properly validate lat-long labels', () => {
         const CHECKED_KEY = 'csys-location-lat';
+        const checkValidationErrorVisbility = (shouldBeVisible: boolean) =>
+            shouldBeVisible
+                ? cy.contains('This label should be a number').should('be.visible')
+                : cy.contains('This label should be a number').should('not.exist');
 
         cy.contains('Add').click();
         cy.get('.modal').within(() => {
@@ -73,25 +76,25 @@ describe('Labels widget', () => {
             cy.fillLabelInputs(CHECKED_KEY, '90');
             cy.get('.add').parent().should('not.have.attr', 'disabled');
         });
-        cy.contains('This label should be a number').should('not.exist');
+        checkValidationErrorVisbility(false);
 
         cy.get('.modal').within(() => {
             cy.typeLabelValue('101');
             cy.get('.add').parent().should('have.attr', 'disabled');
         });
 
-        cy.contains('This label should be a number').should('be.visible');
+        checkValidationErrorVisbility(true);
         cy.get('.modal').within(() => {
             cy.typeLabelValue('0');
             cy.get('.add').parent().should('not.have.attr', 'disabled');
         });
 
-        cy.contains('This label should be a number').should('not.exist');
+        checkValidationErrorVisbility(false);
         cy.get('.modal').within(() => {
             cy.typeLabelValue('sample_valeu');
             cy.get('.add').parent().should('have.attr', 'disabled');
         });
-        cy.contains('This label should be a number').should('be.visible');
+        checkValidationErrorVisbility(true);
         cy.get('.modal').within(() => {
             cy.clickButton('Cancel');
         });
