@@ -20,8 +20,4 @@ export enum DeploymentStatus {
 
 export type Deployment = Omit<FullDeploymentData, 'groups'>;
 
-export interface DeploymentWithUpdate extends Deployment {
-    // Many fetching functions add this prop
-    isUpdated: boolean;
-}
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;

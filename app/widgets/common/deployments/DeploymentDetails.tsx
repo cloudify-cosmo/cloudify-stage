@@ -2,7 +2,7 @@ import React from 'react';
 import type { ReactNode, CSSProperties } from 'react';
 import { isEmpty } from 'lodash';
 import type { ResourceVisibilityProps } from 'cloudify-ui-components';
-import type { DeploymentWithUpdate } from 'app/widgets/common/deploymentsView/types';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 import NodeInstancesSummary from '../nodes/NodeInstancesSummary';
 import Consts from '../Consts';
 import { Grid, Header, ResourceVisibility } from '../../../components/basic';
@@ -31,8 +31,13 @@ function DeploymentParameter({
     );
 }
 
-interface DeploymentDetailsProps {
-    deployment: Partial<DeploymentWithUpdate>;
+export type DeploymentWithUpdate = Pick<FullDeploymentData, 'id' | 'display_name' | 'description' | 'visibility'> &
+    Partial<Pick<FullDeploymentData, 'blueprint_id' | 'site_name' | 'created_at' | 'updated_at' | 'created_by'>> & {
+        isUpdated: boolean;
+    };
+
+export interface DeploymentDetailsProps {
+    deployment: DeploymentWithUpdate;
     instancesCount: number;
     instancesStates: {
         [key: string]: number;
