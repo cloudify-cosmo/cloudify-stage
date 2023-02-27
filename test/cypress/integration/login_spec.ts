@@ -126,23 +126,19 @@ describe('Login', () => {
     });
 
     describe('fails when provided credentials are invalid', () => {
-        it('for admin user', () => {
+        const invalidCredentialsErrorMessage = 'Incorrect username and/or password. Please check and try again.';
+
+        it('for existing user', () => {
             cy.login({ password: 'invalid-password', expectSuccessfulLogin: false });
 
-            cy.get('.error.message').should(
-                'have.text',
-                'User unauthorized: Authentication failed for user admin. Wrong credentials or locked account'
-            );
+            cy.get('.error.message').should('have.text', invalidCredentialsErrorMessage);
             cy.location('pathname').should('be.equal', '/console/login');
         });
 
-        it('for non admin user', () => {
-            cy.login({ username: 'invalid-username', expectSuccessfulLogin: false });
+        it('for not existing user', () => {
+            cy.login({ username: 'not-extisting-username', expectSuccessfulLogin: false });
 
-            cy.get('.error.message').should(
-                'have.text',
-                'Incorrect username and/or password. Please check and try again.'
-            );
+            cy.get('.error.message').should('have.text', invalidCredentialsErrorMessage);
             cy.location('pathname').should('be.equal', '/console/login');
         });
     });
