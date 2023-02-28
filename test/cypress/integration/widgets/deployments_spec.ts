@@ -261,6 +261,7 @@ describe('Deployments widget', () => {
         it('deploy blueprint on environment', () => {
             const environmentBlueprintName = `${blueprintName}_deploy_on_environment`;
             const environmentDeploymentName = `${deploymentId}_deploy_on_environment`;
+            const childDeploymentName = `${environmentDeploymentName}_child_service`;
 
             cy.uploadBlueprint('blueprints/deploy_on_environment.zip', environmentBlueprintName).deployBlueprint(
                 environmentBlueprintName,
@@ -271,11 +272,12 @@ describe('Deployments widget', () => {
 
             cy.get('.modal').within(() => {
                 cy.setSearchableDropdownValue('Blueprint', environmentBlueprintName);
-                cy.typeToFieldInput('Deployment name', `${environmentDeploymentName}_child_service`);
+                cy.typeToFieldInput('Deployment name', childDeploymentName);
                 cy.clickButton('Install');
             });
 
             cy.get('.modal').should('not.exist');
+            cy.contains('.breadcrumb', childDeploymentName);
         });
 
         it('manage deployment labels', () => {
