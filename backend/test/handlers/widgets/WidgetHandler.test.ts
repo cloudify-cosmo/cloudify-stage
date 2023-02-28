@@ -40,7 +40,6 @@ describe('WidgetHandler', () => {
             { id: 'inputs', isCustom: false },
             { id: 'labels', isCustom: false },
             { id: 'maintenanceModeButton', isCustom: false },
-            { id: 'managers', isCustom: false },
             { id: 'nodes', isCustom: false },
             { id: 'nodesComputeNum', isCustom: false },
             { id: 'nodesStats', isCustom: false },
