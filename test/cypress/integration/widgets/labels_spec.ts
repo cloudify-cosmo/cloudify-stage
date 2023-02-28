@@ -2,7 +2,6 @@ describe('Labels widget', () => {
     const blueprintName = 'labels_test_blueprint';
     const deploymentName = 'labels_test_deployment';
     const getCreatedLabel = () => cy.get('a.label');
-
     before(() => {
         cy.usePageMock('labels')
             .activate()
@@ -58,5 +57,44 @@ describe('Labels widget', () => {
             cy.wrap(deleteIcon).should('not.exist');
         });
         cy.contains('There are no Labels defined');
+    });
+
+    it('should properly validate lat-long labels', () => {
+        const CHECKED_KEY = 'csys-location-lat';
+        const checkValidationErrorVisbility = (shouldBeVisible: boolean) =>
+            cy.contains('This label should be a number').should(shouldBeVisible ? 'be.visible' : 'not.exist');
+
+        cy.contains('Add').click();
+        cy.get('.modal').within(() => {
+            getCreatedLabel().should('not.exist');
+            cy.contains('button', 'Add').should('have.attr', 'disabled');
+        });
+
+        cy.get('.modal').within(() => {
+            cy.fillLabelInputs(CHECKED_KEY, '90');
+            cy.get('.add').parent().should('not.have.attr', 'disabled');
+        });
+        checkValidationErrorVisbility(false);
+
+        cy.get('.modal').within(() => {
+            cy.typeLabelValue('101');
+            cy.get('.add').parent().should('have.attr', 'disabled');
+        });
+
+        checkValidationErrorVisbility(true);
+        cy.get('.modal').within(() => {
+            cy.typeLabelValue('0');
+            cy.get('.add').parent().should('not.have.attr', 'disabled');
+        });
+
+        checkValidationErrorVisbility(false);
+        cy.get('.modal').within(() => {
+            cy.typeLabelValue('sample_valeu');
+            cy.get('.add').parent().should('have.attr', 'disabled');
+        });
+        checkValidationErrorVisbility(true);
+        cy.get('.modal').within(() => {
+            cy.clickButton('Cancel');
+        });
     });
 });
