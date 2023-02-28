@@ -53,132 +53,6 @@ describe('Deployments widget', () => {
         });
     });
 
-    describe('should provide display configuration for', () => {
-        before(cy.refreshPage);
-
-        it('clickToDrillDown option', () => {
-            cy.searchInDeploymentsWidget(deploymentId);
-            cy.get('.deploymentsWidget').contains(deploymentName).click({ force: true });
-            cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
-            cy.contains('.breadcrumb', 'deployments_test_hw_dep');
-
-            cy.refreshPage();
-            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', false);
-
-            cy.get('.deploymentsWidget').contains(deploymentName).click();
-            cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
-            cy.get('.deploymentsWidget');
-        });
-
-        it('showExecutionStatusLabel option', () => {
-            cy.searchInDeploymentsWidget(deploymentId);
-
-            const latestExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(3)';
-            cy.get(latestExecutionCellSelector).within(() => {
-                cy.get('.icon').should('be.visible');
-                cy.get('.label').should('not.exist');
-            });
-
-            cy.setBooleanConfigurationField(widgetId, 'Show execution status label', true);
-
-            cy.searchInDeploymentsWidget(deploymentId);
-            cy.get(latestExecutionCellSelector).within(() => {
-                cy.get('.icon').should('be.visible');
-                cy.get('.label').should('be.visible');
-            });
-            cy.getSearchInput().clear().blur();
-        });
-
-        describe('showFirstUserJourneyButtons option and', () => {
-            before(() => {
-                cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
-            });
-
-            beforeEach(() => {
-                cy.visitTestPage();
-            });
-
-            const getMockedResponse = (deployments: unknown[] = []) => ({
-                items: deployments,
-                metadata: {
-                    pagination: {
-                        total: deployments.length,
-                        size: 1000,
-                        offset: 0
-                    },
-                    filtered: 0
-                }
-            });
-
-            const mockDeploymentsResponse = (mockedResponse: any) =>
-                cy.interceptSp('GET', '/deployments*', mockedResponse);
-
-            it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
-                const mockedResponse = getMockedResponse([]);
-                mockDeploymentsResponse(mockedResponse);
-
-                cy.contains('No Deployments Yet').should('be.visible');
-
-                cy.contains('Upload from Terraform').click();
-                cy.contains('Create blueprint from Terraform')
-                    .parent()
-                    .within(() => {
-                        cy.contains('button', 'Cancel').click();
-                    });
-                cy.contains('button', 'Yes').click();
-
-                cy.contains('Create new Deployment').click();
-                cy.contains('Blueprint Marketplace').should('be.visible');
-            });
-
-            it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
-                const displayName = 'deploymentDisplayName';
-                const mockedDeployment = {
-                    blueprint_id: 'test',
-                    created_at: '2022-03-21T08:52:31.251Z',
-                    created_by: 'admin',
-                    display_name: displayName,
-                    id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
-                    inputs: { webserver_port: 8000 },
-                    latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
-                    site_name: null,
-                    updated_at: '2022-03-21T08:52:31.251Z',
-                    visibility: 'tenant'
-                };
-                const mockedResponse = getMockedResponse([mockedDeployment]);
-                mockDeploymentsResponse(mockedResponse);
-
-                cy.contains(displayName).should('be.visible');
-                cy.contains('No Deployments Yet').should('not.exist');
-            });
-        });
-
-        it('blueprintIdFilter option', () => {
-            cy.interceptSp('GET', { pathname: '/deployments', query: { blueprint_id: blueprintName } }).as(
-                'getFilteredDeployments'
-            );
-
-            cy.editWidgetConfiguration('deployments', () =>
-                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
-            );
-
-            cy.wait('@getFilteredDeployments');
-        });
-
-        it('displayStyle option', () => {
-            cy.get('table.deploymentsTable').should('be.visible');
-            cy.get('div.segmentList').should('not.exist');
-
-            cy.editWidgetConfiguration('deployments', () => {
-                cy.get('div[name="displayStyle"]').click();
-                cy.get('div[option-value="list"]').click();
-            });
-
-            cy.get('table.deploymentsTable').should('not.exist');
-            cy.get('div.segmentList').should('be.visible');
-        });
-    });
-
     describe('should allow to', () => {
         beforeEach(() => {
             cy.refreshPage();
@@ -339,6 +213,132 @@ describe('Deployments widget', () => {
 
             cy.wait('@deleteDeployment');
             cy.contains('div.row', testDeploymentId).should('not.exist');
+        });
+    });
+
+    describe('should provide display configuration for', () => {
+        before(cy.refreshPage);
+
+        it('clickToDrillDown option', () => {
+            cy.searchInDeploymentsWidget(deploymentId);
+            cy.get('.deploymentsWidget').contains(deploymentName).click({ force: true });
+            cy.location('pathname').should('contain', '_deployment/deployments_test_hw_dep');
+            cy.contains('.breadcrumb', 'deployments_test_hw_dep');
+
+            cy.refreshPage();
+            cy.setBooleanConfigurationField(widgetId, 'Enable click to drill down', false);
+
+            cy.get('.deploymentsWidget').contains(deploymentName).click();
+            cy.location('pathname').should('not.contain', '_deployment/deployments_test_hw_dep');
+            cy.get('.deploymentsWidget');
+        });
+
+        it('showExecutionStatusLabel option', () => {
+            cy.searchInDeploymentsWidget(deploymentId);
+
+            const latestExecutionCellSelector = 'tr#deploymentsTable_deployments_test_hw_dep td:nth-child(3)';
+            cy.get(latestExecutionCellSelector).within(() => {
+                cy.get('.icon').should('be.visible');
+                cy.get('.label').should('not.exist');
+            });
+
+            cy.setBooleanConfigurationField(widgetId, 'Show execution status label', true);
+
+            cy.searchInDeploymentsWidget(deploymentId);
+            cy.get(latestExecutionCellSelector).within(() => {
+                cy.get('.icon').should('be.visible');
+                cy.get('.label').should('be.visible');
+            });
+            cy.getSearchInput().clear().blur();
+        });
+
+        describe('showFirstUserJourneyButtons option and', () => {
+            before(() => {
+                cy.setBooleanConfigurationField(widgetId, 'Show first user journey buttons', true);
+            });
+
+            beforeEach(() => {
+                cy.visitTestPage();
+            });
+
+            const getMockedResponse = (deployments: unknown[] = []) => ({
+                items: deployments,
+                metadata: {
+                    pagination: {
+                        total: deployments.length,
+                        size: 1000,
+                        offset: 0
+                    },
+                    filtered: 0
+                }
+            });
+
+            const mockDeploymentsResponse = (mockedResponse: any) =>
+                cy.interceptSp('GET', '/deployments*', mockedResponse);
+
+            it('should display showFirstUserJourneyButtons view when there are no deployments', () => {
+                const mockedResponse = getMockedResponse([]);
+                mockDeploymentsResponse(mockedResponse);
+
+                cy.contains('No Deployments Yet').should('be.visible');
+
+                cy.contains('Upload from Terraform').click();
+                cy.contains('Create blueprint from Terraform')
+                    .parent()
+                    .within(() => {
+                        cy.contains('button', 'Cancel').click();
+                    });
+                cy.contains('button', 'Yes').click();
+
+                cy.contains('Create new Deployment').click();
+                cy.contains('Blueprint Marketplace').should('be.visible');
+            });
+
+            it("should hide showFirstUserJourneyButtons view when there's at least one deployment", () => {
+                const displayName = 'deploymentDisplayName';
+                const mockedDeployment = {
+                    blueprint_id: 'test',
+                    created_at: '2022-03-21T08:52:31.251Z',
+                    created_by: 'admin',
+                    display_name: displayName,
+                    id: 'ea2d9302-6452-4f51-a224-803925d2cc6e',
+                    inputs: { webserver_port: 8000 },
+                    latest_execution: '28f3fada-118c-4236-9987-576b0efae71e',
+                    site_name: null,
+                    updated_at: '2022-03-21T08:52:31.251Z',
+                    visibility: 'tenant'
+                };
+                const mockedResponse = getMockedResponse([mockedDeployment]);
+                mockDeploymentsResponse(mockedResponse);
+
+                cy.contains(displayName).should('be.visible');
+                cy.contains('No Deployments Yet').should('not.exist');
+            });
+        });
+
+        it('blueprintIdFilter option', () => {
+            cy.interceptSp('GET', { pathname: '/deployments', query: { blueprint_id: blueprintName } }).as(
+                'getFilteredDeployments'
+            );
+
+            cy.editWidgetConfiguration('deployments', () =>
+                cy.get('input[name="blueprintIdFilter"]').clear().type(blueprintName)
+            );
+
+            cy.wait('@getFilteredDeployments');
+        });
+
+        it('displayStyle option', () => {
+            cy.get('table.deploymentsTable').should('be.visible');
+            cy.get('div.segmentList').should('not.exist');
+
+            cy.editWidgetConfiguration('deployments', () => {
+                cy.get('div[name="displayStyle"]').click();
+                cy.get('div[option-value="list"]').click();
+            });
+
+            cy.get('table.deploymentsTable').should('not.exist');
+            cy.get('div.segmentList').should('be.visible');
         });
     });
 
