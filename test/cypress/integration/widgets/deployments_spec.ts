@@ -42,7 +42,7 @@ describe('Deployments widget', () => {
     });
 
     describe('should be present and', () => {
-        it('search by depyloyment ID', () => {
+        it('should allow to search by depyloyment ID', () => {
             cy.searchInDeploymentsWidget(deploymentId);
             checkDeploymentNameField();
         });
