@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import type { Toolbox } from 'app/utils/StageAPI';
-import { GenericFieldType } from 'cloudify-ui-components';
 import type {
     PostEnvironmentBlueprintRequestBody,
     PostEnvironmentBlueprintResponse
@@ -33,19 +32,19 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
             {
                 id: 'name',
                 label: translateCapabilities('name'),
-                type: GenericFieldType.STRING
+                type: GenericField.STRING_TYPE
             },
             {
                 id: 'source',
                 label: translateCapabilities('source'),
-                type: GenericFieldType.LIST,
+                type: GenericField.LIST_TYPE,
                 items: ['static', 'secret', 'input'].map(value => ({ value, name: translateSource(value) })),
                 width: 3
             },
             {
                 id: 'blueprintDefault',
                 label: translateCapabilities('default'),
-                type: GenericFieldType.CUSTOM,
+                type: GenericField.CUSTOM_TYPE,
                 component: CapabilityBlueprintDefaultInput,
                 width: 1,
                 style: { textAlign: 'center', paddingBottom: 16 }
@@ -53,7 +52,7 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
             {
                 id: 'value',
                 label: translateCapabilities('value'),
-                type: GenericFieldType.CUSTOM,
+                type: GenericField.CUSTOM_TYPE,
                 component: CapabilityValueInput,
                 width: 4
             }
@@ -144,7 +143,7 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
         }
     }
 
-    const { ApproveButton, CancelButton, Form, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
+    const { ApproveButton, CancelButton, Form, GenericField, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
     const { DynamicTable } = Stage.Shared;
     const { DynamicDropdown } = Stage.Common.Components;
     const LabelsInput = Stage.Common.Labels.Input;
