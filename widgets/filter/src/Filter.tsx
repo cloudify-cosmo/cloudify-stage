@@ -132,8 +132,8 @@ export default class Filter extends React.Component<FilterProps, FilterState> {
         const { allowMultipleSelection } = configuration;
         const context = toolbox.getContext();
 
-        if (!allowMultipleSelection && selectedDeploymentId && selectedNodeId) {
-            if (!_.isEmpty(selectedDeploymentId) && !_.isEmpty(selectedNodeId)) {
+        if (!allowMultipleSelection) {
+            if (selectedDeploymentId && selectedNodeId) {
                 const oldDepNodeId = context.getValue('depNodeId');
                 const newDepNodeId = selectedNodeId + selectedDeploymentId;
                 if (oldDepNodeId !== newDepNodeId) {
