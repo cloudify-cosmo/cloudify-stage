@@ -728,6 +728,8 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
+                "labelNumberValidationError": "This label should be a number between {{ from }} and {{ to }}",
+                "labelDuplicatedKeyError": "This label key cannot be added twice",
                 "modalHeader": "Manage labels for deployment {{ deploymentNameAndId }}",
                 "modalApplyButton": "Apply"
             },
@@ -2546,13 +2548,6 @@
             },
             "name": "Snapshots list",
             "decription": "Snapshots list"
-        },
-        "managers": {
-            "actions": {
-                "openConsole": "Open Console",
-                "refreshStatus": "Refresh Status",
-                "refreshStatusInProgress": "Status refresh in progress..."
-            }
         },
         "deploymentActionButtons": {
             "name": "Deployment action buttons",

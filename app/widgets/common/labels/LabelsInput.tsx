@@ -1,5 +1,7 @@
 import type { CSSProperties, FunctionComponent, SyntheticEvent } from 'react';
 import React from 'react';
+import { toNumber } from 'lodash';
+import LabelErrorPopup from './LabelErrorPopup';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
 import AddButton from './AddButton';
@@ -31,14 +33,38 @@ function useReservedKeys(toolbox: Stage.Types.Toolbox) {
         setFetchingReservedKeys();
         actions
             .doGetReservedLabelKeys()
-            .then(keys => {
-                setReservedKeys(keys.filter(isLabelModifiable));
+            .then(labelKeys => {
+                setReservedKeys(labelKeys.filter(isLabelModifiable));
             })
             .catch(error => log.error('Cannot fetch reserved label keys', error))
             .finally(unsetFetchingReservedKeys);
     }, []);
 
     return { reservedKeys, fetchingReservedKeys };
+}
+
+const coordinateLabelKeys = {
+    latitude: 'csys-location-lat',
+    longitude: 'csys-location-long'
+};
+
+function validateCoordinateLabels(newValue: string, newLabelKey: string, existingLabelKeys: string[]) {
+    if (!Object.values(coordinateLabelKeys).find(key => key === newLabelKey)) {
+        return undefined;
+    }
+    const boundary = newLabelKey === coordinateLabelKeys.latitude ? 90 : 180;
+
+    const number = toNumber(newValue);
+
+    if (Number.isNaN(number) || number > boundary || number < -boundary) {
+        return Stage.i18n.t('widgets.common.labels.labelNumberValidationError', { to: boundary, from: -boundary });
+    }
+
+    if (existingLabelKeys.find(label => label === newLabelKey)) {
+        return Stage.i18n.t('widgets.common.labels.labelDuplicatedKeyError');
+    }
+
+    return undefined;
 }
 
 export interface LabelsInputProps {
@@ -77,9 +103,18 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
         return !!_.find(allLabels, newLabel);
     })();
+    const keyValidationError = validateCoordinateLabels(
+        newLabelValue,
+        newLabelKey,
+        labels.map(({ key }) => key)
+    );
     const newLabelKeyIsNotPermitted = newLabelKey.startsWith(internalKeyPrefix) && !reservedKeys.includes(newLabelKey);
     const addLabelNotAllowed =
-        !newLabelIsProvided || newLabelIsAlreadyPresent || addingLabel || newLabelKeyIsNotPermitted;
+        !newLabelIsProvided ||
+        newLabelIsAlreadyPresent ||
+        addingLabel ||
+        newLabelKeyIsNotPermitted ||
+        !!keyValidationError;
     const duplicationErrorPopupOpen = newLabelIsProvided && newLabelIsAlreadyPresent;
 
     useEffect(() => {
@@ -177,6 +212,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                         </Form.Field>
                         <Form.Field width={7}>
                             {duplicationErrorPopupOpen && <DuplicationErrorPopup />}
+                            {keyValidationError && <LabelErrorPopup content={keyValidationError} />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
                                 onChange={setNewLabelValue}
