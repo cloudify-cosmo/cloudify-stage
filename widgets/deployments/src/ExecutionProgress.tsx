@@ -4,7 +4,7 @@ import type { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 
 interface ExecutionProgressProps {
     execution: {
-        status?: string;
+        status: string;
         /* eslint-disable camelcase */
         finished_operations: number;
         total_operations: number;
