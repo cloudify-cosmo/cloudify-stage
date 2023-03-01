@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -52,19 +52,22 @@ interface DescriptionMessageProps {
 }
 
 const { redirectToPage } = StageUtils.Url;
-const StyledMessageContentCenter = styled(Message.Content)`
+
+interface StyledMessageContentProps {
+    spaceBetweenItems?: boolean;
+}
+
+const StyledMessageContent = styled(Message.Content)<StyledMessageContentProps>`
     &&&& {
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-`;
 
-const StyledMessageContentSpaceBetween = styled(Message.Content)`
-    &&&& {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        ${({ spaceBetweenItems }) =>
+            spaceBetweenItems &&
+            css`
+                justify-content: space-between;
+            `}
     }
 `;
 
@@ -80,7 +83,7 @@ function DescriptionMessage({
             return (
                 <Message negative icon>
                     <Icon name="ban" />
-                    <StyledMessageContentCenter>
+                    <StyledMessageContent>
                         <div>
                             <Message.Header>{t('subheader.noLicense')}</Message.Header>
                             {canUploadLicense ? (
@@ -103,7 +106,7 @@ function DescriptionMessage({
                             onClick={() => redirectToPage(t('getLicenseLink'))}
                             style={{ minWidth: '160px' }}
                         />
-                    </StyledMessageContentCenter>
+                    </StyledMessageContent>
                 </Message>
             );
         case Consts.LICENSE.EXPIRED:
@@ -161,7 +164,7 @@ function DescriptionMessage({
             return (
                 <Message positive icon>
                     <Icon name="checkmark" />
-                    <StyledMessageContentSpaceBetween>
+                    <StyledMessageContent spaceBetweenItems>
                         <span>
                             <Message.Header>{t('subheader.activeLicense')}</Message.Header>
                             <span>{t('action.activeLicense')}</span>
@@ -173,7 +176,7 @@ function DescriptionMessage({
                                 color="green"
                             />
                         )}
-                    </StyledMessageContentSpaceBetween>
+                    </StyledMessageContent>
                 </Message>
             );
         default:
