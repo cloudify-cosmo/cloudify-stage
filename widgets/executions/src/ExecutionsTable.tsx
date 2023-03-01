@@ -305,11 +305,11 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                     <DataTable.Data style={{ wordBreak: 'break-word' }}>
                                         {item.created_by}
                                     </DataTable.Data>
-                                    <DataTable.Data textAlign="center">
+                                    <DataTable.Data>
                                         <SystemWorkflowIcon execution={item} />
                                         <DryRunIcon execution={item} />
                                     </DataTable.Data>
-                                    <DataTable.Data textAlign="center">
+                                    <DataTable.Data>
                                         <ExecutionStatus execution={item} />
                                     </DataTable.Data>
                                     <DataTable.Data textAlign="center">

@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import React, { Component } from 'react';
 import { HeaderBar } from 'cloudify-ui-components';
 import type { ButtonProps } from 'semantic-ui-react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 
@@ -52,13 +52,25 @@ interface DescriptionMessageProps {
 }
 
 const { redirectToPage } = StageUtils.Url;
-const StyledMessageContent = styled(Message.Content)`
+
+interface StyledMessageContentProps {
+    spaceBetweenItems?: boolean;
+}
+
+const StyledMessageContent = styled(Message.Content)<StyledMessageContentProps>`
     &&&& {
         display: flex;
         justify-content: center;
         align-items: center;
+
+        ${({ spaceBetweenItems }) =>
+            spaceBetweenItems &&
+            css`
+                justify-content: space-between;
+            `}
     }
 `;
+
 function DescriptionMessage({
     canUploadLicense,
     isTrial,
@@ -152,7 +164,11 @@ function DescriptionMessage({
             return (
                 <Message positive icon>
                     <Icon name="checkmark" />
-                    <Message.Content>
+                    <StyledMessageContent spaceBetweenItems>
+                        <span>
+                            <Message.Header>{t('subheader.activeLicense')}</Message.Header>
+                            <span>{t('action.activeLicense')}</span>
+                        </span>
                         {canUploadLicense && (
                             <LicenseSwitchButton
                                 isEditLicenseActive={isEditLicenseActive}
@@ -160,9 +176,7 @@ function DescriptionMessage({
                                 color="green"
                             />
                         )}
-                        <Message.Header>{t('subheader.activeLicense')}</Message.Header>
-                        <span>{t('action.activeLicense')}</span>
-                    </Message.Content>
+                    </StyledMessageContent>
                 </Message>
             );
         default:

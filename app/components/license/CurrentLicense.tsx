@@ -4,9 +4,19 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
+import styled from 'styled-components';
 import StageUtils from '../../utils/stageUtils';
-import { Header, Icon, Segment, Table } from '../basic';
+import { Header, Icon, Table } from '../basic';
+import colors from '../../styles/colors.scss';
 
+export const HeaderIcon = styled(Icon)`
+    &&&& {
+        display: inline-block;
+        float: left;
+        color: ${colors.cloudifyBlue};
+        font-size: 18px;
+    }
+`;
 interface CurrentLicenseProps {
     license: LicenseResponse | null;
 }
@@ -75,31 +85,25 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
     ];
 
     return (
-        <Segment>
-            <Table basic="very" size="large" celled>
-                <Table.Body>
-                    {map(fields, field => {
-                        const value = license[field.name];
+        <Table basic compact>
+            <Table.Body>
+                {map(fields, field => {
+                    const value = license[field.name];
 
-                        return !!field.hide && field.hide(value) ? null : (
-                            <Table.Row key={field.header}>
-                                <Table.Cell width={5}>
-                                    <Header as="h4">
-                                        <Icon
-                                            name={field.icon}
-                                            size="large"
-                                            style={{ display: 'inline-block', float: 'left' }}
-                                        />
-                                        <Header.Content>{field.header}</Header.Content>
-                                    </Header>
-                                </Table.Cell>
-                                <Table.Cell>{field.format(license[field.name])}</Table.Cell>
-                            </Table.Row>
-                        );
-                    })}
-                </Table.Body>
-            </Table>
-        </Segment>
+                    return !!field.hide && field.hide(value) ? null : (
+                        <Table.Row key={field.header}>
+                            <Table.Cell width={5}>
+                                <Header as="h4">
+                                    <HeaderIcon name={field.icon} />
+                                    <Header.Content>{field.header}</Header.Content>
+                                </Header>
+                            </Table.Cell>
+                            <Table.Cell>{field.format(license[field.name])}</Table.Cell>
+                        </Table.Row>
+                    );
+                })}
+            </Table.Body>
+        </Table>
     );
 };
 export default CurrentLicense;

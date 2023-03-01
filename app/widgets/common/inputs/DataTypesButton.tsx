@@ -49,7 +49,7 @@ function DataType({ name, description, version, derivedFrom, properties }: DataT
                     name="Properties"
                     show={!!properties}
                     value={
-                        <Table celled>
+                        <Table>
                             <Table.Header>
                                 <Table.Row>
                                     <Table.HeaderCell>Name</Table.HeaderCell>
