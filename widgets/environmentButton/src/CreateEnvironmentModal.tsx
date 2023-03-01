@@ -24,6 +24,7 @@ interface CreateEnvironmentModalProps {
 }
 
 export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnvironmentModalProps) {
+    const { ApproveButton, CancelButton, Form, GenericField, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
     const { useInput, useBoolean } = Stage.Hooks;
     const [submitInProgress, startSubmit, stopSubmit] = useBoolean();
 
@@ -143,7 +144,6 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
         }
     }
 
-    const { ApproveButton, CancelButton, Form, GenericField, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
     const { DynamicTable } = Stage.Shared;
     const { DynamicDropdown } = Stage.Common.Components;
     const LabelsInput = Stage.Common.Labels.Input;
