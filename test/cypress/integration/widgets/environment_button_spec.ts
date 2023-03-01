@@ -39,7 +39,7 @@ describe('Environment button widget', () => {
             cy.createSecret(secretKey, 'value');
 
             const siteName = 'London';
-            cy.deleteSite(siteName, { ignoreFailure: false }).createSite({ name: siteName });
+            cy.deleteSites(siteName).createSite({ name: siteName });
 
             const blueprintDescription = 'Blueprint description';
             const secretCapabilityKey = 'secret_capability_key';
