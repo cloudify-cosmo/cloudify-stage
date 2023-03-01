@@ -30,6 +30,7 @@ export default function UploadLicense({
                 errorMessageHeader={i18n.t('licenseManagement.errorHeader', 'License error')}
                 onErrorsDismiss={onErrorDismiss}
             >
+                {/* TODO Norbert: Provide label */}
                 <Form.TextArea
                     name="license"
                     error={!!error}

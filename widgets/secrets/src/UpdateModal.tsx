@@ -206,6 +206,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                                         </Form.Field>
                                     </>
                                 ) : (
+                                    // TODO Norbert: Provide label
                                     <Form.Field error={errors.secretValue}>
                                         <MultilineInput
                                             name="secretValue"

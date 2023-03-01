@@ -185,6 +185,7 @@ export default function CreateModal({ toolbox }: CreateModalProps) {
                     ) : (
                         <>
                             <Form.Field error={errors.secretValue}>
+                                {/* TODO Norbert: Provide label */}
                                 <MultilineInput
                                     name="secretValue"
                                     placeholder={translateForm('inputs.secretValue.placeholder')}
