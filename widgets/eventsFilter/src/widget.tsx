@@ -1,11 +1,7 @@
-// @ts-nocheck File not migrated fully to TS
-
 import EventFilter from './EventFilter';
 
 Stage.defineWidget({
     id: 'eventsFilter',
-    name: 'Events/logs filter',
-    description: 'Adds a filter section for events and logs',
     initialWidth: 12,
     initialHeight: 5,
     showHeader: false,
@@ -16,7 +12,7 @@ Stage.defineWidget({
     permission: Stage.GenericConfig.WIDGET_PERMISSION('eventsFilter'),
     initialConfiguration: [],
 
-    render(widget, data, error, toolbox) {
-        return <EventFilter data={data} toolbox={toolbox} />;
+    render(_widget, _data, _error, toolbox) {
+        return <EventFilter toolbox={toolbox} />;
     }
 });

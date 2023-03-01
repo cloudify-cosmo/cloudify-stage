@@ -728,6 +728,8 @@
                 },
                 "fetchingLabelsError": "Cannot fetch labels for deployment '{{deploymentId}}'",
                 "labelDuplicationError": "Cannot add the same label twice",
+                "labelNumberValidationError": "This label should be a number between {{ from }} and {{ to }}",
+                "labelDuplicatedKeyError": "This label key cannot be added twice",
                 "modalHeader": "Manage labels for deployment {{ deploymentNameAndId }}",
                 "modalApplyButton": "Apply"
             },
@@ -992,6 +994,24 @@
                 "downloadBlueprint": "Download blueprint",
                 "editCopy": "Edit a copy in Composer"
             }
+        },
+        "blueprintInfo": {
+            "name": "Blueprint Info",
+            "description": "Shows blueprint basic information and status",
+            "configuration": {
+                "blueprintId": {
+                    "name": "Blueprint ID",
+                    "placeholder": "Enter the blueprint ID you wish to show info for"
+                }
+            },
+            "fields": {
+                "created": "Created",
+                "updated": "Updated",
+                "creator": "Creator",
+                "mainFile": "Main Blueprint File",
+                "deployments": "Deployments"
+            },
+            "noBlueprintError": "No blueprint selected"
         },
         "blueprints": {
             "name": "Blueprints",
@@ -1523,6 +1543,35 @@
                 "message": "Message"
             }
         },
+        "eventsFilter": {
+            "name": "Events/logs filter",
+            "description": "Adds a filter section for events and logs",
+            "inputs": {
+                "type": {
+                    "placeholder": "Type"
+                },
+                "eventType": {
+                    "placeholder": "Event Types",
+                    "additionLabel": "Add custom Event Type: "
+                },
+                "logLevel": {
+                    "placeholder": "Log Levels",
+                    "additionLabel": "Add custom Log Level: "
+                },
+                "operationText": {
+                    "placeholder": "Operation"
+                },
+                "messageText": {
+                    "placeholder": "Message"
+                },
+                "timeRange": {
+                    "placeholder": "Time Range"
+                },
+                "resetFilter": {
+                    "content": "Reset filter"
+                }
+            }
+        },
         "executions": {
             "name": "Executions",
             "description": "This widget shows the deployment executions",
@@ -1595,6 +1644,61 @@
         },
         "maintenanceModeButton": {
             "activating": "Maintenance Mode is being activated"
+        },
+        "nodes": {
+            "name": "Nodes list",
+            "description": "This widget shows nodes",
+            "configuration": {
+                "fieldsToShow": {
+                    "name": "List of fields to show in the table",
+                    "placeholder": "Select fields from the list",
+                    "items": {
+                        "name": "Name",
+                        "type": "Type",
+                        "blueprint": "Blueprint",
+                        "deployment": "Deployment",
+                        "deploymentId": "Deployment ID",
+                        "containedIn": "Contained in",
+                        "connectedTo": "Connected to",
+                        "host": "Host",
+                        "creator": "Creator",
+                        "instancesCount": "# Instances",
+                        "groups": "Groups"
+                    }
+                }
+            },
+            "nodeInstanceModal": {
+                "header": "Node instance {{ id }}",
+                "relationships": {
+                    "header": "Relationships",
+                    "targetNode": "Target node",
+                    "type": "Relationship type",
+                    "sourceNode": "Source node",
+                    "noDataMessage": "There are no Relationships defined for that Node Instance."
+                },
+                "runtimeProperties": {
+                    "header": "Runtime properties",
+                    "key": "Key",
+                    "value": "Value",
+                    "noDataMessage": "There are no Runtime Properties defined for that Node Instance."
+                },
+                "buttons": {
+                    "close": "Close",
+                    "copy": "Copy"
+                }
+            },
+            "nodeInstancesTable": {
+                "columns": {
+                    "instance": "Instance",
+                    "status": "Status",
+                    "details": "Details"
+                },
+                "noDataMessage": "There are no Node Instances of selected Node available."
+            },
+            "nodesTable":{
+                "noDataMessage": "There are no Nodes available. Probably there's no deployment created, yet.",
+                "typeHierarchy": "Type Hierarchy"
+            }
         },
         "nodesStats": {
             "name": "Nodes statistics",
@@ -2444,13 +2548,6 @@
             },
             "name": "Snapshots list",
             "decription": "Snapshots list"
-        },
-        "managers": {
-            "actions": {
-                "openConsole": "Open Console",
-                "refreshStatus": "Refresh Status",
-                "refreshStatusInProgress": "Status refresh in progress..."
-            }
         },
         "deploymentActionButtons": {
             "name": "Deployment action buttons",

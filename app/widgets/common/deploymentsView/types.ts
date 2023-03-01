@@ -18,7 +18,7 @@ export enum DeploymentStatus {
     RequiresAttention = 'requires_attention'
 }
 
-export interface Deployment {
+export interface FullDeployment {
     id: string;
     // NOTE: the property names come from the backend
     /* eslint-disable camelcase */
@@ -39,7 +39,10 @@ export interface Deployment {
     labels?: Label[];
     inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };
+    groups: Record<string, { members: string[] }>;
     /* eslint-enable camelcase */
 }
+
+export type Deployment = Omit<FullDeployment, 'groups'>;
 
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;
