@@ -114,10 +114,9 @@ export default class WidgetDefinitionsLoader {
 
     public static load(manager: ManagerData): Promise<SimpleWidgetDefinition[]> {
         const internal = new Internal(manager);
-        return Promise.all([
-            new ScriptLoader(LoaderUtils.getResourceUrl('widgets/common/common.js', false)).load(), // Commons has to load before the widgets
-            internal.doGet<GetWidgetsResponse>('/widgets') // We can load the list of widgets in the meanwhile
-        ]).then(results => results[1].map(widget => ({ ...widget, loaded: false })));
+        return internal
+            .doGet<GetWidgetsResponse>('/widgets')
+            .then(widgets => widgets.map(widget => ({ ...widget, loaded: false })));
     }
 
     private static installWidget(widgetFile: File | null, widgetUrl: string, manager: ManagerData) {
