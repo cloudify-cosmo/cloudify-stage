@@ -3,8 +3,4 @@ export interface Label {
     value: string;
 }
 
-export interface LabelWithSystemData extends Label {
-    isInSystem?: boolean;
-}
-
 export type LabelInputType = 'key' | 'value';

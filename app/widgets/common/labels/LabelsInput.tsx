@@ -1,6 +1,7 @@
-import type { CSSProperties, FunctionComponent, SyntheticEvent } from 'react';
+import type { CSSProperties, SyntheticEvent } from 'react';
 import React from 'react';
-import { toNumber } from 'lodash';
+import { pick, toNumber } from 'lodash';
+import type { LabelsListProps } from 'cloudify-ui-components';
 import LabelErrorPopup from './LabelErrorPopup';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
@@ -8,7 +9,7 @@ import AddButton from './AddButton';
 import DuplicationErrorPopup from './DuplicationErrorPopup';
 import InvalidKeyErrorPopup from './InvalidKeyErrorPopup';
 import KeyDropdown from './KeyDropdown';
-import type { Label, LabelWithSystemData } from './types';
+import type { Label as BasicLabel } from './types';
 import ValueDropdown from './ValueDropdown';
 import { isLabelModifiable } from './common';
 
@@ -67,20 +68,35 @@ function validateCoordinateLabels(newValue: string, newLabelKey: string, existin
     return undefined;
 }
 
-export interface LabelsInputProps {
+export interface ExtraFormFieldProps<Label extends BasicLabel> {
+    label: Label;
+    onChange: (label: Label) => void;
+}
+
+export interface LabelsInputProps<Label extends BasicLabel> {
     hideInitialLabels?: boolean;
     initialLabels?: Label[];
     onChange: (labels: Label[]) => void;
     toolbox: Stage.Types.Toolbox;
+    extraFormField?: React.FunctionComponent<ExtraFormFieldProps<Label>>;
+    coloringStrategy?: LabelsListProps<Label>['coloringStrategy'];
 }
 
-const LabelsInput: FunctionComponent<LabelsInputProps> = ({
+const defaultInitialLabels: any[] = [];
+
+function LabelsInput<Label extends BasicLabel = BasicLabel>({
     hideInitialLabels = false,
-    initialLabels = [],
+    initialLabels = defaultInitialLabels,
     onChange,
-    toolbox
-}) => {
-    const { useEffect, useRef } = React;
+    toolbox,
+    extraFormField,
+    coloringStrategy
+}: LabelsInputProps<Label>) {
+    type LabelWithSystemData = Label & {
+        isInSystem?: boolean;
+    };
+
+    const { useEffect, useRef, useState } = React;
     const {
         Basic: { Divider, Form, Icon, LabelsList, Segment },
         Hooks: { useBoolean, useOpenProp, useResettableState, useToggle },
@@ -93,15 +109,20 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
         hideInitialLabels ? [] : initialLabels
     );
     const [open, toggleOpen] = useToggle();
-    const [newLabelKey, setNewLabelKey, resetNewLabelKey] = useResettableState('');
-    const [newLabelValue, setNewLabelValue, resetNewLabelValue] = useResettableState('');
+    const [newLabel, setNewLabel] = useState<Label>({ key: '', value: '' } as Label);
     const keyDropdownRef = useRef<HTMLElement>(null);
+
+    const newLabelKey = newLabel.key;
+    const newLabelValue = newLabel.value;
+
+    function resetNewLabel() {
+        setNewLabel({ ...newLabel, key: '', value: '' });
+    }
 
     const newLabelIsProvided = !!newLabelKey && !!newLabelValue;
     const newLabelIsAlreadyPresent = (() => {
-        const newLabel = { key: newLabelKey, value: newLabelValue };
         const allLabels = [...labels, ...(hideInitialLabels ? initialLabels : [])];
-        return !!_.find(allLabels, newLabel);
+        return !!_.find(allLabels, pick(newLabel, 'key', 'value'));
     })();
     const keyValidationError = validateCoordinateLabels(
         newLabelValue,
@@ -122,8 +143,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
     }, [labels]);
 
     useOpenProp(open, () => {
-        resetNewLabelKey();
-        resetNewLabelValue();
+        resetNewLabel();
     });
 
     useEffect(() => {
@@ -144,10 +164,9 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
 
         setAddingLabel();
         return isLabelInSystem().then(isInSystem => {
-            const newLabels = [...labels, { key: newLabelKey, value: newLabelValue, isInSystem }];
+            const newLabels = [...labels, { ...newLabel, isInSystem }];
             setLabels(newLabels);
-            resetNewLabelKey();
-            resetNewLabelValue();
+            resetNewLabel();
             unsetAddingLabel();
         });
     }
@@ -157,6 +176,8 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
             keyDropdownRef.current?.click();
         });
     }
+
+    const ExtraFormField = extraFormField;
 
     return (
         <Segment
@@ -193,7 +214,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                     onClick={toggleOpen}
                     style={{ ...iconStyle, right: '0.5em' }}
                 />
-                <LabelsList labels={labels} onChange={setLabels} />
+                <LabelsList labels={labels} onChange={setLabels} coloringStrategy={coloringStrategy} />
             </div>
             {open && (
                 <div style={{ padding: '0 0.5em' }}>
@@ -205,7 +226,7 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                             )}
                             <KeyDropdown
                                 innerRef={keyDropdownRef}
-                                onChange={setNewLabelKey}
+                                onChange={(key: string) => setNewLabel({ ...newLabel, key })}
                                 toolbox={toolbox}
                                 value={newLabelKey}
                             />
@@ -215,11 +236,12 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
                             {keyValidationError && <LabelErrorPopup content={keyValidationError} />}
                             <ValueDropdown
                                 labelKey={newLabelKey}
-                                onChange={setNewLabelValue}
+                                onChange={(value: string) => setNewLabel({ ...newLabel, value })}
                                 toolbox={toolbox}
                                 value={newLabelValue}
                             />
                         </Form.Field>
+                        {ExtraFormField && <ExtraFormField label={newLabel} onChange={setNewLabel} />}
                         <Form.Field width={2}>
                             <AddButton
                                 onClick={onAddLabel}
@@ -232,5 +254,5 @@ const LabelsInput: FunctionComponent<LabelsInputProps> = ({
             )}
         </Segment>
     );
-};
+}
 export default LabelsInput;
