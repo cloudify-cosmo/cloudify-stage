@@ -1,11 +1,15 @@
+import StageUtils from 'app/utils/stageUtils';
 import Filter from './Filter';
 
 export type FilterWidgetConfiguration = { allowMultipleSelection: boolean };
 
+const translate = StageUtils.getT('widgets.filter');
+const translateColumn = Stage.Utils.composeT(translate, 'columns');
+
 Stage.defineWidget<never, never, FilterWidgetConfiguration>({
     id: 'filter',
-    name: 'Resource filter',
-    description: 'Adds a filter section for resources - blueprints, deployments, nodes, node instances and executions',
+    name: translate('name'),
+    description: translate('description'),
     initialWidth: 12,
     initialHeight: 3,
     showHeader: false,
@@ -17,46 +21,45 @@ Stage.defineWidget<never, never, FilterWidgetConfiguration>({
         Stage.GenericConfig.POLLING_TIME_CONFIG(10),
         {
             id: 'filterByBlueprints',
-            name: 'Show blueprint filter',
+            name: translateColumn('showBlueprintFilter'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByDeployments',
-            name: 'Show deployment filter',
+            name: translateColumn('showDeploymentFilter'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByExecutions',
-            name: 'Show execution filter',
+            name: translateColumn('showExecutionFilter'),
             default: true,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         { id: 'filterByNodes', name: 'Show node filter', default: false, type: Stage.Basic.GenericField.BOOLEAN_TYPE },
         {
             id: 'filterByNodeInstances',
-            name: 'Show node instance filter',
+            name: translateColumn('showNodeInstanceFilter'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterByExecutionsStatus',
-            name: 'Show execution status filter',
+            name: translateColumn('showExecutionStatusFilter'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'filterBySiteName',
-            name: 'Show site name filter',
+            name: translateColumn('showSiteNameFilter'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         },
         {
             id: 'allowMultipleSelection',
-            name: 'Allow multiple selection',
-            description:
-                'Allows selecting more than one blueprint, deployment, node, node instance and execution in the filter',
+            name: translateColumn('allowMultipleSelection'),
+            description: translateColumn('allowMultipleSelectionDescription'),
             default: false,
             type: Stage.Basic.GenericField.BOOLEAN_TYPE
         }
