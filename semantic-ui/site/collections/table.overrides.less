@@ -1,3 +1,40 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.table {
+    font-size: @fontSize;
+    border-color: @borderColor;
+    tr td {
+        border-color: #ebebeb;
+    }
+    i.icon {
+        margin: @iconMargin;
+    }
+}
+
+.ui.sortable.table thead th {
+    border-left: 0;
+    background-color: white;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    color: @grey;
+    &:hover {
+        border-color: @borderColor;
+    }
+    &.sorted {
+        background-color: white;
+        // table descending/ascending icon
+        &::after {
+            display: inline;
+            vertical-align: bottom;
+            position: absolute;
+        }
+    }
+    &.disabled {
+        &:hover {
+            color: @grey;
+            background-color: white;
+        }
+    }
+}
