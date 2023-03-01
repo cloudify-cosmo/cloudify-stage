@@ -365,7 +365,7 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                     <Modal.Header>{translateParametersModal('header')}</Modal.Header>
                     <Modal.Content scrolling>
                         {!_.isEmpty(execution.parameters) ? (
-                            <Table>
+                            <Table compact basic>
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell>

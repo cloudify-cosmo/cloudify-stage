@@ -35,7 +35,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
     };
 
     return (
-        <Table>
+        <Table compact basic>
             <Table.Header>
                 <Table.Row>
                     {columns
