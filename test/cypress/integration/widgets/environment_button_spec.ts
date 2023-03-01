@@ -15,11 +15,11 @@ describe('Environment button widget', () => {
                 filter_rules: [{ operator: 'any_of', type: 'label', key: 'csys-obj-type', values: ['environment'] }]
             })
         );
+        cy.clickButton('Cancel');
     });
 
     describe('opens New modal and', () => {
         beforeEach(() => {
-            cy.refreshTemplate();
             cy.contains('Create Environment').click();
             cy.contains('New').click();
         });
