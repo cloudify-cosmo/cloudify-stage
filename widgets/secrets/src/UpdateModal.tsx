@@ -208,7 +208,7 @@ export default function UpdateModal({ open, secret, toolbox, onHide }: UpdateMod
                                 ) : (
                                     <Form.Field
                                         error={errors.secretValue}
-                                        help={translateForm('inputs.secretValue.label')}
+                                        label={translateForm('inputs.secretValue.label')}
                                     >
                                         <MultilineInput
                                             name="secretValue"

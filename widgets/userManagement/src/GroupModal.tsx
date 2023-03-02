@@ -66,7 +66,7 @@ const GroupModal: FunctionComponent<GroupModalProps> = ({ onHide, open, user, to
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field help={t('details.groups')}>
+                    <Form.Field label={t('details.groups')}>
                         <Form.Dropdown
                             multiple
                             selection
