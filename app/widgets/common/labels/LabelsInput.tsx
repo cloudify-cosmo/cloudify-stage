@@ -1,7 +1,7 @@
 import type { CSSProperties, SyntheticEvent } from 'react';
 import React from 'react';
 import { pick, toNumber } from 'lodash';
-import type { LabelsListProps } from 'cloudify-ui-components';
+import type { LabelsListProps, Label as BasicLabelWithSystemData } from 'cloudify-ui-components';
 import LabelErrorPopup from './LabelErrorPopup';
 import RevertToDefaultIcon from '../components/RevertToDefaultIcon';
 import DeploymentActions from '../deployments/DeploymentActions';
@@ -92,9 +92,7 @@ function LabelsInput<Label extends BasicLabel = BasicLabel>({
     extraFormField,
     coloringStrategy
 }: LabelsInputProps<Label>) {
-    type LabelWithSystemData = Label & {
-        isInSystem?: boolean;
-    };
+    type LabelWithSystemData = Label & BasicLabelWithSystemData;
 
     const { useEffect, useRef, useState } = React;
     const {
