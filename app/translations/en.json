@@ -2601,12 +2601,12 @@
                             "secret": "Secret",
                             "input": "Input"
                         },
-                        "default": "Blueprint Detault",
+                        "default": "Blueprint Default",
                         "value": "Value"
                     },
                     "labels": {
                         "header": "Labels",
-                        "default": "Blueprint Detault"
+                        "default": "Blueprint Default"
                     },
                     "location": "Location"
                 },
