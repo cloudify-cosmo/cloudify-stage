@@ -41,9 +41,7 @@ export default function TenantList({ custom = false, onDelete = noop, style, ten
                     );
                 })}
                 {_.isEmpty(tenants) && (
-                    <Message
-                        content={i18n.t('templates.templateManagement.tenantsList.noTenants', 'No tenants available')}
-                    />
+                    <Message content={i18n.t('templates.templateManagement.tenantsList.noTenants')} />
                 )}
             </List>
         </Segment>
