@@ -11,7 +11,7 @@ import type { InstanceSummaryItem } from 'app/widgets/common/nodes/NodeInstances
 import DeploymentsList from './DeploymentsList';
 import FirstUserJourneyButtons from './FirstUserJourneyButtons';
 import type { DeploymentsListData } from './types';
-import { FetchedDeploymentFields, FetchedLastExecutionFields } from './types';
+import { fetchedDeploymentFields, fetchedLastExecutionFields } from './types';
 
 const translate = Stage.Utils.getT('widgets.deployments');
 
@@ -107,10 +107,10 @@ Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>
 
     async fetchData(_widget, toolbox, params) {
         const deploymentDataPromise = new Stage.Common.Deployments.Actions(toolbox.getManager()).doGetDeployments<
-            typeof FetchedDeploymentFields[number]
+            typeof fetchedDeploymentFields[number]
         >(
             Stage.Common.Actions.Search.searchAlsoByDeploymentName({
-                _include: FetchedDeploymentFields.join(','),
+                _include: fetchedDeploymentFields.join(','),
                 ...params
             })
         );
@@ -131,9 +131,9 @@ Stage.defineWidget<DeploymentsParams, DeploymentsData, DeploymentsConfiguration>
             .then(data => data.items.map(item => item.latest_execution))
             .then(ids =>
                 new Stage.Common.Executions.Actions(toolbox.getManager()).doGetAll<
-                    typeof FetchedLastExecutionFields[number]
+                    typeof fetchedLastExecutionFields[number]
                 >({
-                    _include: FetchedLastExecutionFields.join(','),
+                    _include: fetchedLastExecutionFields.join(','),
                     id: ids
                 })
             );

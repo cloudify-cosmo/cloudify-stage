@@ -6,7 +6,7 @@ import type { Toolbox, Widget } from 'app/utils/StageAPI';
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
 import type { Visibility } from 'app/widgets/common/types';
 
-export const FetchedDeploymentFields = [
+export const fetchedDeploymentFields = [
     'id',
     'display_name',
     'blueprint_id',
@@ -20,7 +20,7 @@ export const FetchedDeploymentFields = [
     'latest_execution'
 ] as const;
 
-export const FetchedLastExecutionFields = [
+export const fetchedLastExecutionFields = [
     'id',
     'deployment_id',
     'workflow_id',
@@ -35,9 +35,9 @@ export const FetchedLastExecutionFields = [
     'finished_operations'
 ] as const;
 
-export type FetchedLastExecutionType = Required<Pick<Execution, typeof FetchedLastExecutionFields[number]>>;
+export type FetchedLastExecutionType = Required<Pick<Execution, typeof fetchedLastExecutionFields[number]>>;
 
-export type EnhancedDeployment = Pick<FullDeploymentData, typeof FetchedDeploymentFields[number]> & {
+export type EnhancedDeployment = Pick<FullDeploymentData, typeof fetchedDeploymentFields[number]> & {
     nodeInstancesCount: number;
     nodeInstancesStates: Record<string, number>;
     isUpdated: boolean;
