@@ -28,7 +28,7 @@ describe('License Management', () => {
     ];
 
     const verifyMessageHeader = (header: string) => {
-        cy.get('.content > .header').should('have.text', header);
+        cy.get('.content .header').should('have.text', header);
     };
     const verifyError = (error: string) => {
         cy.get('.form > .message')

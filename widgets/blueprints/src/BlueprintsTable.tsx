@@ -16,7 +16,7 @@ export default function BlueprintsTable({
     toolbox,
     widget
 }: BlueprintsViewProps) {
-    const { DataTable, Icon, ResourceVisibility } = Stage.Basic;
+    const { DataTable, Icon, ResourceVisibility, Label } = Stage.Basic;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
     const manager = toolbox.getManager();
@@ -73,17 +73,21 @@ export default function BlueprintsTable({
                     selected={item.isSelected}
                     onClick={Blueprints.Actions.isUploaded(item) ? () => onSelectBlueprint(item) : undefined}
                 >
-                    <DataTable.Data>
-                        {Blueprints.Actions.isUploaded(item) && (
-                            <Blueprints.UploadedImage
-                                blueprintId={item.id}
-                                tenantName={manager.getSelectedTenant()}
-                                width={30}
-                            />
-                        )}{' '}
-                        <a className="blueprintName" href="#!">
-                            {item.id}
-                        </a>
+                    <DataTable.Data
+                        style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}
+                    >
+                        <span>
+                            {Blueprints.Actions.isUploaded(item) && (
+                                <Blueprints.UploadedImage
+                                    blueprintId={item.id}
+                                    tenantName={manager.getSelectedTenant()}
+                                    width={25}
+                                />
+                            )}{' '}
+                            <a className="blueprintName" href="#!" style={{ marginLeft: '5px' }}>
+                                {item.id}
+                            </a>
+                        </span>
                         <ResourceVisibility
                             visibility={item.visibility}
                             onSetVisibility={visibility => onSetVisibility(item.id, visibility)}
@@ -98,8 +102,10 @@ export default function BlueprintsTable({
                     <DataTable.Data>
                         <BlueprintState blueprint={item} />
                     </DataTable.Data>
-                    <DataTable.Data style={{ textAlign: 'center' }}>
-                        <div className="ui green horizontal label">{item.depCount}</div>
+                    <DataTable.Data>
+                        <Label color="green" horizontal>
+                            {item.depCount}
+                        </Label>
                     </DataTable.Data>
 
                     <DataTable.Data textAlign="center" className="rowActions">

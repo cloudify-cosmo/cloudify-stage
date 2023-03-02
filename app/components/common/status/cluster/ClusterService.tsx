@@ -13,7 +13,6 @@ interface ClusterServiceProps {
 
 const ClusterServiceWrapper = styled.div`
     vertical-align: middle;
-    padding: 10px;
     overflow: auto;
 `;
 
