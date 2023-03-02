@@ -152,7 +152,7 @@ function InputsSection({ oldInputs = {}, newInputs = {} }: InputSectionProps) {
             </Header>
 
             {inputsChanged ? (
-                <Table striped>
+                <Table compact basic>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={4}>Input</Table.HeaderCell>
