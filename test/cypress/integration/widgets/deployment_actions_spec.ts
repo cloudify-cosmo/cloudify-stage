@@ -254,7 +254,7 @@ describe('Deployment Action Buttons widget', () => {
             }
             function checkIfInternalKeyIsPermitted(key: string) {
                 checkIfPopupIsNotDisplayed('key', key);
-                cy.typeLabelValue('a');
+                cy.typeLabelValue('10');
                 cy.get('button[aria-label=Add]').should('not.have.attr', 'disabled');
             }
             cy.getReservedLabelKeys().then(reservedLabelKeys => {
