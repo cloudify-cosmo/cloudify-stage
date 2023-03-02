@@ -50,7 +50,9 @@ export interface DeploymentsData<ItemsData = EnhancedDeployment> extends Paginat
     searchValue?: string;
 }
 
-export type DeploymentsListData = DeploymentsData<EnhancedDeployment & { isSelected: boolean }>;
+export type DeploymentItem = EnhancedDeployment & { isSelected: boolean };
+
+export type DeploymentsListData = DeploymentsData<DeploymentItem>;
 
 export interface DeploymentViewProps {
     data: DeploymentsListData;
