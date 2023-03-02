@@ -49,8 +49,8 @@ export default function DeploymentsTable({
             <DataTable.Column label={translate('columns.siteName')} name="site_name" width="15%" />
             <DataTable.Column label={translate('columns.created')} name="created_at" width="15%" />
             <DataTable.Column label={translate('columns.updated')} name="updated_at" width="15%" />
-            <DataTable.Column label={translate('columns.creator')} name="created_by" width="10%" />
-            <DataTable.Column width="5%" />
+            <DataTable.Column label={translate('columns.creator')} name="created_by" width="8%" />
+            <DataTable.Column className="rowActions" width="7%" />
 
             {data.items.map(item => {
                 return (
@@ -93,7 +93,7 @@ export default function DeploymentsTable({
                         </DataTable.Data>
                         <DataTable.Data>{item.updated_at}</DataTable.Data>
                         <DataTable.Data>{item.created_by}</DataTable.Data>
-                        <DataTable.Data style={{ display: 'inline-flex' }}>
+                        <DataTable.Data className="rowActions">
                             <ActionsMenus
                                 deployment={item}
                                 onDeploymentAction={onDeploymentAction}

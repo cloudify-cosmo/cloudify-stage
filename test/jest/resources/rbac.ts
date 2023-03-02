@@ -136,7 +136,6 @@ export default {
         widget_blueprintActionButtons: ['sys_admin', 'manager', 'user', 'operations'],
         execution_cancel: ['sys_admin', 'manager', 'user', 'operations'],
         widget_custom_admin: ['sys_admin', 'manager'],
-        widget_managers: ['sys_admin'],
         maintenance_mode_get: ['sys_admin', 'manager', 'user', 'operations', 'viewer', 'default'],
         cluster_status_get: ['sys_admin'],
         snapshot_upload: ['sys_admin'],
