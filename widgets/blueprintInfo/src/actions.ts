@@ -1,5 +1,5 @@
 import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
-import type { Deployment } from 'app/widgets/common/deploymentsView/types';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 
 // TODO(RD-5879): Use Awaited (introduced in TS 4.5) instead of creating custom utility type
 type Unpromise<T extends Promise<any>> = T extends Promise<infer U> ? U : never;
@@ -12,9 +12,11 @@ export default class Actions {
         const deploymentKeys = ['id', 'blueprint_id'] as const;
         type DeploymentKeys = typeof deploymentKeys[number];
 
-        return this.toolbox.getManager().doGet<Pick<Deployment, DeploymentKeys>>(`/deployments/${deploymentId}`, {
-            params: { _include: deploymentKeys.join(',') }
-        });
+        return this.toolbox
+            .getManager()
+            .doGet<Pick<FullDeploymentData, DeploymentKeys>>(`/deployments/${deploymentId}`, {
+                params: { _include: deploymentKeys.join(',') }
+            });
     }
 
     doGetBlueprintDetails(blueprintId: string) {
