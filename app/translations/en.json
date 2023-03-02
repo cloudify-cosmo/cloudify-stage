@@ -2606,7 +2606,7 @@
                     },
                     "labels": {
                         "header": "Labels",
-                        "default": "Blueprint Detault"
+                        "default": "Blueprint Default"
                     },
                     "location": "Location"
                 },
