@@ -48,7 +48,7 @@ export const groupStates: (GroupState & { states: string[]; colorHTML: string })
     }
 ];
 
-type InstanceSummaryItem = {
+export type InstanceSummaryItem = {
     /* eslint-disable camelcase */
     'by state': { state: string; node_instances: number }[];
     deployment_id: string;

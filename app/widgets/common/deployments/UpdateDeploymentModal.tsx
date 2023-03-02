@@ -8,6 +8,7 @@ import DynamicDropdown from '../components/DynamicDropdown';
 import DataTypesButton from '../inputs/DataTypesButton';
 import SortOrderIcons from '../inputs/SortOrderIcons';
 import YamlFileButton from '../inputs/YamlFileButton';
+import type { FullDeploymentData } from './DeploymentActions';
 import DeploymentActions from './DeploymentActions';
 import type { FullBlueprintData } from '../blueprints/BlueprintActions';
 import getInputFieldInitialValue from '../inputs/utils/getInputFieldInitialValue';
@@ -22,10 +23,9 @@ import UpdateDetailsModal from './UpdateDetailsModal';
 import type { DeploymentUpdate } from './UpdateDetailsModal';
 import { useBoolean, useErrors, useInputs, useOpenProp, useResettableState } from '../../../utils/hooks';
 import StageUtils from '../../../utils/stageUtils';
-import type { Deployment } from '../deploymentsView/types';
 import IconButtonsGroup from '../components/IconButtonsGroup';
 
-type FetchedDeployment = Pick<Deployment, 'blueprint_id' | 'id' | 'inputs'>;
+type FetchedDeployment = Pick<FullDeploymentData, 'blueprint_id' | 'id' | 'inputs'>;
 
 interface UpdateDeploymentModalProps {
     toolbox: Stage.Types.Toolbox;
