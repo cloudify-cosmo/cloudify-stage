@@ -17,12 +17,6 @@ import '@cypress/code-coverage/support';
 
 // Import commands.js using ES2015 syntax:
 import './commands';
-// use `Cypress` instead of `cy` so this persists across all tests
-Cypress.on('window:before:load', window => {
-    // @ts-ignore: The operand of a 'delete' operator must be optional
-    delete window.fetch;
-    cy.stub(window, 'open');
-});
 
 // Workaround for "ResizeObserver loop limit exceeded" error
 // https://github.com/cypress-io/cypress/issues/8418
