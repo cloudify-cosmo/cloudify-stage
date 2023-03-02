@@ -1,4 +1,4 @@
-import type { Label } from '../labels/types';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 
 export enum LatestExecutionStatus {
     Completed = 'completed',
@@ -18,31 +18,24 @@ export enum DeploymentStatus {
     RequiresAttention = 'requires_attention'
 }
 
-export interface FullDeployment {
-    id: string;
-    // NOTE: the property names come from the backend
-    /* eslint-disable camelcase */
-    display_name: string;
-    site_name: string;
-    blueprint_id: string;
-    latest_execution_status: LatestExecutionStatus;
-    deployment_status: DeploymentStatus;
-    environment_type: string;
-    latest_execution_total_operations: number;
-    latest_execution_finished_operations: number;
-    sub_services_count: number;
-    /** Can be null when there are no subservices */
-    sub_services_status: DeploymentStatus | null;
-    sub_environments_count: number;
-    /** Can be null when there are no subenvironments */
-    sub_environments_status: DeploymentStatus | null;
-    labels?: Label[];
-    inputs: { [key: string]: unknown };
-    capabilities: { [key: string]: unknown };
-    groups: Record<string, { members: string[] }>;
-    /* eslint-enable camelcase */
-}
+export const deploymentFields = [
+    'id',
+    'display_name',
+    'site_name',
+    'blueprint_id',
+    'latest_execution_status',
+    'deployment_status',
+    'environment_type',
+    'latest_execution_total_operations',
+    'latest_execution_finished_operations',
+    'sub_services_count',
+    'sub_services_status',
+    'sub_environments_count',
+    'sub_environments_status',
+    'labels',
+    'capabilities'
+] as const;
 
-export type Deployment = Omit<FullDeployment, 'groups'>;
+export type Deployment = Pick<FullDeploymentData, typeof deploymentFields[number]>;
 
 export type DeploymentsResponse = Stage.Types.PaginatedResponse<Deployment>;

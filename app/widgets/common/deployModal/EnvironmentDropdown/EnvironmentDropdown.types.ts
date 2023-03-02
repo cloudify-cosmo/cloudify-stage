@@ -1,10 +1,10 @@
-import type { Deployment } from '../../deploymentsView/types';
+import type { FullDeploymentData } from '../../deployments/DeploymentActions';
 
 export interface FetchedEnvironment {
-    id: Deployment['id'];
+    id: FullDeploymentData['id'];
     // eslint-disable-next-line
-    display_name: Deployment['display_name'];
-    capabilities: Deployment['capabilities'];
+    display_name: FullDeploymentData['display_name'];
+    capabilities: FullDeploymentData['capabilities'];
 }
 
 export interface Environment {

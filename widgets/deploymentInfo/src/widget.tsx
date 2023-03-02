@@ -1,3 +1,4 @@
+import type { DeploymentWithUpdate } from 'app/widgets/common/deployments/DeploymentDetails';
 import type { DeploymentInfoWidget } from './widget.types';
 import DeploymentInfo from './DeploymentInfo';
 import Consts from './consts';
@@ -74,7 +75,7 @@ Stage.defineWidget<DeploymentInfoWidget.Params, DeploymentInfoWidget.Data, Deplo
 
         if (deploymentId) {
             deployment = await manager
-                .doGet(`/deployments/${deploymentId}`, {
+                .doGet<Omit<DeploymentWithUpdate, 'isUpdated'>>(`/deployments/${deploymentId}`, {
                     params: {
                         _include: _.join(
                             _.compact([
