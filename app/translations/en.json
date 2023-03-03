@@ -2610,6 +2610,15 @@
                     },
                     "location": "Location"
                 },
+                "errors": {
+                    "nameMissing": "Environment name is required, please fill the environment name",
+                    "blueprintNameMissing": "Environment blueprint name should be provided",
+                    "blueprintNameInvalid": "Invalid blueprint name. It should contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
+                    "capabilityNameMissing": "Please provide capability name",
+                    "capabilitySourceMissing": "Please provide capability source",
+                    "capabilityNameDuplicated": "Capability name already defined",
+                    "blueprintNameExists": "Blueprint with this name already exists"
+                },
                 "submit": "Create",
                 "cancelConfirm": "Are you sure you would like to discard the filled data and close?"
             }
