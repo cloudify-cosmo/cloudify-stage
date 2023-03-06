@@ -1,9 +1,8 @@
-// @ts-nocheck File not migrated fully to TS
 import styled from 'styled-components';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 import ActionsMenus from './ActionsMenus';
 import ExecutionProgress from './ExecutionProgress';
-import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
+import type { DeploymentViewProps } from './types';
 
 const DeploymentName = styled.span`
     display: -webkit-box;
@@ -29,14 +28,13 @@ export default function DeploymentsSegment({
     showExecutionStatusLabel,
     toolbox,
     widget
-}) {
+}: DeploymentViewProps) {
     const { DataSegment, Divider, Header } = Stage.Basic;
     const { IdPopup } = Stage.Shared;
-    const { useResettableState } = Stage.Hooks;
     const DeploymentDetails = Stage.Common.Deployments.Details;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
-    const formatName = item => Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
-    const [hoveredDeploymentId, setHoveredDeploymentId, clearHoveredDeploymentId] = useResettableState(null);
+    const formatName = (item: Pick<FullDeploymentData, 'id' | 'display_name'>) =>
+        Stage.Utils.formatDisplayName({ id: item.id, displayName: item.display_name });
 
     return (
         <DataSegment
@@ -52,9 +50,6 @@ export default function DeploymentsSegment({
                     selected={item.isSelected}
                     className={`${item.id} deploymentSegment`}
                     onClick={() => onSelectDeployment(item)}
-                    onMouseOver={setHoveredDeploymentId}
-                    onFocus={setHoveredDeploymentId}
-                    onMouseOut={clearHoveredDeploymentId}
                 >
                     <DeploymentDetails
                         customName={
@@ -75,7 +70,7 @@ export default function DeploymentsSegment({
                                         <DeploymentName title={formatName(item)} aria-label="Deployment name">
                                             {item.display_name}
                                         </DeploymentName>
-                                        <IdPopup selected={item.id === hoveredDeploymentId} id={item.id} />
+                                        <IdPopup selected={false} id={item.id} />
                                     </DeploymentIdAndName>
                                 </Header>
                             </div>
@@ -103,7 +98,3 @@ export default function DeploymentsSegment({
         </DataSegment>
     );
 }
-
-DeploymentsSegment.propTypes = DeploymentsViewPropTypes;
-
-DeploymentsSegment.defaultProps = DeploymentsViewDefaultProps;
