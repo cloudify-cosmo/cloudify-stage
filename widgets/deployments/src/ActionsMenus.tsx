@@ -1,4 +1,3 @@
-import type { Label } from 'app/widgets/common/labels/types';
 import type { WorkflowsMenuProps } from 'app/widgets/common/executeWorkflow/WorkflowsMenu';
 import type { DeploymentItem } from './types';
 
