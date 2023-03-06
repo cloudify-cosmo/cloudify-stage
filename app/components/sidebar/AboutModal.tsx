@@ -41,11 +41,11 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
             </Modal.Header>
 
             <Modal.Content>
-                <Header>{i18n.t('help.aboutModal.versionDetails', 'Version Details')}</Header>
+                <Header>{i18n.t('help.aboutModal.versionDetails')}</Header>
                 <Divider />
                 <CurrentVersion version={version} />
 
-                <Header>{i18n.t('help.aboutModal.licenseDetails', 'License Details')}</Header>
+                <Header>{i18n.t('help.aboutModal.licenseDetails')}</Header>
                 <Divider />
                 <CurrentLicense license={license} />
 
@@ -55,13 +55,13 @@ const AboutModal: FunctionComponent<AboutModalProps> = ({ onHide, open }) => {
             <Modal.Actions>
                 {canLicenseManagement && (
                     <Button
-                        content={i18n.t('help.aboutModal.licenseManagement', 'License Management')}
+                        content={i18n.t('help.aboutModal.licenseManagement')}
                         icon="key"
                         color="yellow"
                         onClick={() => dispatch(push(Consts.PAGE_PATH.LICENSE))}
                     />
                 )}
-                <CancelButton content={i18n.t('help.aboutModal.close', 'Close')} onClick={onHide} />
+                <CancelButton content={i18n.t('help.aboutModal.close')} onClick={onHide} />
             </Modal.Actions>
         </Modal>
     );
