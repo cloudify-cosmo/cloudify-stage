@@ -120,7 +120,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
                 >
                     <Grid container className="contentBlock">
                         <StyledGridRowHeader>
-                            <ExternalBlueprintImage url={image_url} width={30} />
+                            <ExternalBlueprintImage url={image_url} width={25} />
                             {showName && <StyledHeader>{name}</StyledHeader>}
                         </StyledGridRowHeader>
                         {showDescription && (

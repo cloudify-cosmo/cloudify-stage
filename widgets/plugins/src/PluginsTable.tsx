@@ -114,7 +114,7 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                 <DataTable.Column />
                 <DataTable.Column label={translate('columns.plugin')} name="title" width="20%" />
                 <DataTable.Column label={translate('columns.packageName')} name="package_name" width="20%" />
-                <DataTable.Column label={translate('columns.packageVersion')} name="package_version" width="10%" />
+                <DataTable.Column label={translate('columns.packageVersion')} name="package_version" width="5%" />
                 <DataTable.Column
                     label={translate('columns.supportedPlatform')}
                     name="supported_platform"
@@ -126,8 +126,8 @@ const PluginsTable: FunctionComponent<PluginsTableProps> = ({ data, toolbox, wid
                     name="distribution_release"
                     width="10%"
                 />
-                <DataTable.Column label={translate('columns.uploadedAt')} name="uploaded_at" width="15%" />
-                <DataTable.Column label={translate('columns.creator')} name="created_by" width="15%" />
+                <DataTable.Column label={translate('columns.uploadedAt')} name="uploaded_at" width="10%" />
+                <DataTable.Column label={translate('columns.creator')} name="created_by" width="10%" />
                 <DataTable.Column width="10%" />
 
                 {data.items.map(item => {

@@ -255,7 +255,7 @@ export default class EventsTable extends React.Component {
                                 </DataTable.Data>
                                 <DataTable.Data>
                                     {item.message && (
-                                        <span>
+                                        <span style={{ wordBreak: 'break-word' }}>
                                             {this.getHighlightedText(
                                                 _.truncate(messageText, truncateOptions),
                                                 'messageText'

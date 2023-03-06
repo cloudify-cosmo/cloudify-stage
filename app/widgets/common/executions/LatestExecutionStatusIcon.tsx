@@ -132,7 +132,7 @@ export default class LatestExecutionStatusIcon extends React.Component<
                     <Popup.Header>Last Execution</Popup.Header>
 
                     <Popup.Content>
-                        <Table compact celled>
+                        <Table compact basic>
                             <Table.Header>
                                 <Table.Row textAlign="center">
                                     <Table.HeaderCell>Workflow</Table.HeaderCell>

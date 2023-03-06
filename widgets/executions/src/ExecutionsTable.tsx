@@ -305,11 +305,11 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                                     <DataTable.Data style={{ wordBreak: 'break-word' }}>
                                         {item.created_by}
                                     </DataTable.Data>
-                                    <DataTable.Data textAlign="center">
+                                    <DataTable.Data>
                                         <SystemWorkflowIcon execution={item} />
                                         <DryRunIcon execution={item} />
                                     </DataTable.Data>
-                                    <DataTable.Data textAlign="center">
+                                    <DataTable.Data>
                                         <ExecutionStatus execution={item} />
                                     </DataTable.Data>
                                     <DataTable.Data textAlign="center">
@@ -365,7 +365,7 @@ export default class ExecutionsTable extends Component<ExecutionsTableProps, Exe
                     <Modal.Header>{translateParametersModal('header')}</Modal.Header>
                     <Modal.Content scrolling>
                         {!_.isEmpty(execution.parameters) ? (
-                            <Table>
+                            <Table compact basic>
                                 <Table.Header>
                                     <Table.Row>
                                         <Table.HeaderCell>
