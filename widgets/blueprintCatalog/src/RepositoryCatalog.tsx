@@ -2,6 +2,7 @@ import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
+import { GridWrapper } from '../../../app/components/shared';
 import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
@@ -67,12 +68,6 @@ const StyledHeader = styled(Header)`
 
 const StyledText = styled.p`
     font-size: 12px;
-`;
-
-const StyledGridWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
-    grid-gap: 20px;
 `;
 
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
@@ -216,7 +211,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <StyledGridWrapper>{catalogItems}</StyledGridWrapper>
+            <GridWrapper>{catalogItems}</GridWrapper>
         </DataSegment>
     );
 };

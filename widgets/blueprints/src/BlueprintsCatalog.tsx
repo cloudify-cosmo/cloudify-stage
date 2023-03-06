@@ -1,18 +1,10 @@
-import styled from 'styled-components';
-import { TextEllipsis } from '../../../app/components/shared';
+import { GridWrapper, TextEllipsis } from '../../../app/components/shared';
 import { translateBlueprints } from './widget.utils';
 
 import BlueprintState from './BlueprintState';
 import type { BlueprintsViewProps } from './types';
 
 const translateBlueprintsButtons = Stage.Utils.composeT(translateBlueprints, 'buttons');
-
-const StyledGridWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
-    grid-gap: 20px;
-    margin-bottom: 1rem;
-`;
 
 export default function BlueprintsCatalog({
     data,
@@ -198,7 +190,7 @@ export default function BlueprintsCatalog({
             searchable
             noDataMessage={noDataMessage}
         >
-            <StyledGridWrapper>{blueprintsItems}</StyledGridWrapper>
+            <GridWrapper>{blueprintsItems}</GridWrapper>
         </DataSegment>
     );
 }
