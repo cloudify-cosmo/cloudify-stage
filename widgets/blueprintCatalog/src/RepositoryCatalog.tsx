@@ -2,7 +2,6 @@ import { noop } from 'lodash';
 import type { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
-import { GridWrapper } from '../../../app/components/shared';
 import Consts from './consts';
 import Utils from './utils';
 import type { RepositoryViewProps } from './types';
@@ -81,6 +80,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
+    const { GridWrapper } = Stage.Shared;
     const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));

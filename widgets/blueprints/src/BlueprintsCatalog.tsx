@@ -1,4 +1,3 @@
-import { GridWrapper, TextEllipsis } from '../../../app/components/shared';
 import { translateBlueprints } from './widget.utils';
 
 import BlueprintState from './BlueprintState';
@@ -20,6 +19,7 @@ export default function BlueprintsCatalog({
     const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
+    const { GridWrapper, TextEllipsis } = Stage.Shared;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
 

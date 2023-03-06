@@ -13,7 +13,7 @@
     },
     {
         "name": "Widgets",
-        "limit": "5.3 MB",
+        "limit": "2.64 MB",
         "gzip": false,
         "running": false,
         "path": [
@@ -23,7 +23,7 @@
     },
     {
         "name": "Application package",
-        "limit": "12.7 MB",
+        "limit": "10.6 MB",
         "gzip": false,
         "running": false,
         "path": [
