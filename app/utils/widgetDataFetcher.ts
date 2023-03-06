@@ -91,11 +91,11 @@ export default class WidgetDataFetcher {
                 );
             } catch (e) {
                 log.error('Error fetching widget data', e);
-                return Promise.reject({ error: i18n.t('widget.fetchError', 'Error fetching widget data') });
+                return Promise.reject({ error: i18n.t('widget.fetchError') });
             }
         } else {
             return Promise.reject({
-                error: i18n.t('widget.fetchDataFunctionError', 'Widget doesnt have a fetchData function')
+                error: i18n.t('widget.fetchDataFunctionError')
             });
         }
     }
