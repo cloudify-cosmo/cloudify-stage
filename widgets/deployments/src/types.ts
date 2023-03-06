@@ -5,7 +5,6 @@ import type { Execution, ExecutionAction } from 'app/utils/shared/ExecutionUtils
 import type { Toolbox, Widget } from 'app/utils/StageAPI';
 import type { DeploymentsConfiguration } from 'widgets/deployments/src/widget';
 import type { Visibility } from 'app/widgets/common/types';
-import type { Label } from 'app/widgets/common/labels/types';
 
 export const fetchedDeploymentFields = [
     'id',
