@@ -15,6 +15,6 @@ const StyledDiv = styled.div<GridWrapperProps>`
     margin-bottom: 1rem;
 `;
 
-const GridWrapper = ({ children, ...rest }: GridWrapperProps) => <StyledDiv {...rest}>{children ?? ''}</StyledDiv>;
+const GridWrapper = ({ children, ...rest }: GridWrapperProps) => <StyledDiv {...rest}>{children}</StyledDiv>;
 
 export default GridWrapper;
