@@ -23,7 +23,7 @@
     },
     {
         "name": "Application package",
-        "limit": "10.6 MB",
+        "limit": "10.16 MB",
         "gzip": false,
         "running": false,
         "path": [
