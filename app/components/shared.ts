@@ -3,7 +3,6 @@ import ClusterServicesList from './common/status/cluster/ClusterServicesList';
 import ClusterStatusIcon from './common/status/cluster/ClusterStatusIcon';
 import ClusterServicesOverview from './common/status/cluster/ClusterServicesOverview';
 import Graph from './common/graphs/Graph';
-import GridWrapper from './common/GridWrapper';
 import PieGraph from './common/graphs/PieGraph';
 import IdPopup from './common/IdPopup';
 import DynamicTable from './common/DynamicTable';
@@ -27,7 +26,6 @@ export {
     ErrorPopup,
     ExecutionStatus,
     Graph,
-    GridWrapper,
     IdPopup,
     Link,
     TextEllipsis,

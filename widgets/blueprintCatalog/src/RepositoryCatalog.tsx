@@ -80,7 +80,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
-    const { GridWrapper } = Stage.Shared;
+    const { GridWrapper } = Stage.Common.Components;
     const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));

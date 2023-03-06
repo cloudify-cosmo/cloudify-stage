@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface GridWrapperProps {
+type GridWrapperProps = {
     /**
-     * text content
+     * ReactNode content
      */
     children?: React.ReactNode;
-}
+};
 
 const StyledDiv = styled.div<GridWrapperProps>`
     display: grid;

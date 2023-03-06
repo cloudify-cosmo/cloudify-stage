@@ -19,7 +19,8 @@ export default function BlueprintsCatalog({
     const { DataSegment, Grid, Button, Label, ResourceVisibility, Header } = Stage.Basic;
     const { Blueprints } = Stage.Common;
     const { allowedVisibilitySettings } = Stage.Common.Consts;
-    const { GridWrapper, TextEllipsis } = Stage.Shared;
+    const { TextEllipsis } = Stage.Shared;
+    const { GridWrapper } = Stage.Common.Components;
     const manager = toolbox.getManager();
     const { fieldsToShow } = widget.configuration;
 
