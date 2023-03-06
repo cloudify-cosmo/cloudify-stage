@@ -230,9 +230,7 @@ export default function TemplateManagement() {
     }
 
     function canDeletePage(page: Page) {
-        return isEmpty(page.templates)
-            ? null
-            : i18n.t('templates.pageManagement.cantDelete', 'Page is used by the templates and cannot be deleted');
+        return isEmpty(page.templates) ? null : i18n.t('templates.pageManagement.cantDelete');
     }
 
     function onEditPage(page: Page) {
@@ -268,12 +266,10 @@ export default function TemplateManagement() {
             <Segment basic loading={isLoading}>
                 <div style={{ position: 'relative' }}>
                     <Breadcrumb>
-                        <Breadcrumb.Section active>
-                            {i18n.t('templates.breadcrumb', 'Template management')}
-                        </Breadcrumb.Section>
+                        <Breadcrumb.Section active>{i18n.t('templates.breadcrumb')}</Breadcrumb.Section>
                     </Breadcrumb>
                     <Button
-                        content={i18n.t('templates.close', 'Close')}
+                        content={i18n.t('templates.close')}
                         basic
                         compact
                         floated="right"
