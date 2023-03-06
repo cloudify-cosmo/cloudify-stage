@@ -1,13 +1,11 @@
-// @ts-nocheck File not migrated fully to TS
 import ActionsMenus from './ActionsMenus';
 import DeploymentUpdatedIcon from './DeploymentUpdatedIcon';
-import DeploymentsViewDefaultProps from './props/DeploymentsViewDefaultProps';
-import DeploymentsViewPropTypes from './props/DeploymentsViewPropTypes';
+import type { DeploymentViewProps } from './types';
 
-const t = Stage.Utils.getT('widgets.deployments.table');
+const translate = Stage.Utils.getT('widgets.deployments.table');
 
 export default function DeploymentsTable({
-    allowedSettingTo,
+    allowedSettingTo = ['tenant', 'global'],
     data,
     fetchData,
     noDataMessage,
@@ -19,12 +17,12 @@ export default function DeploymentsTable({
     showExecutionStatusLabel,
     toolbox,
     widget
-}) {
+}: DeploymentViewProps) {
     const { useResettableState } = Stage.Hooks;
     const { IdPopup } = Stage.Shared;
     const { DataTable, ResourceVisibility } = Stage.Basic;
     const { LatestExecutionStatusIcon } = Stage.Common.Executions;
-    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState(null);
+    const [hoveredDeployment, setHoveredDeployment, clearHoveredDeployment] = useResettableState<string | null>(null);
     const tableName = 'deploymentsTable';
 
     return (
@@ -40,13 +38,18 @@ export default function DeploymentsTable({
             noDataMessage={noDataMessage}
         >
             <DataTable.Column name="id" />
-            <DataTable.Column label={t('columns.name')} name="name" width="20%" />
-            <DataTable.Column label={t('columns.lastExecution')} width="5%" />
-            <DataTable.Column label={t('columns.blueprint')} name="blueprint_id" width="15%" show={!data.blueprintId} />
-            <DataTable.Column label={t('columns.siteName')} name="site_name" width="15%" />
-            <DataTable.Column label={t('columns.created')} name="created_at" width="15%" />
-            <DataTable.Column label={t('columns.updated')} name="updated_at" width="15%" />
-            <DataTable.Column label={t('columns.creator')} name="created_by" width="8%" />
+            <DataTable.Column label={translate('columns.name')} name="name" width="20%" />
+            <DataTable.Column label={translate('columns.lastExecution')} width="5%" />
+            <DataTable.Column
+                label={translate('columns.blueprint')}
+                name="blueprint_id"
+                width="15%"
+                show={!data.blueprintId}
+            />
+            <DataTable.Column label={translate('columns.siteName')} name="site_name" width="15%" />
+            <DataTable.Column label={translate('columns.created')} name="created_at" width="15%" />
+            <DataTable.Column label={translate('columns.updated')} name="updated_at" width="15%" />
+            <DataTable.Column label={translate('columns.creator')} name="created_by" width="8%" />
             <DataTable.Column className="rowActions" width="7%" />
 
             {data.items.map(item => {
@@ -56,10 +59,8 @@ export default function DeploymentsTable({
                         key={item.id}
                         selected={item.isSelected}
                         onClick={() => onSelectDeployment(item)}
-                        onMouseOver={setHoveredDeployment}
-                        onFocus={setHoveredDeployment}
+                        onMouseOver={() => setHoveredDeployment(item.id)}
                         onMouseOut={clearHoveredDeployment}
-                        onBlur={clearHoveredDeployment}
                     >
                         <DataTable.Data>
                             <IdPopup selected={item.id === hoveredDeployment} id={item.id} />
@@ -107,7 +108,3 @@ export default function DeploymentsTable({
         </DataTable>
     );
 }
-
-DeploymentsTable.propTypes = DeploymentsViewPropTypes;
-
-DeploymentsTable.defaultProps = DeploymentsViewDefaultProps;

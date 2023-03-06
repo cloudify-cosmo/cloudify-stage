@@ -1,6 +1,6 @@
 import type { PaginatedResponse } from 'backend/types';
-import type { FullBlueprintData } from 'app/widgets/common/blueprints/BlueprintActions';
-import type { Deployment } from '../deploymentsView/types';
+import type { FullBlueprintData } from '../blueprints/BlueprintActions';
+import type { FullDeploymentData } from '../deployments/DeploymentActions';
 import type { Workflow } from '../executeWorkflow';
 import type { FilterRule } from '../filters/types';
 
@@ -51,11 +51,11 @@ export default class SearchActions {
         };
     }
 
-    doListDeployments<IncludeKeys extends keyof Deployment = keyof Deployment>(
+    doListDeployments<IncludeKeys extends keyof FullDeploymentData = keyof FullDeploymentData>(
         filterRules: FilterRule[],
         params?: ListDeploymentsParams
     ) {
-        return this.doList<Pick<Deployment, IncludeKeys>>(
+        return this.doList<Pick<FullDeploymentData, IncludeKeys>>(
             'deployments',
             filterRules,
             SearchActions.searchAlsoByDeploymentName(params)
@@ -63,7 +63,11 @@ export default class SearchActions {
     }
 
     doListAllDeployments(filterRules: FilterRule[], params?: ListDeploymentsParams) {
-        return this.doListAll<Deployment>('deployments', filterRules, SearchActions.searchAlsoByDeploymentName(params));
+        return this.doListAll<FullDeploymentData>(
+            'deployments',
+            filterRules,
+            SearchActions.searchAlsoByDeploymentName(params)
+        );
     }
 
     doListBlueprints<IncludeKeys extends keyof FullBlueprintData>(

@@ -1,22 +1,23 @@
 import type { WorkflowsMenuProps } from '../../../app/widgets/common/executeWorkflow/WorkflowsMenu';
+import type { DeploymentItem } from './types';
 
 const WorkflowsMenu = Stage.Common.Workflows.Menu;
 
-interface ActionsMenusProps<D> {
-    deployment?: D;
-    onDeploymentAction: (deployment: D | undefined, actionName: string) => void;
-    onWorkflowAction: (deployment: D | undefined, workflowName: string) => void;
+interface ActionsMenusProps {
+    deployment?: DeploymentItem;
+    onDeploymentAction: (deployment: DeploymentItem | undefined, actionName: string) => void;
+    onWorkflowAction: (deployment: DeploymentItem | undefined, workflowName: string) => void;
     workflows: WorkflowsMenuProps['workflows'];
     toolbox: Stage.Types.Toolbox;
 }
 
-export default function ActionsMenus<D>({
+export default function ActionsMenus({
     deployment,
     onDeploymentAction,
     onWorkflowAction,
     toolbox,
     workflows
-}: ActionsMenusProps<D>) {
+}: ActionsMenusProps) {
     const DeploymentActionsMenu = Stage.Common.Deployments.ActionsMenu;
 
     return (

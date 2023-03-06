@@ -2585,6 +2585,33 @@
             "menu": {
                 "new": "New",
                 "fromBlueprint": "From Blueprint"
+            },
+            "createNewModal": {
+                "header": "Create Environment",
+                "form": {
+                    "name": "Name",
+                    "blueprintName": "Blueprint Name",
+                    "blueprintDescription": "Blueprint Description",
+                    "capabilities": {
+                        "header": "Capabilities",
+                        "name": "Capability Name",
+                        "source": "Source",
+                        "sources": {
+                            "static": "Static",
+                            "secret": "Secret",
+                            "input": "Input"
+                        },
+                        "default": "Blueprint Default",
+                        "value": "Value"
+                    },
+                    "labels": {
+                        "header": "Labels",
+                        "default": "Blueprint Default"
+                    },
+                    "location": "Location"
+                },
+                "submit": "Create",
+                "cancelConfirm": "Are you sure you would like to discard the filled data and close?"
             }
         }
     }

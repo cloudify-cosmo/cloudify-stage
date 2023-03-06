@@ -1,6 +1,6 @@
 import type { PaginatedResponse } from 'backend/types';
-import type { FullDeployment } from 'app/widgets/common/deploymentsView/types';
 import { castArray } from 'lodash';
+import type { FullDeploymentData } from 'app/widgets/common/deployments/DeploymentActions';
 import type { Node, NodeInstance, NodesConfiguration } from './types';
 import NodesTable from './NodesTable';
 import { translateWidget, widgetId } from './common';
@@ -20,7 +20,7 @@ const defaultFieldsToShow = [
 const allFieldsToShow = [...defaultFieldsToShow, 'deploymentId'];
 const translateFieldsToShow = Stage.Utils.composeT(translateWidget, 'configuration.fieldsToShow');
 
-type Deployment = Pick<FullDeployment, 'id' | 'groups'>;
+type Deployment = Pick<FullDeploymentData, 'id' | 'groups'>;
 
 function getGroups(deployments: Deployment[]) {
     const groups: Record<string, string[]> = {};
