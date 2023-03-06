@@ -1,9 +1,11 @@
-import type { NodesTreeProps } from 'cloudify-ui-components';
+import { Loading, NodesTreeProps } from 'cloudify-ui-components';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import styled from 'styled-components';
+import type { WidgetData } from 'app/utils/StageAPI';
 import Actions from './actions';
+import { BlueprintSourcesData } from './widget';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;
@@ -17,7 +19,7 @@ interface NodeTreeItem {
     isDir: boolean;
 }
 
-interface BlueprintTree {
+export interface BlueprintTree {
     children: NodeTreeItem[];
     key: string;
     title: string;
@@ -107,13 +109,7 @@ const RightPane = ({
 };
 
 interface BlueprintSourcesProps {
-    data: {
-        blueprintId: string;
-        blueprintTree: BlueprintTree;
-        importedBlueprintIds: string[];
-        importedBlueprintTrees: BlueprintTree[];
-        yamlFileName: string;
-    };
+    data: WidgetData<BlueprintSourcesData>;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
@@ -185,6 +181,10 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             })
             .finally(() => toolbox.loading(false));
     };
+
+    if (!data) {
+        return <Loading />;
+    }
 
     const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {

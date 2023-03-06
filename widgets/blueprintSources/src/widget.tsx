@@ -1,10 +1,26 @@
-// @ts-nocheck File not migrated fully to TS
-
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
+import type { BlueprintTree } from './BlueprintSources';
 import './widget.css';
 
-Stage.defineWidget({
+type BlueprintSourcesParams = {
+    blueprint_id: string;
+    deployment_id: string;
+};
+
+export type BlueprintSourcesData = {
+    blueprintId: string;
+    blueprintTree: BlueprintTree;
+    importedBlueprintIds: string[];
+    importedBlueprintTrees?: BlueprintTree[];
+    yamlFileName: string;
+};
+
+type BlueprintSourcesConfiguration = {
+    contentPaneWidth: number;
+};
+
+Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSourcesConfiguration>({
     id: 'blueprintSources',
     name: 'Blueprint Sources',
     description: 'Shows blueprint files',
@@ -23,20 +39,20 @@ Stage.defineWidget({
         }
     ],
 
-    fetchParams(widget, toolbox) {
+    fetchParams(_widget, toolbox) {
         const blueprintId = toolbox.getContext().getValue('blueprintId');
         const deploymentId = toolbox.getContext().getValue('deploymentId');
 
         return {
             blueprint_id: blueprintId,
-            deployment_id: deploymentId
+            deployment_id: deploymentId as string
         };
     },
 
-    fetchData(widget, toolbox, params) {
+    fetchData(_widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        const paramBlueprintId = params.blueprint_id;
+        const paramBlueprintId: string = params.blueprint_id;
         const paramDeploymentId = params.deployment_id;
 
         let promise = Promise.resolve({ blueprint_id: paramBlueprintId });
@@ -79,7 +95,7 @@ Stage.defineWidget({
         });
     },
 
-    render(widget, data, error, toolbox) {
+    render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
         if (_.isEmpty(data)) {
