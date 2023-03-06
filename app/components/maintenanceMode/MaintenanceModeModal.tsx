@@ -267,8 +267,13 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
             )}
 
             <Modal.Actions>
-                <CancelButton onClick={onDeny} content={tConfirmModal('no')} disabled={loading} />
-                <ApproveButton onClick={onApprove} content={tConfirmModal('yes')} icon="doctor" disabled={loading} />
+                <CancelButton onClick={onDeny} content={tConfirmModal('buttons.cancel')} disabled={loading} />
+                <ApproveButton
+                    onClick={onApprove}
+                    content={tConfirmModal('buttons.submit')}
+                    icon="doctor"
+                    disabled={loading}
+                />
             </Modal.Actions>
         </Modal>
     );
