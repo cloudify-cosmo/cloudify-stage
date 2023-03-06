@@ -16,7 +16,7 @@ interface DeploymentActionsMenuProps {
     toolbox: Stage.Types.Toolbox;
     trigger?: ReactNode;
     workflows: Workflow[];
-    deploymentLabels?: Label[];
+    deploymentLabels: Label[];
 }
 
 export default function DeploymentActionsMenu({
@@ -24,7 +24,7 @@ export default function DeploymentActionsMenu({
     toolbox,
     trigger,
     workflows,
-    deploymentLabels = []
+    deploymentLabels
 }: DeploymentActionsMenuProps) {
     const [sitesExist] = useSitesExist(toolbox);
     const managerState = toolbox.getManagerState();
