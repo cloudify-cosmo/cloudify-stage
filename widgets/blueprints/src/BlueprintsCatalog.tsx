@@ -38,7 +38,7 @@ export default function BlueprintsCatalog({
             updated_at: updatedAt,
             created_by: createdBy,
             isSelected,
-            visibility: visibilityString,
+            visibility: itemVisibility,
             depCount,
             main_file_name: mainFileName
         } = item;
@@ -64,7 +64,7 @@ export default function BlueprintsCatalog({
                                     />
                                 )}
                                 <ResourceVisibility
-                                    visibility={visibilityString}
+                                    visibility={itemVisibility}
                                     onSetVisibility={visibility => onSetVisibility(id, visibility)}
                                     allowedSettingTo={allowedVisibilitySettings}
                                     className="rightFloated"
