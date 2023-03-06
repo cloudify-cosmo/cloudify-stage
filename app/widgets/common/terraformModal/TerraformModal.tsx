@@ -47,27 +47,27 @@ const TerraformLogo = styled(Image)`
 
 export const inputMaxLength = 256;
 
-function LengthLimitedDynamicTableInput({
-    name,
-    onChange,
-    idPrefix,
-    index,
-    ...rest
-}: CustomConfigurationComponentProps<string>) {
-    const { getFieldError } = useFormErrors('terraformModal');
-
-    return (
-        <Form.Input
-            name={name}
-            fluid
-            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-            error={getFieldError(`${idPrefix}_${index}_${name}`)}
-            {...rest}
-        >
-            <input maxLength={inputMaxLength} />
-        </Form.Input>
-    );
-}
+// function LengthLimitedDynamicTableInput({
+//     name,
+//     onChange,
+//     idPrefix,
+//     index,
+//     ...rest
+// }: CustomConfigurationComponentProps<string>) {
+//     const { getFieldError } = useFormErrors('terraformModal');
+//
+//     return (
+//         <Form.Input
+//             name={name}
+//             fluid
+//             onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
+//             error={getFieldError(`${idPrefix}_${index}_${name}`)}
+//             {...rest}
+//         >
+//             <input maxLength={inputMaxLength} />
+//         </Form.Input>
+//     );
+// }
 
 export interface VariableRow extends Omit<Variable, 'name'> {
     name: { value: string; added?: boolean };
@@ -209,9 +209,9 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             {
                 id: 'variable',
                 label: t('variablesTable.variable'),
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput,
-                width: 3
+                type: GenericField.STRING_TYPE,
+                width: 3,
+                maxLength: inputMaxLength
             },
             {
                 id: 'source',
@@ -249,8 +249,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             {
                 id: 'name',
                 label: t('outputsTable.name'),
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput
+                type: GenericField.STRING_TYPE,
+                maxLength: inputMaxLength
             },
             {
                 id: 'type',
@@ -266,8 +266,8 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                 id: 'terraformOutput',
                 label: t('outputsTable.terraformOutput'),
                 default: '',
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput
+                type: GenericField.STRING_TYPE,
+                maxLength: inputMaxLength
             }
         ],
         undefined
