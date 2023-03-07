@@ -159,7 +159,7 @@ function markDuplicates(
     setVariables(variables);
 }
 
-type ErrorSetter = (path: string, error: any) => void;
+type ErrorSetter = (path: string, error: string) => void;
 
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
     const variablesColumns = useMemo<Columns<VariableRow>>(
