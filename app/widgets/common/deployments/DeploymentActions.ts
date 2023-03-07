@@ -31,7 +31,7 @@ export interface FullDeploymentData {
     sub_environments_count: number;
     /** Can be null when there are no subenvironments */
     sub_environments_status: DeploymentStatus | null;
-    labels?: Label[];
+    labels: Label[];
     workflows: Workflow[];
     inputs: { [key: string]: unknown };
     capabilities: { [key: string]: unknown };

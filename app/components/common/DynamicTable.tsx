@@ -7,7 +7,14 @@ export interface DynamicTableProps
     [key: string]: any;
 }
 
-const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], onChange, columns = [], ...rest }) => {
+const DynamicTable: FunctionComponent<DynamicTableProps> = ({
+    name,
+    value = [],
+    onChange,
+    columns = [],
+    errors,
+    ...rest
+}) => {
     const { GenericField, Button, Table } = Stage.Basic;
     const t = Stage.Utils.getT('shared.dynamicTable');
 
@@ -52,23 +59,27 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                     <Table.Row key={index}>
                         {columns
                             .filter(column => !column.hidden)
-                            .map(({ id, label, width, placeHolder, ...columnRest }) => (
-                                <Table.Cell key={id} width={width}>
-                                    <GenericField
-                                        label=""
-                                        key={id}
-                                        index={index}
-                                        name={id}
-                                        value={val[id]}
-                                        rowValues={val}
-                                        onChange={handleEditRow(id, index)}
-                                        placeholder={placeHolder}
-                                        {...rest}
-                                        {...columnRest}
-                                    />
-                                </Table.Cell>
-                            ))}
-                        <Table.Cell textAlign="right" width={1}>
+                            .map(({ id, label, width, placeHolder, ...columnRest }) => {
+                                const error = errors?.[index]?.[id];
+                                return (
+                                    <Table.Cell key={id} width={width} verticalAlign="top">
+                                        <GenericField
+                                            label=""
+                                            key={id}
+                                            index={index}
+                                            name={id}
+                                            value={val[id]}
+                                            rowValues={val}
+                                            onChange={handleEditRow(id, index)}
+                                            placeholder={placeHolder}
+                                            error={error && { content: error, pointing: 'above' }}
+                                            {...rest}
+                                            {...columnRest}
+                                        />
+                                    </Table.Cell>
+                                );
+                            })}
+                        <Table.Cell textAlign="right" width={1} verticalAlign="top">
                             <Button
                                 basic
                                 icon="trash"
