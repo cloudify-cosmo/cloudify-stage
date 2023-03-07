@@ -27,7 +27,7 @@ export default function UploadLicense({
         <Segment>
             <Form
                 errors={error}
-                errorMessageHeader={i18n.t('licenseManagement.errorHeader', 'License error')}
+                errorMessageHeader={i18n.t('licenseManagement.errorHeader')}
                 onErrorsDismiss={onErrorDismiss}
             >
                 <Form.TextArea
@@ -43,7 +43,7 @@ export default function UploadLicense({
                 />
 
                 <Button
-                    content={i18n.t('licenseManagement.update', 'Update')}
+                    content={i18n.t('licenseManagement.update')}
                     icon="upload"
                     color="yellow"
                     labelPosition="left"

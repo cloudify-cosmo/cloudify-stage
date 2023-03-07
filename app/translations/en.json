@@ -310,7 +310,23 @@
                 "activate": "Are you sure you want to enter maintenance mode?",
                 "deactivate": "Are you sure you want to exit maintenance mode?"
             },
-            "activeExecutionsDelay": "There are active executions. If you confirm, maintenance mode will be activated when all executions are done."
+            "buttons": {
+                "submit": "Yes",
+                "cancel": "No"
+            },
+            "activeExecutionsDelay": "There are active executions. If you confirm, maintenance mode will be activated when all executions are done.",
+            "executions": {
+                "blueprint": "Blueprint",
+                "deployment": "Deployment",
+                "workflow": "Workflow",
+                "id": "Id",
+                "system": "System",
+                "status": "Status",
+                "action": "Action",
+                "cancel": "Cancel",
+                "forceCancel": "Force Cancel",
+                "killCancel": "'Kill Cancel"
+            }
         },
         "deactivate": "Deactivate Maintenance Mode",
         "header": "Maintenance mode",
@@ -1695,7 +1711,7 @@
                 },
                 "noDataMessage": "There are no Node Instances of selected Node available."
             },
-            "nodesTable":{
+            "nodesTable": {
                 "noDataMessage": "There are no Nodes available. Probably there's no deployment created, yet.",
                 "typeHierarchy": "Type Hierarchy"
             }
@@ -2609,6 +2625,15 @@
                         "default": "Blueprint Default"
                     },
                     "location": "Location"
+                },
+                "errors": {
+                    "nameMissing": "Environment name is required, please fill the environment name",
+                    "blueprintNameMissing": "Environment blueprint name should be provided",
+                    "blueprintNameInvalid": "Invalid blueprint name. It should contain only letters, digits and the following characters: \"-\", \".\" and \"_\".",
+                    "capabilityNameMissing": "Please provide capability name",
+                    "capabilitySourceMissing": "Please provide capability source",
+                    "capabilityNameDuplicated": "Capability name already defined",
+                    "blueprintNameExists": "Blueprint with this name already exists"
                 },
                 "submit": "Create",
                 "cancelConfirm": "Are you sure you would like to discard the filled data and close?"

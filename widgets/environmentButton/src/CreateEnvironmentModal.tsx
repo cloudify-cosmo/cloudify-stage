@@ -4,7 +4,7 @@ import type {
     PostEnvironmentBlueprintRequestBody,
     PostEnvironmentBlueprintResponse
 } from 'backend/routes/Environment.types';
-import { map, set } from 'lodash';
+import { find, isEmpty, map, pick, set } from 'lodash';
 import type { DefaultableLabel } from 'widgets/environmentButton/src/widget.types';
 import CapabilityBlueprintDefaultInput from './CapabilityBlueprintDefaultInput';
 import CapabilityValueInput from './CapabilityValueInput';
@@ -15,6 +15,7 @@ const translate = Stage.Utils.getT('widgets.environmentButton.createNewModal');
 const translateForm = Stage.Utils.composeT(translate, 'form');
 const translateCapabilities = Stage.Utils.composeT(translateForm, 'capabilities');
 const translateSource = Stage.Utils.composeT(translateCapabilities, 'sources');
+const translateError = Stage.Utils.composeT(translate, 'errors');
 
 type Capability = PostEnvironmentBlueprintRequestBody['capabilities'][number];
 
@@ -23,17 +24,23 @@ interface CreateEnvironmentModalProps {
     toolbox: Toolbox;
 }
 
+const commonMaxLength = 256;
+
 export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnvironmentModalProps) {
     const { ApproveButton, CancelButton, Form, GenericField, Modal, Header, LoadingOverlay, Confirm } = Stage.Basic;
-    const { useInput, useBoolean } = Stage.Hooks;
+    const { useInput, useBoolean, useErrors } = Stage.Hooks;
     const [submitInProgress, startSubmit, stopSubmit] = useBoolean();
+    const { errors, setErrors, getContextError, createEmptyErrors } = useErrors<
+        'name' | 'blueprintName' | 'capabilities'
+    >();
 
     const capabilitiesColumns = useMemo<Stage.Types.WidgetConfigurationDefinition[]>(
         () => [
             {
                 id: 'name',
                 label: translateCapabilities('name'),
-                type: GenericField.STRING_TYPE
+                type: GenericField.STRING_TYPE,
+                maxLength: commonMaxLength
             },
             {
                 id: 'source',
@@ -71,52 +78,104 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
     const [confirmCancelModalOpen, openConfirmCancelModal, closeConfirmCancelModal] = useBoolean();
 
     function handleSubmit() {
-        const BlueprintActions = Stage.Common.Blueprints.Actions;
         const { Consts } = Stage.Common;
 
-        const creationParams: PostEnvironmentBlueprintRequestBody = {
-            description: blueprintDescription,
-            labels,
-            capabilities
-        };
+        const validationErrors = createEmptyErrors();
+
+        if (!blueprintName) {
+            validationErrors.blueprintName = translateError('blueprintNameMissing');
+        } else if (!blueprintName.match(Consts.idRegex)) {
+            validationErrors.blueprintName = translateError('blueprintNameInvalid');
+        }
+
+        if (!deploymentName) {
+            validationErrors.name = translateError('nameMissing');
+        }
+
+        capabilities.forEach((capability, index) => {
+            function getErrorsForRow() {
+                validationErrors.capabilities = validationErrors.capabilities ?? {};
+                validationErrors.capabilities[index] = validationErrors.capabilities[index] ?? {};
+                return validationErrors.capabilities[index];
+            }
+
+            if (!capability.name) {
+                getErrorsForRow().name = translateError('capabilityNameMissing');
+            } else if (find(capabilities.slice(0, index), pick(capability, 'name'))) {
+                getErrorsForRow().name = translateError('capabilityNameDuplicated');
+            }
+
+            if (!capability.source) {
+                getErrorsForRow().source = translateError('capabilitySourceMissing');
+            }
+        });
+
+        if (!isEmpty(validationErrors)) {
+            setErrors(validationErrors);
+            return;
+        }
 
         startSubmit();
 
-        return toolbox
-            .getInternal()
-            .doPost<PostEnvironmentBlueprintResponse, PostEnvironmentBlueprintRequestBody>('/environment/blueprint', {
-                body: creationParams
-            })
-            .then(blueprintContent => {
-                const file = set<File>(new Blob([blueprintContent]), 'name', Consts.defaultBlueprintYamlFileName);
+        const blueprintActions = new Stage.Common.Blueprints.Actions(toolbox);
 
-                return new BlueprintActions(toolbox).doUpload(blueprintName, {
-                    file,
-                    blueprintYamlFile: Consts.defaultBlueprintYamlFileName
-                });
-            })
-            .then(() =>
-                toolbox.drillDown(
-                    toolbox.getWidget(),
-                    'blueprint',
-                    {
-                        blueprintId: blueprintName,
-                        deploymentName,
-                        deploymentInputs: _(
-                            capabilities.filter(
-                                capability => capability.source !== 'static' && !capability.blueprintDefault
-                            )
+        blueprintActions
+            .doGetBlueprints({ id: blueprintName })
+            .then(response => {
+                if (response.items.length) {
+                    setErrors({ blueprintName: translateError('blueprintNameExists') });
+                    return Promise.resolve();
+                }
+
+                const creationParams: PostEnvironmentBlueprintRequestBody = {
+                    description: blueprintDescription,
+                    labels,
+                    capabilities
+                };
+
+                return toolbox
+                    .getInternal()
+                    .doPost<PostEnvironmentBlueprintResponse, PostEnvironmentBlueprintRequestBody>(
+                        '/environment/blueprint',
+                        {
+                            body: creationParams
+                        }
+                    )
+                    .then(blueprintContent => {
+                        const file = set<File>(
+                            new Blob([blueprintContent]),
+                            'name',
+                            Consts.defaultBlueprintYamlFileName
+                        );
+
+                        return blueprintActions.doUpload(blueprintName, {
+                            file,
+                            blueprintYamlFile: Consts.defaultBlueprintYamlFileName
+                        });
+                    })
+                    .then(() =>
+                        toolbox.drillDown(
+                            toolbox.getWidget(),
+                            'blueprint',
+                            {
+                                blueprintId: blueprintName,
+                                deploymentName,
+                                deploymentInputs: _(
+                                    capabilities.filter(
+                                        capability => capability.source !== 'static' && !capability.blueprintDefault
+                                    )
+                                )
+                                    .keyBy('name')
+                                    .mapValues(capability => `{ get-${capability.source}: ${capability.value} }`)
+                                    .value(),
+                                labels: labels.filter(label => !label.blueprintDefault),
+                                siteName,
+                                openDeploymentModal: true
+                            },
+                            blueprintName
                         )
-                            .keyBy('name')
-                            .mapValues(capability => `{ get-${capability.source}: ${capability.value} }`)
-                            .value(),
-                        labels: labels.filter(label => !label.blueprintDefault),
-                        siteName,
-                        openDeploymentModal: true
-                    },
-                    blueprintName
-                )
-            )
+                    );
+            })
             .finally(stopSubmit);
     }
 
@@ -154,18 +213,24 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
                 {submitInProgress && <LoadingOverlay />}
                 <Modal.Header>{translate('header')}</Modal.Header>
                 <Modal.Content>
-                    <Form>
+                    <Form scrollToError errors={isEmpty(errors) ? undefined : {}}>
                         <Form.Input
                             label={translateForm(`name`)}
                             value={deploymentName}
                             onChange={setDeploymentName}
                             onBlur={handleNameBlur}
-                        />
+                            error={getContextError('name')}
+                            required
+                        >
+                            <input maxLength={commonMaxLength} />
+                        </Form.Input>
                         <Form.Input
                             label={translateForm(`blueprintName`)}
                             value={blueprintName}
                             onChange={setBlueprintName}
                             loading={generatingBlueprintName}
+                            required
+                            error={getContextError('blueprintName')}
                         />
                         <Form.TextArea
                             label={translateForm(`blueprintDescription`)}
@@ -180,6 +245,7 @@ export default function CreateEnvironmentModal({ onHide, toolbox }: CreateEnviro
                             onChange={(_event, field) => setCapabilities(field.value as Capability[])}
                             columns={capabilitiesColumns}
                             widgetlessToolbox={toolbox}
+                            errors={errors.capabilities}
                         />
                         <Header size="tiny">{translateForm('labels.header')}</Header>
                         <LabelsInput

@@ -18,7 +18,7 @@ describe('Config', () => {
     it('should construct manager URL', () => {
         jest.doMock('../../conf/me.json', () => ({}));
         loadMeJson();
-        expect(getConfig('main').managerUrl).toBe('https://127.0.0.1:53333');
+        expect(getConfig('main').managerUrl).toBe('https://127.0.0.1:443');
     });
 
     it('should support `saml` section', () => {
