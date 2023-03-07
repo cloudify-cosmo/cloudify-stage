@@ -27,7 +27,7 @@ export default function ActionsMenus({
                 onActionClick={actionName => onDeploymentAction(deployment, actionName)}
                 toolbox={toolbox}
                 workflows={workflows}
-                deploymentLabels={deployment?.labels || []}
+                deploymentLabels={deployment.labels}
             />
         </>
     );
