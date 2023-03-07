@@ -34,13 +34,6 @@ describe('Environment button widget', () => {
             cy.contains('New').click();
         });
 
-        it('shows confirm modal on cancel', () => {
-            cy.clickButton('Cancel');
-            cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
-            cy.clickButton('Yes');
-            cy.get('.modal').should('not.exist');
-        });
-
         it('validates form', () => {
             cy.get('.modal').within(() => {
                 cy.clickButton('Create');
@@ -75,7 +68,12 @@ describe('Environment button widget', () => {
                         cy.get('tr').eq(1).contains('Please provide capability source');
                         cy.get('tr').eq(3).contains('Capability name already defined');
                     });
+
+                cy.clickButton('Cancel');
             });
+            cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
+            cy.clickButton('Yes');
+            cy.get('.modal').should('not.exist');
         });
 
         it('passes on form data on submit', () => {
