@@ -28,10 +28,10 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
 
     const formatExpirationDate = (date: string) =>
         isEmpty(date)
-            ? i18n.t('licenseManagement.expirationDateNever', 'Never')
+            ? i18n.t('licenseManagement.expirationDateNever')
             : StageUtils.formatLocalTimestamp(date, 'DD-MM-YYYY');
     const formatVersion = (version: string) =>
-        isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
+        isEmpty(version) ? i18n.t('licenseManagement.allVersions') : String(version);
     const formatCapabilities = (capabilities: string[]) => join(capabilities, ', ');
     const isFalse = (value: boolean) => !value;
 
@@ -45,39 +45,39 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
     const fields: Field[] = [
         {
             name: 'expiration_date',
-            header: i18n.t('licenseManagement.expirationDate', 'Expiration Date'),
+            header: i18n.t('licenseManagement.expirationDate'),
             icon: 'clock',
             format: formatExpirationDate
         },
         {
             name: 'cloudify_version',
-            header: i18n.t('licenseManagement.validForVersion', 'Valid For Version'),
+            header: i18n.t('licenseManagement.validForVersion'),
             icon: 'thumbs up',
             format: formatVersion
         },
         {
             name: 'license_edition',
-            header: i18n.t('licenseManagement.licenseEdition', 'License Edition'),
+            header: i18n.t('licenseManagement.licenseEdition'),
             icon: 'file alternate outline',
             format: String
         },
         {
             name: 'capabilities',
-            header: i18n.t('licenseManagement.capabilities', 'Capabilities'),
+            header: i18n.t('licenseManagement.capabilities'),
             icon: 'wrench',
             format: formatCapabilities,
             hide: isEmpty
         },
         {
             name: 'trial',
-            header: i18n.t('licenseManagement.trial', 'Trial'),
+            header: i18n.t('licenseManagement.trial'),
             icon: 'lab',
-            format: constant(i18n.t('licenseManagement.trialYes', 'Yes')),
+            format: constant(i18n.t('licenseManagement.trialYes')),
             hide: isFalse
         },
         {
             name: 'customer_id',
-            header: i18n.t('licenseManagement.licensedTo', 'Licensed To'),
+            header: i18n.t('licenseManagement.licensedTo'),
             icon: 'handshake',
             format: String,
             hide: isEmpty

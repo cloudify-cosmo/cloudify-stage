@@ -68,7 +68,7 @@ export default class ResetPagesModal extends React.Component<ResetPagesModalProp
         return tenantNames.length > 1 ? (
             <Modal className="tiny resetPagesModal" open={open} onClose={onHide}>
                 <Modal.Header>
-                    <Icon name="user" /> {i18n.t('pagesResetModal.header', 'Reset pages for tenants')}
+                    <Icon name="user" /> {i18n.t('pagesResetModal.header')}
                 </Modal.Header>
 
                 <Modal.Content>

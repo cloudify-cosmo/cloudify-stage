@@ -34,10 +34,10 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
     };
 
     const fields: VersionField[] = [
-        { name: 'full_version', header: i18n.t('licenseManagement.version', 'Version'), icon: 'star', format: String },
+        { name: 'full_version', header: i18n.t('licenseManagement.version'), icon: 'star', format: String },
         {
             name: 'distro',
-            header: i18n.t('licenseManagement.distribution', 'Distribution'),
+            header: i18n.t('licenseManagement.distribution'),
             icon: 'linux',
             format: startCase,
             hide: isEmpty
@@ -65,6 +65,6 @@ export default function CurrentVersion({ version }: CurrentVersionProps) {
             </Table.Body>
         </Table>
     ) : (
-        <Message>{i18n.t('licenseManagement.noVersion', 'There is no version data.')}</Message>
+        <Message>{i18n.t('licenseManagement.noVersion')}</Message>
     );
 }
