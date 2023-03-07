@@ -4,6 +4,7 @@ import React from 'react';
 export interface DynamicTableProps
     extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {
     columns?: Stage.Types.WidgetConfigurationDefinition[];
+    errors?: Record<number, Record<string, any>>;
     [key: string]: any;
 }
 
@@ -16,7 +17,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({
     ...rest
 }) => {
     const { GenericField, Button, Table } = Stage.Basic;
-    const t = Stage.Utils.getT('shared.dynamicTable');
+    const translate = Stage.Utils.getT('shared.dynamicTable');
 
     const handleEditRow =
         (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] =>
@@ -83,8 +84,8 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({
                             <Button
                                 basic
                                 icon="trash"
-                                aria-label={t('removeButton')}
-                                title={t('removeButton')}
+                                aria-label={translate('removeButton')}
+                                title={translate('removeButton')}
                                 onClick={handleRemoveRow(index)}
                             />
                         </Table.Cell>
@@ -94,7 +95,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({
             <Table.Footer>
                 <Table.Row>
                     <Table.HeaderCell colSpan={columns.length + 1}>
-                        <Button icon="add" content={t('addButton')} onClick={handleAddRow} />
+                        <Button icon="add" content={translate('addButton')} onClick={handleAddRow} />
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Footer>
