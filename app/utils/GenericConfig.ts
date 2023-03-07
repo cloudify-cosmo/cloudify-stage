@@ -6,13 +6,10 @@ export default class GenericConfig {
     static POLLING_TIME_CONFIG = (pollingTime = 0): WidgetConfigurationDefinition => {
         return {
             id: 'pollingTime',
-            name: i18n.t('widget.config.pollingTime.name', 'Refresh time interval'),
+            name: i18n.t('widget.config.pollingTime.name'),
             default: pollingTime,
-            placeHolder: i18n.t('widget.config.pollingTime.placeholder', 'Enter time interval in seconds'),
-            description: i18n.t(
-                'widget.config.pollingTime.description',
-                'Data of the widget will be refreshed per provided interval time in seconds'
-            ),
+            placeHolder: i18n.t('widget.config.pollingTime.placeholder'),
+            description: i18n.t('widget.config.pollingTime.description'),
             type: GenericField.NUMBER_TYPE,
             min: 0
         };

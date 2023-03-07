@@ -19,7 +19,7 @@ export default function SystemStatusHeader() {
         <div style={{ verticalAlign: 'middle', overflow: 'hidden' }}>
             <Header floated="left" style={{ width: 'auto', marginTop: '4px' }} size="medium">
                 <SystemStatusIcon />
-                {i18n.t('cluster.systemStatus', 'System Status')}
+                {i18n.t('cluster.systemStatus')}
             </Header>
             <Button
                 floated="right"

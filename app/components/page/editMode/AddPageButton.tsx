@@ -12,7 +12,7 @@ const AddPageButton = () => {
     const dispatch = useDispatch();
 
     function onClick() {
-        dispatch(addPage(i18n.t('editMode.defaultPageName', 'Page_{{index}}', { index: nameIndex })));
+        dispatch(addPage(i18n.t('editMode.defaultPageName', { index: nameIndex })));
         nameIndex += 1;
     }
 
@@ -21,7 +21,7 @@ const AddPageButton = () => {
             icon="add"
             labelPosition="left"
             onClick={onClick}
-            content={i18n.t('editMode.addPage', 'Add Page')}
+            content={i18n.t('editMode.addPage')}
             className="addPageBtn"
             style={{ width: buttonWidth }}
         />
