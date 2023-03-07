@@ -34,8 +34,43 @@ describe('Environment button widget', () => {
             cy.contains('New').click();
         });
 
-        it('shows confirm modal on cancel', () => {
-            cy.clickButton('Cancel');
+        it('validates form', () => {
+            cy.get('.modal').within(() => {
+                cy.clickButton('Create');
+                cy.getField('Name').contains('Environment name is required');
+                cy.getField('Blueprint Name').contains('Environment blueprint name should be provided');
+
+                cy.typeToFieldInput('Blueprint Name', '!');
+                cy.clickButton('Create');
+                cy.getField('Blueprint Name').contains('Invalid blueprint name');
+
+                const existingBlueprintName = 'existing';
+                cy.typeToFieldInput('Blueprint Name', existingBlueprintName);
+                cy.typeToFieldInput('Name', 'Valid');
+                cy.interceptSp('GET', '/blueprints', { items: [0] });
+                cy.clickButton('Create');
+                cy.getField('Blueprint Name').contains('Blueprint with this name already exists');
+
+                cy.clickButton('Add');
+                cy.clickButton('Add');
+                cy.clickButton('Add');
+                cy.contains('Capabilities')
+                    .next()
+                    .within(() => {
+                        fillCapabilityInputs(2, 'a');
+                        fillCapabilityInputs(3, 'a');
+                    });
+                cy.clickButton('Create');
+                cy.contains('Capabilities')
+                    .next()
+                    .within(() => {
+                        cy.get('tr').eq(1).contains('Please provide capability name');
+                        cy.get('tr').eq(1).contains('Please provide capability source');
+                        cy.get('tr').eq(3).contains('Capability name already defined');
+                    });
+
+                cy.clickButton('Cancel');
+            });
             cy.contains('Are you sure you would like to discard the filled data and close?').should('be.visible');
             cy.clickButton('Yes');
             cy.get('.modal').should('not.exist');
