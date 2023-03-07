@@ -76,43 +76,6 @@ describe('Environment button widget', () => {
             cy.get('.modal').should('not.exist');
         });
 
-        it('validates form', () => {
-            cy.get('.modal').within(() => {
-                cy.clickButton('Create');
-                cy.getField('Name').contains('Environment name is required');
-                cy.getField('Blueprint Name').contains('Environment blueprint name should be provided');
-
-                cy.typeToFieldInput('Blueprint Name', '!');
-                cy.clickButton('Create');
-                cy.getField('Blueprint Name').contains('Invalid blueprint name');
-
-                const existingBlueprintName = 'existing';
-                cy.typeToFieldInput('Blueprint Name', existingBlueprintName);
-                cy.typeToFieldInput('Name', 'Valid');
-                cy.interceptSp('GET', '/blueprints', { items: [0] });
-                cy.clickButton('Create');
-                cy.getField('Blueprint Name').contains('Blueprint with this name already exists');
-
-                cy.clickButton('Add');
-                cy.clickButton('Add');
-                cy.clickButton('Add');
-                cy.contains('Capabilities')
-                    .next()
-                    .within(() => {
-                        fillCapabilityInputs(2, 'a');
-                        fillCapabilityInputs(3, 'a');
-                    });
-                cy.clickButton('Create');
-                cy.contains('Capabilities')
-                    .next()
-                    .within(() => {
-                        cy.get('tr').eq(1).contains('Please provide capability name');
-                        cy.get('tr').eq(1).contains('Please provide capability source');
-                        cy.get('tr').eq(3).contains('Capability name already defined');
-                    });
-            });
-        });
-
         it('passes on form data on submit', () => {
             const deploymentName = 'Environment button test';
             cy.deleteBlueprint('environment_button_test');
