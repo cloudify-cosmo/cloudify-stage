@@ -13,7 +13,7 @@ export default function EulaLink() {
             target="_blank"
             rel="noopener noreferrer"
         >
-            {i18n.t('licenseManagement.eula', 'End User License Agreement')}
+            {i18n.t('licenseManagement.eula')}
         </a>
     );
 }

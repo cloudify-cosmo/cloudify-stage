@@ -195,13 +195,13 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                             <Message content={tConfirmModal('activeExecutionsDelay')} info />
 
                             <DataTable>
-                                <DataTable.Column label={tExecutions('blueprint', 'Blueprint')} width="15%" />
-                                <DataTable.Column label={tExecutions('deployment', 'Deployment')} width="15%" />
-                                <DataTable.Column label={tExecutions('workflow', 'Workflow')} width="15%" />
-                                <DataTable.Column label={tExecutions('id', 'Id')} width="20%" />
-                                <DataTable.Column label={tExecutions('system', 'System')} width="5%" />
-                                <DataTable.Column label={tExecutions('status', 'Status')} width="15%" />
-                                <DataTable.Column label={tExecutions('action', 'Action')} />
+                                <DataTable.Column label={tExecutions('blueprint')} width="15%" />
+                                <DataTable.Column label={tExecutions('deployment')} width="15%" />
+                                <DataTable.Column label={tExecutions('workflow')} width="15%" />
+                                <DataTable.Column label={tExecutions('id')} width="20%" />
+                                <DataTable.Column label={tExecutions('system')} width="5%" />
+                                <DataTable.Column label={tExecutions('status')} width="15%" />
+                                <DataTable.Column label={tExecutions('action')} />
 
                                 {activeExecutions?.items.map(item => {
                                     return (
@@ -220,7 +220,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                                                 <PopupMenu className="menuAction">
                                                     <Menu pointing vertical>
                                                         <Menu.Item
-                                                            content={tExecutions('cancel', 'Cancel')}
+                                                            content={tExecutions('cancel')}
                                                             icon="cancel"
                                                             name={ExecutionUtils.CANCEL_ACTION}
                                                             onClick={() =>
@@ -231,7 +231,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                                                             }
                                                         />
                                                         <Menu.Item
-                                                            content={tExecutions('forceCancel', 'Force Cancel')}
+                                                            content={tExecutions('forceCancel')}
                                                             icon={<Icon name="cancel" color="red" />}
                                                             name={ExecutionUtils.FORCE_CANCEL_ACTION}
                                                             onClick={() =>
@@ -242,7 +242,7 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
                                                             }
                                                         />
                                                         <Menu.Item
-                                                            content={tExecutions('killCancel', 'Kill Cancel')}
+                                                            content={tExecutions('killCancel')}
                                                             icon={<Icon name="stop" color="red" />}
                                                             name={ExecutionUtils.KILL_CANCEL_ACTION}
                                                             onClick={() =>
@@ -267,10 +267,10 @@ export default function MaintenanceModeModal({ onHide, show }: MaintenanceModeMo
             )}
 
             <Modal.Actions>
-                <CancelButton onClick={onDeny} content={tConfirmModal('no', 'No')} disabled={loading} />
+                <CancelButton onClick={onDeny} content={tConfirmModal('buttons.cancel')} disabled={loading} />
                 <ApproveButton
                     onClick={onApprove}
-                    content={tConfirmModal('yes', 'Yes')}
+                    content={tConfirmModal('buttons.submit')}
                     icon="doctor"
                     disabled={loading}
                 />

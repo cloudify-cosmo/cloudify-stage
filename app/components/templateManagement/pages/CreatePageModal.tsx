@@ -59,7 +59,7 @@ export default function CreatePageModal({ onCreatePage }: CreatePageModalProps) 
         <Modal trigger={trigger} open={open} onOpen={openModal} onClose={unsetOpen} className="createPageModal">
             <Modal.Header>
                 <Icon name="file outline" />
-                {i18n.t('templates.createPageModal.header', 'Create page')}
+                {i18n.t('templates.createPageModal.header')}
             </Modal.Header>
 
             <Modal.Content>
@@ -75,7 +75,7 @@ export default function CreatePageModal({ onCreatePage }: CreatePageModalProps) 
                 <ApproveButton
                     onClick={submitCreate}
                     disabled={loading}
-                    content={i18n.t('templates.createPageModal.create', 'Create')}
+                    content={i18n.t('templates.createPageModal.create')}
                     icon="checkmark"
                 />
             </Modal.Actions>

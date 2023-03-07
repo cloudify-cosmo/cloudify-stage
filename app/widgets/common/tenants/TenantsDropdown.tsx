@@ -24,7 +24,7 @@ const TenantsDropdown = ({ value, availableTenants, onChange }: TenantsDropdownP
     });
 
     return (
-        <Form.Field label={t('fields.tenants', 'Tenants')}>
+        <Form.Field label={t('fields.tenants')}>
             <Form.Dropdown
                 name="tenants"
                 multiple
