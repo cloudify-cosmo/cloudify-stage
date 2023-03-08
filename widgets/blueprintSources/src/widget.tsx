@@ -89,7 +89,7 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
             }
             return {
                 blueprintTree: {},
-                importedBlueprintsTrees: [],
+                importedBlueprintTrees: [],
                 blueprintId: '',
                 importedBlueprintIds: [],
                 yamlFileName: ''
