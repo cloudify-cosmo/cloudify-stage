@@ -1,11 +1,12 @@
-import { Loading, NodesTreeProps } from 'cloudify-ui-components';
+import { Loading } from 'cloudify-ui-components';
+import type { NodesTreeProps } from 'cloudify-ui-components';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
 import SplitterLayout from 'react-splitter-layout';
 import styled from 'styled-components';
 import type { WidgetData } from 'app/utils/StageAPI';
 import Actions from './actions';
-import { BlueprintSourcesData } from './widget';
+import type { BlueprintSourcesData } from './widget';
 
 const { CancelButton, NodesTree, Message, Label, Modal, HighlightText, ErrorMessage, Icon } = Stage.Basic;
 const { useResettableState, useBoolean } = Stage.Hooks;

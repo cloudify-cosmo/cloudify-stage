@@ -4,7 +4,9 @@ import type { BlueprintTree } from './BlueprintSources';
 import './widget.css';
 
 type BlueprintSourcesParams = {
+    // eslint-disable-next-line camelcase
     blueprint_id: string;
+    // eslint-disable-next-line camelcase
     deployment_id: string;
 };
 
