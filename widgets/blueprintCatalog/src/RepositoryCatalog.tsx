@@ -69,12 +69,6 @@ const StyledText = styled.p`
     font-size: 12px;
 `;
 
-const StyledGridWrapper = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 3fr));
-    grid-gap: 20px;
-`;
-
 const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     fetchData = noop,
     onSelect = noop,
@@ -86,6 +80,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
     onReadme,
     widget
 }) => {
+    const { GridWrapper } = Stage.Common.Components;
     const { fieldsToShow, displayStyle } = widget.configuration;
     const showName = fieldsToShow.includes(t('configuration.fieldsToShow.items.name'));
     const showDescription = fieldsToShow.includes(t('configuration.fieldsToShow.items.description'));
@@ -216,7 +211,7 @@ const RepositoryCatalog: FunctionComponent<RepositoryViewProps> = ({
             className="repositoryCatalog"
             noDataMessage={noDataMessage}
         >
-            <StyledGridWrapper>{catalogItems}</StyledGridWrapper>
+            <GridWrapper>{catalogItems}</GridWrapper>
         </DataSegment>
     );
 };
