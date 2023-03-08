@@ -42,19 +42,19 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
     ],
 
     fetchParams(_widget, toolbox) {
-        const blueprintId = toolbox.getContext().getValue('blueprintId');
-        const deploymentId = toolbox.getContext().getValue('deploymentId');
+        const blueprintId = toolbox.getContext().getValue('blueprintId') ?? '';
+        const deploymentId = toolbox.getContext().getValue('deploymentId') ?? '';
 
         return {
             blueprint_id: blueprintId,
-            deployment_id: deploymentId as string
+            deployment_id: deploymentId
         };
     },
 
     fetchData(_widget, toolbox, params) {
         const actions = new Actions(toolbox);
 
-        const paramBlueprintId: string = params.blueprint_id;
+        const paramBlueprintId = params.blueprint_id;
         const paramDeploymentId = params.deployment_id;
 
         let promise = Promise.resolve({ blueprint_id: paramBlueprintId });
