@@ -212,7 +212,10 @@ a:hover {
             border: 1px solid rgba(34, 36, 38, 0.15);
         }
     }
-
+    .rowActions {
+        min-width: 60px;
+        text-align: right !important;
+    }
     .row {
         cursor: pointer;
 

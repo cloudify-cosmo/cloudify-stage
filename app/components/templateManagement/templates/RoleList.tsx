@@ -39,9 +39,7 @@ export default function RoleList({ custom = false, onDelete = noop, roles = [], 
                         </List.Item>
                     );
                 })}
-                {_.isEmpty(roles) && (
-                    <Message content={i18n.t('templates.templateManagement.roleList.noRoles', 'No roles available')} />
-                )}
+                {_.isEmpty(roles) && <Message content={i18n.t('templates.templateManagement.roleList.noRoles')} />}
             </List>
         </Segment>
     );

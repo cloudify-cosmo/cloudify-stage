@@ -1,5 +1,6 @@
 import type { SemanticICONS } from 'semantic-ui-react';
 import styled from 'styled-components';
+import colors from '../../../../app/styles/colors.scss';
 
 const { Icon } = Stage.Basic;
 
@@ -13,7 +14,7 @@ interface StyledIconProps {
     name: SemanticICONS;
 }
 export const StyledIcon = styled(Icon)<StyledIconProps>`
-    color: #65adff;
+    color: ${colors.cloudifyBlue};
     line-height: 1;
 
     && {

@@ -41,7 +41,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
         <>
             {!_.isEmpty(header) && header}
             <Table
-                celled
+                compact
                 basic="very"
                 collapsing
                 className="servicesData"
@@ -61,7 +61,7 @@ const ClusterServicesOverview: FunctionComponent<ClusterServicesOverviewProps> =
                                         key={serviceName}
                                         style={{ backgroundColor: clusterServiceBgColor(service.status) }}
                                     >
-                                        <Table.Cell>
+                                        <Table.Cell style={{ padding: '10px' }}>
                                             {clickable && isSystemHealthPagePresent ? (
                                                 <Link to={systemHealthPageUrl}>
                                                     <ClusterService

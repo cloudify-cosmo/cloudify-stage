@@ -95,9 +95,8 @@ const TenantModal: FunctionComponent<TenantModalProps> = ({ onHide, open, user, 
 
             <Modal.Content>
                 <Form loading={isLoading} errors={errors} onErrorsDismiss={clearErrors}>
-                    <Form.Field>
+                    <Form.Field label={t('details.tenants')}>
                         <Form.Dropdown
-                            placeholder={t('details.tenants')}
                             multiple
                             selection
                             options={options}

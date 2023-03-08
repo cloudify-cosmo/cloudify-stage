@@ -4,12 +4,20 @@ import React from 'react';
 export interface DynamicTableProps
     extends Pick<Stage.Types.CustomConfigurationComponentProps<Record<string, any>[]>, 'name' | 'onChange' | 'value'> {
     columns?: Stage.Types.WidgetConfigurationDefinition[];
+    errors?: Record<number, Record<string, any>>;
     [key: string]: any;
 }
 
-const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], onChange, columns = [], ...rest }) => {
+const DynamicTable: FunctionComponent<DynamicTableProps> = ({
+    name,
+    value = [],
+    onChange,
+    columns = [],
+    errors,
+    ...rest
+}) => {
     const { GenericField, Button, Table } = Stage.Basic;
-    const t = Stage.Utils.getT('shared.dynamicTable');
+    const translate = Stage.Utils.getT('shared.dynamicTable');
 
     const handleEditRow =
         (key: string, index: number): ComponentProps<typeof GenericField>['onChange'] =>
@@ -35,7 +43,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
     };
 
     return (
-        <Table>
+        <Table compact basic>
             <Table.Header>
                 <Table.Row>
                     {columns
@@ -52,28 +60,32 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
                     <Table.Row key={index}>
                         {columns
                             .filter(column => !column.hidden)
-                            .map(({ id, label, width, placeHolder, ...columnRest }) => (
-                                <Table.Cell key={id} width={width}>
-                                    <GenericField
-                                        label=""
-                                        key={id}
-                                        index={index}
-                                        name={id}
-                                        value={val[id]}
-                                        rowValues={val}
-                                        onChange={handleEditRow(id, index)}
-                                        placeholder={placeHolder}
-                                        {...rest}
-                                        {...columnRest}
-                                    />
-                                </Table.Cell>
-                            ))}
-                        <Table.Cell textAlign="right" width={1}>
+                            .map(({ id, label, width, placeHolder, ...columnRest }) => {
+                                const error = errors?.[index]?.[id];
+                                return (
+                                    <Table.Cell key={id} width={width} verticalAlign="top">
+                                        <GenericField
+                                            label=""
+                                            key={id}
+                                            index={index}
+                                            name={id}
+                                            value={val[id]}
+                                            rowValues={val}
+                                            onChange={handleEditRow(id, index)}
+                                            placeholder={placeHolder}
+                                            error={error && { content: error, pointing: 'above' }}
+                                            {...rest}
+                                            {...columnRest}
+                                        />
+                                    </Table.Cell>
+                                );
+                            })}
+                        <Table.Cell textAlign="right" width={1} verticalAlign="top">
                             <Button
                                 basic
                                 icon="trash"
-                                aria-label={t('removeButton')}
-                                title={t('removeButton')}
+                                aria-label={translate('removeButton')}
+                                title={translate('removeButton')}
                                 onClick={handleRemoveRow(index)}
                             />
                         </Table.Cell>
@@ -83,7 +95,7 @@ const DynamicTable: FunctionComponent<DynamicTableProps> = ({ name, value = [], 
             <Table.Footer>
                 <Table.Row>
                     <Table.HeaderCell colSpan={columns.length + 1}>
-                        <Button icon="add" content={t('addButton')} onClick={handleAddRow} />
+                        <Button icon="add" content={translate('addButton')} onClick={handleAddRow} />
                     </Table.HeaderCell>
                 </Table.Row>
             </Table.Footer>

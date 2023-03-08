@@ -231,7 +231,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                     <div>
                         <Breadcrumb>
                             <Breadcrumb.Section onClick={onTemplateNavigate}>
-                                {i18n.t('templates.pageManagement.breadcrumb', 'Template management')}
+                                {i18n.t('templates.pageManagement.breadcrumb')}
                             </Breadcrumb.Section>
                             <Breadcrumb.Divider />
                             <Breadcrumb.Section active>
@@ -270,21 +270,21 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                         onDismiss={onTemplateNavigate}
                         header={
                             isEditMode
-                                ? i18n.t('templates.pageManagement.editHeader', 'Page management')
-                                : i18n.t('templates.pageManagement.previewHeader', 'Page preview')
+                                ? i18n.t('templates.pageManagement.editHeader')
+                                : i18n.t('templates.pageManagement.previewHeader')
                         }
                     >
                         {isEditMode ? (
                             <>
                                 <Button
                                     basic
-                                    content={i18n.t('templates.pageManagement.save', 'Save')}
+                                    content={i18n.t('templates.pageManagement.save')}
                                     icon="save"
                                     onClick={onPageSave}
                                 />
                                 <Button
                                     basic
-                                    content={i18n.t('templates.pageManagement.cancel', 'Cancel')}
+                                    content={i18n.t('templates.pageManagement.cancel')}
                                     icon="remove"
                                     onClick={onTemplateNavigate}
                                 />
@@ -292,7 +292,7 @@ export default function PageManagement({ pageId, isEditMode = false }: PageManag
                         ) : (
                             <Button
                                 basic
-                                content={i18n.t('templates.pageManagement.exit', 'Exit')}
+                                content={i18n.t('templates.pageManagement.exit')}
                                 icon="sign out"
                                 onClick={onTemplateNavigate}
                             />

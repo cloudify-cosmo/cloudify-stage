@@ -7,3 +7,11 @@ $cloudify-yellow: #fee584;
 $cloudify-blue: #65adff;
 $cloudify-grey: #5f6368;
 $cloudify-black: #050229;
+
+:export {
+    cloudifyRed: $cloudify-red;
+    cloudifyYellow: $cloudify-yellow;
+    cloudifyBlue: $cloudify-blue;
+    cloudifyGrey: $cloudify-grey;
+    cloudifyBlack: $cloudify-black;
+}

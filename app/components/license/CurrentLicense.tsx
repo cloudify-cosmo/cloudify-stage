@@ -4,9 +4,19 @@ import type { FunctionComponent } from 'react';
 import React from 'react';
 import type { SemanticICONS } from 'semantic-ui-react';
 import type { LicenseResponse } from 'backend/handler/AuthHandler.types';
+import styled from 'styled-components';
 import StageUtils from '../../utils/stageUtils';
-import { Header, Icon, Segment, Table } from '../basic';
+import { Header, Icon, Table } from '../basic';
+import colors from '../../styles/colors.scss';
 
+export const HeaderIcon = styled(Icon)`
+    &&&& {
+        display: inline-block;
+        float: left;
+        color: ${colors.cloudifyBlue};
+        font-size: 18px;
+    }
+`;
 interface CurrentLicenseProps {
     license: LicenseResponse | null;
 }
@@ -18,10 +28,10 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
 
     const formatExpirationDate = (date: string) =>
         isEmpty(date)
-            ? i18n.t('licenseManagement.expirationDateNever', 'Never')
+            ? i18n.t('licenseManagement.expirationDateNever')
             : StageUtils.formatLocalTimestamp(date, 'DD-MM-YYYY');
     const formatVersion = (version: string) =>
-        isEmpty(version) ? i18n.t('licenseManagement.allVersions', 'All') : String(version);
+        isEmpty(version) ? i18n.t('licenseManagement.allVersions') : String(version);
     const formatCapabilities = (capabilities: string[]) => join(capabilities, ', ');
     const isFalse = (value: boolean) => !value;
 
@@ -35,39 +45,39 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
     const fields: Field[] = [
         {
             name: 'expiration_date',
-            header: i18n.t('licenseManagement.expirationDate', 'Expiration Date'),
+            header: i18n.t('licenseManagement.expirationDate'),
             icon: 'clock',
             format: formatExpirationDate
         },
         {
             name: 'cloudify_version',
-            header: i18n.t('licenseManagement.validForVersion', 'Valid For Version'),
+            header: i18n.t('licenseManagement.validForVersion'),
             icon: 'thumbs up',
             format: formatVersion
         },
         {
             name: 'license_edition',
-            header: i18n.t('licenseManagement.licenseEdition', 'License Edition'),
+            header: i18n.t('licenseManagement.licenseEdition'),
             icon: 'file alternate outline',
             format: String
         },
         {
             name: 'capabilities',
-            header: i18n.t('licenseManagement.capabilities', 'Capabilities'),
+            header: i18n.t('licenseManagement.capabilities'),
             icon: 'wrench',
             format: formatCapabilities,
             hide: isEmpty
         },
         {
             name: 'trial',
-            header: i18n.t('licenseManagement.trial', 'Trial'),
+            header: i18n.t('licenseManagement.trial'),
             icon: 'lab',
-            format: constant(i18n.t('licenseManagement.trialYes', 'Yes')),
+            format: constant(i18n.t('licenseManagement.trialYes')),
             hide: isFalse
         },
         {
             name: 'customer_id',
-            header: i18n.t('licenseManagement.licensedTo', 'Licensed To'),
+            header: i18n.t('licenseManagement.licensedTo'),
             icon: 'handshake',
             format: String,
             hide: isEmpty
@@ -75,31 +85,25 @@ const CurrentLicense: FunctionComponent<CurrentLicenseProps> = ({ license }) => 
     ];
 
     return (
-        <Segment>
-            <Table basic="very" size="large" celled>
-                <Table.Body>
-                    {map(fields, field => {
-                        const value = license[field.name];
+        <Table basic compact>
+            <Table.Body>
+                {map(fields, field => {
+                    const value = license[field.name];
 
-                        return !!field.hide && field.hide(value) ? null : (
-                            <Table.Row key={field.header}>
-                                <Table.Cell width={5}>
-                                    <Header as="h4">
-                                        <Icon
-                                            name={field.icon}
-                                            size="large"
-                                            style={{ display: 'inline-block', float: 'left' }}
-                                        />
-                                        <Header.Content>{field.header}</Header.Content>
-                                    </Header>
-                                </Table.Cell>
-                                <Table.Cell>{field.format(license[field.name])}</Table.Cell>
-                            </Table.Row>
-                        );
-                    })}
-                </Table.Body>
-            </Table>
-        </Segment>
+                    return !!field.hide && field.hide(value) ? null : (
+                        <Table.Row key={field.header}>
+                            <Table.Cell width={5}>
+                                <Header as="h4">
+                                    <HeaderIcon name={field.icon} />
+                                    <Header.Content>{field.header}</Header.Content>
+                                </Header>
+                            </Table.Cell>
+                            <Table.Cell>{field.format(license[field.name])}</Table.Cell>
+                        </Table.Row>
+                    );
+                })}
+            </Table.Body>
+        </Table>
     );
 };
 export default CurrentLicense;

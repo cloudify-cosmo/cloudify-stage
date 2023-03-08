@@ -152,7 +152,7 @@ function InputsSection({ oldInputs = {}, newInputs = {} }: InputSectionProps) {
             </Header>
 
             {inputsChanged ? (
-                <Table striped>
+                <Table compact basic>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell width={4}>Input</Table.HeaderCell>
@@ -322,7 +322,7 @@ function StepsSection({ steps }: StepsSectionProps) {
                 {stepsPresent && <Header.Subheader>Action steps taken during update.</Header.Subheader>}
             </Header>
             {stepsPresent ? (
-                <Table striped definition>
+                <Table compact basic definition>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell collapsing />
