@@ -13,7 +13,6 @@ import app from './appReducer';
 import widgetData from './widgetDataReducer';
 import drilldownContext from './drilldownContextReducer';
 import plugins from './pluginsReducer';
-import formErrors from './formErrorsReducer';
 
 const rootReducer = (history: History) =>
     combineReducers({
@@ -28,8 +27,7 @@ const rootReducer = (history: History) =>
         drilldownContext,
         config,
         widgetData,
-        plugins,
-        formErrors
+        plugins
     });
 
 export type ReduxState = ReturnType<ReturnType<typeof rootReducer>>;

@@ -4,10 +4,8 @@
 
 .blueprintCatalog .segment {
     background: white !important;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
 }
+
 .uploadBlueprintButton {
     z-index: 5;
     position: absolute !important;
@@ -18,14 +16,6 @@
     margin: 0.2rem;
 }
 
-.blueprintCatalog .stackable .column > .column {
-    min-width: 315px;
-    max-width: 20%;
+.blueprintCatalog .row .header {
     margin-bottom: 1rem;
-}
-
-@media screen and (max-width: 769px) {
-    .blueprintCatalog .stackable .column > .column {
-        max-width: 100%;
-    }
 }

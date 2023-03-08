@@ -1,8 +1,8 @@
 import type { FormEvent } from 'react';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CheckboxProps, DropdownProps, InputProps } from 'semantic-ui-react';
+import type { CheckboxProps, InputProps } from 'semantic-ui-react';
 import { Ref } from 'semantic-ui-react';
-import { chain, entries, head, isEmpty, some } from 'lodash';
+import { chain, entries, get, head, isEmpty, omit, set, some } from 'lodash';
 import styled from 'styled-components';
 import type { Output, Variable } from 'backend/handler/TerraformHandler.types';
 import BlueprintActions from '../blueprints/BlueprintActions';
@@ -24,7 +24,6 @@ import {
     ApproveButton,
     CancelButton,
     Confirm,
-    Dropdown,
     Form,
     GenericField,
     Header,
@@ -32,7 +31,7 @@ import {
     LoadingOverlay,
     Modal
 } from '../../../components/basic';
-import { useBoolean, useFormErrors, useInput, useResettableState } from '../../../utils/hooks';
+import { useBoolean, useErrors, useInput, useResettableState } from '../../../utils/hooks';
 import ID_REGEX from '../../../utils/consts';
 
 const t = StageUtils.getT('widgets.blueprints.terraformModal');
@@ -46,28 +45,6 @@ const TerraformLogo = styled(Image)`
 `;
 
 export const inputMaxLength = 256;
-
-function LengthLimitedDynamicTableInput({
-    name,
-    onChange,
-    idPrefix,
-    index,
-    ...rest
-}: CustomConfigurationComponentProps<string>) {
-    const { getFieldError } = useFormErrors('terraformModal');
-
-    return (
-        <Form.Input
-            name={name}
-            fluid
-            onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-            error={getFieldError(`${idPrefix}_${index}_${name}`)}
-            {...rest}
-        >
-            <input maxLength={inputMaxLength} />
-        </Form.Input>
-    );
-}
 
 export interface VariableRow extends Omit<Variable, 'name'> {
     name: { value: string; added?: boolean };
@@ -87,7 +64,6 @@ function TerraformVariableValueInput({
     ...rest
 }: TerraformVariableValueInputProps) {
     const secretSource = rowValues?.source === 'secret';
-    const { getFieldError } = useFormErrors('terraformModal');
     const InputComponent = secretSource ? SinglelineInput : Form.Input;
     const externalValue = secretSource && !rowValues?.name.added;
 
@@ -103,7 +79,6 @@ function TerraformVariableValueInput({
         <InputComponent
             disabled={rowValues?.duplicated || externalValue}
             name={name}
-            error={getFieldError(`${idPrefix}_${index}_${name}`)}
             fluid
             onChange={handleChange}
             maxLength={inputMaxLength}
@@ -111,25 +86,6 @@ function TerraformVariableValueInput({
             {...rest}
         />
     );
-}
-
-function getDynamicTableDropdown(options: DropdownProps['options']) {
-    return ({ name, onChange, idPrefix, index, ...rest }: CustomConfigurationComponentProps<string>) => {
-        const { getFieldError } = useFormErrors('terraformModal');
-
-        return (
-            <Form.Field error={getFieldError(`${idPrefix}_${index}_${name}`)}>
-                <Dropdown
-                    clearable={false}
-                    fluid
-                    selection
-                    options={options}
-                    onChange={(event, { value }) => onChange?.(event, { name, value: value as string })}
-                    {...rest}
-                />
-            </Form.Field>
-        );
-    };
 }
 
 const validationStrictRegExp = /^[a-zA-Z][a-zA-Z0-9._-]*$/;
@@ -203,25 +159,27 @@ function markDuplicates(
     setVariables(variables);
 }
 
+type ErrorSetter = (path: string, error: string) => void;
+
 export default function TerraformModal({ onHide, toolbox }: { onHide: () => void; toolbox: Stage.Types.Toolbox }) {
     const variablesColumns = useMemo<Columns<VariableRow>>(
         () => [
             {
                 id: 'variable',
                 label: t('variablesTable.variable'),
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput,
-                width: 3
+                type: GenericField.STRING_TYPE,
+                width: 3,
+                maxLength: inputMaxLength
             },
             {
                 id: 'source',
                 label: t('variablesTable.source'),
-                type: GenericField.CUSTOM_TYPE,
-                component: getDynamicTableDropdown([
-                    { text: t('variablesTable.sources.secret'), value: 'secret' },
-                    { text: t('variablesTable.sources.input'), value: 'input' },
-                    { text: t('variablesTable.sources.static'), value: 'static' }
-                ]),
+                type: GenericField.LIST_TYPE,
+                items: [
+                    { name: t('variablesTable.sources.secret'), value: 'secret' },
+                    { name: t('variablesTable.sources.input'), value: 'input' },
+                    { name: t('variablesTable.sources.static'), value: 'static' }
+                ],
                 style: dynamicTableFieldStyle,
                 width: 3
             },
@@ -249,25 +207,25 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
             {
                 id: 'name',
                 label: t('outputsTable.name'),
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput
+                type: GenericField.STRING_TYPE,
+                maxLength: inputMaxLength
             },
             {
                 id: 'type',
                 label: t('outputsTable.type'),
-                type: GenericField.CUSTOM_TYPE,
-                component: getDynamicTableDropdown([
-                    { text: t('outputsTable.types.output'), value: 'output' },
-                    { text: t('outputsTable.types.capability'), value: 'capability' }
-                ]),
+                type: GenericField.LIST_TYPE,
+                items: [
+                    { name: t('outputsTable.types.output'), value: 'output' },
+                    { name: t('outputsTable.types.capability'), value: 'capability' }
+                ],
                 style: dynamicTableFieldStyle
             },
             {
                 id: 'terraformOutput',
                 label: t('outputsTable.terraformOutput'),
                 default: '',
-                type: GenericField.CUSTOM_TYPE,
-                component: LengthLimitedDynamicTableInput
+                type: GenericField.STRING_TYPE,
+                maxLength: inputMaxLength
             }
         ],
         undefined
@@ -287,7 +245,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [templateModulesLoading, setTemplateModulesLoading, unsetTemplateModulesLoading] = useBoolean();
     const [templateModules, setTemplateModules, clearTemplateModules] = useResettableState<string[]>([]);
 
-    const { getFieldError, setFieldError, cleanFormErrors, fieldErrors } = useFormErrors('terraformModal');
+    const { setErrors, errors, getContextError } = useErrors();
     const [version, setVersion] = useInput(defaultVersion);
     const [blueprintName, setBlueprintName] = useInput('');
     const [blueprintDescription, setBlueprintDescription] = useInput('');
@@ -306,15 +264,25 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     const [outputsDeferred, setOutputsDeferred] = useState<Output[]>([]);
 
     const usernameInputRef = useRef<HTMLInputElement>(null);
-    const formHeaderErrors = useMemo(() => (fieldErrors ? [] : undefined), [fieldErrors]);
+    const formHeaderErrors = useMemo(() => (errors ? [] : undefined), [errors]);
 
     const handleOnHideModal = useCallback(() => {
-        cleanFormErrors();
+        clearErrors();
         onHide();
-    }, [onHide, cleanFormErrors]);
+    }, [onHide, clearErrors]);
+
+    const setFieldError: ErrorSetter = (path, error) => {
+        setErrors(existingErrors => ({
+            ...set(existingErrors, path, error)
+        }));
+    };
+
+    function clearErrors() {
+        setErrors(() => ({}));
+    }
 
     function clearFieldError(fieldName: string) {
-        setFieldError(fieldName);
+        setErrors(existingErrors => omit(existingErrors, fieldName));
     }
 
     useEffect(
@@ -381,57 +349,50 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         entities: Record<string, any>[],
         type: string,
         IDkey: 'variable' | 'name' = 'variable',
-        setFormError: typeof setFieldError
+        setFormError: ErrorSetter
     ): void {
         const tNameError = Stage.Utils.composeT(tError, type);
 
         entities.forEach((variable, index) => {
+            const path = `${type}[${index}].${IDkey}`;
             if (isEmpty(variable[IDkey])) {
-                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyMissing'));
+                setFormError(path, tNameError('keyMissing'));
             } else if (!variable[IDkey].match(ID_REGEX)) {
-                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyInvalid'));
+                setFormError(path, tNameError('keyInvalid'));
             } else if (
                 some(entities, (entity, entityIndex) => entityIndex !== index && entity[IDkey] === variable[IDkey])
             ) {
-                setFormError(`${type}_${index}_${IDkey}`, tNameError('keyDuplicated'));
+                setFormError(path, tNameError('keyDuplicated'));
             }
         });
     }
 
-    function validateVariablesSource(
-        variablesList: VariableRow[],
-        variableType: string,
-        setFormError: typeof setFieldError
-    ) {
+    function validateVariablesSource(variablesList: VariableRow[], variableType: string, setFormError: ErrorSetter) {
         variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_source`;
-            const hasError = getFieldError(variableIndex);
+            const variableErrorPath = `${variableType}[${index}].source`;
+            const hasError = get(errors, variableErrorPath);
             const tVariableError = Stage.Utils.composeT(tError, variableType);
 
             if (isEmpty(variable.source)) {
-                setFormError(variableIndex, tVariableError('sourceMissing'));
+                setFormError(variableErrorPath, tVariableError('sourceMissing'));
             } else if (hasError) {
-                clearFieldError(variableIndex);
+                clearFieldError(variableErrorPath);
             }
         });
     }
 
-    function validateVariablesName(
-        variablesList: VariableRow[],
-        variableType: string,
-        setFormError: typeof setFieldError
-    ) {
+    function validateVariablesName(variablesList: VariableRow[], variableType: string, setFormError: ErrorSetter) {
         variablesList.forEach((variable, index) => {
-            const variableIndex = `${variableType}_${index}_name`;
-            const hasError = getFieldError(variableIndex);
+            const variableErrorPath = `${variableType}[${index}].name`;
+            const hasError = get(errors, variableErrorPath);
             const tVariableError = Stage.Utils.composeT(tError, variableType);
 
             if (isEmpty(variable.name)) {
-                setFormError(variableIndex, tVariableError('nameMissing'));
+                setFormError(variableErrorPath, tVariableError('nameMissing'));
             } else if (!variable.name.value.match(validationStrictRegExp)) {
-                setFormError(variableIndex, tVariableError('nameInvalid'));
+                setFormError(variableErrorPath, tVariableError('nameInvalid'));
             } else if (hasError) {
-                clearFieldError(variableIndex);
+                clearFieldError(variableErrorPath);
             }
         });
     }
@@ -442,32 +403,32 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
         validateVariablesName(variablesList, variableType, setFormError);
     }
 
-    function validateOutputsType(outputsList: Output[], setFormError: typeof setFieldError) {
+    function validateOutputsType(outputsList: Output[], setFormError: ErrorSetter) {
         outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_type`;
-            const hasError = getFieldError(outputIndex);
+            const outputErrorPath = `outputs[${index}].type`;
+            const hasError = get(errors, outputErrorPath);
             const tOutputError = Stage.Utils.composeT(tError, 'outputs');
 
             if (isEmpty(output.type)) {
-                setFormError(outputIndex, tOutputError('typeMissing'));
+                setFormError(outputErrorPath, tOutputError('typeMissing'));
             } else if (hasError) {
-                clearFieldError(outputIndex);
+                clearFieldError(outputErrorPath);
             }
         });
     }
 
-    function validateOutputsTerraformOutput(outputsList: Output[], setFormError: typeof setFieldError) {
+    function validateOutputsTerraformOutput(outputsList: Output[], setFormError: ErrorSetter) {
         outputsList.forEach((output, index) => {
-            const outputIndex = `outputs_${index}_terraformOutput`;
-            const hasError = getFieldError(outputIndex);
+            const outputErrorPath = `outputs[${index}].terraformOutput`;
+            const hasError = get(errors, outputErrorPath);
             const tOutputError = Stage.Utils.composeT(tError, 'outputs');
 
             if (isEmpty(output.terraformOutput)) {
-                setFormError(outputIndex, tOutputError('outputMissing'));
+                setFormError(outputErrorPath, tOutputError('outputMissing'));
             } else if (!output.terraformOutput.match(validationStrictRegExp)) {
-                setFormError(outputIndex, tOutputError('outputInvalid'));
+                setFormError(outputErrorPath, tOutputError('outputInvalid'));
             } else if (hasError) {
-                clearFieldError(outputIndex);
+                clearFieldError(outputErrorPath);
             }
         });
     }
@@ -479,13 +440,13 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
     }
 
     async function handleSubmit() {
-        cleanFormErrors();
+        clearErrors();
 
         let formHasErrors = false;
 
-        const setFormError: typeof setFieldError = (...setFieldErrorArguments) => {
+        const setFormError: ErrorSetter = (field, error) => {
             formHasErrors = true;
-            return setFieldError(...setFieldErrorArguments);
+            setFieldError(field, error);
         };
 
         function validateBlueprintName() {
@@ -734,7 +695,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         required
                         value={blueprintName}
                         onChange={setBlueprintName}
-                        error={getFieldError('blueprintName')}
+                        error={getContextError('blueprintName')}
                     >
                         <input maxLength={inputMaxLength} />
                     </Form.Input>
@@ -744,7 +705,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                         value={blueprintDescription}
                         onChange={setBlueprintDescription}
                         rows={4}
-                        error={getFieldError('blueprintDescription')}
+                        error={getContextError('blueprintDescription')}
                     />
                     <Form.Field label={t(`terraformVersion`)} required>
                         <Form.Dropdown
@@ -761,7 +722,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                     <Accordion>
                         <AccordionSectionWithDivider title={t('terraformModuleDetails')} initialActive>
                             {templateModulesLoading && <LoadingOverlay />}
-                            <Form.Field label={t(`template`)} required error={getFieldError('template')}>
+                            <Form.Field label={t(`template`)} required error={getContextError('template')}>
                                 <Form.UrlOrFile
                                     name="terraformUrlOrFile"
                                     placeholder={t(`template`)}
@@ -782,7 +743,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                 </Form.Field>
                                 <Ref innerRef={usernameInputRef}>
                                     <Form.Input
-                                        error={getFieldError('username')}
+                                        error={getContextError('username')}
                                         disabled={!urlAuthentication}
                                         value={username}
                                         onChange={setUsername}
@@ -792,7 +753,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                     />
                                 </Ref>
                                 <Form.Input
-                                    error={getFieldError('password')}
+                                    error={getContextError('password')}
                                     disabled={!urlAuthentication}
                                     value={password}
                                     onChange={setPassword}
@@ -802,7 +763,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                                     type="password"
                                 />
                             </Form.Group>
-                            <Form.Field label={t(`resourceLocation`)} required error={getFieldError('resource')}>
+                            <Form.Field label={t(`resourceLocation`)} required error={getContextError('resource')}>
                                 <Form.Dropdown
                                     selection
                                     options={templateModules.map(moduleLocation => ({
@@ -824,6 +785,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                             onChange={handleVariablesChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
+                            errors={errors}
                         />
                         <TerraformModalTableAccordion
                             title={t('environment')}
@@ -832,6 +794,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                             onChange={handleEnvironmentChange}
                             columns={variablesColumns}
                             toolbox={toolbox}
+                            errors={errors}
                         />
                         <TerraformModalTableAccordion
                             title={t('outputs')}
@@ -840,6 +803,7 @@ export default function TerraformModal({ onHide, toolbox }: { onHide: () => void
                             onChange={setOutputs}
                             columns={outputsColumns}
                             toolbox={toolbox}
+                            errors={errors}
                         />
                     </Accordion>
                 </Form>

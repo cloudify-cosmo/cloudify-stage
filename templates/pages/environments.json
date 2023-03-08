@@ -6,21 +6,9 @@
       "type": "widgets",
       "content": [
         {
-          "name": "Deployment Button",
           "x": 0,
           "y": 0,
-          "width": 3,
-          "height": 3,
-          "definition": "deploymentButton",
-          "configuration": {
-            "label": "Create Environment",
-            "blueprintFilterRules": [{
-              "key": "csys-obj-type",
-              "values": ["environment"],
-              "operator": "any_of",
-              "type": "label"
-            }]
-          }
+          "definition": "environmentButton"
         },
         {
           "name": "Environments",
