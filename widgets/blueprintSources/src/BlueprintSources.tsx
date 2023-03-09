@@ -110,7 +110,7 @@ const RightPane = ({
 };
 
 interface BlueprintSourcesProps {
-    data: WidgetData<BlueprintSourcesData>;
+    data: Exclude<WidgetData<BlueprintSourcesData>, undefined>;
     toolbox: Stage.Types.Toolbox;
     widget: Stage.Types.Widget;
 }
@@ -182,10 +182,6 @@ export default function BlueprintSources({ data, toolbox, widget }: BlueprintSou
             })
             .finally(() => toolbox.loading(false));
     };
-
-    if (!data) {
-        return <Loading />;
-    }
 
     const loop = (blueprintId: string, timestamp: number, items: NodeTreeItem[]) => {
         return items.map(item => {
