@@ -10,13 +10,13 @@ import {
 } from './services/BlueprintBuilder';
 
 export const renderHelmBlueprint = (renderParams: HelmRenderParams) => {
-    function createClientConfig(wrapers: Partial<Record<ClusterCredentialName, (value: any) => any>> = {}) {
+    function createClientConfig(wrappers: Partial<Record<ClusterCredentialName, (value: any) => any>> = {}) {
         return {
             configuration: {
                 api_options: mapValues(
                     renderParams.clusterCredentials,
                     (credential, credentialName: ClusterCredentialName) =>
-                        (wrapers[credentialName] ?? identity)(
+                        (wrappers[credentialName] ?? identity)(
                             createIntrinsicFunctionCall(`get_${credential.source}`, credential.value)
                         )
                 )
