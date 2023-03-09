@@ -5,6 +5,8 @@ export function createIntrinsicFunctionCall(
     return { [name]: arg };
 }
 
+export type IntrinsicFunction = ReturnType<typeof createIntrinsicFunctionCall>;
+
 export function createGetSecretCall(arg: string) {
     return createIntrinsicFunctionCall('get_secret', arg);
 }
@@ -21,6 +23,6 @@ export function createGetSysCall(...args: string[]) {
     return createIntrinsicFunctionCall('get_sys', args);
 }
 
-export function createConcatCall(...args: string[]) {
+export function createConcatCall(...args: (string | IntrinsicFunction)[]) {
     return createIntrinsicFunctionCall('concat', args);
 }

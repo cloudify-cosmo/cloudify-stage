@@ -2,6 +2,7 @@ import _, { identity, mapValues, merge } from 'lodash';
 import type { Blueprint } from 'cloudify-ui-common-backend';
 import { renderBlueprintYaml } from 'cloudify-ui-common-backend';
 import type { ClusterCredentialName, HelmRenderParams } from './HelmHandler.types';
+import type { IntrinsicFunction } from './services/BlueprintBuilder';
 import {
     createConcatCall,
     createGetAttributeCall,
@@ -10,7 +11,9 @@ import {
 } from './services/BlueprintBuilder';
 
 export const renderHelmBlueprint = (renderParams: HelmRenderParams) => {
-    function createClientConfig(wrappers: Partial<Record<ClusterCredentialName, (value: any) => any>> = {}) {
+    function createClientConfig(
+        wrappers: Partial<Record<ClusterCredentialName, (value: IntrinsicFunction) => unknown>> = {}
+    ) {
         return {
             configuration: {
                 api_options: mapValues(
