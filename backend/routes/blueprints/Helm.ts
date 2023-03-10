@@ -1,5 +1,5 @@
 import express from 'express';
-import { renderHelmBlueprint } from '../handler/HelmHandler';
+import { renderHelmBlueprint } from '../../handler/HelmHandler';
 import type { PostHelmBlueprintRequestBody, PostHelmBlueprintResponse } from './Helm.types';
 
 const router = express.Router();
