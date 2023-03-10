@@ -27,6 +27,7 @@ import Environment from './routes/Environment';
 import External from './routes/External';
 import File from './routes/File';
 import GitHub from './routes/GitHub';
+import Helm from './routes/Helm';
 import Maps from './routes/Maps';
 import Plugins from './routes/Plugins';
 import ServerProxy from './routes/ServerProxy';
@@ -109,6 +110,7 @@ const cookieAuthenticatedApiRoutes: Record<string, Router> = {
     file: File,
     filters: Filters,
     github: GitHub,
+    helm: Helm,
     maps: Maps,
     plugins: Plugins,
     source: SourceBrowser,
