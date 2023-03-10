@@ -2,8 +2,8 @@ import yaml from 'js-yaml';
 import request from 'supertest';
 import { size } from 'lodash';
 import type { Blueprint } from 'cloudify-ui-common-backend';
-import app from '../../app';
-import type { PostEnvironmentBlueprintRequestBody } from '../../routes/Environment.types';
+import app from '../../../app';
+import type { PostEnvironmentBlueprintRequestBody } from '../../../routes/Environment.types';
 
 describe('/environment/blueprint endpoint', () => {
     function assertConstantPart(blueprint: Blueprint) {
