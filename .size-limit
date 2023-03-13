@@ -13,7 +13,7 @@
     },
     {
         "name": "Widgets",
-        "limit": "3.6 MB",
+        "limit": "2.64 MB",
         "gzip": false,
         "running": false,
         "path": [
