@@ -243,8 +243,8 @@ declare global {
          * TODO: (RD-6559) narrow down any-s
          */
         interface ContextEntries {
-            deploymentId: string | null;
-            blueprintId: string;
+            deploymentId: string | string[] | null;
+            blueprintId: any;
             nodeId: any;
             executionId: any;
             nodeInstanceId: any;

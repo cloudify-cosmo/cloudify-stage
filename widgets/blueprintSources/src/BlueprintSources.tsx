@@ -1,4 +1,3 @@
-import { Loading } from 'cloudify-ui-components';
 import type { NodesTreeProps } from 'cloudify-ui-components';
 import type { ComponentProps } from 'react';
 import { useEffect } from 'react';
