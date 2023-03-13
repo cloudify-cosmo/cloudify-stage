@@ -1,6 +1,6 @@
+import type { GetSourceBrowseBlueprintArchiveResponse } from 'backend/routes/SourceBrowser.types';
 import Actions from './actions';
 import BlueprintSources from './BlueprintSources';
-import type { BlueprintTree } from './BlueprintSources';
 import './widget.css';
 
 type BlueprintSourcesParams = {
@@ -9,6 +9,8 @@ type BlueprintSourcesParams = {
     // eslint-disable-next-line camelcase
     deployment_id: string;
 };
+
+type BlueprintTree = GetSourceBrowseBlueprintArchiveResponse;
 
 export type BlueprintSourcesData = {
     blueprintId: string;
@@ -103,7 +105,7 @@ Stage.defineWidget<BlueprintSourcesParams, BlueprintSourcesData, BlueprintSource
     render(widget, data, _error, toolbox) {
         const { Loading } = Stage.Basic;
 
-        if (_.isEmpty(data)) {
+        if (!data || _.isEmpty(data)) {
             return <Loading />;
         }
 
